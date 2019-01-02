@@ -51,7 +51,7 @@ smandir: ${SPD}/books/bookvol6.pamphlet
 	@echo 5 making ${SRC}/sman
 	@( cd sman ; \
 	   ${BOOKS}/tanglec ${BOOKS}/bookvol6.pamphlet >Makefile ; \
-           ${ENV} ${MAKE} )
+	   ${ENV} ${MAKE} )
 
 \end{chunk}
 \subsection{The share directory}
@@ -65,10 +65,10 @@ sharedir: ${SRC}/share/Makefile
 
 ${SRC}/share/Makefile: ${SRC}/share/Makefile.pamphlet
 	@echo 10 making ${SRC}/share/Makefile from \
-           ${SRC}/share/Makefile.pamphlet
+	   ${SRC}/share/Makefile.pamphlet
 	@( cd share ; \
-           ${EXTRACT} Makefile ; \
-           cp Makefile.pdf ${MNT}/${SYS}/doc/src/share.Makefile.pdf )
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/share.Makefile.pdf )
 
 sharedocument: ${SRC}/share/Makefile
 	@echo 11 documenting ${SRC}/share
@@ -98,8 +98,8 @@ bootdir: ${SRC}/boot/Makefile
 ${SRC}/boot/Makefile: ${SRC}/boot/Makefile.pamphlet
 	@echo 22 making ${SRC}/boot/Makefile from ${SRC}/boot/Makefile.pamphlet
 	@( cd boot ; \
-           ${EXTRACT} Makefile ; \
-           cp Makefile.pdf ${MNT}/${SYS}/doc/src/boot.Makefile.pdf )
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/boot.Makefile.pdf )
 
 bootdocument: ${SRC}/boot/Makefile
 	@echo 23 documenting ${SRC}/boot
@@ -135,15 +135,15 @@ interpdir: ${SRC}/interp/Makefile
 	@cp ${SPD}/books/bookvol9.pamphlet interp
 	@cp ${SPD}/books/bookvol10.5.pamphlet interp
 	@(cd ${MNT}/${SYS}/doc ; \
-          ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet util.ht >util.ht )
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet util.ht >util.ht )
 	@(cd interp ; ${ENV} ${MAKE} )
 
 ${SRC}/interp/Makefile: ${SRC}/interp/Makefile.pamphlet
 	@echo 26 making ${SRC}/interp/Makefile from \
-                 ${SRC}/interp/Makefile.pamphlet
+		 ${SRC}/interp/Makefile.pamphlet
 	@( cd interp ; \
-           ${EXTRACT} Makefile ; \
-           cp Makefile.pdf ${MNT}/${SYS}/doc/src/interp.Makefile.pdf )
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/interp.Makefile.pdf )
 
 interpdocument: ${SRC}/interp/Makefile
 	@echo 27 documenting ${SRC}/interp
@@ -176,14 +176,14 @@ that nothing has been broken in the process of fixing bugs.
 inputdir: ${SRC}/input/Makefile
 	@echo 33 making ${SRC}/input
 	@(cd input ; ${ENV} ${MAKE} )
-#	@(cd input ; ${ENV} ${MAKE} -j 10)
+#       @(cd input ; ${ENV} ${MAKE} -j 10)
 
 ${SRC}/input/Makefile: ${SRC}/input/Makefile.pamphlet
 	@echo 34 making ${SRC}/input/Makefile from \
-                ${SRC}/input/Makefile.pamphlet
+		${SRC}/input/Makefile.pamphlet
 	@( cd input ; \
-           ${EXTRACT} Makefile ; \
-           cp Makefile.pdf ${MNT}/${SYS}/doc/src/input.Makefile.pdf )
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/input.Makefile.pdf )
 
 inputdocument: ${SRC}/input/Makefile
 	@echo 35 documenting ${SRC}/input
@@ -211,8 +211,8 @@ etcdir: ${SRC}/etc/Makefile
 ${SRC}/etc/Makefile: ${SRC}/etc/Makefile.pamphlet
 	@echo 38 making ${SRC}/etc/Makefile from ${SRC}/etc/Makefile.pamphlet
 	@( cd etc ; \
-           ${EXTRACT} Makefile ; \
-           cp Makefile.pdf ${MNT}/${SYS}/doc/src/etc.Makefile.pdf )
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/etc.Makefile.pdf )
 
 etcdocument: ${SRC}/etc/Makefile
 	@echo 39 documenting ${SRC}/etc
@@ -256,11 +256,11 @@ Hyperdoc is the Axiom document browser.
 hyperdir: ${SPD}/books/bookvol7.pamphlet ${SPD}/books/bookvol7.1.pamphlet
 	@echo 7 making hyperdoc from bookvol7
 	@(cd ${INT}/hyper ; \
-          ${BOOKS}/tanglec ${BOOKS}/bookvol7.pamphlet >Makefile ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.pamphlet >Makefile ; \
 	  ${ENV} ${MAKE} )
 	@echo 7.1 making pages from bookvol7.1 ${ENV}
 	@(cd ${INT}/hyper ; \
-          ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet >Makefile ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet >Makefile ; \
 	  ${ENV} ${MAKE} )
 
 \end{chunk}
@@ -269,7 +269,7 @@ hyperdir: ${SPD}/books/bookvol7.pamphlet ${SPD}/books/bookvol7.1.pamphlet
 graphdir: ${SPD}/books/bookvol8.pamphlet
 	@echo 8 making graph from bookvol8
 	@(cd ${OBJ}/${SYS}/graph ; \
-          ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
 	  ${ENV} ${MAKE} )
 
 \end{chunk}
@@ -318,13 +318,13 @@ and bookvol10.3 (Packages) to the src/algebra subdirectory.
 \subsection{Volume 10: Axiom Algebra book}
 \begin{chunk}{algebradir}
 algebradir: ${SRC}/algebra/Makefile ${SPD}/books/bookvol10.pamphlet \
-            ${SPD}/books/bookvol7.1.pamphlet
+	    ${SPD}/books/bookvol7.1.pamphlet
 	@echo 29 making ${SRC}/algebra
 	@(cd algebra ; ${ENV} ${MAKE} )
 
 ${SRC}/algebra/Makefile: ${BOOKS}/bookvol10.pamphlet
 	@echo 30 making ${SRC}/algebra/Makefile from \
-                ${BOOKS}/bookvol10.pamphlet
+		${BOOKS}/bookvol10.pamphlet
 	@( cd algebra ; \
 	${BOOKS}/tanglec ${BOOKS}/bookvol10.pamphlet Makefile >Makefile ; \
 	cp ${SPD}/books/bookvol10.2.pamphlet . ; \
@@ -332,9 +332,9 @@ ${SRC}/algebra/Makefile: ${BOOKS}/bookvol10.pamphlet
 	cp ${SPD}/books/bookvol10.4.pamphlet . ; \
 	cp ${SPD}/books/bookvol10.5.pamphlet . ; \
 	echo 30a tangling findAlgebraFiles from \
-                 ${BOOKS}/bookvol10.pamphlet ; \
+		 ${BOOKS}/bookvol10.pamphlet ; \
 	${BOOKS}/tanglec ${BOOKS}/bookvol10.pamphlet \
-             findAlgebraFiles >${INT}/algebra/findAlgebraFiles ; \
+	     findAlgebraFiles >${INT}/algebra/findAlgebraFiles ; \
 	echo 30b running ${INT}/algebra/findAlgebraFiles ; \
 	. ${INT}/algebra/findAlgebraFiles >> Makefile )
 
@@ -357,10 +357,10 @@ post processing. Thus the "-j 10" argument to make. We use
 \begin{chunk}{browserdir}
 browserdir: ${SPD}/books/bookvol11.pamphlet
 	@echo 11 making browser from bookvol11
-#	@(cd ${MNT}/${SYS}/doc/hypertex ; \
-#	  ${BOOKS}/tanglec ${SPD}/books/bookvol11.pamphlet >Makefile11 ; \
-#	  ${ENV} ${MAKE} -j 10 -f Makefile11 ; \
-#	  rm -f Makefile11 )
+#       @(cd ${MNT}/${SYS}/doc/hypertex ; \
+#       ${BOOKS}/tanglec ${SPD}/books/bookvol11.pamphlet >Makefile11 ; \
+#       ${ENV} ${MAKE} -j 10 -f Makefile11 ; \
+#       rm -f Makefile11 )
 
 \end{chunk}
 

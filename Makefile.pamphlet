@@ -17,8 +17,8 @@ and then themselves. The system is built in the following order
 \item books       -- building pdf files
 \item src/scripts -- building scripts
 \item src/lib     -- building lib files
-\item lsp         -- building gcl common lisp
-\item src         -- building src
+\item lsp       -- building gcl common lisp
+\item src       -- building src
 \item src/interp  -- building interpreter files
 \item src/share   -- building share files
 \item src/algebra -- building help files
@@ -88,120 +88,120 @@ directory so we have to expand the serial forms inline. Cheesy.
 
 \begin{chunk}{parallel}
 all: rootdirs axiom.sty tanglec libspad lspdir
-        @ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
-        @ echo 2 Environment ${ENV}
-        @ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
-        @ cp ${BOOKS}/dvipdfm.def ${MNT}/${SYS}/doc
-        @ cp ${BOOKS}/changepage.sty ${MNT}/${SYS}/doc
-        @ ${EXTRACT} Makefile.pamphlet
-        @ cp Makefile.pdf ${MNT}/${SYS}/doc/src/root.Makefile.pdf
-        @ if [ "${RUNTYPE}" = "parallel" ] ; then \
-           ( echo p4 starting parallel make of input files ; \
-             ${ENV} ${MAKE} input ${NOISE} & ) ; \
-          else \
-           if [ "${BUILD}" = "full" ] ; then \
-           ( echo s4 starting serial make of input files ; \
-             cd ${MNT}/${SYS}/doc/src/input ; \
-             cp ${BOOKS}/axiom.sty . ; \
-             cp ${SRC}/input/*.eps . ; \
-             for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
-              if [ .${NOISE} = . ] ; \
-              then \
-               latex $$i ; \
-              else \
-               ( echo p4a making $$i ; \
-                 latex $$i >${TMP}/trace ) ; \
-              fi ; \
-             done ; \
-             rm -f *~ ; \
-             rm -f *.pamphlet~ ; \
-             rm -f *.log ; \
-             rm -f *.tex ; \
-             rm -f *.toc ; \
-             rm -f *.aux ) ; fi ; \
-          fi
-        @ if [ "${RUNTYPE}" = "parallel" ] ; then \
-            ( echo s2 starting parallel make of books ; \
-              echo s3 ${SPD}/books/Makefile from \
-                   ${SPD}/books/Makefile.pamphlet ; \
-              cd ${SPD}/books ; \
-              ${EXTRACT} Makefile ; \
-              cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
-              ${ENV} ${MAKE} & ) ; \
-          else \
-            ( echo s2 starting serial make of books ; \
-              echo s3 ${SPD}/books/Makefile from \
-                   ${SPD}/books/Makefile.pamphlet ; \
-              cd ${SPD}/books ; \
-              ${EXTRACT} Makefile ; \
-              cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
-              if [ "${BUILD}" = "full" ] ; then \
-              ${ENV} ${MAKE} ; fi ) ; \
-          fi
-        @ echo p7 starting make of src
-        @ ${ENV} $(MAKE) -f Makefile.${SYS} 
-        @ echo 3 finished system build on `date` | tee >lastBuildDate
+	@ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
+	@ echo 2 Environment ${ENV}
+	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
+	@ cp ${BOOKS}/dvipdfm.def ${MNT}/${SYS}/doc
+	@ cp ${BOOKS}/changepage.sty ${MNT}/${SYS}/doc
+	@ ${EXTRACT} Makefile.pamphlet
+	@ cp Makefile.pdf ${MNT}/${SYS}/doc/src/root.Makefile.pdf
+	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
+	   ( echo p4 starting parallel make of input files ; \
+	     ${ENV} ${MAKE} input ${NOISE} & ) ; \
+	  else \
+	   if [ "${BUILD}" = "full" ] ; then \
+	   ( echo s4 starting serial make of input files ; \
+	     cd ${MNT}/${SYS}/doc/src/input ; \
+	     cp ${BOOKS}/axiom.sty . ; \
+	     cp ${SRC}/input/*.eps . ; \
+	     for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
+	      if [ .${NOISE} = . ] ; \
+	      then \
+	       latex $$i ; \
+	      else \
+	       ( echo p4a making $$i ; \
+		 latex $$i >${TMP}/trace ) ; \
+	      fi ; \
+	     done ; \
+	     rm -f *~ ; \
+	     rm -f *.pamphlet~ ; \
+	     rm -f *.log ; \
+	     rm -f *.tex ; \
+	     rm -f *.toc ; \
+	     rm -f *.aux ) ; fi ; \
+	  fi
+	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
+	    ( echo s2 starting parallel make of books ; \
+	      echo s3 ${SPD}/books/Makefile from \
+		   ${SPD}/books/Makefile.pamphlet ; \
+	      cd ${SPD}/books ; \
+	      ${EXTRACT} Makefile ; \
+	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
+	      ${ENV} ${MAKE} & ) ; \
+	  else \
+	    ( echo s2 starting serial make of books ; \
+	      echo s3 ${SPD}/books/Makefile from \
+		   ${SPD}/books/Makefile.pamphlet ; \
+	      cd ${SPD}/books ; \
+	      ${EXTRACT} Makefile ; \
+	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
+	      if [ "${BUILD}" = "full" ] ; then \
+	      ${ENV} ${MAKE} ; fi ) ; \
+	  fi
+	@ echo p7 starting make of src
+	@ ${ENV} $(MAKE) -f Makefile.${SYS} 
+	@ echo 3 finished system build on `date` | tee >lastBuildDate
 
 \getchunk{lsp}
 
 libspad: 
-        @ echo 11a making libspad
-        @ ( cd ${OBJ}/${SYS}/lib ; \
-            ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
-            ${ENV} ${MAKE} libspad.a )
+	@ echo 11a making libspad
+	@ ( cd ${OBJ}/${SYS}/lib ; \
+	    ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
+	    ${ENV} ${MAKE} libspad.a )
 
 axiom.sty:
-        @ echo 11c copying books/axiom.sty
-        @ cp ${BOOKS}/axiom.sty .
+	@ echo 11c copying books/axiom.sty
+	@ cp ${BOOKS}/axiom.sty .
 
 rootdirs:
-        @ echo 11 checking directory structure
-         mkdir -p ${TMP}
-         mkdir -p ${INT}/algebra
-         mkdir -p ${INT}/hyper
-         mkdir -p ${INT}/input
-         mkdir -p ${INT}/interp
-         mkdir -p ${INT}/sman
-         mkdir -p ${OBJ}/${SYS}/bin
-         mkdir -p ${OBJ}/${SYS}/etc
-         mkdir -p ${OBJ}/${SYS}/graph
-         mkdir -p ${OBJ}/${SYS}/hyper/pages
-         mkdir -p ${OBJ}/${SYS}/interp
-         mkdir -p ${OBJ}/${SYS}/lib
-         mkdir -p ${OBJ}/${SYS}/sman
-         mkdir -p ${OBJ}/${SYS}/proofs
-         mkdir -p ${MNT}/doc
-         mkdir -p ${MNT}/${SYS}/algebra
-         mkdir -p ${MNT}/${SYS}/src/algebra
-         mkdir -p ${MNT}/${SYS}/autoload
-         mkdir -p ${MNT}/${SYS}/bin
-         mkdir -p ${MNT}/${SYS}/doc/axbook
-         mkdir -p ${MNT}/${SYS}/doc/bitmaps
-         mkdir -p ${MNT}/${SYS}/doc/hypertex/bitmaps
-         mkdir -p ${MNT}/${SYS}/doc/msgs
-         mkdir -p ${MNT}/${SYS}/doc/ps
-         mkdir -p ${MNT}/${SYS}/doc/cookbook
-         mkdir -p ${MNT}/${SYS}/doc/spadhelp
-         mkdir -p ${MNT}/${SYS}/doc/src/input
-         mkdir -p ${MNT}/${SYS}/graph/parabola.view
-         mkdir -p ${MNT}/${SYS}/input
-         mkdir -p ${MNT}/${SYS}/lib/graph
-         mkdir -p ${MNT}/${SYS}/lib/scripts
+	@ echo 11 checking directory structure
+	 mkdir -p ${TMP}
+	 mkdir -p ${INT}/algebra
+	 mkdir -p ${INT}/hyper
+	 mkdir -p ${INT}/input
+	 mkdir -p ${INT}/interp
+	 mkdir -p ${INT}/sman
+	 mkdir -p ${OBJ}/${SYS}/bin
+	 mkdir -p ${OBJ}/${SYS}/etc
+	 mkdir -p ${OBJ}/${SYS}/graph
+	 mkdir -p ${OBJ}/${SYS}/hyper/pages
+	 mkdir -p ${OBJ}/${SYS}/interp
+	 mkdir -p ${OBJ}/${SYS}/lib
+	 mkdir -p ${OBJ}/${SYS}/sman
+	 mkdir -p ${OBJ}/${SYS}/proofs
+	 mkdir -p ${MNT}/doc
+	 mkdir -p ${MNT}/${SYS}/algebra
+	 mkdir -p ${MNT}/${SYS}/src/algebra
+	 mkdir -p ${MNT}/${SYS}/autoload
+	 mkdir -p ${MNT}/${SYS}/bin
+	 mkdir -p ${MNT}/${SYS}/doc/axbook
+	 mkdir -p ${MNT}/${SYS}/doc/bitmaps
+	 mkdir -p ${MNT}/${SYS}/doc/hypertex/bitmaps
+	 mkdir -p ${MNT}/${SYS}/doc/msgs
+	 mkdir -p ${MNT}/${SYS}/doc/ps
+	 mkdir -p ${MNT}/${SYS}/doc/cookbook
+	 mkdir -p ${MNT}/${SYS}/doc/spadhelp
+	 mkdir -p ${MNT}/${SYS}/doc/src/input
+	 mkdir -p ${MNT}/${SYS}/graph/parabola.view
+	 mkdir -p ${MNT}/${SYS}/input
+	 mkdir -p ${MNT}/${SYS}/lib/graph
+	 mkdir -p ${MNT}/${SYS}/lib/scripts
 
 input:
-        @ echo p9 making input documents
-        @ if [ "${BUILD}" = "full" ] ; then \
-          ( cd ${MNT}/${SYS}/doc/src/input ; \
-            cp ${BOOKS}/axiom.sty . ; \
-            for i in `ls ${SRC}/input/*.input.pamphlet` ; \
-              do latex $$i ; \
-              done ; \
-             rm -f *~ ; \
-             rm -f *.pamphlet~ ; \
-             rm -f *.log ; \
-             rm -f *.tex ; \
-             rm -f *.toc ; \
-             rm -f *.aux ) ; fi
+	@ echo p9 making input documents
+	@ if [ "${BUILD}" = "full" ] ; then \
+	  ( cd ${MNT}/${SYS}/doc/src/input ; \
+	    cp ${BOOKS}/axiom.sty . ; \
+	    for i in `ls ${SRC}/input/*.input.pamphlet` ; \
+	      do latex $$i ; \
+	      done ; \
+	     rm -f *~ ; \
+	     rm -f *.pamphlet~ ; \
+	     rm -f *.log ; \
+	     rm -f *.tex ; \
+	     rm -f *.toc ; \
+	     rm -f *.aux ) ; fi
 
 \end{chunk}
 
@@ -215,56 +215,56 @@ input:
 \getchunk{install}
 
 document: 
-        @ echo 4 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
-        @ echo 5 Environment ${ENV}
-        @ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
-        @ ${ENV} $(MAKE) -f Makefile.${SYS} document
-        @echo 6 finished system build on `date` | tee >lastBuildDate
+	@ echo 4 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
+	@ echo 5 Environment ${ENV}
+	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
+	@ ${ENV} $(MAKE) -f Makefile.${SYS} document
+	@echo 6 finished system build on `date` | tee >lastBuildDate
 
 clean: 
-        @ echo 7 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
-        @ echo 8 Environment ${ENV}
-        @ rm -f axiom.sty
-        @ rm -f Makefile.pdf
-        @ rm -f Makefile.dvi
-        @ rm -f Makefile.${SYS}
-        @ rm -f books/Makefile
-        @ rm -f books/Makefile.dvi
-        @ rm -f books/Makefile.pdf
-        @ rm -f books/axiom.bib
-        @ rm -f books/sortsig.lisp
-        @ rm -f lsp/axiom.sty
-        @ rm -f lsp/Makefile lsp/Makefile.dvi lsp/Makefile.pdf
-        @ rm -rf lsp/gcl*
-        @ rm -f src/axiom.sty
-        @ rm -f src/Makefile
-        @ rm -f src/Makefile.dvi
-        @ rm -f src/Makefile.pdf
-        @ rm -f src/algebra/book*pamphlet
-        @ rm -f src/algebra/*.spad
-        @ rm -f src/algebra/Makefile
-        @ rm -f src/etc/axiom.sty
-        @ rm -f src/etc/Makefile src/etc/Makefile.dvi src/etc/Makefile.pdf
-        @ rm -f src/interp/book*pamphlet
-        @ rm -f src/interp/axiom.sty
-        @ rm -f src/input/axiom.sty
-        @ rm -f src/share/axiom.sty
-        @ rm -f src/share/Makefile src/share/Makefile.dvi 
-        @ rm -f src/share/Makefile.pdf
-        @ rm -rf int
-        @ rm -rf obj
-        @ rm -rf mnt
-        @ for i in `find . -name "*~"` ; do rm -f $$i ; done
-        @ rm -f lastBuildDate
-        @ rm -f books/tanglec
-        @ rm -f src/input/Makefile src/input/Makefile.dvi
-        @ rm -f src/input/Makefile.pdf 
-        @ rm -f src/interp/Makefile src/interp/Makefile.dvi
-        @ rm -f src/interp/Makefile.pdf 
-        @ rm -f src/share/Makefile src/share/Makefile.dvi
-        @ rm -f src/share/Makefile.pdf 
-        @ rm -f Makefile.aux
-        @ rm -f Makefile.log
+	@ echo 7 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
+	@ echo 8 Environment ${ENV}
+	@ rm -f axiom.sty
+	@ rm -f Makefile.pdf
+	@ rm -f Makefile.dvi
+	@ rm -f Makefile.${SYS}
+	@ rm -f books/Makefile
+	@ rm -f books/Makefile.dvi
+	@ rm -f books/Makefile.pdf
+	@ rm -f books/axiom.bib
+	@ rm -f books/sortsig.lisp
+	@ rm -f lsp/axiom.sty
+	@ rm -f lsp/Makefile lsp/Makefile.dvi lsp/Makefile.pdf
+	@ rm -rf lsp/gcl*
+	@ rm -f src/axiom.sty
+	@ rm -f src/Makefile
+	@ rm -f src/Makefile.dvi
+	@ rm -f src/Makefile.pdf
+	@ rm -f src/algebra/book*pamphlet
+	@ rm -f src/algebra/*.spad
+	@ rm -f src/algebra/Makefile
+	@ rm -f src/etc/axiom.sty
+	@ rm -f src/etc/Makefile src/etc/Makefile.dvi src/etc/Makefile.pdf
+	@ rm -f src/interp/book*pamphlet
+	@ rm -f src/interp/axiom.sty
+	@ rm -f src/input/axiom.sty
+	@ rm -f src/share/axiom.sty
+	@ rm -f src/share/Makefile src/share/Makefile.dvi 
+	@ rm -f src/share/Makefile.pdf
+	@ rm -rf int
+	@ rm -rf obj
+	@ rm -rf mnt
+	@ for i in `find . -name "*~"` ; do rm -f $$i ; done
+	@ rm -f lastBuildDate
+	@ rm -f books/tanglec
+	@ rm -f src/input/Makefile src/input/Makefile.dvi
+	@ rm -f src/input/Makefile.pdf 
+	@ rm -f src/interp/Makefile src/interp/Makefile.dvi
+	@ rm -f src/interp/Makefile.pdf 
+	@ rm -f src/share/Makefile src/share/Makefile.dvi
+	@ rm -f src/share/Makefile.pdf 
+	@ rm -f Makefile.aux
+	@ rm -f Makefile.log
 
 \end{chunk}
 
@@ -484,7 +484,7 @@ TMP:=${OBJ}/tmp
 ZIPS:=${SPD}/zips
 BOOKS:=${SPD}/books
 SRCDIRS:="interpdir sharedir algebradir etcdir docdir \
-          graphdir smandir hyperdir browserdir inputdir"
+	  graphdir smandir hyperdir browserdir inputdir"
 
 SYS:=$(notdir $(AXIOM))
 DAASE:=${SRC}/share
@@ -603,69 +603,69 @@ run latex over the pamphlet file.
 
 \begin{chunk}{book}
 book:
-        @ echo 79 building the book as ${MNT}/${SYS}/doc/book.dvi 
-        @ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
-        @ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
-        @ (cd ${MNT}/${SYS}/doc ; \
-          if [ .${NOISE} = . ] ; then \
-            ( latex book.pamphlet --interaction nonstopmode ; \
-              latex book.pamphlet --interaction nonstopmode ) ; \
-           else \
-            ( latex book.pamphlet --interaction nonstopmode >${TMP}/trace ; \
-              latex book.pamphlet --interaction nonstopmode >${TMP}/trace ) ; \
-          fi ; \
-          rm book.pamphlet ; \
-          rm book.toc ; \
-          rm book.log ; \
-          rm book.aux )
-        @ echo 80 The book is at ${MNT}/${SYS}/doc/book.dvi 
+	@ echo 79 building the book as ${MNT}/${SYS}/doc/book.dvi 
+	@ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
+	@ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
+	@ (cd ${MNT}/${SYS}/doc ; \
+	  if [ .${NOISE} = . ] ; then \
+	    ( latex book.pamphlet --interaction nonstopmode ; \
+	      latex book.pamphlet --interaction nonstopmode ) ; \
+	   else \
+	    ( latex book.pamphlet --interaction nonstopmode >${TMP}/trace ; \
+	      latex book.pamphlet --interaction nonstopmode >${TMP}/trace ) ; \
+	  fi ; \
+	  rm book.pamphlet ; \
+	  rm book.toc ; \
+	  rm book.log ; \
+	  rm book.aux )
+	@ echo 80 The book is at ${MNT}/${SYS}/doc/book.dvi 
 
 \end{chunk}
 \subsection{tanglec.c}
 \begin{chunk}{tanglec.c}
 
 tanglec: books/tanglec.c
-        @echo t01 making tanglec from books/tanglec.c
-        @( cd books ; gcc -o tanglec tanglec.c )
+	@echo t01 making tanglec from books/tanglec.c
+	@( cd books ; gcc -o tanglec tanglec.c )
 
 \end{chunk}
 
 \subsection{src}
 We should recompile the world with the .fn information but not here.
 \begin{verbatim}
-        ( for i in `find . -name "*.lsp"` ; \
-            do echo $$i ; touch $$i ; done )
-        ( for i in `find . -name "*.lisp"` ; \
-            do echo $$i ; touch $$i ; done )
-        @echo 15a remaking ${SRC}/interp for performance
-        @(cd src ; ${ENV} ${MAKE} )
+	( for i in `find . -name "*.lsp"` ; \
+	    do echo $$i ; touch $$i ; done )
+	( for i in `find . -name "*.lisp"` ; \
+	    do echo $$i ; touch $$i ; done )
+	@echo 15a remaking ${SRC}/interp for performance
+	@(cd src ; ${ENV} ${MAKE} )
 \end{verbatim}
 
 \begin{chunk}{src}
 srcdir: ${SPD}/src/Makefile
-        @echo 15 making ${SPD}/src 
-        @( cd src ; ${ENV} ${MAKE} )
+	@echo 15 making ${SPD}/src 
+	@( cd src ; ${ENV} ${MAKE} )
 
 ${SPD}/src/Makefile: ${SPD}/src/Makefile.pamphlet
-        @echo 16 making ${SPD}/src/Makefile from ${SPD}/src/Makefile.pamphlet
-        ( cd src ; \
-           ${EXTRACT} Makefile ; \
-           cp Makefile.pdf ${MNT}/${SYS}/doc/src/src.Makefile.pdf )
+	@echo 16 making ${SPD}/src/Makefile from ${SPD}/src/Makefile.pamphlet
+	( cd src ; \
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/src.Makefile.pdf )
 
 libspadclean:
-        @echo 17 cleaning ${OBJ}/${SYS}/lib     
-        @rm -rf ${OBJ}/${SYS}/lib       
-        @( cd src ; ${EXTRACT} Makefile )
-        @( cd src ; ${ENV} ${MAKE} clean )
-        @rm -f ${SPD}/src/Makefile ${SPD}/src/Makefile.dvi
+	@echo 17 cleaning ${OBJ}/${SYS}/lib     
+	@rm -rf ${OBJ}/${SYS}/lib       
+	@( cd src ; ${EXTRACT} Makefile )
+	@( cd src ; ${ENV} ${MAKE} clean )
+	@rm -f ${SPD}/src/Makefile ${SPD}/src/Makefile.dvi
 
 \end{chunk}
 
 \subsection{src setup}
 \begin{chunk}{srcsetup}
 srcsetup: ${SPD}/src/Makefile
-        @echo 18 making ${SPD}/src 
-        @( cd src ; ${ENV} ${MAKE} setup )
+	@echo 18 making ${SPD}/src 
+	@( cd src ; ${ENV} ${MAKE} setup )
 
 \end{chunk}
 
@@ -690,13 +690,13 @@ then the Makefile is rewritten to extract the later version.
 It looks for a chunk name that matches the version number.
 \begin{chunk}{LSPMakefile}
 ${LSP}/Makefile: ${LSP}/Makefile.pamphlet
-        @echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.pamphlet
-        @( cd lsp ; \
-         ${EXTRACT} Makefile.pamphlet ; \
-         if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
-         ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
-         fi ; \
-         cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
+	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.pamphlet
+	@( cd lsp ; \
+	 ${EXTRACT} Makefile.pamphlet ; \
+	 if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
+	 ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
+	 fi ; \
+	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 
 \end{chunk}
 Here we add mkdir -p \verb|${OBJ}/${SYS}/lsp| because we need to rename the
@@ -714,43 +714,43 @@ more efficient. The sys-proclaims file contains type information
 about standard common lisp function calls.
 \begin{chunk}{lsp}
 lspdir: ${LSP}/Makefile
-        @echo 19 making ${LSP}
-        @mkdir -p ${OBJ}/${SYS}/bin
-        @mkdir -p ${OBJ}/${SYS}/lsp
-        @echo =====================================
-        @echo lsp BUILDING GCL COMMON LISP
-        @echo =====================================
-        (cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir ) 
-        @(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
+	@echo 19 making ${LSP}
+	@mkdir -p ${OBJ}/${SYS}/bin
+	@mkdir -p ${OBJ}/${SYS}/lsp
+	@echo =====================================
+	@echo lsp BUILDING GCL COMMON LISP
+	@echo =====================================
+	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir ) 
+	@(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
 
 \getchunk{LSPMakefile}
 lspclean:
-        @echo 21 cleaning ${OBJ}/${SYS}/ccl
-        @rm -rf ${LSP}/${GCLVERSION}
-        @rm -rf ${INT}/ccl
-        @rm -rf ${OBJ}/${SYS}/ccl
-        @rm -rf ${LSP}/gcldir
-        @rm -f ${LSP}/Makefile ${LSP}/Makefile.dvi
+	@echo 21 cleaning ${OBJ}/${SYS}/ccl
+	@rm -rf ${LSP}/${GCLVERSION}
+	@rm -rf ${INT}/ccl
+	@rm -rf ${OBJ}/${SYS}/ccl
+	@rm -rf ${LSP}/gcldir
+	@rm -f ${LSP}/Makefile ${LSP}/Makefile.dvi
 
 \end{chunk}
 \subsection{install}
 \begin{chunk}{install}
 install:
-        @echo 78 installing Axiom in ${DESTDIR}
-        @mkdir -p ${DESTDIR}
-        @cp -pr ${MNT} ${DESTDIR}
-        @echo '#!/bin/sh -' >${COMMAND}
-        @echo AXIOM=${DESTDIR}/mnt/${SYS} >>${COMMAND}
-        @echo export AXIOM >>${COMMAND}
-        @echo PATH='$${AXIOM}/bin':'$${PATH}' >>${COMMAND}
-        @echo export PATH >>${COMMAND}
-        @cat ${INT}/sman/axiom >>${COMMAND}
-        @chmod +x ${COMMAND}
-        @echo 79 Axiom installation finished.
-        @echo
-        @echo Please add $(shell dirname ${COMMAND}) to your PATH variable
-        @echo Start Axiom with the command $(shell basename ${COMMAND})
-        @echo 
+	@echo 78 installing Axiom in ${DESTDIR}
+	@mkdir -p ${DESTDIR}
+	@cp -pr ${MNT} ${DESTDIR}
+	@echo '#!/bin/sh -' >${COMMAND}
+	@echo AXIOM=${DESTDIR}/mnt/${SYS} >>${COMMAND}
+	@echo export AXIOM >>${COMMAND}
+	@echo PATH='$${AXIOM}/bin':'$${PATH}' >>${COMMAND}
+	@echo export PATH >>${COMMAND}
+	@cat ${INT}/sman/axiom >>${COMMAND}
+	@chmod +x ${COMMAND}
+	@echo 79 Axiom installation finished.
+	@echo
+	@echo Please add $(shell dirname ${COMMAND}) to your PATH variable
+	@echo Start Axiom with the command $(shell basename ${COMMAND})
+	@echo 
 
 \end{chunk}
 \subsection{document}
@@ -767,27 +767,27 @@ sure the INT/DOC/LSP and INT/DOC/SRC directories exist.
 
 \begin{chunk}{document}
 document: 
-        @echo 22 documenting files
-        @(cd lsp ; ${ENV} ${MAKE} document )
-        @(cd src ; ${ENV} ${MAKE} document )
+	@echo 22 documenting files
+	@(cd lsp ; ${ENV} ${MAKE} document )
+	@(cd src ; ${ENV} ${MAKE} document )
 
 \end{chunk}
 \subsection{clean}
 \begin{chunk}{clean}
 clean: 
-        @ echo 7 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
-        @ echo 8 Environment ${ENV}
-        @ rm -f lsp/Makefile.dvi
-        @ rm -f lsp/Makefile
-        @ rm -f trace
-        @ rm -f *~
-        @ rm -f Makefile.${SYS}
-        @ rm -rf ${MNT}
-        @ rm -rf int
-        @ rm -rf obj
-        @ rm -rf mnt
-        @ for i in `find src -name "Makefile"` ; do rm -f $i ; done
-        @ for i in `find src -name "Makefile.dvi"` ; do rm -f $i ; done
+	@ echo 7 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
+	@ echo 8 Environment ${ENV}
+	@ rm -f lsp/Makefile.dvi
+	@ rm -f lsp/Makefile
+	@ rm -f trace
+	@ rm -f *~
+	@ rm -f Makefile.${SYS}
+	@ rm -rf ${MNT}
+	@ rm -rf int
+	@ rm -rf obj
+	@ rm -rf mnt
+	@ for i in `find src -name "Makefile"` ; do rm -f $i ; done
+	@ for i in `find src -name "Makefile.dvi"` ; do rm -f $i ; done
 
 \end{chunk}
 \section{The Platform Makefiles}
@@ -968,11 +968,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.FreeBSD called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.FreeBSD called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1010,11 +1010,11 @@ SRCDIRS="bootdir interpdir sharedir algebradir etcdir docdir inputdir"
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.windows called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.windows called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1040,11 +1040,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.slackware called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.slackware called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1072,11 +1072,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1104,11 +1104,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.mandriva called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.mandriva called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1136,11 +1136,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1168,11 +1168,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1200,11 +1200,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1232,11 +1232,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1264,11 +1264,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1296,11 +1296,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1328,11 +1328,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1360,11 +1360,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1392,11 +1392,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1425,11 +1425,11 @@ O:=o
 
 
 all: srcsetup srcdir
-        @echo 45 Makefile.macosxppc called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.macosxppc called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1458,11 +1458,11 @@ O:=o
 
 
 all: srcsetup srcdir
-        @echo 45 Makefile.fedora called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.fedora called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1508,11 +1508,11 @@ O:=o
 
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1550,11 +1550,11 @@ all: srcsetup srcdir
 
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1583,11 +1583,11 @@ O:=o
 
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1617,11 +1617,11 @@ O:=o
 
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1669,11 +1669,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1721,11 +1721,11 @@ O:=o
 \getchunk{ENVAR}
 
 all: srcsetup srcdir
-        @echo 45 Makefile.linux called
-        @echo 46 Environment : ${ENV} 
-        @echo 47 finished system build on `date` | tee >lastBuildDate
-        @- if [ "${TESTSET}" != "notests" ] ; \
-            then  grep "result FAILED" int/input/*.regress || true ; fi
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}

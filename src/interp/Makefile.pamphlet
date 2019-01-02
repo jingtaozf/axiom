@@ -150,7 +150,7 @@ OBJS= ${OUT}/vmlisp.${O}      \
       ${OUT}/buildom.${O} \
       ${OUT}/cattable.${O}    \
       ${OUT}/cfuns.${O} \
-      ${OUT}/clam.${O}        ${OUT}/clammed.${O} \
+      ${OUT}/clam.${O}	${OUT}/clammed.${O} \
       ${OUT}/compress.${O} \
       ${OUT}/format.${O} \
       ${OUT}/g-boot.${O}      ${OUT}/g-cndata.${O} \
@@ -185,7 +185,7 @@ OBJS= ${OUT}/vmlisp.${O}      \
       ${OUT}/c-util.${O}      ${OUT}/profile.${O}  \
       ${OUT}/category.${O}    \
       ${OUT}/functor.${O}  \
-      ${OUT}/info.${O}        ${OUT}/iterator.${O} \
+      ${OUT}/info.${O}	${OUT}/iterator.${O} \
       ${OUT}/nruncomp.${O} 
 
 \end{chunk}
@@ -243,12 +243,12 @@ Note that \verb|${AUTO}/nag-e02a.${O}| is not included in this
 list as it is a subset of \verb|${AUTO}/nag-e02.${O}|.
 \begin{chunk}{environment}
 NAGBROBJS= ${AUTO}/nag-c02.${O}   ${AUTO}/nag-c05.${O} \
-           ${AUTO}/nag-c06.${O}   ${AUTO}/nag-d01.${O} \
-           ${AUTO}/nag-d02.${O}   ${AUTO}/nag-d03.${O} \
-           ${AUTO}/nag-e01.${O}   ${AUTO}/nag-e02.${O} \
-           ${AUTO}/nag-e04.${O}   ${AUTO}/nag-f01.${O} \
-           ${AUTO}/nag-f02.${O}   ${AUTO}/nag-f04.${O} \
-           ${AUTO}/nag-f07.${O}   ${AUTO}/nag-s.${O} 
+	   ${AUTO}/nag-c06.${O}   ${AUTO}/nag-d01.${O} \
+	   ${AUTO}/nag-d02.${O}   ${AUTO}/nag-d03.${O} \
+	   ${AUTO}/nag-e01.${O}   ${AUTO}/nag-e02.${O} \
+	   ${AUTO}/nag-e04.${O}   ${AUTO}/nag-f01.${O} \
+	   ${AUTO}/nag-f02.${O}   ${AUTO}/nag-f04.${O} \
+	   ${AUTO}/nag-f07.${O}   ${AUTO}/nag-s.${O} 
 
 \end{chunk}
 The {\bf ASCOMP} list contains files used by the {\bf Aldor}
@@ -273,8 +273,8 @@ This information is set by hand in the top level Makefile.
 \begin{chunk}{environment}
 TIMESTAMP=${MNT}/${SYS}/timestamp
 YEARWEEK=(progn (setq timestamp "${TIMESTAMP}") \
-                (setq boot::*build-version* "${VERSION}") \
-                (yearweek))
+		(setq boot::*build-version* "${VERSION}") \
+		(yearweek))
 
 \end{chunk}
 The {\bf .PRECIOUS} setting will keep make from deleting these
@@ -337,7 +337,7 @@ into the src/interp diretory (or boot, algebra).
 In order for this information to be used during compiles we define
 \begin{chunk}{environment}
 PROCLAIMS=(progn (load "${OUT}/sys-pkg.lsp") \
-                 (load "${IN}/interp-proclaims.lisp"))
+		 (load "${IN}/interp-proclaims.lisp"))
 
 \end{chunk}
 
@@ -404,7 +404,7 @@ This code used to read:
 \begin{chunk}{save depsys image}
 	@ (cd ${MNT}/${SYS}/bin ; \
 	   echo '(progn (load "${OUT}/makedep.lisp")' \
-                '(spad-save "${DEPSYS}"))' | ${LISPSYS})
+		'(spad-save "${DEPSYS}"))' | ${LISPSYS})
 \end{chunk}
 \end{verbatim}
 
@@ -448,7 +448,7 @@ maxima, have no such complex initialization sequence.
 .o files loaded by makedep.lsp above.
 \begin{verbatim}
    (remove-duplicates si::*binary-modules* \
-                      :test (quote equal)) \
+		      :test (quote equal)) \
 \end{verbatim}
 
 The name of the output image.
@@ -474,7 +474,7 @@ using this entire sequence on machines which cannot load binary object
 modules and preserve them in saved images.
 \begin{verbatim}
      (let ((si::*load-path* (cons ~S si::*load-path*))\
-           (si::*load-types* ~S))\
+	   (si::*load-types* ~S))\
 \end{verbatim}
 
 Turn on function analyzation and autoload thereby \verb|gcl_collectfn.lsp|.
@@ -506,7 +506,7 @@ Throw an error if we've actually loaded any binary modules.
 Unset the binary module collection flags.
 \begin{verbatim}
     (setq si::collect-binary-modules* nil \xo
-          si::*binary-modules* nil)\
+	  si::*binary-modules* nil)\
     (gbc t)\
 \end{verbatim}
 
@@ -558,24 +558,24 @@ The save depsys image was supposed to read:
     '(load "${OUT}/makedep.lisp")' \
     '(compiler::link' \
       '(remove-duplicates si::*binary-modules*' \
-                        ':test (quote equal))' \
+			':test (quote equal))' \
       '"$(DEPSYS)"' \
       '(format nil' \
 	 '"(setq si::*collect-binary-modules* t)' \
 	  '(let ((si::*load-path* (cons ~S si::*load-path*))' \
-	          '(si::*load-types* ~S))' \
+		  '(si::*load-types* ~S))' \
 	  	  '(compiler::emit-fn t))' \
 	  '(load \"$(OUT)/makedep.lisp\")' \
 	  '(gbc t)' \
 	  '(when si::*binary-modules*' \
-                '(error si::*binary-modules*))' \
+		'(error si::*binary-modules*))' \
 	  '(setq si::collect-binary-modules* nil' \
-                'si::*binary-modules* nil)' \
+		'si::*binary-modules* nil)' \
 	  '(gbc t)' \
-          '(si::reset-sys-paths)' \
+	  '(si::reset-sys-paths)' \
 	  '(when (fboundp (quote si::sgc-on)) (si::sgc-on t))' \
 	  '(setq compiler::*default-system-p* t)"' \
-         'si::*system-directory* (quote (list ".lsp")))'\
+	 'si::*system-directory* (quote (list ".lsp")))'\
        '""' \
        'nil))' | $(LISPSYS))
 \end{verbatim}
@@ -591,13 +591,13 @@ of the form:
 \end{verbatim}
 \begin{chunk}{depsys}
 ${DEPSYS}:	${DEP} ${OUT}/sys-pkg.${LISP} ${OUT}/nocompil.${LISP} \
-	        ${OUT}/bookvol5.${LISP} ${OUT}/bookvol9.${LISP} \
-                ${OUT}/util.${LISP} \
-	        ${OUT}/parsing.${LISP} \
-	        ${OUT}/g-boot.lisp ${OUT}/c-util.lisp \
-	        ${OUT}/g-util.lisp \
-	        ${OUT}/clam.lisp \
-	        ${OUT}/slam.lisp ${LOADSYS}
+		${OUT}/bookvol5.${LISP} ${OUT}/bookvol9.${LISP} \
+		${OUT}/util.${LISP} \
+		${OUT}/parsing.${LISP} \
+		${OUT}/g-boot.lisp ${OUT}/c-util.lisp \
+		${OUT}/g-util.lisp \
+		${OUT}/clam.lisp \
+		${OUT}/slam.lisp ${LOADSYS}
 	@ echo si002 making ${DEPSYS} 
 	@ echo '${PROCLAIMS}' > ${OUT}/makedep.lisp
 	@ echo '(push :oldboot *features*)' >>${OUT}/makedep.lisp
@@ -607,31 +607,31 @@ ${DEPSYS}:	${DEP} ${OUT}/sys-pkg.${LISP} ${OUT}/nocompil.${LISP} \
 	@ echo '(load "${OUT}/util")' >> ${OUT}/makedep.lisp
 	@ echo '(in-package "BOOT")' >> ${OUT}/makedep.lisp
 	@ echo '(build-depsys (quote ($(patsubst %, "%", ${DEP})))' \
-          '"${SPAD}" "${GCLDIR}" "${SRC}" "${INT}" "${OBJ}" "${MNT}"' \
-          '"${SYS}")' >> ${OUT}/makedep.lisp
+	  '"${SPAD}" "${GCLDIR}" "${SRC}" "${INT}" "${OBJ}" "${MNT}"' \
+	  '"${SYS}")' >> ${OUT}/makedep.lisp
 	@ echo '(unless (probe-file "${OUT}/parsing.${O}")' \
-          '(compile-file "${OUT}/parsing.${LISP}"' \
-          ':output-file "${OUT}/parsing.${O}"))' >> ${OUT}/makedep.lisp
+	  '(compile-file "${OUT}/parsing.${LISP}"' \
+	  ':output-file "${OUT}/parsing.${O}"))' >> ${OUT}/makedep.lisp
 	@ echo '(load "${OUT}/parsing")' >> ${OUT}/makedep.lisp
 	@ echo '(unless (probe-file "${OUT}/clam.${O}")' \
-          '(compile-file "${OUT}/clam.lisp"' \
-          ':output-file "${OUT}/clam.${O}"))' >> ${OUT}/makedep.lisp
+	  '(compile-file "${OUT}/clam.lisp"' \
+	  ':output-file "${OUT}/clam.${O}"))' >> ${OUT}/makedep.lisp
 	@ echo '(load "${OUT}/clam")' >> ${OUT}/makedep.lisp
 	@ echo '(unless (probe-file "${OUT}/slam.${O}")' \
-          '(compile-file "${OUT}/slam.lisp"' \
-          ':output-file "${OUT}/slam.${O}"))' >> ${OUT}/makedep.lisp
+	  '(compile-file "${OUT}/slam.lisp"' \
+	  ':output-file "${OUT}/slam.${O}"))' >> ${OUT}/makedep.lisp
 	@ echo '(load "${OUT}/slam")' >> ${OUT}/makedep.lisp
 	@ echo '(unless (probe-file "${OUT}/g-boot.${O}")' \
-          '(compile-file "${OUT}/g-boot.lisp"' \
-          ':output-file "${OUT}/g-boot.${O}"))' >> ${OUT}/makedep.lisp
+	  '(compile-file "${OUT}/g-boot.lisp"' \
+	  ':output-file "${OUT}/g-boot.${O}"))' >> ${OUT}/makedep.lisp
 	@ echo '(load "${OUT}/g-boot")' >> ${OUT}/makedep.lisp
 	@ echo '(unless (probe-file "${OUT}/c-util.${O}")' \
-          '(compile-file "${OUT}/c-util.lisp"' \
-          ':output-file "${OUT}/c-util.${O}"))' >> ${OUT}/makedep.lisp
+	  '(compile-file "${OUT}/c-util.lisp"' \
+	  ':output-file "${OUT}/c-util.${O}"))' >> ${OUT}/makedep.lisp
 	@ echo '(load "${OUT}/c-util")' >> ${OUT}/makedep.lisp
 	@ echo '(unless (probe-file "${OUT}/g-util.${O}")' \
-          '(compile-file "${OUT}/g-util.lisp"' \
-          ':output-file "${OUT}/g-util.${O}"))' >> ${OUT}/makedep.lisp
+	  '(compile-file "${OUT}/g-util.lisp"' \
+	  ':output-file "${OUT}/g-util.${O}"))' >> ${OUT}/makedep.lisp
 
 	@ echo '(load "${OUT}/g-util")' >> ${OUT}/makedep.lisp
 \getchunk{save depsys image}
@@ -645,13 +645,13 @@ is a call to the same function. In general, we don't care so we set
 compiler::*suppress-compiler-notes* to true in order to reduce the noise.
 \begin{chunk}{savesys}
 ${SAVESYS}:	${DEPSYS} ${OBJS} ${OUT}/bookvol5.${O} ${OUT}/util.${O} \
-                ${OUT}/nocompil.${LISP} ${OUT}/sys-pkg.${LISP} \
-	        ${OUTINTERP} ${BROBJS} \
+		${OUT}/nocompil.${LISP} ${OUT}/sys-pkg.${LISP} \
+		${OUTINTERP} ${BROBJS} \
 		${OUT}/database.date ${INOBJS} ${ASCOMP} \
 		${NAGBROBJS} \
-	        ${LOADSYS} \
+		${LOADSYS} \
 		${SRC}/doc/msgs/s2-us.msgs \
-	        ${INT}/algebra/warm.data
+		${INT}/algebra/warm.data
 	@ echo si004 invoking make in `pwd` with parms:
 	@ echo SYS= ${SYS} 
 	@ echo LSP= ${LSP} 
@@ -674,26 +674,26 @@ ${SAVESYS}:	${DEPSYS} ${OBJS} ${OUT}/bookvol5.${O} ${OUT}/util.${O} \
 	@ touch ${TIMESTAMP}
 	@ echo '${YEARWEEK}' >> ${OUT}/makeint.lisp
 	@ echo '(build-interpsys (append' \
-          '(quote ($(patsubst %, "%", ${OBJS})))'  \
-          '(quote ($(patsubst %, "%", ${ASCOMP})))'  \
-          '(quote ($(patsubst %, "%", ${INOBJS}))))' \
-          '(quote ($(patsubst %, "%", ${BROBJS})))'  \
-          '(quote ($(patsubst %, "%", ${NAGBROBJS})))'  \
-          '"${SPAD}"  "${LSP}" "${SRC}" "${INT}"' \
-          '"${OBJ}" "${MNT}" "${SYS}")' >> ${OUT}/makeint.lisp
+	  '(quote ($(patsubst %, "%", ${OBJS})))'  \
+	  '(quote ($(patsubst %, "%", ${ASCOMP})))'  \
+	  '(quote ($(patsubst %, "%", ${INOBJS}))))' \
+	  '(quote ($(patsubst %, "%", ${BROBJS})))'  \
+	  '(quote ($(patsubst %, "%", ${NAGBROBJS})))'  \
+	  '"${SPAD}"  "${LSP}" "${SRC}" "${INT}"' \
+	  '"${OBJ}" "${MNT}" "${SYS}")' >> ${OUT}/makeint.lisp
 	@ echo '(in-package "SCRATCHPAD-COMPILER")' >> ${OUT}/makeint.lisp
 	@ echo '(boot::set-restart-hook)' >> ${OUT}/makeint.lisp
 	@ echo '(in-package "BOOT")' >> ${OUT}/makeint.lisp
 	@ echo '(load "${INT}/algebra/warm.data")' >> ${OUT}/makeint.lisp
 	@ echo '(|clearClams|)' >> ${OUT}/makeint.lisp
 	@ echo '#+:akcl (setq compiler::*suppress-compiler-notes* t)' \
-                >> ${OUT}/makeint.lisp
+		>> ${OUT}/makeint.lisp
 	@ echo '#+:akcl (si::gbc-time 0)' >> ${OUT}/makeint.lisp
 	@ echo '#+:akcl (setq si::*system-directory* "${SPAD}/bin/")' \
-               >> ${OUT}/makeint.lisp
+	       >> ${OUT}/makeint.lisp
 	@ (cd ${OBJ}/${SYS}/bin ; \
 	  echo '(progn (gbc t) (load "${OUT}/makeint.lisp")' \
-                 '(gbc t) (user::spad-save "${SAVESYS}"))' | ${LISPSYS} )
+		 '(gbc t) (user::spad-save "${SAVESYS}"))' | ${LISPSYS} )
 	@ echo si005 ${SAVESYS} created
 	@ cp ${SAVESYS} ${AXIOMSYS}
 	@ echo si006 ${AXIOMSYS} created
@@ -709,7 +709,7 @@ ${DEBUGSYS}: ${MID}/debugsys.lisp
 	@ echo si007 building debugsys
 	@ (cd ${OBJ}/${SYS}/bin ; \
 	  echo '(progn (gbc t) (load "${MID}/debugsys.lisp")' \
-                 '(user::spad-save "${DEBUGSYS}"))' | ${LISPSYS} )
+		 '(user::spad-save "${DEBUGSYS}"))' | ${LISPSYS} )
 	@ echo si008 ${DEBUGSYS} created
 
 \end{chunk}
@@ -733,8 +733,8 @@ files (or .lsp or .clisp) and saved it here.
 ${MID}/debugsys.lisp: ${IN}/debugsys.lisp.pamphlet
 	@ echo si011 making ${MID}/debugsys.lisp from ${IN}/debugsys.lisp.pamphlet
 	@ (cd ${MID} ; \
-          echo '(tangle "${IN}/debugsys.lisp.pamphlet" "*" "debugsys.lisp")' \
-        | ${OBJ}/${SYS}/bin/lisp  1>/dev/null 2>/dev/null)
+	  echo '(tangle "${IN}/debugsys.lisp.pamphlet" "*" "debugsys.lisp")' \
+	| ${OBJ}/${SYS}/bin/lisp  1>/dev/null 2>/dev/null)
 
 \end{chunk}
 
@@ -797,19 +797,19 @@ ${MID}/bookvol5.${LISP}: ${IN}/bookvol5.pamphlet
 	@ echo si125 making ${MID}/bookvol5.${LISP} from ${IN}/bookvol5.pamphlet
 	@ (cd ${MID} ; \
   echo '(tangle "${IN}/bookvol5.pamphlet" "Interpreter" "bookvol5.${LISP}")' \
-        | ${OBJ}/${SYS}/bin/lisp )  1>/dev/null 2>/dev/null
+	| ${OBJ}/${SYS}/bin/lisp )  1>/dev/null 2>/dev/null
 
 ${MID}/bookvol9.${LISP}: ${IN}/bookvol9.pamphlet
 	@ echo si128 making ${MID}/bookvol9.${LISP} from ${IN}/bookvol9.pamphlet
 	@ (cd ${MID} ; \
      echo '(tangle "${IN}/bookvol9.pamphlet" "Compiler" "bookvol9.${LISP}")' \
-        | ${OBJ}/${SYS}/bin/lisp ) 1>/dev/null 2>/dev/null
+	| ${OBJ}/${SYS}/bin/lisp ) 1>/dev/null 2>/dev/null
 
 ${MID}/bookvol10.5.${LISP}: ${IN}/bookvol10.5.pamphlet
 	@ echo si131 making ${MID}/bookvol10.5.${LISP} from ${IN}/bookvol10.5.pamphlet
 	@ (cd ${MID} ; \
-        echo '(tangle "${IN}/bookvol10.5.pamphlet" "Numerics" "bookvol10.5.${LISP}")'\
-         | ${LISPTANGLE} ) 1>/dev/null 2>/dev/null
+	echo '(tangle "${IN}/bookvol10.5.pamphlet" "Numerics" "bookvol10.5.${LISP}")'\
+	 | ${LISPTANGLE} ) 1>/dev/null 2>/dev/null
 
 ${MID}/http.lisp: ${IN}/http.lisp
 	@ echo si110 making ${MID}/http.lisp from ${IN}/http.lisp
@@ -827,27 +827,27 @@ ${OUT}/%.lisp: ${IN}/%.lisp.pamphlet
 	@ echo siOUTfromIN making ${OUT}/$*.lisp from ${IN}/$*.lisp.pamphlet
 	@ rm -f ${OUT}/$*.${O}
 	@( cd ${OUT} ; \
-          echo '(tangle "${IN}/$*.lisp.pamphlet" "*" "$*.lisp")' \
-        | ${OBJ}/${SYS}/bin/lisp ) 1>/dev/null 
+	  echo '(tangle "${IN}/$*.lisp.pamphlet" "*" "$*.lisp")' \
+	| ${OBJ}/${SYS}/bin/lisp ) 1>/dev/null 
 
 ${OUT}/%.o: ${MID}/%.lisp
 	@ echo siOUTfromMID making ${OUT}/$*.o from ${MID}/$*.lisp
 	@ if [ -z "${NOISE}" ] ; then \
 	   (cd ${MID} ; \
 	    echo '(progn  (compile-file "$*.lisp"' \
-             ':output-file "${OUT}/$*.o") (${BYE}))' | ${DEPSYS} ) ; \
+	     ':output-file "${OUT}/$*.o") (${BYE}))' | ${DEPSYS} ) ; \
 	   else \
 	    (cd ${MID} ; \
 	     echo '(progn  (compile-file "$*.lisp"' \
-             ':output-file "${OUT}/$I.o") (${BYE}))' | ${DEPSYS} ) \
-              1>/dev/null 2>/dev/null ; \
+	     ':output-file "${OUT}/$I.o") (${BYE}))' | ${DEPSYS} ) \
+	      1>/dev/null 2>/dev/null ; \
 	   fi 
 
 ${MID}/%.lisp: ${IN}/%.lisp.pamphlet
 	@ echo siMIDfromIN making ${MID}/$*.lisp from ${IN}/$*.lisp.pamphlet
 	@ (cd ${MID} ; \
-          ( echo '(tangle "${IN}/$*.lisp.pamphlet" "*" "$*.lisp")' \
-          | ${OBJ}/${SYS}/bin/lisp 1>/dev/null ) )
+	  ( echo '(tangle "${IN}/$*.lisp.pamphlet" "*" "$*.lisp")' \
+	  | ${OBJ}/${SYS}/bin/lisp 1>/dev/null ) )
 
 ${AUTO}/%.${O}: ${OUT}/%.${O}
 	@ echo siAUTOfromOUT making ${AUTO}/$*.${O} from ${OUT}/$*.${O}
@@ -858,12 +858,12 @@ ${OUT}/%.${O}: ${MID}/%.${LISP}
 	@  if [ -z "${NOISE}" ] ; then \
 	 (cd ${MID} ; \
 	   echo '(progn  (compile-file "${MID}/$*.${LISP}"' \
-             ':output-file "${OUT}/$*.${O}") (${BYE}))' | ${DEPSYS} ) ; \
+	     ':output-file "${OUT}/$*.${O}") (${BYE}))' | ${DEPSYS} ) ; \
 	  else \
 	  (cd ${MID} ; \
 	   echo '(progn  (compile-file "${MID}/$*.${LISP}"' \
-             ':output-file "${OUT}/$*.${O}") (${BYE}))' | ${DEPSYS} ) \
-              1>/dev/null 2>/dev/null ; \
+	     ':output-file "${OUT}/$*.${O}") (${BYE}))' | ${DEPSYS} ) \
+	      1>/dev/null 2>/dev/null ; \
 	  fi 
 
 \end{chunk}
