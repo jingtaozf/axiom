@@ -2,6 +2,8 @@ VERSION:="Axiom (May 2017)"
 
 ##### special paths
 SPD:=$(shell pwd)
+AXIOM:=$(or $(AXIOM),$(SPD)/mnt/gentoo)
+PATH:=$(AXIOM)/bin:$(PATH)
 SRC:=${SPD}/src
 LSP:=${SPD}/lsp
 INT:=${SPD}/int
