@@ -81,7 +81,7 @@ RUNTYPE:=serial
 # can be richtests, catstests, regresstests (see src/input/Makefile)
 # alltests, notests
 TESTSET:=notests
-BUILD:=full
+BUILD:=partial
 ACL2:=
 COQ:=
 
