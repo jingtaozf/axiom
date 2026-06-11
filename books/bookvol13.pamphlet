@@ -5,6 +5,7 @@
 \usepackage{turnstile}
 \usepackage{mathrsfs}
 \input{bookheader.tex}
+\pagenumbering{arabic}
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
 Ultimately we would like Axiom to be able to prove that an
@@ -24,6 +25,33 @@ in general but will exist for known algorithms.
 \end{quote}
 
 \begin{quote}
+{\bf The use of a program to prove the 4-color theorem will not 
+change mathematics -- it merely demonstrates that the theorem,
+a challenge for a century, is probably not important to mathematics.}\\
+-- Alan J. Perlis 
+\end{quote}
+
+\begin{quote}
+{\bf Thinking, analyzing, and inventing are not anomalous acts; they
+are the normal respiration of the intelligence.}\\
+-- Zero HP Lovecraft (The Gig Economy)
+\end{quote}
+
+\begin{quote}
+{\bf You have to have an intrinsic drive, intrinsic interest in doing
+research.  You've got to be willing to suffer, go away from a problem,
+come back to it later. Doing research in theory is kind of terrifying
+because you never know if the problem you're trying to solve you can
+solve or not.}\\
+-- Robert E. Tarjan
+\end{quote}
+
+\begin{quote}
+{\bf The truth of an arithmetic statement is independent from its proof}\\
+-- Kurt G\"odel
+\end{quote}
+
+\begin{quote}
 {\bf Coq is the tactical nuclear weapons of programming.  You need to be
 quite clever to use them. And indeed, when people first start to use
 them you don't hear from them for two years, they sort of 'go dark'
@@ -31,6 +59,12 @@ and then they emerge with all their pain receptors destroyed and they
 say Coq the only way to live, to do everything in Coq. "I don't write
 programs anymore, I just write Coq proofs"}\\
 -- Simon Peyton-Jones \cite{Peyt17}
+\end{quote}
+
+\begin{quote}
+{\bf Research is to see what everybody else has seen and to think what
+nobody has thought}\\
+-- Max Jammer \cite{Jamm66}
 \end{quote}
 
 \begin{quote}
@@ -654,6 +688,65 @@ Chlipala has done both machine-level \cite{Chli17a} and higher-level
  \cite{Chli17} formal proofs. He claims that within 10 years it will be
 normal to have deployed computer systems with top-to-bottom correctness
 proofs which were checked algorithmically.
+
+Establishing that the algorithm is correct (e.g. Groebner) is clearly
+in the proof side of coputational math.
+
+Establishing that there is an implementation of Groebner is clearly in
+the computer algebra side of computational math.
+
+The game is to unite the two.
+
+Such a proof becomes a {\bf part} of the specification of a program
+that implements the algorithm, such as in Axiom.
+
+The definitions and axioms of the proof have to be put into the system
+both at the category and domain levels They need to be available at
+the implementation code.
+
+On the other hand, there are non-logical 'axioms' of categories and
+domains, such as limits to the size of a floating point number.
+
+The Axiom approach is to have many FLOAT domains, such as Gustafson's
+UNUM \cite{Gust16a}.
+
+An alternative is to have a symbolic Integer domain that uses symbols
+rather than numbers.
+
+There are non-logical limits to the implementation, such as
+intermediate expression swell that uses up all of memory. It isn't
+possible to write a specification that can detect all of these kinds
+of failures before they occur. But there are logical ways to handle
+such boundaries.
+
+In logic there are ``product types'' which are basically multi-field
+records. There are ``sum types'' which are disjoint unions.
+
+Axiom's approach to reaching limits of computation is to return a
+sum-type that is either the result or ``failed''. The failed result
+needs to be explicitly carried in the proof. Because failed is a valid
+result, the specification can be expanded to include this as a valid
+result. 
+
+Just because a program can fail there is no reason to say that it
+can't be proven, given that ``failed'' is a valid result.
+
+One could even expand the sum types to include inforation about the
+failure so that ``failed'' would be a product type that said why it
+failed. That allows another domain to be used. 
+
+In fact, one could introduce a FAILED domain in Axiom with a 'why?'
+function. Local domains could extend FAILED with their own 'why?'
+function specific to their possible failures.
+
+Axiom has the ability to have multile domains that can overcome
+limits, e.g. small floats, large floats, unums. These would allow
+users to 'retry' a computation with different assumptions.
+
+The issue, as raised by william Sit, is important. Some algorithms in
+Axiom have ``hand waving'' specifications that need to be expanded to
+properly return 'failed' when that is expected. This is a 'good thing'
+and a useful by-product of combining proof and computer algebra.
 
 \chapter{Here is a problem}
 
@@ -1435,6 +1528,12 @@ d & = & -q_nr_{n-3}+(1+q_nq_{n-1})r_{n-2}\\
 d & = & ra+sb
 \end{array}
 \]
+
+\section{Floating Point Proofs}
+
+Bagnara, Bagnara, Biselli, Chiara, and Gori \cite{Bagn19}
+{\bf Correct Approximation of IEEE 754 Floating-Point Arithmetic 
+for Program Verification}
 
 \chapter{GCD in Miranda by Broda, et al.}
 
@@ -3060,6 +3159,24 @@ Axiom adds these types:
 \item Command = String
 \end{itemize}
 
+From Carette, et al. \cite{Care11a} we find:
+\begin{verbatim}
+LeftNearSemiRing := Theory {
+  U : type;
+  * : (U, U) -> U;
+  + : (U, U) -> U;
+  0 : U;
+  axiom right_Identity_+_0: forall x : U. x + 0 = x;
+  axiom leftIdentity_+_0 := forall x : U. 0 + x = x;
+  axiom leftDistributive_*_+ :=
+    forall x,y,z : U. x * (y + z) = (x * y) + (x * z);
+  axiom left0 := forall x : U. 0 * x = 0;
+  axiom associative_+ :=
+    forall x,y,z : U. (x + y) + z = x + (y + z);
+  axiom associative_* :=
+    forall x,y,z : U. (x * y) * z = x * (y * z);
+\end{verbatim}
+
 \chapter{COQ nat vs Axiom NNI}
 
 COQ's nat domain includes a proof of GCD.
@@ -4268,7 +4385,7 @@ Kamareddine \cite{Kama15}
 Computerising Mathematical Text explores various ways of 
 capturing mathematical reasoning. 
 
-\section{Mahboubi \cite{Mahb16}} 
+\section{Mahboubi \cite{Mahb18}} 
 Mathematical Components. This book contains a
 proof of the Euclidean algorithm using COQ.
 
@@ -4384,6 +4501,10 @@ $f(r)<f(b)$
 \subsection{Ballarin \cite{Ball95}}
 
 \subsection{Basu, Pollack,and Roy \cite{Basu10}}
+
+\subsection{Cloostermans \cite{Cloo12}}
+
+Quasi-Linear GCD Computation and Factoring RSA Moduli
 
 \subsubsection{Euclidean Division and Greatest Common Divisor} 
 
@@ -4669,16 +4790,17 @@ WIth these observations the following lemma is clear:
 
 {\bf Lemma} {\sl If $\mathcal{P}$,$\mathcal{Q}$
 are two finite subsets of D[X], then there is
-an $x\in C$ such that
-\[\left(\bigwedge_{P\in \mathcal{P}} P(x)=0\right)\land
+an $x\in C$ such that}
+\[
+\left(\bigwedge_{P\in \mathcal{P}} P(x)=0\right)\land
 \left(\bigwedge_{Q\in \mathcal{Q}} Q(x)\ne 0\right)
 \]
 if and only if
 \[{\rm deg}({\rm gcd}({\rm gcd}(\mathcal{P}),
 \prod_{Q\in \mathcal{Q}} Q^d))\ne {\rm deg}({\rm gcd}(\mathcal{P}))
 \]
-where $d$ is any integer greater than 
-${\rm deg}({\rm gcd}(\mathcal{P}))$.
+{\sl where $d$ is any integer greater than 
+${\rm deg}({\rm gcd}(\mathcal{P}))$.}
 
 Note that when $\mathcal{Q}=\emptyset$, 
 since $\prod_{Q\in \emptyset}Q=1$, the lemma says
@@ -4764,6 +4886,47 @@ $\exists$ A $\subseteq$ Type. Type\quad\quad{}Bounded Quantification
 \end{itemize}
 
 See p516 for the Classification of Type Systems diagram.
+
+\subsection{Char \cite{Char84}}
+
+    "The design of algorithms for polynomial GCD computation has been
+    a continuing area of research since the beginning of the
+    development of symbolic computation systems. The earliest efforts
+    were mainly directed at PRS (Polynomial Remainder Sequence)
+    algorithms which are a direct generalization of Euclid's
+    algorithm. The main algorithms of this type are the Reduced PRS
+    algorithm and the Subresultant PRS algorithm. Hearn discusses the
+    use of trial divisions to further improve the performance of PRS
+    algorithms. The first fundamentally different polynomial GCD
+    algorithm was the modular algorithm. To amek the modular algorithm
+    competative for sparse multivariate polynomals, Zippel developed
+    the sparse modular algorithm. Another modular-type algorithm was
+    the Hensel-based EZ GCD algorithm which was later improved as the
+    EEZ GCD algorithm.
+
+    the present paper discusses a new heuristic algorithm, GCDHEU,
+    which is found to be very efficient for problems in a small number
+    of variables. The heuristic algorithm can be viewed as
+    amodular-type algorithm in that it uses evaluation and
+    interpolation, but only a single evaluation per variable is
+    used. The heuristic algorithm can be incorporated into a
+    reorganized form of the EEZ GCD algorithm such that the base of
+    the EEZ GCD algorithm, rather than a univariate GCD algorithm, is
+    GCDHEU which is often successful for problems in up to four variables.",
+
+\subsection{Chen \cite{Chen08}}
+
+Computing Polynomial LCD and GCD in Lagrange Basis
+
+\subsection{Chen \cite{Chen08a}}
+
+    "Given two polynomials, we find a convergence property of the GCD of
+    the rising factorial and the falling factorial. Based on this
+    property, we present a unified approach to computing the universal
+    denominators as given by Gosper's algorithm and Abramov's algorithm
+    for finding rational solutions to linear difference equations with
+    polynomial coefficients. Our approach easily extends to the
+    q-analogues.",
 
 \subsection{Clarke \cite{Clar91}}
 
@@ -4888,6 +5051,12 @@ Clarke shows several proofs
 \hline
 \end{tabular}
 
+\subsection{Davenport \cite{Dave85c}}
+
+The work presented in this paper is a direct consequence of the
+ideas set forth by Char et al (1984b) describing a new technique
+for computing the greatest common divisor of polynomials.",
+
 \subsection{Davenport \cite{Dave02}}
 
 \subsection{Davenport \cite{Dave12b}}
@@ -4969,6 +5138,10 @@ continues up to level 11 which has significant power. Every level 11
 proof can be reduced to a level 1 proof, giving a solid foundation.
 
 
+\subsection{Dominus \cite{Domi19}}
+
+  lcm(a,b) * gcd(a,b) = ab
+
 \subsection{Filliatre \cite{Fill03}}
 
 A formal method to establish software correctness can involve several
@@ -5034,6 +5207,59 @@ at some point before the loop using such a label.
 
 Fr\"uhwirht \cite{Frue91} details optimistic type systems for logic
 programs.
+
+\subsection{Gianni and Trager \cite{Gian85a}}
+
+    "This paper shows how Grobner basis computations can be used to
+    compute multivariate gcds, perform Hensel lifting, and reduce
+    multivariate factorization to univariate. The essential idea is to
+    produce an ideal containing the desired polynomial as an element
+    of least degree. The construction is somewhat analogous to the
+    recent lattice algorithms for polynomial factorization. A major
+    difference is that we don't need to perform the hensel lifting as
+    a separate step; one Brobner basis computation is sufficient to
+    find the desired multivariate factor or gcd. We produce algorithms
+    which are vary simple and may be of use on small systems where
+    code size is critical. We feel that these results demonstrate the
+    fundamental importance of the Grobner basis in computer algebra.",
+
+
+\subsection{Galligo, Pottier and Traverso \cite{Gall88}}
+
+    "Our approach looks for analogies with these algorithms, but a
+    general structure theorem is missing, hence our approach relies on
+    a limited seqrch of coefficient simplifications. The basic idea is
+    the following: since the GCD is usually costly, we can use in its
+    place the ``greatest between the common divisors that are easy to
+    compute'' (the GECD), this suggestion allowing different
+    instances. A set of such instances is based on the remark that if
+    you hve elements in factorized form, then many common divisors are
+    immediately evident. Since irreducible factorization, even
+    assuming that is exists in our domain, is costly, we use a partial
+    factorization basically obtained using a ``lazy multiplication''
+    technique, i.e. performing coefficient multiplications only if
+    they are unavoidable. The resulting algorithms were tested with a
+    ``simulatied'' implementation on the integers, and the results
+    suggest that a complete implementation should be very efficient,
+    at least when the coefficient domain is a multivariate rational
+    function field."
+
+\subsection{Geddes, Gonnet, and Smedley \cite{Gedd88}}
+
+    "Algorithms for doing computations involving algebraic numbers
+    have been known for quite some time [6,9,12] and implementations
+    now exist in many computer algebra systems [1,4,11]. Many of these
+    algorithms have been analysed and shown to run in polynomial time
+    and space [7,8], but in spite of this many real problems take
+    large amounts of time and space to solve. In this paper we
+    describe a heuristic method which can be used for many operations
+    involving algebraic numbers. We gie specifics for doing algebraic
+    number inverses, and algebraic number polynomial exact division
+    and greatest common divisor calculation. The heurist will not
+    solve all instances of these problems, but it returns either the
+    correct result or with failure very quickly, and succeeds for a
+    very large number of problems. The heuristic method is similar to,
+    and based on concepts in [3].",
 
 \subsection{Gurevich \cite{Gure12}}
 
@@ -5117,6 +5343,25 @@ theorem, since obviously any common factor of $x^2-1$ and $x^5+1$
 must, by the above equation, divide $x+1$ too. So here, given a
 certificate slightly more elaborate than simply the answer, easy and
 efficient checking is possible.
+
+\subsection{Hearn \cite{Hear72}}
+
+    "An improved non-modular algorithm for the calculation of the
+    greatest common divisor of two multivariate polynomials is
+    presented.",
+
+
+\subsection{Hoare \cite{Hoar85}}
+
+The Euclidean algorithm defines the greatest common divisor, and we
+write 
+\[\begin{array}{rcl}
+gcd(m,n)& = &\\
+&&(m>n \rightarrow gcd(n,m)\\
+&&rem(n/m)=0 \rightarrow m\\
+&&T \rightarrow gcd(rem(n/m),m))
+\end{array}
+\]
 
 \subsection{Hoare \cite{Hoar87}}
 
@@ -5357,12 +5602,375 @@ P6.3 & $\land$ & (Y add)\\
 P6.3 & $\land$ & (Y odd) $\land$ X=Y\\
 \end{tabular}
 
+\subsection{Jenks \cite{Jenk75}}
+
+Greatest Common Divisor. Integer algorithms: Euclid's algorithm;
+improved versions; Extended Euclidean algorithm. Polynomial GCD:
+definitions and basic theorems; division and pseudo-division;
+polynomial remainder sequences. PRS algorithm: Euclidean, primitive,
+reduced, and subresultant. Modular GCD algorithm: outline of
+``general modular problem solver''; application to GCD; other
+problems in GCD algorithm design and their solution; description
+of univariate and multivariate algorithms; compute time analysis.
+
+Hensel's Lemma and Algorithm Applications. Introduction: problems
+with PRS GCD algorithms; schematic differences between modular and
+Hensel approaches; an example. Background: p-adic representations of
+integers and polynomials; general statement of Hensel's lemma;
+application to solving diophantine univariate polynomial equations.
+Hensel algorithm for univariate GCD and its generalization to
+multivariate case; comparison with modular algorithm.
+
+Hensel's Lemma and Algorithm Applications. The EZ GCD algorithm:
+description; discussion of test comparisons with other algorithms;
+leading coefficient blowup problem and its solution in the EZ
+algorithm.
+
 \subsection{Jenks \cite{Jenk84b}} Overview of Scratchpad.
+
+\subsection{Kaltofen \cite{Kalt85f}}
+
+Arithmetic in Quadratic Fields with Unique Factorization
+
+In a quadratic field $\mathbb{Q}(\sqrt{D})$, $D$ a squarefree
+integer, with class number 1 any algebraic integer can be
+decomposed uniquely into primes but for only 21 domains Euclidean
+algorithms are known. We prove that for $D \le -19$ even remainder
+sequences with possibly non-decreasing norms cannot determine the
+GCD of arbitrary inputs. We then show how to compute the greatest
+common divisor of the algebraic integers in any fixed
+$\mathbb{Q}(\sqrt{D})$ with class number 1 in $O(S^2)$ binary
+steps where $S$ is the number of bits needed to encode the
+inputs. We also prove that in any domain the computation of the
+prime factorization of an algebraic integer can be reduced in
+polynomial-time to factoring its norm into rational primes. Our
+reduction is based on a constructive version of a theorem by
+A. Thue. Finally we present another GCD algorithm for complex
+quadratic fields based on a short lattice vector construction.
+
+\subsection{Kaltofen \cite{Kalt85d}}
+
+A new algorithm is introduced which computes the multivariate
+leading coefficients of polynomial factors from their univariate
+images. This algorithm is incorporated into a sparse Hensel
+lifting scheme and only requires the factorization of a single
+univariate image. The algorithm also provides the content of the
+input polynomial in the main variable as a by-product. We show how
+we can take advantage of this property when coputing the GCD of
+multivariate polynomials by sparse Hensel lifting.",
 
 \subsection{Kifer \cite{Kife91}} 
 
 Typed Predicate Calculus giving declarative meaning to
 logic programs with type declarations and type inference.
+
+\subsection{Kowalski \cite{Kowa84}}
+
+The Euclidean algorithm can be verified by the same technique of
+deriving programs from specifications that was used to verify the
+recurssive program for subset. For the Euclidean algorithm, however,
+the program is significantly more efficient than the
+specification. Here we use functional notation for the sake of
+clarity.
+\begin{verbatim}
+(a) gcd(x y) = z if z divides x
+                 and z divides y
+                 and For all u [u <= z if u divides x
+                                       and u divides y]
+\end{verbatim}
+
+Notice that, like the definition of subset, this definition is
+expressed in the extended Horn clause subset of logic. However, the
+Euclidean algorithm for gcd can be expressed in Horn cluase form:
+\begin{verbatim}
+(a) gcd(x y) = z if x divides y
+    gcd(x y) = z if x <= y
+                 and x divides y with remainder r
+                 and r != 0
+                 and gcd(r x) = z
+\end{verbatim}
+
+It can be shown that the specification  (in iff form together with
+auxiliary properties of `divides', '<=', and the axioms of equality)
+logically implies the program. However, the derivation requires
+genuine mathematical ingenuity. Although both specification and
+program are executable, the program is significanly more efficient.
+
+Note:
+\begin{enumerate}
+\item The functional notation gcd(x y) = z an be rewritten in
+relational notation as Gcd(x y z)
+\item By exploiting functional notation, the second clause of the
+program can be written more compactly as
+\begin{verbatim}
+   gcd(x y) = gcd(r x) if x <= y
+                       and x divides y with remainder r
+                       and r != 0
+\end{verbatim}
+\item For the sake of completeness we need to add a third clause
+\begin{verbatim}
+   gcd(x y) = gcd(y x) if y <= x
+\end{verbatim}
+\end{enumerate}
+
+(from the questions): In this gcd example Kowalski seemed to
+indicate that the seaarch for gcd(x y) would be limited to numbers
+less than x and y. Putting a limit on the search requires either a
+careful choice of the specification of divides (which must state more
+or less explicitly that divides(x y) is false if $x > y$) or else a
+lot of cleverness on the part of the compiler. The fact that some
+specifications lead to non-terminating programs suggests that the
+relation between specifications and programs is not as close as
+Kowalski says.
+
+(with the answer): There are two ways to 'execute' the specification
+of gcd: by means of a standard theorem-prover for first-order logic or
+by using negation by failure. Because negation by failure is
+incomplete in the general case, it may be incomplete in a particular
+case such as the specification of gcd, especially if the definition of
+divides(x y) does not have some explicit or implicit constraint that
+$x < y$.
+
+However, if we use any complete theorem-prover for first-order logic
+and the definition of gcd implies the existence of a gcd, for
+paricular numbers x and y, then, by the completeness theorem for
+first-order logic, the theorem-prover is guaranteed to terminate
+successfully with an existence proof. Most theorem-provers, including
+all theorem-provers based on the resolution principle, will construct
+the gcd as a by-product of the proof. Thus, except for the
+inefficiency involved in using a general-purpose theorem-prover for
+computation, there is no difference in principle between a program and
+a complete specification, except for efficiency.
+
+\subsection{Kowalski \cite{Hoar85}}
+
+The Euclidean algorithm can be verified by the same technique of
+deriving programs from specifications that was used to verify the
+recursive program for subset. For the Euclidean algorithm, however,
+the program is significantly more efficient than the
+specification. Here we use functional notation for the sake of
+clarity.
+
+\hspace*{0.1cm}gcd(x y) = z if z divides x\\
+\hspace*{1.5cm}             and z divides y\\
+\hspace*{1.5cm}             and For all u [u $\le$ z if u divides x\\
+\hspace*{2.5cm}                                   and u divides y]
+
+Notice that, like the definition of subset, this definition is
+expressed in the extended Horn clause subset of logic. However, the
+Euclidean algorithm for gcd can be expressed in Horn clause form.
+
+\hspace*{0.1cm}gcd(x y) = z if x divides y\\
+\hspace*{0.1cm}gcd(x y) = z if x $\le$ y\\
+\hspace*{1.5cm}and x divides y with remainder r\\
+\hspace*{1.5cm}and r $\ne$ 0\\
+\hspace*{1.5cm}and gcd(r x) = z
+
+It can be shown that the specification (in iff form together with
+auxillary properties of 'divides', '$\le$', and the axioms of
+equality) logically implies the program. However, the derivation
+requires genuine mathematical ingenuity. Although both specification
+and program are executable, the program is significanly more
+efficient. 
+
+Notes:
+
+(1) The functional notation gcd(x y) = z can be rewritten in
+relational notation as Gcd(x y z)
+
+(2) By exploiting functional notation, the second clause of the
+program can be written more compactly as
+
+\hspace*{1.1cm}gcd(x y) = gcd(r x) if x $\le$ y\\
+\hspace*{2.5cm}and x divides y with remainder r\\
+\hspace*{2.5cm}and r $\ne$ 0
+
+(3) for the sake of completeness we need to add a third clause
+
+\hspace*{1.1cm}gcd(x y) = gcd(y x) if y $\le$ x
+
+The use of functional notation simplifies the program, but is
+inefficient if the equality symbol, $=$, is defined by means of the
+axioms of equality. We shall show later how functional notation can be
+transformed into relational notation without equality. Thus we can
+have the convenience of functional notation whie retaining the
+semantics of relations. Relational semantics gives us both partial
+functions and non-deterministic functions as special cases.
+
+\subsection{Lamport \cite{Lamp09}}
+
+Euclid's Algorithm (pp 4--6)
+
+The first example is a simple version of Euclid's algorithm from
+Sedgewick's textbook \cite{Sedg88}. The algorithm computes the GCD of
+two natural numbers $m$ and $n$ by setting $u$ to $m$ and $v$ to $m$
+and executing the following pseudo-code:
+
+\hspace*{0.5cm}while $u \ne 0$ do\\
+\hspace*{1.0cm}if $u < v$ then $swap\ u\ and\ v$ end if;
+\hspace*{1.0cm}u := u - v
+\hspace*{0.5cm}end while
+
+Upon termination, $v$ equals the GCD of $m$ and $n$. The PlusCal
+version is
+
+\hspace*{0.5cm}--algorithm EuclidSedgewick\\
+\hspace*{0.5cm}variables $m\in 1\ldots K$, $n\in 1\ldots K$,
+$u=m$, $v=n$\\
+\hspace*{0.5cm}begin while $u\ne 0$ do\\
+\hspace*{1.5cm}if $u < v$ then $u := v || v := u$ end if;\\
+\hspace*{1.5cm}$u := u - v$\\
+\hspace*{1.0cm}end while;\\
+\hspace*{1.0cm}assert $IsGCD(v,m,n)$\\
+\hspace*{0.5cm}end algorithm
+
+The variable declarations assert that the initial values of $m$ and
+$n$ are in the set $1\ldots K$ of integers from 1 through $K$, and
+that $u$ and $v$ initially equal $m$ and $n$, respectively. (We will
+later see wher $K$ is declared). Assignment statements separated by
+$||$ form a multi-assignment, executed by first evaluating all the
+right-hand expressions and then performing all the assignments. The 
+{\bf assert} statement checks the correctness of the algorith, where 
+$IsGCD(v,m,n)$ will be defined to be true iff $v$ is the GCD of $m$
+and $n$, for natural numbers $v$, $m$, and $n$.
+
+The algorithm appears in a comment in a TLA+ module:
+
+\hspace*{3.0cm}MODULE Euclid\\
+\hspace*{0.5cm}EXTENDS $Naturals$, TLC
+\hspace*{0.5cm}CONSTANT $K$
+\hspace*{0.5cm}$Divides(i,j)\over{\Delta}{=} \exists k\in 0\ldots j :
+j = i*k$\\
+\hspace*{0.5cm}$ISGCD(i,j,k)\over{\Delta}{=} Divides(i,j)$\\
+\hspace*{2.0cm}$\land Divides(i,j)$\\
+\hspace*{2.0cm}$\land \forall r\in 0..j \cup 0..k :$\\
+\hspace*{2.5cm}$Divides(r,j)\land Divides(r,k) \Rightarrow Divides(r,i)$\\
+\hspace*{0.5cm}(* --algorithm $EuclidSedgewick$\\
+\hspace*{1.0cm}$\ldots$\\
+\hspace*{0.5cm}end algorithm *)\\
+\hspace*{0.5cm}\\* BEGIN TRANSLATION\\
+\hspace*{1.0cm}Translator puts TLA+ specification here\\
+\hspace*{0.5cm}\\* END TRANSLATION
+
+The mdoule's EXTENDS statement imports the $Naturals$ module, which
+defines arithmetic operators like subtraction and ``$\ldots$'', and a
+speclal TLC module that is needed because of the algorithms
+{\bf assert} statement. The CONSTANT declaration declares the
+algorithm parameter $K$. The module next defines $Divides(i,j)$ to be
+true for natural numbers $i$ and $j$ iff $i$ divides $j$, and it uses
+$Divides$ to define $IsGCD$.
+
+The translator inserts the algorithm's translation, which is a TLA+
+specification, between the BEGIN and END TRANSLATION comment lines,
+replacing any previous version. The translator also writes a
+configuration file that controls the TLC model checker. We must add to
+that file a command that specifies the value of $K$. TLC checks that
+the assertion is satisfied and that execution terminates for all $K^2$
+possible choices of the variables' inital values. 
+
+REMARKS
+
+The operation of swapping $u$ and $v$ can of course be expressed
+without a multiple assignment by declaring an additional variable $t$
+and writing:
+
+\hspace*{0.5cm}$t:=u; u:=v; v:=t$
+
+It can also be written as follows
+
+\hspace*{0.5cm}with $t = u$ do $u:=v$; $v:=t$ end with
+
+The WITH statement declares $t$ to be local to the DO clause.
+
+Instead of restricting $m$ and $n$ to be in the range $1\ldots K$, it
+would be more natural to allow them to be any positive integers. We do
+this by replacing $1\ldots K$ with the set of positive integers, here
+are three ways to express that set in TLA+, where $Nat$ is defined in
+the $Naturals$ module to be the set of all natural numbers.
+
+\hspace*{0.5cm}\[Nat \\ \{0\}\quad 
+\{i\in Nat : i > 0\}\quad
+\{i+1 : i\in Nat\}\]
+
+To check the resulting algorithm, we would tell TLC to substitute a
+finite set of numbers for $Nat$.
+
+As this example shows, PlusCal is untyped. Type correctness is an
+invariance property of an algorithm asserting that, throughout any
+execution, the values of the variables belong to certain sets. A type
+invariant for algorithm $EuclidSedgewick$ is that the values of $u$
+and $v$ are integers. For a type invariant like this whose proof is
+trivial, a typed language allows type correctness to be verified by
+type checking. If the proof is not completely trivial, as for the type
+invariant that $u$ and $v$ are natural number, type correctness annot
+be verified by ordinary type checking. (If $natural\ number$ is a
+type, the type checking is undecidable for a Turing complete language
+with subtraction.) These type invariants are easily checked by TLC.
+
+The translation from PlusCal to TLA+ is 
+
+\hspace*{0.5cm}--algorithm EuclidSedgewick\\
+\hspace*{0.5cm}variables $m\in 1\ldots K$, $n\in 1\ldots K$, $u=m$,
+$v=n$\\ 
+\hspace*{0.5cm}begin $L1$: while $u\ne 0$ do\\
+\hspace*{2.5cm}if $u < v$ then $u:=v || v:=u$ end if;\\
+\hspace*{2.3cm}$L2$: $u:=u-v$\\
+\hspace*{2.0cm}end while;\\
+\hspace*{2.0cm}assert $IsGCD(v,m,n)$\\
+\hspace*{0.7cm}$Done$:\\
+\hspace*{0.5cm}end algorithm
+
+\subsection{lion137 \cite{lion137}} 
+
+{\bf Fundamental Algorithms: Polynomial GCD}
+
+Another one in the series on fundamental algorithms; today: polynomial
+division. We assume that polynomial is over some field, this is a good
+thing, we have lots of nice properties in those, explicitly. If $a$
+and $b$ are in the field and $b$ is not zero, than there always exists
+an element of the field $c$, such that $a=bc$.
+
+So division is easy, just ``push it'' over the field, like division in
+base, or multi precision division. Algorithm, Knuth ``The Art of
+Computer Programming Vol 4'' and the others.
+
+\begin{verbatim}
+# input: coefficients of polynomials as a lists u, v != 0
+# in order u[0] = free coefficient of u(x), ....
+# returns polynomials q, r such that u = vq + r(rest)
+# length u >= length v >= 0
+def poly_divide(u, v)
+  m = len(u) - 1
+  n = len(v) - 1
+  q = [0] * (m - n + 1)
+  lim = m - n
+  for k in range (lim, -1, -1):
+    q[k] = u[n + k] / v[n]
+    for j in range(n + k - 1, k - 1, -1):
+      u[j] = u[j] - q[k] * v[j - k]
+  return q, u[:n]
+\end{verbatim}
+
+Having division, we can compute the Great Common Divisor, showing that
+Euclidean Domain is larger than expected.
+
+\begin{verbatim}
+def poly_gcd(u, v):
+  if not any(v): return u
+  else: return poly_gcd(v,poly_mod(u,v))
+\end{verbatim}
+
+$poly\_mod$ it's just a rest returned from division algorithm.
+
+\begin{verbatim}
+# a polynomial u modulo v
+def poly_mod(u, v):
+  return poly_divide(u,v)[1]
+\end{verbatim}
+
+\subsection{Makkai \cite{Makk07}}
+
+Gives a formal definition of the GCD
 
 \subsection{Manna and Waldinger \cite{Mann78a}}
 
@@ -5525,6 +6133,125 @@ passes from one loop label to the next.
 Although this method is effective, it is not the most natural in
 establishing the termination of the $gcd$ program.
 
+\subsection{Mao \cite{Maox20}}
+
+Let $a=bq+r$, where $a$, $b$, $q$, and $r$ are integers. Then 
+$gcd(a,b)=gcd(b,r)$.
+
+{\bf Proof}
+
+Supposed $d\vert a$ and $d\vert b$, then we have
+\[\begin{array}{rcl}
+a & = & dk_1\\
+b & = & dk_2\
+\end{array}\]
+for some $k_1,k_2 \in \mathbb{N}$
+\[\begin{array}{rcl}
+r & = & a-bq\\
+  & = & dk_1 - dk_2q\\
+  & = & d(k_1-k_2q)
+\end{array}\]
+
+This means that any common divisor for $a$ and $b$ must also be a
+divisor for $r$, and further any common divisor for $a$ and $b$ must
+also be a common divisor for $b$ and $r$. So one of the common
+divisors for $a$ and $b$, $gcd(a,b)$, is a common divisor for $b$ and
+$r$. Since the greatest common divisor for $b$ and $r$ is $gcd(b,r)$,
+then we have $gcd(a,b)\le gcd(b,r)$.
+
+Similarly, we could prove that any common divisor for $b$ and $r$ must
+also be a divisor for $a$, and further any common divisor for $b$ and
+$r$ must also be a common divisor for $a$ and $b$. So one of the
+common divisors for $b$ and $r$, $gcd(b,r)$, is a common divisor for
+$a$ and $b$. Since the greatest common divisor for $a$ and $b$ is
+$gcd(a,b)$, then we have $gcd(b,r)\le gcd(a,b)$.
+
+Because $gcd(a,b)\le gcd(b,r)$ and
+$gcd(b,r)\le gcd(a,b)$, we must have
+$gcd(a,b)=gcd(b,r)$.
+
+{\bf QED}
+
+\subsection{McAllester, D. and Arkondas, K., \cite{Mcal96}}
+
+"Primitive recursion is a well known syntactic restriction on
+recursion definitions which guarantees termination. Unfortunately
+many natural definitions, such as the most common definition of
+Euclid's GCD algorithm, are not primitive recursive. Walther has
+recently given a proof system for verifying termination of a
+broader class of definitions. Although Walther's system is highly
+automatible, the class of acceptable definitions remains only
+semi-decidable. Here we simplify Walther's calculus and give a
+syntactic criteria generalizes primitive recursion and handles
+most of the examples given by Walthar. We call the corresponding
+class of acceptable defintions ``Walther recursive''.",
+
+\subsection{McCarthy \cite{Mcca63}}
+
+
+Let $I$ be the set of non-negative integers $\{0,1,2,\ldots\}$ and
+denote the successor of an integer $n$ by $n^\prime$ and denote the
+equality of integers $n_1$ and $n_2$ by $n_1=n_2$. If we define
+functions $succ$ and $eq$ by
+\[succ(n)=n^\prime\]
+
+\[eq(n_1,n_2)=
+\left\{
+\begin{array}{c}
+{\tt T} {\tt\ if\ } n_1=n_2\\
+{\tt F} {\tt\ if\ } n_1\ne n_2\\
+\end{array}
+\right.\]
+
+then we write $\mathcal{F}=\{succ,eq\}$. We are interested in 
+$\mathcal{C\{F\}}$. Clearly all functions in $\mathcal{C\{F\}}$ will
+have either integers or truth values as values.
+
+First we define the predecessor function $pred$ (not defined for
+$n=0$) by 
+\[pred(n)=pred2(n,0)\]
+
+\[pred2(n,m)=(m^\prime=n\rightarrow m,
+{\tt T}\rightarrow pred2(n,m^\prime))\]
+
+We shall denote $pred(n)$ by $n^-$
+
+Now we define the sum
+\[m+n=(n=0\rightarrow m,~{\tt T}\rightarrow m^\prime+n^\prime)\]
+the product
+\[mn=(n=0\rightarrow 0,~{\tt T}\rightarrow m+mn^-)\]
+the difference
+\[m-n=(n=0\rightarrow m,~{\tt T}\rightarrow m^- -n^-)\]
+which is defined only for $m\ge n$. The inequality predicate $m\le n$
+is defined by
+\[m\le n=(m=0)\lor(\sim{}(n=0\land(m^-\le n^-))\]
+The strict inequality $m<n$ is defined by
+\[m<n=(m\le n)\land\sim{}(m=n)\]
+The integer valued quotient $m/n$ is defined by
+\[m/n=(m<n\rightarrow 0,~{\tt T}\rightarrow((m-n)/n)^\prime)\]
+The remainder on dividing $m$ by $n$ is defined by
+\[rem(m/n)=(m<n\rightarrow m,~{\tt T}\rightarrow rem((m-n)/n))\]
+and the divisibility of a number $n$ by a number $m$,
+\[m|n=(n=0)\lor((n\ge m)\land(m|(n-m)))\]
+The primeness of a number is defined by
+\[prime(n)=(n\ne 0)\land(n\ne 1)\land prime2(n,2)\]
+where
+\[prime2(m,n)=(m=n)\lor(\sim{}(m|n)\land prime2(n,m^\prime))\]
+
+The Euclidean algorithm defines the greatest common divisor, and we
+write 
+\[gcd(m,n)=(m>n\rightarrow gcd(n,m),
+rem(n/m)=0\rightarrow m,
+{\tt T}\rightarrow gcd(rem(n/m,m))\]
+and we can define Euler's $\varphi$-function by
+\[\varphi(n)=\varphi_2(n,n)\]
+where
+\[\varphi_2(n,m)=(m=1\rightarrow 1,
+gcd(n,m)=1\rightarrow \varphi_2(n,m^-)^\prime,
+{\tt T}\rightarrow\varphi_2(n,m^-))\]
+$\varphi(n)$ is the number of numbers less than $n$ and relatively
+prime to $n$.
+
 \subsection{Meshveliani \cite{Mesh16a}}
 
 {\bf Prejudice 1}: ``Proof by contradiction is not possible in
@@ -5547,6 +6274,31 @@ algorithm to build a proof witness for each concrete data''.
 
 I claim: {\sl they also provide a proof in its ordinary meaning}
 (this is so in Agda, and I expect, the same is with Coq).
+
+\subsection{Myreen \cite{Mimr20}}
+
+Of course, if we want to prove richer properties of programs (or use
+programs to prove more interesting formulas), we should use a logic
+which is more expressive than propositional logic. In this couse, we
+will present {\sl dependent types} which achieve this, while keeping
+the proof-as-program correspondence. For instance the euclidean
+division, which computes the quotient and remainder of two integers is
+usually given the type
+\begin{verbatim}
+   int -> int -> int * int
+\end{verbatim}
+stating that it takes two integers as argument and returns a pair of
+integer. This typing is very weak, in the sense that there are many
+different functions which also have this type. With dependent types,
+we will be able to give it the type
+\[(m:{\tt int}) \rightarrow (n:{\tt int}) \rightarrow
+\sum{(q:({\tt int})}.\sum{(r:({\tt int})}.((m=nq+r)\times (r<n))\]
+which can be read as the formula
+\[\forall m\in {\tt int}.
+\forall n\in {\tt int}.
+\exists q\in {\tt int}.
+\exists r\in {\tt int}.
+((m=nq+r)\land(r<n))\]
 
 \subsection{Myreen \cite{Myre10}}
 
@@ -5666,6 +6418,49 @@ an extent that it is no longer convenient to separate them. Since it
 is essential to prove termination anyway, we should use total
 correctness logics for reasoning about function definitions.
 
+\subsection{Paulson \cite{Paul96}}
+
+Consider Euclid's Algorithm, which is defined by recursion, for
+computing the Greatest Common Divisor (GCD) of two natural numbers:
+\begin{verbatim}
+   gcd(0,n) = n
+   gcd(m,n) = gcd(n mod m,m)       for m > 0
+\end{verbatim}
+
+Here it is in Standard ML as a functional program:
+\begin{verbatim}
+   fun gcd(m,n) = if m=0 then n else gcd(n mod m,m);
+\end{verbatim}
+
+\subsection{Sanuki, Inaba, and Sasaki \cite{Sanu15}}
+
+Computation of GCD of Sparse Multivariate Polynomials by Extended
+Hensel Construction
+
+    "Let $F(x,u_1,\ldots,u_i)$ be a squarefree multivariate polynomial
+    in main variable $x$ and sub-variables $u_1\ldots u_i$. We say
+    that the leading coefficient (LC) of $F$ is singular if it
+    vanishes at the origin of the sub-variables. A representative
+    algorithm for non-sparse multivariate polynomial GCD is the EZ-GCD
+    algorithm, which is based on the generalized Hensel construction
+    (GHC). In order to apply the GHC easily, we requires 1) the LC of
+    $F$ is non-singular, 2) $F(x,0,\ldots,0)$ is squarefree, and 3)
+    the initial Hensel factor of GCD is ``lucky''. These requirements
+    are usually satisfied by the ``nonzero substitution'', i.e. to
+    shift the origin of sub-variables. However, the nonzero
+    substitution may cause a drastic increase of the number of terms
+    of $F$ if $F$ is sparse. In 1993, Sasaki and Kako proposed the
+    extended Hensel construction (EHC) which does not perform the
+    nonzero substitution even if the LC is singular. Using the EHC,
+    Inaba implemented an algorithm of multivariate polynomial
+    factorization and verified that it is very useful for sparse
+    polynomials. In this paper, we apply the EHC for the computation
+    of GCD of sparse multivariate polynomials. In order to find a
+    lucky initial factor, we utilize the weighting of sub-variables,
+    etc. Our naive implementation in Maple shows that our algorithm is
+    comparable in performance to Maple's GCD routine base on the
+    sparse interpolation.",
+
 \subsection{Scott and Strachey \cite{Scot71}}
 
 Monotonic functions on complete lattices always have fixed points.
@@ -5691,6 +6486,10 @@ will be established.
 
 details the foundations for relational logic programming
 with polymorphically order-sorted data types.
+
+\subsection{Stepanov and McJones \cite{Step09}}
+
+Chapter 5
 
 \subsection{Strub, Pierre Yves}
 \begin{verbatim}
@@ -5812,25 +6611,53 @@ Calculus of Presburger Constructions
 
 Type inference and coercion in Scratchpad II.
 
+\subsection{Tsuji \cite{Tsuj09}}
+
+An Improved EZ-GCD Algorithm for Multivariate Polynomials
+
+    "The EZ-GCD algorithm often has a bad-zero problem, which has a
+    remarkable influence on polynomials with higher-degree terms. In
+    this paper, by applying special ideals, the EZ-GCD algorithm for
+    sparse polynomials is improved. This improved algorithm greatly
+    reduces computational complexity because of the sparseness of
+    polynomials. The author expects that the use of these ideals will
+    be useful as a resolution for obtaining a GCD of sparse
+    multivariate polynomials with higher-degree terms.",
+
+
+\subsection{Wang \cite{Wang80}}
+
+The EEZ-GCD algorithm
+
+   "An enhanced gcd algorithm based on the EX-GCD algorithm is
+    described. Implementational aspects are emphasized. It is
+    generally faster and is particularly suited for computing gcd of
+    sparse multivariate polynomials. The EEZ-GCD algorithm is
+    characterized by the following features:
+    \begin{enumerate}
+    \item avoiding unlucky evaluations,
+    \item predetermining the correct leading coefficient of the
+    desired gcd,
+    \item using the sparsity of the given polynomials to determine
+    terms in the gcd and
+    \item direct methods for dealing with the ``common divisor problem.''
+    \end{enumerate}
+    The common divisor problem occurs when the gcd has a different
+    common divisor with each of the cofactors. The EZ-GCD algorithm
+    does a square-free decomposition in this case. It can be avoided
+    resulting in increased speed. One method is to use parallel p-adic
+    construction of more than two factors. Machine examples with
+    timing data are included.",
+
+\subsection{Watt \cite{Watt85a}}
+
+Watt has a Survey of GCD Algorithms.
+
 \subsection{Wijngaarden \cite[Section 6, p95]{Wijn68}}
 
 ALGOL 68 has carefully defined rules for coercion, using dereferencing, deproceduring,
 widening, rowing, uniting, and voiding to transform values to the type required
 for further computation. 
-
-\subsection{McAllester, D. and Arkondas, K., \cite{Mcal96}}
-
-"Primitive recursion is a well known syntactic restriction on
-recursion definitions which guarantees termination. Unfortunately
-many natural definitions, such as the most common definition of
-Euclid's GCD algorithm, are not primitive recursive. Walther has
-recently given a proof system for verifying termination of a
-broader class of definitions. Although Walther's system is highly
-automatible, the class of acceptable definitions remains only
-semi-decidable. Here we simplify Walther's calculus and give a
-syntactic criteria generalizes primitive recursion and handles
-most of the examples given by Walthar. We call the corresponding
-class of acceptable defintions ``Walther recursive''.",
 
 \appendix
 
@@ -5875,6 +6702,93 @@ The factorial of 10. factorial of 3, add 4, compute factorial of that.
    '1+ 0))
 
 \end{chunk}
+
+\subsection{Weber \cite{Webe95a}}
+
+Since the greatest common divisor (GCD) of two integers is a
+basic arithmetic operation, used in many mathematical software
+systems, new algorithsm for its computation are of widespread
+interest. The accelerated integer GCD algorithm discussed here is
+based on a reduction step proposed by Sorenson (k-ary reduction),
+coupled with the dmod operation similar to Norton's smod. Some
+practical limitations of Sorenson's reduction have been
+eliminated. Worst-case complexity is still $O(n^2)$ for $n$-bit
+input, but actual implementations given input about 4000 bits long
+perform over 5.5 times as fast as the binary GCD on one computer
+architecture having a multiply instruction. Independent research
+by Jebelean points to the same conclusion. 
+
+\subsection{LeanProver}
+
+On the LeanProver chat \cite{Lean19}, agro1986 wrote:
+
+\begin{flalign*}
+{\tt variables}~\{a~b~c~d:~\mathbb{Z}\}&&
+\end{flalign*}
+
+\noindent
+${\tt def}~{\tt divides}~(a~b:~\mathbb{Z}):~{\tt Prop}~:=
+~\exists(d:~\mathbb{Z}),~b~=~a~*~d$\\
+
+\noindent
+${\tt def}~{\tt gcd}~(a~b~d:~\mathbb{Z}):~{\tt Prop}~:=$\\
+\hspace*{0.2cm} $\lnot(a~=~0~\land~b~=~0)~\land$\\
+\hspace*{0.2cm} ${\tt divides}~d~a~\land$\\
+\hspace*{0.2cm} ${\tt divides}~d~b~\land$\\
+\hspace*{0.2cm} $\forall~(c:~\mathbb{Z}),~{\tt divides}~c~a~\land
+~~{\tt divides}~c~b\rightarrow c~\le~d$
+
+\noindent
+${\tt theorem}~{\tt gcd\_sym}~(h:~{\tt gcd}~a~b~d):~{\tt gcd}~b~a~d~:=$\\
+\hspace*{0.2cm}${\tt begin}$\\
+\hspace*{0.4cm}${\tt let\ hnonzero\ }:={\tt \ h.left},
+\quad\qquad\qquad -- \lnot(a~=~0~\land~b~=~0)$\\
+\hspace*{0.4cm}${\tt let\ hda\ }:={\tt \ h.right.left},
+\quad\qquad\qquad -- {\tt divides\ }d~a~\land$\\
+\hspace*{0.4cm}${\tt let\ hdb\ }:={\tt \ h.right.right.left},
+\qquad -- {\tt divides\ }d~b~\land$\\
+\hspace*{0.4cm}${\tt let\ }{\tt hgreatest\ }:={\tt \ h.right.right.right},$\\
+\hspace*{0.4cm}${\tt apply\ and.intro},$\\
+\hspace*{0.6cm}${\tt exact\ }({\tt assume\ hzero}:~b~=~0~\land~a~=~0,$\\
+\hspace*{0.8cm}${\tt hnonzero\ (hzero.right,\ hzero.left))},$\\
+\hspace*{0.4cm}${\tt apply\ and.intro},$\\
+\hspace*{0.6cm}${\tt assumption},$\\
+\hspace*{0.4cm}${\tt apply\ and.intro},$\\
+\hspace*{0.6cm}${\tt assumption},$\\
+\hspace*{0.4cm}${\tt assume\ c},$\\
+\hspace*{0.6cm}${\tt let\ hc\_lt\_d\ (hc\_divides.right,
+\ hc\_divides.left)}$\\
+${\tt end}$
+
+Kevin Buzzard replied with a {\bf tactics mode} proof:
+
+\noindent
+${\tt theorem}~{\tt gcd\_sym}~(h:~{\tt gcd}~a~b~d):~{\tt gcd}~b~a~d~:=$\\
+\hspace*{0.2cm}${\tt begin}$\\
+\hspace*{0.4cm}${\tt rcases\ h\ with\ (hne0,\ hda,\ hdb,\ hdmin),}$\\
+\hspace*{0.4cm}${\tt split,\ exact\ mt\ and.comm.mp\ hne0,}$\\
+\hspace*{0.4cm}${\tt split,\ assumption,}$\\
+\hspace*{0.4cm}${\tt split,\ assumption,}$\\
+\hspace*{0.4cm}${\tt rintros\ }c{\tt \ (ha,\ hb)},$\\
+\hspace*{0.4cm}${\tt exact\ hdmin\ }c{\tt \ (hb,\ ha)}$\\
+${\tt end}$
+
+and here's a {\bf term proof}
+
+\noindent
+${\tt theorem}~{\tt gcd\_sym}~(h:~{\tt gcd}~a~b~d):~{\tt gcd}~b~a~d~:=$\\
+${\tt (mt\ and.comm.mp\ h.1,\ h.2.2.1,\ h.2.1,\ }\lambda~c~{\tt hc},
+{\tt \ h.2.2.2\ \_\ (hc.2\ hc.1))}$\\
+
+Reid Barton says a better definition would conclude
+
+\noindent
+$\forall~(c:~\mathbb{Z}),{\tt \ divides\ }c~a~\land~
+{\tt \ divides\ }c~b~\rightarrow
+{\tt \ divides\ }c~d$
+
+Then assume $d\ge 0$. You don't need the
+$\lnot(a~=~0~\land~b~=~0)$ part.
 
 
 

@@ -1,716 +1,2535 @@
-books/bookvol15 new book on Axiom Sane Compiler
+books/bookvolbib add references
 
 Goal: Proving Axiom Sane
 
-\index{Bronstein, Manuel}
-\begin{chunk}
-@article{Bron88a,
-  author = "Bronstein, Manuel",
-  title = {{Fast Reduction of the Risch Differential Equation}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "358",
-  pages = "64-72",
-  year = "1988",
-  abstract = 
-    "Since Risch (1969) reduced the problem of integrating
-    exponentials to solving a first order linear differntial equation
-    in a differential field, there has been considerable interest in
-    solving \[y^\prime + fy = g\] for $y$ in a given differential
-    field $K$, where $f,g\in K$. Risch (1969) gave an algorithm for a
-    more general equation. His algorithm, however, required factoring
-    the denominators of $f$ and $g$, which is an obstacle to efficient
-    implementations. 
-
-    Later, Rothstein (1976) and Davenport (1986) presented algorithms
-    for equation $(R)$ that both rely on a squarefree factorization of
-    the denominator for $y$. The algorithm in (Davenport 1986) has
-    been implemented in the Scratchpad II (see Jenks et al.) and Maple
-    (see Char et al, 1985) computer algebra systems. This algorithm,
-    however, requires $f$ to be in a certain form (called {\sl weakly
-    normalized}), but no computer algorithm that makes $f$ weakly
-    normalized has been published.
-
-    We present here a weaker definition of weak-normality, which
-    \begin{enumerate}
-    \item can always be obtained in a tower of transcendental
-    elementary extensions,
-    \item gives us an explicit formula for the denominator of $y$, so
-    equation $(R)$ can be reduced to a polynomial equation in one
-    reduction step
-    \end{enumerate}
-
-    As a consequence, we obtain a new algorithm for solving equation
-    $(R)$. OUr algorithm is very similar to the one described in
-    Rothstein (1976), except that we use weak normality to prevent
-    finite cancellation, rather than having to find integer roots of
-    polynomials over the constant field of $K$ in order to detect it.",
-  paper = "Bron88a.pdf",
-  keywords = "axiomref, printed"
-}  
-
-\end{chunk}
-
-\index{Galligo, Andre}
-\index{Pottier, Loic}
-\index{Traverso, Carlo}
-\begin{chunk}
-@article{Gall88,
-  author = "Galligo, Andre and Pottier, Loic and Traverso, Carlo",
-  title = {{Greater Easy Common Divisor and Standard Basis Completion
-            Algorithms}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "358",
-  pages = "162-176",
-  year = "1988",
-  abstract = 
-    "The computation of a standard basis (also alled Groebner basis)
-    of a multivariate polynomial ideal over a field $K$ is crucial in
-    many appliations. The problem is intransically time and space
-    consuming, and many researchers aim to improve the basic algorithm
-    due to B. Buchberger [Bu1]. One has investigated the problem of
-    the optimal choice of the term ordering depending from the use
-    that has to be made of the results, [BS], and the systematic
-    elimination of unnecessary reductions [Bu2],[GM],[Po]. We can call
-    all these problems ``combinatorial complexity problems''.
-
-    The present paper considers arithmetic complexity problems; our
-    main problem is how to limit the growth of the coefficients in the
-    algorithms and the complexity of the field operations
-    involved. The problem is important with every ground field, with
-    the obvious exception of finite fields.
-
-    The ground field is often represented as the field of fractions of
-    some explict domain, which is usually a quotient of a finite
-    extension of $Z$, and the computations are hence reduced to these
-    domains. 
-
-    The problem of coefficient growth, and the complexity already
-    appearing in the calculation of the GCD of tw univariate
-    polynomials, which is indeed a very special case of standard basis
-    computation; the PRS algorithms of Brown and Collins operate the
-    partial coefficient simplifications predicted by a theorem, hence
-    succeeding in controlling this complexity.
-
-    Our approach looks for analogies with these algorithms, but a
-    general structure theorem is missing, hence our approach relies on
-    a limited seqrch of coefficient simplifications. The basic idea is
-    the following: since the GCD is usually costly, we can use in its
-    place the ``greatest between the common divisors that are easy to
-    compute'' (the GECD), this suggestion allowing different
-    instances. A set of such instances is based on the remark that if
-    you hve elements in factorized form, then many common divisors are
-    immediately evident. Since irreducible factorization, even
-    assuming that is exists in our domain, is costly, we use a partial
-    factorization basically obtained using a ``lazy multiplication''
-    technique, i.e. performing coefficient multiplications only if
-    they are unavoidable. The resulting algorithms were tested with a
-    ``simulatied'' implementation on the integers, and the results
-    suggest that a complete implementation should be very efficient,
-    at least when the coefficient domain is a multivariate rational
-    function field.",
-  paper = "Gall88.pdf",
-  keywords = "GCD"
-}  
-
-\end{chunk}
-
-\index{Bradford, R.J.}
-\index{Davenport, J.H.}
-\begin{chunk}
-@article{Brad88,
-  author = "Bradford, R.J. and Davenport, J.H.",
-  title = {{Effective Tests for Cyclotomic Polynomials}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "358",
-  pages = "244-251",
-  year = "1988",
-  abstract = 
-    "We present two efficient tests that determine if a given
-    polynomial is cyclotomic, or is a product of cyclotomics. The
-    first method uses the fact that all the roots of a cyclotomic
-    polynomial are roots of unity, and the second the fact that the
-    degree of a cyclotomic polynomial is a value of $\phi(n)$, for
-    some $n$. We can also find the cyclotomic factors of any
-    polynomial.",
-  paper = "Brad88.pdf"
-}  
-
-\end{chunk}
-
-\index{Gianni, Patrizia}
-\index{Miller, Victor}
-\index{Trager, Barry}
-\begin{chunk}
-@article{Gian88a,
-  author = "Gianni, Patrizia and Miller, Victor and Trager, Barry",
-  title = {{Decomposition of Algebras}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "358",
-  pages = "300-308",
-  year = "1988",
-  abstract = 
-    "In this paper we deal with the problem of decomposing finite
-    commative $Q$-algebras as a direct product of local
-    $Q$-algebras. We solve this problem by reducing it to the problem
-    of finding a decomposition of finite algebras over finite
-    field. We will show that it is possible to define a lifting
-    process that allows to reconstruct the answer over the rational
-    numbers. This lifting appears to be very efficient since it is a
-    quadratic lifting that doesn't require stepwise inversions. It is
-    easy to see that the Berlekamp-Hensel algorithm for the
-    factorization of polynomials is a special case of this argument.",
-  paper = "Gian88a.pdf"
-}  
-
-\end{chunk}
-
-\index{Canny, John}
-\begin{chunk}
-@article{Cann88a,
-  author = "Canny, John",
-  title = {{Generalized Characteristic Polynomials}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "358",
-  pages = "293-299",
-  year = "1988",
-  abstract = 
-    "We generalize the notion of characteristic polynomial for a
-    system of linear equations to systems of multivariate polynomial
-    equations. The generalization is natural in the sense that it
-    reduces to the usual definition when all the polynomials are
-    linear. Whereas the constant coefficient of the characteristic
-    polynomial is the resultant of the system. This construction is
-    applied to solve a traditional problem with efficient methods for
-    solving systems of polynomial equations: the presence of
-    infinitely many solutions ``at infinity''. We give a
-    single-exponential time method for finding all the isolated
-    solution points of a system of polynomials, even in the presence
-    of infinitely many solutions at infinity or elsewhere.",
-  paper = "Cann88a.pdf"
-}  
-
-\end{chunk}
-
-\index{de la Tour, Thierry Boy}
-\index{Caferra, Richardo}
-\begin{chunk}
-@article{Tour88,
-  author = "de la Tour, Thierry Boy and Caferra, Richardo",
-  title = {{A Formal Approach to some Usually Informal Techniques used
-            in Mathematical Reasoning}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "358",
-  pages = "402-408",
-  year = "1988",
-  abstract = 
-    "One of the striking characteristics of mathematical reasoning is
-    the contrast between the formal aspects of mathematical truth and
-    the informal character of the ways to that truth. Among the many
-    important and usually informal mathematical activities we are
-    interested by proof analogy (i.e. common pattern between proofs of
-    different theorems) in the context of interactive theorem
-    proving. In some sense we propose a partial contribution of one of
-    the Polya's wishes [Polya 73]:
-    \begin{quote}
-    Analogy pervades all our thinking, our everyday speech and our
-    trivial conclusions as well as artistic way of expression and the
-    highest scientific achievements... but analogy may reach the level
-    of mathematical precision...
-    \end{quote}
-    
-    It is a work in philosophy of mathematics [Resnik 75], in which
-    mathematics is viewed as studying {\sl patterns} or 
-    {\sl structures}, which encouraged us to pursue our aim of
-    partially formalizing {\sl analogy}. We naturally arrived at the
-    need of considering other activities strongly tied to the notion
-    of analogy and very well known of the working mathematician:
-    {\sl generalization}, {\sl abstraction} and {\sl analysis of
-    proofs}.
-
-    Let us assume that the user has to prove a conjecture C. Given a
-    proof P for a known theorem T, he describes in the langauge L a
-    scheme of P. Then he expresses the syntactic analogy he views as
-    relevant between the scheme of P and what ``should be'' a proof
-    scheme for C, as a {\sl transformation rule}. This process needs
-    analysis of proofs, generalization and abstraction.
-
-    A second order pattern matching algorithm constructs matchers of P
-    and its scheme, and applies them to the intended proof scheme of
-    the conjecture C. In the best case one obtains a potential proof
-    of C, but in general one obtains a more instantiated proof-scheme
-    with some ``holes'' to be filled by a theorem prover. In both
-    cases a proof-checking process is necessary (analogy is in general
-    a heuristic way of thinking).
-
-    A question arises naturally: ``What to do when the assumed analogy
-    fails?''. We study in this paper one of the possible answers:
-    ``Inforamation may be extracted from the failure in order to 
-    {\sl suggest lemmas} that try to {\sl semantically} restore
-    analogy''. Of coure these lemmas an also serve for detecting wrong
-    analogies (for example, if required lemmas clearly cannot be
-    theorems.). Two kinds of failure are possible:
-    \begin{enumerate}
-    \item The given proof P and its proposed scheme are not matchable
-    \item A type error is detected in the instantiated proof scheme
-    for C.
-    \end{enumerate}
-
-    We give in the following a method to suggest lemmas in the first
-    case, and sketch some ideas of how to use such a possibility in
-    the second case.",
-  paper = "Tour88.pdf",
-  keywords = "printed"
-}  
-
-\end{chunk}
-
-\index{Geddes, Keith O.}
-\index{Gonnet, Gaston H.}
-\index{Smedley, Trevor J.}
-\begin{chunk}
-@article{Gedd88,
-  author = "Geddes, Keith O. and Gonnet, Gaston H. and Smedley, Trevor J.",
-  title = {{Heuristic Methods for Operations With Algebraic Numbers}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "358",
-  pages = "475-480",
-  year = "1988",
-  abstract = 
-    "Algorithms for doing computations involving algebraic numbers
-    have been known for quite some time [6,9,12] and implementations
-    now exist in many computer algebra systems [1,4,11]. Many of these
-    algorithms have been analysed and shown to run in polynomial time
-    and space [7,8], but in spite of this many real problems take
-    large amounts of time and space to solve. In this paper we
-    describe a heuristic method which can be used for many operations
-    involving algebraic numbers. We gie specifics for doing algebraic
-    number inverses, and algebraic number polynomial exact division
-    and greatest common divisor calculation. The heurist will not
-    solve all instances of these problems, but it returns either the
-    correct result or with failure very quickly, and succeeds for a
-    very large number of problems. The heuristic method is similar to,
-    and based on concepts in [3].",
-  paper = "Gedd88.pdf",
-  keywords = "GCD"
-}  
-
-\end{chunk}
-
-\index{Knuth, Donal E.}
-\index{Larrabee, Tracy}
-\index{Roberts, Paul M.}
+\index{Wirth, Niklaus}
 \begin{chunk}{axiom.bib}
-@misc{Knut87,
-  author = "Knuth, Donal E. and Larrabee, Tracy and Roberts, Paul M.",
-  title = {{Mathematical Writing}},
-  year = "1987",
-  link = "\url{jmlr.csail.mit.edu/reviewing-papers/knuth_mathematical_writing.pdf}"
+@book{Wirt13,
+  author = "Wirth, Niklaus",
+  title = {{Project Oberon}},
+  publisher = "ACM Press",
+  isbn = "0-201-54428-8",
+  year = "2013"
 }
 
 \end{chunk}
 
-\index{Zeilberger, Doron}
+\index{Wirth, Niklaus}
 \begin{chunk}{axiom.bib}
-@misc{Zeil02,
-  author = "Zeilberger, Doron",
-  title = {{Topology: The Slum of Combinatorics}},
-  year = "2002",
-  link = "\url{http://sites.math.rutgers.edu/~zeilberg/Opinion1.html}"
+@misc{Wirt14,
+  author = "Wirth, Niklaus",
+  title = {{Reviving a Computer System of 25 Years Ago}},
+  link = "\url{https://www.youtube.com/watch?v=EXY78gPMvl0}",
+  year = "2014"
 }
 
 \end{chunk}
 
-\index{Schopenhauer, Arthur}
+\index{Alpern, Bowen L.}
 \begin{chunk}{axiom.bib}
-@misc{Scho16,
-  author = "Schopenhauer, Arthur",
-  title = {{Essays of Schopenhauer: On Reading and Books}},
-  link =
-  "\url{https://ebooks.adelaide.edu.au/s/schopenhauer/arthur/essays/chapter3.html}",
-  year = "2016"
-}
+@phdthesis{Alpe86,
+  author = "Alpern, Bowen L.",
+  title = {{Proving Temporal Properties of Concurrent Programs: A
+            Non-Temporal Approach}},
+  school = "Cornell University",
+  year = "1986",
+  abstract = 
+    "This thesis develops a new method for proving properties of
+    concurrent programs and gives formal definitions for safety and
+    liveness. A property is specified by a property recognizer -- a
+    finite-state machine that accepts the sequences of program states
+    in the property it specifies. A property recognizer can be
+    constructed for any temporal logic formula.
 
-\end{chunk}
+    To prove that a program satisfies a property specified by a
+    deterministic program recognizer, one must show that any history
+    of the program will be accepted by the recognizer. This is done by
+    demonstrating that proof obligations derived from the recognizer
+    are met. These obligations require the program prover to exhibit
+    certain invariant assertions and variant functions and to prove
+    the validty of certain predicates and Hoare triples. Thus, the
+    same techniques used to prove local correctness of a while loop
+    can be used to prove temporal properties of concurrent
+    programs. No temporal inference is required.
 
-\index{Bhat, Siddharth}
-\begin{chunk}{axiom.bib}
-@misc{Bhat19,
-  author = "Bhat, Siddharth",
-  title = {{Computing Equivalent Gate Sets Using Grobner Bases}},
-  link = "\url{https://bollu.github.io/#computing-equivalent-gat-sets-using-grobner-bases}",
-  year = "2019"
-}
+    The invariant assertions required by the proof obligations
+    establish a correspondence between the states of the program and
+    those of the recogniser. Such correspondences can be denoted by
+    property outlines, a generalization of proof outlines.
 
-\end{chunk}
+    Some non-deterministic property recognizers have no deterministic
+    equivalents To prove that a program satisfies a non-deterministic
+    property, a deterministic sub-property that the program satisfies
+    must be found. This is shown possible, provided the program state
+    space is finite.
 
-\index{Carneiro, Mario}
-\begin{chunk}{axiom.bib}
-@misc{Carn19,
-  author = "Carneiro, Mario",
-  title = {{Metamath Zero: The Cartesian Theorem Prover}},
-  link = "\url{https://arxiv.org/pdf/1910.10703.pdf}",
-  year = "2019",
-  abstract =
-    "As the usage of theorem prover technology expands, so too does 
-    the reliance on correctness of the tools. Metamath Zero is a
-    verification system that aims for simplicity of logic and
-    implementation, without compromising on efficiency of
-    verification. It is formally specified in its own language, and
-    supports a number of translations to and from other proof
-    languages. This paper describes the abstract logic of Metamath
-    Zero, essentially a multi-sorted first order logic, as well as the
-    binary proof format and the way in which it can ensure essentially
-    linear time verification while still being concise and efficient
-    at scale. Metamath Zero currently holds the record for fastest
-    verification of the {\tt set.mm} Metamath library of proofs in ZFC
-    (including 71 of Wiedijk's 100 formalization targets), at less
-    than 200 ms. Ultimately, we intend to use it to verify the
-    correctness of the implementation of the verifier down to binary
-    executable, so it can be used as a root of trust for more compolex
-    proof systems.",
-  paper = "Carn19.pdf",
+    Finally, safety properties are formalized as the closed sets of a
+    topological space and liveness properties as its dense sets. Every
+    property is shown to be the intersection of a safety property and
+    a liveness property. A technique for separating a property
+    specified by a deterministic property recognizer into its safety
+    and liveness aspects is also presented.",
   keywords = "printed"
 }
 
 \end{chunk}
 
-\index{Roanes-Lozano, Eugenio}
-\index{Galan-Garcia, Jose Luis}
-\index{Solano-Macias, Carmen}
+\index{Hobbs, Jerry R.}
+\index{Stickel, Mark}
+\index{Appelt, Douglas}
+\index{Martin, Paul}
 \begin{chunk}{axiom.bib}
-@article{Roan19,
-  author = "Roanes-Lozano, Eugenio and Galan-Garcia, Jose Luis and
-            Solano-Macias, Carmen", 
-  title = {{Some Reflections About the Success and Impact of the
-            Computer Algebra System DERIVE with a 10-Year Time
-	    Perspective}}, 
-  journal = "Mathematics in Computer Science",
-  volume = "13",
-  number = "3",
-  pages = "417-431",
-  year = "2019",
+@article{Hobb93,
+  author = "Hobbs, Jerry R. and Stickel, Mark and Appelt, Douglas
+            and Martin, Paul",
+  title = {{Interpretation as Abduction}},
+  journal = "Artifical Intelligence",
+  volume = "63",
+  number = "1-2",
+  pages = "69-142",
+  uear = "1993",
   abstract =
-    "The computer algebra system DERIVE had a very important impact in
-    teaching mathematics, mainly in the 1990's. The authors analyze
-    the possible reasons for its success and impact and give personal
-    conclusions based on the facts collected. More than 10 years after
-    it was discontinued it is still used for teaching and several
-    scientific papers (mostly devoted to educational issues) still
-    refer to it. A summary of the history, journals and conferences
-    together with a brief bibliographic analysis are included.",
-  paper = "Roan19.pdf",
-  keywords = "axiomref, printed"
+    "Abduction is inference to the best explanation. In the TACITUS
+    project at SRI we have developed an approach to abductive
+    inference, called ``weighted abduction'', that has resulted in a
+    significant simplification of how the problem of interpreting
+    texts is conceptualized. The interpretation of a text is the
+    minimal explanation of why the text would be true. More precisely,
+    to interpret a text, one must prove the logical form of the text
+    from what is already mutually known, allowing for coercions,
+    merging redundancies where possible, and making assumptions where
+    necessary. It is shown how such ``local pragmatics'' problems as
+    reference resolution, the interpretation of compound nominals, the
+    resolution of syntactic ambiguity and metonymy, and schema
+    recognition can be solved in this manner. Moreover, this approach
+    of ``interpretation as abduction' can be combined with the older
+    view of ``parsing as deduction' to produce an elegant and thorough
+    integration of syntax, semantics, and pragmatics, one that spans
+    the range of linguistic phenomena from phonology to discourse
+    structure. Finally, we discuss means for making the abduction
+    process efficient, possibilities for extending the approach to
+    other pragmatics phenomena, and the semantics of the weights and
+    costs in the abduction scheme.",
+  keywords = "printed"
 }
 
 \end{chunk}
 
-\index{Abraham, Erika}
-\index{Abbott, John}
-\index{Becker, Bernd}
-\index{Bigatti, Anna M.}
-\index{Brain, Martin}
-\index{Buchberger, Bruno}
-\index{Cimatti, Alessandro}
-\index{Davenport, James H.}
-\index{England, Matthew}
-\index{Fontaine, Pascal}
-\index{Forrest, Stephen}
-\index{Griggio, Alberto}
-\index{Droening, Daniel}
-\index{Seller, Werner M.}
-\index{Sturm, Thomas}
+\index{Stickel, Mark E.}
 \begin{chunk}{axiom.bib}
-@article{Abra16b,
-  author = "Abraham, Erika and Abbott, John and Becker, Bernd and
-            Bigatti, Anna M. and Brain, Martin and Buchberger, Bruno
-	    and Cimatti, Alessandro and Davenport, James H. and
-            England, Matthew and Fontaine, Pascal and Forrest, Stephen
-            and Griggio, Alberto and Droening, Daniel and 
-            Seller, Werner M. and Sturm, Thomas",
-  title = {{SC^2: Satisfiability Checking Meets Symbolic Computation}},
-  journal = "Lecture Notes in Computer Science",
-  volume = "9791",
-  year = "2016",
+@techreport{Stic89,
+  author = "Stickel, Mark E.",
+  title = {{A Prolog Technology Theorem Prover: A New Exposition and
+            Implemention in Prolog}},
+  type = "technical note",
+  institution = "SRI International",
+  number = "464",
+  year = "1989",
+  link = "\url{www.ai.sri.com/~stickel/pttp.html}",
   abstract =
-    "Symbolic Computation and Satisfiability Checking are two research
-    areas, both having their individual scientific focus but sharing
-    also common interests in the development, implementation and
-    application of decision procedures for arithmetic
-    theories. Despite their commonalities, the two communities are
-    weakly connected. The aim of our newly accepted $SC^2$ project
-    (H2020-FETOPEN-CSA) is to strengthen the connection between these
-    communities by creating common platforms, initiating interaction
-    and exchange, identifying common challenges, and developing a
-    common roadmap from theory along the way to tools and (industrial)
-    applications. In this paper we report on the aims and on the first
-    activities of this project, and formalise some relevant challenges
-    for the unified $SC^2$ community.",
-  paper = "Abra16b.pdf",
-  keywords = "axiomref"
+    "A Prolog technology theorem prover (PTTP) is an extension of
+    Prolog that is complete for the full first-order predicate
+    calculus. It differs from Prolog in its use of unification with
+    the occurs check for soundness, depth-first iterative-deepening
+    search instead of unbounded depth-first search to make the search
+    strategy complete, and the model elimination reduction rule that
+    is added to Prolog inferences to make the inference system
+    complete. This paper describes a new Prolog-based implementation
+    of PTTP. It uses three compile-time transformations to translate
+    formulas into Prolog clauses that directly execute, with the
+    support of a few run-time predicates, the model elimination
+    procedure with depth-first iterative-deepening search and
+    unification with the occurs check. Its high performance exceeds
+    that of Prolog-based PTTP interpreters, and it is more concise and
+    readable than the earlier Lisp-based compiler, which makes it
+    superior for expository purposes. Examples of inputs and outputs
+    of the compile-time transformations provide an easy and quite
+    precise way to explain how PTTP works, This Prolog-based version
+    makes it easier to incorporate PTTP theorem-proving ideas into
+    Prolog programs. Some suggestions are made on extensions to Prolog
+    that could be used to improve PTTP's performance.",
+  keywords = "printed"
 }
 
 \end{chunk}
 
-\index{Lambe, Larry A.}
+\index{Nehrkorn, Klaus}
 \begin{chunk}{axiom.bib}
-@article{Lamb16,
-  author = "Lambe, Larry A.",
-  title = {{An Algebraic Study of the Klein Bottle}},
-  journal = "Homotopy and Related Structures",
-  volume = "11",
-  number = "4",
-  pages = "885-891",
-  year = "2016",
-  abstract =
-    "We use symbolic computation (SC) and homological perturbation
-    (HPT) to compute a resolution of the integers $\mathbb{Z}$ over
-    the integer group ring of $G$, the fundamental group of the Klein
-    bottle. From this it is easy to read off the homology of the Klein
-    bottle as well as other information.",
-  paper = "Lamb16.pdf",
-  keywords = "axiomref"
-}
-
-\end{chunk}
-
-\index{Gerdt, Vladimir P.}
-\index{Koepf, Wolfram}
-\index{Mayr, Ernst W.}
-\index{Vorozhtsov, Evgenii V.}
-\begin{chunk}{axiom.bib}
-@book{Gerd13,
-  author = "Gerdt, Vladimir P. and Koepf, Wolfram and Mayr, Ernst W.
-            and Vorozhtsov, Evgenii V.",
-  title = {{Computer Algebra in Scientific Computing}},
+@inproceedings{Nehr85,
+  author = "Nehrkorn, Klaus",
+  title = {{Symbolic Integration of Exponential Polynomials}},
+  booktitle = "European COnference on Computer Algebra",
   publisher = "Springer",
-  year = "2013",
-  comment = "LNCS 8136",
-  paper = "Gerd13.pdf",
-  keywords = "axiomref"
+  pages = "599-600",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Nehr85.pdf"
 }
 
 \end{chunk}
 
-\index{Ardizzoni, Alessandro}
-\index{Stumbo, Fabio}
+\index{Singer, M.F.}
+\index{Davenport, J.H.}
 \begin{chunk}{axiom.bib}
-@article{Ardi09,
-  author = "Ardizzoni, Alessandro and Stumbo, Fabio",
-  title = {{Quadratic Lie Algebras}},
-  journal = "Commun. Algebra",
-  volume = "39",
-  number = "8",
-  pages = "2723-2751",
-  year = "2011",
-  link = "\url{https://arxiv.org/pdf/0906.4617.pdf}",
-  abstract =
-    "In this paper, the notion of universal envoloping algebra
-    introduced in [A. Ardizzoni, A First Sight Towards Primitively
-    Generated Connected Braided Bialgebras] is specialized to the case
-    of braided vector spaces whole Nichols algebra is quadratic as an
-    algebra. In this setting a classification of universal enveloping
-    algebras for braided vectors spaces of dimension not greater than
-    2 is handled. As an application, we investigate the structure of
-    primitively generated connected braided bialgebras whose braided
-    vector space of primitive elements forms a Nichols algebra which
-    is a quadratic algebra.",
-  paper = "Ardi09.pdf",
-  keywords = "axiomref"
+@inproceedings{Sing85a,
+  author = "Singer, M.F. and Davenport, J.H.",
+  title = {{Elementary and Liouvillian Solutions of Linear
+            Differential Equations}},
+  booktitle = "European COnference on Computer Algebra",
+  publisher = "Springer",
+  pages = "595-596",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Sing85a.pdf"
 }
 
 \end{chunk}
 
-\index{Aharonovich, I.}
-\index{Horwitz, L.P.}
+\index{Watt, Stephen M.}
 \begin{chunk}{axiom.bib}
-@article{Ahar12,
-  author = "Aharonovich, I. and Horwitz, L.P.",
-  title = {{Radiation-reaction in classical off-shell electrodynamics,
-            I: The above mass-shell case}},
-  journal = "J. Math. Phys.",
-  volume = "53",
-  number = "3",
+@inproceedings{Watt85,
+  author = "Watt, Stephen M.",
+  title = {{A System for Parallel Computer Algebra Programs}},
+  booktitle = "European COnference on Computer Algebra",
+  publisher = "Springer",
+  pages = "537-538",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Watt85.pdf"
+}
+
+\end{chunk}
+
+\index{Robbiano, Lorenzo}
+\begin{chunk}{axiom.bib}
+@inproceedings{Robb85,
+  author = "Robbiano, Lorenzo",
+  title = {{Term Orderings on the Polynomial Ring}},
+  booktitle = "European COnference on Computer Algebra",
+  publisher = "Springer",
+  pages = "513-517",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Robb85.pdf"
+}
+
+\end{chunk}
+
+\index{Hohlfeld, Bernhard}
+\begin{chunk}{axiom.bib}
+@inproceedings{Hohl85,
+  author = "Hohlfeld, Bernhard",
+  title = {{Correctness Proofs of the Implementation of Abstract Data
+            Types}}, 
+  booktitle = "European COnference on Computer Algebra",
+  publisher = "Springer",
+  pages = "446-447",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Hohl85.pdf"
+}
+
+\end{chunk}
+
+\index{Emmanuel, Kounalis}
+\begin{chunk}{axiom.bib}
+@inproceedings{Emma85,
+  author = "Emmanuel, Kounalis",
+  title = {{Completeness in Data Type Specifications}},
+  booktitle = "European COnference on Computer Algebra",
+  publisher = "Springer",
+  pages = "348-362",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Emma85.pdf"
+}
+
+\end{chunk}
+
+\index{Aspetsberger, K.}
+\begin{chunk}{axiom.bib}
+@inproceedings{Aspe85,
+  author = "Aspetsberger, K.",
+  title = {{Substitution Expressions: Extracting Solutions of non-Horn
+            Clause Proofs}},
+  booktitle = "European COnference on Computer Algebra",
+  publisher = "Springer",
+  pages = "78-86",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Aspe85.pdf"
+}
+
+\end{chunk}
+w
+\index{Bini, Dario}
+\index{Pan, Victor}
+\begin{chunk}{axiom.bib}
+@inproceedings{Bini85,
+  author = "Bini, Dario and Pan, Victor",
+  title = {{Algorithms for Polynomial Division}},
+  booktitle = "European COnference on Computer Algebra",
+  publisher = "Springer",
+  pages = "1-3",
+  year = "1985",
+  comment = "LNCS 204",
+  paper = "Bini85.pdf"
+}
+
+\end{chunk}
+
+\index{Monagan, Michael}
+\index{Pearce, Roman}
+\begin{chunk}{axiom.bib}
+@article{Mona12,
+  author = "Monagan, Michael and Pearce, Roman",
+  title = {{POLY: A New Polynomial Data Structure for Maple 17}},
+  journal = "Communications in Computer Algebra",
+  publisher = "ACM",
+  volume = "46",
+  number = "4",
   year = "2012",
   abstract =
-    "Offshell electrodynamics based on a manifestly covarieant
-    off-shell relativeistic dynamics of Stueckelberg, Horwitz, and
-    Piron, is five-dimensional. In this paper, we study the problem of
-    radiation reaction of a particle in motion in this framework. In
-    particular, the case of the above-mass-shell is studied in detail,
-    where the renormalization of the Lorentz force leads to a system
-    of non-linear differential equations for 3 Lorentz scalars. The
-    system is then solved numerically, where it is shown that the
-    mass-shell deviation scalar either smoothly falls down to 0 (this
-    result provides a mechanism for the mass stability of the
-    off-shell theory), or strongly diverges under more extremem
-    conditions. In both cases, no runaway motion is
-    observed. Stability analysis indicates that the system seems to
-    have chaotic behavior. It is also shown that, although a motion
-    under which the mass-shell deviation $\epsilon$ is constant but
-    not-zero, is indeed possible, but, it is unstable, and eventually
-    it either decays to 0 or diverges.",
-  keywords = "axiomref"
+    "We demonstrate how a new data structure for sparse distributed
+    polynomials in the Maple kernel significantly accelerates a large
+    subset of Maple library routines The POLY data structure and its
+    associated kernel operations (degree, coeff, subs, has, diff,
+    eval,...) are programmed for high scalability, allowing
+    polynomials to have hundreds of millions of terms, and very low
+    overhead, increasing parallel speedup in existing routines and
+    improving the performance of high live Maple library routines.", 
+  paper = "Mona12.pdf"
 }
 
 \end{chunk}
 
-\index{Ioakimidis, Nikolaos I.}
+\index{Cherry, G.W.}
+\index{Caviness, B.F.}
 \begin{chunk}{axiom.bib}
-@article{Ioak00,
-  author = "Ioakimidis, Nikolaos I.",
-  title = {{Derivation of Feasibility Conditions in Engineering
-            Problems under Parametric Inequality Constraints with
-	    Classical Fourier Elimination}},
-  journal = "Int. J. Numerical Methods Eng.",
-  volume = "48",
-  number = "11",
-  pages = "1583-1599",
-  year = "2000",
+@inproceedings{Cher84
+  author = "Cherry, G.W. and Caviness, B.F.",
+  title = {{Integration in Finite Terms With Special Functions:
+            A Progress Report}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "351-358",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
   abstract =
-    "Fourier (or Motzkin or even Fourier-Motzkin) elimiation is the
-    classical and equally old analogue of Gaussian elimination for the
-    solution of linear equations in the case of linear
-    inequalities. Here this approach and two standard improvements are
-    applied to two engineering problems (involving numerical
-    integration in fracture mechanics as well as finite differences in
-    heat transfer in the parametric case) with linear inequality
-    constraints. The results obtained by a solver of systems of
-    inequalities concern the feasibility conditions (quantifier-free
-    formulae), so that the satisfaction of the original system of
-    linear inequality constraints can be possible. We use the computer
-    algebra system Maple V and a related elementary procedure for
-    Fourier elimination. The results constitute an extension of
-    already available applications of computer algebra software to the
-    classical approximate-numerical methods traditionally employed in
-    enginerring, and are also related to computational elimination
-    techniques in computer algebra and applied logic.",
-  paper = "Ioak00.pdf",
-  keywords = "axiomref"
+    "Since R. Risch published an algorithm for calculating symbolic
+    integrals of elementary functions in 1969, there has been an
+    interest in extending his methods to include nonelementary
+    functions. We report here on the recent development of two
+    decision procedures for calculating integrals of transcendental
+    elementary functions in terms of logarithmic integrals and error
+    functions Both of these algorithms are based on the Singer,
+    Saunders, Caviness extension of Liouville's theorem on integration
+    in finite terms. Parts of the logarithmic integral algorithm have
+    been implemented in Macsyma and a brief demonstraction is given.",
+  paper = "Cher84.pdf"
 }
 
 \end{chunk}
 
-\index{Fournie, Michel}
+\index{Kaltofen, Erich}
 \begin{chunk}{axiom.bib}
-@article{Four99,
-  author = "Fournie, Michel",
-  title = {{High-order compact schemes: Application to bidimensional unsteady
-           diffusion-convection problems. II}},
-  journal = "C. R. Acad. Sci.",
-  volume = "328",
-  number = "6",
-  pages = "539-542",
-  year = "1999",
+@inproceedings{Kalt84,
+  author = "Kaltofen, E.",
+  title = {{A Note on the Risch Differential Equation}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "359-366",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
   abstract =
-    "This Note generalizes the construcion and the analysis of high
-    order compact difference schemes for unsteady 2D
-    diffusion-convection problems cf. Part I by A. Rigal. The accuracy
-    (of order 2 in time and 4 in space) and the stability analysis
-    yield different choices of the weighting parameters. This work
-    realized with symbolic computation systems allow to obtain
-    analytical results for a wide class of schemes and to increase the
-    stability domain in some cases.",
-  keywords = "axiomref"
+    "This paper relates to the technique of integrating a function in
+    a purely transcendental regular elementary Liouville extension by
+    prescribing degree bounds for the transcendentals and then solving
+    linear systems over the constants. The problem of finding such
+    bounds explicitly remains yet to be solved due to the so-called
+    third possibilities in the estimates for the degrees given in
+    R. Risch's original algorithm.
+
+    We prove that in the basis case in which we have only exponentials
+    of rational functions, the bounds arising from the third
+    possibilities are again degree bounds of the inputs. This result
+    provides an algorithm for solving the differential equation
+    $y^\prime =f^\prime y= g$ in $y$ where $f$, $g$, and $y$ are
+    rational functions over an arbitrary constant field. This new
+    algorithm can be regarded as a direct generalization of the
+    algorithm by E. Horowitz for computing the rational part of the
+    integral of a rational function (i.e. $f^\prime = 0$), though its
+    correctness proof is quite different.",
+  paper = "Kalt84.pdf"
 }
 
 \end{chunk}
 
-\index{Lamagna, Edmund A.}
+\index{Viry, G.}
 \begin{chunk}{axiom.bib}
-@book{Lama19,
-  author = "Lamagna, Edmund A.",
-  title = {{Computer Algebra: Concepts and Techniques}},
-  publisher = "CRC Press",
-  year = "2019",
-  isbn = "978-1-138-09314-0",
-  keywords = "axiomref"
+@inproceedings{Viry84,
+  author = "Viry, G.",
+  title = {{Simplification of Polynomials in n Variables}},
+  booktitle = "International Sympoium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "64-73",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
+  paper = "Viry84.pdf"
 }
 
 \end{chunk}
 
-\index{Benker, Hans}
+\index{Wang, Paul S.}
 \begin{chunk}{axiom.bib}
-@book{Benk99,
-  author = "Benker, Hans",
-  title = {{Practical User of MATHCAD: Solving Mathematical Problems
-            with a Computer Algebra System}},
-  publisher = "Springer-Verlag",
-  year = "1999",
-  isbn = "978-1-85233-166-5",
-  keywords = "axiomref"
-}
-
-\end{chunk}
-
-\index{Dooley, Samuel S.}
-\begin{chunk}{axiom.bib}
-@InProceedings{Dool02,
-  author = "Dooley, Samuel S.",
-  title = {{Editing mathematical content and presentation markup in
-           interactive mathematical documents}},
-  booktitle = "Proc. ISSAC 2002",
-  series = "ISSAC 02",
-  year = "2002",
-  publisher = "ACM Press",
-  pages = "55-62",
+@inproceedings{Wang84,
+  author = "Wang, Paul S.",
+  title = {{Implementation of a p-adic Package for Polynomial
+            Factorization and other Related Operations}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "86-99",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
   abstract =
-    "The IBM MathML Expression Editor is a two-dimensional
-    mathematical editor for expressions encoded using MathML content
-    and presentation elements. It allows a user to interact with the
-    visual presentation of an expression, while simultaneously
-    creating the underlying structure of the expression. This paper
-    describes the internal expression framework used by the editor to
-    represent the content and presentation structures, the layout
-    mechanisms used to transform content into presentation, the
-    structural navigation conventions used to select subexpressions,
-    the editing templates used to support visual input of MathML
-    content expressions, and the customization framework that allows
-    for a fully extensible set of content operators, including
-    complete support for MathML 2.0 content elements as well as
-    user-defined function symbols and operators."
+    "The design and implementation of a $p-adic$ package, called 
+     {\bf P}-pack, for polynomial factorization, gcd, squarefree
+     decomposition and univariate partial fraction expansion are
+     presented. {\bf P}-pack is written in FRANZ LISP, and can be
+     loaded into VAXIMA and run without modification. The physical
+     organization of the code modules and their logical relations are
+     described. Sharing of code among different modules and techniques
+     for improved speed are discussed.",
+  paper = "Wang84.pdf"
 }
 
 \end{chunk}
 
-\index{Bradford, Russell}
+\index{Najid-Zejli, H.}
+\begin{chunk}{axiom.bib}
+@inproceedings{Naji84,
+  author = "Najid-Zejli, H.",
+  title = {{Computation in Radical Extensions}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "115-122",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
+  paper = "Naji84.pdf"
+}
+
+\end{chunk}
+
+\index{Czapor, Stephen R.}
+\index{Geddes, Keith O.}
+\begin{chunk}{axiom.bib}
+@inproceedings{Czap84,
+  author = "Czapor, Stephen R. and Geddes, Keith O.",
+  title = {{A Comparison of Algorithms for the Symbolic Computation of
+            Pade Approximants}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "248-259",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
+  abstract =
+    "This paper compares three algorithms for the symbolic computation
+    of Pad\'e approximants: an $O(n^3)$ algorithm based on the direct
+    solutions of the Hankel linear system exploiting only the property
+    of symmetry, and $O(n^2)$ algorithm based on the extended
+    Euclidean algorithm, and an $O(n~log^2~n)$ algorithm based on a
+    divide-and-conquer version of the extended Euclidean algorithm.
+    Implementations of these algorithms are presented and some timing
+    comparisons are given. It is found that the $O(n^2)$ algorithm is
+    often the fastest for practical sizes of problems and,
+    surprisingly, the $O(n^2)$ algorithm wins in the important case
+    where the power series being approximated has an exact rational
+    function representation.",
+  paper = "Czap84.pdf"
+}
+
+\end{chunk}
+
+\index{Lenstra, Arjen K.}
+\begin{chunk}{axiom.bib}
+@inproceedings{Lens84,
+  author = "Lenstra, Arjen K.",
+  title = {{Polynomial Factorizaion by Root Approximation}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "272-276",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
+  abstract =
+    We show that a constructive version of the fundamental theorem of
+    algebra [3], combined with the basis reduction algorithm from [1],
+    yields a polynomial-time algorithm for factoring polynomials in
+    one variable with rational coefficients.",
+  paper = "Lens84.pdf"
+}
+
+\end{chunk}
+
 \index{Davenport, James H.}
 \begin{chunk}{axiom.bib}
-@inproceedings{Brad02a,
-  author = "Bradford, Russell and Davenport, James H.",
-  title = {{Towards Better Simplification of Elementary Functions}},
-  booktitle = "ISSAC 02",
-  publisher = "ACM",
-  year = "2002",
-  isbn = "1-58113-484-3",
+@inproceedings{Dave84c,
+  author = "Davenport, James H.",
+  title = {{y'+fy=g}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "341-350",
+  publisher = "Springer",
+  year = "1984",
+  comment = "LNCS 174",
   abstract =
-    "We preent an algorithm for simplifying a large class of
-    elementary functions in the presence of branch cuts. This
-    algorithm works by:
-    \begin{itemize}
-    \item verifying that the proposed simplification is correct as a
-    simplification of multi-valued functions
-    \item decomposing $\mathbb{C}$ (or $\mathbb{C}^n$ in the case of
-    multivariate simplifications) according to the branch cuts of the
-    relevant functions
-    \item checking that the proposed identity is valid on each
-    component of that decomposition
-    \end{itemize}
-
-    This process can be interfaced to an assume facility, and, if
-    required, can verify that simplifications are valid ``almost
-    everywhere''.", 
-  paper = "Brad02a.pdf"
+    "In this paper, we look closely at the equation of the title,
+    originally consider by Risch, which arises in the integration of
+    exponentials. We present a minor improvement of Risch's original
+    presentation, a generalisation of that presentation to algebraic
+    functions $f$ and $g$, and a new algorithm for the solution of
+    this equation. Full details of the last two are to appear
+    elsewhere.", 
+  paper = "Dave84c.pdf"
 }
 
 \end{chunk}
 
-\index{Zucker, Philip}
+\index{Lazard, Daniel}
 \begin{chunk}{axiom.bib}
-@misc{Zuck19,
-  author = "Zucker, Philip",
-  title = {{Grobner Bases and Optics}},
-  link = "\url{http://www.philipzucker.com/grobner-bases-and-optics}",
-  year = "2019"
+@inproceedings{Laza79,
+  author = "Lazard, Daniel",
+  title = {{Systems of Algebraic Equations}},
+  booktitle = "International Symbposium on Symbolic and Algebraic
+               Manipulation", 
+  pages = "88-94",
+  publisher = "Springer",
+  year = "1979",
+  comment = "LNCS 72",
+  paper = "Laza79.pdf"
+}
+
+\end{chunk}
+
+\index{Tang, Min}
+\index{Li, Bingyu}
+\index{Zeng, Zhenbing}
+\begin{chunk}{axiom.bib}
+@article{Tang18,
+  author = "Tang, Min and Li, Bingyu and Zeng, Zhenbing",
+  title = {{Computing Sparse GCD of Multivariate Polynomials via
+            Polynomial Interpolation}},
+  journal = "System Science and Complexity",
+  volume = "31",
+  pages = "552-568",
+  year = "2018",
+  abstract =
+    "The problem of computing the greatest common divisor (GCD) of
+    multivariate polynomials, as one of the most important tasks of
+    computer algebra and symbolic computation in more general scope,
+    has been studied extensively since the beginning of the
+    interdisciplinary of mathematics with computer science. For many
+    real applications such as digital image restoration and
+    enhancement, robust control theory of nonlinear systems,
+    $L_1$-norm convex optimizations in compressed sensing techniques,
+    as well as algebraic decoding of Reed-Solomon and BCH codes, the
+    concept of sparse GCD plays a core role where only the greatest
+    common divisors with much fewer terms than the original
+    polynomials are of interest due to the nature of problems or data
+    structures. This paper presents two methods via multivariate
+    polynomial interpolation which are based on the variation of
+    Zippel's method and Ben-Or/Tiwari algorithm, respectively. To
+    reduce computational complexity, probabilistic techniques and
+    randomization are employed to deal with univariate GCD computation
+    and univariate polynomial interpolation. The authors demonstrate
+    the practical performance of our algorithms on a significant body
+    of examples. The implemented experiment illustrates that our
+    algorithms are efficient for a quite wide range of input.",
+  paper = "Tang18.pdf"
+}
+
+\end{chunk}
+
+\index{Miola, Alfonso}
+\index{Yun, David Y.Y.}
+\begin{chunk}{axiom.bib}
+@article{Miol74,
+  author = "Miola, Alfonso and Yun, David Y.Y.",
+  title = {{Computational Aspects of Hensel-type Univariate Polynomial
+            Greatest Common Divisor Algorithms}},
+  journal = "ACM Sigplan Bulletin",
+  year = "1974",
+  abstract =
+    "Two Hensel-type univariate polynomial Greatest Common Divisor
+    (GCD) algorithms are presented and compared. The regular linear
+    Hensel construction is shown to be generally more efficient than
+    the Zassenhaus quadratic contstruction. The UNIGCD algorithm for
+    UNIvariate polynomial GCD computations, based on the regular
+    Hensel construction is then presented and compared with the
+    Modular algorithm based on the Chinese Remainder Algorithm. From
+    both an analytical and an experimental point of view, the UNIGCD
+    algorithm is shown to be preferable for many common univariate GCD
+    computations. This is true even for dense polynomials, which was
+    considered to be the most suitable case for the application of the
+    Modular algorithm.",
+  paper = "Miol74.pdf"
+}
+
+\end{chunk}
+
+\index{Brown, W.S.}
+\begin{chunk}{axiom.bib}
+@article{Brow71,
+  author = "Brown, W.S.",
+  title = {{On Euclid's Algorithm and the Computation of Polynomial
+            Greatest Common Divisors}},
+  journal = "J. ACM",
+  volume = "18",
+  pages = "478-504",
+  year = "1971",
+  abstract =
+    "This paper examines the computation of polynomial greatest common
+    divisors by various generalizations of Euclid's algorithm. The
+    phenomenon of coefficient growth is described, and the history of
+    successful efforts first to control it and then to eliminate it is
+    related.
+
+    The recently developed modular algorithm is presented in careful
+    detail, with special attention to the case of multivariate
+    polynomials.
+
+    The computing times for the classical algorithm and for the
+    modular algorithm are analyzed, and it is shown that the modular
+    algorithm is markedly superior. In fact, in the multivariate case,
+    the maximum computing time for the modular algorithm is strictly
+    dominated by the maximum computing time for the first
+    pseudo-division in the classical algorithm.",
+  paper = "Brow71.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Collins, George E.}
+\begin{chunk}{axiom.bib}
+@article{Coll67,
+  author = "Collins, George E.",
+  title = {{Subresultants and Reduced Polynomial Remainder
+           Sequences}}, 
+  journal = "J. ACM",
+  volume = "14",
+  number = "1",
+  pages = "128-142",
+  year = "1967",
+  paper = "Coll67.pdf"
+}
+
+\end{chunk}
+
+\index{Brown, W.S.}
+\index{Traub, J.F.}
+\begin{chunk}{axiom.bib}
+@article{Brow71a,
+  author = "Brown, W.S. and Traub, J.F.",
+  title = {{On Euclid's Algorithm and the Theory of Subresultants}},
+  journal = "J. ACM",
+  volume = "18",
+  number = "4",
+  pages = "505-514",
+  year = "1971",
+  abstract =
+    "This papers presents an elementary treatment of the theory of
+    subresultants, and examines the relationship of the subresultants
+    of a given pair of polynomials to their polynomial remainder
+    sequence as determined by Euclid's algorithm. Two important
+    versions of Euclid's algorithm are discussed. The results are
+    essentially the same as those of Collins, but the presentatino is
+    briefer, simpler, and somewhat more general.",
+  paper = "Brow71a.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Moses, Joel}
+\index{Zippel, Richard}
+\begin{chunk}{axiom.bib}
+@article{Mose79a,
+  author = "Moses, Joel and Zippel, Richard",
+  title = {{An Extension of Liouville's Theorem}},
+  journal = "LNCS",
+  volume = "72",
+  pages = "426-430",
+  year = "1979",
+  paper = "Mose79a.pdf"
+}
+
+\end{chunk}
+
+\index{Gabriel, Richard}
+\begin{chunk}{axiom.bib}
+@misc{Gabr91,
+  author = "Gabriel, Richard",
+  title = {{Lisp: Good News, Bad News, How to Win Big}},
+  year = "1991",
+  link = "\url{https://www.dreamsongs.com/WIB.html}"
+}
+
+\end{chunk}
+
+\index{Chatley, Robert}
+\index{Donaldson, Alastair}
+\index{Mycroft, Alan}
+\begin{chunk}{axiom.bib}
+@article{Chat19,
+  author = "Chatley, Robert and Donaldson, Alastair and 
+            Mycroft, Alan",
+  title = {{The Next 7000 Programming Languages}},
+  journal = "LNCS",
+  volume = "10000",
+  pages = "250-282",
+  year = "2019",
+  abstract =
+   "Landin's seminal paper "The next 700 programming languages"
+   considered programming languages prior to 1966 and speculated on
+   the next 700. Half-a-century on, we cast programming languages in a
+   Darwinian 'tree of life' and explore languages, their features
+   (genes) and language evolution from a viewpoint of 'survival of the
+   fittest'. 
+
+   We investigatge this thesis by exploring how various anguages fared
+   in the past, and then consider the divergence between the languages 
+   {\sl empirically used in 2017} and the langauge features one might
+   have expected if the languages of the 1960s had evolved optimally
+   to fill programming niches.
+
+   This leads us to characterise three divergences, or 'elephants in
+   the room', were actual current language use, or feature provision,
+   differs from that which evolution might suggest. We conclude by
+   speculating on future language evolution.",
+  paper = "Chat19.pdf",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Pierce, Benjamin C.}
+\begin{chunk}{axiom.bib}
+@misc{Pier08,
+  author = "Pierce, Benjamin C.",
+  title = {{Types Considered Harmful}},
+  comment = "Talk at Mathematical Foundations of Programming Languages",
+  year = "2008",
+  link = "\url{https://www.cis.upenn.edu/~bcpierce/papers/harmful-mfps.pdf}",
+  paper = "Pier08.pdf",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Eisenberg, Richard A.}
+\index{Vytiniotis, Dimitrios}
+\index{Jones, Simon Peyton}
+\index{Weirich, Stephanie}
+\begin{chunk}{axiom.bib}
+@inproceedings{Eise14,
+  author = "Eisenberg, Richard A. and Vytiniotis, Dimitrios and
+            Jones, Simon Peyton and Weirich, Stephanie",
+  title = {{Closed Type Families with Overlapping Equations}},
+  booktitle = "POPL 14",
+  year = "2014",
+  abstract =
+    "Open, type-level functions are a recent innovatino in Haskell
+    that move Haskell towards the expressiveness of dependent types,
+    while retaining the lok and feel of a practial programming
+    language. This paper shows how to increase expressiveness still
+    further, by adding closed type functions whose equations may
+    overlap, and may have non-linear patterns over an open type
+    universe. Although practically useful and simple to implement,
+    these features go {\sl beyond} conventional dependent type theory
+    in some respects, and have a subtle metatheory.",
+  paper = "Eise14.pdf"
+}
+
+\end{chunk}
+
+\index{Wand, Mitchell}
+\index{Friedman, Dan}
+\begin{chunk}{axiom.bib}
+@articlen{Wand78,
+  author = "Wand, Mitchell and Friedman, Dan",
+  title = {{Compiling Lambda-Expressions Using Continuations and
+            Factorizations}}, 
+  journal = "Computer Languages",
+  volume = "3",
+  pages = "241-263",
+  year = "1978",
+  abstract =
+    "We present a source-level transformation for recursion-removal
+    with several interesting characteristics:
+    \begin{itemize}
+    \item[(i)] the algorithm is simple and provably correct
+    \item[(ii)] the stack utilization regime is chosen by the compiler
+    rather than being fixed by the run-time environment
+    \item[(iii)] the stack is available at the source language level
+    so that further optimizations are possible
+    \item[(iv)] the algorithm arises from ideas in category theory
+    \end{itemize}
+    In addition to its implications for compilers, the transformation
+    algorithm is useful as an implementation technique for advanced
+    LISP-based systems, and one such application is described.",
+  paper = "Wand78.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Rapoport, Marianna}
+\index{Kabir, Ifaz}
+\index{He, Paul}
+\index{Lhotak, Ondrej}
+\begin{chunk}{axiom.bib}
+@misc{Rapo17,
+  author = "Rapoport, Marianna and Kabir, Ifaz and He, Paul and
+            Lhotak, Ondrej",
+  title = {{A Simple Soundness Proof for Dependent Object Types}},
+  year = "2017",
+  link = "\url{https://arxiv.org/pdf/1706.03814v1.pdf}",
+  abstract =
+    "Dependent Object Types (DOT) is intended to be a core calculus
+    for modelling Scala. Its distinguishing feature is abstract type
+    members, fields in objects that hold types rather than
+    values. Proving soundness of DOT has been surprisingly
+    challenging, and existing proofs are complicated, and reason about
+    multiple concepts at the same time (e.g. types, values,
+    evaluation). To serve as a core calculus for Scala, DOT should be
+    easy to experiment with and extend, and therefore its soundness
+    proof needs to be easy to modify.
+
+    This paper presents a simple and modular proof strategy for
+    reasoning in DOT. The strategy separates reasoning about types
+    from other concerns. It is centered around a theorem that connects
+    the full DOT type system to a restricted variant in which the
+    challenges and paradoxes caused by abstract type members are
+    eliminated. Almost all reasoning in the proof is done in the
+    intuitive worlds of this restricted type system. Once we have the
+    necessary results about types, we observe that the other aspects
+    of DOT are mostly standard and can be incorporated into a
+    soundness proof using familiar techniques known from other
+    calculi.
+
+    Our paprer comes with a machine-verified version of the proof in
+    Coq.",
+  paper = "Rapo17.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Daumas, Marc}
+\index{Lester, David}
+\index{Munoz, Cesar}
+\begin{chunk}{axiom.bib}
+@misc{Daum07,
+  author = "Daumas, Marc and Lester, David and Munoz, Cesar",
+  title = {{Verified Real Number Calculations: A Library for Interval
+            Arithmetic}}, 
+  year = "2007",
+  link = "\url{https://arxiv.org/pdf/0708.3721.pdf}",
+  abstract =
+    "Real number calculations on elementary functions are remarkably
+    difficult to handle in mechanical proofs. In this paper, we show
+    how these calculations can be performed within a theorem prover or
+    proof assistant in a convenient and highly automated as well as
+    interactive way. First, we formally establish upper and lower
+    bounds for elementary functions. Then, based on these bounds, we
+    develop a rational interval arithmetic where real number
+    calculations take place in an algebraic setting. In order to
+    reduce the dependency effect of interval arithmetic, we integrate
+    two techniques: interval splitting and taylor series
+    expansions. This pragmatic approach has been developed, and
+    formally verified, in a theorem prover. The formal development
+    also includes a set of customizable strategies to automate proofs
+    involving explicit calculations over real numbers. Our ultimate
+    goal is to provide guaranteed proofs of numerical properties with
+    minimal human theorem-prover interaction.",
+  paper = "Daum07.pdf"
+}
+
+\end{chunk}
+
+\index{Appel, Andrew W.}
+\index{Dockins, Robert}
+\index{Hobor, Aquinas}
+\index{Beringer, Lennart}
+\index{Dodds, Josiah}
+\index{Stewart, Gordon}
+\index{Blazy, Sandrine}
+\index{Leroy, Xavier}
+\begin{chunk}{axiom.bib}
+@book{Appe14,
+  author = "Appel, Andrew W. and Dockins, Robert and Hobor, Aquinas
+            and Beringer, Lennart and Dodds, Josiah and 
+            Stewart, Gordon and Blazy, Sandrine and Leroy, Xavier",
+  title = {{Program Logics for Certified Compilers}},
+  publisher = "Cambridge University Press",
+  isbn = "978-1-107-04801-0",
+  year = "2014",
+  paper = "Appe14.pdf"
+}
+
+\end{chunk}
+
+\index{Leroy, Xavier}
+\begin{chunk}{axiom.bib}
+@misc{Lero08,
+  author = "Leroy, Xavier",
+  title = {{Formal Verification of a Realistic Compiler}},
+  year = "2008",
+  link = "\url{https://xavierleroy.org/publi/compcert-CACM.pdf}",
+  abstract =
+    "This paper reports on the development and formal verification
+    (proof of semantic preservation) of CompCert, a compiler from
+    Clight (a large subset of the C programming language) to PowerPC
+    assembly code, using the Coq proof assistant both for programming
+    the compiler and for proving its correctness. Such a verificed
+    compiler is useful in the context of critical software and its
+    formal verification: the verification of the compiler guarantees
+    that the safety properties proved on the source code hold for the
+    executable compiled code as well.",
+  paper = "Lero08.pdf"
+}
+
+\end{chunk}
+
+\index{Bauer, Andrej}
+\index{Haselwarter, Philipp G.}
+\index{Lumsdaine, Peter LeFanu}
+\begin{chunk}{axiom.bib}
+@misc{Baue20,
+  author = "Bauer, Andrej and Haselwarter, Philipp G. and
+            Lumsdaine, Peter LeFanu",
+  title = {{A General Definition of Dependent Type Theories}},
+  year = "2020",
+  link = "\url{https://arxiv.org/pdf/2009.05539.pdf}",
+  abstract = 
+    "We define a general class of dependent type theories,
+    encompassing Martin L\"of's intuitionistic type theories and
+    variants and extensions. The primary aim is pragmatic: to unify
+    and organise their study, allowing results and constructions to be
+    given in reasonable generality, rather than just for specific
+    theories. Compared with other approaches, our definition stays
+    closer to the direct or naive reading of syntax, yielding the
+    traditional presentation of specific theories as closely as
+    possible. 
+
+    Specifically, we give three main definitions: {\sl raw type
+    theories}, a minimal setup for discussing dependently typed
+    derivability; {\sl acceptable type theories}, including extra
+    conditions ensuring well-behavedness; and {\sl well-presented type
+    theories}, generalisig how in traditional presentations, the
+    well-behavedness of a type theory is established step by step as
+    the type theory is built up. Following these, we show that various
+    fundamental fitness-for-purpose metatheorems hold in this
+    generality.
+
+    Much of the present work has been formalised in the proof
+    assistant Coq.",
+  paper = "Baue20.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Longley, John}
+\begin{chunk}{axiom.bib}
+@article{Long99,
+  author = "Longley, John",
+  title = {{Matching Typed and Untyped Realizability}},
+  journal = "Theoretical Computer Science",
+  volume = "23",
+  number = "1",
+  year = "1999",
+  abstract =
+    "Realizability interpretations of logics are given by saying what
+    it means for computational objects of some kind to {\sl realize}
+    logical formulae. The computational object in question might be
+    drawn from an untyped universe of computation, such as a partial
+    combinatory algebra, or they might be typed objects such as terms
+    of a PCF-style programming languag. In some instances, one can
+    show that a particular untyped realizability interpretation
+    matches a particular typed one, in the sense that they give the
+    same set of realizable formulae. In this case, we haev a very good
+    fit indeed between the typed language and the untyped
+    realizability model -- we refer to this condition as 
+    {\sl (constructive) logical full abstraction}.
+
+    We give some examples of this situation for a variety of
+    extensions of PCF. Of particular interest are some models that are
+    logically fully abstract for typed languages including 
+    {\sl non-functional} features. Our results establish connections
+    between what is computable in various programming languages and
+    what is true inside various realizable toposes. We consider some
+    examples of logical formulae to illustrate these ideas, in
+    particular their application to exact real-number compatibility.",
+  paper = "Long99.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Bowman, William J.}
+\begin{chunk}{axiom.bib}
+@misc{Bowm20,
+  author = "Bowman, William J.",
+  title = {{Cur: Designing a Less Devious Proof Assistant}},
+  year = "2020",
+  link = "\url{https://vimeo.com/432569820}",
+  abstract =
+    "Dijkstra said that our tools can have a profound and devious
+    influence on our thinking. I find this especially true of modern
+    proof assistants, with ``devious'' out-weighing ``profound''. Cur
+    is an experiment in design that aims to be less devious. The
+    design emphasizes language extension, syntax manipulation, and
+    DSL construction and integration. This enables the user to be in
+    charge of how they think, rather than requiring the user to
+    contort their thinking to that of the proof assistant. In this
+    talk, my goal is to convince you that you want similar
+    capabilities in a proof assistant, and explain and demonstrate
+    Cur's attempt at solving the problem.",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Croxford, Martin}
+\index{Chapman, Roderick}
+\begin{chunk}{axiom.bib}
+@misc{Crox05,
+  author = "Croxford, Martin and Chapman, Roderick",
+  title = {{Correctness by Construction: A Manifesto for
+            High-Integrity Software}},
+  year = "2005",
+  link = "\url{https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.190.867}",
+  abstract =
+    "High-integrity software systems are often so large that
+    conventional development processes cannot get anywhere near
+    achieving tolerable defect rates. This article presents an
+    approach that has delivered software with very low defect rates
+    cost-effectively. We describe the technical details of the
+    approach and the results achieved, and discuss how to overcome
+    barriers to adopting such best practice approaches. We conclude by
+    observing that where such approaches are compatible and can be
+    deployed in combination, we have the opportunity to realize the
+    extremely low defect rates needed for high integrity software
+    composed of many million lines of code.",
+  paper = "Crox05.pdf",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Kowalski, R.}
+\begin{chunk}{axiom.bib}
+@article{Kowa84,
+  author = "Kowalski, R.",
+  title = {{The Relation Between Logic Programming and Logic
+            Specification}}, 
+  journal = "Phil. Trans. R. Soc. Lond.",
+  volume = "312",
+  pages = "345-351",
+  year = "1984",
+  link = "\url{www.doc.ic.ac.uk/~rak/papers/logic%20programming%20and%20specification.pdf}",
+  abstract =
+    "Formal logic is widely accepted as a program specification
+    language in computing science. It is ideally suited to the
+    representation of knowledge and the description of problems
+    without regard to the choice of programming language. Its use as a
+    specification language is compatible not only with conventional
+    programming languages but also with programming languages based
+    entirely on logic itself. In this paper I shall investigate the
+    relation that holds when both programs and program specifications
+    are expressed in formal logic.
+
+    In many cases, when a specification {\sl completely} defines the
+    relations to be computed, there is no syntactic distinction
+    between specification and program. Moreover the same mechanism
+    that is used to execute logic programs, namely automated
+    deduction, can also be used to execute logic specifications. Thus
+    all relations defined by complete specifications are
+    executable. The only difference between a complete specification
+    and a program is one of efficiency. A program is more efficient
+    than a specification.",
+  paper = "Kowa84.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Cousot, Patrick}
+\index{Cousot, Radhia}
+\index{Fahndrich, Manuel}
+\index{Logozzo, Francesco}
+\begin{chunk}{axiom.bib}
+@misc{Cous13,
+  author = "Cousot, Patrick and Cousot, Radhia and Fahndrich, Manuel
+            and Logozzo, Francesco",
+  title = {{Automatic Inference of Necessary Preconditions}},
+  year = "2013",
+  abstract =
+    "We consider the problem of {\sl automatic} precondition
+    inference. We argue that the common notion of {\sl sufficient}
+    precondition inference (i.e., under which precondition is the
+    program correct?) imposes too large a burden on callers, and hence
+    it is unfit for automatic program analysis. Therefore, we define
+    the problem of {\sl necessary} precondition inference (ie. under
+    which precondition, if violated, will the program {\sl always} be
+    incorrect?). We designed and implemented several new abstract
+    interpretation-based analyses to infer atomic, disjunctive,
+    universally and existentially quantified necessary preconditions.
+
+    We experimentally validated the analyses on large scale industrial
+    code. For unannotated code, the inference algorithms find
+    necessary preconditions for almost 64\% of methods which contained
+    warnings. In 27\% of these cases the inferred preconditions were
+    also {\sl sufficient}, meaning all warnings within the method body
+    disappeared. For annotated code, the inference algorithms find
+    necessary preconditions for over 68\% of methods with warnings. In
+    almost 50\% of these cases the preconditions were also
+    sufficient. Overall, the precision improvement obtained by
+    precondition inference (counted as the additional number of
+    methods with no warnings) ranged between 9\% and 21\%.",
+  paper = "Cous13.pdf"
+}
+
+\end{chunk}
+
+\index{Calcagno, Cristiano}
+\index{Distefano, Dino}
+\index{Dubreil, Jeremy}
+\index{Gabi, Dominik}
+\index{Hooimeijer, Pieter}
+\index{Luca, Martino}
+\index{O'Hearn, Peter}
+\index{Papakonstantinou, Irene}
+\index{Purbrick, Jim}
+\index{Rodriguez, Dulma}
+\begin{chunk}{axiom.bib}
+@misc{Calc16,
+  author = "Calcagno, Cristiano and Distefano, Dino and 
+            Dubreil, Jeremy and Gabi, Dominik and
+            Hooimeijer, Pieter and Luca, Martino and
+            O'Hearn, Peter and Papakonstantinou, Irene and
+            Purbrick, Jim and Rodriguez, Dulma",
+  title = {{Moving Fast with Software Verification}},
+  year = "2016",
+  abstract =
+    "For organisations like Facebook, high quality software is
+    imprtant. However, the pace of change and increasing complexity of
+    modern code makes it difficult to produce error-free
+    software. Available tools are often lacking in helping programmers
+    developer more reliable and secure applications.
+
+    Formal verificatin is a technique able to detect software errors
+    statically, before a product is actually shipped. Although this
+    aspect makes this technology very appealing in principle, in
+    practice there have been many difficulties that have hindered the
+    application of software verification in industrial
+    environments. In particular, in an organisation like Facebook
+    where the release cycle is fast compared to more traditional
+    industries, the deployment of formal techniques is highly
+    challenging.
+
+    This paper describes our experience in integrating a verification
+    tool based on static analysis into the software development cycle
+    at Facebook.",
+  paper = "Calc16.pdf"
+}
+
+\end{chunk}
+
+\index{Ryder, Chris}
+\index{Thompson, Simon}
+\begin{chunk}{axiom.bib}
+@techreport{Ryde99,
+  author = "Ryder, Chris and Thompson, Simon",
+  title = {{Aldor meets Haskell}},
+  type = "technical report",
+  institution = "University of Kent",
+  number = "21762",
+  year = "1999",
+  abstract =
+    "The aim of this project was to attempt to output a Haskell
+    representation of the Aldor compiler's abstract syntax tree. The
+    purpose of this is to enable the representation to be executed and
+    to give an experimental platform in which to look at how to
+    circumvent some of the limitations of the Aldor compilers type
+    checker.",
+  paper = "Ryde99.pdf",
+  keywords = "axiomref"
+}
+
+\end{chunk}
+
+\index{Corless, Robert}
+\index{Watt, Stephen}
+\index{Zhi, Lihong}
+\begin{chunk}{axiom.bib}
+@article{Corl04,
+  author = "Corless, Robert and Watt, Stephen and Zhi, Lihong",
+  title = {{QR Factoring to Compute the GCD of Univariate Approximate
+            Polynomials}},
+  journal = "IEEE Trans. on Signal Processing",
+  volume = "52",
+  number = "12",
+  year = "2004",
+  abstract =
+    "We present a stable and practical algorithm that uses QR factors
+    of the Sylvester matrix to compute the greatest common divisor
+    (GCD) of univariate approximate polynomials over $\mathbb{R}[x]$
+    or $\mathbb{C}[x]$. An approximate polynomial is a polynomial with
+    coefficients that are not known with certainty. The algorithm of
+    this paper improves over previously published algorithms by
+    handling the case when common roots are near to or outside the
+    unit circle, by splitting and reversal if necessary. The algorithm
+    has been tested on thousands of examples, including pairs of
+    polynomials of up to degree 1000, and is now distributed as the
+    program QRGCD in the SNAP package of Maple 9.",
+  paper = "Corl04.pdf"
+}
+
+\end{chunk}
+
+\index{Watt, Stephen M.}
+\begin{chunk}{axiom.bib}
+@phdthesis{Watt85,
+  author = "Watt, Stephen M.",
+  title = {{Bounded Parallelism in Computer Algebra}},
+  school = "University of Waterloo",
+  year = "1985",
+  link = "\url{http://www.csd.uwo.ca/~watt/pub/reprints/1985-smw-phd.pdf}",
+  abstract =
+    "This thesis examines the performance improvements that can be
+    made by exploiting parallel processing in symbolic mathmatical
+    computation. The study focuses on the use of high-level
+    parallelism in the case where the number of processors is fixed
+    and independent of the problem size, as in existing
+    multiprocessors.
+
+    Since seemingly small changes to the inputs can cause dramatic
+    changes in the execution times of many algorithms in computer
+    algebra, it is not generally useful to use static scheduling. We
+    find it is possible, however, to exploit the high-level parallelism
+    in many computer algebra problems using dynamic scheduling methods
+    in which subproblems are treated homogeneously.
+
+    Our investigation considers the reduction of execution time in
+    both the case of AND-parallelism, where all of the subproblems
+    must be completed, and the less well studied case of
+    OR-parallelism, where completing any one of the subproblems is
+    sufficient. We examine the use of AND and OR-parallelism in terms
+    of the {\sl problem heap} and {\sl collusive} dynamic scheduling
+    schemes which allow a homogeneous treatment of subtasks. A useful
+    generalization is also investigated in which each of the subtasks
+    may either succeed or fail and execution completes when the first
+    success is obtained.
+
+    We study certain classic problems in computer algebra within this
+    framework. A collusive method for integer factorization is
+    presented. This method attempts to find different factors in
+    parallel, taking the first one that is discovered. Problem heap
+    algorithms are given for the computation of multivariate
+    polynomial GCDs and the computation of Grobner bases. The GCD
+    algorithm is based on the sparse modular GCD and performs the
+    interpolations in parallel. The Grobner basis algorithm exploits
+    the independence of the reductions in basis completion to obtain a
+    parallel method.
+
+    In order to make evaluations in concrete terms, we have
+    constructed a system for running computer algebra programs on a
+    multiprocessor. The system is a version of Maple able to
+    distribute processes over a local area network. The fact that the
+    multiprocessor is a local area network need not be considered by
+    the programmer.",
+  paper = "Watt85.pdf",
+  keywords = "axiomref"
+}
+
+\end{chunk}
+
+\index{Watt, Stephen M.}
+\begin{chunk}{axiom.bib}
+@article{Watt06,
+  author = "Watt, Stephen M.",
+  title = {{Making Computer Algebra More Symbolic}},
+  journal = "Proc. Transgressive Computing",
+  pages = "43-49",
+  year = "2006",
+  abstract =
+    "This paper is a step to bring closer together two views of
+    computing with mathematical objects: the view of ``symbolic
+    computation'' and the view of ``computer algebra''. Symbolic
+    computation may be seen as working with expression trees
+    representing mathematical formulae and applying various rules to
+    transform them. Computer algebra may be seen as developing
+    constructive algorithms to compute algebraic quanties in various
+    arithmetic domains, possibly involving indeterminates. Symbolic
+    computation allows a wider range of expression, while computer
+    algebra admits greater algorithmic precision. We examine the
+    problem of providing polynomials symbolic exponents. We present a
+    natural algebraic structure in which such polynomials may be
+    defined and a notion of factorization under which these
+    polynomials form a UFD.",
+  paper = "Watt06.pdf"
+}
+
+\end{chunk}
+
+\index{Watt, Stephen M.}
+\begin{chunk}{axiom.bib}
+@inproceedings{Watt06a,
+  author = "Watt, Stephen M.",
+  title = {{Post Facto Type Extension for Mathematical Programming}}, 
+  booktitle = "Workshop on Domain Specific Aspect Language",
+  publisher = "ACM",
+  year = "2006",
+  abstract =
+    "We present the concept of {\sl post facto extensions}, which may
+    be used to enrich types after they have been defined. Adding
+    exported behaviours without altering data representation permits
+    existing types to be augmented without renaming. This allows large
+    libraries to be structured in a clean, layered fashion and allows
+    independently developed software components to be used
+    together. This form of type extension has been found to be
+    particularly useful in mathematical software, where often new
+    abstractions are applicable to existing objects. We describe an
+    implementation of post facto extension, as provided by Aldor, and
+    explain how it has been used to structure a large mathematical
+    library.",
+  paper = "Watt06a.pdf",
+  keywords = "axiomref"
+}
+
+\end{chunk}
+
+\index{Bronstein, Manuel}
+\index{Maza, Marc Moreno}
+\index{Watt, Stephen M.}
+\begin{chunk}{axiom.bib}
+@inproceedings{Bron07a,
+  author = "Bronstein, Manuel and Maza, Marc Moreno and 
+            Watt, Stephen M.",
+  title = {{Generic Programming Techniques in Aldor}}
+  booktitle = "Proc. of AWFS",
+  publisher = "unknown",
+  year = "2007",
+  pages = "72-77",
+  abstract =
+    "Certain problems in mathematical computing present unusual
+    challenges in structuring software libraries. Although generics,
+    or templates as they are sometimes called, have been in wide use
+    now for many years, new ways to use them to improve library
+    architecture continue to be discovered. We find mathemaical
+    software to be particularly useful in exploring these ideas
+    because the domain is extremely rich while being
+    well-specified. In this paper we present two techniques for using
+    generics in mathematical computation: The first allows efficient
+    formulation of generic algorithms for modular computations. The
+    second allow mathematical domains to be endowed with additional
+    algorithms after they are defined and to have these algorithms
+    used in generic libraries.",
+  paper = "Bron07a.pdf",
+  keywords = "axiomref"
+}
+
+\end{chunk}
+
+\index{Watt, Stephen M.}
+\begin{chunk}{axiom.bib}
+@inproceedings{Watt09a,
+  author = "Watt, Stephen M.",
+  title = {{On the Future of Computer Algebra Systems at the threshold
+            of 2010}},
+  booktitle = "Proc. ASCM-MACIS",
+  publisher = "unknown",
+  pages = "422-430",
+  abstract =
+    "This paper discusses ways in which software systems for computer
+    algebra could be improved if designed from scratch today rather
+    than evolving designs from the 1980s",
+  paper = "Watt09a.pdf"
+}
+
+\end{chunk}
+
+\index{Mao, Lei}
+\begin{chunk}{axiom.bib}
+@misc{Maox20,
+  author = "Mao, Lei",
+  title = {{Euclidean Algorithm}},
+  link = "\url{https://leimao.github.io/blog/Euclidean-Algorithm}",
+  year = "2020"
+}
+
+\end{chunk}
+
+\index{Makkai, Michael}
+\begin{chunk}{axiom.bib}
+@misc{Makk07,
+  author = "Makkai, Michael",
+  title = {{Formal Specification of Computer Programs}},
+  year = "2007",
+  link = "\url{https://www.math.mcgill.ca/makkai/MATH3182007/31807552.pdf}",
+  paper = "Makk07.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Baker, Henry G.}
+\begin{chunk}{axiom.bib}
+@article{Bake93b,
+  author = "Baker, Henry G.",
+  title = {{Equal Rights for Functional Object or, The More Things
+            Change, the More They Are the Same}},
+  journal = "OOPS",
+  publisher = "ACM",
+  pages = "2-27",
+  year = "1993",
+  abstract =
+    "We argue that intensional {\sl object identity} in
+    object-oriented programming languages and databases is best
+    defined operationally by sode-effect semantics. A corollary is
+    that ``functional'' objects have extensional semantics. This model
+    of object identity, which is analogous to the ormal forms of
+    relational algebra, provides cleaner semantics for the
+    value-transmission operations and built-in primitive equality
+    predicate of a programming language, and eliminates the confusion
+    surrounding ``call-by-value'' and ``call-by-reference'' as well as
+    the confusion of multiple equality predicates.
+
+    Implementation issues are discusssed, and this model is shown to
+    have significant performance advantages in persistent, parallel,
+    distributed and multilingua processing environments. This model
+    also provides insight into the ``type equivalence'' problem of
+    Algol-68, Pascal and Ada.",
+  paper = "Bake93b.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Dijkstra, Edsger W.}
+\begin{chunk}{axiom.bib}
+@misc{Dijk12,
+  author = "Dijkstra, Edsger W.",
+  title = {{Some Meditations on Advanced Programming}},
+  link = "\url{https://www.cs.utexas.edu/users/EWD/transcriptions/EWD00xx/EWD32.html}",
+  year = "2012"
+}
+
+\end{chunk}
+
+\index{Lim, Jay P.}
+\index{Aanjaneya, Mridul}
+\index{Gustafson, John}
+\index{Nagarakatte, Santosh}
+\begin{chunk}{axiom.bib}
+@misc{Limx20,
+  author = "Lim, Jay P. and Aanjaneya, Mridul and Gustafson, John
+            and Nagarakatte, Santosh",
+  title = {{A Novel Approach to Generate Correctly Rounded Math
+            Libraries for New Floating Point Representations}},
+  link = "\url{https://arxiv.org/pdf/2007.05344.pdf}",
+  year = "2020",
+  abstract =
+    "Given the importance of floating-point (FP) performance in
+    numerous domains, several new variants of FP and its alternatives
+    have been proposed (e.g. Bfloat16, TensorFloat32, and
+    Posits). These representations do not have correctly rounded math
+    libraries. Further, the use of existing FP libraries for these new
+    representations can produce incorrect results. This paper proposes
+    a novel methodology for generating polynomial approximations that
+    can be used to implement correctly rounded math libraries. Existing
+    methods produce polynomials that approximate the real value of an
+    elementary function $f(x)$ and experience wrong results due to
+    errors in the approximation and due to rounding errors in the
+    implementation. In contrast, our approach generates polynomials
+    that approximate the correctly rounded value of $f(x)$ (i.e. the
+    value of $f(x)$ rounded to the target representation). This
+    methodology provides more margin to identify efficient polynomials
+    that produce correctly rounded results for all inputs. We frame
+    the problem of generating efficient polynomials that produce
+    correctly rounded results as a linear programming problem. Our
+    approach guarantees that we produce the correct result even with
+    range reduction techniques. Using our approach, we have developed
+    correctly rounded, yet faster, implementations of elementary
+    functions for multiple target representations. Our Bfloat16
+    library is 2.3x faster than the corresponding state-of-the-art
+    while producing correct results for all inputs.",
+  paper = "Limx20.pdf"
+}
+
+\end{chunk}
+
+\index{Lanczos, Cornelius}
+\begin{chunk}{axiom.bib}
+@misc{Lanc13,
+  author = "Lanczos, Cornelius",
+  title = {{Cornelius Lanczos (1893-1974) about Mathematics}},
+  year = "2013",
+  link = "\url{https://www.youtube.com/watch?v=avSHHi9QCjA}"
+}
+
+\end{chunk}
+
+\index{Schultz, Daniel}
+\begin{chunk}{axiom.bib}
+@misc{Schu16,
+  author = "Schultz, Daniel",
+  title = {{Trager's Algorithm for Integration of Algebraic Functions
+            Revisited}},
+  year = "2016",
+  link = "\url{https://sites.psu.edu/dpsmath/files/2016/12/IntegrationOnCurves-2hhuby8.pdf}",
+  abstract =
+    "Building on work of Risch in the 1980s and Liouville in the
+    1840s, Trager published an algorithm for deciding if a given
+    algebraic function has an elementary antiderivative. While this
+    algorithm is theoretically complete, it is incomplete in the sense
+    that assumptions are made about the function to be integrated in
+    relation to the defining equation for the algebraic
+    irrationality. These assumptions can be justified by a change of
+    variables in the defining equation, but this does not lead to the
+    most natural algorithm for integration. We fill in the 'gaps' in
+    Trager's algorithm and partially implement this algorithm in the
+    computer algebra system Mathematica. Various extensions to
+    Trager's algorithm are also discussed including a remedy to
+    several of the possible points of failure in the algorithm as well
+    as the problem of the presence of zero divisors in the algebraic
+    function to be integrated.",
+  paper = "Schu16.pdf"
+}
+
+\end{chunk}
+
+\index{Elbakyan, Alexandra}
+\index{Francis, Robin}
+\begin{chunk}{axiom.bib}
+@misc{Elba20,
+  author = "Elbakyan, Alexandra and Francis, Robin",
+  title = {{Should Knowledge Be Free?}},
+  year = "2020",
+  link = "\url{https://www.youtube.com/watch?v=PriwCi6SzLo}"
+}
+
+\end{chunk}
+
+\index{Ferguson, Craig}
+@book{Ferg06,
+  author = "Ferguson, Craig",
+  title = {{Between the Bridge and the River}},
+  year = "2006",
+  publisher = "Chronicle Books LLC",
+  isbn = 978-0-8118-7303-1",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Axiom Authors}
+\begin{chunk}{axiom.bib}
+@misc{list20,
+  author = "Axiom Authors",
+  title = {{axiom-developer Archives}},
+  year = "2020",
+  link = "\url{https://lists.nongnu.org/archive/html/axiom-developer/}"
+}
+
+\end{chunk}
+
+\index{Bridges, Jeff}
+\begin{chunk}{axiom.bib}
+@misc{Lebo98,
+  author = "Coen, Ethan and Coen, Joel",
+  title = {{The Big Lebowski}},
+  year = "1998",
+  link = "\url{https://www.imdb.com/title/tt0118715}"
+}
+
+\end{chunk}
+
+\index{Davant, James B.}
+\begin{chunk}{axiom.bib}
+@article{Dava75,
+  author = "Davant, James B.",
+  title = {{Wittgenstein on Russell's Theory of Types}},
+  journal = "Notre Dame Journal of Formal Logic",
+  volume = "16",
+  number = "1",
+  year = "1975",
+  paper = "Dava75.pdf",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\begin{chunk}{axiom.bib}
+@article{Cont81,
+  author = "Unknown",
+  title = {{Final Report on the National Commission of New
+            Technological Uses of Copyrighted Works}},
+  journal = "Computer/Law Journal",
+  volume = "3",
+  number = "1",
+  year = "1981",
+  comment = "CONTU Report",
+  paper = "Cont81.pdf"
+}
+
+\end{chunk}
+
+\index{Dijkstra, Edsger W.}
+\begin{chunk}{axiom.bib}
+@article{Dijk74,
+  author = "Dijkstra, Edsger W.",
+  title = {{Programming as a Discipline of Mathematical Nature}},
+  year = "1974",
+  comment = "EWD361",
+  link = "\url{https://www.cs.utexas.edu/users/EWD/ewd03xx/EWD361.PDF}",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Rich, Albert}
+\index{Scheibe, Patrick}
+\index{Abbasi, Nasser}
+\begin{chunk}{axiom.bib}
+@article{Rich18,
+  author = "Rich, Albert and Scheibe, Patrick and Abbasi, Nasser",
+  title = {{Rule-based Integration: An Extensive System of Symbolic
+            Integration Rules}},
+  journal = "Journal of Open Source Software",
+  volume = "3.32",
+  year = "2018",
+  abstract =
+    "Finding the antiderivative of expressions is often challenging
+    and requires advanced mathematical skills even for simple looking
+    problems. Computer algebra aystems (CAS) like Mathematica (Wolfram
+    Research, Inc., Champaign, IL), Maple (Maplesoft, a division of
+    Waterloo Maple Inc., Waterloo, Ontario), and Maxima
+    (maxima.sourceforge.net) provide integrators to compute
+    antiderivatives symbolically. However, these systems give no
+    insight as to how an antiderivative is found or why it could not
+    be computed. Also, they use advanced methods incomprehensible to
+    humans that often result in huge antiderivatives unnecessarily
+    involving special functions.",
+  paper = "Rich18.pdf",
+  keywords = "axiomref, DONE"
+}
+
+\end{chunk}
+
+\index{Scheibe, Patrick}
+\begin{chunk}{axiom.bib}
+@misc{Sche18,
+  author = "Scheibe, Patrick",
+  title = {{Rubi - The Rule-based Integrator for Mathematica}},
+  link = "\url{https://community.wolfram.com/groups/-/m/t/1421180}",
+  year = "2018",
+  keywords = "axiomref, DONE"
+}
+
+\end{chunk}
+
+\index{Hutton, Graham}
+\index{Meijer, Erik}
+\begin{chunk}{axiom.bib}
+@techreport{Hutt96,
+  author = "Hutton, Graham and Meijer, Erik",
+  title = {{Monadic Parser Combinators}},
+  type = "technical report",
+  institution = "University of Nottingham",
+  number = "MOTTCS-TR-96-4",
+  year = "1996",
+  link = "\url{http://raw.githubusercontent.com/drewc/smug/master/doc/monparsing.org}",
+  abstract =
+    "In functional programming, a popular approach to building
+    recursive descent parsers is to model parsers as functions, and to
+    define higher-order functions (or combinators) that implement
+    grammar constructions such as sequencing, choice, and
+    repetition. Such parsers form an instance of a monad, an algebraic
+    structure from mathematics that has proved useful for addressing a
+    number of computational problems. The purpose of this artice is to
+    provide a step-by-step tutorial on the monadic approach to
+    building functional parsers, and to explain some of the benefits
+    that result from exploiting monads. No prior knowledge of parser
+    combinators or of monads is assumed. Indeed, this article can also
+    be viewed as a first introduction to the use of monads in
+    programming.",
+  paper = "Hutt96.txt"
+}
+
+\end{chunk}
+
+\index{Jahren, Hope}
+\begin{chunk}{axiom.bib}
+@book{Jahr20,
+  author = "Jahren, Hope",
+  title = {{The Story of More: How We Got to Climate Change and Where
+            to Go from Here}},
+  publisher = "Vintage Books",
+  isbn = "978-0-525-56399-6",
+  year = "2020",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Maling, K.}
+\begin{chunk}{axiom.bib}
+@techreport{Mali59,
+  author = "Maling, K.",
+  title = {{The Lisp Differentiation Demonstration Program}}
+  type = "AI Memo",
+  institution = "MIT Project MAC",
+  number = "AI Memo 10",
+  year = "1959",
+  link = "\url{ftp://publications.ai.mit.edu/ai-publications/pdf/AIM-10.pdf}",
+  paper = "Mali59.pdf"
+}
+
+\end{chunk}
+
+\index{Moses, Joel}
+\begin{chunk}{axiom.bib}
+@techreport{Mose66,
+  author = "Moses, Joel",
+  title = {{Symbolic Integration}},
+  type = "AI Memo",
+  institution = "MIT Project MAC",
+  number = "AI Memo 97",
+  year = "1966",
+  link = "\url{ftp://publications.ai.mit.edu/ai-publications/pdf/AIM-097.pdf}",
+  abstract =
+    "A program has been written which is capable of integrating all
+    but two of the problems solved by Slagle's symbolic integration
+    program SAINT. In contrast to SAINT, it is a purely algorithmic
+    program and it has achieved running times two to three orders of
+    magnitude faster than SAINT. This program and some of the basic
+    routines which it uses are described. A heuristic for integrtion,
+    called the Edge heuristic, is presented. It is claimed that this
+    heuristic with the aid of a few algorithms is capable of solving
+    all the problems solved by the algorithmic program and many others
+    as well.',
+  paper = "Mose66.pdf"
+}  
+
+\end{chunk}
+
+\index{Moses, Joel}
+\begin{chunk}{axiom.bib}
+@techreport{Mose66a,
+  author = "Moses, Joel",
+  title = {{Symbolic Integration - II}},
+  type = "AI Memo",
+  institution = "MIT Project MAC",
+  number = "AI Memo 97A",
+  year = "1966",
+  link = "\url{ftp://publications.ai.mit.edu/ai-publications/pdf/AIM-097a.pdf}",
+  abstract =
+    "In this memo we describe the current state of the integration
+    program originally described in AI Memo 97  (MAC-M-310). Familiarity 
+    with Memo 97 is assumed. Some of the algorithms described in that
+    memo have been extended. Certain new algorithms and a simple
+    integration by parts routine have been added. The current program
+    can integrate all of the problems which were solved by SAINT and
+    also the two problems attempted by it and not solved. Due to the
+    addition of a decision procedure the program is capable of
+    identifying certain integrands (suc as $e^x$ or $e^x/x$ as not
+    integrable in closed form.",
+  paper = "Mose66a.pdf"
+}  
+
+\end{chunk}
+
+\index{Constable, Robert}
+\begin{chunk}{axiom.bib}
+@misc{Cons12
+  author = "Constable, Robert",
+  title = {{Proofs as Processes}},
+  year = "2012",
+  link = "\url{https://www.cs.uoregon.edu/research/summerschool/summer12/curriculum.html}",
+  keywords = "DONE"
+
+}
+
+\end{chunk}
+
+\index{Mimram, Samuel}
+\begin{chunk}{axiom.bib}
+@book{Mimr20,
+  author = "Mimram, Samuel",
+  title = {{Program = Proof}},
+  publisher = "Polytechnique.fr",
+  year = "2020",
+  link = "\url{www.lix.polytechnique.fr/Labo/Samuel.Mimram/teaching/IFN551/course.pdf}",
+  paper = "Mimr20.pdf
+}
+
+\end{chunk}
+
+\index{Voevodsky, Vladimir}
+\begin{chunk}{axiom.bib}
+@misc{Voev14,
+  author = "Voevodsky, Vladimir",
+  title = {{Univalent Foundations}},
+  link = "\url{http://www.math.ias.edu/~vladimir/Site3/Univalent_Foundations_files/2014_IAS.pdf}",
+  year = "2014",
+  paper = "Voev14.pdf",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Gratzer, Daniel}
+\index{Kavvos, G.A.}
+\index{Nuyts, Andreas}
+\index{Birkedal, Lars}
+\begin{chunk}{axiom.bib}
+@misc{Grat20,
+  author = "Gratzer, Daniel and Kavvos, G.A. and Nuyts, Andreas
+            and Birkedal, Lars",
+  title = {{Multimodel Dependent Type Theory}},
+  year = "2020",
+  link = "\url{https://arxiv.org/pdf/2011.15021.pdf}",
+  abstract =
+    "We introduce MTT, a dependent type theory which supports multiple
+    modalities. MTT is parameterized by a mode theory which specifies
+    a collection of modes, modalities, and transformations between
+    them. We show that different choices of mode theory allow us to
+    use the same type theory to compute and reason in many modal
+    situations, including guarded recursion, axiomatic cohesion, and
+    parametric quantification. We reproduce examples from prior work
+    in guarded recursion and axiomatic cohesion -- demonstrating that
+    MTT constitutes a simple and usable syntax whose instantiations
+    intuitively correspond to previous handcrafted modal type
+    theories. In some cases, instantiating MTT to a particular
+    situation unearths a previously unknown type theory that improves
+    upon prior systems. Finally, we investigate the metatheory of
+    MTT. We prove the consistency of MTT and establish canonicity
+    through an extension of recent type-theoretic gluing
+    techniques. These results hold irrespective of the choice of mode
+    theory, and thus apply to a wide variety of modal situations.",
+  paper = "Grat20.pdf"
+}
+
+\end{chunk}
+
+\index{Smullyan, Raymond M.}
+\begin{chunk}{axiom.bib}
+@book{Smul95,
+  author = "Smullyan, Raymond M.",
+  title = {{First-Order Logic}},
+  publisher = "Dover",
+  year = "1995",
+  isbn = "978-0-486-68370-6",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Pfenning, Frank}
+\begin{chunk}{axiom.bib}
+@misc{Pfen17,
+  author = "Pfenning, Frank",
+  title = {{Lecture Notes on Sequent Calculus}},
+  year = "2017",
+  link = "\url{http://www.cs.cmu.edu/~fp/courses/15317-f17/lectures/09-seqcalc.pdf}",
+  paper = "Pfen17.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Stepanov, Alexander}
+\index{McJones, Paul}
+\begin{chunk}{axiom.bib}
+@book{Step09,
+  author = "Stepanov, Alexander and McJones, Paul",
+  title = {{Elements of Programming}},
+  publisher = "Semigroup Press",
+  year = "2009",
+  isbn = "978-0-578-22214-1",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Floyd, Robert W.}
+\index{Knuth, Donald E.}
+\begin{chunk}{axiom.bib}
+@article{Floy90,
+  author = "Floyd, Robert W. and Knuth, Donald E.",
+  title = {{Addition Machines}},
+  journal = "SIAM Journal on Computing",
+  volume = "19",
+  number = "2",
+  pages = "329-340",
+  year = "1990",
+  comment = "Stanford Report STAN-CS-89-1268",
+  link =
+  "\url{i.stanford.edu/pub/cstr/reports/cs/tr/89/1268/CS-TR-89-1268.pdf}",
+  abstract =
+    "It is possible to compute gcd(x,y) efficiently with only 
+    $O(\log xy)$ additions and subtractions, when three arithmetic
+    registers are available but not when there are only two. Several
+    other functions, such as $x^y \bmod z$, are also efficiently
+    computatable in a small number of registers, using only addition,
+    subtraction, and comparison.",
+  paper = "Floy90.pdf"
+}
+
+\end{chunk}
+
+\index{Almeida, Jose Bacelar}
+\index{Frade, Maria Joao}
+\index{Pinto, Jorge Sousa}
+\index{de Sousa, Simao Melo}
+\begin{chunk}{axiom.bib}
+@book{Alme11,
+  author = "Almeida, Jose Bacelar and Frade, Maria Joao and
+            Pinto, Jorge Sousa and de Sousa, Simao Melo",
+  title = {{Rigorous Software Development}},
+  year = "2011",
+  publisher = "Springer",
+  isbn = "978-0-85729-017-5",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Nielson, Flemming}
+\index{Nielson, Hanne Riis}
+\begin{chunk}{axiom.bib}
+@book{Niel19,
+  author = "Nielson, Flemming and Nielson, Hanne Riis",
+  title = {{Formal Methods}},
+  year = "2019",
+  publisher = "Springer",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Kaufmann, Matt}
+\index{Moore, J Strother}
+\begin{chunk}{axiom.bib}
+@misc{Kauf97,
+  author = "Kaufman, Matt and Moore, J Strother",
+  title = {{An Industrial Strength Theorem Prover for a Logic Based on
+            Common Lisp}},
+  year = "1997",
+  link = "\url{web.eecs.umich.edu/~bchandra/courses/papers/Kaufmann_ACL2.pdf}",
+  abstract =
+    "ACL2 is a re-implemented extended version of Boyer and Moore's
+    Nqthm and Kaufmann's Pc-Nqthm intended for large scale
+    verification projects. This paper deals primarily with how we
+    scaled up Nqthm's logic to an ``industrial strength'' programming
+    language -- namely, a large applicative subset of Common Lisp --
+    while preserving the use of total functions within a logic. This
+    makes it possible to run formal models efficiently while keeping
+    the logic simple. We enumerate many other important features of
+    ACL2 and we briefly summarize two industrial applications: a model
+    of the Motorola CAP digital signal processing chip and the proof
+    of the correctness of the kernel of the floating point division
+    algorithm on the AMD$5_k$86 microprocessor by Advanced Micro
+    Devices, Inc.",
+  paper = "Kauf97.pdf"
+}
+
+\end{chunk}
+
+\index{Dijkstra, Edsger W.}
+\begin{chunk}{axiom.bib}
+@misc{Dijk88a,
+  author = "Dijkstra, Edsger W.",
+  title = {{On the Cruelty of Really Teaching Computing Science}}, 
+  year = "1988",
+  link = "\url{http://www.cs.utexas.edu/users/EWD/ewd10xx/EWD1036.PDF}",
+  paper = "Dijk88a.pdf"
+}
+
+\end{chunk}
+
+\index{Pfenning, Frank}
+\begin{chunk}{axiom.bib}
+@misc{Pfen12,
+  author = "Pfenning, Frank",
+  title = {{Proof Theory Foundations}},
+  year = "2012",
+  link = "\url{https://www.cs.uoregon.edu/research/summerschool/summer12/videos/Pfenning1_0.mp4}",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Avigad, Jeremy}
+\begin{chunk}{axiom.bib}
+@misc{Avig20,
+  author = "Avigad, Jeremy",
+  title = {{Mathematical Logic}},
+  year = "2020",
+  comment = "book preprint",
+  paper = "Avig20.pdf"
+}
+
+\end{chunk}
+
+\index{Pfenning, Frank}
+\begin{chunk}{axiom.bib}
+@misc{Pfen16,
+  author = "Pfenning, Frank",
+  title = {{Lecture Notes on Focusing}},
+  year = "2016",
+  link = "\url{http://www.cs.cmu.edu/~fp/courses/15816-f16/lectures/18-focusing.pdf}",
+  paper = "Pfen16.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Dowek, Gilles}
+\begin{chunk}{axiom.bib}
+@misc{Dowe15,
+  author = "Dowek, Gilles",
+  title = {{Deduction Modulo Theory}},
+  year = "2015",
+  link = "\url{http://arxiv.org/pdf/1501.06523.pdf}",
+  paper = "Dowe15.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Andreoli, Jean-Marc}
+\begin{chunk}{axiom.bib}
+@article{Andr01,
+  author = "Andreoli, Jean-Marc",
+  title = {{Focussing and Proof Construction}},
+  journal = "Annals of Pure and Applied Logic",
+  volume = "107",
+  pages = "131-163",
+  year = "2001",
+  abstract = 
+    "This paper proposoes a synthetic presentation of the proof
+    construction paradigm, which underlies most of the research and
+    development in the so-called ``logic programming'' area. Two
+    essential aspects of this paradigm are discussed here: true
+    non-determinism and partial information. A new formulation of
+    Focussing, the basic property used to deal with non-determinism in
+    proof construction, is presented. This formulation is then used to
+    introduce a general constraint-based technique capable of dealing
+    with partial information in proof construction. One of the
+    baselines of the paper is to avoid to rely on syntax to describe
+    the key mechanisms of the paradigm. In fact, the bipolar
+    decomposition of formulas captures their main structure, which can
+    then be directly mapped into a sequent system that uses only
+    atoms. This system thus completely ``dissolves'' the syntax of the
+    formulas and retains only their behavioural content as far as
+    proof construction is concerned. One step further is taken with
+    the so-called ``abstract'' proofs, which dissolves in a similar
+    way the specific tree-like syntax of the proofs themselves and
+    retains only what is relevant to proof construction.",
+  paper = "Andr01.pdf",
+  keywords = "printed"
+}  
+
+\end{chunk}
+
+\index{Touretzky, David S.}
+\begin{chunk}{axiom.bib}
+@book{Tour90,
+  author = "Touretzky, David S.",
+  title = {{Common Lisp: A Gentle Introduction to Symbolic Computation}},
+  year = "1990",
+  publisher = "Benjamin/Cummings Publishing Company",
+  paper = "Tour90.pdf"
+}
+
+\end{chunk}
+
+\index{Lawvere, F. William}
+\begin{chunk}{axiom.bib}
+@article{Lawv69,
+  author = "Lawvere, F. William",
+  title = {{Adjointness in Foundations}},
+  journal = "Dialectica",
+  volume = "23",
+  number = "3/4",
+  year = "1969",
+  pages = "281-296",
+  paper = "Lawv69.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Lawvere, F. William}
+\begin{chunk}{axiom.bib}
+@article{Lawv06,
+  author = "Lawvere, F. William",
+  title = {{Adjointness in Foundations: Author's Commentary}},
+  journal = "Theory and Applications of Categories",
+  volume = "16",
+  pages = "1-16",
+  year = "2006",
+  paper = "Lawv06.pdf"
+}
+
+\end{chunk}
+
+\index{Claessen, Koen}
+\index{Hughes, John}
+\begin{chunk}{axiom.bib}
+@inproceedings{Clae00,
+  author = "Claessen, Koen and Hughes, John",
+  booktitle = "Proc. 5th ACM SIGPLAN Conf. on Functional Programming", 
+  publisher = "ACM",
+  pages = "268-279",
+  year = "2000",
+  link = "\url{cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf}",
+  abstract =
+    "QuickCheck is a tool which aids the Haskell programmer in
+    formulating and testing properties of programs. Properties are
+    described as Haskell functions, and can be automatically tested on
+    random input, but it is also possible to define custom test data
+    generators. We present a number of case studies, in which the tool
+    was successfully used, and also point out some pitfalls to
+    avoid. Random testing is especially suitable for functional
+    programs because properties can be stated at a fine grain. When a
+    function is built from separately tested components, then random
+    testing suffices to obtain good coveraoge of the definition under
+    test.", 
+  paper = "Clae00.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Hughes, John}
+\begin{chunk}{axiom.bib}
+@misc{Hugh12,
+  author = "Hughes, John",
+  title = {{Monads and all that}},
+  year = "2012",
+  link = "\url{https://www.cs.uoregon.edu/research/summerschool/summer12/curriculum.html}",
+  keywords = "DONE"
+
+}
+
+\end{chunk}
+
+\index{Hales, Thomas C.}
+\begin{chunk}{axiom.bib}
+@misc{Hale18,
+  author = "Hales, Thomas C.".
+  title = <<A Review of the Lean Theorem Prover>>,
+  year = "2018",
+  link = "\url{htts://jiggerwit.wordpress.com/2018/09/18/a-review-of-the-lean-theorem-prover}",
+  keywords = "printed, DONE"
+}
+
+\end{chunk}
+
+\index{Selsam, Daniel}
+\begin{chunk}{axiom.bib}
+@misc{Sels16,
+  author = "Selsam, Daniel",
+  title = {{A Standalone Proof-checker for the Lean Theorem Prover}},
+  year = "2016",
+  link = "\url{www.scs.stanford.edu/16wi-cs240h/projects/selsam.pdf}",
+  comment = "\url{https://github.com/dselsam/tc}",
+  paper = "Sels16.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Backhouse, Roland}
+\index{Chisholm, Paul}
+\index{Malcolm, Grant}
+\index{Saaman, Erik}
+\begin{chunk}{axiom.bib}
+@misc{Back88,
+  author = "Backhouse, Roland and Chisholm, Paul and Malcolm, Grant
+            and Saaman, Erik",
+  title = {{Do-it-yourself Type Theory}},
+  year = "1988",
+  link = "\url{www.cs.nott.ac.uk/~psarb2/MPC/DOYTypeTheory.pdf}",
+  paper = "Back88.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{van der Hoeven, Joris}
+\begin{chunk}{axiom.bib}
+@misc{Hoev20,
+  author = "van der Hoeven, Joris",
+  title = {{Overview of the Mathemagix Type System}},
+  year = "2020",
+  link = "\url{https://www.texmacs.org/joris/mmxtyping/mmxtyping.html}",
+  abstract =
+    "The goal of the Mathematix project is to develop a new and free
+    software for computer algebra and computer analysis, based on a
+    strongly typed and compiled language. In this paper, we focus on
+    the underlying type system of this language, which allows for
+    heavy overloading, including parameterized overloading with
+    parameters in so called ``categories''. The exposition is informal
+    and aims at giving the reader an overview of the main concepts,
+    ideas and differences with existing languages. In a forthcoming
+    paper, we intend to describe the formal semantics of the type
+    system in more details.",
+  keywords = "axiomref"
+}
+
+\end{chunk}
+
+\index{Bittner, Calvin John}
+\index{Grossman, Bertrand M.}
+\index{Jenks, Richard Dimick}
+\index{Watt, Stephen Michael}
+\index{Williams, Richard Quimby}
+\begin{chunk}{axiom.bib}
+@misc{Bitt01,
+  author = "Bittner, Calvin John and Grossman, Bertrand M. and
+            Jenks, Richard Dimick and Watt, Stephen Michael and
+            Williams, Richard Quimby",
+  title = {{Computer-Program Compilers Comprising a Program
+            Augmentation Capability}},
+  link = "\url{https://cs.uwaterloo.ca/~smwatt/pub/reprints/2001-us-6223341.pdf}",
+  comment = "U.S. Patent 6,223,341",
+  paper = "Bitt01.pdf"
+}
+
+\end{chunk}
+
+\index{Rijke, Eghert}
+\begin{chunk}{axiom.bib}
+@mastersthesis{Rijk12,
+  author = "Rijke, Eghert",
+  title = {{Homotopy Type Theory}},
+  school = "Utrecht University",
+  year = "2012",
+  paper = "Rijk12.pdf"
+}
+
+
+\end{chunk}
+
+\index{Thompson, Simon}
+\index{Timochouk, Leonid}
+\begin{chunk}{axiom.bib}
+@misc{Thomxx,
+  author = "Thompson, Simon and Timochouk, Leonid",
+  title = {{The Aldor\-\- language}},
+  year = "unknown",
+  link = "\url{fricas-wiki.math.uni.wroc.pl/public/refs/thompson-aldor.pdf}",
+  abstract =
+    "This paper introduces the Aldor\-\- language, which is a
+    functional programming language with dependent types and a
+    powerful, type-based, overloading mechanism. The language is built
+    on a subset of Aldor, the `library compiler' language for the
+    Axiom computer algebra system. Aldor\-\- is designed with the
+    intention of incorporating logical reasoning into computer algebra
+    computations. 
+
+    The paper contains a formal account of the semantics and type
+    system of Aldor\-\-; a general discussion of overloading and how
+    the overloading in Aldor\-\- fits into the general scheme;
+    examples of logic within Aldor\-\- and notes on the implementation
+    of the system.",
+  paper = "Thomxx.pdf",
+  keywords = "printed, axiomref"
+}
+
+\end{chunk}
+
+\index{Harvey, David}
+\begin{chunk}{axiom.bib}
+@misc{Harv20,
+  author = "Harvey, David",
+  title = {{An Exponent One-Fifth Algorithm for Deterministic Integer
+            Factorisation}}, 
+  year = "2020",
+  link = "\url{https://arxiv.org/pdf/2010.05450.pdf}",
+  abstract =
+    "Hittmeir recently presented a deterministic algorithm that
+    provably computes the prime factorisation of a positive integer
+    $N$ in $N^{2/9+o(1)}$ bit operations. Prior to this breakthrough,
+    the best known complexity bound for this problem was
+    $N^{1/4+o(1)}$, a result going back to the 1970s. In this paper we
+    push Hittmeir's techniques further, obtaining a rigorous,
+    deterministic factoring algorithm with complexity $N^{1/5+o(1)}$.",
+  paper = "Harv20.pdf"
+}
+
+\end{chunk}
+
+\index{Fateman, Richard}
+\index{James, Timothy}
+\begin{chunk}{axiom.bib}
+@misc{Fate99c,
+  author = "Fateman, Richard and James, Timothy",
+  title = {{Analysis of a Web User Interface for Mathematics}},
+  year = "1999",
+  link = "\url{https://people.eecs.berkeley.edu/~fateman/papers/tjames.pdf}",
+  abstract =
+    "What can we learn from the range of over 7000 queries made to
+    TILU, a symbolic integration problem-solving server during the
+    course of more than two years? We have saved all queries during
+    this experiment, and based on our analysis, and experimented with
+    improvements in the computer-human interaction components of our
+    web server. We believe our experience will be useful in the design
+    of similar servers that require human input of mathematics.",
+  paper = "Fate99c.pdf"
+}
+
+\end{chunk}
+
+\index{Rabe, Florian}
+\begin{chunk}{axiom.bib}
+@misc{Rabe20,
+  author = "Rabe, Florian",
+  title = {{MMT: A Foundation-Independent Logical System}},
+  year = "2020",
+  link = "\url{https://vimeo.com/421123419}",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{McBride, Conor}
+\begin{chunk}{axiom.bib}
+@misc{Mcbr20,
+  author = "McBride, Conor",
+  title = {{Epigram 2 - Autopsy, Obituary, Apology}},
+  year = "2020",
+  link = "\url{https://vimeo.com/428161108}",
+  keywords = "DONE"
+}
+
+\end{chunk}
+
+\index{Greenberg, Michael}
+\begin{chunk}{axiom.bib}
+@inproceedings{Gree19,
+  author = "Greenberg, Michael",
+  title = {{The Dynamic Practice and Static Theory of Gradual
+            Typing}}, 
+  booktitle = "3rd Summit on Advances in Programming Languages",
+  publisher = "Dagstuhl Publishing",
+  pages = "6:1-6:20",
+  year = "2019",
+  abstract =
+    "We can tease apart the research on gradual types into two
+    'lineages': a pragmatic, implementation-oriented, dynamic-first
+    lineage and a formal, type-theoretic, static-first lineage. The
+    dynamic-first lineage's focus is on taming particular idioms --
+    'pre-existing conditions' in untyped programming languages. The
+    static-first lineage's focus is on interoperation and individual
+    type system features, rather than the collection of features found
+    in any particular language. Both appear in programming languages
+    research under the name ``gradual typing'', and they are in active
+    conversation with each other.
+
+    What are these two lineages? What challenges and opportunities
+    await the static-first lineage? What progress has been made so
+    far?",
+  paper = "Gree19.pdf"
+}
+
+\end{chunk}
+
+\index{Garcia, Ronald}
+\begin{chunk}{axiom.bib}
+@misc{Garc18,
+  author = "Garcia, Ronald",
+  title = {{Gradual Typing}},
+  year = "2018",
+  link = "\url{www.youtube.com/watch?v=fQRRxaWsuxI}",
+}
+
+\end{chunk}
+
+\index{Henglein, Fritz}
+\begin{chunk}{axiom.bib}
+@article{Heng94,
+  author = "Henglein, Fritz",
+  title = {{Dynamic Typing: Syntax and Proof Theory}},
+  journal = "Science of Computer Programming",
+  volume = "23",
+  pages = "197-230",
+  year = "1994",
+  abstract =
+    "We present the {\sl dynamically typed $\lambda$-calculus}, an
+    extension of the statically typed $\lambda$-calculus with a
+    special type Dyn and explicit {\sl dynamic type coercions}
+    corresponding to run-time type tagging and type check-and-untag
+    operations. Programs in run-type typed languages can be
+    interpreted in the dynamically typed $\lambda$-calculus via a
+    nondeterministic {\sl completion process} that inserts explicit
+    coercions and type declarations such that a well-typed term
+    results.
+
+    We characterize when two different completions of the same
+    run-time typed programs are {\sl coherent} with an equational
+    theory that is independent of the underlying
+    $\lambda$-theory. This theory is refined by orienting some
+    equations to define {\sl safety} and {\sl minimality} of
+    completions. Intuitively, a safe completion is one that does not
+    produce an error at run-time which another completion would have
+    avoided, and a minimal completion is a safe completion that
+    executes fewest tagging and check-and-untag operations amongst all
+    safe completions.
+
+    We show that every untyped $\lambda$-term has a safe completion at
+    any type and that it is unique modulo a suitable congruence
+    relation. Furthermore, we present a rewriting system for
+    generating minimal completions. Assuming strong normalization of
+    this rewriting system we show that every $\lambda I$-term has a
+    minimal completion at any type, which is furthermore unique modulo
+    equality in the dynamically typed $\lambda$-calculus.",
+  paper = "Heng94.pdf"
+}
+
+\end{chunk}
+
+\index{Wright, Andrew K.}
+\index{Felleisen, Mattias}
+\begin{chunk}{axiom.bib}
+@techreport{Wrig92,
+  author = "Wright, Andrew K. and Felleisen, Mattias",
+  title = {{A Syntactic Approach to Type Soundness}},
+  type = "technical report",
+  institution = "Rich University",
+  number = "TR91-160",
+  year = "1992",
+  abstract =
+    "We present a new approach to proving type soundness for
+    Hindley/Milner-style polymorphic type systems. The keys to our
+    approach are (1) an adaptation of subject reduction theorems from
+    combinatory logic to programming languages, and (2) the use of
+    rewriting techniques for the specification of the language
+    semantics. The approach easily extends from polymorphic functional
+    languages to imperative languages that provide references,
+    exceptions, continuations, and similar features. We illustrate the
+    technique with a type soundness theorem for the core of Standard
+    ML, which includes the first type soundess proof for polymorphic
+    exceptions and continuations.",
+  paper = "Wrig92.pdf",
+  keywords = "printed"
+}
+
+\end{chunk}
+
+\index{Jones, Neil D.}
+\index{Gomard, Carsten K.}
+\index{Sestoft, Peter}
+\begin{chunk}{axiom.bib}
+@book{Jone93,
+  author = "Jones, Neil D. and Gomard, Carsten K. and Sestoft, Peter",
+  title = {{Partial Evaluation and Automatic Program Generation}},
+  year = "1993",
+  publisher = "Prentice Hall",
+  link = "\url{www.itu.di/~setoft/pebook/jonesgomardsestoft-letter.pdf}",
+  paper = "Jone93.pdf"
+}
+
+\end{chunk}
+
+\index{Prawitz, Dag}
+\begin{chunk}{axiom.bib}
+@book{Praw65,
+  author = "Prawitz, Dag",
+  title = {{Natural Deduction}},
+  publisher = "Dover",
+  isbn = "978-0-486-44655-4"
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Negri, Sara}
+\index{von Plato, Jan}
+\begin{chunk}{axiom.bib}
+@book{Negr01,
+  author = "Negri, Sara and von Plato, Jan",
+  title = {{Structural Proof Theory}},
+  publisher = "Cambridge University Press",
+  year = "2001",
+  isbn = "978-0-521-06842-0",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Herda, Michal}
+\begin{chunk}{axiom.bib}
+@book{Herd20,
+  author = "Herda, Michal",
+  title = {{The Common Lisp Condition System}},
+  publisher = "Apress",
+  year = "2020",
+  isbn = "978-1-4842-6133-0",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Troelstra, A.S.}
+\index{Schwichtenberg, H.}
+\begin{chunk}{axiom.bib}
+@book{Troe96,
+  author = "Troelstra, A.S. and Schwichtenberg, H.",
+  title = {{Basic Proof Theory}},
+  year = "1996",
+  publisher = "Cambridge",
+  isbn = "0-521-77911-1",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Reynolds, John C.}
+\begin{chunk}{axiom.bib}
+@book{Reyn81,
+  author = "Reynolds, John C.",
+  title = {{The Craft of Programming}},
+  publisher = "Prentice-Hall",
+  year = "1981",
+  isbn = "0-13-188862-5",
+  keywords = "shelf"
+}
+
+\end{chunk}
+
+\index{Hindley, J. Roger}
+\begin{chunk}{axiom.bib}
+@book{Hind97,
+  author = "Hindley, J. Roger",
+  title = {{Basic Simple Type Theory}},
+  publisher = "Cambridge",
+  year = "1997",
+  isbn = "0-521-05422-2",
+  keywords = "shelf"
 }
 
 \end{chunk}
