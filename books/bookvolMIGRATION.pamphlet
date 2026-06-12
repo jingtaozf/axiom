@@ -1,0 +1,269 @@
+\documentclass{article}
+\usepackage{axiom}
+
+\begin{document}
+\title{\$SPAD/books bookvolMIGRATION Migrating Axiom from GCL to SBCL}
+\author{Jingtao Xu}
+\maketitle
+
+\begin{abstract}
+This book documents the migration of Tim Daly's literate Axiom (the
+``30 Year Horizon'' code base) from its historical AKCL/GCL host Lisp to
+a modern ANSI Common Lisp, Steel Bank Common Lisp (SBCL), so that
+\textbf{AXIOMsys} can be built and used on contemporary platforms,
+including Apple Silicon macOS.
+
+The migration is conducted as literate programming. Per the project's
+Rule~0, the document is the deliverable and the code is a by-product the
+document generates. The reader who finishes this book should understand
+\emph{why} Axiom is bound to GCL, \emph{where} that binding lives, and
+\emph{how} each binding is replaced --- before a single line of new Lisp
+is compiled. The companion fork OpenAxiom, which already performed an
+equivalent port, is used throughout as a behavioural \emph{oracle}: we
+read it to learn the per-Lisp semantics, then re-author that knowledge
+here in Axiom's own pamphlet style. We never copy OpenAxiom sources or
+its directory layout into this tree.
+\end{abstract}
+
+\eject
+\tableofcontents
+\eject
+
+\section{Why this book exists}
+
+Three forks descend from the 1992 Axiom: Tim Daly's \textbf{Axiom}
+(this repository), \textbf{FriCAS}, and \textbf{OpenAxiom}. FriCAS and
+OpenAxiom are actively buildable on modern multi-Lisp toolchains, but in
+gaining that portability they moved away from Axiom's original literate
+form: FriCAS keeps only an optional weak literate convention, and
+OpenAxiom, while it retains literate \texttt{.spad.pamphlet} algebra,
+reorganised the host layer into a plain \texttt{src/lisp/} directory.
+
+We deliberately chose \texttt{daly/axiom} instead, precisely because it
+is the \emph{most} literate of the family --- every source file is
+embedded in a pamphlet, every directory carries a
+\texttt{Makefile.pamphlet}, and the documentation is primary. Our goal
+is not merely a running binary; it is to \emph{learn the classic system}
+by carrying its literate discipline through a real port. If we wanted
+only a working computer-algebra system on macOS we would install FriCAS
+in five minutes. We want the understanding, written down.
+
+Therefore this book is mostly prose. Code chunks appear only where a
+concrete snippet teaches something the prose cannot, and each is
+preceded by the reasoning that motivates it.
+
+\section{What binds Axiom to GCL}
+
+Axiom does not ``prefer'' GCL; its entire build architecture is welded to
+the AKCL/GCL family. Five distinct couplings, found by inspecting this
+repository, must each be understood before they can be replaced.
+
+\subsection{The image-dump architecture}
+
+Axiom is built by loading every compiled file into a running Lisp and
+then dumping the live memory image to disk as the \textbf{AXIOMsys}
+executable. The dump is performed by the GCL primitive
+\texttt{system::save-system}. In this repository the call lives in
+\texttt{books/bookvol5.pamphlet} inside the chunk \texttt{spad-save},
+annotated with the cross references
+\texttt{\\calls\{spad-save\}\{save-system\}} and
+\texttt{\\usesdollar\{spad-save\}\{SpadServer\}}. The relevant fragment
+is conditionalised per host:
+
+\begin{verbatim}
+(defun user::spad-save (save-file)
+  ...
+  #+:AKCL   (system::save-system save-file)
+  #+:allegro (excl::dumplisp :name save-file ...)
+  #+Lucid   ...)
+\end{verbatim}
+
+There is no \texttt{\#+:sbcl} branch. This single fact is the heart of
+the port: without an SBCL arm here, the system cannot produce its
+executable image at all. The ANSI-era replacement is
+\texttt{sb-ext:save-lisp-and-die}, which both writes a standalone
+executable and folds in the entry point. See the oracle reference in
+Section~\ref{sec:oracle}.
+
+\subsection{The VMLISP portability layer}
+
+Axiom is not written directly against ANSI Common Lisp. It is written
+against \textbf{VMLISP}, a portability layer inherited from the
+Scratchpad and Lisp-Machine era, referenced over five hundred times
+across the interpreter sources. VMLISP is the real ``language'' the
+interpreter speaks; the host Lisp only needs to provide a handful of
+primitives underneath it --- image save, garbage collection, environment
+access, and a foreign-function interface. Most of the port's surface
+area is making VMLISP rest on SBCL instead of on GCL internals.
+
+\subsection{The GCL foreign-function interface}
+
+Axiom reaches into C through GCL's \texttt{defentry} and \texttt{clines}
+mechanisms. Twenty-three \texttt{defentry} bindings exist; by inspection
+they fall into four groups: sockets for the HyperDoc and graphics
+client/server (\texttt{sock\_send\_int}, \texttt{open\_server},
+\texttt{server\_switch}, and siblings), hashing
+(\texttt{hashString}, \texttt{hashCombine}), floating-point edge values
+(\texttt{NANQ}, \texttt{plus\_infinity}, \texttt{minus\_infinity}), and
+filesystem predicates (\texttt{directoryp}, \texttt{writeablep}). SBCL
+expresses the same bindings through \texttt{sb-alien} (or CFFI). For a
+\emph{core} computer-algebra system, only the hash, float, and
+filesystem entries are essential; the socket group belongs to HyperDoc
+and may be stubbed initially (Section~\ref{sec:plan}).
+
+\subsection{GCL internal packages}
+
+The interpreter calls directly into GCL's private packages:
+\texttt{si::} (system internals), \texttt{system::}, and
+\texttt{compiler::}. Each such call must be mapped to its SBCL
+equivalent or routed through a new shim in the VMLISP layer.
+
+\subsection{A bundled, self-compiled GCL}
+
+Finally, GCL is not even an external dependency here: the build patches
+and compiles a specific GCL from source. The selected version is set in
+the top \texttt{Makefile} (\texttt{GCLVERSION=gcl-2.6.13pre}), and the
+\texttt{zips/} directory carries dozens of version-specific GCL patches.
+Part of the port is simply deleting this self-compiled-GCL machinery and
+pointing the build at a system SBCL.
+
+\section{The bootstrap chain (Stage 1)}
+
+To know where the couplings of the previous section actually fire, one
+must follow how Axiom builds itself. The chain has three images, each
+built from the previous:
+
+\begin{itemize}
+\item \textbf{bootsys} --- the bootstrap of the BOOT translator. BOOT is
+  Axiom's implementation language; it is translated down to Lisp. The
+  BOOT-to-Lisp translator must itself run on the host Lisp.
+\item \textbf{interpsys} --- the interpreter image, built by loading the
+  translated interpreter sources into the host Lisp.
+\item \textbf{AXIOMsys} --- the final executable, produced when
+  \texttt{spad-save} dumps the populated interpreter image
+  (Section~2.1).
+\end{itemize}
+
+The host Lisp is touched at every hop: the translator runs on it, the
+interpreter is loaded into it, and the final image is dumped by its
+\texttt{save-system} primitive. A subtle consequence is that Axiom's own
+\emph{tangle} step is performed by a Lisp function inside the image
+(\texttt{LISPTANGLE} resolves to \texttt{bin/lisp}), so the tangler and
+the host Lisp are entangled at bootstrap. Mapping each hop onto SBCL is
+the substance of Stage~5 in the plan below.
+
+\section{The OpenAxiom oracle}
+\label{sec:oracle}
+
+OpenAxiom already carried this code base onto SBCL, CLISP, ECL and
+Clozure. We use it strictly as a reference. The decisive artefact is its
+host-abstraction file \texttt{src/lisp/core.lisp.in}, whose
+\texttt{saveCore} function is the multi-Lisp generalisation of Axiom's
+\texttt{spad-save}:
+
+\begin{verbatim}
+;; open-axiom src/lisp/core.lisp.in  (READ-ONLY oracle, not copied)
+(defun |saveCore| (core-image &optional (entry-point nil))
+  #+:sbcl    (sb-ext:save-lisp-and-die core-image
+                                       :toplevel entry-point :executable t)
+  #+:gcl     (system::save-system core-image)
+  #+:clisp   (ext::saveinitmem core-image :init-function entry-point ...)
+  #+:clozure (ccl:save-application core-image
+                                   :toplevel-function entry-point ...))
+\end{verbatim}
+
+The lesson we extract --- and re-author in Axiom's style when we reach
+Stage~2 --- is the SBCL arm and the entry-point handling. We do
+\emph{not} import this file, its \texttt{src/lisp/} layout, or
+OpenAxiom's autoconf/CMake build. The SBCL branch will instead be added,
+as literate prose plus a \texttt{\\begin\{chunk\}}, to the existing
+\texttt{spad-save} chapter and a new portability chapter within Axiom's
+book structure.
+
+That OpenAxiom builds and runs on our target platform is not assumed; it
+was demonstrated. On an Apple Silicon Mac (\texttt{arm-apple-darwin})
+with SBCL, a full build produced 1196 compiled algebra libraries and a
+working interpreter; \texttt{integrate(1/(x\^{}3+1), x)} returned the
+correct closed form involving a logarithmic and an arctangent term. This
+gives us a behavioural oracle to compare Axiom's ported output against,
+domain by domain.
+
+\section{The migration plan}
+\label{sec:plan}
+
+The guiding principle is \emph{graft, do not rewrite}. The SPAD algebra
+and BOOT interpreter layers are shared ancestry with OpenAxiom and are
+largely host independent once translated; the real work is the host
+layer and the build.
+
+\begin{itemize}
+\item \textbf{Stage 0 --- Build the oracle.} Build OpenAxiom on the
+  target platform to obtain a working reference system. \emph{Done};
+  evidence in Section~\ref{sec:oracle} and Section~\ref{sec:gotchas}.
+\item \textbf{Stage 1 --- Map the bootstrap.} Document the
+  \texttt{bootsys}/\texttt{interpsys}/\texttt{AXIOMsys} chain and every
+  host-Lisp touch point. This chapter (Section~4) is that map.
+\item \textbf{Stage 2 --- Host abstraction.} In Axiom's style, add the
+  \texttt{\#+:sbcl} arm to \texttt{spad-save} in
+  \texttt{books/bookvol5.pamphlet}, and author a new
+  \texttt{src/interp/portability.lisp.pamphlet} collecting the SBCL
+  shims (save, gc, getenv), woven via \texttt{\\getchunk} into
+  \texttt{src/interp/Makefile.pamphlet}. Do not create a
+  \texttt{src/lisp/} directory.
+\item \textbf{Stage 3 --- Foreign interface.} Re-express the 23
+  \texttt{defentry} bindings via \texttt{sb-alien}; stub the socket
+  group if HyperDoc is deferred.
+\item \textbf{Stage 4 --- Drop bundled GCL.} Remove the self-compiled
+  GCL path and point the build at system SBCL.
+\item \textbf{Stage 5 --- Bootstrap on SBCL.} Make the BOOT translator
+  and the \texttt{si::}/\texttt{compiler::} calls work under SBCL until
+  \texttt{AXIOMsys} dumps. Verify against the oracle.
+\item \textbf{Stage 6 --- Compile the algebra.} With the interpreter
+  alive, compile the SPAD library and confirm basic domains compute.
+\end{itemize}
+
+\section{Build gotchas observed on macOS}
+\label{sec:gotchas}
+
+Building the oracle on Apple Silicon surfaced three traps that will
+recur when Axiom itself is built on this platform. They are recorded
+here so the lesson is not lost.
+
+\subsection{Use the Apple C compiler, not Homebrew's clang}
+
+A Homebrew \texttt{clang} earlier in \texttt{PATH} cannot link
+executables, failing with \texttt{ld: library 'System' not found},
+because it does not default to the macOS SDK sysroot. The build must be
+told to use Apple's compiler, \texttt{CC=/usr/bin/clang}. Axiom's own
+C pieces (\texttt{src/lib}, \texttt{clef}, the graphics drivers) will
+need the same.
+
+\subsection{HyperDoc is a hard dependency and needs X11}
+
+One cannot simply skip the HyperDoc help browser: in the build graph the
+interpreter image depends on HyperDoc preprocessing
+(\texttt{all-interpsys} depends on \texttt{all-hyper-pre}). HyperDoc's C
+sources include X11 headers unconditionally, so X11 is required even for
+a non-graphical build. macOS does ship X11 via XQuartz under
+\texttt{/opt/X11}, but \texttt{autoconf} does not search there by
+default; the location must be supplied explicitly
+(\texttt{-{}-x-includes=/opt/X11/include -{}-x-libraries=/opt/X11/lib}).
+For Axiom, the same applies, or HyperDoc must be stubbed wholesale in
+Stage~3.
+
+\subsection{Drive AXIOMsys directly for non-interactive checks}
+
+The \texttt{open-axiom} launcher starts a session manager (\texttt{sman})
+that expects a real terminal; feeding it a command file through a pipe
+hangs. For scripted verification, run the raw \texttt{AXIOMsys} image
+with the system directory exported and the commands on standard input.
+Axiom's \texttt{sman} behaves the same way.
+
+\section{Status and next step}
+
+Stage~0 is complete and Stage~1 is captured by this book. The immediate
+next work is Stage~2: opening \texttt{books/bookvol5.pamphlet} at the
+\texttt{spad-save} chunk and authoring --- prose first --- the reasoning
+for an SBCL image dump, followed by the minimal chunk that implements it.
+
+\end{document}
