@@ -1748,6 +1748,16 @@ XLIB:=/usr/X11R6/lib
 LDF="-L/usr/X11R6/lib64 -L/usr/local/lib64 -L/usr/openwin/lib64 -L/usr/lib64 "
 O:=o
 
+The platform block above resets {\bf O} to {\bf o} after ENVDEFAULTS
+has already applied the LISPFLAVOR selection, and the ENVAR chunk
+below snapshots variables with immediate assignment --- so without
+re-applying the selector here, a {\bf LISPFLAVOR=sbcl} build hands
+its sub-makes \verb|O=o| and the depsys script compiles fasls under
+.o names that the extensionless loader then cannot find (the
+observed failure: ``wrote clam.o \ldots{} Couldn't load clam'').
+The re-application must sit between the platform reset and ENVAR.
+\getchunk{LISPFLAVOR}
+
 \getchunk{GCLOPTS-MACPORT}
 \getchunk{ENVAR}
 
