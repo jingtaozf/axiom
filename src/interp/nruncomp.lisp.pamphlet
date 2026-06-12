@@ -1510,6 +1510,13 @@
                             (COND
                               ((BOOT-EQUAL |v| 'T) NIL)
                               ((NULL |v|) NIL)
+                              ;; A vector slot can hold a non-list atom (a
+                              ;; number such as 0); (CAR v) on it errors
+                              ;; under SBCL where GCL's lenient CAR gave nil
+                              ;; and the slot was skipped. Test (ATOM v)
+                              ;; first so a non-cons slot is skipped without
+                              ;; the CAR.
+                              ((ATOM |v|) NIL)
                               ((ATOM (CAR |v|)) NIL)
                               ((ATOM |v|)
                                (|systemErrorHere|
