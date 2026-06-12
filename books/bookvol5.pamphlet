@@ -22122,7 +22122,16 @@ of the form ('expression expr position)
    (progn
     (setq parts0 (|pfParts| pform))
     (setq parts1 (loop for p in parts0 collect (funcall f p)))
-    (if (reduce #'(lambda (u v) (and u v)) (mapcar #'eq parts0 parts1))
+    ;; :initial-value t is required, not cosmetic. parts0 is empty for a
+    ;; leaf-like form such as (listOf) with no parts; ANSI reduce on an
+    ;; empty sequence with no initial value calls the function with ZERO
+    ;; arguments, and this two-argument lambda then errors ("invalid
+    ;; number of arguments: 0") -- which aborted compiling AHYP's
+    ;; ()->Category form. The reduce asks "were all parts eq (unchanged)?";
+    ;; for no parts that is vacuously true, so t is both the correct
+    ;; identity and the value that leaves pform untouched.
+    (if (reduce #'(lambda (u v) (and u v)) (mapcar #'eq parts0 parts1)
+                :initial-value t)
      pform
      (|pfTree| (|pfAbSynOp| pform) parts1))))))
 
