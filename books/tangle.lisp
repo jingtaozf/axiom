@@ -160,8 +160,14 @@
   (when *chunknoise* (format t "PASS 1~%"))
   (gcl-hashchunks (gcl-read-file filename) noweb?)
   (when *chunknoise* (format t "PASS 2~%"))
+  ;; :if-exists :supersede — GCL's open silently overwrites an existing
+  ;; output file; ANSI's default signals an error instead, so a re-tangle
+  ;; over a stale extraction died on SBCL with "File exists" (observed in
+  ;; the depsys build, 2026-06). Superseding restores the GCL behaviour
+  ;; on every conforming host, GCL included.
   (if (and file (stringp file))
-   (with-open-file (out file :direction :output)
+   (with-open-file (out file :direction :output
+                        :if-exists :supersede :if-does-not-exist :create)
      (gcl-expand topchunk noweb? out))
    (gcl-expand topchunk noweb? t)))
   (values))
