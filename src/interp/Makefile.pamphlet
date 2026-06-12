@@ -684,7 +684,12 @@ ${SAVESYS}:	${DEPSYS} ${OBJS} ${OUT}/bookvol5.${O} ${OUT}/util.${O} \
 	@ echo OBJ= ${OBJ} 
 	@ echo MNT= ${MNT} 
 	@ echo O=${O} LISP=${LISP} BYE=${BYE}
+# The .fn files are GCL gcl_collectfn's type-information output, emitted
+# during compile-file to drive call optimization. SBCL produces none,
+# so the copy has nothing to stat and is skipped on that host.
+ifneq (${LISPFLAVOR},sbcl)
 	@ cp -p ${OUT}/*.fn ${MID}
+endif
 	@ cp -p ${SRC}/doc/msgs/s2-us.msgs ${SPAD}/doc/msgs
 	@ echo '${PROCLAIMS}' > ${OUT}/makeint.lisp
 	@ echo '(load "${OUT}/nocompil")' >> ${OUT}/makeint.lisp
