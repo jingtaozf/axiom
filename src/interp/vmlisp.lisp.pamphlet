@@ -1314,18 +1314,33 @@ In GCL 2.5:
  (declare (ignore item))
   nil) ;no partial application objects
 
+;;; gcmsg toggles GCL's garbage-collection chatter flag and returns
+;;; the previous setting. SBCL prints no per-GC message, so the
+;;; portable branch just remembers the flag in a variable of our own:
+;;; callers that save-and-restore the old value keep working, and
+;;; nothing is printed either way.
+#+:GCL
 (defun gcmsg (x)
    (prog1 system:*gbc-message* (setq system:*gbc-message* x)))
+#-:GCL
+(progn
+ (defvar *gcmsg-flag* nil)
+ (defun gcmsg (x)
+   (prog1 *gcmsg-flag* (setq *gcmsg-flag* x))))
 
 (defun reclaim () (gbc t))
 
+;;; BPINAME's compiled branch asked GCL for the function's name; the
+;;; ANSI route to the same answer is function-lambda-expression, whose
+;;; third value is the name on every conforming host.
 (defun BPINAME (func)
   (if (functionp func)
       (cond ((symbolp func) func)
             ((and (consp func) (eq (car func) 'LAMBDA-BLOCK))
               (cadr func))
             ((compiled-function-p func)
-             (system:compiled-function-name func))
+             #+:GCL (system:compiled-function-name func)
+             #-:GCL (nth-value 2 (function-lambda-expression func)))
             ('t func))))
 
 (defun LISTOFQUOTES (bpi)
@@ -3624,8 +3639,15 @@ terminals and empty or at-end files.  In Common Lisp, we must assume record size
  
  
 (defmacro |elapsedUserTime| () '(get-internal-run-time))
- 
-(defmacro |elapsedGcTime| () '(system:gbc-time))
+
+;;; GCL reports cumulative GC time via (system:gbc-time); SBCL keeps
+;;; the same quantity in sb-ext:*gc-run-time*, in internal time units
+;;; like elapsedUserTime above. A host with neither reports 0 -- the
+;;; value only feeds the )set messages time display.
+(defmacro |elapsedGcTime| ()
+  #+:GCL '(system:gbc-time)
+  #+:sbcl 'sb-ext:*gc-run-time*
+  #-(or :GCL :sbcl) 0)
  
 (defmacro |do| (&rest args) (CONS 'PROGN args))
 
@@ -4196,6 +4218,19 @@ terminals and empty or at-end files.  In Common Lisp, we must assume record size
  
 
 ;; the following form embeds around the akcl error handler
+;;
+;; GCL-only, by reader conditional: embed/unembed and
+;; system:universal-error-handler are AKCL mechanisms with no analogue
+;; elsewhere, and the single-colon symbol cannot even be read on
+;; another host. What this hook provides at run time -- routing Lisp
+;; errors into the interpreter's $BreakMode protocol (trapNumerics,
+;; letPrint2, nobreak/query/resume) -- is NOT yet provided on SBCL;
+;; the equivalent would hang off sb-ext:*invoke-debugger-hook*. Until
+;; that is written, interpreter-level error trapping is degraded on
+;; SBCL: errors reach the host debugger/top level instead of the
+;; break-mode catches. Deferred deliberately; revisit when the
+;; interpreter runs interactively.
+#+:GCL
 (eval-when
  (load eval)
  (unembed 'system:universal-error-handler)
