@@ -274,17 +274,37 @@ It used to read:
            (handle ) ;; this is what is used for xdr-open xdr-read xdr-write
            (name ))  ;; this is used for printing
 
+;; XDR (External Data Representation) is GCL's builtin binary
+;; serialization, reached through the single-colon system:xdr-open/
+;; read/write -- symbols that do not even read on SBCL. The interpreter
+;; uses this only for an optional binary-I/O feature, not for basic
+;; evaluation, so the non-GCL host gets stubs that announce the gap if
+;; ever called rather than a serializer. (daly already shipped a stub
+;; second definition of xdrOpen that shadowed the real one; the reader
+;; conditional makes that explicit instead of relying on defun order.)
+#+:GCL
 (defun |xdrOpen| (str dir)
  (make-xdr-stream :handle (system:xdr-open str) :name str))
-
+#-:GCL
 (defun |xdrOpen| (str dir)
- (format t "xdrOpen called"))
+ (declare (ignore str dir))
+ (error "xdrOpen: GCL XDR serialization is not available on this host"))
 
+#+:GCL
 (defun |xdrRead| (xstr r)
  (system:xdr-read (xdr-stream-handle xstr) r) )
+#-:GCL
+(defun |xdrRead| (xstr r)
+ (declare (ignore xstr r))
+ (error "xdrRead: GCL XDR serialization is not available on this host"))
 
+#+:GCL
 (defun |xdrWrite| (xstr d)
  (system:xdr-write (xdr-stream-handle xstr) d) )
+#-:GCL
+(defun |xdrWrite| (xstr d)
+ (declare (ignore xstr d))
+ (error "xdrWrite: GCL XDR serialization is not available on this host"))
 
 ;; here is a test for XDR
 ;; (setq *print-array* T)
