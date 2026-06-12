@@ -46881,13 +46881,20 @@ to wrap. SBCL can fold its runtime into the output directly when passed
 the shape \verb|AXIOMsys| is meant to have. We therefore always ask for
 an executable.
 
-The entry point is treated as in the Allegro and Lucid branches: if
-\verb|boot::restart| is bound we install it as the top level of the
-saved image (via \verb|:toplevel|) so the binary boots straight into
-Axiom; otherwise we save a plain executable and let SBCL's default top
-level run. These two choices mirror the multi-Lisp \verb|saveCore| in
-the OpenAxiom fork, read here only as a semantic oracle and not copied,
-whose \verb|#+:sbcl| arm makes the same decisions.
+No entry point is installed: the SBCL arm saves a plain executable
+and lets SBCL's default read-eval loop run, exactly as the AKCL
+branch's bare \verb|save-system| leaves GCL's own top level in
+charge. The first draft of this arm copied the Allegro and Lucid
+branches instead, installing \verb|boot::restart| via
+\verb|:toplevel| whenever it was bound --- and the depsys image then
+booted straight into the Axiom banner and died printing it, because
+depsys is a \emph{compile environment}: the build pipes
+\verb|(compile-file ...)|~forms into a Lisp prompt that must simply
+be there. The restart-function was always an Allegro/Lucid-only
+flourish; on GCL the per-image entry point is arranged later, when
+the makeint step installs a top-level hook in the images that want
+one, and the SBCL path will make that decision at the same place
+when the interpsys leg is wired.
 
 One caveat this cover deliberately leaves open. As the itemised list
 above shows, \verb|spad-save| is called at three sites: to build
@@ -46926,9 +46933,7 @@ top level that does not return, and that the save runs single-threaded
 #+:CCL
   (preserve)
 #+:sbcl
-  (if (fboundp 'boot::restart)
-   (sb-ext:save-lisp-and-die save-file :toplevel #'boot::restart :executable t)
-   (sb-ext:save-lisp-and-die save-file :executable t))
+  (sb-ext:save-lisp-and-die save-file :executable t)
 )
 
 \end{chunk}
