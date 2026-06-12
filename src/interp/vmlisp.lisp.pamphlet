@@ -1558,18 +1558,37 @@ Camm issued a fix. This used to read:
 #+AKCL
 (clines "static int mem_value(x ,i)object x;int i; { return ((short *)x)[i];}")
 \end{verbatim}
+This whole C excursion exists because CLtL1 had no way to ask a hash
+table for its test: the snippet casts the table object to a short
+array and reads GCL's internal layout at offset 12. ANSI added
+{\bf hash-table-test}, which answers the same question by name on
+every conforming host, so the portable branch is one case form with
+no C at all. The GCL branch is kept verbatim behind a reader
+conditional rather than switched to hash-table-test, because GCL
+2.6.x's ANSI coverage is partial and the memory peek is known to
+work there.
 \begin{chunk}{*}
+#+:GCL
 (clines "int mem_value(x ,i)object x;int i; { return ((short *)x)[i];}")
-
+#+:GCL
 (defentry memory-value-short(object int) (int "mem_value"))
 
 ;(memory-value-short  (make-hash-table :test 'equal) 12) is 0,1,or 2
 ;depending on whether the test is eq,eql or equal.
+#+:GCL
 (defun HASHTABLE-CLASS (table)
   (case (memory-value-short table 12)
         (0 'EQ)
         (1 'EQL)
         (2 'EQUAL)
+        (t "error unknown hash table class")))
+#-:GCL
+(defun HASHTABLE-CLASS (table)
+  (case (hash-table-test table)
+        (eq 'EQ)
+        (eql 'EQL)
+        (equal 'EQUAL)
+        (equalp 'EQUALP)
         (t "error unknown hash table class")))
 
 ;17.4 Searching and Updating
