@@ -172,86 +172,103 @@ documentclass{article}
 
 (defmacro qassq (a b) `(assq ,a ,b))
 
+;;; The q-accessors are GCL's fast car/cdr: (car (the cons x)), an
+;;; UNCHECKED access that trusts x is a cons. GCL never verifies, so the
+;;; interpreter is free to apply them to non-lists -- compColon, for one,
+;;; reaches qcdr on the symbol S while compiling a (: S Type) declaration.
+;;; SBCL cannot reproduce that: (the cons x) is a hard compile-time error
+;;; when x is provably nil, (qListOrNil x) errors at run time when x is a
+;;; symbol, and an unchecked (sb-ext:truly-the) car of a symbol segfaults.
+;;; The only crash-free, error-free match for GCL's leniency is to treat a
+;;; non-list as the empty list: qListOrNil returns its argument when it is
+;;; a list (cons or nil) and nil otherwise, so (car (qListOrNil x)) yields
+;;; nil for a non-list exactly where GCL returned a benign value. Every
+;;; q-accessor below is phrased through it. This costs a listp test per
+;;; access; correctness first, and the hot paths can move back to
+;;; truly-the once the interpreter is proven never to pass a non-list.
+(declaim (inline qListOrNil))
+(defun qListOrNil (x) (if (listp x) x nil))
+
 (defmacro qcar (x)
- `(car (the list ,x)))
+ `(car (qListOrNil ,x)))
 
 (defmacro qfirst (x)
- `(car (the list ,x)))
+ `(car (qListOrNil ,x)))
 
 (defmacro qcdr (x)
- `(cdr (the list ,x)))
+ `(cdr (qListOrNil ,x)))
 
 (defmacro qrest (x)
- `(cdr (the list ,x)))
+ `(cdr (qListOrNil ,x)))
 
 (defmacro qcaar (x)
- `(car (the list (car (the list ,x)))))
+ `(car (qListOrNil (car (qListOrNil ,x)))))
 
 (defmacro qcadr (x)
- `(car (the list (cdr (the list ,x)))))
+ `(car (qListOrNil (cdr (qListOrNil ,x)))))
 
 (defmacro qsecond (x)
- `(car (the list (cdr (the list ,x)))))
+ `(car (qListOrNil (cdr (qListOrNil ,x)))))
 
 (defmacro qcdar (x)
- `(cdr (the list (car (the list ,x)))))
+ `(cdr (qListOrNil (car (qListOrNil ,x)))))
 
 (defmacro qcddr (x)
- `(cdr (the list (cdr (the list ,x)))))
+ `(cdr (qListOrNil (cdr (qListOrNil ,x)))))
 
 (defmacro qcaaar (x)
- `(car (the list (car (the list (car (the list ,x)))))))
+ `(car (qListOrNil (car (qListOrNil (car (qListOrNil ,x)))))))
 (defmacro qcaadr (x)
- `(car (the list (car (the list (cdr (the list ,x)))))))
+ `(car (qListOrNil (car (qListOrNil (cdr (qListOrNil ,x)))))))
 (defmacro qcadar (x)
- `(car (the list (cdr (the list (car (the list ,x)))))))
+ `(car (qListOrNil (cdr (qListOrNil (car (qListOrNil ,x)))))))
 (defmacro qcaddr (x)
- `(car (the list (cdr (the list (cdr (the list ,x)))))))
+ `(car (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))
 (defmacro qthird (x)
- `(car (the list (cdr (the list (cdr (the list ,x)))))))
+ `(car (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))
 (defmacro qcdaar (x)
- `(cdr (the list (car (the list (car (the list ,x)))))))
+ `(cdr (qListOrNil (car (qListOrNil (car (qListOrNil ,x)))))))
 (defmacro qcdadr (x)
- `(cdr (the list (car (the list (cdr (the list ,x)))))))
+ `(cdr (qListOrNil (car (qListOrNil (cdr (qListOrNil ,x)))))))
 (defmacro qcddar (x)
- `(cdr (the list (cdr (the list (car (the list ,x)))))))
+ `(cdr (qListOrNil (cdr (qListOrNil (car (qListOrNil ,x)))))))
 (defmacro qcdddr (x)
- `(cdr (the list (cdr (the list (cdr (the list ,x)))))))
+ `(cdr (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))
 
 (defmacro qcaaaar (x)
- `(car (the list (car (the list (car (the list (car (the list ,x)))))))))
+ `(car (qListOrNil (car (qListOrNil (car (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcaaadr (x)
- `(car (the list (car (the list (car (the list (cdr (the list ,x)))))))))
+ `(car (qListOrNil (car (qListOrNil (car (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qcaadar (x)
- `(car (the list (car (the list (cdr (the list (car (the list ,x)))))))))
+ `(car (qListOrNil (car (qListOrNil (cdr (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcaaddr (x)
- `(car (the list (car (the list (cdr (the list (cdr (the list ,x)))))))))
+ `(car (qListOrNil (car (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qcadaar (x)
- `(car (the list (cdr (the list (car (the list (car (the list ,x)))))))))
+ `(car (qListOrNil (cdr (qListOrNil (car (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcadadr (x)
- `(car (the list (cdr (the list (car (the list (cdr (the list ,x)))))))))
+ `(car (qListOrNil (cdr (qListOrNil (car (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qcaddar (x)
- `(car (the list (cdr (the list (cdr (the list (car (the list ,x)))))))))
+ `(car (qListOrNil (cdr (qListOrNil (cdr (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcadddr (x)
- `(car (the list (cdr (the list (cdr (the list (cdr (the list ,x)))))))))
+ `(car (qListOrNil (cdr (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qfourth (x)
- `(car (the list (cdr (the list (cdr (the list (cdr (the list ,x)))))))))
+ `(car (qListOrNil (cdr (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qcdaaar (x)
- `(cdr (the list (car (the list (car (the list (car (the list ,x)))))))))
+ `(cdr (qListOrNil (car (qListOrNil (car (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcdaadr (x)
- `(cdr (the list (car (the list (car (the list (cdr (the list ,x)))))))))
+ `(cdr (qListOrNil (car (qListOrNil (car (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qcdadar (x)
- `(cdr (the list (car (the list (cdr (the list (car (the list ,x)))))))))
+ `(cdr (qListOrNil (car (qListOrNil (cdr (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcdaddr (x)
- `(cdr (the list (car (the list (cdr (the list (cdr (the list ,x)))))))))
+ `(cdr (qListOrNil (car (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qcddaar (x)
- `(cdr (the list (cdr (the list (car (the list (car (the list ,x)))))))))
+ `(cdr (qListOrNil (cdr (qListOrNil (car (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcddadr (x)
- `(cdr (the list (cdr (the list (car (the list (cdr (the list ,x)))))))))
+ `(cdr (qListOrNil (cdr (qListOrNil (car (qListOrNil (cdr (qListOrNil ,x)))))))))
 (defmacro qcdddar (x)
- `(cdr (the list (cdr (the list (cdr (the list (car (the list ,x)))))))))
+ `(cdr (qListOrNil (cdr (qListOrNil (cdr (qListOrNil (car (qListOrNil ,x)))))))))
 (defmacro qcddddr (x)
- `(cdr (the list (cdr (the list (cdr (the list (cdr (the list ,x)))))))))
+ `(cdr (qListOrNil (cdr (qListOrNil (cdr (qListOrNil (cdr (qListOrNil ,x)))))))))
 
 (defmacro qlength (a)
  `(length ,a))
@@ -260,10 +277,10 @@ documentclass{article}
  `(svref ,vec ,ind))
 
 (defmacro qrplaca (a b)
- `(rplaca (the list ,a) ,b))
+ `(rplaca (qListOrNil ,a) ,b))
 
 (defmacro qrplacd (a b)
- `(rplacd (the list ,a) ,b))
+ `(rplacd (qListOrNil ,a) ,b))
 
 (defmacro qrplq (&whole form pattern exp)
  (if (or (consp pattern) (simple-vector-p pattern))
@@ -1361,7 +1378,7 @@ In GCL 2.5:
 
 (defun QUOREM (i j r) ; never used, refed in parini.boot
   (multiple-value-bind (x y) (truncate i j)
-   (rplaca (the list r) x) (rplacd (the list r) y)))
+   (rplaca (qListOrNil r) x) (rplacd (qListOrNil r) y)))
 
 (defun MAKE-BVEC (n)
  (make-array (list n) :element-type 'bit :initial-element 0))
