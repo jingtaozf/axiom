@@ -445,9 +445,22 @@
 ;;; The ``See Also:'' section lists the domain with the ``show'' command
 ;;; and the path to the source file in dvi format.
 
-#+:GCL
+;;; Portable environment-variable read. makeHelpFiles / makeInputFiles /
+;;; makeXHTMLFiles below were #+:GCL-only because they call si::getenv,
+;;; a GCL single-colon symbol that does not even read on another host.
+;;; The algebra build's fasthelp target pipes (makeHelpFiles) into
+;;; bin/lisp, so on SBCL it was undefined and fasthelp failed. This
+;;; helper isolates the host difference; the #+gcl branch reads under
+;;; suppression off GCL, so the file stays loadable everywhere.
+(defun tangle-getenv (name)
+  #+:gcl    (tangle-getenv name)
+  #+:sbcl   (sb-ext:posix-getenv name)
+  #+:clisp  (ext:getenv name)
+  #+:ecl    (ext:getenv name)
+  #-(or :gcl :sbcl :clisp :ecl) (error "tangle-getenv: no getenv for this host"))
+
 (defun makeHelpFiles ()
- (let ((AXIOM (si::getenv "AXIOM")) (BOOKS (si::getenv "BOOKS")) HELP PAT)
+ (let ((AXIOM (tangle-getenv "AXIOM")) (BOOKS (tangle-getenv "BOOKS")) HELP PAT)
   (setq HELP (concatenate 'string AXIOM "/doc/spadhelp"))
   (setq PAT ".help")
   (allchunks PAT (concatenate 'string BOOKS "/bookvol5.pamphlet") HELP nil)
@@ -474,9 +487,8 @@
 ;;; So if a chunk name is {somedomain.input} the above call will create
 ;;; the file "/tmp/help/somedomain.input" containing the chunk value.
 
-#+:GCL
 (defun makeInputFiles ()
- (let ((SPD (si::getenv "SPD")) (BOOKS (si::getenv "BOOKS")) INPUT PAT)
+ (let ((SPD (tangle-getenv "SPD")) (BOOKS (tangle-getenv "BOOKS")) INPUT PAT)
   (setq INPUT (concatenate 'string SPD "/int/input"))
   (setq PAT ".input")
   (allchunks PAT (concatenate 'string BOOKS "/bookvol10.2.pamphlet") INPUT nil)
@@ -502,9 +514,8 @@
 ;;; So if a chunk name is {somedomain.xhtml} the above call will create
 ;;; the file "/somedomain.xhtml" containing the chunk value.
 
-#+:GCL
 (defun makeXHTMLFiles ()
- (let ((MNT (si::getenv "MNT")) (BOOKS (si::getenv "BOOKS")) INPUT PAT)
+ (let ((MNT (tangle-getenv "MNT")) (BOOKS (tangle-getenv "BOOKS")) INPUT PAT)
   (setq INPUT (concatenate 'string MNT "/doc"))
   (setq PAT ".xhtml")
   (allchunks PAT (concatenate 'string BOOKS "/bookvol11.pamphlet") INPUT nil)
