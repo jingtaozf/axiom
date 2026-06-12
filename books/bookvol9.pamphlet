@@ -25928,7 +25928,14 @@ file rather than the console.
         (ldate (and (probe-file lfile) (file-write-date lfile))))
   (declare (special *lisp-bin-filetype*))
   (unless (and ldate bdate (> bdate ldate))
-   (compile-lib-file lfile)
+   ;; :output-file bfile is required on SBCL. *lisp-bin-filetype* is "o",
+   ;; so bfile is e.g. AHYP.o, and rpackfile then moves AHYP.o to code.o;
+   ;; but compile-file with no output name writes AHYP.fasl on SBCL, so
+   ;; the move found nothing to stat. Naming the output bfile makes SBCL
+   ;; write its fasl content into the .o name the NRLIB convention expects
+   ;; (load detects a fasl by header, extension notwithstanding). GCL
+   ;; already wrote .o, so this is a no-op there.
+   (compile-lib-file lfile :output-file bfile)
    (list bfile))))
 
 \end{chunk}

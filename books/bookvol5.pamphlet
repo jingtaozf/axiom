@@ -37540,10 +37540,23 @@ o )system
 \end{chunk}
 
 \defunsec{leaveScratchpad}{Leave the Axiom interpreter}
+On GCL {\bf bye} is a builtin that exits the process; leaveScratchpad
+and the session-manager paths call it as BOOT::bye. No other host has
+it, so on EOF the interpreter died with ``BOOT::BYE is undefined''
+(seen at the end of a piped \verb|)co| during the algebra build). The
+cover below, in the BOOT package, gives every host the same exit; the
+build's compile pipes use a separate cl-user::bye from the sys-pkg
+bridge, so the two do not collide.
 \begin{chunk}{defun leaveScratchpad}
-(defun |leaveScratchpad| () 
+#-:GCL
+(defun bye (&optional (code 0))
+ "GCL's exit builtin, covered for other hosts"
+ #+:sbcl (sb-ext:exit :code code)
+ #-:sbcl (error "bye: no exit primitive on this host"))
+
+(defun |leaveScratchpad| ()
  "Leave the Axiom interpreter"
- (bye)) 
+ (bye))
 
 \end{chunk}
 
