@@ -17169,7 +17169,13 @@ of the symbol being parsed. The original list read:
                       (setq a (cdr tmp4))
                       nil))
                    (nreverse0 tmp2))
-              (push (list 'in g (list 'identity a))) tmp2))
+;;; A misplaced close paren shut the push at one argument, stranding
+;;; tmp2 outside it -- CL's push requires (obj place), and SBCL's
+;;; macro arity check rejects the one-argument call at compile time.
+;;; One close MOVED from after the inner lists to after tmp2 (total
+;;; count unchanged, the file stays balanced): tmp2 is now the place
+;;; and the do-loop collects as intended.
+              (push (list 'in g (list 'identity a)) tmp2)))
           (list (aplTran1 (cons op futureArgl)))))
          (list (cdar arglAssoc))))
      (t (cons op argl)))))))
