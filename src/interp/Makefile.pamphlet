@@ -616,10 +616,15 @@ ${DEPSYS}:	${DEP} ${OUT}/sys-pkg.${LISP} ${OUT}/nocompil.${LISP} \
 	@ echo si002 making ${DEPSYS} 
 	@ echo '${PROCLAIMS}' > ${OUT}/makedep.lisp
 	@ echo '(push :oldboot *features*)' >>${OUT}/makedep.lisp
-	@ echo '(load "${OUT}/nocompil")' >> ${OUT}/makedep.lisp
-	@ echo '(load "${OUT}/bookvol5")' >> ${OUT}/makedep.lisp
-	@ echo '(load "${OUT}/bookvol9")' >> ${OUT}/makedep.lisp
-	@ echo '(load "${OUT}/util")' >> ${OUT}/makedep.lisp
+# depsys deliberately loads SOURCE (the compile environment must not
+# depend on fasls it is about to produce). The extension is explicit
+# because an extensionless load beside a stale fasl from the interpsys
+# leg makes SBCL refuse with "object file is older than the presumed
+# source" (observed); naming the .${LISP} pins the choice on any host.
+	@ echo '(load "${OUT}/nocompil.${LISP}")' >> ${OUT}/makedep.lisp
+	@ echo '(load "${OUT}/bookvol5.${LISP}")' >> ${OUT}/makedep.lisp
+	@ echo '(load "${OUT}/bookvol9.${LISP}")' >> ${OUT}/makedep.lisp
+	@ echo '(load "${OUT}/util.${LISP}")' >> ${OUT}/makedep.lisp
 	@ echo '(in-package "BOOT")' >> ${OUT}/makedep.lisp
 	@ echo '(build-depsys (quote ($(patsubst %, "%", ${DEP})))' \
 	  '"${SPAD}" "${GCLDIR}" "${SRC}" "${INT}" "${OBJ}" "${MNT}"' \
