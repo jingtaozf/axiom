@@ -205,7 +205,8 @@ ifeq (${LISPFLAVOR},sbcl)
 	@echo lsp USING SYSTEM SBCL AS HOST LISP
 	@echo =====================================
 	@echo '#!/bin/sh -' > ${OBJ}/${SYS}/bin/lisp
-	@echo 'exec sbcl --no-userinit --no-sysinit "$$@"' >> ${OBJ}/${SYS}/bin/lisp
+	@echo 'exec sbcl --no-userinit --no-sysinit --disable-debugger \
+	  --load ${BOOKS}/tangle.lisp "$$@"' >> ${OBJ}/${SYS}/bin/lisp
 	@chmod +x ${OBJ}/${SYS}/bin/lisp
 else
 	@echo =====================================

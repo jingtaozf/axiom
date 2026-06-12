@@ -728,6 +728,21 @@ sb-ext:save-lisp-and-die refuses to dump a multithreaded image. This
 was observed directly, not predicted: the migration spike in
 books/bookvolMIGRATION.pamphlet failed exactly that way until the
 init files were excluded.
+
+Two further flags came out of the first full build attempt, each from
+a watched failure. First, the GCL bin/lisp was never a bare Lisp:
+lsp/Makefile.pamphlet loads books/tangle.lisp before its
+save-system, so the host image carries the literate tangler, and
+every recipe downstream pipes forms like
+\verb|(tangle "foo.pamphlet" "*" "foo.lisp")| into it. A bare SBCL
+answered ``The function TANGLE is undefined''; the wrapper therefore
+loads books/tangle.lisp, which is plain portable Common Lisp and
+loads under SBCL unchanged. Second,
+{\bf -{}-disable-debugger}: when that undefined-function error fired,
+SBCL parked the whole build in its interactive debugger waiting on a
+pipe that would never answer. A batch host must die loudly, not wait
+politely; with the flag, any unhandled error aborts the recipe and
+make reports it.
 \begin{chunk}{lsp}
 lspdir: ${LSP}/Makefile
 	@echo 19 making ${LSP}
@@ -738,7 +753,8 @@ ifeq (${LISPFLAVOR},sbcl)
 	@echo lsp USING SYSTEM SBCL AS HOST LISP
 	@echo =====================================
 	@echo '#!/bin/sh -' > ${OBJ}/${SYS}/bin/lisp
-	@echo 'exec sbcl --no-userinit --no-sysinit "$$@"' >> ${OBJ}/${SYS}/bin/lisp
+	@echo 'exec sbcl --no-userinit --no-sysinit --disable-debugger \
+	  --load ${BOOKS}/tangle.lisp "$$@"' >> ${OBJ}/${SYS}/bin/lisp
 	@chmod +x ${OBJ}/${SYS}/bin/lisp
 else
 	@echo =====================================
