@@ -13690,8 +13690,22 @@ The \verb|$PrintCompilerMessageIfTrue| variable is set to NIL in spad.
 \end{chunk}
 
 \defdollar{quitTag}
+The interpreter's read-eval loop in runspad wraps its body in
+\verb|(catch |\$quitTag| ...)|. On GCL the tag is borrowed from the
+host: \verb|system::*quit-tag*| is the catch tag GCL's own top level
+establishes, so a host-level quit thrown anywhere inside spad unwinds
+through runspad's catch as well. Nothing in Axiom ever throws this
+tag itself --- the grep finds one defvar, one declare, one catch, and
+no throw --- so the only property the value must have on another host
+is to be a well-formed, unique catch tag. On SBCL, where no such
+host variable exists (the load died with ``SYSTEM::*QUIT-TAG* is
+unbound''), a private interned symbol serves; host-level quit on SBCL
+unwinds by its own means and never needed this tag.
 \begin{chunk}{initvars}
+#+:GCL
 (defvar |$quitTag| system::*quit-tag*)
+#-:GCL
+(defvar |$quitTag| '|spadQuitTag|)
 
 \end{chunk}
 
