@@ -31001,8 +31001,12 @@ Handle some specialization retraction cases, like matrices
 \defun{stripUnionTags}{stripUnionTags}
 \begin{chunk}{defun stripUnionTags}
 (defun |stripUnionTags| (doms)
- (loop for dom in doms 
-  collect (if (eq (first dom) '|:|) (third dom) dom)))
+ ;; A union branch is either a tagged (: tag type) list or a bare type
+ ;; (a symbol like |t#1|, or a string like "failed"); (first dom) on the
+ ;; non-list branch errors on SBCL where GCL's lenient first gave nil.
+ ;; Guard with consp so only tagged branches are unwrapped.
+ (loop for dom in doms
+  collect (if (and (consp dom) (eq (first dom) '|:|)) (third dom) dom)))
 
 \end{chunk}
 
