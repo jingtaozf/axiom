@@ -18245,7 +18245,7 @@ This function is used to build the scanKeyTable
     (setq a (make-array 256))
     (setq b (make-array 1))
     (setf (svref b 0)
-      (make-array 0 :fill-pointer 0 :element-type 'string-char))
+      (make-array 0 :fill-pointer 0 :element-type 'character))
     ((lambda (i)
      (loop
       (cond
@@ -46200,12 +46200,21 @@ and the returned string might be
 \begin{verbatim}
    ")abbrev domain EQ Equation"
 \end{verbatim}
+
+A portability note that covers three sites at once (this defun, the
+scanner's token buffer earlier in this book, and quote-if-needed in
+bookvol9): their make-array calls named the element type
+{\bf string-char}, CLtL1's string-element type that X3J13 removed ---
+ANSI strings hold {\bf character}. GCL still recognises the old name;
+SBCL signals ``unknown type'' as soon as the form is evaluated, which
+is how the depsys load surfaced it. All three now say
+\verb|:element-type 'character|, identical in meaning on GCL.
 \begin{chunk}{defun get-a-line 0}
 (defun get-a-line (stream)
  (when (is-console stream) (princ (mkprompt)))
  (let ((ll (read-a-line stream)))
   (if (and (stringp ll) (adjustable-array-p ll))
-   (make-array (array-dimensions ll) :element-type 'string-char
+   (make-array (array-dimensions ll) :element-type 'character
                   :adjustable t :initial-contents ll)
    ll)))
 
