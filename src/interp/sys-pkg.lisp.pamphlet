@@ -87,6 +87,18 @@ fasl.
     (make-package "SYSTEM" :use nil :nicknames '("SI")))
   (unless (find-package "COMPILER")
     (make-package "COMPILER" :use nil))
+  ;; GCL's SYSTEM package exports a system function that runs a shell
+  ;; command; OBEY calls it and so does the SPAD compiler (e.g. to rm a
+  ;; stale .erlib). VMLISP use-packages SYSTEM, so it must be defined and
+  ;; EXPORTED here, before VMLISP is created below, for VMLISP::SYSTEM to
+  ;; resolve. Define it over run-program and export it.
+  (let ((sym (intern "SYSTEM" "SYSTEM")))
+    (setf (symbol-function sym)
+          (lambda (command)
+            (sb-ext:run-program "/bin/sh" (list "-c" command)
+                                :output t :error t :search nil)
+            nil))
+    (export sym "SYSTEM"))
   (setf sb-impl::*load-source-default-type* "lsp")
   ;; Axiom's arithmetic lets IEEE infinities and NaNs flow through
   ;; computations as ordinary values -- the Float domain depends on it,
