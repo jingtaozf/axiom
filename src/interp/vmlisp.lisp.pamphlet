@@ -2044,7 +2044,11 @@ do the compile, and then rename the result back to code.o.
     (BOOT::SPADTEX . |stex|)
     (BOOT::SPADOUT . |spout|)))
 
-(in-package 'boot)
+;;; ANSI's in-package is a macro taking an unevaluated string
+;;; designator; the CLtL1 spelling (in-package 'boot) hands it the
+;;; list (quote boot), which GCL tolerated and SBCL rejects as "not a
+;;; string designator". The string spelling means the same on both.
+(in-package "BOOT")
 
 (defvar *npPCff* nil "rewrite flets, using global scoping")
 (defun npPCff () (and (funcall *npPCff*) (|npPush| (list (|npPop1|)))))
