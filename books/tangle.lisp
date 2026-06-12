@@ -391,7 +391,12 @@
                (let ((filename key) helpfile)
                 (when noweb? (setq filename (subseq key 2 (- (length key) 2))))
                 (setq helpfile (concatenate 'string todir "/" filename))
-                (with-open-file (out helpfile :direction :output)
+                ;; :if-exists :supersede, as in tangle above: GCL silently
+                ;; overwrites, ANSI's default signals, and a re-run over an
+                ;; existing frame.help aborted makeHelpFiles with FILE-EXISTS.
+                (with-open-file (out helpfile :direction :output
+                                     :if-exists :supersede
+                                     :if-does-not-exist :create)
                  (format t "extracting ~a~%" helpfile)
                  (gcl-expand key noweb? out)))))
        *chunkhash*))
