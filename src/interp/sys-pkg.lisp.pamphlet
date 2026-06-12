@@ -43,7 +43,14 @@ nine hundred occurrences to the new ones: it adds {\bf LISP} as a
 nickname of COMMON-LISP, {\bf USER} as a nickname of
 COMMON-LISP-USER, and creates an empty {\bf SYSTEM} package so the
 \verb|use-package| calls succeed (every real SYSTEM symbol reference
-in this file is already \verb|#+:GCL|-guarded). SBCL locks its
+in this file is already \verb|#+:GCL|-guarded). SYSTEM carries the
+nickname {\bf SI}, matching GCL where SI names the same package, so
+\verb|si::|-prefixed tokens read. An empty {\bf COMPILER} package is
+created for the same reason: bookvol9's compile-lib-file mentions
+\verb|compiler::fast-link-proclaimed-type-p| inside a function body,
+and with no COMPILER package the whole book is unreadable --- the
+reference only needs to \emph{read}; it is reached at run time solely
+on a GCL host. SBCL locks its
 standard packages against exactly this kind of mutation, so the two
 \verb|unlock-package| calls are required first; this was observed as
 a ``Lock on package COMMON-LISP violated'' error, not assumed. The
@@ -77,7 +84,9 @@ fasl.
     (rename-package cu (package-name cu)
       (adjoin "USER" (package-nicknames cu) :test #'string=)))
   (unless (find-package "SYSTEM")
-    (make-package "SYSTEM" :use nil))
+    (make-package "SYSTEM" :use nil :nicknames '("SI")))
+  (unless (find-package "COMPILER")
+    (make-package "COMPILER" :use nil))
   (setf sb-impl::*load-source-default-type* "lsp"))
 
 \end{chunk}

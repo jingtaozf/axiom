@@ -3488,10 +3488,14 @@ it shows up as
 \calls{monitorX}{monitorXX}
 \usesdollar{monitorX}{monitorDepth}
 \usesdollar{monitorX}{depthAlist}
+Two stray closing parentheses followed the defun's own --- the
+cgammaG latent-typo class again (GCL discards unmatched top-level
+closes, SBCL aborts). Two closes balance the form: monitorXX's and
+the defun's.
 \begin{chunk}{defun monitorX}
 (defun monitorX (args funct opts)
  (declare (special |$monitorDepth| |$depthAlist|))
-  (monitorXX args funct opts |$monitorDepth| |$depthAlist|))))
+  (monitorXX args funct opts |$monitorDepth| |$depthAlist|))
 
 \end{chunk}
 
@@ -13740,10 +13744,18 @@ unwinds by its own means and never needed this tag.
 
 \defun{resetStackLimits}{Reset the stack limits}
 \calls{resetStackLimits}{reset-stack-limits}
+GCL must have its stack-depth bookkeeping reset by hand after an
+error unwinds the interpreter loop; that is what the builtin
+\verb|system:reset-stack-limits| does. SBCL manages its control
+stack in the runtime and exposes no such call --- none is needed, so
+the non-GCL body is simply nil. The guard must be a reader
+conditional, not a runtime test, because the single-colon symbol
+itself cannot be read outside GCL.
 \begin{chunk}{defun resetStackLimits 0}
-(defun |resetStackLimits| () 
+(defun |resetStackLimits| ()
  "Reset the stack limits"
- (system:reset-stack-limits))
+ #+:GCL (system:reset-stack-limits)
+ #-:GCL nil)
 
 \end{chunk}
 
@@ -30270,6 +30282,11 @@ This function is funcalled from code constructed by {\bf coerceByTable}.
 \end{chunk}
 
 \defun{coerceIntSpecial}{coerceIntSpecial}
+One stray closing parenthesis followed the defun's own --- the same
+latent-typo class as cgammaG: GCL's reader discards an unmatched
+top-level close silently, SBCL's signals and aborts the load. Five
+closes balance this form (coerceInt's, unless's, when's, let's,
+defun's); the sixth is deleted, changing nothing on GCL.
 \calls{coerceIntSpecial}{objMode}
 \calls{coerceIntSpecial}{coerceInt}
 \begin{chunk}{defun coerceIntSpecial}
@@ -30278,7 +30295,7 @@ This function is funcalled from code constructed by {\bf coerceByTable}.
   (when (and (eq (first t2) '|SimpleAlgebraicExtension|)
              (equal (second t2) (|objMode| triple)))
     (unless (setq x (|coerceInt| triple (third t2)))
-     (|coerceInt| x t2))))))
+     (|coerceInt| x t2)))))
 
 \end{chunk}
 
@@ -49284,6 +49301,18 @@ Note that this assumes ``table'' is a string.
 \end{chunk}
 
 \defun{concat}{concat}
+The string branch used GCL's builtin \verb|system:string-concatenate|,
+which coerces each argument through {\bf string} before concatenating
+(KCL lineage: coerce\_to\_string on every arg), so callers may pass
+symbols or characters as well as strings. The single-colon reference
+is a read-time bomb on any other host --- the symbol is not external
+in our bridge's empty SYSTEM package --- and unlike the \verb|#+:AKCL|
+memory-tuning calls elsewhere, this one was unguarded. The portable
+replacement must preserve the coercion, so each argument goes through
+{\bf string} explicitly before {\bf concatenate}; plain
+\verb|(concatenate 'string a b)| would reject symbol arguments that
+GCL accepted. GCL takes the same portable path now, identical in
+behaviour.
 \calls{concat}{string-concatenate}
 \begin{chunk}{defun concat 0}
 (defun concat (a b &rest l)
@@ -49291,9 +49320,9 @@ Note that this assumes ``table'' is a string.
    (if l 
      (apply #'concatenate 'bit-vector a b l)
      (concatenate 'bit-vector a b))
-   (if l 
-     (apply #'system:string-concatenate a b l)
-     (system:string-concatenate a b))))
+   (if l
+     (apply #'concatenate 'string (string a) (string b) (mapcar #'string l))
+     (concatenate 'string (string a) (string b)))))
 
 \end{chunk}
 
@@ -49633,10 +49662,19 @@ Map the 2nd and the 4th quadrants to first and third quadrants.
 \end{chunk}
 
 \defun{cgammaG}{cgammaG}
+This definition carried two stray closing parentheses after the
+defun's own --- a latent typo, invisible for years because GCL's
+reader silently discards an unmatched top-level close, where SBCL's
+reader correctly signals ``unmatched close parenthesis'' and aborts
+the load. Counting the opens confirms four closes end the form:
+one each for the inner \verb|(- real 0.5)| group's enclosing
+multiplications, one for the subtraction, one for the defun. The two
+extras are deleted; on GCL nothing changes, since it was ignoring
+them anyway.
 \begin{chunk}{defun cgammaG 0}
 (defun cgammaG (real imag)
   (- (+ (log (* 2 Pi)) (* Pi imag))
-     (* (* (complex 0.0 1.0) Pi) (- real 0.5))))))
+     (* (* (complex 0.0 1.0) Pi) (- real 0.5))))
 
 \end{chunk}
 
@@ -50810,11 +50848,13 @@ up to overflow.  See Hart and Cheney.
 \end{chunk}
 
 \defun{rbesselj}{The real BesselJ function}
+One stray closing parenthesis (the cgammaG latent-typo class; GCL
+discards it, SBCL aborts the load): three closes balance the form.
 \calls{rbesselj}{c-to-r}
 \calls{rbesselj}{BesselJ}
 \begin{chunk}{defun rbesselj}
 (defun rbesselj (n x)
-  (c-to-r (BesselJ n x)) ))
+  (c-to-r (BesselJ n x)))
 
 \end{chunk}
 
@@ -50829,11 +50869,12 @@ up to overflow.  See Hart and Cheney.
 \end{chunk}
  
 \defun{rbesseli}{The real BesselI function}
+One stray closing parenthesis, as in rbesselj just above.
 \calls{rbesseli}{c-to-r}
 \calls{rbesseli}{BesselI}
 \begin{chunk}{defun rbesseli}
 (defun rbesseli (n x)
-  (c-to-r (BesselI n x)) ))
+  (c-to-r (BesselI n x)))
 
 \end{chunk}
 
