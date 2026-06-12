@@ -220,9 +220,21 @@ layer and the build.
   later stages: daly is more SBCL-ready at the leaf than at the
   architecture; the gaps are the image dump (now closed), the foreign
   interface, and the bootstrap internals.
-\item \textbf{Stage 3 --- Foreign interface.} Re-express the 23
-  \texttt{defentry} bindings via \texttt{sb-alien}; stub the socket
-  group if HyperDoc is deferred.
+\item \textbf{Stage 3 --- Foreign interface.} \emph{Cfuns done and
+  verified; sockets deferred.} The 23 \texttt{defentry} bindings split
+  sharply. Five are not really foreign: in \texttt{cfuns.lisp.pamphlet}
+  GCL supplied \texttt{hashString} and \texttt{hashCombine} as C compiled
+  into its image with \texttt{Clines} (which SBCL has no analogue for),
+  and \texttt{directoryp}/\texttt{writeablep} are filesystem predicates;
+  each is trivial. We reimplemented all four in pure Common Lisp under
+  \texttt{\#+:sbcl}, removing the foreign call entirely, and verified the
+  two hashes \emph{bit-for-bit} against the original C across empty,
+  single-character, and type-name inputs and the $2^{24}$ boundary. The
+  remaining seventeen are the genuine sockets in
+  \texttt{sockio.lisp.pamphlet}; they remain \texttt{sb-alien} work or
+  are stubbed when HyperDoc is deferred. The rule the file now records:
+  reimplement trivial C in Lisp; reserve \texttt{sb-alien} for the
+  irreducibly foreign.
 \item \textbf{Stage 4 --- Drop bundled GCL.} Remove the self-compiled
   GCL path and point the build at system SBCL.
 \item \textbf{Stage 5 --- Bootstrap on SBCL.} Make the BOOT translator

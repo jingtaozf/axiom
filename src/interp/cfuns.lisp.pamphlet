@@ -43,6 +43,48 @@
 ;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 \end{verbatim}
+
+\section{Hosting these C utilities on SBCL}
+
+This file is the clearest illustration of why the GCL binding cannot be
+carried verbatim to SBCL, and of the right response.
+
+The four utilities Axiom needs here --- \verb|directoryp|,
+\verb|writeablep|, \verb|hashString| and \verb|hashCombine| --- are bound
+under GCL with \verb|defentry|, and the two hash functions supply their C
+bodies inline with \verb|Clines|. \verb|Clines| asks the host Lisp to
+compile a snippet of C \emph{into its own image}. GCL, descended from a
+Lisp that was half a C compiler, can do this. SBCL cannot: it has no
+facility to compile C into the running image, and its foreign interface,
+\verb|sb-alien|, can only call functions that already live in a loaded
+shared object.
+
+One could therefore build a small shared library and reach it with
+\verb|sb-alien:define-alien-routine|. For \emph{these} functions that
+would be effort spent badly, because each is trivial: the two hashes are
+a handful of integer operations, and the two filesystem predicates are
+already written in portable Lisp in the \verb|#+:CCL| branch below. The
+right SBCL port here is not foreign at all --- we reimplement the four in
+pure Common Lisp. This removes a foreign dependency and makes the
+behaviour visible in this book instead of hidden in a C string.
+
+Real foreign calls are still required elsewhere: the seventeen socket
+entries in \verb|sockio.lisp.pamphlet| genuinely cross into C, and those
+are handled with \verb|sb-alien| or stubbed when the HyperDoc server is
+not built. The rule the whole port follows: \emph{reimplement trivial C
+in Lisp; reserve \verb|sb-alien| for code that is irreducibly foreign.}
+
+The pure-Lisp hashes must reproduce the C bit-for-bit, because hash
+values may be stored and compared across sessions. \verb|MYHASH|
+exclusive-ors the running value left-shifted by eight, adds the
+character code plus a constant, and masks to thirty bits;
+\verb|MYCOMBINE| shifts the masked second argument left by six, adds the
+first, and reduces modulo a prime. Both are transcribed below. The
+filesystem predicates are less exact: \verb|directoryp| follows the
+\verb|#+:CCL| precedent, while \verb|writeablep| is a non-creating
+open-probe whose correspondence to the C \verb|access(2)| test ---
+particularly on directories --- is flagged for verification in Stage~5.
+
 \begin{chunk}{*}
 
 
@@ -73,7 +115,28 @@
         ((directoryp fn) 1)
         (t 0)))
 
-(defun |findStringInFile| (str p) 
+#+:sbcl
+(defun |directoryp| (fn)
+  "1 if FN names a directory, 0 if a non-directory file, -1 if absent.
+   A directory truename has neither a name nor a type component."
+  (let ((truename (probe-file fn)))
+    (cond ((null truename) -1)
+          ((and (null (pathname-name truename))
+                (null (pathname-type truename))) 1)
+          (t 0))))
+
+#+:sbcl
+(defun |writeablep| (fn)
+  "1 if FN can be opened for writing without creating it, -1 otherwise.
+   Non-creating open-probe; see the Stage 5 caveat in the prose above."
+  (handler-case
+      (with-open-file (s fn :direction :output
+                            :if-exists :append
+                            :if-does-not-exist nil)
+        (if s 1 -1))
+    (file-error () -1)))
+
+(defun |findStringInFile| (str p)
     (|findString| (namestring p) str) )
 
 (defun |getEnv| (var-name)  (system::getenv var-name))
@@ -99,6 +162,14 @@
 (defentry |hashString| (string) (int "MYHASH"))
 #+(AND KCL ELF)
 (defun |hashString| (string) (system:|hashString| string))
+#+:sbcl
+(defun |hashString| (s)
+  "Pure-Lisp transcription of the C MYHASH; must match it bit-for-bit."
+  (let ((h 0))
+    (loop for c across s do
+      (setf h (logand (+ (logxor h (ash h 8)) (char-code c) 200041)
+                      #x3FFFFFFF)))
+    h))
 
 \end{chunk}
 The MYCOMBINE function causes a problem as of GCL-2.6.8pre.
@@ -128,6 +199,10 @@ Camm has rewritten it. This used to read:
 (defentry |hashCombine| (int int) (int "MYCOMBINE"))
 #+(AND KCL  ELF)
 (defun |hashCombine| (x y) (system:|hashCombine| x y))
+#+:sbcl
+(defun |hashCombine| (i j)
+  "Pure-Lisp transcription of the C MYCOMBINE; must match it bit-for-bit."
+  (mod (+ (ash (logand j 16777215) 6) i) 1073741789))
 
 
 \end{chunk}
