@@ -46400,118 +46400,127 @@ The IO state manipulation routines assume that
 \chapter{Handling output}
 \section{Special Character Tables}
 
+These tables were written with {\bf int-char}, a CLtL1 function that
+ANSI Common Lisp removed (X3J13 dropped it because a character's
+integer encoding is not portable; only char-code/code-char survived).
+GCL still accepts it, SBCL does not --- loading this chunk was the
+build failure ``The function INT-CHAR is undefined.'' Every call here
+is \verb|(int-char N)| with a literal code, for which {\bf code-char}
+is the exact replacement on both hosts, GCL included, so the rename
+below is unconditional rather than feature-guarded.
+
 \defdollar{defaultSpecialCharacters}
 \begin{chunk}{initvars}
 (defvar |$defaultSpecialCharacters| (list
- (int-char 28)    ; upper left corner
- (int-char 27)    ; upper right corner
- (int-char 30)    ; lower left corner
- (int-char 31)    ; lower right corner
- (int-char 79)    ; vertical bar
- (int-char 45)    ; horizontal bar
- (int-char 144)   ; APL quad
- (int-char 173)   ; left bracket
- (int-char 189)   ; right bracket
- (int-char 192)   ; left brace
- (int-char 208)   ; right brace
- (int-char 59)    ; top    box tee
- (int-char 62)    ; bottom box tee
- (int-char 63)    ; right  box tee
- (int-char 61)    ; left   box tee
- (int-char 44)    ; center box tee
- (int-char 224))) ; back slash
+ (code-char 28)    ; upper left corner
+ (code-char 27)    ; upper right corner
+ (code-char 30)    ; lower left corner
+ (code-char 31)    ; lower right corner
+ (code-char 79)    ; vertical bar
+ (code-char 45)    ; horizontal bar
+ (code-char 144)   ; APL quad
+ (code-char 173)   ; left bracket
+ (code-char 189)   ; right bracket
+ (code-char 192)   ; left brace
+ (code-char 208)   ; right brace
+ (code-char 59)    ; top    box tee
+ (code-char 62)    ; bottom box tee
+ (code-char 63)    ; right  box tee
+ (code-char 61)    ; left   box tee
+ (code-char 44)    ; center box tee
+ (code-char 224))) ; back slash
 
 \end{chunk}
 
 \defdollar{plainSpecialCharacters0}
 \begin{chunk}{initvars}
 (defvar |$plainSpecialCharacters0| (list
- (int-char 78)     ; upper left corner   (+)
- (int-char 78)     ; upper right corner  (+)
- (int-char 78)     ; lower left corner   (+)
- (int-char 78)     ; lower right corner  (+)
- (int-char 79)     ; vertical bar
- (int-char 96)     ; horizontal bar      (-)
- (int-char 111)    ; APL quad            (?)
- (int-char 173)    ; left bracket
- (int-char 189)    ; right bracket
- (int-char 192)    ; left brace
- (int-char 208)    ; right brace
- (int-char 78)     ; top    box tee      (+)
- (int-char 78)     ; bottom box tee      (+)
- (int-char 78)     ; right  box tee      (+)
- (int-char 78)     ; left   box tee      (+)
- (int-char 78)     ; center box tee      (+)
- (int-char 224)))  ; back slash
+ (code-char 78)     ; upper left corner   (+)
+ (code-char 78)     ; upper right corner  (+)
+ (code-char 78)     ; lower left corner   (+)
+ (code-char 78)     ; lower right corner  (+)
+ (code-char 79)     ; vertical bar
+ (code-char 96)     ; horizontal bar      (-)
+ (code-char 111)    ; APL quad            (?)
+ (code-char 173)    ; left bracket
+ (code-char 189)    ; right bracket
+ (code-char 192)    ; left brace
+ (code-char 208)    ; right brace
+ (code-char 78)     ; top    box tee      (+)
+ (code-char 78)     ; bottom box tee      (+)
+ (code-char 78)     ; right  box tee      (+)
+ (code-char 78)     ; left   box tee      (+)
+ (code-char 78)     ; center box tee      (+)
+ (code-char 224)))  ; back slash
 
 \end{chunk}
 
 \defdollar{plainSpecialCharacters1}
 \begin{chunk}{initvars}
 (defvar |$plainSpecialCharacters1| (list
- (int-char 107)    ; upper left corner   (,)
- (int-char 107)    ; upper right corner  (,)
- (int-char 125)    ; lower left corner   (')
- (int-char 125)    ; lower right corner  (')
- (int-char 79)     ; vertical bar
- (int-char 96)     ; horizontal bar      (-)
- (int-char 111)    ; APL quad            (?)
- (int-char 173)    ; left bracket
- (int-char 189)    ; right bracket
- (int-char 192)    ; left brace
- (int-char 208)    ; right brace
- (int-char 78)     ; top    box tee      (+)
- (int-char 78)     ; bottom box tee      (+)
- (int-char 78)     ; right  box tee      (+)
- (int-char 78)     ; left   box tee      (+)
- (int-char 78)     ; center box tee      (+)
- (int-char 224)))  ; back slash
+ (code-char 107)    ; upper left corner   (,)
+ (code-char 107)    ; upper right corner  (,)
+ (code-char 125)    ; lower left corner   (')
+ (code-char 125)    ; lower right corner  (')
+ (code-char 79)     ; vertical bar
+ (code-char 96)     ; horizontal bar      (-)
+ (code-char 111)    ; APL quad            (?)
+ (code-char 173)    ; left bracket
+ (code-char 189)    ; right bracket
+ (code-char 192)    ; left brace
+ (code-char 208)    ; right brace
+ (code-char 78)     ; top    box tee      (+)
+ (code-char 78)     ; bottom box tee      (+)
+ (code-char 78)     ; right  box tee      (+)
+ (code-char 78)     ; left   box tee      (+)
+ (code-char 78)     ; center box tee      (+)
+ (code-char 224)))  ; back slash
 
 \end{chunk}
 
 \defdollar{plainSpecialCharacters2}
 \begin{chunk}{initvars}
 (defvar |$plainSpecialCharacters2| (list
- (int-char 79)     ; upper left corner   (|)
- (int-char 79)     ; upper right corner  (|)
- (int-char 79)     ; lower left corner   (|)
- (int-char 79)     ; lower right corner  (|)
- (int-char 79)     ; vertical bar
- (int-char 96)     ; horizontal bar      (-)
- (int-char 111)    ; APL quad            (?)
- (int-char 173)    ; left bracket
- (int-char 189)    ; right bracket
- (int-char 192)    ; left brace
- (int-char 208)    ; right brace
- (int-char 78)     ; top    box tee      (+)
- (int-char 78)     ; bottom box tee      (+)
- (int-char 78)     ; right  box tee      (+)
- (int-char 78)     ; left   box tee      (+)
- (int-char 78)     ; center box tee      (+)
- (int-char 224)))  ; back slash
+ (code-char 79)     ; upper left corner   (|)
+ (code-char 79)     ; upper right corner  (|)
+ (code-char 79)     ; lower left corner   (|)
+ (code-char 79)     ; lower right corner  (|)
+ (code-char 79)     ; vertical bar
+ (code-char 96)     ; horizontal bar      (-)
+ (code-char 111)    ; APL quad            (?)
+ (code-char 173)    ; left bracket
+ (code-char 189)    ; right bracket
+ (code-char 192)    ; left brace
+ (code-char 208)    ; right brace
+ (code-char 78)     ; top    box tee      (+)
+ (code-char 78)     ; bottom box tee      (+)
+ (code-char 78)     ; right  box tee      (+)
+ (code-char 78)     ; left   box tee      (+)
+ (code-char 78)     ; center box tee      (+)
+ (code-char 224)))  ; back slash
 
 \end{chunk}
 
 \defdollar{plainSpecialCharacters3}
 \begin{chunk}{initvars}
 (defvar |$plainSpecialCharacters3| (list
- (int-char 96)     ; upper left corner   (-)
- (int-char 96)     ; upper right corner  (-)
- (int-char 96)     ; lower left corner   (-)
- (int-char 96)     ; lower right corner  (-)
- (int-char 79)     ; vertical bar
- (int-char 96)     ; horizontal bar      (-)
- (int-char 111)    ; APL quad            (?)
- (int-char 173)    ; left bracket
- (int-char 189)    ; right bracket
- (int-char 192)    ; left brace
- (int-char 208)    ; right brace
- (int-char 78)     ; top    box tee      (+)
- (int-char 78)     ; bottom box tee      (+)
- (int-char 78)     ; right  box tee      (+)
- (int-char 78)     ; left   box tee      (+)
- (int-char 78)     ; center box tee      (+)
- (int-char 224)))  ; back slash
+ (code-char 96)     ; upper left corner   (-)
+ (code-char 96)     ; upper right corner  (-)
+ (code-char 96)     ; lower left corner   (-)
+ (code-char 96)     ; lower right corner  (-)
+ (code-char 79)     ; vertical bar
+ (code-char 96)     ; horizontal bar      (-)
+ (code-char 111)    ; APL quad            (?)
+ (code-char 173)    ; left bracket
+ (code-char 189)    ; right bracket
+ (code-char 192)    ; left brace
+ (code-char 208)    ; right brace
+ (code-char 78)     ; top    box tee      (+)
+ (code-char 78)     ; bottom box tee      (+)
+ (code-char 78)     ; right  box tee      (+)
+ (code-char 78)     ; left   box tee      (+)
+ (code-char 78)     ; center box tee      (+)
+ (code-char 224)))  ; back slash
 
 \end{chunk}
 
