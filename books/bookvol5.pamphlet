@@ -46933,7 +46933,16 @@ top level that does not return, and that the save runs single-threaded
 #+:CCL
   (preserve)
 #+:sbcl
-  (sb-ext:save-lisp-and-die save-file :executable t)
+  (progn
+    ;; The saved executable re-runs SBCL's startup sequence, including
+    ;; the search for init files -- so every image would load the
+    ;; BUILDING user's ~/.sbclrc (observed: a (require :asdf) there
+    ;; killed depsys at its first prompt). A build artifact must not
+    ;; depend on who built it: pin both init lookups to nil inside
+    ;; the image before dumping.
+    (setq sb-ext:*userinit-pathname-function* (constantly nil))
+    (setq sb-ext:*sysinit-pathname-function* (constantly nil))
+    (sb-ext:save-lisp-and-die save-file :executable t))
 )
 
 \end{chunk}
