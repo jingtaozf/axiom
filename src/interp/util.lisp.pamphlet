@@ -355,7 +355,7 @@ called {\bf setBootAutoLoadProperty} to set up the autoload trigger.
 This helper function is listed below.
 \begin{chunk}{setBootAutloadProperties}
 (defun |setBootAutloadProperties| (fun-list file-list)
-#+:AKCL
+#+(or :AKCL :sbcl)
   (mapc #'(lambda (fun) (|setBootAutoLoadProperty| fun file-list)) fun-list)
 #+:CCL
   (mapc #'(lambda (fun) (lisp::set-autoload fun file-list)) fun-list)
