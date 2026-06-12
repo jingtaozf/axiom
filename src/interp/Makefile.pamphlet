@@ -716,9 +716,24 @@ endif
 	@ echo '#+:akcl (si::gbc-time 0)' >> ${OUT}/makeint.lisp
 	@ echo '#+:akcl (setq si::*system-directory* "${SPAD}/bin/")' \
 	       >> ${OUT}/makeint.lisp
+# The save wrapper is piped into a FRESH bin/lisp, which on SBCL has
+# none of the build's packages yet. The GCL form wraps the load in
+# (gbc t) collections and names user::spad-save -- but gbc is
+# undefined before makeint loads it, and user:: cannot even be READ
+# until makeint's first form installs the USER nickname (the whole
+# progn is read before any of it evaluates). The SBCL form drops the
+# gbc calls (it collects on its own) and names spad-save unqualified:
+# read in COMMON-LISP-USER, it interns there, and makeint's load of
+# bookvol5 defines user::spad-save -- the same symbol via the nickname.
+ifeq (${LISPFLAVOR},sbcl)
+	@ (cd ${OBJ}/${SYS}/bin ; \
+	  echo '(progn (load "${OUT}/makeint.lisp")' \
+		 '(spad-save "${SAVESYS}"))' | ${LISPSYS} )
+else
 	@ (cd ${OBJ}/${SYS}/bin ; \
 	  echo '(progn (gbc t) (load "${OUT}/makeint.lisp")' \
 		 '(gbc t) (user::spad-save "${SAVESYS}"))' | ${LISPSYS} )
+endif
 	@ echo si005 ${SAVESYS} created
 	@ cp ${SAVESYS} ${AXIOMSYS}
 	@ echo si006 ${AXIOMSYS} created
