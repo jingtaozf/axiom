@@ -250,11 +250,16 @@ layer and the build.
   cannot be completed independently of Stage 5: the depsys recipe that
   selects the host also calls GCL-only \texttt{compiler::} internals, so
   the two stages are one combined effort.
-\item \textbf{Stage 5 --- Bootstrap on SBCL.} Make the BOOT translator
-  and the \texttt{si::}/\texttt{compiler::} calls work under SBCL until
-  \texttt{AXIOMsys} dumps, rewriting the depsys recipe to SBCL's
-  compilation model. Verify against the oracle. This combined Stage~4/5
-  rewire is the project's long pole and the next body of work.
+\item \textbf{Stage 5 --- Bootstrap on SBCL.} \emph{Path found; see
+  Section~\ref{sec:stage5}.} Make the BOOT translator and the residual
+  \texttt{si::}/\texttt{compiler::} calls work under SBCL until
+  \texttt{AXIOMsys} dumps. The depsys recipe is a \emph{reversion} to its
+  documented simple load-then-save form rather than an invention --- the
+  GCL \texttt{compiler::link} path exists only to work around a
+  limitation SBCL does not share. What remains is iterative build-debug
+  against the oracle (the \texttt{makedep.lisp} file list and the BOOT
+  translator on SBCL). This combined Stage~4/5 rewire is the project's
+  long pole.
 \item \textbf{Stage 6 --- Compile the algebra.} With the interpreter
   alive, compile the SPAD library and confirm basic domains compute.
 \end{itemize}
@@ -318,6 +323,73 @@ iteratively against the OpenAxiom oracle: change a recipe, run it under
 SBCL, compare the failure to how OpenAxiom's corresponding Makefile and
 \texttt{depsys} equivalent solved it, repeat. This is the long pole of
 the whole project, and it is the next body of work.
+
+\section{Stage 5: rewriting the depsys bootstrap for SBCL}
+\label{sec:stage5}
+
+Reading the \texttt{save depsys image} recipe in
+\texttt{src/interp/Makefile.pamphlet} turned the combined Stage~4/5
+problem from daunting into tractable, because the recipe documents its
+own history.
+
+\subsection{What the GCL recipe actually does}
+
+The current recipe does not merely load code and save an image. It uses
+GCL's static-linking machinery: \texttt{si::*collect-binary-modules*}
+makes GCL record every compiled \texttt{.o} object module that
+\texttt{load} pulls in; \texttt{compiler::link} is then a Lisp interface
+to the C \texttt{ld} linker that links those \texttt{.o} modules into a
+fresh GCL image; \texttt{compiler::emit-fn} and
+\texttt{compiler::*default-system-p*} arrange unique C initialiser
+names; and SGC (stratified garbage collection) marks much of the heap
+read-only in the result. Every one of these is a GCL internal with no
+counterpart anywhere else.
+
+The reason for the complexity is stated in the prose itself: this path
+exists ``only \ldots\ on machines which cannot load binary object
+modules and preserve them in saved images.'' GCL on some platforms
+cannot keep \texttt{load}ed \texttt{.o} code across an image save, so it
+re-links through \texttt{ld} instead.
+
+\subsection{Why SBCL needs almost none of it}
+
+SBCL's compilation model removes the entire problem. It compiles Lisp to
+\texttt{.fasl} files of native code, \texttt{load} brings them into the
+image as ordinary definitions, and \texttt{save-lisp-and-die} preserves
+them faithfully across the save --- exactly the capability GCL lacked
+and worked around. So on SBCL there is nothing to \texttt{ld}-link and no
+binary-module bookkeeping to do.
+
+The recipe even hands us the target form. Its prose records that the code
+``used to read'':
+
+\begin{verbatim}
+  (progn (load "${OUT}/makedep.lisp")
+         (spad-save "${DEPSYS}"))
+\end{verbatim}
+
+That simple load-then-save is precisely the SBCL shape. \texttt{load}
+brings in the compiled output named by \texttt{makedep.lisp};
+\texttt{spad-save} then dumps the image, and the \texttt{\#+:sbcl} arm we
+added in Stage~2 turns that into \texttt{save-lisp-and-die}. The SBCL
+depsys recipe is therefore a \emph{reversion}, not an invention: we
+restore the simple form behind a host-Lisp conditional and leave the
+\texttt{compiler::link} path for \texttt{\#+:gcl} alone.
+
+\subsection{What remains genuinely open}
+
+Two things still need iterative work against the oracle before depsys
+will dump. First, \texttt{makedep.lisp} is generated during the build and
+lists what to load; we must confirm it names SBCL \texttt{.fasl} output
+rather than GCL \texttt{.o} modules, which reaches back to how the
+compile step and \texttt{compiler::make-proclaims} emit their file
+lists. Second, the BOOT translator and any residual \texttt{si::} calls
+on the load path must run under SBCL. These are not understood from
+reading alone; they are found by changing the recipe, building under
+SBCL, comparing each failure to how OpenAxiom's \texttt{src/lisp} and
+generated Makefiles handle the same step, and repeating. That iteration
+is the next body of work; this chapter records where it starts and why
+the destination form is already known.
 
 \section{Build gotchas observed on macOS}
 \label{sec:gotchas}
