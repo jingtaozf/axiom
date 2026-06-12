@@ -17536,6 +17536,13 @@ The output of the compile step is saved in a file of the same name
 and extension .out in the \${MID} directory. These files are useful for
 deriving the dependencies by scanning the ``Loading ...'' messages.
 
+The algebra object files keep the .o name on every host. The 400-odd
+layer-dependency lists below are all written with literal .o, and the
+interpreter's SPAD compiler writes the NRLIB member as code.o; rather
+than rewrite all of those, SBCL simply writes fasl content into the .o
+name (compile-file's :output-file takes any name, and load detects a
+fasl by its header regardless of extension). So .o here means
+``compiled object'', GCL .o or SBCL fasl, not a literal extension.
 \begin{chunk}{genericDotOfiles}
 
 ${OUT}/%.o: ${MID}/%.nrlib/code.o
@@ -17563,10 +17570,10 @@ ${MID}/%.o: ${MID}/%.lsp
 	@ echo sa08 compiling $*.lsp to $*.o
 	@ (cd ${MID} ; \
 	  if [ -z "${NOISE}" ] ; then \
-	   echo '(progn (in-package (quote boot)) (compile-file "$*.lsp" :output-file "$*.o"))'\
+	   echo '(progn (in-package "BOOT") (compile-file "$*.lsp" :output-file "$*.o"))'\
             | ${DEPSYS} ; \
 	  else \
-	   echo '(progn (in-package (quote boot)) (compile-file "$*.lsp" :output-file "$*.o"))'\
+	   echo '(progn (in-package "BOOT") (compile-file "$*.lsp" :output-file "$*.o"))'\
            | ${DEPSYS} 1>/dev/null 2>/dev/null ; \
 	  fi )
 	@ cp ${MID}/$*.o ${OUT}/$*.o
