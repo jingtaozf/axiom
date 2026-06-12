@@ -230,11 +230,20 @@ layer and the build.
   \texttt{\#+:sbcl}, removing the foreign call entirely, and verified the
   two hashes \emph{bit-for-bit} against the original C across empty,
   single-character, and type-name inputs and the $2^{24}$ boundary. The
-  remaining seventeen are the genuine sockets in
-  \texttt{sockio.lisp.pamphlet}; they remain \texttt{sb-alien} work or
-  are stubbed when HyperDoc is deferred. The rule the file now records:
-  reimplement trivial C in Lisp; reserve \texttt{sb-alien} for the
-  irreducibly foreign.
+  remaining seventeen live in \texttt{sockio.lisp.pamphlet} and split
+  again: three (\texttt{plus\_infinity}, \texttt{minus\_infinity},
+  \texttt{NANQ}) are IEEE double values the \texttt{Float} domain needs,
+  reimplemented in Lisp and verified under SBCL to yield $+\infty$,
+  $-\infty$ and a quiet NaN; the other twelve are the genuine HyperDoc
+  client/server sockets, which we \texttt{\#+:sbcl}-stub so an accidental
+  call raises a clear message (the console \texttt{AXIOMsys} never calls
+  them, since \texttt{\$SpadServer} is nil) and which become real
+  \texttt{sb-alien} routines if and when HyperDoc is built. So of the 23
+  bindings, eight are now pure Lisp, three are pure-Lisp float constants,
+  and twelve are deferred socket stubs --- \texttt{sb-alien} is reserved
+  for exactly the irreducibly foreign socket layer and nothing else. The
+  rule the files now record: reimplement trivial C in Lisp; reserve
+  \texttt{sb-alien} for the irreducibly foreign.
 \item \textbf{Stage 4 --- Drop bundled GCL.} Remove the self-compiled
   GCL path and point the build at system SBCL.
 \item \textbf{Stage 5 --- Bootstrap on SBCL.} Make the BOOT translator

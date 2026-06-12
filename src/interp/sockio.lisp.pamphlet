@@ -89,6 +89,36 @@ GCL may pass strings by value.  [[sock_get_string_buf]] should fill
 string with data read from connection, therefore needs address of
 actual string buffer. We use [[sock_get_string_buf_wrapper]] to
 resolve the problem
+
+\section{Hosting the socket layer on SBCL}
+
+The seventeen \verb|defentry| bindings in the block below divide along
+the same line drawn in \verb|cfuns.lisp.pamphlet|: most are genuinely
+foreign, a few only look it.
+
+Twelve --- \verb|open_server|, the \verb|sock_*| transfer calls,
+\verb|server_switch|, \verb|flush_stdout|, \verb|sock_send_signal| and
+\verb|print_line| --- are the real client/server socket layer that the
+HyperDoc browser and the graphical front end use to talk to the engine.
+They cross into C and have no meaning without the server. Because this
+port targets a console \verb|AXIOMsys| first and defers HyperDoc, we do
+not bind them on SBCL; we install \emph{stubs} that raise a clear error
+if anything calls them. The console interpreter never does --- recall
+that \verb|spad-save| sets \verb|$SpadServer| to nil --- so the stubs
+merely make the absence explicit instead of failing later with an
+obscure ``undefined function''. When HyperDoc is eventually built these
+become real \verb|sb-alien| routines against the socket C, which is the
+one place in the whole port where \verb|sb-alien| is genuinely
+warranted.
+
+The other three are not sockets at all. \verb|plus_infinity|,
+\verb|minus_infinity| and \verb|NANQ| return IEEE double values that the
+\verb|Float| domain needs and that GCL happened to obtain through C.
+SBCL exposes them directly: the two infinities are constants, and a
+quiet NaN is the result of an invalid operation evaluated under masked
+float traps. We reimplement these in Lisp, exactly as the hashes were
+--- they are not foreign, only historically routed through C.
+
 \begin{chunk}{*}
   (clines "int sock_get_string_buf_wrapper(int i, object x, int j)"
           "{ if (type_of(x)!=t_string) FEwrong_type_argument(sLstring,x);"
@@ -112,6 +142,31 @@ resolve the problem
   (defentry minus_infinity () (double "minus_infinity"))
   (defentry NANQ () (double "NANQ"))
   )
+
+#+:sbcl
+(progn
+  ;; IEEE float edge values: not foreign, reimplemented in Lisp (see prose).
+  (defun plus_infinity  () sb-ext:double-float-positive-infinity)
+  (defun minus_infinity () sb-ext:double-float-negative-infinity)
+  (defun NANQ ()
+    (sb-int:with-float-traps-masked (:invalid)
+      (- sb-ext:double-float-positive-infinity
+         sb-ext:double-float-positive-infinity)))
+  ;; HyperDoc/graphics sockets: foreign, stubbed until the server is built.
+  ;; The console AXIOMsys never calls these ($SpadServer is nil); the stub
+  ;; turns an accidental call into a clear message instead of a crash.
+  (macrolet ((stub (name)
+               `(defun ,name (&rest args)
+                  (declare (ignore args))
+                  (error "sockio: ~A is unavailable -- the HyperDoc/SpadServer ~
+                          is not built in this SBCL image. Rebuild with the ~
+                          server enabled to use the socket layer." ',name))))
+    (stub open_server)          (stub sock_get_int)
+    (stub sock_send_int)        (stub sock_get_string_buf)
+    (stub sock_send_string_len) (stub sock_get_float)
+    (stub sock_send_float)      (stub sock_send_wakeup)
+    (stub server_switch)        (stub flush_stdout)
+    (stub sock_send_signal)     (stub print_line)))
 
 (defun open-server (name)
   (open_server name))
