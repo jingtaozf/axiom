@@ -706,7 +706,14 @@ endif
 	  '(quote ($(patsubst %, "%", ${NAGBROBJS})))'  \
 	  '"${SPAD}"  "${LSP}" "${SRC}" "${INT}"' \
 	  '"${OBJ}" "${MNT}" "${SYS}")' >> ${OUT}/makeint.lisp
-	@ echo '(in-package "SCRATCHPAD-COMPILER")' >> ${OUT}/makeint.lisp
+# The package sys-pkg creates is SCRATCHPAD_COMPILER (underscore); the
+# hyphenated name here never existed anywhere -- CLtL1's in-package
+# silently CREATED it as an empty package on GCL, where ANSI's signals
+# package-does-not-exist (observed, right after build-interpsys
+# finished). The underscore package gives the identical effect -- an
+# empty package context for the set-restart-hook call that follows --
+# and exists on both hosts.
+	@ echo '(in-package "SCRATCHPAD_COMPILER")' >> ${OUT}/makeint.lisp
 	@ echo '(boot::set-restart-hook)' >> ${OUT}/makeint.lisp
 	@ echo '(in-package "BOOT")' >> ${OUT}/makeint.lisp
 	@ echo '(load "${INT}/algebra/warm.data")' >> ${OUT}/makeint.lisp
