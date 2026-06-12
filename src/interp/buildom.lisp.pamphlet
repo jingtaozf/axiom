@@ -73,7 +73,7 @@
   (declare (special |$Expression|))
     (RETURN
       (SEQ (PROGN
-             (setq |dom| (make-array 10))
+             (setq |dom| (make-array 10 :initial-element nil))
              (SETELT |dom| 0
                      (CONS '|Record|
                            (PROG (G166069)
@@ -142,7 +142,7 @@
                      (COND
                        ((<= (setq |n| (LENGTH |args|)) 2)
                         (CONS NIL NIL))
-                       ('T (make-array |n|))))
+                       ('T (make-array |n| :initial-element nil))))
              |dom|)))))
 
 ;RecordEqual(x,y,dom) ==
@@ -327,7 +327,7 @@
   (declare (special |$Expression|))
     (RETURN
       (SEQ (PROGN
-             (setq |dom| (make-array 9))
+             (setq |dom| (make-array 9 :initial-element nil))
              (SETELT |dom| 0
                      (CONS '|Union|
                            (PROG (G166195)
@@ -545,7 +545,7 @@
   (declare (special |$Expression|))
     (RETURN
       (SEQ (PROGN
-             (setq |dom| (make-array 9))
+             (setq |dom| (make-array 9 :initial-element nil))
              (SETELT |dom| 0
                      (CONS '|Mapping|
                            (PROG (G166306)
@@ -651,7 +651,7 @@
   (declare (special |$Symbol| |$Expression|))
     (RETURN
       (PROGN
-        (setq |dom| (make-array 9))
+        (setq |dom| (make-array 9 :initial-element nil))
         (SETELT |dom| 0 (CONS '|Enumeration| |args|))
         (SETELT |dom| 1
                 (CONS #'|lookupInTable|

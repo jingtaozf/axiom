@@ -1218,14 +1218,14 @@
              (setq |makeCatvecCode| (CAR |catvecListMaker|))
              (setq |emptyVector| (VECTOR))
              (setq |domainShell|
-                      (make-array (+ 6 |$NRTdeltaLength|)))
+                      (make-array (+ 6 |$NRTdeltaLength|) :initial-element nil))
              (DO ((|i| 0 (QSADD1 |i|))) ((QSGREATERP |i| 4) NIL)
                (SEQ (EXIT (SETELT |domainShell| |i|
                                   (ELT |$domainShell| |i|)))))
              (setq |$template|
                       (COND
                         ((BOOT-EQUAL |$NRTvec| 'T)
-                         (make-array (+ 6 |$NRTdeltaLength|)))
+                         (make-array (+ 6 |$NRTdeltaLength|) :initial-element nil))
                         ('T NIL)))
              (setq |$catvecList|
                       (CONS |domainShell|
@@ -1246,9 +1246,9 @@
                                          (CONS |emptyVector| G166786)))))))))
              (setq |$catNames| (CONS '$ NIL))
              (setq |$maximalViews| NIL)
-             (setq |$SetFunctions| (make-array (SIZE |domainShell|)))
+             (setq |$SetFunctions| (make-array (SIZE |domainShell|) :initial-element nil))
              (setq |$MissingFunctionInfo|
-                      (make-array (SIZE |domainShell|)))
+                      (make-array (SIZE |domainShell|) :initial-element nil))
              (setq |$catNames|
                       (CONS '$
                             (PROG (G166801)
@@ -1405,7 +1405,8 @@
                                   (CONS (CONS 'make-array
                                          (CONS
                                           (+ 6 |$NRTdeltaLength|)
-                                          NIL))
+                                          (CONS ':initial-element
+                                           (CONS NIL NIL))))
                                         NIL))))
              (setq |setVector0Code|
                       (CONS |$setelt|
@@ -1535,7 +1536,7 @@
 
 (DEFUN |NRTvectorCopy| (|cacheName| |domName| |deltaLength|)
   (declare (ignore |cacheName| |domName| ))
-  (make-array (+ 6 |deltaLength|)))
+  (make-array (+ 6 |deltaLength|) :initial-element nil))
 
 ;mkDomainCatName id == INTERN STRCONC(id,";CAT")
 
