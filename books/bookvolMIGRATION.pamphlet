@@ -244,14 +244,80 @@ layer and the build.
   for exactly the irreducibly foreign socket layer and nothing else. The
   rule the files now record: reimplement trivial C in Lisp; reserve
   \texttt{sb-alien} for the irreducibly foreign.
-\item \textbf{Stage 4 --- Drop bundled GCL.} Remove the self-compiled
-  GCL path and point the build at system SBCL.
+\item \textbf{Stage 4 --- Drop bundled GCL.} \emph{Analysed; see
+  Section~\ref{sec:stage4}.} Point \texttt{bin/lisp} at system SBCL and
+  delete the \texttt{lspdir} GCL build. The investigation showed this
+  cannot be completed independently of Stage 5: the depsys recipe that
+  selects the host also calls GCL-only \texttt{compiler::} internals, so
+  the two stages are one combined effort.
 \item \textbf{Stage 5 --- Bootstrap on SBCL.} Make the BOOT translator
   and the \texttt{si::}/\texttt{compiler::} calls work under SBCL until
-  \texttt{AXIOMsys} dumps. Verify against the oracle.
+  \texttt{AXIOMsys} dumps, rewriting the depsys recipe to SBCL's
+  compilation model. Verify against the oracle. This combined Stage~4/5
+  rewire is the project's long pole and the next body of work.
 \item \textbf{Stage 6 --- Compile the algebra.} With the interpreter
   alive, compile the SPAD library and confirm basic domains compute.
 \end{itemize}
+
+\section{Stage 4 in detail: replacing the GCL host}
+\label{sec:stage4}
+
+Stage 4 is where the port stops being local edits to cover functions and
+becomes surgery on the build itself. Investigating the literate
+Makefiles produced both the substitution plan and an honest surprise:
+Stage 4 cannot be finished without Stage 5, because the same recipe that
+selects the host Lisp also calls GCL-only compiler internals.
+
+\subsection{How the GCL host is built and used}
+
+The top \texttt{Makefile} (tangled from \texttt{books/Makefile.pamphlet})
+carries the whole GCL apparatus. \texttt{GCLVERSION=gcl-2.6.13pre} and
+\texttt{GCLDIR:=\$\{LSP\}/\$\{GCLVERSION\}} name a GCL to build from the
+sources in \texttt{zips/}; the \texttt{lspdir} target compiles it
+(\texttt{cd lsp ; make gcldir}) and then copies the result,
+\texttt{\$\{GCLDIR\}/unixport/saved\_gcl}, into the build's \texttt{bin}.
+That saved GCL image \emph{is} the host Lisp. Everywhere downstream it is
+referred to as \texttt{bin/lisp}: in \texttt{src/interp/Makefile} both
+\texttt{LISPSYS} and \texttt{LISPTANGLE} are \texttt{\$\{OBJ\}/\$\{SYS\}/bin/lisp},
+so the same GCL image both tangles the literate sources and hosts the
+compile.
+
+\subsection{How the bootstrap drives that host}
+
+The three images are produced by piping a save form into that Lisp. The
+\texttt{save depsys image} chunk of \texttt{src/interp/Makefile.pamphlet}
+does, in essence,
+
+\begin{verbatim}
+  echo '... (spad-save "${DEPSYS}")' | ${LISPSYS}
+\end{verbatim}
+
+\noindent and \texttt{interpsys} and \texttt{AXIOMsys} are saved the same
+way. This is the join with Stage~2: the \texttt{(spad-save ...)} that the
+Makefile pipes in is exactly the cover whose \texttt{\#+:sbcl} arm we
+added. Once \texttt{bin/lisp} is SBCL, that arm fires and
+\texttt{save-lisp-and-die} writes the image. The cover side is ready.
+
+\subsection{The substitution, and why it is gated on Stage 5}
+
+The intended change is small to state: make \texttt{bin/lisp} resolve to
+the system \texttt{sbcl} (or a one-line wrapper), and skip the
+\texttt{lspdir} GCL build entirely --- the \texttt{zips/} GCL sources and
+their patches then become dead weight to be removed. Stated that simply,
+it sounds like a Stage 4 one-liner.
+
+It is not, because the depsys recipe does more than pick a Lisp. The same
+chunk calls \texttt{compiler::make-proclaims}, \texttt{compiler::link} and
+\texttt{compiler::emit-fn} --- GCL compiler internals with no SBCL
+equivalent. The moment \texttt{bin/lisp} becomes SBCL, those calls fail.
+So pointing the build at SBCL and rewriting the depsys recipe to use
+SBCL's compilation model are the \emph{same} task; they cannot be
+sequenced apart. Stage 4 (choose the host) and Stage 5 (make the
+bootstrap run on that host) are therefore one combined effort, driven
+iteratively against the OpenAxiom oracle: change a recipe, run it under
+SBCL, compare the failure to how OpenAxiom's corresponding Makefile and
+\texttt{depsys} equivalent solved it, repeat. This is the long pole of
+the whole project, and it is the next body of work.
 
 \section{Build gotchas observed on macOS}
 \label{sec:gotchas}
