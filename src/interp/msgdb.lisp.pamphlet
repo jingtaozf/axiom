@@ -701,9 +701,11 @@
 ;  sayKeyedMsg("S2GE0000",nil)
 ;  breakKeyedMsg(key,args)
 
+;;; One stray top-level close removed (GCL discards, SBCL aborts the
+;;; read): two closes balance breakKeyedMsg's call and the defun.
 (defun |keyedSystemError| (|key| |args|)
   (|sayKeyedMsg| "Internal Error" nil)
-  (|breakKeyedMsg| |key| |args|)))
+  (|breakKeyedMsg| |key| |args|))
 
 ;systemErrorHere functionName ==
 ;  keyedSystemError("S2GE0017",[functionName])
