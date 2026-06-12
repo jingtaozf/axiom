@@ -20744,11 +20744,18 @@ digraph hierarchy {
             (equal (car (setq v (ifcdr v))) #\}))
         (setq u v) 
         acc)
-      ((or (char= x #\$) (string= x "$"))
+;;; The elements of u are a mix of single characters and string tokens.
+;;; The original guards each punctuation case as (or (char= x #\$)
+;;; (string= x "$")), but the or evaluates char= first and char= raises a
+;;; TYPE-ERROR on a string argument under SBCL's strict typing (GCL
+;;; returned nil). string= already accepts a character as a string
+;;; designator, so (string= x "$") alone matches both the #\$ char and
+;;; the "$" string and never errors -- the redundant char= is dropped.
+      ((string= x "$")
         (cons "\\$" acc))
-      ((or (char= x #\%) (string= x "%"))
+      ((string= x "%")
         (cons "\\%" acc))
-      ((or (char= x #\,) (string= x ","))
+      ((string= x ",")
         (cons ",{}" acc))
       ((string= x "\\spad")
         (cons "\\spad" acc))
