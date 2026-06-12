@@ -49,6 +49,22 @@ standard packages against exactly this kind of mutation, so the two
 a ``Lock on package COMMON-LISP violated'' error, not assumed. The
 form is \verb|#+:sbcl|-guarded, so GCL reads it with suppression and
 is undisturbed.
+
+One more old habit needs teaching. The build's generated load scripts
+say \verb|(load "nocompil")| with no file extension, and the sources
+they mean are \verb|.lsp| files. GCL probes \verb|.lsp| for an
+extensionless load; SBCL probes only \verb|.lisp| (and its fasl
+type), so the first such load died with ``Couldn't load \ldots{}
+nocompil: file does not exist'' --- observed in the first depsys run,
+with \verb|nocompil.lsp| sitting right there in the directory. Setting
+SBCL's default source type to \verb|lsp| restores the GCL behaviour
+for every extensionless load at once. The variable,
+\verb|sb-impl::*load-source-default-type*|, is an SBCL internal with
+no exported equivalent; that is a pragmatic debt accepted knowingly,
+verified against SBCL 2.6.3, to be revisited if SBCL ever renames it.
+Compiled-then-loaded files are unaffected: when both a source and a
+newer fasl answer to an extensionless name, SBCL still picks the
+fasl.
 \begin{chunk}{*}
 #+:sbcl
 (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -61,7 +77,8 @@ is undisturbed.
     (rename-package cu (package-name cu)
       (adjoin "USER" (package-nicknames cu) :test #'string=)))
   (unless (find-package "SYSTEM")
-    (make-package "SYSTEM" :use nil)))
+    (make-package "SYSTEM" :use nil))
+  (setf sb-impl::*load-source-default-type* "lsp"))
 
 \end{chunk}
 \section{New Common Lisp Changes}
