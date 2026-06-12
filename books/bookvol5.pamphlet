@@ -13492,11 +13492,24 @@ When a lisp image containing code is reloaded there is a hook to
 allow a function to be called. In our case it is the restart
 function which is the entry to the Axiom interpreter.
 \sig{set-restart-hook}{Void}{'restart}
+On SBCL there is no top-level hook variable the image saver consults;
+the entry point is an argument to save-lisp-and-die instead. So this
+function records the restart function in a global that the
+\verb|#+:sbcl| arm of spad-save reads at dump time. The distinction
+that GCL got from the hook -- depsys, which never calls
+set-restart-hook, dumps a plain Lisp prompt for the compile pipes,
+while interpsys and AXIOMsys, built by makeint which does call it,
+dump with the Axiom interpreter as their top level -- is preserved
+exactly: the global stays nil for depsys and holds #'restart for the
+interpreter images.
 \begin{chunk}{defun set-restart-hook 0}
+#+:sbcl (defvar |*axiomTopLevel*| nil
+  "On SBCL, holds the interpreter entry point for spad-save's :toplevel")
 (defun set-restart-hook ()
   "Set the restart hook"
   #+KCL (setq system::*top-level-hook* 'restart)
   #+Lucid (setq boot::restart-hook 'restart)
+  #+:sbcl (setq |*axiomTopLevel*| #'restart)
   'restart
  )
 
@@ -46964,7 +46977,14 @@ top level that does not return, and that the save runs single-threaded
     ;; not just during the build, so a running AXIOMsys does not trap on
     ;; the Float domain's infinities.
     (sb-int:set-floating-point-modes :traps nil)
-    (sb-ext:save-lisp-and-die save-file :executable t))
+    ;; If set-restart-hook ran (interpsys, AXIOMsys), boot into the Axiom
+    ;; interpreter; if not (depsys), leave SBCL's plain REPL for the
+    ;; compile pipes. boot::|*axiomTopLevel*| carries the choice.
+    (if (and (boundp 'boot::|*axiomTopLevel*|)
+             (symbol-value 'boot::|*axiomTopLevel*|))
+        (sb-ext:save-lisp-and-die save-file :executable t
+          :toplevel (symbol-value 'boot::|*axiomTopLevel*|))
+        (sb-ext:save-lisp-and-die save-file :executable t)))
 )
 
 \end{chunk}
