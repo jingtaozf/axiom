@@ -60405,8 +60405,19 @@ Make a page given the description in itemList
 \end{chunk}
 
 \defdollar{funnyBacks}
+This sentinel character stands in for a backslash while HyperDoc
+strings are escaped (htEscapeString swaps them in,
+unescapeStringsInForm swaps them back). The original source wrote it
+as the literal \verb|#\\200| --- GCL's reader names the 8-bit
+character with code octal 200, i.e.\ 128 --- but ANSI defines no such
+character name and SBCL's reader rejects the token outright
+(``unrecognized character name'', a READ error, so no feature guard
+can help: the form must be readable on every host). The portable
+spelling of the same value is \verb|(code-char 128)|, which GCL
+accepts identically. Its companion \$funnyQuote needs no change:
+\verb|#\Rubout| is a standard character name.
 \begin{chunk}{initvars}
-(defvar |$funnyBacks| #\\200) 
+(defvar |$funnyBacks| (code-char 128))
 
 \end{chunk}
 
