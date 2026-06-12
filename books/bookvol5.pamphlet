@@ -14484,6 +14484,23 @@ Call the garbage collector on various platforms.
 
 \end{chunk}
 
+On GCL the collector is also reachable as the builtin {\bf gbc},
+and the build calls it bare --- build-interpsys says \verb|(gbc t)|
+between its loading phases. That symbol arrives in the BOOT package
+and is undefined on any other host (observed: build-interpsys died
+on BOOT::GBC right after preloading the algebra). The cover below
+gives non-GCL hosts the same entry point; the argument, GCL's
+``collect everything'' flag, maps to a full collection.
+\begin{chunk}{defun reclaim 0}
+#-(OR IBCL KCL GCL)
+(defun gbc (&optional full)
+ "GCL's garbage collector entry point, covered for other hosts"
+ (declare (ignore full))
+ #+sbcl (sb-ext:gc :full t)
+ #-sbcl (reclaim))
+
+\end{chunk}
+
 \defun{reroot}{reroot}
 The reroot function is used to reset the important variables used by
 the system. In particular, these variables are sensitive to the
