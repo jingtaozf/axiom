@@ -46704,7 +46704,13 @@ gets the index into the EBCDIC table, and returns the appropriate character.
  (declare (ignore width) (ignore recnum))
    (cond ((numberp filespec) (make-synonym-stream '*terminal-io*))
          ((null filespec) (error "not handled yet"))
-         (t (open (make-filename filespec) :direction :output))))
+         ;; :if-exists :supersede -- GCL's :direction :output open
+         ;; overwrites an existing file, ANSI's default signals
+         ;; FILE-EXISTS, and dbWriteLines re-opening libdb.text on a
+         ;; second compile aborted the build. This is the one VMLISP
+         ;; output-stream cover, so superseding here fixes every writer.
+         (t (open (make-filename filespec) :direction :output
+                  :if-exists :supersede :if-does-not-exist :create))))
 
 \end{chunk}
 
