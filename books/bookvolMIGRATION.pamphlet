@@ -203,13 +203,23 @@ layer and the build.
 \item \textbf{Stage 1 --- Map the bootstrap.} Document the
   \texttt{bootsys}/\texttt{interpsys}/\texttt{AXIOMsys} chain and every
   host-Lisp touch point. This chapter (Section~4) is that map.
-\item \textbf{Stage 2 --- Host abstraction.} In Axiom's style, add the
-  \texttt{\#+:sbcl} arm to \texttt{spad-save} in
-  \texttt{books/bookvol5.pamphlet}, and author a new
-  \texttt{src/interp/portability.lisp.pamphlet} collecting the SBCL
-  shims (save, gc, getenv), woven via \texttt{\\getchunk} into
-  \texttt{src/interp/Makefile.pamphlet}. Do not create a
-  \texttt{src/lisp/} directory.
+\item \textbf{Stage 2 --- Host abstraction.} \emph{Done, and smaller
+  than expected.} Inspecting \texttt{books/bookvol5.pamphlet} revealed
+  that daly's leaf host covers are \emph{already} conditionalised for
+  SBCL: \texttt{getenviron} carries \texttt{\#+sbcl (sb-ext:posix-getenv
+  var)} and \texttt{reclaim} carries \texttt{\#+sbcl (sb-ext::gc)}. The
+  one architecturally central cover that lacked an SBCL arm was
+  \texttt{spad-save}, the image dump itself. We added it in place,
+  prose first: an \texttt{\#+:sbcl} branch calling
+  \texttt{sb-ext:save-lisp-and-die} with \texttt{:executable~t} and,
+  when \texttt{boot::restart} is bound, \texttt{:toplevel}. Because the
+  covers already live in the books and only needed extending, no new
+  \texttt{portability.lisp.pamphlet} and certainly no OpenAxiom-style
+  \texttt{src/lisp/} directory were created --- the host abstraction is
+  extended exactly where daly already kept it. The lesson recorded for
+  later stages: daly is more SBCL-ready at the leaf than at the
+  architecture; the gaps are the image dump (now closed), the foreign
+  interface, and the bootstrap internals.
 \item \textbf{Stage 3 --- Foreign interface.} Re-express the 23
   \texttt{defentry} bindings via \texttt{sb-alien}; stub the socket
   group if HyperDoc is deferred.

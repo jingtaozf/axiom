@@ -46807,6 +46807,55 @@ file and it will show up here.
 DEBUGSYS=${OBJ}/${SYS}/bin/debugsys
 \end{verbatim}
 \end{itemize}
+
+\subsection*{Saving the image under SBCL}
+
+When the host Lisp is Steel Bank Common Lisp the cover function must
+differ from the AKCL/GCL case in two ways that the prose above glosses
+over, because each one changes how the surrounding build must treat the
+call.
+
+First, GCL's \verb|system::save-system| writes the image and then
+\emph{returns} to its caller, so the build step that invoked it can
+carry on. SBCL's primitive is deliberately named
+\verb|sb-ext:save-lisp-and-die|: it serialises the heap and then
+\emph{terminates the process}. There is no ``after the save'' on SBCL.
+A Makefile step that, on GCL, saved an image and then kept feeding forms
+into the same running Lisp must instead feed those forms \emph{before}
+the save, or start a fresh image afterwards. This is the single most
+important behavioural difference to remember when porting the bootstrap
+in later chapters.
+
+Second, AKCL produced a bare image that a separate launcher script had
+to wrap. SBCL can fold its runtime into the output directly when passed
+\verb|:executable t|, producing one standalone file --- which is exactly
+the shape \verb|AXIOMsys| is meant to have. We therefore always ask for
+an executable.
+
+The entry point is treated as in the Allegro and Lucid branches: if
+\verb|boot::restart| is bound we install it as the top level of the
+saved image (via \verb|:toplevel|) so the binary boots straight into
+Axiom; otherwise we save a plain executable and let SBCL's default top
+level run. These two choices mirror the multi-Lisp \verb|saveCore| in
+the OpenAxiom fork, read here only as a semantic oracle and not copied,
+whose \verb|#+:sbcl| arm makes the same decisions.
+
+One caveat this cover deliberately leaves open. As the itemised list
+above shows, \verb|spad-save| is called at three sites: to build
+\textbf{depsys}, \textbf{interpsys}, and the final \textbf{AXIOMsys}.
+The final image genuinely wants to be an executable, so \verb|:executable t|
+is right there. But \textbf{depsys} is a \emph{compile environment} that
+the Makefile keeps feeding forms into; on SBCL that role is served more
+naturally by a restartable core --- \verb|save-lisp-and-die| \emph{without}
+\verb|:executable|, relaunched as \verb|sbcl --core| --- than by a
+standalone binary that dies on save. We keep \verb|:executable t|
+uniformly here as a first cut and will revisit the depsys site when the
+bootstrap is rewired in Stage~5. It is flagged so the uniform choice is
+not mistaken for a settled one. Two further assumptions also await
+Stage~5 verification: that \verb|boot::restart| is a zero-argument
+top level that does not return, and that the save runs single-threaded
+(\verb|save-lisp-and-die| requires it).
+
 \calls{spad-save}{save-system}
 \usesdollar{spad-save}{SpadServer}
 \usesdollar{spad-save}{openServerIfTrue}
@@ -46827,6 +46876,10 @@ DEBUGSYS=${OBJ}/${SYS}/bin/debugsys
    (sys::disksave save-file))
 #+:CCL
   (preserve)
+#+:sbcl
+  (if (fboundp 'boot::restart)
+   (sb-ext:save-lisp-and-die save-file :toplevel #'boot::restart :executable t)
+   (sb-ext:save-lisp-and-die save-file :executable t))
 )
 
 \end{chunk}
