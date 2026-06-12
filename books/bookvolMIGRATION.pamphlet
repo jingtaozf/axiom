@@ -332,64 +332,90 @@ Reading the \texttt{save depsys image} recipe in
 problem from daunting into tractable, because the recipe documents its
 own history.
 
-\subsection{What the GCL recipe actually does}
+\subsection{What the active recipe actually is (a correction)}
 
-The current recipe does not merely load code and save an image. It uses
-GCL's static-linking machinery: \texttt{si::*collect-binary-modules*}
-makes GCL record every compiled \texttt{.o} object module that
-\texttt{load} pulls in; \texttt{compiler::link} is then a Lisp interface
-to the C \texttt{ld} linker that links those \texttt{.o} modules into a
-fresh GCL image; \texttt{compiler::emit-fn} and
-\texttt{compiler::*default-system-p*} arrange unique C initialiser
-names; and SGC (stratified garbage collection) marks much of the heap
-read-only in the result. Every one of these is a GCL internal with no
-counterpart anywhere else.
+A first reading of this file is misleading, and the correction matters
+enough to record. The prose around the save step shows an elaborate
+GCL procedure --- \texttt{si::*collect-binary-modules*} to record every
+compiled \texttt{.o} module, \texttt{compiler::link} as a Lisp interface
+to the C \texttt{ld} linker, \texttt{compiler::emit-fn}, SGC --- and a
+casual reader (this author included, at first) concludes the live recipe
+statically links object modules through \texttt{ld}.
 
-The reason for the complexity is stated in the prose itself: this path
-exists ``only \ldots\ on machines which cannot load binary object
-modules and preserve them in saved images.'' GCL on some platforms
-cannot keep \texttt{load}ed \texttt{.o} code across an image save, so it
-re-links through \texttt{ld} instead.
-
-\subsection{Why SBCL needs almost none of it}
-
-SBCL's compilation model removes the entire problem. It compiles Lisp to
-\texttt{.fasl} files of native code, \texttt{load} brings them into the
-image as ordinary definitions, and \texttt{save-lisp-and-die} preserves
-them faithfully across the save --- exactly the capability GCL lacked
-and worked around. So on SBCL there is nothing to \texttt{ld}-link and no
-binary-module bookkeeping to do.
-
-The recipe even hands us the target form. Its prose records that the code
-``used to read'':
+It does not. Mapping every \verb|\begin{chunk}| and \verb|\begin{verbatim}|
+marker in the section shows that the elaborate procedure lives entirely
+in \verb|\begin{verbatim}| blocks with \emph{no} surrounding
+\verb|\begin{chunk}|; it is documentation of an approach, not tangled
+code. There is exactly one chunk named \texttt{save depsys image}, and it
+is the simple form:
 
 \begin{verbatim}
   (progn (load "${OUT}/makedep.lisp")
          (spad-save "${DEPSYS}"))
 \end{verbatim}
 
-That simple load-then-save is precisely the SBCL shape. \texttt{load}
-brings in the compiled output named by \texttt{makedep.lisp};
-\texttt{spad-save} then dumps the image, and the \texttt{\#+:sbcl} arm we
-added in Stage~2 turns that into \texttt{save-lisp-and-die}. The SBCL
-depsys recipe is therefore a \emph{reversion}, not an invention: we
-restore the simple form behind a host-Lisp conditional and leave the
-\texttt{compiler::link} path for \texttt{\#+:gcl} alone.
+\noindent The \verb|\getchunk{save depsys image}| in the \texttt{depsys}
+target therefore tangles \emph{this}, not the \texttt{ld} procedure. The
+active depsys save has been the simple load-then-save all along; the
+\texttt{compiler::link} narrative is dead prose. The lesson, and the
+reason this subsection exists: in a literate file, what tangles is the
+\verb|\begin{chunk}|, never the surrounding prose, however authoritative
+the prose sounds.
 
-\subsection{What remains genuinely open}
+\subsection{Why this makes SBCL close}
 
-Two things still need iterative work against the oracle before depsys
-will dump. First, \texttt{makedep.lisp} is generated during the build and
-lists what to load; we must confirm it names SBCL \texttt{.fasl} output
-rather than GCL \texttt{.o} modules, which reaches back to how the
-compile step and \texttt{compiler::make-proclaims} emit their file
-lists. Second, the BOOT translator and any residual \texttt{si::} calls
-on the load path must run under SBCL. These are not understood from
-reading alone; they are found by changing the recipe, building under
-SBCL, comparing each failure to how OpenAxiom's \texttt{src/lisp} and
-generated Makefiles handle the same step, and repeating. That iteration
-is the next body of work; this chapter records where it starts and why
-the destination form is already known.
+The simple form is almost host-neutral. \texttt{load} and the
+\texttt{compile-file} forms that build \texttt{makedep.lisp} are standard
+Common Lisp, and the \texttt{\#+:sbcl} arm added in Stage~2 turns the
+\texttt{spad-save} into \texttt{save-lisp-and-die}. We validated the
+whole cycle in miniature: piping
+\texttt{(progn (load "makedep.lisp") (spad-save "depsys-img"))} into a
+clean SBCL produced a 36~MB standalone executable that, run, booted into
+the \texttt{boot::restart} top level and exited cleanly. The mechanism
+works; only the build's host-specific variables stand between it and the
+real depsys.
+
+\subsection{The genuine GCL remnants, and what stays open}
+
+Three host-specific pieces remain in the depsys path, far fewer than the
+\texttt{ld} narrative suggested. \texttt{\$\{O\}} is the compiled-object
+extension, \texttt{o} for GCL and \texttt{fasl} for SBCL.
+\texttt{\$\{LISPSYS\}} is \texttt{bin/lisp}, which must become a clean
+SBCL --- the spike showed \texttt{save-lisp-and-die} demands a
+single-threaded image, so the wrapper must pass
+\texttt{-{}-no-userinit -{}-no-sysinit} or any thread-starting init (a
+SLYNK in \texttt{.sbclrc}) aborts the save. \texttt{\$\{PROCLAIMS\}} is
+generated by \texttt{compiler::make-proclaims} and is the one genuinely
+GCL-only form in the makedep sequence; on SBCL it must be emptied or
+regenerated by other means. Beyond depsys, the BOOT translator and the
+earlier tangle/compile chain must also run under SBCL. These are found
+the same way: change a variable, build under SBCL, compare the failure to
+OpenAxiom, repeat. The destination is now known; the iteration is the
+long pole.
+
+\subsection{The first cut, taken and verified}
+
+The first two of those three remnants are now closed. The top
+\texttt{Makefile.pamphlet} gained a \texttt{LISPFLAVOR} selector
+(default \texttt{gcl}, so every existing platform is untouched); under
+\texttt{make LISPFLAVOR=sbcl} the object extension \texttt{O} becomes
+\texttt{fasl} and the \texttt{lspdir} target, instead of compiling the
+bundled GCL, writes a two-line wrapper installing the system SBCL as
+\texttt{bin/lisp} with the init files excluded. Three verifications
+gate the change. The tangled \texttt{Makefile} was diffed against the
+tracked one: the only changed lines are the intended ones, and the
+tracked file had first been proven byte-identical to the root chunk, so
+the literate pipeline itself is sound. The default flavor's dry run
+still builds GCL. And \texttt{make lspdir LISPFLAVOR=sbcl}, run for
+real, wrote the wrapper and a piped form answered
+\texttt{host=SBCL 2.6.3} through it. One sequencing note for later
+readers: \texttt{lspdir}'s prerequisite tangles
+\texttt{lsp/Makefile.pamphlet} \emph{and} typesets its documentation,
+so \texttt{rootdirs} and \texttt{axiom.sty} must have run first ---
+invoking \texttt{lspdir} in isolation fails in LaTeX, not in Lisp.
+What remains open is unchanged: \texttt{\$\{PROCLAIMS\}} and the
+depsys/BOOT chain itself, which the next iteration drives by running
+\texttt{make LISPFLAVOR=sbcl} onward into \texttt{src/interp}.
 
 \section{Build gotchas observed on macOS}
 \label{sec:gotchas}

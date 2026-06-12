@@ -72,6 +72,10 @@ GCLVERSION=gcl-2.6.13pre
 GCLDIR:=${LSP}/${GCLVERSION}
 GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"
 LISP:=lsp
+LISPFLAVOR?=gcl
+ifeq (${LISPFLAVOR},sbcl)
+O:=fasl
+endif
 
 ##### command line control
 NOISE:="-o ${TMP}/trace"
@@ -195,11 +199,20 @@ lspdir: ${LSP}/Makefile
 	@echo 19 making ${LSP}
 	@mkdir -p ${OBJ}/${SYS}/bin
 	@mkdir -p ${OBJ}/${SYS}/lsp
+ifeq (${LISPFLAVOR},sbcl)
+	@echo =====================================
+	@echo lsp USING SYSTEM SBCL AS HOST LISP
+	@echo =====================================
+	@echo '#!/bin/sh -' > ${OBJ}/${SYS}/bin/lisp
+	@echo 'exec sbcl --no-userinit --no-sysinit "$$@"' >> ${OBJ}/${SYS}/bin/lisp
+	@chmod +x ${OBJ}/${SYS}/bin/lisp
+else
 	@echo =====================================
 	@echo lsp BUILDING GCL COMMON LISP
 	@echo =====================================
-	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir ) 
+	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir )
 	@(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
+endif
 
 ${LSP}/Makefile: ${LSP}/Makefile.pamphlet
 	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.pamphlet
