@@ -89,7 +89,18 @@ fasl.
     (make-package "COMPILER" :use nil))
   (setf sb-impl::*load-source-default-type* "lsp"))
 
+#+:sbcl
+(defun common-lisp-user::bye (&optional (code 0))
+  (sb-ext:exit :code code))
+
 \end{chunk}
+The build pipes forms like \verb|(progn (compile-file ...) (bye))|
+into the depsys image, and the image's reader interns that
+\verb|bye| in its startup package, COMMON-LISP-USER. On GCL
+\verb|bye| is the builtin exit; SBCL has none, so the bridge defines
+it where the pipes will find it. Exit code zero by default ---
+make treats the recipe as succeeded exactly when the compile before
+it did not abort.
 \section{New Common Lisp Changes}
 \subsection{in-package change}
 Common lisp has changed in-package to require a string-designator which

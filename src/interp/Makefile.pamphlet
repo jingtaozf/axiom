@@ -845,18 +845,25 @@ ${OUT}/%.lisp: ${IN}/%.lisp.pamphlet
 	  echo '(tangle "${IN}/$*.lisp.pamphlet" "*" "$*.lisp")' \
 	| ${OBJ}/${SYS}/bin/lisp ) 1>/dev/null 
 
-${OUT}/%.o: ${MID}/%.lisp
-	@ echo siOUTfromMID making ${OUT}/$*.o from ${MID}/$*.lisp
+# The compiled-object extension follows the host (${O}: o on GCL,
+# fasl on SBCL), so the pattern target and both output-file forms use
+# ${O} instead of a hardcoded .o -- otherwise an SBCL build has no
+# rule for the vmlisp.fasl that interpsys depends on (observed).
+# The quiet branch's output-file used to say $I.o: $I is an undefined
+# make variable, so the file landed at "${OUT}/.o" -- visible in old
+# GCL build trees as a literal ".o" file. It now matches the stem.
+${OUT}/%.${O}: ${MID}/%.lisp
+	@ echo siOUTfromMID making ${OUT}/$*.${O} from ${MID}/$*.lisp
 	@ if [ -z "${NOISE}" ] ; then \
 	   (cd ${MID} ; \
 	    echo '(progn  (compile-file "$*.lisp"' \
-	     ':output-file "${OUT}/$*.o") (${BYE}))' | ${DEPSYS} ) ; \
+	     ':output-file "${OUT}/$*.${O}") (${BYE}))' | ${DEPSYS} ) ; \
 	   else \
 	    (cd ${MID} ; \
 	     echo '(progn  (compile-file "$*.lisp"' \
-	     ':output-file "${OUT}/$I.o") (${BYE}))' | ${DEPSYS} ) \
+	     ':output-file "${OUT}/$*.${O}") (${BYE}))' | ${DEPSYS} ) \
 	      1>/dev/null 2>/dev/null ; \
-	   fi 
+	   fi
 
 ${MID}/%.lisp: ${IN}/%.lisp.pamphlet
 	@ echo siMIDfromIN making ${MID}/$*.lisp from ${IN}/$*.lisp.pamphlet
