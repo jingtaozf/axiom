@@ -698,7 +698,7 @@ can be restored.
 
 (define-function 'strconc #'concat)
 
-(defun make-cvec (sint) (make-array sint :fill-pointer 0 :element-type 'string-char))
+(defun make-cvec (sint) (make-array sint :fill-pointer 0 :element-type 'character))
 
 (define-function 'getstr #'make-cvec)
 
@@ -5552,7 +5552,7 @@ o  there is some code at the end of SPECEVAL BOOT that puts "up"
 
 (defun |ByteFileReadLine| (instream)
   (do ((buf (make-array '(80) 
-                :element-type 'string-char 
+                :element-type 'character 
                 :fill-pointer 0
                 :adjustable 't ))
        (b (read-byte instream nil nil) (read-byte instream nil nil))
@@ -5911,7 +5911,7 @@ o  there is some code at the end of SPECEVAL BOOT that puts "up"
 (defun |FullString| (size &optional (init #\Space))
   (make-array
    (list size)
-   :element-type 'string-char
+   :element-type 'character
    :initial-element init ))
 
 (defun |ToString| (ob)
