@@ -87,7 +87,16 @@ fasl.
     (make-package "SYSTEM" :use nil :nicknames '("SI")))
   (unless (find-package "COMPILER")
     (make-package "COMPILER" :use nil))
-  (setf sb-impl::*load-source-default-type* "lsp"))
+  (setf sb-impl::*load-source-default-type* "lsp")
+  ;; Axiom's arithmetic lets IEEE infinities and NaNs flow through
+  ;; computations as ordinary values -- the Float domain depends on it,
+  ;; and GCL runs with floating-point traps disabled so they never fire.
+  ;; SBCL enables :invalid and :overflow by default, so merely LOADING a
+  ;; fasl that carries an infinity literal (sockio's plus_infinity)
+  ;; signalled FLOATING-POINT-OVERFLOW and aborted build-interpsys. This
+  ;; runs first, as part of the very form that installs the packages, so
+  ;; every later load in the build inherits the GCL-compatible mode.
+  (sb-int:set-floating-point-modes :traps nil))
 
 #+:sbcl
 (defun common-lisp-user::bye (&optional (code 0))

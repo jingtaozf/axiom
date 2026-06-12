@@ -46942,6 +46942,11 @@ top level that does not return, and that the save runs single-threaded
     ;; the image before dumping.
     (setq sb-ext:*userinit-pathname-function* (constantly nil))
     (setq sb-ext:*sysinit-pathname-function* (constantly nil))
+    ;; Axiom expects IEEE infinities and NaNs to flow as values, as they
+    ;; do under GCL; disable SBCL's float traps in the saved image too,
+    ;; not just during the build, so a running AXIOMsys does not trap on
+    ;; the Float domain's infinities.
+    (sb-int:set-floating-point-modes :traps nil)
     (sb-ext:save-lisp-and-die save-file :executable t))
 )
 

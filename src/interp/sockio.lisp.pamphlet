@@ -146,12 +146,29 @@ float traps. We reimplement these in Lisp, exactly as the hashes were
 #+:sbcl
 (progn
   ;; IEEE float edge values: not foreign, reimplemented in Lisp (see prose).
+  ;; The ftype declaim is load-bearing, not decoration. Each body returns
+  ;; a literal infinity, so SBCL's type derivation narrows the result to a
+  ;; singleton -- plus_infinity to (double-float +inf +inf) -- and then
+  ;; folds NANQ's (- +inf +inf) to the *finite* identity 0.0d0, deriving
+  ;; NANQ :: (member 0.0d0). The function genuinely returns a NaN, so when
+  ;; sockio.fasl is loaded the value violates that derived ftype and the
+  ;; whole build-interpsys aborts (observed). Declaring the return type as
+  ;; plain double-float -- which includes infinities and NaNs -- blocks the
+  ;; bogus narrowing while staying true.
+  (declaim (ftype (function () double-float)
+                  plus_infinity minus_infinity NANQ))
   (defun plus_infinity  () sb-ext:double-float-positive-infinity)
   (defun minus_infinity () sb-ext:double-float-negative-infinity)
+  ;; NANQ builds a quiet NaN from its bit pattern rather than computing
+  ;; (- +inf +inf). The arithmetic form is wrong twice over on a compiling
+  ;; host: with-float-traps-masked only masks at RUN time, but SBCL
+  ;; constant-folds the subtraction at COMPILE time with traps live, so
+  ;; merely compiling sockio raised FLOATING-POINT-OVERFLOW (observed).
+  ;; make-double-float assembles the IEEE-754 quiet-NaN double directly --
+  ;; sign 0, exponent all ones, mantissa MSB set, i.e. #x7FF8000000000000 --
+  ;; with no float operation to fold or trap.
   (defun NANQ ()
-    (sb-int:with-float-traps-masked (:invalid)
-      (- sb-ext:double-float-positive-infinity
-         sb-ext:double-float-positive-infinity)))
+    (sb-kernel:make-double-float #x7FF80000 0))
   ;; HyperDoc/graphics sockets: foreign, stubbed until the server is built.
   ;; The console AXIOMsys never calls these ($SpadServer is nil); the stub
   ;; turns an accidental call into a clear message instead of a crash.
