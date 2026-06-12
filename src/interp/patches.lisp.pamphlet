@@ -206,8 +206,17 @@ It used to read:
 
 (defun GETZEROVEC (n) (MAKE-ARRAY n :initial-element 0))
 
-(proclaim '(ftype (function (t) t) identity))
-(defun identity (x) x)
+;; daly re-provides identity with its own proclaim+defun -- but CL
+;; already exports identity with this exact definition, and SBCL locks
+;; the COMMON-LISP package, rejecting both the ftype proclamation and
+;; the redefinition (FTYPE-PROCLAMATION-MISMATCH for COMMON-LISP:IDENTITY,
+;; which aborted build-interpsys). On any conforming host CL:identity
+;; is the function we want, so the GCL-only pair is reader-guarded. The
+;; defvar -- a variable, separate namespace, holding the function for the
+;; LispVM constant handler -- stays; #'identity now resolves to
+;; CL:identity, which is the same function.
+#+:GCL (proclaim '(ftype (function (t) t) identity))
+#+:GCL (defun identity (x) x)
 (defvar identity #'identity) ; make LispVM code for handling constants to work
 
 
