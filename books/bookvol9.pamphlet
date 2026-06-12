@@ -12730,7 +12730,10 @@ by setting the {\tt special} keyword on the \verb|:| symbol property list.
             (|unknownTypeError| argt)
             argt)))
         (cond
-         ((eq (car argf) 'listof)
+         ;; argf may be a bare symbol (e.g. S in (: S BasicType)); plain
+         ;; (car argf) on a symbol errors under SBCL where GCL's lenient
+         ;; car returned nil, so guard with consp before tagging.
+         ((and (consp argf) (eq (car argf) 'listof))
            (dolist (x (cdr argf) td)
              (setq td (|compColon| (list '|:| x argt) mode env))
              (setq env (third td))))
