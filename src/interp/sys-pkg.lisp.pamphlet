@@ -24,6 +24,46 @@ from the environment.
 \begin{chunk}{GCL.PNAME}
 #+:GCL    SYSTEM:PNAME
 \end{chunk}
+\subsection{SBCL host bridge}
+The package definitions below speak the CLtL1 dialect of their AKCL
+origin: they say \verb|lisp::use-package|, import symbols with a
+\verb|LISP:| or \verb|user::| prefix, and use-package the GCL-internal
+{\bf SYSTEM} package. On SBCL none of those three packages exists ---
+the standard package is {\bf COMMON-LISP} with nickname {\bf CL}, the
+user package is {\bf COMMON-LISP-USER}, and there is no {\bf SYSTEM}.
+The failure is not at execution but at \emph{read} time: the reader
+cannot intern \verb|lisp::use-package| when no package is named LISP,
+so the load aborts before the first form runs. (The already-guarded
+\verb|#+:GCL SYSTEM:GETENV| tokens never bit, because a false feature
+test reads its form with suppression on.)
+
+The bridge below, which must therefore be the very first form this
+file tangles, teaches SBCL the old names instead of rewriting some
+nine hundred occurrences to the new ones: it adds {\bf LISP} as a
+nickname of COMMON-LISP, {\bf USER} as a nickname of
+COMMON-LISP-USER, and creates an empty {\bf SYSTEM} package so the
+\verb|use-package| calls succeed (every real SYSTEM symbol reference
+in this file is already \verb|#+:GCL|-guarded). SBCL locks its
+standard packages against exactly this kind of mutation, so the two
+\verb|unlock-package| calls are required first; this was observed as
+a ``Lock on package COMMON-LISP violated'' error, not assumed. The
+form is \verb|#+:sbcl|-guarded, so GCL reads it with suppression and
+is undisturbed.
+\begin{chunk}{*}
+#+:sbcl
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (sb-ext:unlock-package "COMMON-LISP")
+  (sb-ext:unlock-package "COMMON-LISP-USER")
+  (let ((cl (find-package "COMMON-LISP")))
+    (rename-package cl (package-name cl)
+      (adjoin "LISP" (package-nicknames cl) :test #'string=)))
+  (let ((cu (find-package "COMMON-LISP-USER")))
+    (rename-package cu (package-name cu)
+      (adjoin "USER" (package-nicknames cu) :test #'string=)))
+  (unless (find-package "SYSTEM")
+    (make-package "SYSTEM" :use nil)))
+
+\end{chunk}
 \section{New Common Lisp Changes}
 \subsection{in-package change}
 Common lisp has changed in-package to require a string-designator which
