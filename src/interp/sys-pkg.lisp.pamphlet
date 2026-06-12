@@ -120,8 +120,17 @@ We create all of the known packages here.
 The spad compiler package. Although I believe this is a dead
 package at this point. All of the symbols from this package
 have been moved into the boot package.
+
+It must still {\bf use} the Lisp package, because makeint switches
+into it ((in-package "SCRATCHPAD\_COMPILER")) and then evaluates a
+plain (in-package "BOOT") -- if the package inherits nothing, that
+in-package symbol interns locally and is an undefined function
+(observed on SBCL right after build-interpsys). GCL's make-package
+defaulted to using LISP; SBCL's does not, so we say it explicitly.
+The bridge above has already nicknamed LISP onto COMMON-LISP, so this
+reads on both hosts.
 \begin{chunk}{*}
-(make-package "SCRATCHPAD_COMPILER")
+(make-package "SCRATCHPAD_COMPILER" :use '("LISP"))
 \end{chunk}
 The special functions package. There was originally lisp code
 to support hardcoded knowledge of special functions like gamma.
