@@ -56,8 +56,11 @@
         ((AND (CONSP |l|) (EQ (QCDR |l|) NIL)
               (PROGN (setq |n| (QCAR |l|)) 'T) (INTEGERP |n|))
          (|displayComp| (setq |$level| |n|)))
+;;; One stray close paren removed below (GCL's reader discarded it
+;;; silently; SBCL aborts the load): 5 closes balance SAY's clause,
+;;; COND, RETURN, PROG and the DEFUN.
         ('T
-         (SAY            "Correct format: (level n) where n is the level you want to go to"           )))))))
+         (SAY            "Correct format: (level n) where n is the level you want to go to"           ))))))
 
 ;
 ;UP() == up()

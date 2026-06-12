@@ -2293,12 +2293,16 @@
                           G3127)
                         NIL))
                   NIL)
+;;; One stray close paren removed from the line below (GCL's reader
+;;; discarded it silently; SBCL aborts the load). A character-level
+;;; balance scan of the whole tangled file confirms this was the only
+;;; surplus and the file is balanced after the fix.
                (SEQ (EXIT (PROGN
                             (|sayBrightlyNT|
                                 (APPEND (|rightJustifyString| |n| 6)
                                         (CONS '|  |
                                          (CONS |fn| (CONS '|: | NIL)))))
-                            (|pp| |args|))))))))))
+                            (|pp| |args|)))))))))
 
 ;constructor2ConstructorForm x ==
 ;  VECP x => x.0

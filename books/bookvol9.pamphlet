@@ -22714,15 +22714,35 @@ Return a pointer to the Nth cons of X, counting 0 as the first cons.
 \end{chunk}
  
 \defun{is-console}{is-console}
+The GCL form answers ``does this stream write to the console?'' by
+extracting the underlying C FILE pointer with the builtin
+\verb|system:fp-output-stream| and comparing it against
+\verb|*terminal-io*|'s --- an identity test below the Lisp stream
+layer, so it sees through any number of stream wrappers. No other
+host exposes FILE pointers; the single-colon token does not even
+read outside GCL, hence the reader conditional. The portable branch
+approximates the same question one level up: the stream is the
+console if it is \verb|*terminal-io*| itself or a synonym stream
+(the usual shape of \verb|*standard-output*|) resolving to it. This
+sees through the synonym indirection but not through other wrapper
+streams; if console detection ever misbehaves on SBCL, deepen this
+test rather than the callers.
 \calls{is-console}{fp-output-stream}
 \uses{is-console}{*terminal-io*}
 \label{is-console}
 \sig{is-console}{Stream}{Boolean}
 \begin{chunk}{defun is-console}
 (defun is-console (stream)
+ #+:GCL
   (and (streamp stream) (output-stream-p stream)
        (eq (system:fp-output-stream stream)
-           (system:fp-output-stream *terminal-io*))))
+           (system:fp-output-stream *terminal-io*)))
+ #-:GCL
+  (and (streamp stream) (output-stream-p stream)
+       (or (eq stream *terminal-io*)
+           (and (typep stream 'synonym-stream)
+                (eq (symbol-value (synonym-stream-symbol stream))
+                    *terminal-io*)))))
 
 \end{chunk}
 
