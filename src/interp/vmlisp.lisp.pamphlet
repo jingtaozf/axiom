@@ -2078,18 +2078,24 @@ do the compile, and then rename the result back to code.o.
 (in-package "BOOT")
 (use-package '("LISP" "VMLISP"))
 
+;;; These three macros expanded into (compiler-let nil ...) --
+;;; compiler-let with an EMPTY binding list, doing nothing that progn
+;;; does not. compiler-let is CLtL1, removed by X3J13 (its compile-
+;;; time special bindings could not be given a portable meaning), and
+;;; SBCL has no such operator. With no bindings the substitution is
+;;; exact on every host, GCL included.
 (defmacro def-boot-fun (f args where)
-  `(compiler-let nil
+  `(progn
      (defun ,f ,args ,where (print (list ',f . ,args)))
      (export '(,f) "BOOT")))
 
 (defmacro def-boot-var (p where)
-  `(compiler-let nil
+  `(progn
      (defparameter ,p nil ,where)
      (export '(,p) "BOOT")))
 
 (defmacro def-boot-val (p val where)
-  `(compiler-let nil
+  `(progn
      (defparameter ,p ,val ,where)
      (export '(,p) "BOOT")))
 
