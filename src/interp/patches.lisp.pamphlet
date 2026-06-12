@@ -171,8 +171,13 @@ It used to read:
   (if (equal string "") (obey "sh")
     (obey string))
    (|terminateSystemCommand|))
-(setq *print-escape* nil) 
-#+(or :IEEE-FLOATING-POINT)
+(setq *print-escape* nil)
+;; system:*print-nans* is a GCL flag that makes the printer emit NaNs;
+;; the guard was :IEEE-FLOATING-POINT, a feature SBCL also defines, so
+;; the form was read and the single-colon GCL symbol failed to intern.
+;; SBCL prints NaNs as #<DOUBLE-FLOAT ... NaN> by default, so the guard
+;; is simply narrowed to GCL.
+#+:GCL
  (setq system:*print-nans* T)
 
 (defun /EF (&rest foo)
