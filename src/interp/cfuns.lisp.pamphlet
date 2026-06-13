@@ -147,10 +147,13 @@ particularly on directories --- is flagged for verification in Stage~5.
 ;;; Portable chdir — GCL has system::chdir built in; SBCL uses alien call.
 #+:sbcl
 (defun system::chdir (dir)
-  "Change process working directory.  GCL compatibility shim for SBCL."
-  (sb-alien:alien-funcall
-    (sb-alien:extern-alien "chdir" (sb-alien:function sb-alien:int sb-alien:c-string))
-    dir))
+  "Change process working directory.  GCL compatibility shim for SBCL.
+SBCL's truename/directory use *default-pathname-defaults*, not the
+OS CWD, so we must update both."
+  (require 'sb-posix)
+  (funcall (symbol-function (intern "CHDIR" "SB-POSIX")) dir)
+  (setq *default-pathname-defaults*
+        (pathname (concatenate 'string (namestring (truename dir)) "/"))))
 
 ;;stolen from AXIOM-XL src/strops.c
 #+(AND KCL (NOT ELF))

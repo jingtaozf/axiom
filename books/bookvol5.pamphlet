@@ -47990,12 +47990,11 @@ nrlib/index.kaf
    (let (allfiles)
     (declare (special vmlisp::*index-filename*))
     (system::chdir (string dirarg))
-    (setq allfiles (directory "*"))
+    (setq allfiles (directory "*.nrlib"))
     (system::chdir thisdir)
      (mapcan #'(lambda (f)
-      (when (string-equal (pathname-type f) "nrlib")
        (list (concatenate 'string (namestring f) "/"
-                          vmlisp::*index-filename*)))) allfiles))))
+                          vmlisp::*index-filename*))) allfiles))))
  (let (thisdir nrlibs object only dir key  (|$forceDatabaseUpdate| t) noexpose)
   (declare (special |$forceDatabaseUpdate| vmlisp::*index-filename*
                     |$ConstructorCache|))
