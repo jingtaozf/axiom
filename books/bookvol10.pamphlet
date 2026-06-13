@@ -17385,6 +17385,7 @@ INPUT=${INT}/input
 LISP=${OBJ}/${SYS}/bin/lisp
 LISPTANGLE=${OBJ}/${SYS}/bin/lisp
 BOOKSRC=${SPD}/books/bookvol5.pamphlet
+BOOKS=${SPD}/books
 
 \end{chunk}
 \subsection{The depsys variable}
@@ -19235,14 +19236,14 @@ fasthelp:
 	@ echo src/algebra BUILDING HELP FILES bookvol10
 	@ echo =========================================
 	@echo sa17 making .help files with lisp
-	@ echo "(makeHelpFiles)" | ${LISP}
+	@ export BOOKS=${BOOKS} && echo "(makeHelpFiles)" | ${LISP}
 
 fastinput:
 	@ echo ==========================================
 	@ echo src/algebra BUILDING INPUT FILES bookvol10
 	@ echo ==========================================
 	@echo sa18 making .input files with lisp
-	@ echo "(makeInputFiles)" | ${LISP}
+	@ export BOOKS=${BOOKS} && echo "(makeInputFiles)" | ${LISP}
 
 fastxhtml:
 	@ echo ==========================================
@@ -19250,7 +19251,7 @@ fastxhtml:
 	@ echo ==========================================
 	@echo sa19 making .xhtml files with lisp
 	@ mkdir -p ${MNT}/doc
-	@ echo "(makeXHTMLFiles)" | ${LISP}
+	@ export BOOKS=${BOOKS} && echo "(makeXHTMLFiles)" | ${LISP}
 
 copyspad:
 	@ echo ==========================================

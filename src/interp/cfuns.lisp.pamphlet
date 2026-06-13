@@ -139,7 +139,18 @@ particularly on directories --- is flagged for verification in Stage~5.
 (defun |findStringInFile| (str p)
     (|findString| (namestring p) str) )
 
+#+:gcl
 (defun |getEnv| (var-name)  (system::getenv var-name))
+#+:sbcl
+(defun |getEnv| (var-name)  (sb-ext:posix-getenv var-name))
+
+;;; Portable chdir — GCL has system::chdir built in; SBCL uses alien call.
+#+:sbcl
+(defun system::chdir (dir)
+  "Change process working directory.  GCL compatibility shim for SBCL."
+  (sb-alien:alien-funcall
+    (sb-alien:extern-alien "chdir" (sb-alien:function sb-alien:int sb-alien:c-string))
+    dir))
 
 ;;stolen from AXIOM-XL src/strops.c
 #+(AND KCL (NOT ELF))
