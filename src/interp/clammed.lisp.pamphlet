@@ -13,6 +13,19 @@
 
 (in-package "BOOT")
 
+;;; SBCL needs explicit defvar for top-level SETQ targets that GCL
+;;; implicitly globalises.  Without these, compile-file emits
+;;; "Undefined variable" warnings and --disable-debugger exits non-zero.
+(defvar |canCoerce;AL| nil)
+(defvar |canCoerceFrom;AL| nil)
+(defvar |coerceConvertMmSelection;AL| nil)
+(defvar |hasFileProperty;AL| nil)
+(defvar |isLegitimateMode;AL| nil)
+(defvar |isValidType;AL| nil)
+(defvar |resolveTT;AL| nil)
+(defvar |selectMms1;AL| nil)
+(defvar |underDomainOf;AL| nil)
+
 ;--% Functions on $clamList
 ;-- These files are read in by the system so that they can be cached
 ;-- properly.  Otherwise, must read in compiled versions and then
