@@ -338,28 +338,36 @@ Multiple blocks with the same #+NAME are concatenated."
 ** Expand noweb references
 
 #+BEGIN_SRC elisp
-(defun pamphlet2org--expand (body blocks &optional visited)
+(defun pamphlet2org--expand (body blocks &optional visiting)
   "Expand noweb <<name>> references in BODY using BLOCKS hash.
-VISITED tracks names being expanded (cycle detection).
+VISITING tracks names currently being expanded (cycle detection only).
+Same block can be expanded at multiple locations (like tanglec).
 Returns the fully expanded string."
-  (let ((visited (or visited (make-hash-table :test #'equal))))
+  (let ((visiting (or visiting (make-hash-table :test #'equal))))
     (with-temp-buffer
       (insert body)
       (goto-char (point-min))
       (while (re-search-forward "^\\(\\s-*\\)<<\\([^>]+\\)>>\\s-*$" nil t)
         (let* ((indent (match-string 1))
                (ref (string-trim (match-string 2))))
-          (unless (gethash ref visited)
-            (puthash ref t visited)
+          (unless (gethash ref visiting)
+            (puthash ref t visiting)
             (let ((expanded (gethash ref blocks)))
               (when expanded
-                (let* ((exp (pamphlet2org--expand expanded blocks visited))
-                       (trimmed (string-remove-suffix "\n" exp))
+                (let* ((exp (pamphlet2org--expand expanded blocks visiting))
+                       ;; Only strip trailing \n if the char after match is also \n
+                       ;; (prevents double-newline; preserves intentional blank lines)
+                       (after-match (char-after (match-end 0)))
+                       (trimmed (if (and (string-suffix-p "\n" exp)
+                                         after-match
+                                         (= after-match ?\n))
+                                    (string-remove-suffix "\n" exp) exp))
                        (indented (if (string-empty-p indent) trimmed
                                    (replace-regexp-in-string
                                     "\\(^\\)\\(.\\)" (concat indent "\\2")
                                     trimmed))))
-                  (replace-match indented t t)))))))
+                  (replace-match indented t t))))
+            (remhash ref visiting))))
       (buffer-string))))
 #+END_SRC
 
