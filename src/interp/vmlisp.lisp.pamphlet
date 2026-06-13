@@ -721,7 +721,8 @@ can be restored.
 
 ; rewrite this as make-string everywhere and delete this
 (defun make-full-cvec (sint &optional (char #\space))
-  (make-string sint :initial-element (character char)))
+  (make-string sint
+    :initial-element (if (integerp char) (code-char char) (character char))))
 
 ; 17.2 Accessing
 
