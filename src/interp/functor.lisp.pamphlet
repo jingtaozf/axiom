@@ -710,7 +710,7 @@
   (PROG (|v|)
     (RETURN
       (SEQ (PROGN
-             (setq |v| (make-array (SIZE |u|)))
+             (setq |v| (make-array (SIZE |u|) :initial-element nil))
              (DO ((|i| 0 (QSADD1 |i|))) ((QSGREATERP |i| 5) NIL)
                (SEQ (EXIT (SETELT |v| |i| (ELT |u| |i|)))))
              (DO ((G166429 (MAXINDEX |v|)) (|i| 6 (+ |i| 1)))
@@ -2267,7 +2267,7 @@
                                           NIL))
                                         (SETQ G167375
                                          (CONS |u| G167375))))))))))
-                (setq |copyvec| (make-array (+ 1 |n|)))
+                (setq |copyvec| (make-array (+ 1 |n|) :initial-element nil))
                 (DO ((G167387 |code| (CDR G167387)) (|u| NIL))
                     ((OR (ATOM G167387)
                          (PROGN (SETQ |u| (CAR G167387)) NIL))
