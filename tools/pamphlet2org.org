@@ -354,10 +354,14 @@ Returns the fully expanded string."
             (let ((expanded (gethash ref blocks)))
               (when expanded
                 (let* ((exp (pamphlet2org--expand expanded blocks visited))
-                       (trimmed (string-remove-suffix "\n" exp))
-                       (indented (replace-regexp-in-string
-                                  "\\(^\\)\\(.\\)" (concat indent "\\2")
-                                  trimmed)))
+                       ;; Remove trailing \n if present (the match line's own
+                       ;; \n stays in buffer, so we'd get a double \n otherwise)
+                       (trimmed (if (string-suffix-p "\n" exp)
+                                    (substring exp 0 -1) exp))
+                       (indented (if (string-empty-p indent) trimmed
+                                   (replace-regexp-in-string
+                                    "\\(^\\)\\(.\\)" (concat indent "\\2")
+                                    trimmed))))
                   (replace-match indented t t)))))))
       (buffer-string))))
 #+END_SRC
