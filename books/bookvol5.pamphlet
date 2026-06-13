@@ -29648,12 +29648,12 @@ with type m2 or NIL (= failed).
                   (setq ans (|coerceInt| (mkObjWrap valp t1p) t2)))
                 ans)
               ; tagged union selectors
-            ((or (and (eq (car t1) '|Variable|) (equal (cadr t1) t2))
-                 (and (eq (car t2) '|Variable|) (equal (cadr t2) t1)))
+            ((or (and (eqcar t1 '|Variable|) (equal (cadr t1) t2))
+                 (and (eqcar t2 '|Variable|) (equal (cadr t2) t1)))
               (mkObj val t2))
             ((stringp t2)
                  (cond
-                  ((and (eq (first t1) '|Variable|)
+                  ((and (eqcar t1 '|Variable|)
                         (equal t2 (pname (second t1))))
                     (mkObjWrap t2 t2))
                   (t
@@ -29661,7 +29661,7 @@ with type m2 or NIL (= failed).
                    (when (and (equal t2 valp)
                               (or (equal valp t1) (equal t1 |$String|)))
                     (mkObj val t2)))))
-            ((eq (first t1) '|Tuple|)
+            ((eqcar t1 '|Tuple|)
               (|coerceInt1|
                (mkObjWrap
                 (|asTupleAsList| (|unwrap| val))
@@ -44793,7 +44793,7 @@ alternate polynomial types of Symbols.
 \defun{isTaggedUnion}{isTaggedUnion}
 \begin{chunk}{defun isTaggedUnion}
 (defun |isTaggedUnion| (u)
- (and (eq (car u) '|Union|) (eq (caadr u) '|:|)))
+ (and (eqcar u '|Union|) (eqcar (ifcar (ifcdr u)) '|:|)))
 
 \end{chunk}
 
