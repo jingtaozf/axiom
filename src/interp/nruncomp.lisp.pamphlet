@@ -12,6 +12,28 @@
 \begin{chunk}{*}
 (IN-PACKAGE "BOOT" )
 
+;;; GCL implicitly globalises (declare (special x)); SBCL does not.
+;;; These defvars ensure the NRT compiler variables have default
+;;; bindings even when compDefineFunctor1 is not on the call stack.
+(defvar |$NRTaddForm| nil)
+(defvar |$NRTaddList| nil)
+(defvar |$NRTattributeAlist| nil)
+(defvar |$NRTbase| nil)
+(defvar |$NRTdeltaLength| nil)
+(defvar |$NRTdeltaList| nil)
+(defvar |$NRTdeltaListComp| nil)
+(defvar |$NRTderivedTargetIfTrue| nil)
+(defvar |$NRTdomainFormList| nil)
+(defvar |$NRTloadTimeAlist| nil)
+(defvar |$NRTmakeCompactDirect| nil)
+(defvar |$NRTslot| nil)
+(defvar |$NRTslot1Info| nil)
+(defvar |$NRTslot1PredicateList| nil)
+(defvar |$NRTvec| nil)
+(defvar |$template| nil)
+(defvar |$domainShell| nil)
+(defvar |$QuickCode| nil)
+
 ;-----------------------------NEW buildFunctor CODE-----------------------------
 ;NRTaddDeltaCode() ==
 ;--NOTES: This function is called from NRTbuildFunctor to initially
