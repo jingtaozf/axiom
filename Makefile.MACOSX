@@ -1,0 +1,261 @@
+
+VERSION:="Axiom (May 2017)"
+
+##### special paths
+SPD:=$(shell pwd)
+SRC:=${SPD}/src
+LSP:=${SPD}/lsp
+INT:=${SPD}/int
+OBJ:=${SPD}/obj
+MNT:=${SPD}/mnt
+TMP:=${OBJ}/tmp
+ZIPS:=${SPD}/zips
+BOOKS:=${SPD}/books
+SRCDIRS:="interpdir sharedir algebradir etcdir docdir \
+	  graphdir smandir hyperdir browserdir inputdir"
+
+SYS:=$(notdir $(AXIOM))
+DAASE:=${SRC}/share
+PROOFS:=${OBJ}/${SYS}/proofs
+SPAD:=${SPD}/mnt/${SYS}
+
+SPADBIN:=${MNT}/${SYS}/bin
+DOCUMENT:=${SPADBIN}/document
+EXTRACT:=${BOOKS}/extract
+
+##### installation paths
+DESTDIR:=/usr/local/axiom
+COMMAND:=${DESTDIR}/mnt/${SYS}/bin/axiom
+
+##### functions we need
+AWK:=gawk 
+PATCH:=patch
+RANLIB:=ranlib
+TAR:=tar
+TOUCH:=touch
+UNCOMPRESS:=gunzip
+
+####K C Related variables
+PLF=${SYS}platform
+CCF="-O2 -fno-strength-reduce -D_GNU_SOURCE -D${PLF} \
+     -I/usr/X11/include \
+     -Wno-absolute-value -std=gnu89 -w" 
+INC:=${SPD}/src/include
+CC:=gcc
+XLIB:=/usr/X11R6/lib
+LDF="-L/usr/X11/lib -L/usr/X11R6/lib64 -L/usr/local/lib64 -L/usr/openwin/lib64 -L/usr/lib64 "
+O:=o
+
+##### lisp related variables
+BYE:=bye
+#GCLVERSION=gcl-2.4.1
+#GCLVERSION=gcl-2.5
+#GCLVERSION=gcl-2.5.2
+#GCLVERSION=gcl-2.6.1
+#GCLVERSION=gcl-2.6.2
+#GCLVERSION=gcl-2.6.2a
+#GCLVERSION=gcl-2.6.3
+#GCLVERSION=gcl-2.6.5
+#GCLVERSION=gcl-2.6.6
+#GCLVERSION=gcl-2.6.7pre
+#GCLVERSION=gcl-2.6.7
+#GCLVERSION=gcl-2.6.8pre
+#GCLVERSION=gcl-2.6.8pre2
+#GCLVERSION=gcl-2.6.8pre3 
+#GCLVERSION=gcl-2.6.8pre4
+#GCLVERSION=gcl-2.6.8pre7
+#GCLVERSION=gcl-cygwin
+#GCLVERSION=gcl-2.6.9
+#GCLVERSION=gcl-2.6.10
+#GCLVERSION=gcl-2.6.11
+#GCLVERSION=gcl-2.6.12
+GCLVERSION=gcl-2.6.13pre
+GCLDIR:=${LSP}/${GCLVERSION}
+GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"
+LISP:=lsp
+LISPFLAVOR?=gcl
+ifeq (${LISPFLAVOR},sbcl)
+O:=fasl
+INTERPSYS=${OBJ}/${SYS}/bin/interpsys.sh
+endif
+
+##### command line control
+NOISE:="-o ${TMP}/trace"
+PART:=  cprogs
+SUBPART:= everything
+RUNTYPE:=serial
+# can be richtests, catstests, regresstests (see src/input/Makefile)
+# alltests, notests
+TESTSET:=notests
+BUILD:=partial
+ACL2:=
+COQ:=
+
+
+AWK=awk
+
+####K C Related variables
+PLF=MACOSXplatform
+CCF="-O2 -fno-strength-reduce -D_GNU_SOURCE -D${PLF} \
+     -I/usr/X11/include -I/usr/include -I/usr/include/sys \
+     -Wno-absolute-value -std=gnu89 -w" 
+INC:=${SPD}/src/include
+CC:=gcc
+XLIB:=/usr/X11R6/lib
+LDF="-L/usr/X11R6/lib64 -L/usr/local/lib64 -L/usr/openwin/lib64 -L/usr/lib64 "
+O:=o
+
+# The platform line above resets O to o after ENVDEFAULTS has already
+# applied the LISPFLAVOR selection, and ENVAR below snapshots the
+# variables with immediate assignment -- so without re-applying the
+# selector here, a LISPFLAVOR=sbcl build hands its sub-makes O=o and
+# depsys compiles fasls under .o names the extensionless loader then
+# cannot find (observed: "wrote clam.o ... Couldn't load clam").
+# The re-application must sit between the platform reset and ENVAR.
+LISPFLAVOR?=gcl
+ifeq (${LISPFLAVOR},sbcl)
+O:=fasl
+endif
+
+GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"
+
+ENV:= \
+ACL2=${ACL2} \
+AWK=${AWK} \
+BOOKS=${BOOKS} \
+BUILD=${BUILD} \
+BYE=${BYE} \
+CC=${CC} \
+CCF=${CCF} \
+COMMAND=${COMMAND} \
+COQ=${COQ} \
+DAASE=${DAASE} \
+DESTDIR=${DESTDIR} \
+DOCUMENT=${DOCUMENT} \
+EXTRACT=${EXTRACT} \
+GCLDIR=${GCLDIR} \
+GCLOPTS=${GCLOPTS} \
+GCLVERSION=${GCLVERSION} \
+INC=${INC} \
+INTERPSYS=${INTERPSYS} \
+INT=${INT} \
+LDF=${LDF} \
+LISP=${LISP} \
+LISPFLAVOR=${LISPFLAVOR} \
+LSP=${LSP} \
+MNT=${MNT} \
+NOISE=${NOISE} \
+O=${O} \
+OBJ=${OBJ} \
+PART=${PART} \
+PATCH=${PATCH} \
+PLF=${PLF} \
+PROOFS=${PROOFS} \
+RANLIB=${RANLIB} \
+RUNTYPE=${RUNTYPE} \
+SPAD=${SPAD} \
+SPADBIN=${SPADBIN} \
+SPD=${SPD} \
+SRC=${SRC} \
+SRCDIRS=${SRCDIRS} \
+SUBPART=${SUBPART} \
+SYS=${SYS} \
+TANGLE=${TANGLE} \
+TAR=${TAR} \
+TESTSET=${TESTSET} \
+TMP=${TMP} \
+TOUCH=${TOUCH} \
+UNCOMPRESS=${UNCOMPRESS} \
+VERSION=${VERSION} \
+WEAVE=${WEAVE} \
+XLIB=${XLIB} \
+ZIPS=${ZIPS} 
+
+
+all: srcsetup srcdir
+	@echo 45 Makefile.linux called
+	@echo 46 Environment : ${ENV} 
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+	    then  grep "result FAILED" int/input/*.regress || true ; fi
+
+srcsetup: ${SPD}/src/Makefile
+	@echo 18 making ${SPD}/src 
+	@( cd src ; ${ENV} ${MAKE} setup )
+
+srcdir: ${SPD}/src/Makefile
+	@echo 15 making ${SPD}/src 
+	@( cd src ; ${ENV} ${MAKE} )
+
+${SPD}/src/Makefile: ${SPD}/src/Makefile.pamphlet
+	@echo 16 making ${SPD}/src/Makefile from ${SPD}/src/Makefile.pamphlet
+	( cd src ; \
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/src.Makefile.pdf )
+
+libspadclean:
+	@echo 17 cleaning ${OBJ}/${SYS}/lib     
+	@rm -rf ${OBJ}/${SYS}/lib       
+	@( cd src ; ${EXTRACT} Makefile )
+	@( cd src ; ${ENV} ${MAKE} clean )
+	@rm -f ${SPD}/src/Makefile ${SPD}/src/Makefile.dvi
+
+lspdir: ${LSP}/Makefile
+	@echo 19 making ${LSP}
+	@mkdir -p ${OBJ}/${SYS}/bin
+	@mkdir -p ${OBJ}/${SYS}/lsp
+ifeq (${LISPFLAVOR},sbcl)
+	@echo =====================================
+	@echo lsp USING SYSTEM SBCL AS HOST LISP
+	@echo =====================================
+	@echo '#!/bin/sh -' > ${OBJ}/${SYS}/bin/lisp
+	@echo 'exec sbcl --dynamic-space-size 32768 \
+	  --no-userinit --no-sysinit --disable-debugger \
+	  --load ${BOOKS}/tangle.lisp "$$@"' >> ${OBJ}/${SYS}/bin/lisp
+	@chmod +x ${OBJ}/${SYS}/bin/lisp
+else
+	@echo =====================================
+	@echo lsp BUILDING GCL COMMON LISP
+	@echo =====================================
+	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir )
+	@(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
+endif
+
+${LSP}/Makefile: ${LSP}/Makefile.pamphlet
+	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.pamphlet
+	@( cd lsp ; \
+	 ${EXTRACT} Makefile.pamphlet ; \
+	 if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
+	 ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
+	 fi ; \
+	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
+
+lspclean:
+	@echo 21 cleaning ${OBJ}/${SYS}/ccl
+	@rm -rf ${LSP}/${GCLVERSION}
+	@rm -rf ${INT}/ccl
+	@rm -rf ${OBJ}/${SYS}/ccl
+	@rm -rf ${LSP}/gcldir
+	@rm -f ${LSP}/Makefile ${LSP}/Makefile.dvi
+
+document: 
+	@echo 22 documenting files
+	@(cd lsp ; ${ENV} ${MAKE} document )
+	@(cd src ; ${ENV} ${MAKE} document )
+
+clean: 
+	@ echo 7 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
+	@ echo 8 Environment ${ENV}
+	@ rm -f lsp/Makefile.dvi
+	@ rm -f lsp/Makefile
+	@ rm -f trace
+	@ rm -f *~
+	@ rm -f Makefile.${SYS}
+	@ rm -rf ${MNT}
+	@ rm -rf int
+	@ rm -rf obj
+	@ rm -rf mnt
+	@ for i in `find src -name "Makefile"` ; do rm -f $i ; done
+	@ for i in `find src -name "Makefile.dvi"` ; do rm -f $i ; done
+
+

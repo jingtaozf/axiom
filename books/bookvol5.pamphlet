@@ -48434,7 +48434,7 @@ Here I'll try to outline the interp database write procedure
 
 ; 1. We open the file we're going to create
 
-  (setq out (open "interp.build" :direction :output))
+  (setq out (open "interp.build" :direction :output :if-exists :supersede))
 
 ; 2. We reserve some space at the top of the file for the key-time pair
 ;    We will overwrite these spaces just before we close the file.
@@ -48616,7 +48616,7 @@ Here I'll try to outline the interp database write procedure
         ancestors ancestorspos out)
   (declare (special *print-pretty*))
   (print "building interp.daase")
-  (setq out (open "interp.build" :direction :output))
+  (setq out (open "interp.build" :direction :output :if-exists :supersede))
   (princ "                              " out)
   (finish-output out)
   (dolist (constructor (|allConstructors|))
@@ -48700,7 +48700,7 @@ time stamp at the top of the file and close the file.
  (let (master masterpos src formpos docpos attpos predpos *print-pretty* out)
   (declare (special *print-pretty*))
   (print "building browse.daase")
-  (setq out (open "browse.build" :direction :output))
+  (setq out (open "browse.build" :direction :output :if-exists :supersede))
   (princ "                              " out)
   (finish-output out)
   (dolist (constructor (|allConstructors|))
@@ -48747,7 +48747,7 @@ database format.
   (declare (special *print-pretty* *hasCategory-hash*))
   (print "building category.daase")
   (|genCategoryTable|)
-  (setq out (open "category.build" :direction :output))
+  (setq out (open "category.build" :direction :output :if-exists :supersede))
   (princ "                              " out)
   (finish-output out)
   (maphash #'(lambda (key value)
@@ -48778,7 +48778,7 @@ database format.
 (defun write-operationdb ()
  (let (pos master out)
   (declare (special leaves *operation-hash*))
-  (setq out (open "operation.build" :direction :output))
+  (setq out (open "operation.build" :direction :output :if-exists :supersede))
   (princ "                              " out)
   (finish-output out)
   (maphash #'(lambda (key value)
