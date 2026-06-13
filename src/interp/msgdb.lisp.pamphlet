@@ -632,10 +632,9 @@
 ;  spadThrow()
 
 (defun |throwKeyedMsg| (|key| |args|)
- (let (*standard-output*)
- (declare (special *standard-OUTPUT* |$testingErrorPrefix|
+ (let ((*standard-output* (or |$texOutputStream| *standard-output*)))
+ (declare (special |$testingErrorPrefix|
                    |$testingSystem| |$texOutputStream|))
-   (setq *standard-output* |$texOutputStream|)
    (|sayMSG| " ")
    (when |$testingSystem| (|sayMSG| |$testingErrorPrefix|))
    (|sayKeyedMsg| |key| |args|)
