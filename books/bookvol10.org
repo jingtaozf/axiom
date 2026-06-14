@@ -19304,21 +19304,36 @@ all: fasthelp fastinput fastxhtml src ${OUT}/libdb.text \
      ${SPADBIN}/index.html gloss copyspad
 	@ echo sa16 finished ${IN}
 
-fasthelp:
+# makeHelpFiles/makeInputFiles/makeXHTMLFiles below are the legacy Lisp
+# `tangle' (in books/tangle.lisp) doing a whole-book pass; it parses
+# \begin{chunk} latex markers and cannot read .org.  Materialise the exact
+# .pamphlet bytes (untanglec) for just the six books these passes read, so
+# their .help/.input/.xhtml output stays byte-identical.  Source extraction
+# (.spad/.lisp) still tangles directly from .org via srctangle -- this regen
+# is confined to the doc/help passes, not the source path.
+helpbooks:
+	@ ${BOOKS}/untanglec ${BOOKS}/bookvol5.org    > ${BOOKS}/bookvol5.pamphlet
+	@ ${BOOKS}/untanglec ${BOOKS}/bookvol10.2.org > ${BOOKS}/bookvol10.2.pamphlet
+	@ ${BOOKS}/untanglec ${BOOKS}/bookvol10.3.org > ${BOOKS}/bookvol10.3.pamphlet
+	@ ${BOOKS}/untanglec ${BOOKS}/bookvol10.4.org > ${BOOKS}/bookvol10.4.pamphlet
+	@ ${BOOKS}/untanglec ${BOOKS}/bookvol10.5.org > ${BOOKS}/bookvol10.5.pamphlet
+	@ ${BOOKS}/untanglec ${BOOKS}/bookvol11.org   > ${BOOKS}/bookvol11.pamphlet
+
+fasthelp: helpbooks
 	@ echo =========================================
 	@ echo src/algebra BUILDING HELP FILES bookvol10
 	@ echo =========================================
 	@echo sa17 making .help files with lisp
 	@ export BOOKS=${BOOKS} && echo "(makeHelpFiles)" | ${LISP}
 
-fastinput:
+fastinput: helpbooks
 	@ echo ==========================================
 	@ echo src/algebra BUILDING INPUT FILES bookvol10
 	@ echo ==========================================
 	@echo sa18 making .input files with lisp
 	@ export BOOKS=${BOOKS} && echo "(makeInputFiles)" | ${LISP}
 
-fastxhtml:
+fastxhtml: helpbooks
 	@ echo ==========================================
 	@ echo src/algebra BUILDING XHTML FILES bookvol10
 	@ echo ==========================================
