@@ -186,7 +186,11 @@ interpreter or algebra uses has to (cough, cough) appear here.
 \begin{chunk}{*}
 (make-package "BOOT")
 (in-package "BOOT")
-(lisp::use-package '("VMLISP" "LISP"))
+;; SYSTEM too: `)lisp (system "...")` (e.g. src/input/fixed.input) is read in
+;; BOOT, so BOOT::SYSTEM must resolve to the SYSTEM:SYSTEM shell shim.  VMLISP
+;; use-packages SYSTEM but that is not transitive, so name it here explicitly.
+;; SYSTEM exports only the SYSTEM symbol, so there is no bulk-import conflict.
+(lisp::use-package '("VMLISP" "LISP" "SYSTEM"))
 
 \end{chunk}
 FOAM is the intermediate language for the aldor compiler. FOAM
