@@ -34541,10 +34541,10 @@ and tell the user what options are available.
      ((eq option '|names|) (|displayWorkspaceNames|))
      (t (|displayProperties| option l))))
    (|sayMessage|
-    (append 
+    (append
       '("  )display keyword arguments are")
       (mapcar #'(lambda (x) (format nil "~%     ~a" x)) |$displayOptions|)
-      (format nil "~%  or abbreviations thereof"))))))
+      (list (format nil "~%  or abbreviations thereof")))))))
 
 \end{chunk}
 
@@ -39820,7 +39820,8 @@ linker       linker arguments (e.g. libraries to search) -lxlf
 (defun |validateOutputDirectory| (x)
  "Validate the output directory"
  (let ((dirname (car x)))
-  (when (and (pathname-directory (string dirname)) (null (probe-file dirname)))
+  (when (and (pathname-directory (string dirname))
+             (null (probe-file (string dirname))))
    dirname)))
 
 \end{chunk}
