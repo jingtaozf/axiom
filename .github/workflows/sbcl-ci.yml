@@ -37,12 +37,24 @@ jobs:
           brew update >/dev/null || true
           # sbcl: the Lisp host. gawk: Makefile uses gawk. gnu-sed/grep: a few
           # recipes assume GNU behaviour. coreutils: gtimeout for the runner.
-          brew install sbcl gawk gnu-sed grep coreutils || true
+          # libx11/libxpm/...: headless X11 client headers+libs so libspad's
+          # graphics C compiles/links without XQuartz (the graphics binaries are
+          # built but unused; the regression tests exclude them).
+          brew install sbcl gawk gnu-sed grep coreutils \
+                       libx11 libxpm libxt libxext libxau libxdmcp || true
           sbcl --version
           # Expose GNU coreutils `timeout` as `timeout` for the runner.
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
           echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
           echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
+          # Headers/libs for clang: SDK sysroot (macos runners have no
+          # /usr/include) plus Homebrew's X11.  The Makefile's hard-coded
+          # -I/usr/X11/include / -L/usr/X11/lib are harmless no-ops here.
+          {
+            echo "SDKROOT=$(xcrun --show-sdk-path)"
+            echo "CPATH=$(brew --prefix)/include"
+            echo "LIBRARY_PATH=$(brew --prefix)/lib"
+          } >> "$GITHUB_ENV"
 
       - name: Cache build artifacts (obj/int/mnt/lsp)
         uses: actions/cache@v4
