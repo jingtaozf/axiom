@@ -181,33 +181,48 @@ encoded to UTF-8 to turn its eight-bit characters back into the raw bytes
                (with-current-buffer out (buffer-string)))
       (kill-buffer out))))
 
+(defvar migrate-dryrun-drop-whitelist '(end-document skip bib-end)
+  "Drop KINDs that carry no documentation content and are acceptable to
+drop: \\end{document}, the skip-list markers (\\maketitle etc.), and
+\\end{thebibliography}.  ANY other drop kind (preamble, bib-tail) means
+real content was lost -- a losslessness failure.")
+
 (defun migrate-dryrun-verify-file (pamphlet outdir)
-  "Convert PAMPHLET -> .org under OUTDIR, verify tangle-equivalence.
-Return a plist: :pamphlet :mode :nchunks :pass :fail :failed :tangle-eq :error."
+  "Convert PAMPHLET -> .org under OUTDIR; verify BOTH axes:
+tangle-equivalence (org tangles byte-identically to tanglec) and
+losslessness (every line the converter drops is a whitelisted marker).
+Return a plist with :tangle-eq, :lossless, :bad-drops, etc."
   (condition-case err
       (let* ((rel (file-relative-name pamphlet migrate-dryrun-root))
              (org (expand-file-name (concat rel ".org") outdir))
              (chunks (migrate-dryrun-chunks-to-verify pamphlet))
-             (mode (migrate-dryrun-mode pamphlet)))
+             (mode (migrate-dryrun-mode pamphlet))
+             (pamphlet2org-ledger t)
+             (pamphlet2org--ledger-list nil))
         (make-directory (file-name-directory org) t)
-        (pamphlet2org-convert-file pamphlet org)
-        (if (null chunks)
-            (list :pamphlet pamphlet :mode mode :nchunks 0
-                  :pass 0 :fail 0 :failed nil :tangle-eq t)
-          (let ((blocks (pamphlet2org--collect-blocks org))
-                (pass 0) (fail 0) (failed '()))
-            (dolist (c chunks)
-              (if (string= (migrate-dryrun--tanglec pamphlet c)
-                           (encode-coding-string
-                            (migrate-dryrun--org-tangle blocks c) 'utf-8))
-                  (cl-incf pass)
-                (cl-incf fail)
-                (when (< (length failed) 8) (push c failed))))
-            (list :pamphlet pamphlet :mode mode :nchunks (length chunks)
-                  :pass pass :fail fail :failed (nreverse failed)
-                  :tangle-eq (= fail 0)))))
+        (pamphlet2org-convert-file pamphlet org)   ; ledger records its drops
+        (let ((bad (seq-uniq
+                    (mapcar #'car
+                            (seq-remove
+                             (lambda (d) (memq (car d) migrate-dryrun-drop-whitelist))
+                             pamphlet2org--ledger-list))))
+              (pass 0) (fail 0) (failed '()))
+          (when chunks
+            (let ((blocks (pamphlet2org--collect-blocks org)))
+              (dolist (c chunks)
+                (if (string= (migrate-dryrun--tanglec pamphlet c)
+                             (encode-coding-string
+                              (migrate-dryrun--org-tangle blocks c) 'utf-8))
+                    (cl-incf pass)
+                  (cl-incf fail)
+                  (when (< (length failed) 8) (push c failed))))))
+          (list :pamphlet pamphlet :mode mode :nchunks (length chunks)
+                :pass pass :fail fail :failed (nreverse failed)
+                :tangle-eq (= fail 0)
+                :lossless (null bad) :bad-drops bad)))
     (error (list :pamphlet pamphlet :mode "ERROR" :nchunks 0
                  :pass 0 :fail 0 :failed nil :tangle-eq nil
+                 :lossless nil :bad-drops nil
                  :error (error-message-string err)))))
 #+END_SRC
 
@@ -228,6 +243,8 @@ fans out the representative's verdict with a =dup_of= back-reference).
            (number-to-string (plist-get r :pass))
            (number-to-string (plist-get r :fail))
            (if (plist-get r :tangle-eq) "PASS" "FAIL")
+           (if (plist-get r :lossless) "PASS" "FAIL")
+           (funcall q (or (plist-get r :bad-drops) ""))
            (funcall q (or (plist-get r :failed) (plist-get r :error) ""))
            (funcall q (or dup-of "")))
      ",")))
@@ -236,7 +253,7 @@ fans out the representative's verdict with a =dup_of= back-reference).
   "Verify FILES (dedup by content), append CSV rows to CSV, return tallies."
   (make-directory outdir t)
   (let ((seen (make-hash-table :test #'equal))
-        (pass 0) (fail 0) (prose 0) (err 0) (dup 0) (n 0)
+        (pass 0) (fail 0) (prose 0) (err 0) (dup 0) (lossfail 0) (n 0)
         (rows '()))
     (dolist (f files)
       (cl-incf n)
@@ -252,6 +269,7 @@ fans out the representative's verdict with a =dup_of= back-reference).
           (let ((r (migrate-dryrun-verify-file f outdir)))
             (puthash m r seen)
             (push (migrate-dryrun--csv-row r nil) rows)
+            (unless (plist-get r :lossless) (cl-incf lossfail))
             (cond ((plist-get r :error) (cl-incf err))
                   ((string= (plist-get r :mode) "prose") (cl-incf prose))
                   ((plist-get r :tangle-eq) (cl-incf pass))
@@ -262,12 +280,12 @@ fans out the representative's verdict with a =dup_of= back-reference).
                      (file-relative-name f migrate-dryrun-root))))))
     (with-temp-buffer
       (when (= 0 (or (file-attribute-size (file-attributes csv)) 0))
-        (insert "file,mode,nchunks,pass,fail,tangle_eq,detail,dup_of\n"))
+        (insert "file,mode,nchunks,pass,fail,tangle_eq,lossless,bad_drops,detail,dup_of\n"))
       (insert (string-join (nreverse rows) "\n") "\n")
       (append-to-file (point-min) (point-max) csv))
     (let ((tally (list :files n :unique (hash-table-count seen)
                        :dup dup :tangle_pass pass :tangle_fail fail
-                       :prose prose :error err)))
+                       :prose prose :error err :lossless_fail lossfail)))
       (message "TALLY %S" tally)
       tally)))
 

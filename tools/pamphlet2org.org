@@ -166,6 +166,21 @@ preserve original order (we =push= to a list during traversal).
 (defvar pamphlet2org--src-prefix (concat "#" "+")
   "Org #+ prefix, split to avoid literate-elisp misparse.")
 
+(defvar pamphlet2org-ledger nil
+  "Non-nil enables drop recording in `pamphlet2org--convert': every input
+line it DROPS (emits no org for) is pushed onto `pamphlet2org--ledger-list'
+as a (KIND . LINE) cons.  KIND is one of: end-document, preamble, skip,
+bib-tail, bib-end.  Off in normal use, so it adds zero overhead.")
+
+(defvar pamphlet2org--ledger-list nil
+  "Accumulator of (KIND . LINE) drops while `pamphlet2org-ledger' is on.")
+
+(defsubst pamphlet2org--drop (kind line)
+  "Record a dropped LINE of KIND; return nil."
+  (when pamphlet2org-ledger
+    (push (cons kind line) pamphlet2org--ledger-list))
+  nil)
+
 (defun pamphlet2org--convert (pamphlet-text filename)
   "Convert PAMPHLET-TEXT (string) to org format.
 FILENAME is used for language detection.
@@ -193,7 +208,7 @@ Returns the org text as a string."
            ;;      after the first one -- e.g. a \begin{chunk}{*} that follows
            ;;      a mid-file \end{document} in concatenated volumes. ----
            ((and (not in-chunk) (string= trimmed "\\end{document}"))
-            nil)
+            (pamphlet2org--drop 'end-document line))
 
            ;; ---- Preamble: extract title/author ----
            (in-preamble
@@ -218,7 +233,11 @@ Returns the org text as a string."
                   (string-match-p "^\\\\chapter{" trimmed)
                   (string-match-p "^\\\\begin{chunk}{" trimmed))
               (setq in-preamble nil)
-              (forward-line -1))))
+              (forward-line -1))
+             ;; Preserve every other preamble line (\documentclass,
+             ;; \usepackage, \newcommand macros, \input, copyright/license
+             ;; headers, comments) as prose -- the org loses nothing.
+             (t (push (pamphlet2org--convert-line line) result))))
 
            ;; ---- Verbatim blocks (prose only; never inside a chunk) ----
            (in-verbatim
@@ -294,19 +313,24 @@ Returns the org text as a string."
             (setq in-bib t)
             (push "* Bibliography" result))
            ((string= trimmed "\\end{thebibliography}")
-            (setq in-bib nil))
+            (setq in-bib nil)
+            (pamphlet2org--drop 'bib-end line))
            (in-bib
-            (when (string-match "^\\\\bibitem{\\([^}]+\\)}\\s-*\\(.*\\)" line)
-              (push (format "- [%s] %s"
-                            (match-string 1 line)
-                            (match-string 2 line))
-                    result)))
+            (if (string-match
+                 "^\\\\bibitem\\(\\[[^]]*\\]\\)?{\\([^}]+\\)}\\s-*\\(.*\\)" line)
+                (push (format "- [%s]%s %s"
+                              (match-string 2 line)        ; cite key
+                              (or (match-string 1 line) "") ; optional [label]
+                              (match-string 3 line))
+                      result)
+              ;; continuation lines of a multi-line citation: keep as prose
+              (push (pamphlet2org--convert-line line) result)))
 
            ;; Skip LaTeX structural commands
            ((member trimmed '("\\maketitle" "\\tableofcontents" "\\eject"
                               "\\begin{abstract}" "\\end{abstract}"
                               "\\begin{document}"))
-            nil)
+            (pamphlet2org--drop 'skip line))
 
            ;; Default: prose line with inline conversion
            (t
