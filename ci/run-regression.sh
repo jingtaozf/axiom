@@ -29,10 +29,13 @@
 #                                 skips an empty staged int/input rather than
 #                                 NOOUT-ing the shard.
 #
-# Five hyphenated Risch batches are excluded -- they crash on SBCL (port bugs in
-# the Risch integrator), tracked for follow-up; the other 32 hyphenated batches
-# (recovered by the '-'-aware regex below) pass:
-#   richhyper000-099 richhyper800-899 richtrig200-299 richtrig300-399 richtrig700-799
+# (The 5 hyphenated Risch batches that used to be excluded -- richhyper000-099/
+#  800-899, richtrig200-299/300-399/700-799 -- now pass.  They hit known algebra
+#  bugs ("Cannot take first of an empty list") and, for 300-399, a deep-recursion
+#  CONTROL-STACK-EXHAUSTED.  GCL's universal-error-handler reported these and
+#  resumed; SBCL quit.  bookvol5/g-error now wrap runspad in a handler-bind for
+#  error AND storage-condition that reports a "System error" and resumes, like
+#  GCL/FriCAS -- so all 37 hyphenated batches run.)
 #
 # Scheduling: a few hundred sub-second tests plus a heavy tail -- ~106
 # rich*/richder* (Risch integration) tests at 30-120s each.  We dispatch through
@@ -58,8 +61,7 @@ NW="${NW:-$(( NCORE*2 > 12 ? 12 : NCORE*2 ))}"
 export PER_TEST_TIMEOUT="${PER_TEST_TIMEOUT:-120}"
 
 EXCLUDE="graphviz herm monitortest newtonlisp unittest2 unittest4 \
-BlasLevelOne dasum dcopy dcabs1 daxpy Graphviz \
-richhyper000-099 richhyper800-899 richtrig200-299 richtrig300-399 richtrig700-799"
+BlasLevelOne dasum dcopy dcabs1 daxpy Graphviz"
 # The cost is dominated by the Risch-integration family: ~106 rich*/richder*
 # tests run 30-120s each (some hit PER_TEST_TIMEOUT) plus a few other heavies.
 # We front-load them -- emit the heavy patterns before the fast bulk -- so the

@@ -13701,13 +13701,24 @@ The \verb|$PrintCompilerMessageIfTrue| variable is set to NIL in spad.
 \calls{spad}{runspad}
 \usesdollar{spad}{PrintCompilerMessageIfTrue}
 \begin{chunk}{defun spad}
-(defun |spad| () 
+(defun |spad| ()
  "Starts the interpreter but do not read in profiles"
- (let (|$PrintCompilerMessageIfTrue|) 
-  (declare (special |$PrintCompilerMessageIfTrue|)) 
-  (setq |$PrintCompilerMessageIfTrue| nil) 
-  (|setOutputAlgebra| '|%initialize%|) 
-  (|runspad|) 
+ (let (|$PrintCompilerMessageIfTrue|)
+  (declare (special |$PrintCompilerMessageIfTrue|))
+  (setq |$PrintCompilerMessageIfTrue| nil)
+  (|setOutputAlgebra| '|%initialize%|)
+  ;; On SBCL wrap the read-eval loop so a raw Lisp error is reported as a
+  ;; "System error" and the loop resumes (via the top_level catch inside
+  ;; runspad), the way GCL's universal-error-handler did -- see
+  ;; spad_system_error_handler in g-error.  The handler-bind stays in force
+  ;; across inputs because the recovery throw lands on runspad's inner catch.
+  #+:sbcl (handler-bind ((error #'|spad_system_error_handler|)
+                         ;; storage-condition (control-stack-exhausted) is NOT a
+                         ;; subtype of error; catch it too so a deep Risch
+                         ;; recursion is reported and resumed, not a fatal quit.
+                         (storage-condition #'|spad_system_error_handler|))
+            (|runspad|))
+  #-:sbcl (|runspad|)
   '|EndOfSpad|))
 
 \end{chunk}

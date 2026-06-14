@@ -225,6 +225,31 @@
   (bye value)
   (bye 1)))
 
+;; SBCL error trapping.  GCL embeds system:universal-error-handler to route a
+;; raw Lisp error into the $BreakMode protocol (see vmlisp.lisp); SBCL has no
+;; such hook, so without this an error like "Cannot take first of an empty list"
+;; (a known algebra bug, e.g. exp^log(x)) reaches --disable-debugger and quits
+;; interpsys instead of being reported as a "System error" and resumed.  Modelled
+;; on FriCAS's spad_system_error_handler: in batch ($BreakMode nobreak/...) hand
+;; the condition to systemError, which prints it and throws to the read loop's
+;; top_level catch via handleLispBreakLoop.
+#+:sbcl
+(defun |spad_system_error_handler| (c)
+ (declare (special |$BreakMode| |$NeedToSignalSessionManager|
+                   |$numericFailure|))
+ (setq |$NeedToSignalSessionManager| t)
+ (cond
+  ((member |$BreakMode|
+           '(|nobreak| |query| |resume| |quit| |validate| |trapSpadErrors|))
+   (|systemError| (format nil "~a" c)))
+  ((eq |$BreakMode| '|trapNumerics|)
+   (setq |$BreakMode| nil)
+   (throw '|trapNumerics| |$numericFailure|))
+  ((eq |$BreakMode| '|letPrint2|)
+   (setq |$BreakMode| nil)
+   (throw '|letPrint2| nil))
+  (t nil)))
+
 
 ;TOP() == returnToTopLevel()
 
