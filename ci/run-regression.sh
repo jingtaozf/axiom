@@ -69,6 +69,20 @@ richhyper000-099 richhyper800-899 richtrig200-299 richtrig300-399 richtrig700-79
 HEAVY_RE='^(rich|fuzz)'
 HEAVY_EXTRA="easter dave89 groebtest ackermann r21bugsbig charlwood mapleok"
 
+# Pool 2: constructor regression inputs that are staged in int/input/ with a
+# )spool but are NOT listed in bookvol10's algebra.regress chunk.  A coverage
+# audit found ~25 such CamelCase constructors; 24 pass locally and are added
+# here (NagRootFindingPackage NOOUTs and is left out).  The ~970 lowercase
+# LAPACK/BLAS routine artifacts are intentionally NOT included.
+POOL2="AttributeRegistry DenavitHartenbergMatrix Exit FloatSpecialFunctions \
+LeftOreRing MappingPackage4 ModularAlgebraicGcdOperations MultivariateLifting \
+SegmentBinding TwoDimensionalViewport Type \
+NagEigenPackage NagFittingPackage NagIntegrationPackage NagInterpolationPackage \
+NagLapack NagLinearEquationSolvingPackage NagMatrixOperationsPackage \
+NagOptimisationPackage NagOrdinaryDifferentialEquationsPackage \
+NagPartialDifferentialEquationsPackage NagPolynomialRootsPackage \
+NagSeriesSummationPackage NagSpecialFunctionsPackage"
+
 [ -x "$TESTSYS" ] || { echo "FATAL: interpsys not built at $TESTSYS"; exit 2; }
 [ -x "$LISP" ]    || { echo "FATAL: lisp tangler not built at $LISP"; exit 2; }
 
@@ -95,9 +109,11 @@ SRC_TOTAL=$(wc -l < "$ALL" | tr -d ' ')
 # files are build artifacts staged in int/input/.  Append the ones present --
 # graceful if a given build did not stage them (the count is logged below).
 ALG="$WORKROOT/alg_names.txt"; : > "$ALG"
-awk '/begin\{chunk\}\{algebra.regress\}/{p=1} p&&/REGRESS=/{r=1} r{print} p&&/%\.regress:/{exit}' \
-    "$SPD/books/bookvol10.pamphlet" \
-  | grep -oE '[A-Za-z][A-Za-z0-9]*\.regress' | sed 's/\.regress//' | sort -u \
+{ awk '/begin\{chunk\}\{algebra.regress\}/{p=1} p&&/REGRESS=/{r=1} r{print} p&&/%\.regress:/{exit}' \
+      "$SPD/books/bookvol10.pamphlet" \
+    | grep -oE '[A-Za-z][A-Za-z0-9]*\.regress' | sed 's/\.regress//'
+  printf '%s\n' $POOL2          # staged-but-unlisted constructors (Pool 2)
+} | sort -u \
   | while read -r d; do
       case " $EXCLUDE " in *" $d "*) continue;; esac
       # Require an actual )spool regression input: a build that stages an empty
