@@ -74,19 +74,22 @@ jobs:
           # graphics/hyperdoc.  Build just those SRCDIRS and skip libspad -- its
           # C library bundles graphics C (xdither's <malloc.h>, X11) that cannot
           # build on macOS and that the SBCL interpreter does not link.
-          SUB="interpdir sharedir algebradir"
           # prereqs of `all` minus libspad: dir tree, axiom.sty, the C tangler,
           # and the lsp/ sbcl `lisp` wrapper.
           make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
             2>&1 | tee /tmp/build.log | tail -n 200
           # the `all` recipe normally generates this then runs the cascade.
           books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
-          # SRCDIRS must carry literal quotes: the Makefile re-emits it unquoted
-          # into the ENV string `SRCDIRS=${SRCDIRS}` passed to nested `cd src; ${ENV}
-          # ${MAKE}` recipes -- without the inner quotes the spaces split the value
-          # and the shell runs `sharedir` as a command (Error 127).  Mirror the
-          # Makefile's own `SRCDIRS:="..."` literal-quote convention.
-          time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang SRCDIRS="\"$SUB\"" \
+          # Shrink SRCDIRS to interp+share+algebra by editing the generated
+          # Makefile's own `SRCDIRS:="..."` line, NOT via a command-line override.
+          # A cmdline `SRCDIRS=` propagates to sub-makes through MAKEFLAGS with its
+          # quotes intact, so src/Makefile sees the literal `"interpdir` as a target
+          # and dies `No rule to make target`.  Editing the := line preserves the
+          # original flow: the quotes survive only the ENV-string -> shell hop in
+          # `cd src; ${ENV} ${MAKE}` and reach the sub-make already stripped.
+          # The dropped dirs (graph/hyper/sman/browser/etc) need C/X11 absent on macOS.
+          perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="interpdir sharedir algebradir"/m' Makefile.MACOSX
+          time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang \
             2>&1 | tee -a /tmp/build.log | tail -n 4000
           test -x obj/MACOSX/bin/interpsys
           test -x mnt/MACOSX/bin/AXIOMsys
