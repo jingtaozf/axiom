@@ -184,7 +184,7 @@
 (defun gcl-read-file (streamname)
  "Implement read-sequence in GCL"
  (let (result)
-  (with-open-file (stream (open streamname))
+  (with-open-file (stream streamname #+sbcl :external-format #+sbcl :latin-1)
    (do (line eof)
       ((eq line 'done) (nreverse result))
     (multiple-value-setq (line eof) (read-line stream nil 'done)) 
