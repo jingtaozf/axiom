@@ -3111,7 +3111,7 @@ without stack overflow.  MCD.
       (cond
         ((STRINGP u)
          (cond
-           ((eq u |$EmptyString|) 0)
+           ((or (eq u |$EmptyString|) (eql 0 (length u))) 0)
            ((and (eq (elt u 0) '%)
                  (or (char= (elt u 1) #\b)
                      (char= (elt u 1) #\d)))
