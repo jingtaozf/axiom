@@ -38949,9 +38949,9 @@ The input-libraries is now maintained as a list of truenames.
          (setq act (|selectOptionLC| act '(|add| |drop|) nil)))
     (cond
      ((eq act '|add|)
-      (|addInputLibrary| (truename (princ-to-string filename))))
+      (|addInputLibrary| (or (probe-file (princ-to-string filename)) (pathname (princ-to-string filename)))))
      ((eq act '|drop|)
-      (|dropInputLibrary| (truename (princ-to-string filename))))))
+      (|dropInputLibrary| (or (probe-file (princ-to-string filename)) (pathname (princ-to-string filename)))))))
    (t (|setInputLibrary| nil)))))
 
 \end{chunk}
@@ -38980,7 +38980,7 @@ The input-libraries variable is now maintained as a list of truenames.
  "Add the input library to the list"
  (declare (special input-libraries))
   (|dropInputLibrary| lib)
-  (push (truename lib) input-libraries))
+  (push (or (probe-file lib) lib) input-libraries))
 
 \end{chunk}
 
@@ -38996,7 +38996,7 @@ The input-libraries variable is now maintained as a list of truenames.
 (defun |dropInputLibrary| (lib) 
  "Drop an input library from the list"
  (declare (special input-libraries))
- (setq input-libraries (delete (truename lib) input-libraries :test #'equal)))
+ (setq input-libraries (delete (or (probe-file lib) lib) input-libraries :test #'equal)))
 
 \end{chunk}
 
