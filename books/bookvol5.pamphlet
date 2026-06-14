@@ -43845,7 +43845,7 @@ o )what
        (setq attList
         (remdup
          (msort
-          (mapcar #'(lambda (x) (caar x))
+          (mapcar #'(lambda (x) (ifcar (ifcar x)))
            (reverse (getdatabase op 'attributes))))))
        (if (null attList)
         (|sayBrightly|
