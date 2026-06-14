@@ -179,11 +179,16 @@ xargs -P "$NW" -I{} bash -c '
   mkdir -p "$d" || { echo "$t FAIL mkdir" >> "$RESULTS"; exit 0; }
   cd "$d" || { echo "$t FAIL chdir" >> "$RESULTS"; exit 0; }
   pf="$SPD/src/input/$t.input.pamphlet"
-  if [ -f "$pf" ]; then
+  if grep -qxF "$t" "$WORKROOT/alg_names.txt" 2>/dev/null; then
+    # algebra-domain test: read the staged int/input directly.  Do NOT tangle a
+    # same-named src/input pamphlet -- 32 domains (Vector, Color, Palette, ...)
+    # collide with LaTeX example pamphlets that are not )spool regression tests
+    # and would NOOUT the shard.
+    cp "$SPD/int/input/$t.input" "$t.input"
+  elif [ -f "$pf" ]; then
     # src/input test: tangle the pamphlet to a .input.
     echo "(tangle \"$pf\" \"*\" \"$t.input\")" | "$LISP" >/dev/null 2>&1 || true
   elif [ -f "$SPD/int/input/$t.input" ]; then
-    # algebra-domain test: the .input is a pre-built artifact, read it directly.
     cp "$SPD/int/input/$t.input" "$t.input"
   fi
   rm -f "$t.output"
