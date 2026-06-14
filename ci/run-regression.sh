@@ -16,17 +16,18 @@
 #   unittest2    - reads GCL compiler internals (compiler::*compile-verbose* ...)
 #   unittest4    - )lisp (trace ...) then prints deep domain vectors
 #
-# Seven algebra-domain tests are excluded:
+# Six algebra-domain tests are excluded:
 #   BlasLevelOne dasum dcopy dcabs1 daxpy - wrap Fortran BLAS not linked into
 #                                           the SBCL image (foreign TYPE-ERROR)
 #   Graphviz                              - needs the `dot` binary
-#   ApplicationProgramInterface           - summary() calls (|summary|) with 0
-#                                           args -> PROGRAM-ERROR; tracked.
-# (ElementaryFunction was re-included: its )trace embed crashed because embed2
-#  set symbol-function to a (lambda ...) LIST; bookvol5 now coerces it to a
-#  FUNCTION.  Color/Palette/Vector were re-included: they pass on a correct
-#  interpsys, and the )spool guard below skips them if the runner stages an
-#  empty int/input artifact, so they no longer NOOUT the shard.)
+# Re-included after their root-cause fixes (all in bookvol5):
+#   ElementaryFunction          - embed2 set symbol-function to a (lambda ...)
+#                                 LIST; now coerced to FUNCTION.
+#   ApplicationProgramInterface - summary() called (|summary|) with 0 args;
+#                                 its ignored arg is now &optional.
+#   Color Palette Vector        - pass on a correct interpsys; the )spool guard
+#                                 skips an empty staged int/input rather than
+#                                 NOOUT-ing the shard.
 #
 # Five hyphenated Risch batches are excluded -- they crash on SBCL (port bugs in
 # the Risch integrator), tracked for follow-up; the other 32 hyphenated batches
@@ -57,7 +58,7 @@ NW="${NW:-$(( NCORE*2 > 12 ? 12 : NCORE*2 ))}"
 export PER_TEST_TIMEOUT="${PER_TEST_TIMEOUT:-120}"
 
 EXCLUDE="graphviz herm monitortest newtonlisp unittest2 unittest4 \
-BlasLevelOne dasum dcopy dcabs1 daxpy Graphviz ApplicationProgramInterface \
+BlasLevelOne dasum dcopy dcabs1 daxpy Graphviz \
 richhyper000-099 richhyper800-899 richtrig200-299 richtrig300-399 richtrig700-799"
 # The cost is dominated by the Risch-integration family: ~106 rich*/richder*
 # tests run 30-120s each (some hit PER_TEST_TIMEOUT) plus a few other heavies.

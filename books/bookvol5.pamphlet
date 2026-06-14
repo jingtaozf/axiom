@@ -44231,7 +44231,10 @@ o )cd
 \calls{summary}{concat}
 \calls{summary}{getenviron}
 \begin{chunk}{defun summary}
-(defun |summary| (l)
+(defun |summary| (&optional l)
+ ;; ApplicationProgramInterface's compiled summary() calls (|summary|) with no
+ ;; argument; GCL tolerated the arity mismatch, SBCL raises a PROGRAM-ERROR.
+ ;; l is ignored anyway, so make it &optional.
  (declare (ignore l))
  (obey (concat "cat " (getenviron "AXIOM") "/doc/spadhelp/summary.help")))
 
