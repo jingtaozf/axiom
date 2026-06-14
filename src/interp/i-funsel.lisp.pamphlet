@@ -1688,9 +1688,9 @@
 (defun |getOpArgTypes,f| (x op)
  (let ( m (result x))
  (declare (special |$e|))
-  (if (and (eq (car x) '|FunctionCalled|) (not (eq op '|name|)))
+  (if (and (eqcar x '|FunctionCalled|) (not (eq op '|name|)))
    (if (and (cdr x) (setq m (|get| (cdr x) '|mode| |$e|)))
-    (if (eq (car m) '|Mapping|)     
+    (if (eqcar m '|Mapping|)
      (setq result m))))
   result))
 
