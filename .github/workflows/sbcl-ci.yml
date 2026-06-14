@@ -81,7 +81,12 @@ jobs:
             2>&1 | tee /tmp/build.log | tail -n 200
           # the `all` recipe normally generates this then runs the cascade.
           books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
-          time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang SRCDIRS="$SUB" \
+          # SRCDIRS must carry literal quotes: the Makefile re-emits it unquoted
+          # into the ENV string `SRCDIRS=${SRCDIRS}` passed to nested `cd src; ${ENV}
+          # ${MAKE}` recipes -- without the inner quotes the spaces split the value
+          # and the shell runs `sharedir` as a command (Error 127).  Mirror the
+          # Makefile's own `SRCDIRS:="..."` literal-quote convention.
+          time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang SRCDIRS="\"$SUB\"" \
             2>&1 | tee -a /tmp/build.log | tail -n 4000
           test -x obj/MACOSX/bin/interpsys
           test -x mnt/MACOSX/bin/AXIOMsys
