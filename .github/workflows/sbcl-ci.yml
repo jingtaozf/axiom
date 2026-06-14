@@ -1,0 +1,91 @@
+name: axiom SBCL build + regression
+
+# Builds Axiom from source under SBCL on Apple Silicon (the only LISPFLAVOR=sbcl
+# path is Makefile.MACOSX) and runs the src/input regression suite, excluding
+# six non-portable tests (see ci/run-regression.sh).  The full algebra build is
+# long; obj/int/mnt/lsp are cached on the source-pamphlet hash so reruns that
+# do not touch sources skip most of the work.
+
+on:
+  push:
+    branches: [jt]
+    paths-ignore:
+      - 'books/**.pdf'
+      - 'changelog'
+  workflow_dispatch:
+
+# Never let two builds of the same ref race on the cache.
+concurrency:
+  group: sbcl-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: macos-14
+    timeout-minutes: 350
+    env:
+      LISPFLAVOR: sbcl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Install build dependencies
+        run: |
+          set -x
+          brew update >/dev/null || true
+          # sbcl: the Lisp host. gawk: Makefile uses gawk. gnu-sed/grep: a few
+          # recipes assume GNU behaviour. coreutils: gtimeout for the runner.
+          brew install sbcl gawk gnu-sed grep coreutils || true
+          sbcl --version
+          # Expose GNU coreutils `timeout` as `timeout` for the runner.
+          echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
+          echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
+          echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
+
+      - name: Cache build artifacts (obj/int/mnt/lsp)
+        uses: actions/cache@v4
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          # Re-build only when an interp/algebra/books source or the Makefiles change.
+          key: axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}
+          restore-keys: |
+            axiom-sbcl-${{ runner.arch }}-
+
+      - name: Build axiom (SBCL)
+        id: build
+        run: |
+          set -x
+          export AXIOM="$PWD/mnt/MACOSX"
+          export PATH="$AXIOM/bin:$PATH"
+          # CC=/usr/bin/clang: Homebrew clang cannot link Mach-O here.
+          time make LISPFLAVOR=sbcl CC=/usr/bin/clang 2>&1 | tee /tmp/build.log | tail -n 4000
+          test -x obj/MACOSX/bin/interpsys
+          test -x mnt/MACOSX/bin/AXIOMsys
+
+      - name: Smoke test (1+1, factor, integrate)
+        run: |
+          export AXIOM="$PWD/mnt/MACOSX" DAASE="$PWD/src/share"
+          printf '%s\n' ')set messages time off' '1 + 1' 'factor(120)' 'integrate(x^2,x)' ')quit' \
+            | mnt/MACOSX/bin/AXIOMsys 2>&1 | tee /tmp/smoke.log
+          grep -q 'Type: PositiveInteger' /tmp/smoke.log
+
+      - name: Run regression suite (excluding 6 non-portable)
+        run: |
+          chmod +x ci/run-regression.sh
+          ./ci/run-regression.sh
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: |
+            /tmp/build.log
+            /tmp/smoke.log
+          if-no-files-found: ignore
