@@ -51585,7 +51585,7 @@ are 0 based whereas other Spad language vectors are 1-based.
 \calls{fnameDirectory}{DirToString}
 \begin{chunk}{defun fnameDirectory}
 (defun |fnameDirectory| (f)
-  (|DirToString| (pathname-directory (string f))))
+  (|DirToString| (pathname-directory (pathname f))))
 
 \end{chunk}
 
@@ -51603,7 +51603,7 @@ For example,  ``/''  ``/u/smwatt''  ``../src''
 \defun{fnameName}{FileName name function implementation}
 \begin{chunk}{defun fnameName 0}
 (defun |fnameName| (f)
-  (let ((s (pathname-name (string f))))
+  (let ((s (pathname-name (pathname f))))
     (if s s "") ))
 
 \end{chunk}
@@ -51611,7 +51611,7 @@ For example,  ``/''  ``/u/smwatt''  ``../src''
 \defun{fnameType}{FileName extension function implementation}
 \begin{chunk}{defun fnameType 0}
 (defun |fnameType| (f)
-  (let ((s (pathname-type (string f))))
+  (let ((s (pathname-type (pathname f))))
     (if s s "") ))
 
 \end{chunk}
@@ -51626,8 +51626,10 @@ For example,  ``/''  ``/u/smwatt''  ``../src''
 \defun{fnameReadable?}{FileName readable? function implementation}
 \begin{chunk}{defun fnameReadable? 0}
 (defun |fnameReadable?| (f)
- (let ((s (open f :direction :input :if-does-not-exist nil)))
-  (cond (s (close s) t) (t nil)) ))
+ (handler-case
+  (let ((s (open f :direction :input :if-does-not-exist nil)))
+   (cond (s (close s) t) (t nil)))
+  (file-error () nil) ))
 
 \end{chunk}
 
