@@ -187,9 +187,10 @@ xargs -P "$NW" -I{} bash -c '
     cp "$SPD/int/input/$t.input" "$t.input"
   fi
   rm -f "$t.output"
-  echo ")read $t.input" | timeout -k 10 "$PER_TEST_TIMEOUT" "$TESTSYS" >/dev/null 2>&1 || true
+  echo ")read $t.input" | timeout -k 10 "$PER_TEST_TIMEOUT" "$TESTSYS" >/dev/null 2>"$t.stderr" || true
   if [ ! -f "$t.output" ]; then
-    echo "$t NOOUT" >> "$RESULTS"
+    # Diagnostic: surface why no spool file appeared (stderr tail + input size).
+    echo "$t NOOUT [in=$(wc -c < "$t.input" 2>/dev/null)b err: $(tr "\n" " " < "$t.stderr" 2>/dev/null | tail -c 240)]" >> "$RESULTS"
   elif grep -Eq "^(Unhandled .* in thread|unhandled condition in --disable)" "$t.output"; then
     echo "$t FAIL $(grep -oE "Unhandled [A-Z:-]+" "$t.output" | head -1)" >> "$RESULTS"
   else
