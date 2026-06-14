@@ -127,14 +127,31 @@ particularly on directories --- is flagged for verification in Stage~5.
 
 #+:sbcl
 (defun |writeablep| (fn)
-  "1 if FN can be opened for writing without creating it, -1 otherwise.
-   Non-creating open-probe; see the Stage 5 caveat in the prose above."
-  (handler-case
-      (with-open-file (s fn :direction :output
-                            :if-exists :append
-                            :if-does-not-exist nil)
-        (if s 1 -1))
-    (file-error () -1)))
+  "1 if FN is writable, -1 otherwise. GCL's C writeablep used access(W_OK),
+   which works for directories; an open(:output) probe does not -- you
+   cannot open a directory for output. myWritable?/fnameNew call this on
+   the *directory* that will hold a new file, so dispatch: probe a
+   directory by creating+deleting a temp file in it; probe a regular file
+   with a non-creating open-append."
+  (if (eql 1 (|directoryp| fn))
+      (let ((probe (merge-pathnames
+                    (make-pathname :name (symbol-name (gensym "AXWTEST"))
+                                   :type "tmp")
+                    (truename fn))))
+        (handler-case
+            (progn
+              (with-open-file (s probe :direction :output
+                                       :if-does-not-exist :create)
+                (declare (ignore s)))
+              (ignore-errors (delete-file probe))
+              1)
+          (file-error () -1)))
+      (handler-case
+          (with-open-file (s fn :direction :output
+                                :if-exists :append
+                                :if-does-not-exist nil)
+            (if s 1 -1))
+        (file-error () -1))))
 
 (defun |findStringInFile| (str p)
     (|findString| (namestring p) str) )
