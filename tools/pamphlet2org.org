@@ -187,10 +187,13 @@ Returns the org text as a string."
                (trimmed (string-trim line)))
 
           (cond
-           ;; ---- End of document (only outside chunks; chunk code may
-           ;;      carry the literal string) ----
+           ;; ---- End of document: skip the marker but KEEP scanning.
+           ;;      tanglec ignores \end{document} entirely; truncating here
+           ;;      (the old goto-char point-max) silently dropped everything
+           ;;      after the first one -- e.g. a \begin{chunk}{*} that follows
+           ;;      a mid-file \end{document} in concatenated volumes. ----
            ((and (not in-chunk) (string= trimmed "\\end{document}"))
-            (goto-char (point-max)))
+            nil)
 
            ;; ---- Preamble: extract title/author ----
            (in-preamble
@@ -238,7 +241,7 @@ Returns the org text as a string."
 
            ;; ---- Chunk start ----
            ((and (not in-chunk)
-                 (string-match "^\\\\begin{chunk}{\\(.+\\)}" trimmed))
+                 (string-match "^\\\\begin{chunk}{\\([^}]*\\)}" trimmed))
             (setq chunk-name (match-string 1 trimmed))
             (let ((lang (pamphlet2org--detect-lang chunk-name filename)))
               (push "" result)
@@ -247,8 +250,10 @@ Returns the org text as a string."
             (setq in-chunk t)
             (setq chunk-lines '()))
 
-           ;; ---- Chunk end ----
-           ((and in-chunk (string= trimmed "\\end{chunk}"))
+           ;; ---- Chunk end (prefix match, mirroring tanglec's foundEnd:
+           ;;      a malformed "\end{chunk}p" or "\end{chunk}{*}" still ends
+           ;;      the chunk; the trailing junk is ignored) ----
+           ((and in-chunk (string-prefix-p "\\end{chunk}" trimmed))
             (dolist (cl (nreverse chunk-lines))
               (push cl result))
             (push (concat pamphlet2org--src-prefix "END_SRC") result)
@@ -324,7 +329,12 @@ Returns the org text as a string."
   "Convert PAMPHLET-FILE to ORG-FILE.
 If ORG-FILE is nil, replaces .pamphlet extension with .org."
   (interactive "fPamphlet file: ")
-  (let* ((pamphlet-text (with-temp-buffer
+  ;; Read and write raw bytes (binary): tanglec copies bytes verbatim, so the
+  ;; org must preserve CRLF line endings and legacy non-UTF-8 bytes exactly,
+  ;; or the tangled output would diverge from tanglec.
+  (let* ((coding-system-for-read 'binary)
+         (coding-system-for-write 'binary)
+         (pamphlet-text (with-temp-buffer
                           (insert-file-contents pamphlet-file)
                           (buffer-string)))
          (filename (file-name-nondirectory pamphlet-file))
@@ -353,7 +363,8 @@ environment) as a `latex-environment' that swallows the chunk blocks
 nested inside it, so org-element would silently drop those chunks.
 Same-named blocks are concatenated, mirroring tanglec."
   (let ((blocks (make-hash-table :test #'equal))
-        (case-fold-search t))
+        (case-fold-search t)
+        (coding-system-for-read 'binary))   ; read raw bytes (see convert-file)
     (with-temp-buffer
       (insert-file-contents org-file)
       (goto-char (point-min))

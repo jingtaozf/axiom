@@ -1,0 +1,295 @@
+# -*- mode: org; -*-
+#+TITLE: migrate-dryrun -- pamphlet -> org migration dry run
+#+AUTHOR: Jingtao Xu
+#+PROPERTY: literate-load yes
+#+PROPERTY: literate-lang elisp
+#+PROPERTY: header-args :results silent
+
+* Overview
+
+This is the driver for the *dry run* of migrating every =.pamphlet= in the
+Axiom tree to =.org=.  It verifies the first of the two migration axes:
+
+1. *TANGLE-EQUIVALENCE* -- the converted =.org= tangles byte-identically to
+   the C reference =tanglec=, for the chunk(s) that matter per file.  (The
+   second axis, losslessness of the prose/documentation, is verified by a
+   separate harness.)
+
+Everything is Emacs Lisp loaded literately (=literate-elisp-load=); the only
+external program is the =tanglec= reference binary, which is the migration's
+own ground-truth tangler.
+
+Per file the tangle mode is detected mechanically:
+
+| structure                         | mode      | what is compared                  |
+|-----------------------------------+-----------+-----------------------------------|
+| no =\begin{chunk}=                | prose     | nothing (no code to tangle)       |
+| a =\begin{chunk}{*}= root         | star      | the =*= chunk (noweb pulls the tree) + any Makefile-named extra roots |
+| named chunks, no =*= root         | named     | every named chunk (book-volume per-domain case) |
+
+Usage (batch):
+
+#+begin_example
+AX=/path/to/axiom emacs --batch \
+  --eval '(progn (add-to-list (quote load-path) "~/projects/literate-elisp")
+                 (require (quote literate-elisp))
+                 (literate-elisp-load "tools/migrate-dryrun.org")
+                 (migrate-dryrun-main))'
+#+end_example
+
+* Setup
+
+=migrate-dryrun-root= is the repository root; pass it via the =AX= env var
+or let it derive from this file's location.
+
+#+BEGIN_SRC elisp
+(require 'cl-lib)
+(require 'subr-x)
+
+(defvar migrate-dryrun-root
+  (or (getenv "AX")
+      (and load-file-name
+           (file-name-as-directory
+            (expand-file-name ".." (file-name-directory load-file-name))))
+      default-directory)
+  "Axiom repository root.")
+
+(defvar migrate-dryrun-tanglec nil
+  "Absolute path to the built `tanglec' reference binary.")
+#+END_SRC
+
+=migrate-dryrun-setup= loads the converter literately and makes sure the
+reference tangler is built.  It bootstraps =literate-elisp= itself if the
+host has not already (so the driver is self-sufficient in batch).
+
+#+BEGIN_SRC elisp
+(defun migrate-dryrun-setup ()
+  "Load the converter (literately) and ensure `tanglec' is built."
+  (let ((root migrate-dryrun-root))
+    (unless (featurep 'literate-elisp)
+      (add-to-list 'load-path
+                   (or (getenv "LITERATE_ELISP")
+                       (expand-file-name "~/projects/literate-elisp")))
+      (require 'literate-elisp))
+    (literate-elisp-load (expand-file-name "tools/pamphlet2org.org" root))
+    (setq migrate-dryrun-tanglec (expand-file-name "books/tanglec" root))
+    (unless (file-executable-p migrate-dryrun-tanglec)
+      (shell-command (format "cd %s && gcc -o books/tanglec books/tanglec.c"
+                             (shell-quote-argument root))))))
+#+END_SRC
+
+* Discovery and dedup
+
+Walk the tree for pamphlets, and key files by their raw-byte MD5 so the
+content-identical cross-dir copies (e.g. =bookvol10.5= in books/ + src/interp/
++ src/algebra/) are verified once.
+
+#+BEGIN_SRC elisp
+(defun migrate-dryrun-pamphlets (&optional root)
+  "Every .pamphlet under ROOT (default `migrate-dryrun-root'), excluding .git."
+  (let ((root (or root migrate-dryrun-root)))
+    (seq-filter (lambda (f) (not (string-match-p "/\\.git/" f)))
+                (directory-files-recursively root "\\.pamphlet\\'"))))
+
+(defun migrate-dryrun--content-md5 (file)
+  "MD5 of FILE's raw bytes (locale-independent; handles non-ASCII volumes)."
+  (with-temp-buffer
+    (set-buffer-multibyte nil)
+    (insert-file-contents-literally file)
+    (md5 (current-buffer))))
+#+END_SRC
+
+* Per-file structure and tangle mode
+
+Scan the pamphlet literally (raw bytes, so CRLF / non-UTF-8 files are not
+mis-read) for =\begin{chunk}{...}=; consult the sibling =Makefile= for any
+named chunk it extracts for this file.
+
+#+BEGIN_SRC elisp
+(defun migrate-dryrun--chunk-names (pamphlet)
+  "Scan PAMPHLET literally; return (HAS-STAR . NAMED) where NAMED excludes *."
+  (let ((has-star nil) (named '()))
+    (with-temp-buffer
+      (set-buffer-multibyte nil)
+      (insert-file-contents-literally pamphlet)
+      (goto-char (point-min))
+      (while (re-search-forward "^\\\\begin{chunk}{\\([^}]*\\)}" nil t)
+        (let ((nm (match-string-no-properties 1)))
+          (if (string= nm "*")
+              (setq has-star t)
+            (unless (member nm named) (push nm named))))))
+    (cons has-star (nreverse named))))
+
+(defun migrate-dryrun--makefile-named (pamphlet)
+  "Named chunks the sibling Makefile extracts for PAMPHLET via (tangle ...)."
+  (let* ((dir (file-name-directory pamphlet))
+         (base (file-name-nondirectory pamphlet))
+         (mk (expand-file-name "Makefile" dir))
+         (out '()))
+    (when (file-readable-p mk)
+      (with-temp-buffer
+        (insert-file-contents mk)
+        (goto-char (point-min))
+        (while (re-search-forward
+                "(tangle[ \t]+\"[^\"]*?\\([^\"/]+\\.pamphlet\\)\"[ \t]+\"\\([^\"]+\\)\""
+                nil t)
+          (when (string= (match-string 1) base)
+            (let ((c (match-string 2)))
+              (unless (or (string= c "*") (member c out)) (push c out)))))))
+    (nreverse out)))
+
+(defun migrate-dryrun-chunks-to-verify (pamphlet)
+  "Chunk names whose tangle must match tanglec.  nil means prose-only."
+  (pcase-let ((`(,has-star . ,named) (migrate-dryrun--chunk-names pamphlet)))
+    (cond
+     ((and (not has-star) (null named)) nil)
+     (has-star (cons "*" (migrate-dryrun--makefile-named pamphlet)))
+     (t named))))
+
+(defun migrate-dryrun-mode (pamphlet)
+  "Human label for PAMPHLET's tangle mode."
+  (pcase-let ((`(,has-star . ,named) (migrate-dryrun--chunk-names pamphlet)))
+    (cond ((and (not has-star) (null named)) "prose")
+          (has-star "star")
+          (t "named"))))
+#+END_SRC
+
+* Tangle-equivalence
+
+For each chunk to verify, compare the bytes =tanglec= emits with the bytes
+the converted =.org= tangles via the shipping emitter.  The org side is
+encoded to UTF-8 to turn its eight-bit characters back into the raw bytes
+=tanglec= produced.
+
+#+BEGIN_SRC elisp
+(defun migrate-dryrun--tanglec (pamphlet chunk)
+  "Raw bytes tanglec emits for CHUNK of PAMPHLET (\"*\" => default whole-file)."
+  (with-temp-buffer
+    (set-buffer-multibyte nil)
+    (if (string= chunk "*")
+        (call-process migrate-dryrun-tanglec nil t nil pamphlet)
+      (call-process migrate-dryrun-tanglec nil t nil pamphlet chunk))
+    (buffer-string)))
+
+(defun migrate-dryrun--org-tangle (blocks chunk)
+  "Tangle CHUNK from pre-collected BLOCKS via the shipping emitter."
+  (let ((out (generate-new-buffer " *mdr-tangle*"))
+        (visiting (make-hash-table :test #'equal))
+        (body (gethash chunk blocks)))
+    (unwind-protect
+        (progn (when body (pamphlet2org--emit body blocks "" visiting out))
+               (with-current-buffer out (buffer-string)))
+      (kill-buffer out))))
+
+(defun migrate-dryrun-verify-file (pamphlet outdir)
+  "Convert PAMPHLET -> .org under OUTDIR, verify tangle-equivalence.
+Return a plist: :pamphlet :mode :nchunks :pass :fail :failed :tangle-eq :error."
+  (condition-case err
+      (let* ((rel (file-relative-name pamphlet migrate-dryrun-root))
+             (org (expand-file-name (concat rel ".org") outdir))
+             (chunks (migrate-dryrun-chunks-to-verify pamphlet))
+             (mode (migrate-dryrun-mode pamphlet)))
+        (make-directory (file-name-directory org) t)
+        (pamphlet2org-convert-file pamphlet org)
+        (if (null chunks)
+            (list :pamphlet pamphlet :mode mode :nchunks 0
+                  :pass 0 :fail 0 :failed nil :tangle-eq t)
+          (let ((blocks (pamphlet2org--collect-blocks org))
+                (pass 0) (fail 0) (failed '()))
+            (dolist (c chunks)
+              (if (string= (migrate-dryrun--tanglec pamphlet c)
+                           (encode-coding-string
+                            (migrate-dryrun--org-tangle blocks c) 'utf-8))
+                  (cl-incf pass)
+                (cl-incf fail)
+                (when (< (length failed) 8) (push c failed))))
+            (list :pamphlet pamphlet :mode mode :nchunks (length chunks)
+                  :pass pass :fail fail :failed (nreverse failed)
+                  :tangle-eq (= fail 0)))))
+    (error (list :pamphlet pamphlet :mode "ERROR" :nchunks 0
+                 :pass 0 :fail 0 :failed nil :tangle-eq nil
+                 :error (error-message-string err)))))
+#+END_SRC
+
+* Corpus driver and CSV report
+
+Dedup by content MD5, append one CSV row per file (a content-duplicate
+fans out the representative's verdict with a =dup_of= back-reference).
+
+#+BEGIN_SRC elisp
+(defun migrate-dryrun--csv-row (r dup-of)
+  (let ((q (lambda (s) (concat "\"" (replace-regexp-in-string
+                                     "\"" "\"\"" (format "%s" s)) "\""))))
+    (string-join
+     (list (funcall q (file-relative-name (plist-get r :pamphlet)
+                                          migrate-dryrun-root))
+           (plist-get r :mode)
+           (number-to-string (plist-get r :nchunks))
+           (number-to-string (plist-get r :pass))
+           (number-to-string (plist-get r :fail))
+           (if (plist-get r :tangle-eq) "PASS" "FAIL")
+           (funcall q (or (plist-get r :failed) (plist-get r :error) ""))
+           (funcall q (or dup-of "")))
+     ",")))
+
+(defun migrate-dryrun-run (files outdir csv)
+  "Verify FILES (dedup by content), append CSV rows to CSV, return tallies."
+  (make-directory outdir t)
+  (let ((seen (make-hash-table :test #'equal))
+        (pass 0) (fail 0) (prose 0) (err 0) (dup 0) (n 0)
+        (rows '()))
+    (dolist (f files)
+      (cl-incf n)
+      (let* ((m (migrate-dryrun--content-md5 f))
+             (cached (gethash m seen)))
+        (if cached
+            (progn (cl-incf dup)
+                   (push (migrate-dryrun--csv-row
+                          (plist-put (copy-sequence cached) :pamphlet f)
+                          (file-relative-name (plist-get cached :pamphlet)
+                                              migrate-dryrun-root))
+                         rows))
+          (let ((r (migrate-dryrun-verify-file f outdir)))
+            (puthash m r seen)
+            (push (migrate-dryrun--csv-row r nil) rows)
+            (cond ((plist-get r :error) (cl-incf err))
+                  ((string= (plist-get r :mode) "prose") (cl-incf prose))
+                  ((plist-get r :tangle-eq) (cl-incf pass))
+                  (t (cl-incf fail)))
+            (message "[%d/%d] %-5s %s %s"
+                     n (length files) (plist-get r :mode)
+                     (if (plist-get r :tangle-eq) "OK " "BAD")
+                     (file-relative-name f migrate-dryrun-root))))))
+    (with-temp-buffer
+      (when (= 0 (or (file-attribute-size (file-attributes csv)) 0))
+        (insert "file,mode,nchunks,pass,fail,tangle_eq,detail,dup_of\n"))
+      (insert (string-join (nreverse rows) "\n") "\n")
+      (append-to-file (point-min) (point-max) csv))
+    (let ((tally (list :files n :unique (hash-table-count seen)
+                       :dup dup :tangle_pass pass :tangle_fail fail
+                       :prose prose :error err)))
+      (message "TALLY %S" tally)
+      tally)))
+
+(defun migrate-dryrun-main ()
+  "Entry point: verify all pamphlets (or env MDR_FILES list) to env MDR_OUT."
+  (migrate-dryrun-setup)
+  (let* ((outdir (or (getenv "MDR_OUT")
+                     (expand-file-name "dryrun-out" migrate-dryrun-root)))
+         (csv (or (getenv "MDR_CSV") (expand-file-name "summary.csv" outdir)))
+         (listfile (getenv "MDR_FILES"))
+         (files (if (and listfile (file-readable-p listfile))
+                    (with-temp-buffer
+                      (insert-file-contents listfile)
+                      (split-string (buffer-string) "\n" t))
+                  (migrate-dryrun-pamphlets))))
+    (make-directory outdir t)
+    (when (file-exists-p csv) (delete-file csv))
+    (migrate-dryrun-run files outdir csv)))
+#+END_SRC
+
+* Provide
+
+#+BEGIN_SRC elisp
+(provide 'migrate-dryrun)
+#+END_SRC
