@@ -156,3 +156,54 @@ Reports pass/fail per file with diff summary."
              (if result "PASS" "FAIL"))
     result))
 #+END_SRC
+
+** Per-chunk test (src/algebra book volumes)
+
+The =src/algebra= volumes (=bookvol10.2..10.5=) have no =*= root chunk —
+they are huge literate books whose thousands of named chunks are tangled
+per domain (=category ATADDVA …=, =package RECOP …=, …).  The whole-file
+runner above does not apply; instead compare *every named chunk* against
+=tanglec=.  =STRIDE= > 1 tests every STRIDE-th chunk (sampling) for the
+biggest files.
+
+#+BEGIN_SRC emacs-lisp
+(defun test-pamphlet2org-chunks (pamphlet-file &optional project-root stride)
+  "Per-chunk E2E for PAMPHLET-FILE: tangle every named chunk via tanglec
+and via pamphlet2org and compare.  PROJECT-ROOT defaults to the nearest
+ancestor containing =books=.  STRIDE (default 1) tests every STRIDE-th
+chunk.  Returns (:total N :pass N :fail N :failures NAMES)."
+  (let* ((root (or project-root (locate-dominating-file pamphlet-file "books")))
+         (tanglec (expand-file-name "books/tanglec" root))
+         (tmp-dir (make-temp-file "p2o-chunks-" t))
+         (org (expand-file-name "x.org" tmp-dir))
+         (stride (or stride 1))
+         (pass 0) (fail 0) (failures '())
+         (visiting (make-hash-table :test #'equal)))
+    (unless (file-executable-p tanglec)
+      (shell-command (format "cd %s && gcc -o books/tanglec books/tanglec.c"
+                             (shell-quote-argument root))))
+    (pamphlet2org-convert-file pamphlet-file org)
+    (let ((blocks (pamphlet2org--collect-blocks org))
+          (names '()) (i -1))
+      (maphash (lambda (k _v) (push k names)) blocks)
+      (setq names (nreverse names))
+      (dolist (nm names)
+        (when (= 0 (mod (setq i (1+ i)) stride))
+          (let ((ref (shell-command-to-string
+                      (format "%s %s %s" (shell-quote-argument tanglec)
+                              (shell-quote-argument pamphlet-file)
+                              (shell-quote-argument nm))))
+                (out (generate-new-buffer " *p2o-chunk*")))
+            (clrhash visiting)
+            (pamphlet2org--emit (gethash nm blocks) blocks "" visiting out)
+            (let ((got (with-current-buffer out (buffer-string))))
+              (kill-buffer out)
+              (if (string= ref got) (setq pass (1+ pass))
+                (setq fail (1+ fail))
+                (push nm failures))))))
+      (message "%s: %d chunks | pass=%d fail=%d"
+               (file-name-nondirectory pamphlet-file) (length names) pass fail)
+      (dolist (f (nreverse failures)) (message "  FAIL: %s" f))
+      (delete-directory tmp-dir t)
+      (list :total (length names) :pass pass :fail fail :failures failures))))
+#+END_SRC

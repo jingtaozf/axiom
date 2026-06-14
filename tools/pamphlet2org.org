@@ -346,19 +346,38 @@ name, concatenate blocks with the same name, then recursively expand
 
 #+BEGIN_SRC elisp
 (defun pamphlet2org--collect-blocks (org-file)
-  "Parse ORG-FILE and return hash table of block-name -> concatenated body.
-Multiple blocks with the same #+NAME are concatenated."
-  (let ((blocks (make-hash-table :test #'equal)))
+  "Return a hash of chunk-name -> concatenated body from ORG-FILE.
+Scan #+NAME:/#+BEGIN_SRC...#+END_SRC line by line rather than via
+`org-element': org parses a prose \\begin{enumerate} (or any LaTeX
+environment) as a `latex-environment' that swallows the chunk blocks
+nested inside it, so org-element would silently drop those chunks.
+Same-named blocks are concatenated, mirroring tanglec."
+  (let ((blocks (make-hash-table :test #'equal))
+        (case-fold-search t))
     (with-temp-buffer
       (insert-file-contents org-file)
-      (org-element-map (org-element-parse-buffer) 'src-block
-        (lambda (block)
-          (let ((name (org-element-property :name block))
-                (value (org-element-property :value block)))
-            (when name
-              (puthash name
-                       (concat (gethash name blocks "") value)
-                       blocks))))))
+      (goto-char (point-min))
+      (while (not (eobp))
+        (cond
+         ((looking-at "^#\\+NAME: \\(.*\\)$")
+          (let ((name (string-trim (match-string-no-properties 1))))
+            (forward-line 1)
+            (when (looking-at-p "^#\\+BEGIN_SRC")
+              (forward-line 1)
+              (let ((start (point)))
+                (while (and (not (eobp)) (not (looking-at-p "^#\\+END_SRC")))
+                  (forward-line 1))
+                (puthash name
+                         (concat (gethash name blocks "")
+                                 (buffer-substring-no-properties start (point)))
+                         blocks)
+                (unless (eobp) (forward-line 1))))))
+         ((looking-at-p "^#\\+BEGIN_SRC")
+          (forward-line 1)
+          (while (and (not (eobp)) (not (looking-at-p "^#\\+END_SRC")))
+            (forward-line 1))
+          (unless (eobp) (forward-line 1)))
+         (t (forward-line 1)))))
     blocks))
 #+END_SRC
 
