@@ -91,10 +91,10 @@ directory so we have to expand the serial forms inline. Cheesy.
 all: rootdirs axiom.sty tanglec libspad lspdir
 	@ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 2 Environment ${ENV}
-	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
+	@ ${BOOKS}/srctangle Makefile.org "Makefile.${SYS}" >Makefile.${SYS}
 	@ cp ${BOOKS}/dvipdfm.def ${MNT}/${SYS}/doc
 	@ cp ${BOOKS}/changepage.sty ${MNT}/${SYS}/doc
-	@ ${EXTRACT} Makefile.pamphlet
+	@ ${EXTRACT} Makefile.org
 	@ cp Makefile.pdf ${MNT}/${SYS}/doc/src/root.Makefile.pdf
 	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
 	   ( echo p4 starting parallel make of input files ; \
@@ -105,7 +105,7 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	     cd ${MNT}/${SYS}/doc/src/input ; \
 	     cp ${BOOKS}/axiom.sty . ; \
 	     cp ${SRC}/input/*.eps . ; \
-	     for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
+	     for i in `ls ${SRC}/input/*.input.org` ; do \
 	      if [ .${NOISE} = . ] ; \
 	      then \
 	       latex $$i ; \
@@ -124,17 +124,17 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
 	    ( echo s2 starting parallel make of books ; \
 	      echo s3 ${SPD}/books/Makefile from \
-		   ${SPD}/books/Makefile.pamphlet ; \
+		   ${SPD}/books/Makefile.org ; \
 	      cd ${SPD}/books ; \
-	      ${EXTRACT} Makefile ; \
+	      ${EXTRACT} Makefile.org ; \
 	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
 	      ${ENV} ${MAKE} & ) ; \
 	  else \
 	    ( echo s2 starting serial make of books ; \
 	      echo s3 ${SPD}/books/Makefile from \
-		   ${SPD}/books/Makefile.pamphlet ; \
+		   ${SPD}/books/Makefile.org ; \
 	      cd ${SPD}/books ; \
-	      ${EXTRACT} Makefile ; \
+	      ${EXTRACT} Makefile.org ; \
 	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
 	      if [ "${BUILD}" = "full" ] ; then \
 	      ${ENV} ${MAKE} ; fi ) ; \
@@ -148,7 +148,7 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 libspad: 
 	@ echo 11a making libspad
 	@ ( cd ${OBJ}/${SYS}/lib ; \
-	    ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
+	    ${BOOKS}/srctangle ${BOOKS}/bookvol8.org Makefile >Makefile ; \
 	    ${ENV} ${MAKE} libspad.a )
 
 axiom.sty:
@@ -194,7 +194,7 @@ input:
 	@ if [ "${BUILD}" = "full" ] ; then \
 	  ( cd ${MNT}/${SYS}/doc/src/input ; \
 	    cp ${BOOKS}/axiom.sty . ; \
-	    for i in `ls ${SRC}/input/*.input.pamphlet` ; \
+	    for i in `ls ${SRC}/input/*.input.org` ; \
 	      do latex $$i ; \
 	      done ; \
 	     rm -f *~ ; \
@@ -219,7 +219,7 @@ input:
 document: 
 	@ echo 4 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 5 Environment ${ENV}
-	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
+	@ ${BOOKS}/srctangle Makefile.org "Makefile.${SYS}" >Makefile.${SYS}
 	@ ${ENV} $(MAKE) -f Makefile.${SYS} document
 	@echo 6 finished system build on `date` | tee >lastBuildDate
 
@@ -611,7 +611,7 @@ run latex over the pamphlet file.
 #+begin_src common-lisp :noweb yes
 book:
 	@ echo 79 building the book as ${MNT}/${SYS}/doc/book.dvi 
-	@ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
+	@ ${BOOKS}/untanglec ${SRC}/doc/book.org > ${MNT}/${SYS}/doc/book.pamphlet
 	@ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
 	@ (cd ${MNT}/${SYS}/doc ; \
 	  if [ .${NOISE} = . ] ; then \
@@ -655,16 +655,16 @@ srcdir: ${SPD}/src/Makefile
 	@echo 15 making ${SPD}/src 
 	@( cd src ; ${ENV} ${MAKE} )
 
-${SPD}/src/Makefile: ${SPD}/src/Makefile.pamphlet
-	@echo 16 making ${SPD}/src/Makefile from ${SPD}/src/Makefile.pamphlet
+${SPD}/src/Makefile: ${SPD}/src/Makefile.org
+	@echo 16 making ${SPD}/src/Makefile from ${SPD}/src/Makefile.org
 	( cd src ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.org ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/src.Makefile.pdf )
 
 libspadclean:
 	@echo 17 cleaning ${OBJ}/${SYS}/lib     
 	@rm -rf ${OBJ}/${SYS}/lib       
-	@( cd src ; ${EXTRACT} Makefile )
+	@( cd src ; ${EXTRACT} Makefile.org )
 	@( cd src ; ${ENV} ${MAKE} clean )
 	@rm -f ${SPD}/src/Makefile ${SPD}/src/Makefile.dvi
 
@@ -700,12 +700,12 @@ then the Makefile is rewritten to extract the later version.
 It looks for a chunk name that matches the version number.
 #+NAME: LSPMakefile
 #+begin_src common-lisp :noweb yes
-${LSP}/Makefile: ${LSP}/Makefile.pamphlet
-	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.pamphlet
+${LSP}/Makefile: ${LSP}/Makefile.org
+	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.org
 	@( cd lsp ; \
-	 ${EXTRACT} Makefile.pamphlet ; \
+	 ${EXTRACT} Makefile.org ; \
 	 if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
-	 ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
+	 ${BOOKS}/srctangle Makefile.org ${GCLVERSION} >Makefile ; \
 	 fi ; \
 	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 

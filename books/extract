@@ -1,21 +1,31 @@
 #!/bin/sh
+# Extract a file (e.g. a Makefile) from its literate .org source, and -- when
+# latex is present -- also build the PDF.
+#
+# Source of truth is now BASE.org.  Tangling goes DIRECTLY from the .org via
+# books/srctangle (-> orgtangle); the .pamphlet is materialised by untanglec
+# ONLY for the latex/PDF path.  Accepts BASE, BASE.org, or a legacy BASE.pamphlet
+# argument -- all reduce to BASE.
 latex=`which latex`
 STY=$AXIOM/../../books/axiom.sty
-TAN=$AXIOM/../../books/tanglec
-echo extract1: $TAN
+SRCTANGLE=$AXIOM/../../books/srctangle
+UNTANGLEC=$AXIOM/../../books/untanglec
+echo extract1: $SRCTANGLE
+basearg() { b=`basename "$1" .org`; basename "$b" .pamphlet; }
 if [ "$latex" = "" ] ; then
-  echo "document NOTE: no latex; tangling the file but skipping the PDF"
-  if [ "$#" = "3" ]; then EXF=`basename $3 .pamphlet`; else EXF=`basename $1 .pamphlet`; fi
-  $TAN $EXF.pamphlet >$EXF
+  echo "document NOTE: no latex; tangling the file from .org but skipping the PDF"
+  if [ "$#" = "3" ]; then EXF=`basearg "$3"`; else EXF=`basearg "$1"`; fi
+  $SRCTANGLE $EXF.org >$EXF
   : >$EXF.pdf
   exit 0
 fi
 if [ ! -f axiom.sty ] ; then cp $STY . ; fi
 if [ "$#" = "3" ]; then
  REDIRECT=$2
- FILE=`basename $3 .pamphlet`
- $TAN $FILE.pamphlet >$FILE
- echo extract2: `pwd`/$FILE.pamphlet
+ FILE=`basearg "$3"`
+ $SRCTANGLE $FILE.org >$FILE
+ $UNTANGLEC $FILE.org >$FILE.pamphlet
+ echo extract2: `pwd`/$FILE.org
  if [ ! -f axiom.sty ] ; then cp $STY . ; fi
  $latex --interaction nonstopmode $FILE.pamphlet >$REDIRECT
  $latex --interaction nonstopmode $FILE.pamphlet >$REDIRECT
@@ -29,9 +39,10 @@ if [ "$#" = "3" ]; then
  exit 0
 fi
 if [ "$#" = "1" ]; then
- FILE=`basename $1 .pamphlet`
- $TAN $FILE.pamphlet >$FILE
- echo extract3: `pwd`/$FILE.pamphlet
+ FILE=`basearg "$1"`
+ $SRCTANGLE $FILE.org >$FILE
+ $UNTANGLEC $FILE.org >$FILE.pamphlet
+ echo extract3: `pwd`/$FILE.org
  if [ ! -f axiom.sty ] ; then cp $STY . ; fi
  $latex $FILE.pamphlet
  $latex $FILE.pamphlet
@@ -45,5 +56,3 @@ if [ "$#" = "1" ]; then
  exit 0
 fi
 echo "document [ -o redirect ] pamphlet"
-
-

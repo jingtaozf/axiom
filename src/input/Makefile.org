@@ -61,22 +61,21 @@ ${OUT}/%.input: ${MID}/%.input
 
 LISPTANGLE=${OBJ}/${SYS}/bin/lisp
 
-${MID}/%.input: ${IN}/%.input.pamphlet
-	@ echo si02 making ${MID}/$*.input from ${IN}/$*.input.pamphlet
+${MID}/%.input: ${IN}/%.input.org
+	@ echo si02 making ${MID}/$*.input from ${IN}/$*.input.org
 	@(cd ${MID} ; \
-          echo '(tangle "${IN}/$*.input.pamphlet" "*" "$*.input")' | \
-          ${LISPTANGLE} )
+          ${BOOKS}/srctangle ${IN}/$*.input.org "*" > $*.input )
 
 ${DOC}/axiom.sty:
 	@echo si05 making ${DOC}/axiom.sty from ${BOOKS}/axiom.sty
 	@cp ${BOOKS}/axiom.sty ${DOC}
 
-${DOC}/%.input.dvi: ${IN}/%.input.pamphlet ${DOC}/axiom.sty
+${DOC}/%.input.dvi: ${IN}/%.input.org ${DOC}/axiom.sty
 	@ echo si06 making ${DOC}/$*.input.dvi from \
-               ${IN}/$*.input.pamphlet
+               ${IN}/$*.input.org
 	@ if [ "${BUILD}" = "full" ] ; then \
 	( cd ${DOC} ; \
-	cp ${IN}/$*.input.pamphlet ${DOC} ; \
+	${BOOKS}/untanglec ${IN}/$*.input.org > ${DOC}/$*.input.pamphlet ; \
 	cp ${IN}/$*.eps ${DOC} ; \
 	latex $*.input.pamphlet ; \
 	dvipdf $*.input.dvi ; \
@@ -495,7 +494,7 @@ algebratests: ${OUTS}
 	@ echo ======================================
 	@ echo si13 starting algebra regression testing
 	@ (cd ${MID} ; \
-	  ${BOOKS}/tanglec ${BOOKS}/bookvol10.pamphlet algebra.regress \
+	  ${BOOKS}/srctangle ${BOOKS}/bookvol10.org algebra.regress \
             >Makefile.algebra ; \
           ${MAKE} -f Makefile.algebra )
 	@ echo si14 finished ${INT}/input
@@ -535,11 +534,10 @@ notests:
 	@ echo src/input RUNNING NO TESTS
 	@ echo ======================================
  
-%.input: ${IN}/%.input.pamphlet
-	@ echo si15 making ${MID}/$*.input from ${IN}/$*.input.pamphlet
+%.input: ${IN}/%.input.org
+	@ echo si15 making ${MID}/$*.input from ${IN}/$*.input.org
 	@(cd ${MID} ; \
-         echo '(tangle "${IN}/$*.input.pamphlet" "*" "$*.input")' | \
-	  ${LISPTANGLE} 1>/dev/null 2>/dev/null)
+         ${BOOKS}/srctangle ${IN}/$*.input.org "*" > $*.input 2>/dev/null)
 
 #+end_src
 The curious use of {\tt egrep} in the pipeline is to remove the
@@ -1350,7 +1348,7 @@ use:
 
 regress:
 	@echo si19 making ${MID}
-	@ ${BOOKS}/tanglec ${IN}/Makefile.pamphlet "regression tests" \
+	@ ${BOOKS}/srctangle ${IN}/Makefile.org "regression tests" \
           >${MID}/Makefile
 	@ echo 3a tpdhere parallel making ${MID} 
 	@ echo 3b tpdhere parallel making ${MID} 

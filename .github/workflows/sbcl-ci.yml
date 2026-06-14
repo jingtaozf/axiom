@@ -73,7 +73,7 @@ jobs:
         # rebuild that dies "fasl older than source".  Keeping the key to build
         # inputs means a harness/doc edit is an EXACT hit (no rebuild at all).
         run: |
-          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet.org', 'Makefile*', 'lsp/Makefile.pamphlet.org') }}" >> "$GITHUB_OUTPUT"
+          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.org', 'Makefile*', 'lsp/Makefile.org') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore build cache (obj/int/mnt/lsp)
         id: cache
@@ -90,14 +90,6 @@ jobs:
             mnt
             lsp/Makefile
           key: ${{ steps.key.outputs.value }}
-
-      - name: Regenerate pamphlets from org
-        # The .pamphlet sources were migrated to .pamphlet.org (single source of
-        # truth).  untanglec rebuilds the exact .pamphlet bytes from each .org so
-        # tanglec + the sub-Makefiles below run byte-identically to before the
-        # migration.  Cheap (~1k files of plain C), so run it unconditionally;
-        # on an exact cache hit the regenerated files are simply unused.
-        run: make regen-pamphlets CC=/usr/bin/clang
 
       - name: Build axiom (SBCL, interp + algebra only)
         id: build
@@ -127,10 +119,13 @@ jobs:
             # The regression tests need only interpsys + the algebra (no graphics/
             # hyperdoc), so build just those SRCDIRS and skip libspad, whose C
             # library bundles X11/graphics C that cannot build on macOS.
-            make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
+            make rootdirs axiom.sty tanglec untanglec orgtangle lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
               2>&1 | tee /tmp/build.log | tail -n 200
             # the `all` recipe normally generates this then runs the cascade.
-            books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
+            # Default path: tangle the Makefile straight from Makefile.org (no
+            # intermediate .pamphlet).  srctangle dispatches to orgtangle; set
+            # AXIOM_TANGLE_VIA_PAMPHLET=1 to route through the regenerated .pamphlet.
+            books/srctangle Makefile.org "Makefile.MACOSX" > Makefile.MACOSX
             # Shrink SRCDIRS by editing the generated Makefile's own `SRCDIRS:="..."`
             # line, NOT a command-line override: a cmdline SRCDIRS= propagates to
             # sub-makes through MAKEFLAGS with its quotes intact, so src/Makefile
@@ -234,12 +229,12 @@ jobs:
           test -x obj/MACOSX/bin/lisp
           test -x mnt/MACOSX/bin/AXIOMsys
 
-      - name: Regenerate pamphlets from org
-        # run-regression.sh scans src/input/Makefile.pamphlet, the per-test
-        # *.input.pamphlet, and books/bookvol10.pamphlet -- all migrated to .org.
-        # The build tree is restored from cache, so this only re-materialises the
-        # .pamphlet sources the suite reads directly.
-        run: make regen-pamphlets CC=/usr/bin/clang
+      - name: Build tanglers (orgtangle/untanglec/tanglec)
+        # run-regression.sh discovers tests by scanning the .org sources and
+        # tangles each test .input DIRECTLY from src/input/<t>.input.org via
+        # books/srctangle (-> orgtangle).  The build TREE is restored from cache;
+        # the tiny C tanglers it needs are compiled here.
+        run: make tanglec untanglec orgtangle CC=/usr/bin/clang
 
       - name: Run regression shard ${{ matrix.shard }}/5
         run: |

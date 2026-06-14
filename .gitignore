@@ -10,6 +10,7 @@ books/Makefile.pdf
 books/bookvol0.log
 books/tanglec
 books/untanglec
+books/orgtangle
 int/
 lastBuildDate
 lsp/Makefile
@@ -1235,19 +1236,20 @@ books/bookvolMIGRATION.pdf
 Makefile.
 Makefile.MACOSX
 
-# Pamphlets are regenerated from *.pamphlet.org at build time (untanglec);
-# the .org is now the single source of truth, the .pamphlet a build artifact.
+# A .pamphlet is now only a build artifact: generated from its .org by untanglec
+# for the PDF path or the opt-in AXIOM_TANGLE_VIA_PAMPHLET=1 build.  The .org is
+# the single source of truth.
 *.pamphlet
-# These 7 *.pamphlet.org are themselves derived from bookvolMIGRATION.pamphlet
-# (their .pamphlet siblings above are already build artifacts), so their .org
-# must NOT be committed either -- they are regenerated, never edited.
-src/algebra/bookvol10.2.pamphlet.org
-src/algebra/bookvol10.3.pamphlet.org
-src/algebra/bookvol10.4.pamphlet.org
-src/algebra/bookvol10.5.pamphlet.org
-src/interp/bookvol10.5.pamphlet.org
-src/interp/bookvol5.pamphlet.org
-src/interp/bookvol9.pamphlet.org
+# These 7 .org are COPIES the build stages (cp books/bookvolN.org into
+# src/{interp,algebra}) or files derived from bookvolMIGRATION -- build
+# artifacts, never the tracked source (which lives under books/).
+src/algebra/bookvol10.2.org
+src/algebra/bookvol10.3.org
+src/algebra/bookvol10.4.org
+src/algebra/bookvol10.5.org
+src/interp/bookvol10.5.org
+src/interp/bookvol5.org
+src/interp/bookvol9.org
 
 # Generated databases and data
 *.daase/

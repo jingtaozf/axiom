@@ -41,7 +41,7 @@ stanza to this Makefile you should check that list.
 #+NAME: environment
 #+begin_src common-lisp :noweb yes
 DIRS=${SRCDIRS}
-VOL11=${BOOKS}/bookvol11.pamphlet
+VOL11=${BOOKS}/bookvol11.org
 
 #+end_src
 \subsection{The sman directory}
@@ -49,10 +49,10 @@ Superman (sman) is the master process that runs all of the other
 processes including axiom, clef, nagman, graphics, and hyperdoc
 #+NAME: smandir
 #+begin_src common-lisp :noweb yes
-smandir: ${SPD}/books/bookvol6.pamphlet
+smandir: ${SPD}/books/bookvol6.org
 	@echo 5 making ${SRC}/sman
 	@( cd sman ; \
-	   ${BOOKS}/tanglec ${BOOKS}/bookvol6.pamphlet >Makefile ; \
+	   ${BOOKS}/srctangle ${BOOKS}/bookvol6.org >Makefile ; \
 	   ${ENV} ${MAKE} )
 
 #+end_src
@@ -66,11 +66,11 @@ sharedir: ${SRC}/share/Makefile
 	@echo 9 making ${SRC}/share
 	@(cd share ; ${ENV} ${MAKE} )
 
-${SRC}/share/Makefile: ${SRC}/share/Makefile.pamphlet
+${SRC}/share/Makefile: ${SRC}/share/Makefile.org
 	@echo 10 making ${SRC}/share/Makefile from \
-	   ${SRC}/share/Makefile.pamphlet
+	   ${SRC}/share/Makefile.org
 	@( cd share ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.org ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/share.Makefile.pdf )
 
 sharedocument: ${SRC}/share/Makefile
@@ -99,10 +99,10 @@ bootdir: ${SRC}/boot/Makefile
 	@echo 21 making ${SRC}/boot
 	@(cd boot ; ${ENV} ${MAKE} )
 
-${SRC}/boot/Makefile: ${SRC}/boot/Makefile.pamphlet
-	@echo 22 making ${SRC}/boot/Makefile from ${SRC}/boot/Makefile.pamphlet
+${SRC}/boot/Makefile: ${SRC}/boot/Makefile.org
+	@echo 22 making ${SRC}/boot/Makefile from ${SRC}/boot/Makefile.org
 	@( cd boot ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.org ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/boot.Makefile.pdf )
 
 bootdocument: ${SRC}/boot/Makefile
@@ -136,18 +136,18 @@ function buildHtMacroTable (htcheck.boot)
 #+begin_src common-lisp :noweb yes
 interpdir: ${SRC}/interp/Makefile
 	@echo 25 making ${SRC}/interp
-	@cp ${SPD}/books/bookvol5.pamphlet interp
-	@cp ${SPD}/books/bookvol9.pamphlet interp
-	@cp ${SPD}/books/bookvol10.5.pamphlet interp
+	@cp ${SPD}/books/bookvol5.org interp
+	@cp ${SPD}/books/bookvol9.org interp
+	@cp ${SPD}/books/bookvol10.5.org interp
 	@(cd ${MNT}/${SYS}/doc ; \
-	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet util.ht >util.ht )
+	  ${BOOKS}/srctangle ${BOOKS}/bookvol7.1.org util.ht >util.ht )
 	@(cd interp ; ${ENV} ${MAKE} )
 
-${SRC}/interp/Makefile: ${SRC}/interp/Makefile.pamphlet
+${SRC}/interp/Makefile: ${SRC}/interp/Makefile.org
 	@echo 26 making ${SRC}/interp/Makefile from \
-		 ${SRC}/interp/Makefile.pamphlet
+		 ${SRC}/interp/Makefile.org
 	@( cd interp ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.org ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/interp.Makefile.pdf )
 
 interpdocument: ${SRC}/interp/Makefile
@@ -184,11 +184,11 @@ inputdir: ${SRC}/input/Makefile
 	@(cd input ; ${ENV} ${MAKE} )
 #       @(cd input ; ${ENV} ${MAKE} -j 10)
 
-${SRC}/input/Makefile: ${SRC}/input/Makefile.pamphlet
+${SRC}/input/Makefile: ${SRC}/input/Makefile.org
 	@echo 34 making ${SRC}/input/Makefile from \
-		${SRC}/input/Makefile.pamphlet
+		${SRC}/input/Makefile.org
 	@( cd input ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.org ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/input.Makefile.pdf )
 
 inputdocument: ${SRC}/input/Makefile
@@ -215,10 +215,10 @@ etcdir: ${SRC}/etc/Makefile
 	@echo 37 making ${SRC}/etc
 	@(cd etc ; ${ENV} ${MAKE} )
 
-${SRC}/etc/Makefile: ${SRC}/etc/Makefile.pamphlet
-	@echo 38 making ${SRC}/etc/Makefile from ${SRC}/etc/Makefile.pamphlet
+${SRC}/etc/Makefile: ${SRC}/etc/Makefile.org
+	@echo 38 making ${SRC}/etc/Makefile from ${SRC}/etc/Makefile.org
 	@( cd etc ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.org ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/etc.Makefile.pdf )
 
 etcdocument: ${SRC}/etc/Makefile
@@ -253,7 +253,7 @@ docdir:
 	 cp ${BOOKS}/ps/axiom2.png ${AXIOM}/doc/hypertex/axiom2.png ; \
 	 cp ${BOOKS}/ps/lightbayou.png ${AXIOM}/doc/hypertex/lightbayou.png ) 
 	@(cd ${MNT}/${SYS}/doc/hypertex ; \
-	  ${BOOKS}/tanglec ${BOOKS}/bookvol11.pamphlet >Makefile11 ; \
+	  ${BOOKS}/srctangle ${BOOKS}/bookvol11.org >Makefile11 ; \
 	  ${ENV} ${MAKE} -f Makefile11 ; \
 	  rm -f Makefile11 )
 
@@ -262,24 +262,24 @@ docdir:
 Hyperdoc is the Axiom document browser.
 #+NAME: hyperdir
 #+begin_src common-lisp :noweb yes
-hyperdir: ${SPD}/books/bookvol7.pamphlet ${SPD}/books/bookvol7.1.pamphlet
+hyperdir: ${SPD}/books/bookvol7.org ${SPD}/books/bookvol7.1.org
 	@echo 7 making hyperdoc from bookvol7
 	@(cd ${INT}/hyper ; \
-	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.pamphlet >Makefile ; \
+	  ${BOOKS}/srctangle ${BOOKS}/bookvol7.org >Makefile ; \
 	  ${ENV} ${MAKE} )
 	@echo 7.1 making pages from bookvol7.1 ${ENV}
 	@(cd ${INT}/hyper ; \
-	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet >Makefile ; \
+	  ${BOOKS}/srctangle ${BOOKS}/bookvol7.1.org >Makefile ; \
 	  ${ENV} ${MAKE} )
 
 #+end_src
 \subsection{Volume 8: Axiom Graphics book}
 #+NAME: graphdir
 #+begin_src common-lisp :noweb yes
-graphdir: ${SPD}/books/bookvol8.pamphlet
+graphdir: ${SPD}/books/bookvol8.org
 	@echo 8 making graph from bookvol8
 	@(cd ${OBJ}/${SYS}/graph ; \
-	  ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
+	  ${BOOKS}/srctangle ${BOOKS}/bookvol8.org Makefile >Makefile ; \
 	  ${ENV} ${MAKE} )
 
 #+end_src
@@ -328,23 +328,23 @@ and bookvol10.3 (Packages) to the src/algebra subdirectory.
 \subsection{Volume 10: Axiom Algebra book}
 #+NAME: algebradir
 #+begin_src common-lisp :noweb yes
-algebradir: ${SRC}/algebra/Makefile ${SPD}/books/bookvol10.pamphlet \
-	    ${SPD}/books/bookvol7.1.pamphlet
+algebradir: ${SRC}/algebra/Makefile ${SPD}/books/bookvol10.org \
+	    ${SPD}/books/bookvol7.1.org
 	@echo 29 making ${SRC}/algebra
 	@(cd algebra ; ${ENV} ${MAKE} )
 
-${SRC}/algebra/Makefile: ${BOOKS}/bookvol10.pamphlet
+${SRC}/algebra/Makefile: ${BOOKS}/bookvol10.org
 	@echo 30 making ${SRC}/algebra/Makefile from \
-		${BOOKS}/bookvol10.pamphlet
+		${BOOKS}/bookvol10.org
 	@( cd algebra ; \
-	${BOOKS}/tanglec ${BOOKS}/bookvol10.pamphlet Makefile >Makefile ; \
-	cp ${SPD}/books/bookvol10.2.pamphlet . ; \
-	cp ${SPD}/books/bookvol10.3.pamphlet . ; \
-	cp ${SPD}/books/bookvol10.4.pamphlet . ; \
-	cp ${SPD}/books/bookvol10.5.pamphlet . ; \
+	${BOOKS}/srctangle ${BOOKS}/bookvol10.org Makefile >Makefile ; \
+	cp ${SPD}/books/bookvol10.2.org . ; \
+	cp ${SPD}/books/bookvol10.3.org . ; \
+	cp ${SPD}/books/bookvol10.4.org . ; \
+	cp ${SPD}/books/bookvol10.5.org . ; \
 	echo 30a tangling findAlgebraFiles from \
-		 ${BOOKS}/bookvol10.pamphlet ; \
-	${BOOKS}/tanglec ${BOOKS}/bookvol10.pamphlet \
+		 ${BOOKS}/bookvol10.org ; \
+	${BOOKS}/srctangle ${BOOKS}/bookvol10.org \
 	     findAlgebraFiles >${INT}/algebra/findAlgebraFiles ; \
 	echo 30b running ${INT}/algebra/findAlgebraFiles ; \
 	. ${INT}/algebra/findAlgebraFiles >> Makefile )
@@ -367,10 +367,10 @@ post processing. Thus the "-j 10" argument to make. We use
 ``Makefile11'' so that future parallel builds don't step on each other.
 #+NAME: browserdir
 #+begin_src common-lisp :noweb yes
-browserdir: ${SPD}/books/bookvol11.pamphlet
+browserdir: ${SPD}/books/bookvol11.org
 	@echo 11 making browser from bookvol11
 #       @(cd ${MNT}/${SYS}/doc/hypertex ; \
-#       ${BOOKS}/tanglec ${SPD}/books/bookvol11.pamphlet >Makefile11 ; \
+#       ${BOOKS}/srctangle ${SPD}/books/bookvol11.org >Makefile11 ; \
 #       ${ENV} ${MAKE} -j 10 -f Makefile11 ; \
 #       rm -f Makefile11 )
 

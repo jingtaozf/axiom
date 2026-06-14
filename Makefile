@@ -141,12 +141,13 @@ WEAVE=${WEAVE} \
 XLIB=${XLIB} \
 ZIPS=${ZIPS} 
 
-all: regen-pamphlets rootdirs axiom.sty tanglec libspad lspdir
+all: srctangle-tools rootdirs axiom.sty tanglec libspad lspdir
 	@ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 2 Environment ${ENV}
-	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
+	@ ${BOOKS}/srctangle Makefile.org "Makefile.${SYS}" >Makefile.${SYS}
 	@ cp ${BOOKS}/dvipdfm.def ${MNT}/${SYS}/doc
 	@ cp ${BOOKS}/changepage.sty ${MNT}/${SYS}/doc
+	@ ${BOOKS}/untanglec Makefile.org > Makefile.pamphlet
 	@ ${EXTRACT} Makefile.pamphlet
 	@ cp Makefile.pdf ${MNT}/${SYS}/doc/src/root.Makefile.pdf
 	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
@@ -216,12 +217,12 @@ else
 	@(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
 endif
 
-${LSP}/Makefile: ${LSP}/Makefile.pamphlet
-	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.pamphlet
+${LSP}/Makefile: ${LSP}/Makefile.org
+	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.org
 	@( cd lsp ; \
-	 ${EXTRACT} Makefile.pamphlet ; \
+	 ${EXTRACT} Makefile.org ; \
 	 if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
-	 ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
+	 ${BOOKS}/srctangle Makefile.org ${GCLVERSION} >Makefile ; \
 	 fi ; \
 	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 
@@ -316,19 +317,32 @@ tanglec: books/tanglec.c
 	@echo t01 making tanglec from books/tanglec.c
 	@( cd books ; gcc -o tanglec tanglec.c )
 
-# untanglec rebuilds a .pamphlet from its .pamphlet.org (the migrated source)
-# byte-for-byte; regen-pamphlets runs it over every tracked .pamphlet.org so
-# the rest of the build (tanglec, the sub-Makefiles) keeps seeing the exact
-# .pamphlet bytes it always did.  This is the bridge from "org is the single
-# source of truth" to the unchanged downstream pamphlet build.
+# The literate sources are now .org (single source of truth).  Three small C
+# tools bridge to the unchanged downstream build:
+#   orgtangle  X.org [chunk]  -> source, DIRECTLY (the default build path)
+#   untanglec  X.org          -> the exact .pamphlet bytes (for PDF / via mode)
+#   tanglec    X.pamphlet     -> source (the reference C tangler, used by `via')
+# srctangle is the dispatcher every rule calls: orgtangle by default,
+# untanglec+tanglec when AXIOM_TANGLE_VIA_PAMPHLET=1.  All three emit byte-
+# identical source (verified over every chunk of every file).
 untanglec: books/untanglec.c
 	@echo t02 making untanglec from books/untanglec.c
 	@( cd books ; ${CC} -o untanglec untanglec.c )
 
+orgtangle: books/orgtangle.c
+	@echo t04 making orgtangle from books/orgtangle.c
+	@( cd books ; ${CC} -o orgtangle orgtangle.c )
+
+srctangle-tools: tanglec untanglec orgtangle
+	@chmod +x ${BOOKS}/srctangle
+
+# Regenerate a .pamphlet beside every migrated .org (those carrying a
+# ':noweb yes' chunk).  Only needed to build PDFs or to run the build in
+# AXIOM_TANGLE_VIA_PAMPHLET=1 mode; the default direct build never calls it.
 regen-pamphlets: untanglec
-	@echo t03 regenerating .pamphlet files from .pamphlet.org via untanglec
-	@find . -name '*.pamphlet.org' -not -path './.git/*' | while read f ; do \
-	   ${BOOKS}/untanglec "$$f" > "$${f%.org}" ; \
+	@echo t03 regenerating .pamphlet files from migrated .org via untanglec
+	@grep -rIl ':noweb yes' --include='*.org' . | grep -v '/\.git/' | while read f ; do \
+	   ${BOOKS}/untanglec "$$f" > "$${f%.org}.pamphlet" ; \
 	 done
 
 install:
@@ -393,6 +407,7 @@ clean:
 	@ rm -f lastBuildDate
 	@ rm -f books/tanglec
 	@ rm -f books/untanglec
+	@ rm -f books/orgtangle
 	@ rm -f src/input/Makefile src/input/Makefile.dvi
 	@ rm -f src/input/Makefile.pdf 
 	@ rm -f src/interp/Makefile src/interp/Makefile.dvi

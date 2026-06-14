@@ -17654,10 +17654,10 @@ ${OUTSRC}/%.spad: ${IN}/%.pamphlet
 #+NAME: genericDOCfiles
 #+begin_src common-lisp :noweb yes
 
-${DOC}/%.dvi: ${IN}/%.pamphlet ${DOC}/ps
+${DOC}/%.dvi: ${IN}/%.org ${DOC}/ps
 	@ echo sa10 latexing $*.pamphlet to ${DOC}/$*.dvi
 	@ (cd ${DOC} ; \
-	cp ${IN}/$*.pamphlet ${DOC} ; \
+	${BOOKS}/untanglec ${IN}/$*.org > ${DOC}/$*.pamphlet ; \
 	${DOCUMENT} ${NOISE} $* ; \
 	rm -f ${DOC}/$*.pamphlet ; \
 	rm -f ${DOC}/$*.tex ; \
@@ -17747,39 +17747,39 @@ Step 2 is an awk command line.
 #+NAME: findSpadFiles
 #+begin_src common-lisp :noweb yes
 
-grep -E 'begin{chunk}{category\ .*}' ${BOOKS}/bookvol10.2.pamphlet | sort | uniq | awk -F: '{
+grep -E 'begin{chunk}{category\ .*}' ${BOOKS}/bookvol10.2.org | sort | uniq | awk -F: '{
   chunk=substr($1,15,length($1)-15);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
-  print spadfile": ${BOOKS}/bookvol10.2.pamphlet";
-  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.2.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
+  print spadfile": ${BOOKS}/bookvol10.2.org";
+  print "	   @${BOOKS}/srctangle ${BOOKS}/bookvol10.2.org \""chunk"\" > "part[2]".spad ";
   print "";
 }'
 
-grep -E 'begin{chunk}{domain\ .*}' ${BOOKS}/bookvol10.3.pamphlet | sort | uniq | awk -F: '{
+grep -E 'begin{chunk}{domain\ .*}' ${BOOKS}/bookvol10.3.org | sort | uniq | awk -F: '{
   chunk=substr($1,15,length($1)-15);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
-  print spadfile": ${BOOKS}/bookvol10.3.pamphlet";
-  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.3.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
+  print spadfile": ${BOOKS}/bookvol10.3.org";
+  print "	   @${BOOKS}/srctangle ${BOOKS}/bookvol10.3.org \""chunk"\" > "part[2]".spad ";
   print "";
 }'
 
-grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.4.pamphlet | sort | uniq | awk -F: '{
+grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.4.org | sort | uniq | awk -F: '{
   chunk=substr($1,15,length($1)-15);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
-  print spadfile": ${BOOKS}/bookvol10.4.pamphlet";
-  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.4.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
+  print spadfile": ${BOOKS}/bookvol10.4.org";
+  print "	   @${BOOKS}/srctangle ${BOOKS}/bookvol10.4.org \""chunk"\" > "part[2]".spad ";
   print "";
 }'
 
-grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.5.pamphlet | sort | uniq | awk -F: '{
+grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.5.org | sort | uniq | awk -F: '{
   chunk=substr($1,15,length($1)-15);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
-  print spadfile": ${BOOKS}/bookvol10.5.pamphlet";
-  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.5.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
+  print spadfile": ${BOOKS}/bookvol10.5.org";
+  print "	   @${BOOKS}/srctangle ${BOOKS}/bookvol10.5.org \""chunk"\" > "part[2]".spad ";
   print "";
 }'
 
@@ -17838,23 +17838,23 @@ For each of the above output lines we run an ``grep'' command:
 #+NAME: findBootstrapFiles
 #+begin_src common-lisp :noweb yes
 
-grep 'begin{chunk}{.*BOOTSTRAP}' ${BOOKS}/bookvol10.2.pamphlet | sort | uniq | \
+grep 'begin{chunk}{.*BOOTSTRAP}' ${BOOKS}/bookvol10.2.org | sort | uniq | \
 awk -F: '{
   chunk=substr($1,15,length($1)-15);
   split(chunk,part," ");
   lspfile="${MID}/"part[1];
-  print lspfile": ${BOOKS}/bookvol10.2.pamphlet";
-  print "	  @echo \x27(tangle \"${BOOKS}/bookvol10.2.pamphlet\" \""chunk"\" \""lspfile"\")\x27 | ${LISPTANGLE} ";
+  print lspfile": ${BOOKS}/bookvol10.2.org";
+  print "	  @${BOOKS}/srctangle ${BOOKS}/bookvol10.2.org \""chunk"\" > "lspfile" ";
   print "";
 }'
 
-grep 'begin{chunk}{.*BOOTSTRAP}' ${BOOKS}/bookvol10.3.pamphlet | sort | uniq | \
+grep 'begin{chunk}{.*BOOTSTRAP}' ${BOOKS}/bookvol10.3.org | sort | uniq | \
 awk -F: '{
   chunk=substr($1,15,length($1)-15);
   split(chunk,part," ");
   lspfile="${MID}/"part[1];
-  print lspfile": ${BOOKS}/bookvol10.3.pamphlet";
-  print "	  @echo \x27(tangle \"${BOOKS}/bookvol10.3.pamphlet\" \""chunk"\" \""lspfile"\")\x27 | ${LISPTANGLE} ";
+  print lspfile": ${BOOKS}/bookvol10.3.org";
+  print "	  @${BOOKS}/srctangle ${BOOKS}/bookvol10.3.org \""chunk"\" > "lspfile" ";
   print "";
 }'
 

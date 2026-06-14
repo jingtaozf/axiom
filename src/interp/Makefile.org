@@ -384,7 +384,7 @@ be in the lisp image thus minimizing their startup time.
 #+begin_src common-lisp :noweb yes
 ${INT}/algebra/warm.data: 
 	@ echo si001 building warm.data
-	@ ${BOOKS}/tanglec ${IN}/Makefile.pamphlet warm.data >${INT}/algebra/warm.data
+	@ ${BOOKS}/srctangle ${IN}/Makefile.org warm.data >${INT}/algebra/warm.data
 
 #+end_src
 #+NAME: warm.data
@@ -802,11 +802,10 @@ We simply captured that temporary file, replaced the .o files with .lisp
 files (or .lsp or .clisp) and saved it here.
 #+NAME: debugsys.lisp (MID from IN)
 #+begin_src common-lisp :noweb yes
-${MID}/debugsys.lisp: ${IN}/debugsys.lisp.pamphlet
-	@ echo si011 making ${MID}/debugsys.lisp from ${IN}/debugsys.lisp.pamphlet
+${MID}/debugsys.lisp: ${IN}/debugsys.lisp.org
+	@ echo si011 making ${MID}/debugsys.lisp from ${IN}/debugsys.lisp.org
 	@ (cd ${MID} ; \
-	  echo '(tangle "${IN}/debugsys.lisp.pamphlet" "*" "debugsys.lisp")' \
-	| ${OBJ}/${SYS}/bin/lisp  1>/dev/null 2>/dev/null)
+	  ${BOOKS}/srctangle ${IN}/debugsys.lisp.org "*" > debugsys.lisp 2>/dev/null)
 
 #+end_src
 
@@ -867,23 +866,20 @@ clean:
 
 <<warm.data.stanza>>
 
-${MID}/bookvol5.${LISP}: ${IN}/bookvol5.pamphlet
-	@ echo si125 making ${MID}/bookvol5.${LISP} from ${IN}/bookvol5.pamphlet
+${MID}/bookvol5.${LISP}: ${IN}/bookvol5.org
+	@ echo si125 making ${MID}/bookvol5.${LISP} from ${IN}/bookvol5.org
 	@ (cd ${MID} ; \
-  echo '(tangle "${IN}/bookvol5.pamphlet" "Interpreter" "bookvol5.${LISP}")' \
-	| ${OBJ}/${SYS}/bin/lisp )  1>/dev/null 2>/dev/null
+  ${BOOKS}/srctangle ${IN}/bookvol5.org "Interpreter" > bookvol5.${LISP} )  1>/dev/null 2>/dev/null
 
-${MID}/bookvol9.${LISP}: ${IN}/bookvol9.pamphlet
-	@ echo si128 making ${MID}/bookvol9.${LISP} from ${IN}/bookvol9.pamphlet
+${MID}/bookvol9.${LISP}: ${IN}/bookvol9.org
+	@ echo si128 making ${MID}/bookvol9.${LISP} from ${IN}/bookvol9.org
 	@ (cd ${MID} ; \
-     echo '(tangle "${IN}/bookvol9.pamphlet" "Compiler" "bookvol9.${LISP}")' \
-	| ${OBJ}/${SYS}/bin/lisp ) 1>/dev/null 2>/dev/null
+     ${BOOKS}/srctangle ${IN}/bookvol9.org "Compiler" > bookvol9.${LISP} ) 1>/dev/null 2>/dev/null
 
-${MID}/bookvol10.5.${LISP}: ${IN}/bookvol10.5.pamphlet
-	@ echo si131 making ${MID}/bookvol10.5.${LISP} from ${IN}/bookvol10.5.pamphlet
+${MID}/bookvol10.5.${LISP}: ${IN}/bookvol10.5.org
+	@ echo si131 making ${MID}/bookvol10.5.${LISP} from ${IN}/bookvol10.5.org
 	@ (cd ${MID} ; \
-	echo '(tangle "${IN}/bookvol10.5.pamphlet" "Numerics" "bookvol10.5.${LISP}")'\
-	 | ${LISPTANGLE} ) 1>/dev/null 2>/dev/null
+	${BOOKS}/srctangle ${IN}/bookvol10.5.org "Numerics" > bookvol10.5.${LISP} ) 1>/dev/null 2>/dev/null
 
 ${MID}/http.lisp: ${IN}/http.lisp
 	@ echo si110 making ${MID}/http.lisp from ${IN}/http.lisp
@@ -897,12 +893,11 @@ ${OUT}/%.${LISP}: ${MID}/%.lisp
 	@ echo siOUTfromMID1 making ${OUT}/$*.lisp from ${MID}/$*.lisp
 	@cp ${MID}/$*.lisp ${OUT}/$*.${LISP}
 
-${OUT}/%.lisp: ${IN}/%.lisp.pamphlet
-	@ echo siOUTfromIN making ${OUT}/$*.lisp from ${IN}/$*.lisp.pamphlet
+${OUT}/%.lisp: ${IN}/%.lisp.org
+	@ echo siOUTfromIN making ${OUT}/$*.lisp from ${IN}/$*.lisp.org
 	@ rm -f ${OUT}/$*.${O}
 	@( cd ${OUT} ; \
-	  echo '(tangle "${IN}/$*.lisp.pamphlet" "*" "$*.lisp")' \
-	| ${OBJ}/${SYS}/bin/lisp ) 1>/dev/null 
+	  ${BOOKS}/srctangle ${IN}/$*.lisp.org "*" > $*.lisp ) 1>/dev/null
 
 # The compiled-object extension follows the host (${O}: o on GCL,
 # fasl on SBCL), so the pattern target and both output-file forms use
@@ -924,11 +919,10 @@ ${OUT}/%.${O}: ${MID}/%.lisp
 	      1>/dev/null 2>/dev/null ; \
 	   fi
 
-${MID}/%.lisp: ${IN}/%.lisp.pamphlet
-	@ echo siMIDfromIN making ${MID}/$*.lisp from ${IN}/$*.lisp.pamphlet
+${MID}/%.lisp: ${IN}/%.lisp.org
+	@ echo siMIDfromIN making ${MID}/$*.lisp from ${IN}/$*.lisp.org
 	@ (cd ${MID} ; \
-	  ( echo '(tangle "${IN}/$*.lisp.pamphlet" "*" "$*.lisp")' \
-	  | ${OBJ}/${SYS}/bin/lisp 1>/dev/null ) )
+	  ( ${BOOKS}/srctangle ${IN}/$*.lisp.org "*" > $*.lisp 2>/dev/null ) )
 
 ${AUTO}/%.${O}: ${OUT}/%.${O}
 	@ echo siAUTOfromOUT making ${AUTO}/$*.${O} from ${OUT}/$*.${O}
