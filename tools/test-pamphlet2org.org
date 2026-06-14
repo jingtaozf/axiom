@@ -23,6 +23,35 @@ emacs --batch -l tools/pamphlet2org.org -l tools/test-pamphlet2org.el \
 (require 'pamphlet2org)
 #+END_SRC
 
+** Chunk map (named-chunk pamphlets)
+
+A few pamphlets (=bookvol5/9/10.5=) have no =*= root chunk — the real
+build extracts a named chunk (Interpreter / Compiler / Numerics).
+Derive the map from the directory's =Makefile= instead of hard-coding
+names, so new =(tangle …)= targets are picked up automatically.
+
+#+BEGIN_SRC emacs-lisp
+(defun test-pamphlet2org--chunk-map (dir)
+  "Build a basename->chunk alist from DIR/Makefile.
+Scan for (tangle \"X.pamphlet\" \"Chunk\" ...) forms and keep only the
+ones whose chunk is not the default \"*\"; pamphlets not listed there
+default to \"*\" anyway."
+  (let ((makefile (expand-file-name "Makefile" dir))
+        (map '()))
+    (when (file-readable-p makefile)
+      (with-temp-buffer
+        (insert-file-contents makefile)
+        (goto-char (point-min))
+        (while (re-search-forward
+                "(tangle[ \t]+\"[^\"]*?\\([^\"/]+\\.pamphlet\\)\"[ \t]+\"\\([^\"]+\\)\""
+                nil t)
+          (let ((file (match-string 1))
+                (ch (match-string 2)))
+            (unless (or (string= ch "*") (assoc file map))
+              (push (cons file ch) map))))))
+    (nreverse map)))
+#+END_SRC
+
 ** Test runner
 
 #+BEGIN_SRC emacs-lisp
@@ -36,6 +65,7 @@ Reports pass/fail per file with diff summary."
          (tmp-dir (make-temp-file "pamphlet2org-test-" t))
          (tanglec (expand-file-name "books/tanglec" root))
          (files (directory-files full-dir t "\\.pamphlet$"))
+         (chunk-map (test-pamphlet2org--chunk-map full-dir))
          (pass 0) (fail 0) (skip 0)
          (failures '()))
     ;; Build tanglec if needed
@@ -47,6 +77,7 @@ Reports pass/fail per file with diff summary."
     (message "Testing %d pamphlet files in %s..." (length files) dir)
     (dolist (pamphlet files)
       (let* ((base (file-name-nondirectory pamphlet))
+             (chunk (cdr (assoc base chunk-map)))
              (name (file-name-sans-extension base))
              (ref-file (expand-file-name (concat name ".ref") tmp-dir))
              (org-file (expand-file-name (concat name ".org") tmp-dir))
@@ -54,14 +85,15 @@ Reports pass/fail per file with diff summary."
         (condition-case err
             (progn
               ;; Step 1: Tangle pamphlet with tanglec
-              (shell-command (format "%s %s > %s"
+              (shell-command (format "%s %s %s > %s"
                                      (shell-quote-argument tanglec)
                                      (shell-quote-argument pamphlet)
+                                     (if chunk (shell-quote-argument chunk) "")
                                      (shell-quote-argument ref-file)))
               ;; Step 2: Convert pamphlet to org
               (pamphlet2org-convert-file pamphlet org-file)
               ;; Step 3: Tangle org
-              (let ((tangled (pamphlet2org--tangle org-file)))
+              (let ((tangled (pamphlet2org--tangle org-file chunk)))
                 (with-temp-file test-file (insert tangled)))
               ;; Step 4: Compare
               (let ((diff-result (shell-command-to-string
