@@ -202,12 +202,18 @@ jobs:
       - name: Install test dependencies
         run: |
           set -x
-          # No C is compiled here (we restore the built tree), so no SDK/X11 --
-          # just the Lisp host + GNU tools the harness uses (gtimeout, gawk, ...).
+          # The only C compiled here is untanglec (a tiny self-contained tool)
+          # that regenerates the .pamphlet sources the regression scans, so point
+          # CPATH at the SDK like the build job does.  Plus the Lisp host + GNU
+          # tools the harness uses (gtimeout, gawk, ...).
           brew install sbcl gawk gnu-sed grep coreutils || true
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
           echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
           echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
+          {
+            echo "SDKROOT=$(xcrun --show-sdk-path)"
+            echo "CPATH=$(xcrun --show-sdk-path)/usr/include"
+          } >> "$GITHUB_ENV"
 
       - name: Restore build artifacts
         uses: actions/cache/restore@v4
@@ -227,6 +233,13 @@ jobs:
           test -x obj/MACOSX/bin/interpsys
           test -x obj/MACOSX/bin/lisp
           test -x mnt/MACOSX/bin/AXIOMsys
+
+      - name: Regenerate pamphlets from org
+        # run-regression.sh scans src/input/Makefile.pamphlet, the per-test
+        # *.input.pamphlet, and books/bookvol10.pamphlet -- all migrated to .org.
+        # The build tree is restored from cache, so this only re-materialises the
+        # .pamphlet sources the suite reads directly.
+        run: make regen-pamphlets CC=/usr/bin/clang
 
       - name: Run regression shard ${{ matrix.shard }}/5
         run: |
