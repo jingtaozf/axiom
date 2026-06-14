@@ -727,7 +727,7 @@ can be restored.
 ; 17.2 Accessing
 
 (defun string2id-n (cvec sint)
-  (if (< sint 1)
+  (if (or (< sint 1) (not (stringp cvec)))
       nil
       (let ((start (position-if-not #'(lambda (x) (char= x #\Space)) cvec)))
         (if start
