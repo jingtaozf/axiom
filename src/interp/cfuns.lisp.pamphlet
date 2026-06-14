@@ -169,8 +169,13 @@ SBCL's truename/directory use *default-pathname-defaults*, not the
 OS CWD, so we must update both."
   (require 'sb-posix)
   (funcall (symbol-function (intern "CHDIR" "SB-POSIX")) dir)
+  ;; Read the new CWD back from the kernel rather than (truename dir): a
+  ;; relative DIR would otherwise be resolved against the not-yet-updated
+  ;; *default-pathname-defaults*, desynchronising the two.
   (setq *default-pathname-defaults*
-        (pathname (concatenate 'string (namestring (truename dir)) "/"))))
+        (pathname (concatenate 'string
+                    (funcall (symbol-function (intern "GETCWD" "SB-POSIX")))
+                    "/"))))
 
 ;;stolen from AXIOM-XL src/strops.c
 #+(AND KCL (NOT ELF))

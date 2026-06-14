@@ -108,9 +108,12 @@ RESULTS="$WORKROOT/results.txt"; : > "$RESULTS"; export RESULTS
 # appends do not interleave.
 xargs -P "$NW" -I{} bash -c '
   t="$1"
-  d="$WORKROOT/run/$t"; mkdir -p "$d" || exit 0
+  d="$WORKROOT/run/$t"
+  # A setup failure must still emit a result line, else the test vanishes from
+  # the tally (pass+fail < total) and a never-run test cannot fail the gate.
+  mkdir -p "$d" || { echo "$t FAIL mkdir" >> "$RESULTS"; exit 0; }
   pf="$SPD/src/input/$t.input.pamphlet"
-  cd "$d" || exit 0
+  cd "$d" || { echo "$t FAIL chdir" >> "$RESULTS"; exit 0; }
   echo "(tangle \"$pf\" \"*\" \"$t.input\")" | "$LISP" >/dev/null 2>&1 || true
   rm -f "$t.output"
   echo ")read $t.input" | timeout -k 10 "$PER_TEST_TIMEOUT" "$TESTSYS" >/dev/null 2>&1 || true
@@ -125,8 +128,16 @@ xargs -P "$NW" -I{} bash -c '
 
 PASS=$(grep -c ' PASS' "$RESULTS")
 FAIL=$(grep -cE ' FAIL| NOOUT' "$RESULTS")
+LINES=$(wc -l < "$RESULTS" | tr -d ' ')
 echo "================ regression summary ================"
-echo "pass=$PASS  fail=$FAIL  total=$TOTAL"
+echo "pass=$PASS  fail=$FAIL  total=$TOTAL  results=$LINES"
+# Reconcile: every test must have produced exactly one result line.  A missing
+# line means a test silently vanished (crashed the harness before writing) --
+# fail rather than report green on partial coverage.
+if [ "$LINES" -ne "$TOTAL" ]; then
+  echo "FATAL: $LINES result lines for $TOTAL tests -- $((TOTAL-LINES)) vanished; refusing to pass." >&2
+  exit 2
+fi
 if [ "$FAIL" -gt 0 ]; then
   echo "---- failures ----"
   grep -E ' FAIL| NOOUT' "$RESULTS" | sort

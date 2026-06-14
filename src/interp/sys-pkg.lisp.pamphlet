@@ -102,9 +102,11 @@ fasl.
   (let ((sym (intern "SYSTEM" "SYSTEM")))
     (setf (symbol-function sym)
           (lambda (command)
-            (sb-ext:run-program "/bin/sh" (list "-c" command)
-                                :output t :error t :search nil)
-            nil))
+            ;; Return the shell exit status, as GCL's system:system did, so a
+            ;; caller branching on success sees the real code (not always nil).
+            (sb-ext:process-exit-code
+             (sb-ext:run-program "/bin/sh" (list "-c" command)
+                                 :output t :error t :search nil))))
     (export sym "SYSTEM"))
   (setf sb-impl::*load-source-default-type* "lsp")
   ;; Axiom's arithmetic lets IEEE infinities and NaNs flow through

@@ -249,7 +249,7 @@ Returns the org text as a string."
               (setq in-verbatim nil))
              ;; a chunk start must never be swallowed by an unclosed
              ;; verbatim — close the block and re-read the line as a chunk
-             ((string-match-p "^\\\\begin{chunk}{" trimmed)
+             ((string-match-p "^\\\\begin{chunk}{" line)
               (push (concat pamphlet2org--src-prefix "END_EXAMPLE") result)
               (setq in-verbatim nil)
               (forward-line -1))
@@ -258,10 +258,12 @@ Returns the org text as a string."
             (push (concat pamphlet2org--src-prefix "BEGIN_EXAMPLE") result)
             (setq in-verbatim t))
 
-           ;; ---- Chunk start ----
+           ;; ---- Chunk start (column 0, mirroring tanglec's foundchunk which
+           ;;      tests buffer[i] at line start -- an indented \begin{chunk} is
+           ;;      plain text to tanglec, so it must be here too) ----
            ((and (not in-chunk)
-                 (string-match "^\\\\begin{chunk}{\\([^}]*\\)}" trimmed))
-            (setq chunk-name (match-string 1 trimmed))
+                 (string-match "^\\\\begin{chunk}{\\([^}]*\\)}" line))
+            (setq chunk-name (match-string 1 line))
             (let ((lang (pamphlet2org--detect-lang chunk-name filename)))
               (push "" result)
               (push (format "%sNAME: %s" pamphlet2org--src-prefix chunk-name) result)
@@ -269,10 +271,10 @@ Returns the org text as a string."
             (setq in-chunk t)
             (setq chunk-lines '()))
 
-           ;; ---- Chunk end (prefix match, mirroring tanglec's foundEnd:
-           ;;      a malformed "\end{chunk}p" or "\end{chunk}{*}" still ends
-           ;;      the chunk; the trailing junk is ignored) ----
-           ((and in-chunk (string-prefix-p "\\end{chunk}" trimmed))
+           ;; ---- Chunk end (column 0, mirroring tanglec's foundEnd which tests
+           ;;      buffer[i]=='\\' at line start; trailing junk after the marker
+           ;;      is ignored, but a leading-indented \end{chunk} is body text) ----
+           ((and in-chunk (string-prefix-p "\\end{chunk}" line))
             (dolist (cl (nreverse chunk-lines))
               (push cl result))
             (push (concat pamphlet2org--src-prefix "END_SRC") result)

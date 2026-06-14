@@ -294,7 +294,7 @@
             |sourceIndex| |uniqueSig|)
     (RETURN
       (SEQ (PROGN
-             (setq |newVec| (make-array (SIZE |vec|)))
+             (setq |newVec| (make-array (SIZE |vec|) :initial-element nil))
              (DO ((G166343 (MAXINDEX |vec|))
                   (|index| 0 (QSADD1 |index|)))
                  ((QSGREATERP |index| G166343) NIL)
@@ -561,7 +561,7 @@
              (setq |$predHash| (MAKE-HASHTABLE 'UEQUAL))
              (setq |$consDB| (MAKE-HASHTABLE 'UEQUAL))
              (setq |$predVectorFrontier| 1)
-             (setq |$predVector| (make-array 100))
+             (setq |$predVector| (make-array 100 :initial-element nil))
              (DO ((G166538 (|allConstructors|) (CDR G166538))
                   (|nam| NIL))
                  ((OR (ATOM G166538)
@@ -637,7 +637,7 @@
   (PROG (|vec|)
     (RETURN
       (SEQ (PROGN
-             (setq |vec| (make-array (QUOTIENT (TIMES 7 |n|) 5)))
+             (setq |vec| (make-array (QUOTIENT (TIMES 7 |n|) 5) :initial-element nil))
              (DO ((|i| 0 (QSADD1 |i|)) (G166599 |u| (CDR G166599))
                   (|x| NIL))
                  ((OR (ATOM G166599)

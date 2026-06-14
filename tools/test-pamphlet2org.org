@@ -94,7 +94,11 @@ Reports pass/fail per file with diff summary."
               (pamphlet2org-convert-file pamphlet org-file)
               ;; Step 3: Tangle org
               (let ((tangled (pamphlet2org--tangle org-file chunk)))
-                (with-temp-file test-file (insert tangled)))
+                ;; tangled holds raw eight-bit bytes from the binary-read
+                ;; pamphlet; write them verbatim, else a non-UTF-8 byte makes
+                ;; batch Emacs block on a "Select coding system" prompt.
+                (let ((coding-system-for-write 'binary))
+                  (with-temp-file test-file (insert tangled))))
               ;; Step 4: Compare
               (let ((diff-result (shell-command-to-string
                                   (format "diff %s %s"
@@ -145,8 +149,10 @@ Reports pass/fail per file with diff summary."
                            (shell-quote-argument pamphlet-file)
                            (shell-quote-argument ref-file)))
     (pamphlet2org-convert-file pamphlet-file org-file)
-    (with-temp-file test-file
-      (insert (pamphlet2org--tangle org-file)))
+    ;; binary write: raw eight-bit bytes must not trigger a batch coding prompt.
+    (let ((coding-system-for-write 'binary))
+      (with-temp-file test-file
+        (insert (pamphlet2org--tangle org-file))))
     (setq result (= 0 (shell-command
                         (format "diff %s %s"
                                 (shell-quote-argument ref-file)
