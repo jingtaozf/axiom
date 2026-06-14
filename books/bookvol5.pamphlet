@@ -49187,7 +49187,7 @@ filetype and filemode. We also UPCASE everything.
 \calls{pathnameName}{pathname}
 \begin{chunk}{defun pathnameName}
 (defun |pathnameName| (arg)
- (pathname-name (|pathname| arg)))
+ (let ((p (|pathname| arg))) (and p (pathname-name p))))
 
 \end{chunk}
 
@@ -49195,7 +49195,7 @@ filetype and filemode. We also UPCASE everything.
 \calls{pathnameType}{pathname}
 \begin{chunk}{defun pathnameType}
 (defun |pathnameType| (arg)
- (pathname-type (|pathname| arg))) 
+ (let ((p (|pathname| arg))) (and p (pathname-type p)))) 
 
 \end{chunk}
 
@@ -49230,7 +49230,8 @@ filetype and filemode. We also UPCASE everything.
 \calls{pathnameDirectory}{pathname}
 \begin{chunk}{defun pathnameDirectory}
 (defun |pathnameDirectory| (arg)
- (namestring (make-pathname :directory (pathname-directory (|pathname| arg)))))
+ (let ((p (|pathname| arg)))
+  (if p (namestring (make-pathname :directory (pathname-directory p))) "")))
 
 \end{chunk}
 
