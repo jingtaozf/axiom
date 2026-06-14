@@ -87,6 +87,13 @@ fasl.
     (make-package "SYSTEM" :use nil :nicknames '("SI")))
   (unless (find-package "COMPILER")
     (make-package "COMPILER" :use nil))
+  ;; GCL's compiler package exports *compile-verbose*; Axiom test scripts
+  ;; read compiler::*compile-verbose*.  The placeholder COMPILER package is
+  ;; empty, so the symbol is unbound on SBCL (UNBOUND-VARIABLE).  Give it a
+  ;; bound nil mirroring cl:*compile-verbose*'s default.
+  (let ((cv (intern "*COMPILE-VERBOSE*" "COMPILER")))
+    (proclaim (list 'special cv))
+    (unless (boundp cv) (setf (symbol-value cv) nil)))
   ;; GCL's SYSTEM package exports a system function that runs a shell
   ;; command; OBEY calls it and so does the SPAD compiler (e.g. to rm a
   ;; stale .erlib). VMLISP use-packages SYSTEM, so it must be defined and
