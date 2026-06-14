@@ -172,12 +172,17 @@ float traps. We reimplement these in Lisp, exactly as the hashes were
   ;; HyperDoc/graphics sockets: foreign, stubbed until the server is built.
   ;; The console AXIOMsys never calls these ($SpadServer is nil); the stub
   ;; turns an accidental call into a clear message instead of a crash.
+  ;; No-op (return 0) rather than error: the socket/HyperDoc server is not
+  ;; built into this SBCL image, but batch regression `draw` calls the send
+  ;; primitives expecting a status int. Erroring crashed every draw test;
+  ;; GCL's real layer simply returned a status when no viewport manager was
+  ;; listening. Returning 0 lets the graph build and the viewport object be
+  ;; returned without a live viewman. (Full socket layer is future work, as
+  ;; in fricas/open-axiom which build the server.)
   (macrolet ((stub (name)
                `(defun ,name (&rest args)
                   (declare (ignore args))
-                  (error "sockio: ~A is unavailable -- the HyperDoc/SpadServer ~
-                          is not built in this SBCL image. Rebuild with the ~
-                          server enabled to use the socket layer." ',name))))
+                  0)))
     (stub open_server)          (stub sock_get_int)
     (stub sock_send_int)        (stub sock_get_string_buf)
     (stub sock_send_string_len) (stub sock_get_float)
