@@ -159,13 +159,15 @@ all: srctangle-tools rootdirs axiom.sty tanglec libspad lspdir
 	     cd ${MNT}/${SYS}/doc/src/input ; \
 	     cp ${BOOKS}/axiom.sty . ; \
 	     cp ${SRC}/input/*.eps . ; \
-	     for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
+	     for i in `ls ${SRC}/input/*.input.org` ; do \
+	      p=`basename $$i .org`.pamphlet ; \
+	      ${BOOKS}/untanglec $$i > $$p ; \
 	      if [ .${NOISE} = . ] ; \
 	      then \
-	       latex $$i ; \
+	       latex $$p ; \
 	      else \
-	       ( echo p4a making $$i ; \
-		 latex $$i >${TMP}/trace ) ; \
+	       ( echo p4a making $$p ; \
+		 latex $$p >${TMP}/trace ) ; \
 	      fi ; \
 	     done ; \
 	     rm -f *~ ; \
@@ -238,7 +240,7 @@ lspclean:
 libspad: 
 	@ echo 11a making libspad
 	@ ( cd ${OBJ}/${SYS}/lib ; \
-	    ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
+	    ${BOOKS}/srctangle ${BOOKS}/bookvol8.org Makefile >Makefile ; \
 	    ${ENV} ${MAKE} libspad.a )
 
 axiom.sty:
@@ -284,8 +286,10 @@ input:
 	@ if [ "${BUILD}" = "full" ] ; then \
 	  ( cd ${MNT}/${SYS}/doc/src/input ; \
 	    cp ${BOOKS}/axiom.sty . ; \
-	    for i in `ls ${SRC}/input/*.input.pamphlet` ; \
-	      do latex $$i ; \
+	    for i in `ls ${SRC}/input/*.input.org` ; \
+	      do p=`basename $$i .org`.pamphlet ; \
+	         ${BOOKS}/untanglec $$i > $$p ; \
+	         latex $$p ; \
 	      done ; \
 	     rm -f *~ ; \
 	     rm -f *.pamphlet~ ; \
@@ -296,7 +300,7 @@ input:
 
 book:
 	@ echo 79 building the book as ${MNT}/${SYS}/doc/book.dvi 
-	@ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
+	@ ${BOOKS}/untanglec ${SRC}/doc/book.org > ${MNT}/${SYS}/doc/book.pamphlet
 	@ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
 	@ (cd ${MNT}/${SYS}/doc ; \
 	  if [ .${NOISE} = . ] ; then \
@@ -366,7 +370,7 @@ install:
 document: 
 	@ echo 4 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 5 Environment ${ENV}
-	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
+	@ ${BOOKS}/srctangle Makefile.org "Makefile.${SYS}" >Makefile.${SYS}
 	@ ${ENV} $(MAKE) -f Makefile.${SYS} document
 	@echo 6 finished system build on `date` | tee >lastBuildDate
 

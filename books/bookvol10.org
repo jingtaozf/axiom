@@ -17645,10 +17645,10 @@ ${MID}/%.o: ${MID}/%.lsp
 #+NAME: genericSPADfiles
 #+begin_src common-lisp :noweb yes
 
-${OUTSRC}/%.spad: ${IN}/%.pamphlet
-	@ echo sa09tangling $*.pamphlet to $*.spad
+${OUTSRC}/%.spad: ${IN}/%.org
+	@ echo sa09tangling $*.org to $*.spad
 	@(cd ${OUTSRC} ; \
-	 ${TANGLE} ${IN}/$*.pamphlet >$*.spad )
+	 ${BOOKS}/srctangle ${IN}/$*.org >$*.spad )
 
 #+end_src
 #+NAME: genericDOCfiles

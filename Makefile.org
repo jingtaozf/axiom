@@ -88,7 +88,7 @@ directory so we have to expand the serial forms inline. Cheesy.
 
 #+NAME: parallel
 #+begin_src common-lisp :noweb yes
-all: rootdirs axiom.sty tanglec libspad lspdir
+all: srctangle-tools rootdirs axiom.sty tanglec libspad lspdir
 	@ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 2 Environment ${ENV}
 	@ ${BOOKS}/srctangle Makefile.org "Makefile.${SYS}" >Makefile.${SYS}
@@ -635,6 +635,22 @@ book:
 tanglec: books/tanglec.c
 	@echo t01 making tanglec from books/tanglec.c
 	@( cd books ; gcc -o tanglec tanglec.c )
+
+# The literate sources are .org; three small C tools tangle from them.
+# orgtangle X.org [chunk] -> source directly (the default build path);
+# untanglec X.org -> the exact .pamphlet bytes (PDF / via mode); srctangle is
+# the dispatcher every rule calls (orgtangle by default, untanglec+tanglec when
+# AXIOM_TANGLE_VIA_PAMPHLET=1).  Kept in sync with the committed root Makefile.
+untanglec: books/untanglec.c
+	@echo t02 making untanglec from books/untanglec.c
+	@( cd books ; ${CC} -o untanglec untanglec.c )
+
+orgtangle: books/orgtangle.c
+	@echo t04 making orgtangle from books/orgtangle.c
+	@( cd books ; ${CC} -o orgtangle orgtangle.c )
+
+srctangle-tools: tanglec untanglec orgtangle
+	@chmod +x ${BOOKS}/srctangle
 
 #+end_src
 
