@@ -37,23 +37,18 @@ jobs:
           brew update >/dev/null || true
           # sbcl: the Lisp host. gawk: Makefile uses gawk. gnu-sed/grep: a few
           # recipes assume GNU behaviour. coreutils: gtimeout for the runner.
-          # libx11/libxpm/...: headless X11 client headers+libs so libspad's
-          # graphics C compiles/links without XQuartz (the graphics binaries are
-          # built but unused; the regression tests exclude them).
-          brew install sbcl gawk gnu-sed grep coreutils \
-                       libx11 libxpm libxt libxext libxau libxdmcp || true
+          brew install sbcl gawk gnu-sed grep coreutils || true
           sbcl --version
-          # Expose GNU coreutils `timeout` as `timeout` for the runner.
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
           echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
           echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
-          # Headers/libs for clang: SDK sysroot (macos runners have no
-          # /usr/include) plus Homebrew's X11.  The Makefile's hard-coded
-          # -I/usr/X11/include / -L/usr/X11/lib are harmless no-ops here.
+          # macos-14 has no /usr/include and clang's default sysroot is /, so
+          # the few C bits (tanglec) cannot find <stdio.h> etc.  Point CPATH at
+          # the SDK so relative includes resolve.  We build only interp+algebra
+          # (see below), which compiles no X11/graphics C, so no X11 is needed.
           {
             echo "SDKROOT=$(xcrun --show-sdk-path)"
-            echo "CPATH=$(brew --prefix)/include"
-            echo "LIBRARY_PATH=$(brew --prefix)/lib"
+            echo "CPATH=$(xcrun --show-sdk-path)/usr/include"
           } >> "$GITHUB_ENV"
 
       - name: Cache build artifacts (obj/int/mnt/lsp)
@@ -69,14 +64,25 @@ jobs:
           restore-keys: |
             axiom-sbcl-${{ runner.arch }}-
 
-      - name: Build axiom (SBCL)
+      - name: Build axiom (SBCL, interp + algebra only)
         id: build
         run: |
           set -x
           export AXIOM="$PWD/mnt/MACOSX"
           export PATH="$AXIOM/bin:$PATH"
-          # CC=/usr/bin/clang: Homebrew clang cannot link Mach-O here.
-          time make LISPFLAVOR=sbcl CC=/usr/bin/clang 2>&1 | tee /tmp/build.log | tail -n 4000
+          # The regression tests need only interpsys + the algebra; they exclude
+          # graphics/hyperdoc.  Build just those SRCDIRS and skip libspad -- its
+          # C library bundles graphics C (xdither's <malloc.h>, X11) that cannot
+          # build on macOS and that the SBCL interpreter does not link.
+          SUB="interpdir sharedir algebradir"
+          # prereqs of `all` minus libspad: dir tree, axiom.sty, the C tangler,
+          # and the lsp/ sbcl `lisp` wrapper.
+          make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
+            2>&1 | tee /tmp/build.log | tail -n 200
+          # the `all` recipe normally generates this then runs the cascade.
+          books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
+          time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang SRCDIRS="$SUB" \
+            2>&1 | tee -a /tmp/build.log | tail -n 4000
           test -x obj/MACOSX/bin/interpsys
           test -x mnt/MACOSX/bin/AXIOMsys
 
