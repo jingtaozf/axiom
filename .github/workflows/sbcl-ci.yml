@@ -1,10 +1,19 @@
 name: axiom SBCL build + regression
 
 # Builds Axiom from source under SBCL on Apple Silicon (the only LISPFLAVOR=sbcl
-# path is Makefile.MACOSX) and runs the src/input regression suite, excluding
-# six non-portable tests (see ci/run-regression.sh).  The full algebra build is
-# long; obj/int/mnt/lsp are cached on the source-pamphlet hash so reruns that
-# do not touch sources skip most of the work.
+# path is Makefile.MACOSX), then runs the src/input regression suite (excluding
+# six non-portable tests, see ci/run-regression.sh) SHARDED across 5 parallel
+# macOS jobs.
+#
+# Why this shape:
+#  - The suite is dominated by ~106 rich*/richder* (Risch integration) tests at
+#    60-120s each; on one 3-core runner that is ~22 min even with a dynamic
+#    queue.  GitHub caps FREE macOS concurrency at 5 jobs, so we split the suite
+#    into 5 timing-balanced shards that run at once -> ~5 min wall-clock.
+#  - The algebra build is long but cached on a source hash; the build runs once
+#    in `build`, and the 5 `test` shards restore that cache instead of rebuilding.
+#  - An exact cache-key hit means nothing affecting the build or the regression
+#    outcome changed, so the whole `test` matrix is skipped.
 
 on:
   push:
@@ -14,15 +23,18 @@ on:
       - 'changelog'
   workflow_dispatch:
 
-# Never let two builds of the same ref race on the cache.
+# Never let two builds of the same ref race on the cache / burn the 5-job cap.
 concurrency:
   group: sbcl-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-and-test:
+  build:
     runs-on: macos-14
-    timeout-minutes: 350
+    timeout-minutes: 120
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+      cache-key: ${{ steps.key.outputs.value }}
     env:
       LISPFLAVOR: sbcl
     steps:
@@ -51,6 +63,14 @@ jobs:
             echo "CPATH=$(xcrun --show-sdk-path)/usr/include"
           } >> "$GITHUB_ENV"
 
+      - name: Compute cache key
+        id: key
+        # Single source of truth for the key so the `test` shards restore exactly
+        # what `build` saved.  ci/run-regression.sh is in the hash so editing the
+        # harness misses the key and re-runs the suite.
+        run: |
+          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet', 'ci/run-regression.sh') }}" >> "$GITHUB_OUTPUT"
+
       - name: Cache build artifacts (obj/int/mnt/lsp)
         id: cache
         uses: actions/cache@v4
@@ -60,13 +80,9 @@ jobs:
             int
             mnt
             lsp/Makefile
-          # Exact-key hit (cache-hit==true) means nothing that affects the build
-          # OR the regression outcome changed -> we skip the 33-min suite below.
-          # ci/run-regression.sh is in the key so editing the harness re-runs it;
-          # a key miss still restore-key-matches the prior cache, so the build
-          # stays incremental (fast) -- it is the regression step, not the build,
-          # that the gate saves.
-          key: axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet', 'ci/run-regression.sh') }}
+          key: ${{ steps.key.outputs.value }}
+          # A key miss still restore-key-matches the prior cache, so the build
+          # stays incremental (fast); only a from-scratch runner pays the full cost.
           restore-keys: |
             axiom-sbcl-${{ runner.arch }}-
 
@@ -107,15 +123,6 @@ jobs:
             | mnt/MACOSX/bin/AXIOMsys 2>&1 | tee /tmp/smoke.log
           grep -q 'Type: PositiveInteger' /tmp/smoke.log
 
-      - name: Run regression suite (excluding 6 non-portable)
-        # Skip when the exact cache key hit: identical build + harness => identical
-        # result, already proven by the run that populated the cache.  Any source,
-        # Makefile, pamphlet or harness change misses the key and re-runs this.
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: |
-          chmod +x ci/run-regression.sh
-          ./ci/run-regression.sh
-
       - name: Upload build log on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -124,4 +131,69 @@ jobs:
           path: |
             /tmp/build.log
             /tmp/smoke.log
+          if-no-files-found: ignore
+
+  test:
+    needs: build
+    # Skip the whole matrix when the exact cache key hit: identical build + harness
+    # => identical result, already proven by the run that populated the cache.
+    if: needs.build.outputs.cache-hit != 'true'
+    runs-on: macos-14
+    timeout-minutes: 60
+    strategy:
+      # One shard's failure must not cancel the others -- we want every shard's
+      # result, and a real port bug may surface in only one.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+    env:
+      LISPFLAVOR: sbcl
+      SHARD_INDEX: ${{ matrix.shard }}
+      SHARD_TOTAL: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Install test dependencies
+        run: |
+          set -x
+          # No C is compiled here (we restore the built tree), so no SDK/X11 --
+          # just the Lisp host + GNU tools the harness uses (gtimeout, gawk, ...).
+          brew install sbcl gawk gnu-sed grep coreutils || true
+          echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
+          echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
+          echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
+
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          # Restore exactly what `build` saved; fail loudly rather than test a
+          # stale/mismatched build via a restore-key fallback.
+          key: ${{ needs.build.outputs.cache-key }}
+          fail-on-cache-miss: true
+
+      - name: Verify restored build
+        run: |
+          test -x obj/MACOSX/bin/interpsys
+          test -x obj/MACOSX/bin/lisp
+          test -x mnt/MACOSX/bin/AXIOMsys
+
+      - name: Run regression shard ${{ matrix.shard }}/5
+        run: |
+          chmod +x ci/run-regression.sh
+          ./ci/run-regression.sh
+
+      - name: Upload shard log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-shard-${{ matrix.shard }}
+          path: /tmp/axci/results.txt
           if-no-files-found: ignore

@@ -72,7 +72,20 @@ sort -u "$HEAVY" -o "$HEAVY"
 cat "$HEAVY" > "$NAMES"
 grep -vxF -f "$HEAVY" "$ALL" >> "$NAMES" 2>/dev/null || cat "$ALL" >> "$NAMES"
 
-echo "running $TOTAL regression tests ($NW parallel, dynamic queue; excluding: $EXCLUDE)"
+# Shard selection (for the CI matrix): keep every SHARD_TOTAL-th test, offset by
+# this shard.  Because NAMES is heavy-first, round-robin over it spreads the
+# contiguous Risch block evenly -- each shard gets ~1/SHARD_TOTAL of the dominant
+# heavy load AND of the fast bulk, no per-test timing file needed.  Default
+# SHARD_TOTAL=1 runs the whole suite (local/serial use).
+SHARD_INDEX="${SHARD_INDEX:-1}"
+SHARD_TOTAL="${SHARD_TOTAL:-1}"
+if [ "$SHARD_TOTAL" -gt 1 ]; then
+  awk -v k="$((SHARD_INDEX-1))" -v n="$SHARD_TOTAL" '(NR-1) % n == k' "$NAMES" > "$NAMES.shard"
+  mv "$NAMES.shard" "$NAMES"
+fi
+TOTAL=$(wc -l < "$NAMES" | tr -d ' ')
+
+echo "running $TOTAL regression tests (shard $SHARD_INDEX/$SHARD_TOTAL, $NW parallel, dynamic queue; excluding: $EXCLUDE)"
 
 RESULTS="$WORKROOT/results.txt"; : > "$RESULTS"; export RESULTS
 
