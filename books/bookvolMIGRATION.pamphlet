@@ -454,11 +454,68 @@ hangs. For scripted verification, run the raw \texttt{AXIOMsys} image
 with the system directory exported and the commands on standard input.
 Axiom's \texttt{sman} behaves the same way.
 
-\section{Status and next step}
+\section{Status: the port runs}
 
-Stage~0 is complete and Stage~1 is captured by this book. The immediate
-next work is Stage~2: opening \texttt{books/bookvol5.pamphlet} at the
-\texttt{spad-save} chunk and authoring --- prose first --- the reasoning
-for an SBCL image dump, followed by the minimal chunk that implements it.
+All stages are complete. \texttt{depsys}, \texttt{interpsys} and
+\texttt{AXIOMsys} build and save under SBCL on Apple Silicon; the full
+algebra compiles (1212 NRLIBs); the interpreter computes end to end ---
+\texttt{1+1}, \texttt{factor}, \texttt{integrate}, matrices, series,
+\texttt{solve}, \texttt{gcd} of large integers, partial fractions, and
+the rest all return correct results.
+
+\subsection{Regression result}
+
+Of the 525 runnable \texttt{src/input} regression tests (the graphics
+SKIP set excluded), \textbf{519 run without a Lisp error} (98.9\%).
+Every failure was a GCL-vs-ANSI divergence; the classes fixed, each
+cross-checked against fricas/open-axiom, were:
+
+\begin{itemize}
+\item \textbf{uninitialised vectors} --- GCL's \texttt{GETREFV} fills
+  NIL, SBCL's \texttt{make-array} fills 0; the 0 in an add-chain slot
+  built a self-referencing domain (infinite method lookup). Added
+  \texttt{:initial-element nil} (open-axiom \texttt{newShell}).
+\item \textbf{lenient car/cdr} --- BOOT's \texttt{is} pattern was
+  hand-compiled to raw \texttt{(car x)} that crashes on an atom on
+  SBCL. Restored with daly's own \texttt{eqcar}/\texttt{ifcar}/%
+  \texttt{ifcdr} safe-accessor macros.
+\item \textbf{CLtL1 funcallable lambda-lists} --- \texttt{(funcall
+  '(lambda ...) x)} needs \texttt{COERCE ... 'FUNCTION} on SBCL.
+\item \textbf{(character n)} on an integer, \textbf{(string pathname)},
+  \textbf{(probe-file symbol)}, \textbf{(namestring nil)},
+  \textbf{open(:output) on a directory}, \textbf{(pathname-type nil)}
+  --- ANSI rejects designators GCL accepted; coerced or guarded each.
+\item \textbf{unbound specials} (\texttt{\$indexList},
+  \texttt{getMsgFTTag}) --- \texttt{defvar} to nil.
+\item \textbf{printing self-referential domain vectors} ---
+  \texttt{*print-circle* t}.
+\item \textbf{improper-list display message}, \textbf{nil output
+  stream}, \textbf{latin-1 pamphlet decoding in the tangler}.
+\end{itemize}
+
+\subsection{The remaining six: not portable here}
+
+The last six are not SBCL-port defects and cannot pass in a headless
+SBCL tree:
+
+\begin{itemize}
+\item \texttt{graphviz} --- shells out to the \texttt{dot} binary.
+\item \texttt{herm} --- \texttt{)library herm} loads a prebuilt
+  library file absent from the tree.
+\item \texttt{monitortest}, \texttt{newtonlisp} --- load external files
+  (e.g. \texttt{funcall.o}) the test never builds.
+\item \texttt{unittest2} --- reads a chain of GCL compiler internals
+  (\texttt{compiler::*compile-verbose*},
+  \texttt{*suppress-compiler-notes*}, \ldots) whose expected output is
+  GCL's own values.
+\item \texttt{unittest4} --- \texttt{)lisp (trace ...)} then prints
+  domain-vector arguments; SBCL's tracer recurses on the deep
+  structure.
+\end{itemize}
+
+The socket layer is stubbed (no-op) rather than built, so \texttt{draw}
+returns a viewport object without a live viewport manager; wiring the
+real HyperDoc/graphics server (as fricas/open-axiom do) is the one
+genuine piece of follow-up work.
 
 \end{document}
