@@ -52,6 +52,7 @@ jobs:
           } >> "$GITHUB_ENV"
 
       - name: Cache build artifacts (obj/int/mnt/lsp)
+        id: cache
         uses: actions/cache@v4
         with:
           path: |
@@ -59,8 +60,13 @@ jobs:
             int
             mnt
             lsp/Makefile
-          # Re-build only when an interp/algebra/books source or the Makefiles change.
-          key: axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}
+          # Exact-key hit (cache-hit==true) means nothing that affects the build
+          # OR the regression outcome changed -> we skip the 33-min suite below.
+          # ci/run-regression.sh is in the key so editing the harness re-runs it;
+          # a key miss still restore-key-matches the prior cache, so the build
+          # stays incremental (fast) -- it is the regression step, not the build,
+          # that the gate saves.
+          key: axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet', 'ci/run-regression.sh') }}
           restore-keys: |
             axiom-sbcl-${{ runner.arch }}-
 
@@ -102,6 +108,10 @@ jobs:
           grep -q 'Type: PositiveInteger' /tmp/smoke.log
 
       - name: Run regression suite (excluding 6 non-portable)
+        # Skip when the exact cache key hit: identical build + harness => identical
+        # result, already proven by the run that populated the cache.  Any source,
+        # Makefile, pamphlet or harness change misses the key and re-runs this.
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           chmod +x ci/run-regression.sh
           ./ci/run-regression.sh
