@@ -17747,8 +17747,8 @@ Step 2 is an awk command line.
 #+NAME: findSpadFiles
 #+begin_src common-lisp :noweb yes
 
-grep -E 'begin{chunk}{category\ .*}' ${BOOKS}/bookvol10.2.org | sort | uniq | awk -F: '{
-  chunk=substr($1,15,length($1)-15);
+grep -E '^#\+NAME: category ' ${BOOKS}/bookvol10.2.org | sort | uniq | awk '{
+  chunk=substr($0,9);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.2.org";
@@ -17756,8 +17756,8 @@ grep -E 'begin{chunk}{category\ .*}' ${BOOKS}/bookvol10.2.org | sort | uniq | aw
   print "";
 }'
 
-grep -E 'begin{chunk}{domain\ .*}' ${BOOKS}/bookvol10.3.org | sort | uniq | awk -F: '{
-  chunk=substr($1,15,length($1)-15);
+grep -E '^#\+NAME: domain ' ${BOOKS}/bookvol10.3.org | sort | uniq | awk '{
+  chunk=substr($0,9);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.3.org";
@@ -17765,8 +17765,8 @@ grep -E 'begin{chunk}{domain\ .*}' ${BOOKS}/bookvol10.3.org | sort | uniq | awk 
   print "";
 }'
 
-grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.4.org | sort | uniq | awk -F: '{
-  chunk=substr($1,15,length($1)-15);
+grep -E '^#\+NAME: package ' ${BOOKS}/bookvol10.4.org | sort | uniq | awk '{
+  chunk=substr($0,9);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.4.org";
@@ -17774,8 +17774,8 @@ grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.4.org | sort | uniq | awk
   print "";
 }'
 
-grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.5.org | sort | uniq | awk -F: '{
-  chunk=substr($1,15,length($1)-15);
+grep -E '^#\+NAME: package ' ${BOOKS}/bookvol10.5.org | sort | uniq | awk '{
+  chunk=substr($0,9);
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.5.org";
@@ -17838,9 +17838,9 @@ For each of the above output lines we run an ``grep'' command:
 #+NAME: findBootstrapFiles
 #+begin_src common-lisp :noweb yes
 
-grep 'begin{chunk}{.*BOOTSTRAP}' ${BOOKS}/bookvol10.2.org | sort | uniq | \
-awk -F: '{
-  chunk=substr($1,15,length($1)-15);
+grep '^#+NAME: .*BOOTSTRAP' ${BOOKS}/bookvol10.2.org | sort | uniq | \
+awk '{
+  chunk=substr($0,9);
   split(chunk,part," ");
   lspfile="${MID}/"part[1];
   print lspfile": ${BOOKS}/bookvol10.2.org";
@@ -17848,9 +17848,9 @@ awk -F: '{
   print "";
 }'
 
-grep 'begin{chunk}{.*BOOTSTRAP}' ${BOOKS}/bookvol10.3.org | sort | uniq | \
-awk -F: '{
-  chunk=substr($1,15,length($1)-15);
+grep '^#+NAME: .*BOOTSTRAP' ${BOOKS}/bookvol10.3.org | sort | uniq | \
+awk '{
+  chunk=substr($0,9);
   split(chunk,part," ");
   lspfile="${MID}/"part[1];
   print lspfile": ${BOOKS}/bookvol10.3.org";
