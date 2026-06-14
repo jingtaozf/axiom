@@ -1,0 +1,218 @@
+\documentclass{article}
+\usepackage{axiom}
+\setlength{\textwidth}{400pt}
+\begin{document}
+\title{\$SPAD/src/input divisor.input}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{License}
+#+NAME: license
+#+begin_src common-lisp :noweb yes
+--Copyright The Numerical Algorithms Group Limited 1991.
+#+end_src
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+)set break resume
+)spool divisor.output
+)set message test on
+)set message auto off
+)clear all
+
+--S 1 of 18
+P0 := UP(x, FRAC INT)
+--R 
+--R
+--R   (1)  UnivariatePolynomial(x,Fraction(Integer))
+--R                                                                 Type: Domain
+--E 1
+
+--S 2 of 18
+P1 := UP(y, FRAC P0)
+--R 
+--R
+--R   (2)
+--R   UnivariatePolynomial(y,Fraction(UnivariatePolynomial(x,Fraction(Integer))))
+--R                                                                 Type: Domain
+--E 2
+
+#+end_src
+This is the curve given by $y^2 = x^8 + 1$ (genus = 3)
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 3 of 18
+R := RADFF(FRAC INT, P0, P1, 1 + x^8, 2)
+--R 
+--R
+--R   (3)
+--R  RadicalFunctionField(Fraction(Integer),UnivariatePolynomial(x,Fraction(Intege
+--R  r)),UnivariatePolynomial(y,Fraction(UnivariatePolynomial(x,Fraction(Integer))
+--R  )),x^8+1,2)
+--R                                                                 Type: Domain
+--E 3
+
+--S 4 of 18
+genus()$R
+--R 
+--R
+--R   (4)  3
+--R                                                     Type: NonNegativeInteger
+--E 4
+
+--S 5 of 18
+fd := FDIV(FRAC INT, P0, P1, R)
+--R 
+--R
+--R   (5)
+--R  FiniteDivisor(Fraction(Integer),UnivariatePolynomial(x,Fraction(Integer)),Uni
+--R  variatePolynomial(y,Fraction(UnivariatePolynomial(x,Fraction(Integer)))),Radi
+--R  calFunctionField(Fraction(Integer),UnivariatePolynomial(x,Fraction(Integer)),
+--R  UnivariatePolynomial(y,Fraction(UnivariatePolynomial(x,Fraction(Integer)))),x
+--R  ^8+1,2))
+--R                                                                 Type: Domain
+--E 5
+
+#+end_src
+let P be the place (x = 0, y = 1), 
+Q be the place (x = 0, y = -1),
+and d be the divisor P - Q
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 6 of 18
+d1 := divisor(0, 1)$fd
+--R 
+--R
+--R   (6)  (x,y - 1)
+--IType: FiniteDivisor(Fraction Integer,UnivariatePolynomial(...
+--E 6
+
+--S 7 of 18
+d2 := divisor(0, -1)$fd
+--R 
+--R
+--R   (7)  (x,y + 1)
+--IType: FiniteDivisor(Fraction Integer,UnivariatePolynomial(...
+--E 7
+
+--S 8 of 18
+d  := d1 - d2
+--R 
+--R
+--R        1     2         8
+--R   (8)  - (- x ,- 2y + x  + 2)
+--R        x
+--IType: FiniteDivisor(Fraction Integer,UnivariatePolynomial(...
+--E 8
+
+--S 9 of 18
+d  := reduce d
+--R 
+--R
+--R        1     2         8
+--R   (9)  - (- x ,- 2y + x  + 2)
+--R        x
+--IType: FiniteDivisor(Fraction Integer,UnivariatePolynomial(x,...
+--E 9
+
+#+end_src
+It turns out that d has order 4:
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 10 of 18
+generator d
+--R 
+--R
+--R   (10)  "failed"
+--R                                                    Type: Union("failed",...)
+--E 10
+
+--S 11 of 18
+generator reduce(2 * d)
+--R 
+--R
+--R   (11)  "failed"
+--R                                                    Type: Union("failed",...)
+--E 11
+
+--S 12 of 18
+generator reduce(3 * d)
+--R 
+--R
+--R   (12)  "failed"
+--R                                                    Type: Union("failed",...)
+--E 12
+
+--S 13 of 18
+generator reduce(4 * d)
+--R 
+--R
+--R            1      1
+--R   (13)  - -- y + --
+--R            4      4
+--R           x      x
+--IType: Union(RadicalFunctionField(Fraction Integer,...
+--E 13
+
+#+end_src
+Let's verify the RiemannRoch theorem:
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 14 of 18
+lSpaceBasis d1
+--R 
+--R
+--R   (14)  [- 1]
+--IType: Vector RadicalFunctionField(Fraction Integer,...
+--E 14
+
+--S 15 of 18
+lSpaceBasis(2 * d1)
+--R 
+--R
+--R   (15)  [- 1]
+--IType: Vector RadicalFunctionField(Fraction Integer,...
+--E 15
+
+--S 16 of 18
+lSpaceBasis(3 * d1)
+--R 
+--R
+--R   (16)  [- 1]
+--IType: Vector RadicalFunctionField(Fraction Integer,...
+--E 16
+
+--S 17 of 18
+lSpaceBasis(4 * d1)
+--R 
+--R
+--R           1      1
+--R   (17)  [-- y + --,- 1]
+--R           4      4
+--R          x      x
+--IType: Vector RadicalFunctionField(Fraction Integer,...
+--E 17
+
+--S 18 of 18
+lSpaceBasis(5 * d1)
+--R 
+--R
+--R           1      1  1      1
+--R   (18)  [-- y + --,-- y + --,- 1]
+--R           5      5  4      4
+--R          x      x  x      x
+--IType: Vector RadicalFunctionField(Fraction Integer,...
+--E 18
+)spool
+)lisp (bye)
+ 
+#+end_src
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
+ 

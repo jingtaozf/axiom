@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/src/interp nocompil.lisp}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+
+(in-package "BOOT")
+
+
+;; NOTE: JoinInner is defined in CATEGORY BOOT
+;; following code needs to run interpreted to overcome arglist length limits
+(defun |Join| (&rest L)
+  (|JoinInner| L (if (or (not (boundp '|$e|)) (null |$e|) |$InteractiveMode|)
+                   |$CategoryFrame|
+                   |$e|)))
+
+#+end_src
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}

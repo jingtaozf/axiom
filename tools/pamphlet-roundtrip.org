@@ -153,6 +153,50 @@ Returns (:ok N :differ N :failures (RELPATH ...))."
     (list :ok ok :differ bad :failures fails)))
 #+END_SRC
 
+* Migration + build helpers
+
+The migration makes =X.pamphlet.org= the source and treats =X.pamphlet=
+as a regenerated build artifact.  =migrate-all= writes the org files once;
+=regen-all= rebuilds the exact pamphlets from them at build time (so the
+existing =tanglec= / =make= rules keep working byte-for-byte).
+
+#+BEGIN_SRC elisp
+(defun pamphlet-roundtrip-convert-file (pamphlet)
+  "Write PAMPHLET's reversible org beside it as PAMPHLET\".org\"."
+  (let ((orig (with-temp-buffer (set-buffer-multibyte nil)
+                (insert-file-contents-literally pamphlet) (buffer-string)))
+        (coding-system-for-write 'binary))
+    (with-temp-file (concat pamphlet ".org")
+      (insert (pamphlet-roundtrip-to-org orig (file-name-nondirectory pamphlet))))
+    (concat pamphlet ".org")))
+
+(defun pamphlet-roundtrip-regen-file (orgfile)
+  "Rebuild the .pamphlet from ORGFILE (a *.pamphlet.org); return its path."
+  (let ((pamphlet (string-remove-suffix ".org" orgfile))
+        (org (with-temp-buffer (set-buffer-multibyte nil)
+               (insert-file-contents-literally orgfile) (buffer-string)))
+        (coding-system-for-write 'binary))
+    (with-temp-file pamphlet
+      (insert (pamphlet-roundtrip-to-pamphlet org)))
+    pamphlet))
+
+(defun pamphlet-roundtrip-migrate-all (&optional root)
+  "Convert every .pamphlet under ROOT to a sibling .pamphlet.org."
+  (let ((root (or root (getenv "AX") default-directory)) (n 0))
+    (dolist (f (seq-filter (lambda (x) (not (string-match-p "/\\.git/" x)))
+                           (directory-files-recursively root "\\.pamphlet\\'")))
+      (pamphlet-roundtrip-convert-file f) (cl-incf n))
+    (message "migrated %d pamphlets -> .pamphlet.org" n) n))
+
+(defun pamphlet-roundtrip-regen-all (&optional root)
+  "Rebuild every .pamphlet from its .pamphlet.org under ROOT (build step)."
+  (let ((root (or root (getenv "AX") default-directory)) (n 0))
+    (dolist (f (directory-files-recursively root "\\.pamphlet\\.org\\'"))
+      (unless (string-match-p "/\\.git/" f)
+        (pamphlet-roundtrip-regen-file f) (cl-incf n)))
+    (message "regenerated %d pamphlets from .org" n) n))
+#+END_SRC
+
 * Provide
 
 #+BEGIN_SRC elisp

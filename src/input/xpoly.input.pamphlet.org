@@ -1,0 +1,36 @@
+\documentclass{article}
+\usepackage{axiom}
+\setlength{\textwidth}{400pt}
+\begin{document}
+\title{\$SPAD/src/input XPOLY.input}
+\author{The Axiom Team}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+)cl all
+
+poly := XPolynomial(Integer)
+pr: poly := 2*x + 3*y-5
+pr2: poly := pr*pr
+pd  := expand pr
+pd2 := pd*pd
+expand(pr2) - pd2
+qr :=  pr^3
+qd :=  pd^3
+ trunc(qd,2)
+trunc(qr,2)
+Word := OrderedFreeMonoid Symbol
+w: Word := x*y^2
+rquo(qr,w)
+sh(pr,w::poly)
+#+end_src
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}

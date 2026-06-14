@@ -9,6 +9,7 @@ books/Makefile.dvi
 books/Makefile.pdf
 books/bookvol0.log
 books/tanglec
+books/untanglec
 int/
 lastBuildDate
 lsp/Makefile
@@ -1233,6 +1234,20 @@ books/bookvolMIGRATION.pdf
 *.build
 Makefile.
 Makefile.MACOSX
+
+# Pamphlets are regenerated from *.pamphlet.org at build time (untanglec);
+# the .org is now the single source of truth, the .pamphlet a build artifact.
+*.pamphlet
+# These 7 *.pamphlet.org are themselves derived from bookvolMIGRATION.pamphlet
+# (their .pamphlet siblings above are already build artifacts), so their .org
+# must NOT be committed either -- they are regenerated, never edited.
+src/algebra/bookvol10.2.pamphlet.org
+src/algebra/bookvol10.3.pamphlet.org
+src/algebra/bookvol10.4.pamphlet.org
+src/algebra/bookvol10.5.pamphlet.org
+src/interp/bookvol10.5.pamphlet.org
+src/interp/bookvol5.pamphlet.org
+src/interp/bookvol9.pamphlet.org
 
 # Generated databases and data
 *.daase/

@@ -1,0 +1,316 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/src/interp sockio.lisp}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{License}
+\begin{verbatim}
+;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
+;; All rights reserved.
+;;
+;; Redistribution and use in source and binary forms, with or without
+;; modification, are permitted provided that the following conditions are
+;; met:
+;;
+;;     - Redistributions of source code must retain the above copyright
+;;       notice, this list of conditions and the following disclaimer.
+;;
+;;     - Redistributions in binary form must reproduce the above copyright
+;;       notice, this list of conditions and the following disclaimer in
+;;       the documentation and/or other materials provided with the
+;;       distribution.
+;;
+;;     - Neither the name of The Numerical ALgorithms Group Ltd. nor the
+;;       names of its contributors may be used to endorse or promote products
+;;       derived from this software without specific prior written permission.
+;;
+;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+;; IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+;; TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+;; PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+;; OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+;; EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+;; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+;; PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+;; LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+\end{verbatim}
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+
+
+;; load C socket functions
+
+(in-package "BOOT")
+
+#+(and :Lucid (not :ibm/370))
+(progn
+  (system:define-foreign-function :c 'open_server :fixnum)
+  (system:define-foreign-function :c 'sock_get_int :fixnum)
+  (system:define-foreign-function :c 'sock_send_int :fixnum)
+  (system:define-foreign-function :c 'sock_get_string_buf :fixnum)
+  (system:define-foreign-function :c 'sock_send_string_len :fixnum)
+  (system:define-foreign-function :c 'sock_get_float :single)
+  (system:define-foreign-function :c 'sock_send_float :fixnum)
+  (system:define-foreign-function :c 'sock_send_wakeup :fixnum)
+  (system:define-foreign-function :c 'server_switch :fixnum)
+  (system:define-foreign-function :c 'flush_stdout :fixnum)
+  (system:define-foreign-function :c 'sock_send_signal :fixnum)
+  (system:define-foreign-function :c 'print_line :fixnum)
+  (system:define-foreign-function :c 'plus_infininty :single)
+  (system:define-foreign-function :c 'minus_infinity :single)
+  (system:define-foreign-function :c 'NANQ :single)
+)
+
+#+end_src
+This was changed as of GCL-2.6.8pre2. It used to read:
+\begin{verbatim}
+  (defentry sock_get_float (int) (float "sock_get_float"))
+\end{verbatim}
+
+Yet another version of GCL requires another change. It used to read:
+\begin{verbatim}
+  (defentry sock_send_float (int float) (int "sock_send_float"))
+\end{verbatim}
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+#+KCL
+(progn
+  (clines "extern double plus_infinity(), minus_infinity(), NANQ();")
+  (clines "extern double sock_get_float();")
+#+end_src
+GCL may pass strings by value.  [[sock_get_string_buf]] should fill
+string with data read from connection, therefore needs address of
+actual string buffer. We use [[sock_get_string_buf_wrapper]] to
+resolve the problem
+
+\section{Hosting the socket layer on SBCL}
+
+The seventeen \verb|defentry| bindings in the block below divide along
+the same line drawn in \verb|cfuns.lisp.pamphlet|: most are genuinely
+foreign, a few only look it.
+
+Twelve --- \verb|open_server|, the \verb|sock_*| transfer calls,
+\verb|server_switch|, \verb|flush_stdout|, \verb|sock_send_signal| and
+\verb|print_line| --- are the real client/server socket layer that the
+HyperDoc browser and the graphical front end use to talk to the engine.
+They cross into C and have no meaning without the server. Because this
+port targets a console \verb|AXIOMsys| first and defers HyperDoc, we do
+not bind them on SBCL; we install \emph{stubs} that raise a clear error
+if anything calls them. The console interpreter never does --- recall
+that \verb|spad-save| sets \verb|$SpadServer| to nil --- so the stubs
+merely make the absence explicit instead of failing later with an
+obscure ``undefined function''. When HyperDoc is eventually built these
+become real \verb|sb-alien| routines against the socket C, which is the
+one place in the whole port where \verb|sb-alien| is genuinely
+warranted.
+
+The other three are not sockets at all. \verb|plus_infinity|,
+\verb|minus_infinity| and \verb|NANQ| return IEEE double values that the
+\verb|Float| domain needs and that GCL happened to obtain through C.
+SBCL exposes them directly: the two infinities are constants, and a
+quiet NaN is the result of an invalid operation evaluated under masked
+float traps. We reimplement these in Lisp, exactly as the hashes were
+--- they are not foreign, only historically routed through C.
+
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+  (clines "int sock_get_string_buf_wrapper(int i, object x, int j)"
+          "{ if (type_of(x)!=t_string) FEwrong_type_argument(sLstring,x);"
+          "  if (x->st.st_fillp<j)"
+          "    FEerror(\"string too small in sock_get_string_buf_wrapper\",0);"
+          "  return sock_get_string_buf(i, x->st.st_self, j); }")
+  (defentry open_server (string) (int "open_server"))
+  (defentry sock_get_int (int) (int "sock_get_int"))
+  (defentry sock_send_int (int int) (int "sock_send_int"))
+  (defentry sock_get_string_buf (int object int) 
+     (int "sock_get_string_buf_wrapper"))
+  (defentry sock_send_string_len (int string int) (int "sock_send_string_len"))
+  (defentry sock_get_float (int) (double "sock_get_float"))
+  (defentry sock_send_float (int double) (int "sock_send_float"))
+  (defentry sock_send_wakeup (int int) (int "sock_send_wakeup"))
+  (defentry server_switch () (int "server_switch"))
+  (defentry flush_stdout () (int "flush_stdout"))
+  (defentry sock_send_signal (int int) (int "sock_send_signal"))
+  (defentry print_line (string) (int "print_line"))
+  (defentry plus_infinity () (double "plus_infinity"))
+  (defentry minus_infinity () (double "minus_infinity"))
+  (defentry NANQ () (double "NANQ"))
+  )
+
+#+:sbcl
+(progn
+  ;; IEEE float edge values: not foreign, reimplemented in Lisp (see prose).
+  ;; The ftype declaim is load-bearing, not decoration. Each body returns
+  ;; a literal infinity, so SBCL's type derivation narrows the result to a
+  ;; singleton -- plus_infinity to (double-float +inf +inf) -- and then
+  ;; folds NANQ's (- +inf +inf) to the *finite* identity 0.0d0, deriving
+  ;; NANQ :: (member 0.0d0). The function genuinely returns a NaN, so when
+  ;; sockio.fasl is loaded the value violates that derived ftype and the
+  ;; whole build-interpsys aborts (observed). Declaring the return type as
+  ;; plain double-float -- which includes infinities and NaNs -- blocks the
+  ;; bogus narrowing while staying true.
+  (declaim (ftype (function () double-float)
+                  plus_infinity minus_infinity NANQ))
+  (defun plus_infinity  () sb-ext:double-float-positive-infinity)
+  (defun minus_infinity () sb-ext:double-float-negative-infinity)
+  ;; NANQ builds a quiet NaN from its bit pattern rather than computing
+  ;; (- +inf +inf). The arithmetic form is wrong twice over on a compiling
+  ;; host: with-float-traps-masked only masks at RUN time, but SBCL
+  ;; constant-folds the subtraction at COMPILE time with traps live, so
+  ;; merely compiling sockio raised FLOATING-POINT-OVERFLOW (observed).
+  ;; make-double-float assembles the IEEE-754 quiet-NaN double directly --
+  ;; sign 0, exponent all ones, mantissa MSB set, i.e. #x7FF8000000000000 --
+  ;; with no float operation to fold or trap.
+  (defun NANQ ()
+    (sb-kernel:make-double-float #x7FF80000 0))
+  ;; HyperDoc/graphics sockets: foreign, stubbed until the server is built.
+  ;; The console AXIOMsys never calls these ($SpadServer is nil); the stub
+  ;; turns an accidental call into a clear message instead of a crash.
+  ;; No-op (return 0) rather than error: the socket/HyperDoc server is not
+  ;; built into this SBCL image, but batch regression `draw` calls the send
+  ;; primitives expecting a status int. Erroring crashed every draw test;
+  ;; GCL's real layer simply returned a status when no viewport manager was
+  ;; listening. Returning 0 lets the graph build and the viewport object be
+  ;; returned without a live viewman. (Full socket layer is future work, as
+  ;; in fricas/open-axiom which build the server.)
+  (macrolet ((stub (name)
+               `(defun ,name (&rest args)
+                  (declare (ignore args))
+                  0)))
+    (stub open_server)          (stub sock_get_int)
+    (stub sock_send_int)        (stub sock_get_string_buf)
+    (stub sock_send_string_len) (stub sock_get_float)
+    (stub sock_send_float)      (stub sock_send_wakeup)
+    (stub server_switch)        (stub flush_stdout)
+    (stub sock_send_signal)     (stub print_line)))
+
+(defun open-server (name)
+  (open_server name))
+(defun sock-get-int (type)
+  (sock_get_int type))
+(defun sock-send-int (type val)
+  (sock_send_int type val))
+(defun sock-get-string (type buf buf-len)
+  (sock_get_string_buf type buf buf-len))
+(defun sock-send-string (type str)
+  (sock_send_string_len type str (length str)))
+(defun sock-get-float (type)
+  (sock_get_float type))
+(defun sock-send-float (type val)
+  (sock_send_float type val))
+(defun sock-send-wakeup (type)
+  (sock_send_wakeup type))
+(defun server-switch ()
+  (server_switch))
+(defun sock-send-signal (type signal)
+  (sock_send_signal type signal))
+(defun print-line (str)
+  (print_line str))
+(defun |plusInfinity| () (plus_infinity))
+(defun |minusInfinity| () (minus_infinity))
+
+;; Macros for use in Boot
+
+(defun |openServer| (name)
+  (open_server name))
+(defun |sockGetInt| (type)
+  (sock_get_int type))
+(defun |sockSendInt| (type val)
+  (sock_send_int type val))
+(defun |sockGetString| (type buf buf-len)
+  (sock_get_string_buf type buf buf-len))
+(defun |sockSendString| (type str)
+  (sock_send_string_len type str (length str)))
+(defun |sockGetFloat| (type)
+  (sock_get_float type))
+(defun |sockSendFloat| (type val)
+  (sock_send_float type val))
+(defun |sockSendWakeup| (type)
+  (sock_send_wakeup type))
+(defun |serverSwitch| ()
+  (server_switch))
+(defun |sockSendSignal| (type signal)
+  (sock_send_signal type signal))
+(defun |printLine| (str)
+  (print_line str))
+
+;; Socket types.  This list must be consistent with the one in com.h
+
+(defconstant SessionManager     1)
+(defconstant ViewportServer     2)
+(defconstant MenuServer         3)
+(defconstant SessionIO          4)
+(defconstant MessageServer      5)
+(defconstant InterpWindow       6)
+(defconstant KillSpad           7)
+(defconstant DebugWindow        8)
+(defconstant NAGLinkServer      8)
+(defconstant Forker             9)
+
+;; same constants for use in BOOT
+(defconstant |$SessionManager|  SessionManager)
+(defconstant |$ViewportServer|  ViewportServer)
+(defconstant |$MenuServer|      MenuServer)
+(defconstant |$SessionIO|       SessionIO)
+(defconstant |$MessageServer|   MessageServer)
+(defconstant |$InterpWindow|    InterpWindow)
+(defconstant |$KillSpad|        KillSpad)
+(defconstant |$DebugWindow|     DebugWindow)
+(defconstant |$NAGLinkServer|   NAGLinkServer)
+(defconstant |$Forker|          Forker)
+
+;; Session Manager action requests
+
+(defconstant CreateFrame        1)
+(defconstant SwitchFrames       2)
+(defconstant EndOfOutput        3)
+(defconstant CallInterp         4)
+(defconstant EndSession         5)
+(defconstant LispCommand        6)
+(defconstant SpadCommand        7)
+(defconstant SendXEventToHyperTeX 8)
+(defconstant QuietSpadCommand   9)
+(defconstant CloseClient        10)
+(defconstant QueryClients       11)
+(defconstant QuerySpad          12)
+(defconstant NonSmanSession     13)
+(defconstant KillLispSystem     14)
+
+(defconstant CreateFrameAnswer  50)
+
+(defconstant |$CreateFrame|     CreateFrame)
+(defconstant |$SwitchFrames|    SwitchFrames)
+(defconstant |$EndOfOutput|     EndOfOutput)
+(defconstant |$CallInterp|      CallInterp)
+(defconstant |$EndSession|      EndSession)
+(defconstant |$LispCommand|     LispCommand)
+(defconstant |$SpadCommand|     SpadCommand)
+(defconstant |$SendXEventToHyperTeX| SendXEventToHyperTeX)
+(defconstant |$QuietSpadCommand| QuietSpadCommand)
+(defconstant |$CloseClient|     CloseClient)
+(defconstant |$QueryClients|    QueryClients)
+(defconstant |$QuerySpad|       QuerySpad)
+(defconstant |$NonSmanSession|  NonSmanSession)
+(defconstant |$KillLispSystem|  KillLispSystem)
+
+(defconstant |$CreateFrameAnswer|  CreateFrameAnswer)
+
+(setq |$NaNvalue| (NANQ))
+(setq |$plusInfinity| (* 1.1  MOST-POSITIVE-LONG-FLOAT))
+(setq |$minusInfinity| (- |$plusInfinity|))
+
+#+end_src
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}

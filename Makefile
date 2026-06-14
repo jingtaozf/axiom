@@ -141,7 +141,7 @@ WEAVE=${WEAVE} \
 XLIB=${XLIB} \
 ZIPS=${ZIPS} 
 
-all: rootdirs axiom.sty tanglec libspad lspdir
+all: regen-pamphlets rootdirs axiom.sty tanglec libspad lspdir
 	@ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 2 Environment ${ENV}
 	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
@@ -316,6 +316,21 @@ tanglec: books/tanglec.c
 	@echo t01 making tanglec from books/tanglec.c
 	@( cd books ; gcc -o tanglec tanglec.c )
 
+# untanglec rebuilds a .pamphlet from its .pamphlet.org (the migrated source)
+# byte-for-byte; regen-pamphlets runs it over every tracked .pamphlet.org so
+# the rest of the build (tanglec, the sub-Makefiles) keeps seeing the exact
+# .pamphlet bytes it always did.  This is the bridge from "org is the single
+# source of truth" to the unchanged downstream pamphlet build.
+untanglec: books/untanglec.c
+	@echo t02 making untanglec from books/untanglec.c
+	@( cd books ; ${CC} -o untanglec untanglec.c )
+
+regen-pamphlets: untanglec
+	@echo t03 regenerating .pamphlet files from .pamphlet.org via untanglec
+	@find . -name '*.pamphlet.org' -not -path './.git/*' | while read f ; do \
+	   ${BOOKS}/untanglec "$$f" > "$${f%.org}" ; \
+	 done
+
 install:
 	@echo 78 installing Axiom in ${DESTDIR}
 	@mkdir -p ${DESTDIR}
@@ -377,6 +392,7 @@ clean:
 	@ for i in `find . -name "*~"` ; do rm -f $$i ; done
 	@ rm -f lastBuildDate
 	@ rm -f books/tanglec
+	@ rm -f books/untanglec
 	@ rm -f src/input/Makefile src/input/Makefile.dvi
 	@ rm -f src/input/Makefile.pdf 
 	@ rm -f src/interp/Makefile src/interp/Makefile.dvi

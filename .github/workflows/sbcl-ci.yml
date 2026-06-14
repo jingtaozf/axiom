@@ -73,7 +73,7 @@ jobs:
         # rebuild that dies "fasl older than source".  Keeping the key to build
         # inputs means a harness/doc edit is an EXACT hit (no rebuild at all).
         run: |
-          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
+          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet.org', 'Makefile*', 'lsp/Makefile.pamphlet.org') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore build cache (obj/int/mnt/lsp)
         id: cache
@@ -90,6 +90,14 @@ jobs:
             mnt
             lsp/Makefile
           key: ${{ steps.key.outputs.value }}
+
+      - name: Regenerate pamphlets from org
+        # The .pamphlet sources were migrated to .pamphlet.org (single source of
+        # truth).  untanglec rebuilds the exact .pamphlet bytes from each .org so
+        # tanglec + the sub-Makefiles below run byte-identically to before the
+        # migration.  Cheap (~1k files of plain C), so run it unconditionally;
+        # on an exact cache hit the regenerated files are simply unused.
+        run: make regen-pamphlets CC=/usr/bin/clang
 
       - name: Build axiom (SBCL, interp + algebra only)
         id: build

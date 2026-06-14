@@ -1,0 +1,98 @@
+\documentclass{article}
+\usepackage{axiom}
+\setlength{\textwidth}{400pt}
+\begin{document}
+\title{\$SPAD/src/input macbug.input}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{License}
+#+NAME: license
+#+begin_src common-lisp :noweb yes
+--Copyright The Numerical Algorithms Group Limited 1991.
+#+end_src
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+)set break resume
+)spool macbug.output
+)set message test on
+)set message auto off
+)clear all
+ 
+#+end_src
+Macros can be parameterized and so can be used for many different
+kinds of objects.
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 1 of 5
+macro ff(x) == x^2 + 1
+--R 
+--R                                                                   Type: Void
+--E 1
+
+#+end_src
+Apply it to a number, a symbol, or an expression.
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 2 of 5
+ff z
+--R 
+--R
+--R         2
+--R   (2)  z  + 1
+--R                                                    Type: Polynomial(Integer)
+--E 2
+
+#+end_src
+Macros can also be nested, but you will get an error message if you
+run out of space because of an infinite nesting loop.
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 3 of 5
+macro gg(x) == ff(2*x - 2/3)
+--R 
+--R                                                                   Type: Void
+--E 3
+
+#+end_src
+This new macro is fine as it does not produce a loop.
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 4 of 5
+gg(1/w)
+--R 
+--R
+--R           2
+--R        13w  - 24w + 36
+--R   (4)  ---------------
+--R                2
+--R              9w
+--R                                          Type: Fraction(Polynomial(Integer))
+--E 4
+
+#+end_src
+This however will loop since {\tt gg} is
+defined in terms of {\tt ff}.
+We risk not using a free g on next line
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 5 of 5
+macro ff(x) == gg(-x)
+--R 
+--R                                                                   Type: Void
+--E 5
+)spool 
+)lisp (bye)
+ 
+#+end_src
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
+
+ 

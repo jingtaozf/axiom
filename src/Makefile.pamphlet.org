@@ -1,0 +1,419 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/src Makefile}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{Directory overview}
+\subsection{Environment variables}
+DIRS is a list of directories with the suffix {\bf dir}.
+
+There is a partial order of the directories which is not apparent.
+
+The bootdir must occur first as it builds the boot language
+compiler and the bootsys image.
+
+The interpdir must come second because it builds the interpreter
+and the interpsys image, which is the basic algebra engine.
+
+The sharedir must occur before the algebradir because it
+needs to put the databases in the proper location.
+
+The algebradir comes next. It contains the source code for all
+of the algebra that Axiom knows.
+
+The etcdir must occur after the algebradir because it
+builds the databases from all of the *.nrlib directories
+constructed by algebradir.
+
+The inputdir needs to occur last because it tests
+various other parts of the system. 
+
+The SRCDIRS variable is a list of directory targets. 
+Since this varies from system to system it has been lifted
+up to the top level Makefile.pamphlet. If you add a new
+stanza to this Makefile you should check that list. 
+#+NAME: environment
+#+begin_src common-lisp :noweb yes
+DIRS=${SRCDIRS}
+VOL11=${BOOKS}/bookvol11.pamphlet
+
+#+end_src
+\subsection{The sman directory}
+Superman (sman) is the master process that runs all of the other
+processes including axiom, clef, nagman, graphics, and hyperdoc
+#+NAME: smandir
+#+begin_src common-lisp :noweb yes
+smandir: ${SPD}/books/bookvol6.pamphlet
+	@echo 5 making ${SRC}/sman
+	@( cd sman ; \
+	   ${BOOKS}/tanglec ${BOOKS}/bookvol6.pamphlet >Makefile ; \
+	   ${ENV} ${MAKE} )
+
+#+end_src
+\subsection{The share directory}
+The {\bf share} directory files that are shared by all version of the
+system.
+
+#+NAME: sharedir
+#+begin_src common-lisp :noweb yes
+sharedir: ${SRC}/share/Makefile
+	@echo 9 making ${SRC}/share
+	@(cd share ; ${ENV} ${MAKE} )
+
+${SRC}/share/Makefile: ${SRC}/share/Makefile.pamphlet
+	@echo 10 making ${SRC}/share/Makefile from \
+	   ${SRC}/share/Makefile.pamphlet
+	@( cd share ; \
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/share.Makefile.pdf )
+
+sharedocument: ${SRC}/share/Makefile
+	@echo 11 documenting ${SRC}/share
+	@( cd share ; ${ENV} ${MAKE} document )
+
+shareclean: ${SRC}/share/Makefile
+	@echo 12 cleaning ${SRC}/share
+	@( cd share ; ${ENV} ${MAKE} clean )
+	@rm -f ${SRC}/share/Makefile
+	@rm -f ${SRC}/share/Makefile.dvi
+
+#+end_src
+\subsection{The boot directory}
+Axiom is built in layers. The first layer is contructed into
+an image called {\bf bootsys}. The {\bf bootsys} image is used
+to translate boot code to common lisp code. Since a boot coded
+interpreter is needed to translate the code for the boot coded
+interpreter we have a "boot-strapping" problem. In order to get
+the whole process to start we need certain files kept in 
+common lisp form. This directory contains those files.
+
+#+NAME: bootdir
+#+begin_src common-lisp :noweb yes
+bootdir: ${SRC}/boot/Makefile
+	@echo 21 making ${SRC}/boot
+	@(cd boot ; ${ENV} ${MAKE} )
+
+${SRC}/boot/Makefile: ${SRC}/boot/Makefile.pamphlet
+	@echo 22 making ${SRC}/boot/Makefile from ${SRC}/boot/Makefile.pamphlet
+	@( cd boot ; \
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/boot.Makefile.pdf )
+
+bootdocument: ${SRC}/boot/Makefile
+	@echo 23 documenting ${SRC}/boot
+	@( cd boot ; ${ENV} ${MAKE} document )
+
+bootclean: ${SRC}/boot/Makefile
+	@echo 24 cleaning ${SRC}/boot
+	@( cd boot ; ${ENV} ${MAKE} clean )
+	@rm -rf ${OBJ}/${SYS}/boot
+	@rm -f ${SRC}/boot/Makefile
+	@rm -f ${SRC}/boot/Makefile.dvi
+
+#+end_src
+\subsection{The interp directory}
+Once {\bf bootsys} exists we need to build {\bf depsys}
+and {\bf interpsys}. Since these two images share a lot of
+files they are built in the interp subdirectory using the
+same Makefile.
+
+Book Volume 5 contains the interpreter.
+
+Book Volume 9 contains the compiler.
+
+We need the file util.ht from the hyperdoc pages (bookvol7.1)
+because the spad compiler checks the syntax of the ++ comments
+against the macros that exist in that file. This is done in the
+function buildHtMacroTable (htcheck.boot)
+
+#+NAME: interpdir
+#+begin_src common-lisp :noweb yes
+interpdir: ${SRC}/interp/Makefile
+	@echo 25 making ${SRC}/interp
+	@cp ${SPD}/books/bookvol5.pamphlet interp
+	@cp ${SPD}/books/bookvol9.pamphlet interp
+	@cp ${SPD}/books/bookvol10.5.pamphlet interp
+	@(cd ${MNT}/${SYS}/doc ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet util.ht >util.ht )
+	@(cd interp ; ${ENV} ${MAKE} )
+
+${SRC}/interp/Makefile: ${SRC}/interp/Makefile.pamphlet
+	@echo 26 making ${SRC}/interp/Makefile from \
+		 ${SRC}/interp/Makefile.pamphlet
+	@( cd interp ; \
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/interp.Makefile.pdf )
+
+interpdocument: ${SRC}/interp/Makefile
+	@echo 27 documenting ${SRC}/interp
+	@( cd interp ; ${ENV} ${MAKE} document )
+
+interpclean: ${SRC}/interp/Makefile
+	@echo 28 cleaning ${SRC}/interp
+	@( cd interp ; ${ENV} ${MAKE} clean )
+	@rm -rf ${OBJ}/${SYS}/interp
+	@rm -f ${SRC}/interp/Makefile
+	@rm -f ${SRC}/interp/Makefile.dvi
+
+#+end_src
+\subsection{The input directory}
+The input directory contains code used for examples, regression
+testing, and bug tracking. In a shipped system the working examples
+are collected and documented so a user can learn how to use Axiom's
+many domains and packages.
+
+During development the input files can be used for tracking bugs
+and testing fixes of known bugs. Once a bug is fixed it is moved
+to the regression test set.
+
+Prior to building a shippable system all of the input files are
+run with the example code and the regression test code. Regression
+test input files are compared against known good results to ensure
+that nothing has been broken in the process of fixing bugs.
+
+#+NAME: inputdir
+#+begin_src common-lisp :noweb yes
+inputdir: ${SRC}/input/Makefile
+	@echo 33 making ${SRC}/input
+	@(cd input ; ${ENV} ${MAKE} )
+#       @(cd input ; ${ENV} ${MAKE} -j 10)
+
+${SRC}/input/Makefile: ${SRC}/input/Makefile.pamphlet
+	@echo 34 making ${SRC}/input/Makefile from \
+		${SRC}/input/Makefile.pamphlet
+	@( cd input ; \
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/input.Makefile.pdf )
+
+inputdocument: ${SRC}/input/Makefile
+	@echo 35 documenting ${SRC}/input
+	@( cd input ; ${ENV} ${MAKE} document )
+
+inputclean: ${SRC}/input/Makefile
+	@echo 36 cleaning ${SRC}/input
+	@( cd input ; ${ENV} ${MAKE} clean )
+	@rm -rf ${OBJ}/${SYS}/input
+	@rm -f ${SRC}/input/Makefile
+	@rm -f ${SRC}/input/Makefile.dvi
+
+#+end_src
+\subsection{The etc directory}
+The etc directory contains code used as tools surrounding Axiom.
+
+The asq \cite{2} command, contained in this directory, is useful
+for finding detailed information about domains, packages, and
+categories from the shell without running Axiom.
+#+NAME: etcdir
+#+begin_src common-lisp :noweb yes
+etcdir: ${SRC}/etc/Makefile
+	@echo 37 making ${SRC}/etc
+	@(cd etc ; ${ENV} ${MAKE} )
+
+${SRC}/etc/Makefile: ${SRC}/etc/Makefile.pamphlet
+	@echo 38 making ${SRC}/etc/Makefile from ${SRC}/etc/Makefile.pamphlet
+	@( cd etc ; \
+	   ${EXTRACT} Makefile ; \
+	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/etc.Makefile.pdf )
+
+etcdocument: ${SRC}/etc/Makefile
+	@echo 39 documenting ${SRC}/etc
+	@( cd etc ; ${ENV} ${MAKE} document )
+
+etcclean: ${SRC}/etc/Makefile
+	@echo 40 cleaning ${SRC}/etc
+	@( cd etc ; ${ENV} ${MAKE} clean )
+	@rm -rf ${OBJ}/${SYS}/etc
+	@rm -f ${SRC}/etc/Makefile
+	@rm -f ${SRC}/etc/Makefile.dvi
+
+#+end_src
+\subsection{The doc directory}
+The doc directory contains code used for documenting Axiom.
+
+We've added the books directory above as part of the literate process.
+This takes all of the Axiom volumes and creates .pdf copies in the
+final doc directory.
+
+#+NAME: docdir
+#+begin_src common-lisp :noweb yes
+docdir: 
+	@echo 41 making ${SRC}/doc
+	@(cd ${MNT}/${SYS}/doc/hypertex ; \
+	 ${BOOKS}/tanglec axiom1.bitmap >bitmaps/axiom1.bitmap ; \
+	 ${BOOKS}/tanglec rcm3720.input >rcm3720.input ; \
+	 ${BOOKS}/tanglec strang.input >strang.input ; \
+	 ${BOOKS}/tanglec signatures.txt >signatures.txt ; \
+	 cp ${BOOKS}/ps/doctitle.png ${AXIOM}/doc/hypertex/doctitle.png ; \
+	 cp ${BOOKS}/ps/axiom2.png ${AXIOM}/doc/hypertex/axiom2.png ; \
+	 cp ${BOOKS}/ps/lightbayou.png ${AXIOM}/doc/hypertex/lightbayou.png ) 
+	@(cd ${MNT}/${SYS}/doc/hypertex ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol11.pamphlet >Makefile11 ; \
+	  ${ENV} ${MAKE} -f Makefile11 ; \
+	  rm -f Makefile11 )
+
+#+end_src
+\subsection{Volume 7:Axiom Hyperdoc book}
+Hyperdoc is the Axiom document browser.
+#+NAME: hyperdir
+#+begin_src common-lisp :noweb yes
+hyperdir: ${SPD}/books/bookvol7.pamphlet ${SPD}/books/bookvol7.1.pamphlet
+	@echo 7 making hyperdoc from bookvol7
+	@(cd ${INT}/hyper ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.pamphlet >Makefile ; \
+	  ${ENV} ${MAKE} )
+	@echo 7.1 making pages from bookvol7.1 ${ENV}
+	@(cd ${INT}/hyper ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol7.1.pamphlet >Makefile ; \
+	  ${ENV} ${MAKE} )
+
+#+end_src
+\subsection{Volume 8: Axiom Graphics book}
+#+NAME: graphdir
+#+begin_src common-lisp :noweb yes
+graphdir: ${SPD}/books/bookvol8.pamphlet
+	@echo 8 making graph from bookvol8
+	@(cd ${OBJ}/${SYS}/graph ; \
+	  ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
+	  ${ENV} ${MAKE} )
+
+#+end_src
+\subsection{The algebra directory}
+The algebra directory contains code written in Axiom's computer
+algebra language called {\bf spad}. There are two compilers for
+this language, the spad compiler and the {\bf Aldor}\cite{1} compiler.
+
+Both of these compilers accept the same input language except for
+some platform-dependent differences. The spad compiler is written
+in Common Lisp (well, in boot, anyway) and is built into the 
+interpreter. The Aldor compiler is written in C and runs
+stand-alone. Both compile files that will run in Axiom's 
+interpreter. Files which end in ``.spad'' use the internal 
+spad compiler. Files which end in ``.as'' use the external
+Aldor compiler.
+\subsubsection{Making the Makefile}
+The main body of the algebra Makefile is extracted from the
+Makefile.pamphlet file as usual. It contains generic rules for
+making all the .spad files in a series of ``layers'' such that
+each layer depends on only those layers that preceed it, beginning
+with the bootstap layer. Because the individual .spad files are
+grouped into higher-level algebra pamphlet files, the rules for
+extracting them are derived from a simple script findAlgebraFiles which
+appends these additional rules to the Makefile.
+
+The src/algebra/Makefile is specially constructed in two
+steps. The first step uses the tangle command to extract
+the normal Makefile information.
+
+The second step is to extend the src/algebra/Makefile with
+stanzas that describe the steps to extract the algebra from the
+src/algebra/*.pamphlet files into the int/algebra/*.spad files.
+Further details are provided in Makefile for src/algebra.
+
+The doc/spadhelp directory contains flat files of help text
+for the help system command. Algebra pamphlet contain examples
+that can be shown from these commands.
+
+We need to make the int/input file here because the algebra Makefile
+will extract input files for regression testing from the algebra pamphlets.
+
+We copy bookvol10.1 (Categories), bookvol10.2 (Domains), 
+and bookvol10.3 (Packages) to the src/algebra subdirectory. 
+
+\subsection{Volume 10: Axiom Algebra book}
+#+NAME: algebradir
+#+begin_src common-lisp :noweb yes
+algebradir: ${SRC}/algebra/Makefile ${SPD}/books/bookvol10.pamphlet \
+	    ${SPD}/books/bookvol7.1.pamphlet
+	@echo 29 making ${SRC}/algebra
+	@(cd algebra ; ${ENV} ${MAKE} )
+
+${SRC}/algebra/Makefile: ${BOOKS}/bookvol10.pamphlet
+	@echo 30 making ${SRC}/algebra/Makefile from \
+		${BOOKS}/bookvol10.pamphlet
+	@( cd algebra ; \
+	${BOOKS}/tanglec ${BOOKS}/bookvol10.pamphlet Makefile >Makefile ; \
+	cp ${SPD}/books/bookvol10.2.pamphlet . ; \
+	cp ${SPD}/books/bookvol10.3.pamphlet . ; \
+	cp ${SPD}/books/bookvol10.4.pamphlet . ; \
+	cp ${SPD}/books/bookvol10.5.pamphlet . ; \
+	echo 30a tangling findAlgebraFiles from \
+		 ${BOOKS}/bookvol10.pamphlet ; \
+	${BOOKS}/tanglec ${BOOKS}/bookvol10.pamphlet \
+	     findAlgebraFiles >${INT}/algebra/findAlgebraFiles ; \
+	echo 30b running ${INT}/algebra/findAlgebraFiles ; \
+	. ${INT}/algebra/findAlgebraFiles >> Makefile )
+
+algebraclean: ${SRC}/algebra/Makefile
+	@echo 32 cleaning ${SRC}/algebra
+	@( cd algebra ; ${ENV} ${MAKE} clean )
+	@rm -rf ${OBJ}/${SYS}/algebra
+	@rm -f ${SRC}/algebra/axiom.sty
+	@rm -f ${SRC}/algebra/*.spad
+	@rm -f ${SRC}/algebra/bookvol*
+	@rm -f ${SRC}/algebra/Makefile
+	@rm -f ${SRC}/algebra/Makefile.dvi
+
+#+end_src
+\subsection{Volume 11: Axiom Browser book}
+These are the pages for the Axiom Firefox browser interface.
+They can be expanded in parallel since they (currently) need no
+post processing. Thus the "-j 10" argument to make. We use 
+``Makefile11'' so that future parallel builds don't step on each other.
+#+NAME: browserdir
+#+begin_src common-lisp :noweb yes
+browserdir: ${SPD}/books/bookvol11.pamphlet
+	@echo 11 making browser from bookvol11
+#       @(cd ${MNT}/${SYS}/doc/hypertex ; \
+#       ${BOOKS}/tanglec ${SPD}/books/bookvol11.pamphlet >Makefile11 ; \
+#       ${ENV} ${MAKE} -j 10 -f Makefile11 ; \
+#       rm -f Makefile11 )
+
+#+end_src
+
+\section{The Makefile}
+
+The second call will execute the {\bf all} stanza. This stanza walks 
+all of the lower level directories.
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+
+<<environment>>
+
+all: announce ${DIRS}
+	@echo 49 finished ${SRC}
+
+announce:
+	@ echo ======================================
+	@ echo src BUILDING SRC
+	@ echo ======================================
+
+setup: ${SETUP}
+
+<<clefdir>>
+<<smandir>>
+<<sharedir>>
+<<docdir>>
+<<bootdir>>
+<<interpdir>>
+<<algebradir>>
+<<inputdir>>
+<<etcdir>>
+
+<<hyperdir>>
+<<graphdir>>
+<<browserdir>>
+
+#+end_src
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} Watt, Stephen, The Aldor compiler, {\bf www.aldor.org}
+\bibitem{2} \$AXIOM/src/etc/asq.c.pamphlet
+\bibitem{3} \$AXIOM/src/clef/edible.c.pamphlet
+\end{thebibliography}
+\end{document}

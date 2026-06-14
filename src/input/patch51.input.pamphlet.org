@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{axiom}
+\setlength{\textwidth}{400pt}
+\begin{document}
+\title{\$SPAD/src/input patch51.input}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+These are bug fixes available in patch51
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+)set break resume
+)spool patch51.output
+)set message test on
+)set message auto off
+)clear all
+#+end_src
+The besselK function was missing a minus sign as of patch50.
+This is fixed as of patch51. 
+#+NAME: *
+#+begin_src common-lisp :noweb yes
+--S 1 of 1 bug #355 fix
+D(besselK(a,x),x)
+--R 
+--R
+--R        - besselK(a + 1,x) - besselK(a - 1,x)
+--R   (1)  -------------------------------------
+--R                          2
+--R                                                    Type: Expression(Integer)
+--E 1
+)spool 
+)lisp (bye)
+#+end_src
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} Milton Abramowitz and Irene A. Stegun, eds.  (1965). 
+Handbook of Mathematical Functions with Formulas, Graphs, 
+and Mathematical Tables. New York: Dover. ISBN 0-486-61272-4,
+Equations~9.1.27 and 9.6.26.
+\end{thebibliography}
+\end{document}
