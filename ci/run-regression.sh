@@ -192,6 +192,10 @@ xargs -P "$NW" -I{} bash -c '
     # src/input test: tangle the .org source DIRECTLY to a .input (srctangle ->
     # orgtangle by default; AXIOM_TANGLE_VIA_PAMPHLET=1 routes through .pamphlet).
     "$SPD/books/srctangle" "$pf" "*" > "$t.input" 2>/dev/null || true
+    # ~19 inputs self-reference src/input/<t>.input.pamphlet at an absolute path
+    # ()sys cp ... ; )lisp (tangle "<t>.input.pamphlet" sub out)).  Materialise the
+    # exact .pamphlet bytes beside the .org so those self-tangling tests still run.
+    "$SPD/books/untanglec" "$pf" > "$SPD/src/input/$t.input.pamphlet" 2>/dev/null || true
   elif [ -f "$SPD/int/input/$t.input" ]; then
     cp "$SPD/int/input/$t.input" "$t.input"
   fi
