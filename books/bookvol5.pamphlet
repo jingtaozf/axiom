@@ -32372,7 +32372,11 @@ The \verb|$msgdbPrims| variable is set to:
 (defun |nplisp| (str)
  (declare (special |$ans|))
   (setq |$ans| (eval (read-from-string str)))
-  (format t "~&Value = ~S~%" |$ans|))
+  ;; *print-circle* t: )lisp results often contain self-referential domain
+  ;; vectors; without it SBCL's pretty-printer recurses to CONTROL-STACK
+  ;; exhaustion (GCL printed them).  level/length are a backstop.
+  (let ((*print-circle* t) (*print-level* 20) (*print-length* 100))
+    (format t "~&Value = ~S~%" |$ans|)))
 
 \end{chunk}
 
@@ -65357,7 +65361,12 @@ Note that ACL2 does not support FLOATP.
 \chapter{The Interpreter}
 \begin{chunk}{Interpreter}
 (setq *print-array* nil)
-(setq *print-circle* nil)
+;; *print-circle* t on SBCL: self-referential domain vectors reach the
+;; raw Lisp printer (error dumps, )lisp, test frameworks). With nil
+;; SBCL's printer recurses to CONTROL-STACK-EXHAUSTED; t emits #N= for
+;; the shared/circular refs.  Normal algebra output goes through
+;; OutputForm, not Lisp print, so it is unaffected.
+(setq *print-circle* t)
 (setq *print-pretty* nil)
 
 (in-package "BOOT")
