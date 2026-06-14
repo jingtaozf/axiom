@@ -4,7 +4,10 @@ STY=$AXIOM/../../books/axiom.sty
 TAN=$AXIOM/../../books/tanglec
 echo extract1: $TAN
 if [ "$latex" = "" ] ; then
-  echo document ERROR You must install latex first
+  echo "document NOTE: no latex; tangling the file but skipping the PDF"
+  if [ "$#" = "3" ]; then EXF=`basename $3 .pamphlet`; else EXF=`basename $1 .pamphlet`; fi
+  $TAN $EXF.pamphlet >$EXF
+  : >$EXF.pdf
   exit 0
 fi
 if [ ! -f axiom.sty ] ; then cp $STY . ; fi
