@@ -3443,7 +3443,13 @@ it shows up as
 \begin{chunk}{defun embed2 0}
 (defun embed2 (name newDef oldDef)
  (declare (special |$embeddedFunctions|))
-  (setf (symbol-function name) newDef)
+  ;; newDef is usually a (lambda ...) LIST built by the tracer.  GCL accepted a
+  ;; lambda-list as a function value; SBCL's (setf symbol-function) demands a
+  ;; real FUNCTION, so coerce a non-function newDef (e.g. )trace on a domain
+  ;; constructor -> traceDomainConstructor's embed).  Keep the raw newDef in the
+  ;; $embeddedFunctions record so unembed restores exactly what was installed.
+  (setf (symbol-function name)
+        (if (functionp newDef) newDef (coerce newDef 'function)))
   (push (list name newDef oldDef) |$embeddedFunctions|)
   name)
 
