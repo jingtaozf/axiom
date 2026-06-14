@@ -33,7 +33,6 @@ jobs:
     runs-on: macos-14
     timeout-minutes: 120
     outputs:
-      cache-hit: ${{ steps.cache.outputs.cache-hit }}
       cache-key: ${{ steps.key.outputs.value }}
     env:
       LISPFLAVOR: sbcl
@@ -66,14 +65,24 @@ jobs:
       - name: Compute cache key
         id: key
         # Single source of truth for the key so the `test` shards restore exactly
-        # what `build` saved.  ci/run-regression.sh is in the hash so editing the
-        # harness misses the key and re-runs the suite.
+        # what `build` saved.  Hash ONLY genuine build inputs -- NOT ci/run-
+        # regression.sh or the workflow.  Including non-build files would bust the
+        # key on a harness edit, force a restore-key (prefix) match against an
+        # older cache, and -- because a fresh `git checkout` re-stamps sources to
+        # "now" -- make `make` think every cached .fasl is stale and try a partial
+        # rebuild that dies "fasl older than source".  Keeping the key to build
+        # inputs means a harness/doc edit is an EXACT hit (no rebuild at all).
         run: |
-          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet', 'ci/run-regression.sh') }}" >> "$GITHUB_OUTPUT"
+          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
 
-      - name: Cache build artifacts (obj/int/mnt/lsp)
+      - name: Restore build cache (obj/int/mnt/lsp)
         id: cache
-        uses: actions/cache@v4
+        # Restore-only + a success-gated save below: actions/cache's combined
+        # action saves in a post-step even when the build FAILED, which would
+        # persist a half-built tree and let the next run exact-hit it green.
+        # No restore-keys: on a miss we rm + clean-build anyway, so a prefix
+        # match would only waste a download of a tree we delete.
+        uses: actions/cache/restore@v4
         with:
           path: |
             obj
@@ -81,40 +90,51 @@ jobs:
             mnt
             lsp/Makefile
           key: ${{ steps.key.outputs.value }}
-          # A key miss still restore-key-matches the prior cache, so the build
-          # stays incremental (fast); only a from-scratch runner pays the full cost.
-          restore-keys: |
-            axiom-sbcl-${{ runner.arch }}-
 
       - name: Build axiom (SBCL, interp + algebra only)
         id: build
         run: |
-          set -x
+          set -ex
           export AXIOM="$PWD/mnt/MACOSX"
           export PATH="$AXIOM/bin:$PATH"
-          # The regression tests need only interpsys + the algebra; they exclude
-          # graphics/hyperdoc.  Build just those SRCDIRS and skip libspad -- its
-          # C library bundles graphics C (xdither's <malloc.h>, X11) that cannot
-          # build on macOS and that the SBCL interpreter does not link.
-          # prereqs of `all` minus libspad: dir tree, axiom.sty, the C tangler,
-          # and the lsp/ sbcl `lisp` wrapper.
-          make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
-            2>&1 | tee /tmp/build.log | tail -n 200
-          # the `all` recipe normally generates this then runs the cascade.
-          books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
-          # Shrink SRCDIRS to interp+share+algebra by editing the generated
-          # Makefile's own `SRCDIRS:="..."` line, NOT via a command-line override.
-          # A cmdline `SRCDIRS=` propagates to sub-makes through MAKEFLAGS with its
-          # quotes intact, so src/Makefile sees the literal `"interpdir` as a target
-          # and dies `No rule to make target`.  Editing the := line preserves the
-          # original flow: the quotes survive only the ENV-string -> shell hop in
-          # `cd src; ${ENV} ${MAKE}` and reach the sub-make already stripped.
-          # The dropped dirs (graph/hyper/sman/browser/etc) need C/X11 absent on macOS.
-          perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="interpdir sharedir algebradir"/m' Makefile.MACOSX
-          time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang \
-            2>&1 | tee -a /tmp/build.log | tail -n 4000
-          test -x obj/MACOSX/bin/interpsys
-          test -x mnt/MACOSX/bin/AXIOMsys
+          if [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
+            # Exact key hit: build inputs are byte-identical to when this cache was
+            # saved, so the restored tree (interpsys, AXIOMsys, algebra) is already
+            # correct.  Do NOT rebuild -- a fresh `git checkout` stamps sources to
+            # "now", which makes `make` see every cached .fasl as stale and load a
+            # half-recompiled fasl ("fasl older than source" -> fatal).  Touch the
+            # artifacts newer than the checkout so make has nothing to do, then
+            # just verify the binaries.
+            find obj int mnt lsp -exec touch {} + 2>/dev/null || true
+            test -x obj/MACOSX/bin/interpsys
+            test -x mnt/MACOSX/bin/AXIOMsys
+            echo "exact cache hit -- reused built tree, skipped rebuild"
+          else
+            # Miss (cold runner, or a build input changed): build CLEAN.  Delete any
+            # restore-key-matched partial tree so we never load a stale fasl, and
+            # use pipefail so a real `make` failure fails the job -- the old
+            # `| tee | tail` returned tail's status and masked make's exit code.
+            set -o pipefail
+            rm -rf obj int mnt
+            # The regression tests need only interpsys + the algebra (no graphics/
+            # hyperdoc), so build just those SRCDIRS and skip libspad, whose C
+            # library bundles X11/graphics C that cannot build on macOS.
+            make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
+              2>&1 | tee /tmp/build.log | tail -n 200
+            # the `all` recipe normally generates this then runs the cascade.
+            books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
+            # Shrink SRCDIRS by editing the generated Makefile's own `SRCDIRS:="..."`
+            # line, NOT a command-line override: a cmdline SRCDIRS= propagates to
+            # sub-makes through MAKEFLAGS with its quotes intact, so src/Makefile
+            # sees the literal `"interpdir` as a target and dies `No rule to make
+            # target`.  Editing the := line keeps the quotes surviving only the
+            # ENV-string -> shell hop in `cd src; ${ENV} ${MAKE}`.
+            perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="interpdir sharedir algebradir"/m' Makefile.MACOSX
+            time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang \
+              2>&1 | tee -a /tmp/build.log | tail -n 4000
+            test -x obj/MACOSX/bin/interpsys
+            test -x mnt/MACOSX/bin/AXIOMsys
+          fi
 
       - name: Smoke test (1+1, factor, integrate)
         run: |
@@ -122,6 +142,19 @@ jobs:
           printf '%s\n' ')set messages time off' '1 + 1' 'factor(120)' 'integrate(x^2,x)' ')quit' \
             | mnt/MACOSX/bin/AXIOMsys 2>&1 | tee /tmp/smoke.log
           grep -q 'Type: PositiveInteger' /tmp/smoke.log
+
+      - name: Save build cache
+        # Persist ONLY a freshly built tree that also passed smoke -- never a
+        # partial/broken one.  Skipped on an exact hit (nothing new to save).
+        if: success() && steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          key: ${{ steps.key.outputs.value }}
 
       - name: Upload build log on failure
         if: failure()
@@ -135,9 +168,11 @@ jobs:
 
   test:
     needs: build
-    # Skip the whole matrix when the exact cache key hit: identical build + harness
-    # => identical result, already proven by the run that populated the cache.
-    if: needs.build.outputs.cache-hit != 'true'
+    # Always run the sharded suite: at ~5 min across 5 shards it is cheap enough
+    # that an unconditional run is simpler and safer than a skip-gate, and it
+    # guarantees a harness or test-input edit is actually exercised (those files
+    # are deliberately NOT in the build cache key, so they no longer perturb the
+    # build).
     runs-on: macos-14
     timeout-minutes: 60
     strategy:

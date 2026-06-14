@@ -63,6 +63,18 @@ awk '/^REGRESSTESTS=/{f=1} f{print} f&&/zlindep/{exit}' "$SPD/src/input/Makefile
     done > "$ALL"
 TOTAL=$(wc -l < "$ALL" | tr -d ' ')
 
+# Guard against silent suite shrinkage.  The awk above stops at the first
+# /zlindep/ line; if a regress entry is added after it, or the marker is
+# renamed, the list could quietly lose tests while every shard stays green.
+# Fail loudly if the discovered count drops below a floor.
+EXPECTED_MIN="${EXPECTED_MIN:-500}"
+if [ "$TOTAL" -lt "$EXPECTED_MIN" ]; then
+  echo "FATAL: discovered only $TOTAL regression tests (< $EXPECTED_MIN expected)." >&2
+  echo "  The REGRESSTESTS parse in src/input/Makefile.pamphlet likely broke" >&2
+  echo "  (zlindep marker moved/renamed?).  Refusing to report a shrunk suite green." >&2
+  exit 2
+fi
+
 # Order: heavy tests first (Risch family + measured non-Risch heavies), then the
 # fast bulk.  Front-loading minimises makespan under the dynamic queue.
 NAMES="$WORKROOT/names.txt"; HEAVY="$WORKROOT/heavy.txt"
