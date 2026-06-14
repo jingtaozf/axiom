@@ -28722,7 +28722,10 @@ needs s0 similar to hasSig.
  (let (|$domPvar| fun atts u x cond s)
  (declare (special |$domPvar|))
   (cond
-   ((setq fun (car dom))
+   ;; dom can be the bare $ symbol (e.g. (hasAtt $ finiteAggregate ...) from
+   ;; evalMmCat1).  GCL's lenient (car $) returns nil; SBCL signals a TYPE-ERROR.
+   ;; ifcar yields nil for a non-cons, so we fall through to '|failed| as GCL did.
+   ((setq fun (ifcar dom))
     (cond
      ((setq atts 
         (|subCopy| (getdatabase fun 'attributes) (|constructSubst| dom)))
