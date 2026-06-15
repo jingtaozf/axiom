@@ -340,6 +340,18 @@ orgtangle: books/orgtangle.c
 srctangle-tools: tanglec untanglec orgtangle
 	@chmod +x ${BOOKS}/srctangle
 
+# Byte-exact gate for the org-native migration.  Regenerate every tracked
+# source pamphlet twice -- from BASE (with BASE's untanglec) and from the
+# working tree (with the current untanglec) -- and assert they are identical.
+# Allowlist-free: an intentional content edit between BASE and the tree is
+# invisible; only a prose rewrite that actually moved pamphlet bytes fails it,
+# which is exactly the invariant each org-native phase must hold.  BASE
+# defaults to HEAD (the script's own default when $(BASE) is empty).
+#   make check-pamphlet-bytes BASE=<commit-before-the-phase>
+check-pamphlet-bytes:
+	@echo t05 byte-exact pamphlet gate vs $(BASE)
+	@tools/check-pamphlet-bytes.sh $(BASE)
+
 # Regenerate a .pamphlet beside every migrated .org (those carrying a
 # ':noweb yes' chunk).  Only needed to build PDFs or to run the build in
 # AXIOM_TANGLE_VIA_PAMPHLET=1 mode; the default direct build never calls it.

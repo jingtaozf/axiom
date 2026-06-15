@@ -240,6 +240,44 @@ Returns (:ok N :differ N :failures (RELPATH ...))."
     (list :ok ok :differ bad :failures fails)))
 #+END_SRC
 
+* Build-path byte gate (=check-pamphlet-bytes.sh=)
+
+=pamphlet-roundtrip-test-all= above proves the *elisp* converter is
+reversible on the upstream pamphlets, in memory.  It does not exercise the
+path the build actually takes: the C =books/untanglec.c= reading the
+*migrated tracked =.org=*.  =tools/check-pamphlet-bytes.sh= closes that gap
+and is the per-phase gate.
+
+Its invariant is stronger and needs no allowlist: regenerate every tracked
+source pamphlet twice -- once from a BASE ref with BASE's own =untanglec=,
+once from the working tree with the current =untanglec= -- and assert the
+two are byte-identical.  Because it compares *build output across a change*,
+an intentional content edit living in =BASE..worktree= (an SBCL code patch,
+a Makefile rewiring) is invisible to it; only a prose rewrite that actually
+moved pamphlet bytes can make it fail.  That is exactly the property each
+org-native phase must preserve.
+
+Two traps the script encodes:
+
+- *Tracked-only.*  It selects =git ls-files '*.org'=, not a working-tree
+  =grep=, so git-ignored build artifacts that happen to carry =:noweb yes=
+  (e.g. =src/interp/bookvol5.org=, regenerated during the build) never enter
+  the gate and never raise a false regression.
+- *No =mapfile=.*  The recipe runs under macOS =/bin/bash= 3.2, which
+  predates =mapfile= (bash 4); the candidate list is streamed through a temp
+  file instead.
+
+Run it after each phase (BASE defaults to HEAD):
+
+#+BEGIN_SRC sh
+make check-pamphlet-bytes BASE=<pre-phase-ref>   # e.g. the commit before phase 1
+# or directly:
+tools/check-pamphlet-bytes.sh <pre-phase-ref>
+#+END_SRC
+
+Exit 0 means the rewrite was byte-transparent; exit 1 lists every pamphlet
+whose bytes moved.
+
 * Migration + build helpers
 
 The migration makes =X.pamphlet.org= the source and treats =X.pamphlet=
