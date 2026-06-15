@@ -4,9 +4,9 @@
 \pagenumbering{arabic}
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
-\chapter{Axiom Features}
+* Axiom Features
 \label{ch:axiom features}
-\section{Introduction to Axiom}
+** Introduction to Axiom
 Welcome to the world of Axiom.
 We call Axiom a scientific computation system:
 a self-contained toolbox designed to meet
@@ -16,7 +16,7 @@ from symbolics, to numerics, to graphics.
 This introduction is a quick overview of some of the
 features Axiom offers.
 
-\subsection{Symbolic Computation}
+*** Symbolic Computation
 Axiom provides a wide range of simple commands for symbolic
 mathematical problem solving.  Do you need to solve an equation, to
 expand a series, or to obtain an integral?  If so, just ask Axiom
@@ -57,7 +57,7 @@ $$
 Axiom provides state-of-the-art algebraic machinery to handle your
 most advanced symbolic problems.  
 
-\subsection{Numeric Computation}
+*** Numeric Computation
 Axiom has a numerical library that includes operations for linear
 algebra, solution of equations, and special functions.  For many of
 these operations, you can select any number of floating point digits
@@ -116,7 +116,7 @@ algebra, basic statistics, step-wise regression, analysis of variance,
 time series analysis, mathematical programming, and special functions.
 Contact the Numerical Algorithms Group Limited, Oxford, England.
 
-\subsection{Mathematical Structures}
+*** Mathematical Structures
 Axiom also has many kinds of mathematical structures.  These
 range from simple ones (like polynomials and matrices) to more
 esoteric ones (like ideals and Clifford algebras).  Most structures
@@ -159,7 +159,7 @@ $$
 $$
 \returnType{Type: Union(Matrix Fraction Polynomial Complex Integer,...)}
 
-\subsection{HyperDoc}
+*** HyperDoc
 
 \begin{figure}[htbp]
 %\includegraphics[bbllx=1, bblly=1, bburx=298, bbury=290]{ps/bookvol1a.ps}
@@ -184,7 +184,7 @@ series of HyperDoc windows
 and mouse clicks, you and
 HyperDoc generate the correct command to issue to compute the answer.
 
-\subsection{Interactive Programming }
+*** Interactive Programming 
 Axiom's interactive programming language lets you define your
 own functions.  A simple example of a user-defined function is one
 that computes the successive Legendre polynomials.  Axiom lets
@@ -217,11 +217,11 @@ To actually get a value of a Legendre polynomial, you ask for it.
 What is the tenth Legendre polynomial?
 
 \spadcommand{p(10)}
-\begin{verbatim}
+#+begin_example
    Compiling function p with type Integer -> Polynomial Fraction 
       Integer 
    Compiling function p as a recurrence relation.
-\end{verbatim}
+#+end_example
 $$
 {{{46189} \over {256}} \  {x \sp {10}}} -{{{109395} \over {256}} \  {x \sp 
 8}}+{{{45045} \over {128}} \  {x \sp 6}} -{{{15015} \over {128}} \  {x \sp 
@@ -252,7 +252,7 @@ In general, a user function is type-analyzed and compiled on first use.
 Later, if you use it with a different kind of object, the function
 is recompiled if necessary.
 
-\subsection{Graphics}
+*** Graphics
 
 You may often want to visualize a symbolic formula or draw a graph
 from a set of numerical values.  To do this, you can call upon the
@@ -288,7 +288,7 @@ We can plot a solution to this equation in Axiom with the command:
 \end{figure}
 Draw $J_0(\sqrt{x^2+y^2})$ for $-20 \leq x,y \leq 20$.
 
-\subsection{Data Structures}
+*** Data Structures
 
 A variety of data structures are available for interactive use.  These
 include strings, lists, vectors, sets, multisets, and hash tables.  A
@@ -387,7 +387,7 @@ Note the use of ``\%'' here. This means the value of the last
 expression we computed. In this case it is the long expression
 above. 
 
-\subsection{Pattern Matching}
+*** Pattern Matching
 
 A convenient facility for symbolic computation is ``pattern
 matching.''  Suppose you have a trigonometric expression and you want
@@ -409,13 +409,13 @@ form:
 
 Then we use the {\bf )read} command to read the {\bf input} file.
 The {\bf )read} command yields:
-\begin{verbatim}
+#+begin_example
    {sin(y + x) == cos(x)sin(y) + cos(y)sin(x),
     cos(y + x) == - sin(x)sin(y) + cos(x)cos(y), 
     sin(2x) == 2cos(x)sin(x),
                        2         2
     cos(2x) == - sin(x)  + cos(x) }
-\end{verbatim}
+#+end_example
 \returnType{Type: Ruleset(Integer,Integer,Expression Integer)}
 
 Now we can apply the rules to a simple trigonometric expression.
@@ -449,7 +449,7 @@ you can create your own library of transformation
 rules relevant to your applications, then selectively apply the rules
 you need.
 
-\subsection{Polymorphic Algorithms}
+*** Polymorphic Algorithms
 All components of the Axiom algebra library are written in the
 Axiom library language called {\bf Spad}.\footnote{{\bf Spad} is 
 short for Scratchpad which was the original name of the Axiom system}  
@@ -516,7 +516,7 @@ with equations over any ``field.''  Examples of fields are the
 rational numbers, floating point numbers, rational functions, power
 series, and general expressions involving radicals.
 
-\subsection{Extensibility}
+*** Extensibility
 
 Users and system developers alike can augment the Axiom library,
 all using one common language.  Library code, like interpreter code,
@@ -528,7 +528,7 @@ terms of a database of algebraic properties.  By following the
 language protocols, there is an automatic, guaranteed interaction
 between your code and that of colleagues and system implementers.
 
-\subsection{Open Source}
+*** Open Source
 
 Axiom is completely open source. All of the algebra and all of the
 source code for the interpreter, compiler, graphics, browser, and
@@ -553,7 +553,7 @@ Axiom is hosted at the Sourceforge site which is\\
 (http://sourceforge.net/projects/axiom).
 
 \vfill\eject
-\chapter{Ten Fundamental Ideas}
+* Ten Fundamental Ideas
 \label{ch:Ten Fundamental Ideas}
 Axiom has both an {\it interactive language} for user
 interactions and a {\it programming language} for building library
@@ -593,16 +593,16 @@ omitted for common types in the interactive language.
 So much for the nutshell.
 Here are these basic ideas described by ten design principles:
 
-\subsection{Types are Defined by Abstract Datatype Programs}
+*** Types are Defined by Abstract Datatype Programs
 
 Basic types are called {\it domains of computation}, or,
 simply, {\it domains.}
 \index{domain}
 Domains are defined by Axiom programs of the form:
 
-\begin{verbatim}
+#+begin_example
 Name(...): Exports == Implementation
-\end{verbatim}
+#+end_example
 
 Each domain has a capitalized {\tt Name} that is used to refer to the
 class of its members.  For example, {\tt Integer} denotes ``the
@@ -643,7 +643,7 @@ objects of the domain. Thus the operation of adding two vectors of
 real numbers can be described and implemented using the addition
 operation from {\tt Float}. 
 
-\subsection{The Type of Basic Objects is a Domain or Subdomain}
+*** The Type of Basic Objects is a Domain or Subdomain
 
 Every Axiom object belongs to a {\it unique} domain.  The domain
 of an object is also called its {\it type.}  Thus the integer $7$
@@ -664,15 +664,15 @@ however, must list a subset of the exports of the domain.  The {\tt
 Implementation} part optionally gives special definitions for
 subdomain objects.
 
-\subsection{Domains Have Types Called Categories}
+*** Domains Have Types Called Categories
 
 Domains and subdomains in Axiom are themselves objects that have
 types.  The type of a domain or subdomain is called a {\it category}.
 \index{category} Categories are described by programs of the form:
 
-\begin{verbatim}
+#+begin_example
 Name(...): Category == Exports
-\end{verbatim}
+#+end_example
 The type of every category is the distinguished symbol {\tt Category.}
 The category {\tt Name} is used to designate the class of domains of
 that type.  For example, category {\tt Ring} designates the class
@@ -697,18 +697,18 @@ but ``matrix of lists'' is not.
 Categories say nothing about representation. Domains, which are
 instances of category types, specify representations.
 
-\subsection{Operations Can Refer To Abstract Types}
+*** Operations Can Refer To Abstract Types
 
 All operations have prescribed source and target types.  Types can be
 denoted by symbols that stand for domains, called ``symbolic
 domains.''  The following lines of Axiom code use a symbolic
 domain $R$:
 
-\begin{verbatim}
+#+begin_example
 R: Ring
 power: (R, NonNegativeInteger): R -> R
 power(x, n) == x ** n
-\end{verbatim}
+#+end_example
 
 Line 1 declares the symbol $R$ to be a ring.  Line 2 declares the
 type of $power$ in terms of $R$.  From the definition on
@@ -721,7 +721,7 @@ $power("oxford",2)$ however fails since $"oxford"$ has type
 Using symbolic domains, algorithms can be defined in their most
 natural or general setting.
 
-\subsection{Categories Form Hierarchies}
+*** Categories Form Hierarchies
 
 Categories form hierarchies (technically, directed-acyclic graphs).  A
 simplified hierarchical world of algebraic categories is shown below.
@@ -732,18 +732,18 @@ and rings are also algebraic sets.  Likewise, fields and integral
 domains are rings and algebraic sets.  However fields and integral
 domains are not ordered sets.
 
-\begin{verbatim}
+#+begin_example
 SetCategory +---- Ring       ---- IntegralDomain ---- Field
             |
             +---- Finite     ---+
             |                    \
             +---- OrderedSet -----+ OrderedFinite
-\end{verbatim}
+#+end_example
 \begin{center}
 Figure 1.  A  simplified category hierarchy.
 \end{center}
 
-\subsection{Domains Belong to Categories by Assertion}
+*** Domains Belong to Categories by Assertion
 
 A category designates a class of domains.  Which domains?  You might
 think that {\tt Ring} designates the class of all domains that
@@ -754,9 +754,9 @@ so.  Each domain must {\it assert} which categories it belongs to.
 The {\tt Export} part of the definition for {\tt Integer} reads,
 for example:
 
-\begin{verbatim}
+#+begin_example
 Join(OrderedSet, IntegralDomain,  ...) with ...
-\end{verbatim}
+#+end_example
 
 This definition asserts that {\tt Integer} is both an ordered set
 and an integral domain.  In fact, {\tt Integer} does not
@@ -769,9 +769,9 @@ all: it inherits them all from $Ring$!  Since
 Assertions can be conditional.  For example, {\tt Complex(R)}
 defines its exports by:
 
-\begin{verbatim}
+#+begin_example
 Ring with ... if R has Field then Field ...
-\end{verbatim}
+#+end_example
 Thus {\tt Complex(Float)} is a field but {\tt Complex(Integer)}
 is not since {\tt Integer} is not a field.
 
@@ -789,7 +789,7 @@ definition for {\tt abs} in Axiom is protected by context:
 argument $x$ is required to be a member of a domain of category
 {\tt OrderedSet}.
 
-\subsection{Packages Are Clusters of Polymorphic Operations}
+*** Packages Are Clusters of Polymorphic Operations
 
 In Axiom, facilities for symbolic integration, solution of
 equations, and the like are placed in ``packages''.  A {\it package}
@@ -802,9 +802,9 @@ If you want to use Axiom, for example, to define some algorithms
 for solving equations of polynomials over an arbitrary field $F$,
 you can do so with a package of the form:
 
-\begin{verbatim}
+#+begin_example
 MySolve(F: Field): Exports == Implementation
-\end{verbatim}
+#+end_example
 where {\tt Exports} specifies the {\bf solve} operations
 you wish to export from the domain and the {\tt Implementation}
 defines functions for implementing your algorithms.  Once Axiom has
@@ -812,7 +812,7 @@ compiled your package, your algorithms can then be used for any {\tt F}:
 floating-point numbers, rational numbers, complex rational functions,
 and power series, to name a few.
 
-\subsection{The Interpreter Builds Domains Dynamically}
+*** The Interpreter Builds Domains Dynamically
 
 The Axiom interpreter reads user input then builds whatever types
 it needs to perform the indicated computations.
@@ -864,7 +864,7 @@ the argument of {\tt Matrix} is required to be a {\tt Ring},
 Axiom will not build nonsensical types such as ``matrices of
 input files''.
 
-\subsection{Axiom Code is Compiled}
+*** Axiom Code is Compiled
 
 Axiom programs are statically compiled to machine code, then
 placed into library modules.  Categories provide an important role in
@@ -877,7 +877,7 @@ obtaining efficient object code by enabling:
 though {\tt R} is unknown).
 \end{itemize}
 
-\subsection{Axiom is Extensible}
+*** Axiom is Extensible
 
 Users and system implementers alike use the Axiom language to
 add facilities to the Axiom library.  The entire Axiom
@@ -913,7 +913,7 @@ using field objects defined in the system; past, present, or future.
 Before embarking on the tour, we need to brief those readers working
 interactively with Axiom on some details. 
 
-\chapter{Starting Axiom}
+* Starting Axiom
 \label{ch:Starting Axiom}
 
 Welcome to the Axiom environment for interactive computation and
@@ -925,7 +925,7 @@ of numbers, to data types (like lists, arrays, and sets) and
 mathematical objects (like matrices, integrals, and differential
 equations).  We include a discussion of system commands and an
 interactive ``undo.''
-\section{Starting Up and Winding Down}
+** Starting Up and Winding Down
 \label{sec:Starting Up and Winding Down}
 You need to know how to start the Axiom system and how to stop it.
 We assume that Axiom has been correctly installed on your
@@ -939,9 +939,9 @@ messages, and then one or more windows appear.
 If you are not running Axiom under the X Window System, there is
 only one window (the console).  At the lower left of the screen there
 is a prompt that \index{prompt} looks like
-\begin{verbatim}
+#+begin_example
 (1) ->
-\end{verbatim}
+#+end_example
 
 When you want to enter input to Axiom, you do so on the same
 line after the prompt.  The ``1'' in ``(1)'', also called the equation
@@ -992,7 +992,7 @@ a closing parenthesis and are used to change your environment.  For
 example, you can set a system variable so that you are not prompted
 for confirmation when you want to leave Axiom.
 
-\subsection{Clef}
+*** Clef
 \label{sec:Clef}
 If you are using Axiom under the X Window System, the
 \index{Clef} \index{command line editor} Clef command
@@ -1016,7 +1016,7 @@ use those letters as the prefix of an Axiom operation name.  If
 a name appears and it is not what you want, press {\bf Tab} again to
 see another name.
 
-\subsection{Typographic Conventions}
+*** Typographic Conventions
 \label{sec:Typographic Conventions}
 In this document we have followed these typographical conventions:
 \begin{itemize}
@@ -1048,7 +1048,7 @@ form.  We have deleted system
 messages from the example output if those messages are not important
 for the discussions in which the examples appear.
 
-\section{The Axiom Language}
+** The Axiom Language
 \label{sec:The Axiom Language}
 The Axiom language is a rich language for performing interactive
 computations and for building components of the Axiom library.
@@ -1058,7 +1058,7 @@ intentionally informal, with details unveiled on an ``as needed''
 basis.  For more information on a particular construct, we suggest you
 consult the index.
 
-\subsection{Arithmetic Expressions}
+*** Arithmetic Expressions
 \label{sec:Arithmetic Expressions}
 For arithmetic expressions, use the ``{\tt +}'' and ``{\tt -}'' operator
 as in mathematics.  Use ``{\tt *}'' for multiplication, and ``{\tt **}''
@@ -1093,7 +1093,7 @@ $$
 $$
 \returnType{Type: Fraction Integer}
 
-\subsection{Previous Results}
+*** Previous Results
 \label{sec:Previous Results}
 \index{\%}
 \index{\%\%}
@@ -1133,7 +1133,7 @@ $$
 $$
 \returnType{Type: PositiveInteger}
 
-\subsection{Some Types}
+*** Some Types
 \label{sec:Some Types}
 Everything in Axiom has a type.  The type determines what operations
 you can perform on an object and how the object can be used.
@@ -1168,7 +1168,7 @@ $$
 $$
 \returnType{Type: Fraction Polynomial Integer}
 
-\subsection{Symbols, Variables, Assignments, and Declarations}
+*** Symbols, Variables, Assignments, and Declarations
 \label{sec:Symbols, Variables, Assignments, and Declarations}
 A {\it symbol} is a literal used for the input of things like
 the ``variables'' in polynomials and power series.
@@ -1240,14 +1240,14 @@ $$
 If no such conversion is possible,
 Axiom refuses to assign a value to $y$.
 \spadcommand{y := 2/3}
-\begin{verbatim}
+#+begin_example
    Cannot convert right-hand side of assignment
    2
    -
    3
 
       to an object of the type Integer of the left-hand side.
-\end{verbatim}
+#+end_example
 
 A type declaration can also be given together with an assignment.
 The declaration can assist Axiom in choosing the correct
@@ -1315,7 +1315,7 @@ as a variable.  Experience will teach you when you are most likely
 going to need to use a quote.  We try to point out the location of
 such trouble spots.
 
-\subsection{Conversion}
+*** Conversion
 \label{sec:Conversion}
 \index{conversion}
 \index{::}
@@ -1346,7 +1346,7 @@ Some conversions can be performed automatically when Axiom tries
 to evaluate your input.  Others conversions must be explicitly
 requested.
 
-\subsection{Calling Functions}
+*** Calling Functions
 \label{sec:Calling Functions}
 As we saw earlier, when you want to add or subtract two values, you
 place the arithmetic operator ``{\tt +}'' or ``{\tt -}'' between the two
@@ -1412,7 +1412,7 @@ object returned by the operation and not rely on a physical
 change having occurred within the object. Usually, destructive
 operations are provided for efficiency reasons.
 
-\subsection{Some Predefined Macros}
+*** Some Predefined Macros
 \label{sec:Some Predefined Macros}
 Axiom provides several macros for your convenience. Macros are names
 \index{macro!predefined} (or forms) that expand to larger expressions
@@ -1440,7 +1440,7 @@ for commonly used values.
 To display all the macros (along with anything you have
 defined in the workspace), issue the system command {\tt )display all}.
 
-\subsection{Long Lines}
+*** Long Lines
 \label{sec:Long Lines}
 When you enter Axiom expressions from your keyboard, there will
 be times when they are too long to fit on one line.  Axiom does
@@ -1451,20 +1451,20 @@ Alternatively, you may want to enter several shorter lines and have
 Axiom glue them together.  To get this glue, put an underscore
 (\_) at the end of each line you wish to continue.
 \index{\_ escape}
-\begin{verbatim}
+#+begin_example
 2_
 +_
 3
-\end{verbatim}
+#+end_example
 is the same as if you had entered
-\begin{verbatim}
+#+begin_example
 2+3
-\end{verbatim}
+#+end_example
 
 Axiom statements in an {\bf input} file
 can use indentation to indicate the program structure.
 
-\subsection{Comments}
+*** Comments
 \label{sec:Comments}
 Comment statements begin with two consecutive hyphens or two
 consecutive plus signs and continue until the end of the line.
@@ -1482,14 +1482,14 @@ $$
 There is no way to write long multi-line comments other than starting
 each line with ``{\tt --}'' or ``{\tt ++}''.
 
-\section{Using Axiom as a Pocket Calculator}
+** Using Axiom as a Pocket Calculator
 At the simplest level Axiom can be used as a pocket calculator
 where expressions involving numbers and operators are entered 
 directly in infix notation. In this sense the more advanced
 features of the calculator can be regarded as operators (e.g 
 {\bf sin}, {\bf cos}, etc).
 
-\subsection{Basic Arithmetic}
+*** Basic Arithmetic
 An example of this might be to calculate the cosine of 2.45 (in radians).
 To do this one would type:
 
@@ -1553,7 +1553,7 @@ the result is stored as the fraction 2/1 but is displayed as the integer 2.
 This fraction could be converted to type {\tt Integer} with no loss of
 information but Axiom will not do so automatically.
 
-\subsection{Type Conversion}
+*** Type Conversion
 To obtain the floating point value of a fraction one must convert (
 {\bf conversions} are applied by the user and 
 {\bf coercions} are applied automatically by the interpreter) the result
@@ -1640,7 +1640,7 @@ $$
 $$
 \returnType{Type: Float}
 
-\subsection{Useful Functions}
+*** Useful Functions
 To obtain the absolute value of a number the {\bf abs} function can be used.
 This takes a single argument which is usually an integer or a floating point
 value but doesn't necessarily have to be. The sign of a value can be obtained
@@ -1753,7 +1753,7 @@ $$
 Some other functions that are quite useful for manipulating numerical values
 are:
 
-\begin{verbatim}
+#+begin_example
 sin(x)         Sine of x
 cos(x)         Cosine of x
 tan(x)         Tangent of x
@@ -1767,7 +1767,7 @@ min(x,y)       Minimum of x and y
 factorial(x)   Factorial of x
 factor(x)      Prime factors of x
 divide(x,y)    Quotient and remainder of x/y
-\end{verbatim}
+#+end_example
 \index{sin}
 \index{cos}
 \index{tan}
@@ -1783,7 +1783,7 @@ divide(x,y)    Quotient and remainder of x/y
 \index{divide}
 
 Some simple infix and prefix operators:
-\begin{verbatim}
+#+begin_example
 +      Addition             -      Subtraction
 -      Numerical Negation   ~      Logical Negation
 /\     Conjunction (AND)    \/     Disjunction (OR)
@@ -1793,7 +1793,7 @@ not    Logical Negation     **     Exponentiation
 quo    Quotient             rem    Remainder
 <      less than            >      greater than
 <=     less than or equal   >=     greater than or equal
-\end{verbatim}
+#+end_example
 \index{$+$ Addition}
 \index{$-$ Subtraction}
 \index{$-$ Numerical Negation}
@@ -1810,22 +1810,22 @@ quo    Quotient             rem    Remainder
 \index{$>=$ greater than or equal}
 
 Some useful Axiom macros:
-\begin{verbatim}
+#+begin_example
 %i              The square root of -1
 %e              The base of the natural logarithm
 %pi             Pi
 %infinity       Infinity
 %plusInfinity   Positive Infinity
 %minusInfinity  Negative Infinity
-\end{verbatim}
+#+end_example
 
-\section{Using Axiom as a Symbolic Calculator}
+** Using Axiom as a Symbolic Calculator
 In the previous section all the examples involved numbers and simple
 functions. Also none of the expressions entered were assigned to anything.
 In this section we will move on to simple algebra (i.e. expressions involving
 symbols and other features available on more sophisticated calculators).
 
-\subsection{Expressions Involving Symbols}
+*** Expressions Involving Symbols
 Expressions involving symbols are entered just as they are written down,
 for example:
 
@@ -1888,7 +1888,7 @@ $$
 $$
 \returnType{Type: Polynomial Float}
 
-\subsection{Complex Numbers}
+*** Complex Numbers
 For many scientific calculations real numbers aren't sufficient and support
 for complex numbers is also required. Complex numbers are handled in an
 intuitive manner. Axiom uses the {\bf \%i} macro to represent
@@ -1952,7 +1952,7 @@ $$
 $$
 \returnType{Type: Complex Integer}
 
-\subsection{Number Representations}
+*** Number Representations
 By default all numerical results are displayed in decimal with real numbers
 shown to 20 significant figures. If the integer part of a number is longer
 than 20 digits then nothing after the decimal point is shown and the integer
@@ -2142,7 +2142,7 @@ $$
 $$
 \returnType{Type: Factored Integer}
 
-\subsection{Modular Arithmetic}
+*** Modular Arithmetic
 By using the type constructor {\tt PrimeField} it is possible to do 
 arithmetic modulo some prime number. For example, arithmetic module $7$
 can be performed as follows:
@@ -2199,8 +2199,8 @@ $$
 $$
 \returnType{Type: Polynomial PrimeField 7}
 
-\section{General Points about Axiom}
-\subsection{Computation Without Output}
+** General Points about Axiom
+*** Computation Without Output
 It is sometimes desirable to enter an expression and prevent Axiom from
 displaying the result. To do this the expression should be terminated with
 a semicolon ``;''. In a previous section it was mentioned that a set of 
@@ -2212,7 +2212,7 @@ semicolon no output will be produced (except for its type):
 \spadcommand{2 + 4*5;}
 \returnType{Type: PositiveInteger}
 
-\subsection{Accessing Earlier Results}
+*** Accessing Earlier Results
 \index{\%}
 \index{\%\%}
 The ``\%'' macro represents the result of the previous computation. The 
@@ -2224,7 +2224,7 @@ refers to previous results counting backwards from the last result. That is,
 ``\%\%(-1)'' is the same as ``\%''. The value of ``\%\%(0)'' is not defined and
 will generate an error if requested.
 
-\subsection{Splitting Expressions Over Several Lines}
+*** Splitting Expressions Over Several Lines
 Although Axiom will quite happily accept expressions that are longer than
 the width of the screen (just keep typing without pressing the {\bf Return}
 key) it is often preferable to split the expression being entered at a point
@@ -2232,11 +2232,11 @@ where it would result in more readable input. To do this the underscore
 ``\_'' symbol is placed before the break point and then the {\bf Return}
 key is pressed. The rest of the expression is typed on the next line,
 can be preceeded by any number of whitespace chars, for example:
-\begin{verbatim}
+#+begin_example
 2_
 +_
 3
-\end{verbatim}
+#+end_example
 $$
 5 
 $$
@@ -2258,7 +2258,7 @@ ThisIsAVeryLongVariableName
 $$
 \returnType{Type: Variable ThisIsAVeryLongVariableName}
 
-\subsection{Comments and Descriptions}
+*** Comments and Descriptions
 \index{-- comments}
 \index{++ comments}
 \index{+++ comments}
@@ -2279,7 +2279,7 @@ comments are used within the algebra files and are processed by the
 compiler to add to the documentation. The so-called ``minus minus''
 comments are ignored everywhere.
 
-\subsection{Control of Result Types}
+*** Control of Result Types
 \index{:: conversion}
 In earlier sections the type of an expression was converted to another
 via the ``::'' operator. However, this is not the only method for
@@ -2321,15 +2321,15 @@ $$
 \returnType{Type: String}
 
 \spadcommand{(2 + 3)@String}
-\begin{verbatim}
+#+begin_example
 An expression involving @ String actually evaluated to one of 
    type PositiveInteger . Perhaps you should use :: String .
-\end{verbatim}
+#+end_example
 
 \spadcommand{(2 + 3)\$String}
-\begin{verbatim}
+#+begin_example
    The function + is not implemented in String .
-\end{verbatim}
+#+end_example
 
 If an expression {\sl X} is converted using one of the three operators to 
 type {\sl T} the interpretations are:
@@ -2344,7 +2344,7 @@ type {\sl T} the interpretations are:
 {\bf @} means choose operators to compute {\sl X} so that the result is of
 type {\sl T}.
 
-\subsection{Using system commands}
+*** Using system commands
 \label{sec:Using system commands}
 We conclude our tour of Axiom with a brief discussion of
 {\it system commands}.  System commands are special statements
@@ -2384,7 +2384,7 @@ properties and values of workspace variables; and {\tt )what}.\index{)what}
 Issue {\tt )what} to get a list of Axiom objects that
 contain a given substring in their name.
 \spadcommand{)what operations integrate}
-\begin{verbatim}
+#+begin_example
 
 Operations whose names satisfy the above pattern(s):
 
@@ -2399,8 +2399,8 @@ pmintegrate            primintegrate          tanintegrate
 To get more information about an operation such as 
 limitedIntegrate , issue the command )display op limitedIntegrate
       
-\end{verbatim}
-\subsection{Using undo}
+#+end_example
+*** Using undo
 \label{sec:Undo}
 A useful system command is {\tt )undo}. \index{)undo}
 Sometimes while computing
@@ -2454,14 +2454,14 @@ Undo to the environment right after I defined $f$.''
 
 ``Here is how I think I want $f$ to be defined instead.''
 \spadcommand{f(n) == d/3*f(n-1) - x*g(n-1)}
-\begin{verbatim}
+#+begin_example
    1 old definition(s) deleted for function or rule f 
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 Redo the computation from expression $3$ forward.
 \spadcommand{)undo )redo}
-\begin{verbatim}
+#+begin_example
 g(n) == -x*f(n-1) + d/3*g(n-1)
  
                                                                    Type: Void
@@ -2488,7 +2488,7 @@ f(3)
 +++ |*1;f;1;G82322;AUX| redefined
 
 +++ |*1;f;1;G82322| redefined
-\end{verbatim}
+#+end_example
 $$
 -{x \sp 3}+{d \  {x \sp 2}} -{{1 \over 3} \  {d \sp 2} \  x}+{{1 \over {27}} 
 \  {d \sp 3}} 
@@ -2502,7 +2502,7 @@ the environment to that immediately after $(4)$.''
 
 ``Check that the value of $f(3)$ is restored.''
 \spadcommand{f(3)}
-\begin{verbatim}
+#+begin_example
    Compiling function g with type Integer -> Polynomial Fraction 
       Integer 
    Compiling function g as a recurrence relation.
@@ -2524,7 +2524,7 @@ the environment to that immediately after $(4)$.''
 +++ |*1;f;1;G82322;AUX| redefined
 
 +++ |*1;f;1;G82322| redefined
-\end{verbatim}
+#+end_example
 $$
 -{x \sp 3}+{{\left( e+{{1 \over 3} \  d} 
 \right)}
@@ -2542,10 +2542,10 @@ disregarding those undone.  The system command {\tt )history
 )write mynew.input} writes a clean straight-line program onto the file
 {\bf mynew.input} on your disk.
 
-\section{Data Structures in Axiom}
+** Data Structures in Axiom
 This chapter is an overview of {\sl some} of the data structures provided
 by Axiom.
-\subsection{Lists}
+*** Lists
 The Axiom {\tt List} type constructor is used to create homogenous lists of
 finite size. The notation for lists and the names of the functions that 
 operate over them are similar to those found in functional languages such
@@ -2974,7 +2974,7 @@ $$
 $$
 \returnType{Type: List PositiveInteger}
 
-\subsection{Segmented Lists}
+*** Segmented Lists
 \label{sec:Segmented Lists}
 \index{Segmented Lists}
 A segmented list is one in which some of the elements are ranges of values.
@@ -3026,7 +3026,7 @@ $$
 $$
 \returnType{Type: Stream Integer}
 
-\subsection{Streams}
+*** Streams
 \label{sec:Streams}
 \index{Streams}
 Streams are infinite lists which have the ability to calculate the next
@@ -3164,7 +3164,7 @@ One other function of interest is {\bf complete} which expands a finite
 stream derived from an infinite one (and thus was still stored as an
 infinite stream) to form a finite stream.
 
-\subsection{Arrays, Vectors, Strings, and Bits}
+*** Arrays, Vectors, Strings, and Bits
 The simplest array data structure is the {\sl one-dimensional array} which
 can be obtained by applying the {\bf oneDimensionalArray} function to a list:
 
@@ -3303,7 +3303,7 @@ $$
 A vector is similar to a one-dimensional array except that if its 
 components belong to a ring then arithmetic operations are provided.
 
-\subsection{Flexible Arrays}
+*** Flexible Arrays
 \label{sec:Flexible Arrays}
 \index{Flexible Arrays}
 Flexible arrays are designed to provide the efficiency of one-dimensional
@@ -3437,7 +3437,7 @@ function and defaults to ``{\tt <=}'' if omitted. Lastly,
 contract when elements are deleted from them. An explicit package
 reference must be given as in the example above.
 
-\section{Functions, Choices, and Loops}
+** Functions, Choices, and Loops
 By now the reader should be able to construct simple one-line expressions
 involving variables and different data structures. This section builds on
 this knowledge and shows how to use iteration, make choices, and build
@@ -3447,7 +3447,7 @@ the examples given.
 
 From this point on most examples will be taken from input files. 
 
-\subsection{Reading Code from a File}
+*** Reading Code from a File
 Input files contain code that will be fed to the command prompt. The 
 primary difference between the command line and an input file is that
 indentation matters. In an input file you can specify ``piles'' of code
@@ -3463,7 +3463,7 @@ the file to the command prompt (as though you typed them) by writing:
 It is good practice to start each input file with the {\bf )clear all}
 command so that all functions and variables in the current environment
 are erased. 
-\subsection{Blocks}
+*** Blocks
 \label{sec:Blocks}
 \index{Blocks}
 \index{pile}
@@ -3495,13 +3495,13 @@ $$
 \returnType{Type: List PositiveInteger}
 
 Doing the same thing using piles in an input file you could type:
-\begin{verbatim}
+#+begin_example
 L :=
   a:=4
   b:=1
   c:=9
   [a,b,c]
-\end{verbatim}
+#+end_example
 $$
 \left[
 4, 1, 9 
@@ -3513,14 +3513,14 @@ Since blocks have a type and a value they can be used as arguments to
 functions or as part of other expressions. It should be pointed out that
 the following example is not recommended practice but helps to illustrate
 the idea of blocks and their ability to return values:
-\begin{verbatim}
+#+begin_example
 sqrt(4.0 +
          a:=3.0
          b:=1.0
          c:=a + b
          c
     )
-\end{verbatim}
+#+end_example
 $$
 2.8284271247\ 461900976 
 $$
@@ -3531,14 +3531,14 @@ had the pile starting at ``a:='' moved left by two spaces so that the
 ``a'' was under the ``('' of the first line then the interpreter would
 signal an error. Furthermore if the closing parenthesis ``)'' is moved 
 up to give
-\begin{verbatim}
+#+begin_example
 sqrt(4.0 +
          a:=3.0
          b:=1.0
          c:=a + b
          c)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
   Line   1: sqrt(4.0 +
            ....A
   Error  A: Missing mate.
@@ -3552,18 +3552,18 @@ sqrt(4.0 +
   Error  B: syntax error at top level
   Error  B: Possibly missing a ) 
    5 error(s) parsing 
-\end{verbatim}
+#+end_example
 then the parser will generate errors. If the parenthesis is shifted right 
 by several spaces so that it is in line with the ``c'' thus:
-\begin{verbatim}
+#+begin_example
 sqrt(4.0 +
          a:=3.0
          b:=1.0
          c:=a + b
          c
          )
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
   Line   1: sqrt(4.0 +
            ....A
   Error  A: Missing mate.
@@ -3578,17 +3578,17 @@ sqrt(4.0 +
   Error  A: syntax error at top level
   Error  A: Possibly missing a ) 
    5 error(s) parsing 
-\end{verbatim}
+#+end_example
 a similar error will be raised. Finally, the ``)'' must be indented by 
 at least one space relative to the sqrt thus:
-\begin{verbatim}
+#+begin_example
 sqrt(4.0 +
          a:=3.0
          b:=1.0
          c:=a + b
          c
  )
-\end{verbatim}
+#+end_example
 $$
 2.8284271247\ 461900976 
 $$
@@ -3605,40 +3605,40 @@ from using them in these situations. Using piles should really be restricted
 to constructing functions, etc. and a small amount of rewriting can remove
 the need to use them as arguments. For example, the previous block could
 easily be implemented as:
-\begin{verbatim}
+#+begin_example
 a:=3.0
 b:=1.0
 c:=a + b
 sqrt(4.0 + c)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 a:=3.0
-\end{verbatim}
+#+end_example
 $$
 3.0
 $$
 \returnType{Type: Float}
 
-\begin{verbatim}
+#+begin_example
 b:=1.0
-\end{verbatim}
+#+end_example
 $$
 1.0
 $$
 \returnType{Type: Float}
 
-\begin{verbatim}
+#+begin_example
 c:=a + b
-\end{verbatim}
+#+end_example
 $$
 4.0
 $$
 \returnType{Type: Float}
 
-\begin{verbatim}
+#+begin_example
 sqrt(4.0 + c)
-\end{verbatim}
+#+end_example
 $$
 2.8284271247\ 461900976
 $$
@@ -3646,7 +3646,7 @@ $$
 
 which achieves the same result and is easier to understand. Note that this
 is still a pile but it is not as fragile as the previous version.
-\subsection{Functions}
+*** Functions
 Definitions of functions in Axiom are quite simple providing two things
 are observed. First, the type of the function must either be completely
 specified or completely unspecified. Second, the body of the function is
@@ -3692,9 +3692,9 @@ Now the actual function definitions might be:
 
 with some invocations of these functions:
 \spadcommand{f()}
-\begin{verbatim}
+#+begin_example
    Compiling function f with type () -> List Integer 
-\end{verbatim}
+#+end_example
 $$
 \left[\ 
 \right]
@@ -3702,9 +3702,9 @@ $$
 \returnType{Type: List Integer}
 
 \spadcommand{g(4)}
-\begin{verbatim}
+#+begin_example
    Compiling function g with type Integer -> List Integer 
-\end{verbatim}
+#+end_example
 $$
 \left[
 4 
@@ -3713,9 +3713,9 @@ $$
 \returnType{Type: List Integer}
 
 \spadcommand{h(2,9)}
-\begin{verbatim}
+#+begin_example
    Compiling function h with type (Integer,Integer) -> List Integer 
-\end{verbatim}
+#+end_example
 $$
 \left[
 2,  9 
@@ -3724,10 +3724,10 @@ $$
 \returnType{Type: List Integer}
 
 \spadcommand{k(-3,42,100)}
-\begin{verbatim}
+#+begin_example
    Compiling function k with type (Integer,Integer,Integer) -> List 
       Integer 
-\end{verbatim}
+#+end_example
 $$
 \left[
 -3,  {42},  {100} 
@@ -3759,7 +3759,7 @@ will crop up continually particularly since they are a good way of testing
 examples. Since the block structure is more complex we will use the {\bf pile}
 notation and thus have to use input files to read the piles.
 
-\subsection{Choices}
+*** Choices
 \label{sec:Choices}
 \index{Choices}
 \index{$=>$ block exit}
@@ -3774,30 +3774,30 @@ where ``else {\sl Expr2}'' can be omitted. If the expression {\sl BooleanExpr}
 evaluates to {\tt true} then {\sl Expr1} is executed otherwise {\sl Expr2}
 (if present) will be executed. An example of piles and {\bf if-then-else} is:
 (read from an input file)
-\begin{verbatim}
+#+begin_example
 h := 2.0
 if h > 3.1 then
       1.0
    else
       z:= cos(h)
       max(x,0.5)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 h := 2.0
-\end{verbatim}
+#+end_example
 $$
 2.0
 $$
 \returnType{Type: Float}
 
-\begin{verbatim}
+#+begin_example
 if h > 3.1 then
       1.0
    else
       z:= cos(h)
       max(x,0.5)
-\end{verbatim}
+#+end_example
 $$
 x
 $$
@@ -3813,7 +3813,7 @@ and the most common will be those involving the relational operators ``$>$'',
 operator ``='' will be {\bf Boolean} but in those situations when it isn't
 you may need to use the ``@'' operator to ensure that it is.
 
-\subsection{Loops}
+*** Loops
 \label{sec:Loops}
 \index{Loops}
 Loops in Axiom are regarded as expressions containing another expression 
@@ -3833,23 +3833,23 @@ This will cause Axiom to execute {\sl loopBody} repeatedly until either a
 {\bf break} or {\bf return} statement is encountered. If {\sl loopBody}
 contains neither of these statements then it will loop forever. The 
 following piece of code will display the numbers from $1$ to $4$:
-\begin{verbatim}
+#+begin_example
 i:=1
 repeat
   if i > 4 then break
   output(i)
   i:=i+1
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 i:=1
-\end{verbatim}
+#+end_example
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 repeat
   if i > 4 then break
   output(i)
@@ -3859,7 +3859,7 @@ repeat
    2
    3
    4
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 \index{break}
@@ -3874,7 +3874,7 @@ statement leaves the current function.
 \index{iterate}
 To skip the rest of a loop body and continue the next iteration of the loop
 use the {\bf iterate} statement (the {\tt --} starts a comment in Axiom)
-\begin{verbatim}
+#+begin_example
 i := 0
 repeat
   i := i + 1
@@ -3882,17 +3882,17 @@ repeat
   -- Return to start if i is odd
   if odd?(i) then iterate
   output(i)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 i := 0
-\end{verbatim}
+#+end_example
 $$
 0
 $$
 \returnType{Type: NonNegativeInteger}
 
-\begin{verbatim}
+#+begin_example
 repeat
   i := i + 1
   if i > 6 then break
@@ -3903,7 +3903,7 @@ repeat
    2
    4
    6
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 \subsubsection{The {\tt while} loop}
@@ -3926,31 +3926,31 @@ Multiple conditions can be applied using the logical operators such as
 {\bf and} or by using several {\bf while} statements before the {\bf repeat}.
 
 By using {\tt and} in the test we get
-\begin{verbatim}
+#+begin_example
 x:=1
 y:=1
 while x < 4 and y < 10 repeat
   output [x,y]
   x := x + 1
   y := y + 2
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 x:=1
-\end{verbatim}
+#+end_example
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
-\begin{verbatim}
+#+begin_example
 y:=1
-\end{verbatim}
+#+end_example
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 while x < 4 and y < 10 repeat
   output [x,y]
   x := x + 1
@@ -3959,36 +3959,36 @@ while x < 4 and y < 10 repeat
    [1,1]
    [2,3]
    [3,5]
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 We could use two parallel whiles
-\begin{verbatim}
+#+begin_example
 x:=1
 y:=1
 while x < 4 while y < 10 repeat
   output [x,y]
   x := x + 1
   y := y + 2
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 x:=1
-\end{verbatim}
+#+end_example
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 y:=1
-\end{verbatim}
+#+end_example
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 while x < 4 while y < 10 repeat
   output [x,y]
   x := x + 1
@@ -3997,12 +3997,12 @@ while x < 4 while y < 10 repeat
    [1,1]
    [2,3]
    [3,5]
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 Note that the last example using two {\bf while} statements is {\sl not} a
 nested loop but the following one is:
-\begin{verbatim}
+#+begin_example
 x:=1
 y:=1
 while x < 4 repeat
@@ -4010,22 +4010,22 @@ while x < 4 repeat
     output [x,y]
     x := x + 1
     y := y + 2
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 y:=1
-\end{verbatim}
+#+end_example
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 while x < 4 repeat
   while y < 10 repeat
     output [x,y]
@@ -4037,13 +4037,13 @@ while x < 4 repeat
    [3,5]
    [4,7]
    [5,9]
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 Suppose that, given a matrix of arbitrary size, we find the position and
 value of the first negative element by examining the matrix in row-major 
 order:
-\begin{verbatim}
+#+begin_example
 m := matrix [ [ 21, 37, 53, 14 ],_
               [  8, 22,-24, 16 ],_
               [  2, 10, 15, 14 ],_
@@ -4061,14 +4061,14 @@ while r <= lastrow repeat
       break -- Don't look any further
     c := c + 1
   r := r + 1
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 m := matrix [ [ 21, 37, 53, 14 ],_
               [  8, 22,-24, 16 ],_
               [  2, 10, 15, 14 ],_
               [ 26, 33, 55,-13 ] ]
-\end{verbatim} 
+#+end_example 
 $$
 \left[
 \begin{array}{cccc}
@@ -4081,31 +4081,31 @@ $$
 $$
 \returnType{Type: Matrix Integer}
 
-\begin{verbatim}
+#+begin_example
 lastrow := nrows(m)
-\end{verbatim}
+#+end_example
 $$
 4
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 lastcol := ncols(m)
-\end{verbatim}
+#+end_example
 $$
 4
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 r := 1
-\end{verbatim}
+#+end_example
 $$
 1
 $$
 \returnType{Type: PositiveInteger}
 
-\begin{verbatim}
+#+begin_example
 while r <= lastrow repeat
   c := 1 -- Index of first column
   while c <= lastcol repeat
@@ -4117,7 +4117,7 @@ while r <= lastrow repeat
   r := r + 1
  
    [2,3,- 24]
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 \subsubsection{The {\tt for} loop}
@@ -4138,13 +4138,13 @@ where {\sl var} is an index variable which is iterated over the values in
 or $1\ldots$ and {\sl list} is a list of some type. For example:
 
 We can {\sl iterate} the block thus:
-\begin{verbatim}
+#+begin_example
 for i in 1..10 repeat
   ~prime?(i) => iterate
   output(i)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for i in 1..10 repeat
   ~prime?(i) => iterate
   output(i)
@@ -4153,16 +4153,16 @@ for i in 1..10 repeat
    3
    5
    7
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 We can iterate over a list
-\begin{verbatim}
+#+begin_example
 for w in ["This", "is", "your", "life!"] repeat
   output(w)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for w in ["This", "is", "your", "life!"] repeat
   output(w)
  
@@ -4170,7 +4170,7 @@ for w in ["This", "is", "your", "life!"] repeat
    is
    your
    life!
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 \index{such that}
@@ -4181,12 +4181,12 @@ for {\sl var} in {\sl seg} \textbar\ {\sl BoolExpr} repeat {\sl loopBody}\\
 for {\sl var} in {\sl list} \textbar\ {\sl BoolExpr} repeat {\sl loopBody}
 \end{center}
 We can iterate over a segment
-\begin{verbatim}
+#+begin_example
 for i in 1..10 | prime?(i) repeat
   output(i)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for i in 1..10 | prime?(i) repeat
   output(i)
  
@@ -4194,16 +4194,16 @@ for i in 1..10 | prime?(i) repeat
    3
    5
    7
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 or over a list
-\begin{verbatim}
+#+begin_example
 for i in [1,2,3,4,5,6,7,8,9,10] | prime?(i) repeat
   output(i)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for i in [1,2,3,4,5,6,7,8,9,10] | prime?(i) repeat
   output(i)
  
@@ -4211,49 +4211,49 @@ for i in [1,2,3,4,5,6,7,8,9,10] | prime?(i) repeat
    3
    5
    7
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 You can also use a {\bf while} clause:
-\begin{verbatim}
+#+begin_example
 for i in 1.. while i < 7 repeat
   if even?(i) then output(i)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for i in 1.. while i < 7 repeat
   if even?(i) then output(i)
  
    2
    4
    6
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 Using the ``{\bf such that}'' clause makes this appear simpler:
-\begin{verbatim}
+#+begin_example
 for i in 1.. | even?(i) while i < 7 repeat
   output(i)
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for i in 1.. | even?(i) while i < 7 repeat
   output(i)
  
    2
    4
    6
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 You can use multiple {\bf for} clauses to iterate over several sequences
 in parallel:
-\begin{verbatim}
+#+begin_example
 for a in 1..4 for b in 5..8 repeat
   output [a,b]
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for a in 1..4 for b in 5..8 repeat
   output [a,b]
  
@@ -4261,7 +4261,7 @@ for a in 1..4 for b in 5..8 repeat
    [2,6]
    [3,7]
    [4,8]
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 As a general point it should be noted that any symbols referred to in the
@@ -4269,13 +4269,13 @@ As a general point it should be noted that any symbols referred to in the
 either means that the symbols must have been defined in an outer level
 (e.g. in an enclosing loop) or in a {\bf for} clause appearing before the
 ``{\bf such that}'' or {\bf while}. For example:
-\begin{verbatim}
+#+begin_example
 for a in 1..4 repeat
   for b in 7..9 | prime?(a+b) repeat
     output [a,b,a+b]
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for a in 1..4 repeat
   for b in 7..9 | prime?(a+b) repeat
     output [a,b,a+b]
@@ -4284,7 +4284,7 @@ for a in 1..4 repeat
    [3,8,11]
    [4,7,11]
    [4,9,13]
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 \index{for by}
@@ -4292,12 +4292,12 @@ for a in 1..4 repeat
 Finally, the {\bf for} statement has a {\bf by} clause to specify the
 step size. This makes it possible to iterate over the segment in
 reverse order:
-\begin{verbatim}
+#+begin_example
 for a in 1..4 for b in 8..5 by -1 repeat
   output [a,b]
-\end{verbatim}
+#+end_example
 the {\bf )read} yields:
-\begin{verbatim}
+#+begin_example
 for a in 1..4 for b in 8..5 by -1 repeat
   output [a,b]
  
@@ -4305,7 +4305,7 @@ for a in 1..4 for b in 8..5 by -1 repeat
    [2,7]
    [3,6]
    [4,5]
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 Note that without the ``by -1'' the segment 8..5 is empty so there is
@@ -4324,7 +4324,7 @@ General-Distributed-Mul-ti-var-iate-Poly-nomial
 }
 
 
-\section{Numbers}
+** Numbers
 \label{sec:Numbers}
 Axiom distinguishes very carefully between different kinds of
 numbers, how they are represented and what their properties are.  Here
@@ -4621,7 +4621,7 @@ $$
 Inversion is not available if the modulus is not a prime number.
 
 \spadcommand{1/y}
-\begin{verbatim}
+#+begin_example
    There are 12 exposed and 13 unexposed library operations named / 
       having 2 argument(s) but none was determined to be applicable. 
       Use HyperDoc Browse, or issue
@@ -4637,7 +4637,7 @@ Inversion is not available if the modulus is not a prime number.
       
       Perhaps you should use "@" to indicate the required return type, 
       or "$" to specify which version of the function you need.
-\end{verbatim}
+#+end_example
 
 This defines $a$ to be an algebraic number, that is,
 a root of a polynomial equation.
@@ -4737,7 +4737,7 @@ $$
 $$
 \returnType{Type: Quaternion Integer}
 
-\section{Data Structures}
+** Data Structures
 \label{sec:Data Structures}
 Axiom has a large variety of data structures available.  Many
 data structures are particularly useful for interactive computation
@@ -4883,7 +4883,7 @@ $$
 However, one-dimensional arrays are not flexible structures.
 You cannot destructively {\bf concat!} them together.
 \spadcommand{concat!(a,oneDimensionalArray [1,-2])}
-\begin{verbatim}
+#+begin_example
    There are 5 exposed and 0 unexposed library operations named concat!
       having 2 argument(s) but none was determined to be applicable. 
       Use HyperDoc Browse, or issue
@@ -4899,7 +4899,7 @@ You cannot destructively {\bf concat!} them together.
       
       Perhaps you should use "@" to indicate the required return type, 
       or "$" to specify which version of the function you need.
-\end{verbatim}
+#+end_example
 
 Examples of datatypes similar to {\tt OneDimensionalArray}
 are: {\tt Vector}\index{Vector}
@@ -5100,9 +5100,9 @@ stored under key $m$.
 \index{primes}
 \index{rem}
 \spadcommand{for p in primes(2,1000) repeat (m:= p rem 5; t.m:= howMany(m)); t}
-\begin{verbatim}
+#+begin_example
    Compiling function howMany with type Integer -> Integer 
-\end{verbatim}
+#+end_example
 $$
 {\rm table }
 \left(
@@ -5163,7 +5163,7 @@ Using the domain constructors you can add your own data structure or
 extend an existing one.  Choosing the right data structure for your
 application may be the key to obtaining good performance.
 
-\section{Expanding to Higher Dimensions}
+** Expanding to Higher Dimensions
 \label{sec:Expanding to Higher Dimensions}
 To get higher dimensional aggregates, you can create one-dimensional
 aggregates with elements that are themselves aggregates, for example,
@@ -5281,7 +5281,7 @@ $$
 $$
 \returnType{Type: Factored Polynomial Integer}
 
-\section{Writing Your Own Functions}
+** Writing Your Own Functions
 \label{sec:Writing Your Own Functions}
 Axiom provides you with a very large library of predefined
 operations and objects to compute with.  You can use the Axiom
@@ -5320,10 +5320,10 @@ Ask for the value at $50$.  The resulting function created by
 Axiom computes the value by iteration.
 
 \spadcommand{fact(50)}
-\begin{verbatim}
+#+begin_example
    Compiling function fact with type Integer -> Integer 
    Compiling function fact as a recurrence relation.
-\end{verbatim}
+#+end_example
 $$
 30414093201713378043612608166064768844377641568960512000000000000 
 $$
@@ -5347,9 +5347,9 @@ A third version directly uses iteration.
 
 This is the least space-consumptive version.
 \spadcommand{fa(50)}
-\begin{verbatim}
+#+begin_example
    Compiling function fa with type Integer -> Integer 
-\end{verbatim}
+#+end_example
 $$
 30414093201713378043612608166064768844377641568960512000000000000 
 $$
@@ -5364,10 +5364,10 @@ it with multiplication.
 In fact, the resulting computation is optimized into an efficient
 iteration loop equivalent to that of the third version.
 \spadcommand{f(50)}
-\begin{verbatim}
+#+begin_example
 Compiling function f with type 
    PositiveInteger -> PositiveInteger 
-\end{verbatim}
+#+end_example
 $$
 30414093201713378043612608166064768844377641568960512000000000000 
 $$
@@ -5402,7 +5402,7 @@ in {\bf .input} files.  Indentation is used to create {\sl blocks}:
 sequences of expressions that are evaluated in sequence except as
 modified by control statements such as {\tt if-then-else} and {\tt return}.
 
-\begin{verbatim}
+#+begin_example
 permMat(n, i, j) ==
   m := diagonalMatrix
     [(if i = k or j = k then 0 else 1)
@@ -5410,15 +5410,15 @@ permMat(n, i, j) ==
   m(i,j) := 1
   m(j,i) := 1
   m
-\end{verbatim}
+#+end_example
 
 This creates a four by four matrix that interchanges the second and third
 rows.
 \spadcommand{p := permMat(4,2,3)}
-\begin{verbatim}
+#+begin_example
    Compiling function permMat with type (PositiveInteger,
       PositiveInteger,PositiveInteger) -> Matrix Integer 
-\end{verbatim}
+#+end_example
 $$
 \left[
 \begin{array}{cccc}
@@ -5555,7 +5555,7 @@ y}+{x^2}
 $$
 \returnType{Type: Expression Integer}
 
-\section{Polynomials}
+** Polynomials
 \label{sec:Polynomials}
 Polynomials are the commonly used algebraic types in symbolic
 computation.  \index{polynomial} Interactive users of Axiom
@@ -5645,7 +5645,7 @@ last three constructors are typically used in Gr\"{o}bner basis
 when a flat (that is, non-recursive) display is wanted and the term
 ordering is critical for controlling the computation.
 
-\section{Limits}
+** Limits
 \label{sec:Limits}
 \index{limit}
 Axiom's {\bf limit} function is usually used to evaluate
@@ -5732,7 +5732,7 @@ $$
 $$
 \returnType{Type: Union("failed",...)}
 
-\section{Series}
+** Series
 \label{sec:Series}
 
 Axiom also provides power series.  \index{series!power} By default,
@@ -5935,7 +5935,7 @@ $$\left.
 $$
 \returnType{Type: Stream Expression Float}
 
-\section{Derivatives}
+** Derivatives
 \label{sec:Derivatives}
 \index{Derivatives}
 Use the Axiom function {\bf D} to differentiate an
@@ -6144,7 +6144,7 @@ z}, {\log \left({z + 1}\right)}, {z^2}}\right)}}+
 $$
 \returnType{Type: Expression Integer}
 
-\section{Integration}
+** Integration
 \label{sec:Integration}
 
 Axiom has extensive library facilities for integration.
@@ -6442,7 +6442,7 @@ $$
 $$
 \returnType{Type: Union(Expression Integer,...)}
 
-\section{Differential Equations}
+** Differential Equations
 \label{sec:Differential Equations}
 The general approach used in integration also carries over to the
 solution of linear differential equations.
@@ -6698,7 +6698,7 @@ $$
 \returnType{Type: List UnivariateTaylorSeries(Expression Integer,t,0)}
 \index{UnivariateTaylorSeries}
 
-\section{Solution of Equations}
+** Solution of Equations
 \label{sec:Solution of Equations}
 Axiom also has state-of-the-art algorithms for the solution of
 systems of polynomial equations.  When the number of equations and
@@ -6829,7 +6829,7 @@ $$
 $$
 \returnType{Type: List List Equation Fraction Polynomial Integer}
 
-\chapter{Graphics}
+* Graphics
 \label{sec:Graphics}
 \begin{figure}[htbp]
 \includegraphics[bbllx=14, bblly=14, bburx=215, bbury=215]{ps/bookvol1c.ps}
@@ -6868,7 +6868,7 @@ clicking on the {\bf PS} button.
 \caption{$(x,y) \rightarrow real atan complex(x,y), -\pi\ldots\pi, -\pi\ldots\pi$}
 \end{figure}
 
-\subsection{Plotting 2D graphs}
+*** Plotting 2D graphs
 There are three kinds of 2D graphs of curves defined by
 \begin{enumerate}
 \item a function $y=f(x)$ over a finite interval of $x$
@@ -6884,7 +6884,7 @@ PostScript
 printed.\footnote{PostScript is a trademark of Adobe Systems
 Incorporated, registered in the United States.} 
 
-\subsubsection{Plotting 2D graphs of 1 variable}
+**** Plotting 2D graphs of 1 variable
 \label{sec:2Dcase1}
 \boxer{4.6in}{
 \vskip 0.1cm
@@ -6912,7 +6912,7 @@ Axiom supplies a default title if one is not given.
 \caption{$sin(tan(x)) - tan(sin(x)), x=0\ldots6$}
 \end{figure}
 
-\subsubsection{Plotting 2D parametric plane curves}
+**** Plotting 2D parametric plane curves
 \label{sec:2Dcase2}
 \boxer{4.6in}{
 \vskip 0.1cm
@@ -6941,7 +6941,7 @@ two functions $f$ and $g$ as its parameters.
 \caption{$curve(sin(t)*sin(2*t)*sin(3*t), sin(4*t)*sin(5*t)*sin(6*t)), t=0..2*\pi$}
 \end{figure}
 
-\subsubsection{Plotting 2D algebraic curves}
+**** Plotting 2D algebraic curves
 \label{sec:2Dcase3}
 \boxer{4.6in}{
 \vskip 0.1cm
@@ -6993,7 +6993,7 @@ We require that the polynomial has rational or integral coefficients.
 The first argument is always expressed as an equation of the form $p = 0$
 where $p$ is a polynomial.
 
-\subsubsection{Colors}
+**** Colors
 \label{sec:colors}
 \index{Colors}
 \index{Palettes}
@@ -7048,7 +7048,7 @@ These functions can be used to change the point and curve colors
 for two- and three-di\-men\-sion\-al graphs.
 Use the {\tt pointColor} option for points.
 
-\subsubsection{Two-Dimensional Options}
+**** Two-Dimensional Options
 \label{sec:Two-Dimensional Options}
 
 The {\bf draw} commands take an optional list of options, such as {\tt
@@ -7104,7 +7104,7 @@ coordinates & The {\tt coordinates} option indicates the coordinate system\\
             & {\tt coordinates == polar}
 \end{tabular}
 
-\subsection{Palette}
+*** Palette
 \label{sec:Palette}
 \index{graphics!palette}
 
@@ -7157,7 +7157,7 @@ Palettes can be used in specifying colors in two-di\-men\-sion\-al graphs.
 %\epsffile[0 0 295 295]{ps/23dpal.ps}
 
 
-\subsection{Two-Dimensional Control-Panel}
+*** Two-Dimensional Control-Panel
 \label{sec:Two-Dimensional Control-Panel}
 
 \index{graphics!2D control-panel}
@@ -7172,7 +7172,7 @@ current state of the graph.
 \caption{Two-dimensional control-panel.}
 \end{figure}
 
-\subsubsection{Transformations}
+**** Transformations
 \index{graphics!2D control-panel!transformations}
 
 Object transformations are executed from the control-panel by mouse-activated
@@ -7201,7 +7201,7 @@ On} appear or along one axis when one is on, for example, {\tt X On} and
 {\tt Y Off} appear.
 \end{description}
 
-\subsubsection{Messages}
+**** Messages
 \index{graphics!2D control-panel!messages}
 
 The window directly below the transformation potentiometer windows is
@@ -7220,7 +7220,7 @@ the graph must be selected (see ``Multiple Graphs,'' below) in
 order for its transformation data to be shown, otherwise the number
 is 1.
 
-\subsubsection{Multiple Graphs}
+**** Multiple Graphs
 
 \index{graphics!2D control-panel!multiple graphs}
 The {\bf Graphs} window contains buttons that allow the placement
@@ -7268,7 +7268,7 @@ window, the graph currently being held is dropped into this slot
 and displayed.
 \end{description}
 
-\subsubsection{Buttons}
+**** Buttons
 \index{graphics!2D control-panel!buttons}
 
 %
@@ -7314,7 +7314,7 @@ characteristics and attributes back to their initial states.
 session should be terminated.
 \end{description}
 
-\subsection{Operations for Two-Dimensional Graphics}
+*** Operations for Two-Dimensional Graphics
 \label{sec:Operations for Two-Dimensional Graphics}
 
 Here is a summary of useful Axiom operations for two-di\-men\-sion\-al
@@ -7519,14 +7519,14 @@ all the entries {\tt "pixmap"}, {\tt "bitmap"}, {\tt "postscript"}, and
 {\tt "image"}.
 \end{description}
 
-\subsection{Building Two-Dimensional Graphs Manually}
+*** Building Two-Dimensional Graphs Manually
 \label{sec:Building Two-Dimensional Graphs Manually}
 
 In this section we demonstrate how to create two-di\-men\-sion\-al graphs from
 lists of points and give an example showing how to read the lists
 of points from a file.
 
-\subsubsection{Creating a Two-Dimensional Viewport from a List of Points}
+**** Creating a Two-Dimensional Viewport from a List of Points
 
 Axiom creates lists of points in a two-di\-men\-sion\-al viewport by utilizing
 the {\tt GraphImage} and {\tt TwoDimensionalViewport} domains.
@@ -8028,19 +8028,19 @@ Take a look.
 \caption{Just Points}
 \end{figure}
 
-\subsubsection{Creating a Two-Dimensional Viewport of a List of Points from a File}
+**** Creating a Two-Dimensional Viewport of a List of Points from a File
 
 The following three functions read a list of points from a
 file and then draw the points and the connecting lines. The
 points are stored in the file in readable form as floating point numbers
 (specifically, {\tt DoubleFloat} values) as an alternating
 stream of $x$- and $y$-values. For example,
-\begin{verbatim}
+#+begin_example
 0.0 0.0     1.0 1.0     2.0 4.0
 3.0 9.0     4.0 16.0    5.0 25.0
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
 drawPoints(lp:List Point DoubleFloat):VIEW2D ==
   g := graphImage()$GRIMAGE
   for p in lp repeat
@@ -8066,15 +8066,15 @@ plotData2D(name, title) ==
   close!(f)
   drawPoints(lp)
   drawLines(lp)
-\end{verbatim}
+#+end_example
 %
 This command will actually create the viewport and the graph if
 the point data is in the file $"file.data"$.
-\begin{verbatim}
+#+begin_example
 plotData2D("file.data", "2D Data Plot")
-\end{verbatim}
+#+end_example
 
-\subsection{Appending a Graph to a Viewport Window Containing a Graph}
+*** Appending a Graph to a Viewport Window Containing a Graph
 \label{sec:Appending a Graph to a Viewport Window Containing a Graph}
 
 This section demonstrates how to append a two-di\-men\-sion\-al graph to a viewport
@@ -8117,7 +8117,7 @@ like cut and paste mechanisms in a windowing environment (except that
 they don't use the clipboard). So it is possible to pick one graph
 and drop it on a different graph.
 
-\subsection{Plotting 3D Graphs}
+*** Plotting 3D Graphs
 There are 3 kinds of three dimensional graphs you can generate:
 \begin{enumerate}
 \item surfaces defined by a function of two real variables
@@ -8127,7 +8127,7 @@ There are 3 kinds of three dimensional graphs you can generate:
 \item surfaces defined by parametric equations
 (page~\pageref{sec:3Dcase3})
 \end{enumerate} 
-\subsubsection{Plotting 3D functions of 2 variables}
+**** Plotting 3D functions of 2 variables
 \label{sec:3Dcase1}
 \boxer{4.6in}{
 \vskip 0.1cm
@@ -8157,7 +8157,7 @@ the variable name and an {\tt =} sign.
 \end{figure}
 
 
-\subsubsection{Plotting 3D parametric space curves}
+**** Plotting 3D parametric space curves
 \label{sec:3Dcase2}
 \boxer{4.6in}{
 \vskip 0.1cm
@@ -8189,7 +8189,7 @@ the range specification with the variable name and an
 \end{figure}
 
 
-\subsubsection{Plotting 3D parametric surfaces}
+**** Plotting 3D parametric surfaces
 \label{sec:3Dcase3}
 \boxer{4.6in}{
 \vskip 0.1cm
@@ -8224,7 +8224,7 @@ here as parabolic cylindrical coordinates.
 \caption{$surface(u*cos(v), u*sin(v), v*cos(u)), u=-4..4, v=0..\pi$}
 \end{figure}
 
-\subsection{Three-Dimensional Options}
+*** Three-Dimensional Options
 \label{sec:Three-Dimensional Options}
 \index{graphics!3D options}
 The {\bf draw} commands optionally take an optional list of options such
@@ -8275,7 +8275,7 @@ space         & The {\tt space} option lets you build multiple graphs in\\
               & {\tt space == s}
 \end{tabular}
 
-\subsection{Three-Dimensional Control-Panel}
+*** Three-Dimensional Control-Panel
 \label{sec:Three-Dimensional Control-Panel}
 
 \index{graphics!3D control-panel}
@@ -8289,7 +8289,7 @@ that is closest to where you clicked.
 \caption{Three-dimensional control-panel.}
 \end{figure}
 
-\subsubsection{Transformations}
+**** Transformations
 
 We recommend you first select the {\bf Bounds} button while
 \index{graphics!3D control-panel!transformations}
@@ -8359,7 +8359,7 @@ Each orientates the group as a view into that plane.
 Any translation of the graph occurs only along this plane.
 \end{description}
 
-\subsubsection{Messages}
+**** Messages
 
 \index{graphics!3D control-panel!messages}
 
@@ -8367,7 +8367,7 @@ The window directly below the potentiometer windows for transformations is
 used to display system messages relating to the viewport, the control-panel
 and the current graph displaying status.
 
-\subsubsection{Colormap}
+**** Colormap
 
 \index{graphics!3D control-panel!color map}
 
@@ -8388,7 +8388,7 @@ At each end of the Colormap are {\bf +} and {\bf -} buttons.
 When clicked on, these increment or decrement the top or bottom
 marker.
 
-\subsubsection{Buttons}
+**** Buttons
 \index{graphics!3D control-panel!buttons}
 
 Below the Colormap window and to the left are located various
@@ -8512,7 +8512,7 @@ corresponding viewport to disappear from the screen.
 session should be terminated.
 \end{description}
 
-\subsubsection{Light}
+**** Light
 
 \index{graphics!3D control-panel!light}
 
@@ -8557,7 +8557,7 @@ At the bottom of the meter the light source is emitting at a level
 slightly above ambient lighting.
 \end{description}
 
-\subsubsection{View Volume}
+**** View Volume
 
 \index{graphics!3D control-panel!view volume}
 
@@ -8616,7 +8616,7 @@ Moving the knobs along the {\bf X}, {\bf Y}, and {\bf Z} sliders
 adjusts the volume of the clipping region accordingly.
 \end{description}
 
-\subsection{Operations for Three-Dimensional Graphics}
+*** Operations for Three-Dimensional Graphics
 \label{sec:Operations for Three-Dimensional Graphics}
 
 
@@ -8957,7 +8957,7 @@ specifies the scaling factor.
 \end{description}
 \egroup
 
-\subsection{Customization using .Xdefaults}
+*** Customization using .Xdefaults
 \label{sec:Customization using .Xdefaults}
 
 \index{graphics!.Xdefaults}
@@ -9078,7 +9078,7 @@ three-di\-men\-sion\-al control-panel.
 \end{description}
 
 
-\chapter{Using Types and Modes}
+* Using Types and Modes
 \label{sec:Using Types and Modes}
 
 \index{type} 
@@ -9094,7 +9094,7 @@ objects from old.  We also look at {\tt Record} \index{Record} and
 types and modes internally to resolve ambiguities.
 
 
-\section{The Basic Idea}
+** The Basic Idea
 \label{sec:The Basic Idea}
 
 The Axiom world deals with many kinds of objects.  There are
@@ -9188,7 +9188,7 @@ used as the {\it type} of that object.  The type of $3$ is indeed both
 of integer whose predicate is satisfied, such as ``the prime
 integers,'' ``the odd positive integers between 3 and 17,'' and so on.
 
-\subsection{Domain Constructors}
+*** Domain Constructors
 \label{sec:Domain Constructors}
 
 In Axiom, domains are objects.  You can create them, pass them to
@@ -9259,9 +9259,9 @@ $$
 
 Try to create a meaningless domain.
 \spadcommand{Polynomial(String)}
-\begin{verbatim}
+#+begin_example
    Polynomial String is not a valid type.
-\end{verbatim}
+#+end_example
 
 \index{category}
 Evidently from our last example, Axiom has some mechanism that tells
@@ -9316,9 +9316,9 @@ $$
 
 Thus you can never build polynomials over matrices.
 \spadcommand{Polynomial(Matrix(Integer))}
-\begin{verbatim}
+#+begin_example
    Polynomial Matrix Integer is not a valid type.
-\end{verbatim}
+#+end_example
 
 \index{SquareMatrix}
 Use {\tt SquareMatrix(n,R)} instead.  For any positive integer $n$, it
@@ -9508,7 +9508,7 @@ version of the {\bf Spad} language and contains some additional
 syntax to support standalone programs. In addition, {\bf Aldor}
 includes some new ideas such as post-facto domain extensions.
 
-\section{Writing Types and Modes}
+** Writing Types and Modes
 \label{sec:Writing Types and Modes}
 
 We have already seen in the last section several examples of types.  
@@ -9556,7 +9556,7 @@ $$
 $$
 \returnType{Type: Boolean}
 
-\subsection{Types with No Arguments}
+*** Types with No Arguments
 \label{sec:Types with No Arguments}
 
 A constructor with no arguments can be written either
@@ -9573,7 +9573,7 @@ parentheses ``{\tt ()}''.
 
 It is customary to omit the parentheses.
 
-\subsection{Types with One Argument}
+*** Types with One Argument
 \label{sec:Types with One Argument}
 
 A constructor with one argument can frequently be 
@@ -9631,7 +9631,7 @@ type, integer or symbol, then the parentheses can usually be omitted.
 \spadcommand{(d,f,g) : Complex Polynomial Integer}
 \returnType{Type: Void}
 
-\subsection{Types with More Than One Argument}
+*** Types with More Than One Argument
 \label{sec:Types with More Than One Argument}
 
 If a constructor \index{type!using parentheses} has more than
@@ -9645,7 +9645,7 @@ parentheses.  Some examples are \\
 {\tt FactoredFunctions2(Integer,Fraction Integer)} 
 \index{FactoredFunctions2}
 
-\subsection{Modes}
+*** Modes
 \label{sec:Modes}
 \index{mode}
 A {\it mode} is a type that possibly is a question mark ({\tt ?}) or
@@ -9672,7 +9672,7 @@ This rules out, for example, the two {\tt SquareMatrix} expressions.
 Modes can be used for declarations and conversions. However, you
 cannot use a mode for package calling or giving target type information.
 
-\subsection{Abbreviations}
+*** Abbreviations
 \label{sec:Abbreviations}
 
 Every constructor has an abbreviation that
@@ -9732,22 +9732,22 @@ command to see the names and abbreviations of constructors.
 {\tt )abbreviation query} can be abbreviated (no pun intended) to 
 {\tt )abb q}.
 \spadcommand{)abb q Integer}
-\begin{verbatim}
+#+begin_example
    INT abbreviates domain Integer 
-\end{verbatim}
+#+end_example
 
 The {\tt )abbreviation query} command lists the constructor name if
 you give the abbreviation.  Issue {\tt )abb q} if you want to see the
 names and abbreviations of all Axiom constructors.  
 \spadcommand{)abb q DMP} 
-\begin{verbatim}
+#+begin_example
    DMP abbreviates domain DistributedMultivariatePolynomial 
-\end{verbatim}
+#+end_example
 
 Issue this to see all packages whose
 names contain the string ``ode''.  \index{what packages}
 \spadcommand{)what packages ode}
-\begin{verbatim}
+#+begin_example
 ---------------------- Packages -----------------------
 
 Packages with names matching patterns:
@@ -9768,9 +9768,9 @@ Packages with names matching patterns:
  ODETOOLS ODETools
  UTSODE   UnivariateTaylorSeriesODESolver
  UTSODETL UTSodetools
-\end{verbatim}
+#+end_example
 
-\section{Declarations}
+** Declarations
 \label{sec:Declarations}
 \index{declarations}
 \index{: declaration}
@@ -9815,7 +9815,7 @@ $$
 If a value cannot be converted to a declared type,
 an error message is displayed.
 \spadcommand{b := 4/5}
-\begin{verbatim}
+#+begin_example
  
    Cannot convert right-hand side of assignment
    4
@@ -9823,7 +9823,7 @@ an error message is displayed.
    5
 
       to an object of the type Integer of the left-hand side.
-\end{verbatim}
+#+end_example
 
 This declares a variable with a mode.
 \spadcommand{n : Complex ?}
@@ -9904,7 +9904,7 @@ $$
 $$
 \returnType{Type: Polynomial Complex Integer}
 
-\section{Records}
+** Records
 \label{sec:Records}
 
 A {\tt Record} is an object composed of one or more other objects,
@@ -10084,7 +10084,7 @@ $$
 $$
 \returnType{Type: Record(a: Record(b: Integer,c: Integer),b: Integer)}
 
-\section{Unions}
+** Unions
 \label{sec:Unions}
 
 Type {\tt Union} is used for objects that can be of any of a specific
@@ -10092,7 +10092,7 @@ finite set of types.  \index{Union} Two versions of unions are
 available, one with selectors (like records) and one without.
 \index{union}
 
-\subsection{Unions Without Selectors}
+*** Unions Without Selectors
 \label{sec:Unions Without Selectors}
 
 The declaration $x : Union(Integer, String, Float)$ states that $x$
@@ -10125,35 +10125,35 @@ be used to determine the branch in which an object lies.
 This function displays a message stating in which branch of the 
 {\tt Union} the object (defined as $x$ above) lies.
 
-\begin{verbatim}
+#+begin_example
 sayBranch(x : Union(Integer,String,Float)) : Void  ==
   output
     x case Integer => "Integer branch"
     x case String  => "String branch"
     "Float branch"
-\end{verbatim}
+#+end_example
 
 This tries {\bf sayBranch} with an integer.
 \spadcommand{sayBranch 1}
-\begin{verbatim}
+#+begin_example
 Compiling function sayBranch with type Union(Integer,String,Float)
     -> Void 
  Integer branch
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 This tries {\bf sayBranch} with a string.
 \spadcommand{sayBranch "hello"}
-\begin{verbatim}
+#+begin_example
    String branch
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 This tries {\bf sayBranch} with a floating-point number.
 \spadcommand{sayBranch 2.718281828}
-\begin{verbatim}
+#+begin_example
    Float branch
-\end{verbatim}
+#+end_example
 \returnType{Type: Void}
 
 There are two things of interest about this particular
@@ -10249,7 +10249,7 @@ $$
 $$
 \returnType{Type: Union("failed",...)}
 
-\subsection{Unions With Selectors}
+*** Unions With Selectors
 \label{sec:Unions With Selectors}
 
 Like records,
@@ -10285,13 +10285,13 @@ Here is a version of the {\bf sayBranch} function that
 works with a union with selectors.  It displays a message stating in
 which branch of the {\tt Union} the object lies.
 
-\begin{verbatim}
+#+begin_example
 sayBranch(x:Union(i:Integer,s:String,f:Float)):Void==
   output
     x case i => "Integer branch"
     x case s  => "String branch"
     "Float branch"
-\end{verbatim}
+#+end_example
 
 Note that {\tt case} uses the selector name as its right-hand argument.
 \index{case} If you accidentally use the branch type on the right-hand
@@ -10328,7 +10328,7 @@ $$
 $$
 \returnType{Type: String}
 
-\section{The ``Any'' Domain}
+** The ``Any'' Domain
 \label{sec:The ``Any'' Domain}
 
 With the exception of objects of type {\tt Record}, all Axiom data
@@ -10353,9 +10353,9 @@ $$
 
 We can ask Axiom to show the types in an Any collection
 \spadcommand{showTypeInOutput(true)}
-\begin{verbatim}
+#+begin_example
   "Type of object will be displayed in output of a member of Any"
-\end{verbatim}
+#+end_example
 \returnType{Type: String}
 and now the output looks like
 \spadcommand{u}
@@ -10373,9 +10373,9 @@ $$
 
 We can turn off type annotations with
 \spadcommand{showTypeInOutput(false)}
-\begin{verbatim}
+#+begin_example
   "Type of object will not be displayed in output of a member of Any"
-\end{verbatim}
+#+end_example
 \returnType{Type: String}
 
 When we ask for the elements, Axiom displays these types.
@@ -10396,9 +10396,9 @@ $$
 Since type {\tt Any} can be anything, it can only belong to type 
 {\tt Type}.  Therefore it cannot be used in algebraic domains.
 \spadcommand{v : Matrix(Any)}
-\begin{verbatim}
+#+begin_example
    Matrix Any is not a valid type.
-\end{verbatim}
+#+end_example
 
 Perhaps you are wondering how Axiom internally represents objects of
 type {\tt Any}.  An object of type {\tt Any} consists not only a data
@@ -10412,7 +10412,7 @@ When should you use {\tt Any} instead of a {\tt Union} type?  For a
 going to
 allow.  For {\tt Any}, anything that comes along can be accommodated.
 
-\section{Conversion}
+** Conversion
 \label{sec:Conversion}
 \index{:: conversion}
 \boxer{4.6in}{
@@ -10648,7 +10648,7 @@ $$
 $$
 \returnType{Type: Polynomial SquareMatrix(2,Fraction Complex Integer)}
 
-\section{Subdomains Again}
+** Subdomains Again
 \label{sec:Subdomains Again}
 \index{subdomains}
 A {\it subdomain} {\rm S} of a domain {\rm D} is a domain consisting of
@@ -10770,10 +10770,10 @@ To get a list of elements of {\tt PositiveInteger} instead, you have
 two choices.  You can use a conversion.
 
 \spadcommand{[10**((i-1) :: PI) for i in 2..5]}
-\begin{verbatim}
+#+begin_example
 Compiling function G82696 with type Integer -> Boolean 
 Compiling function G82708 with type NonNegativeInteger -> Boolean 
-\end{verbatim}
+#+end_example
 $$
 \left[
 {10},  {100},  {1000},  {10000} 
@@ -10809,7 +10809,7 @@ $$
 $$
 \returnType{Type: Complex Integer}
 
-\section{Package Calling and Target Types}
+** Package Calling and Target Types
 \label{sec:Package Calling and Target Types}
 \index{\$ package call}
 Axiom works hard to figure out what you mean by an expression without
@@ -10906,18 +10906,18 @@ You can see the difference if you try the following.
 This says to try to choose ``{\tt +}'' so that the result is a string.
 Axiom cannot do this.
 \spadcommand{(2 + 3)@String}
-\begin{verbatim} 
+#+begin_example 
 An expression involving @ String actually evaluated to one of 
    type PositiveInteger . Perhaps you should use :: String .
-\end{verbatim}
+#+end_example
 
 This says to get the {\tt +} from {\tt String} and apply it to the two
 integers.  Axiom also cannot do this because there is no {\tt +}
 exported by {\tt String}.
 \spadcommand{(2 + 3)\$String}
-\begin{verbatim}
+#+begin_example
    The function + is not implemented in String .
-\end{verbatim}
+#+end_example
 
 (By the way, the operation \spadfunFrom{concat}{String} or juxtaposition
 is used to concatenate two strings.)
@@ -11017,7 +11017,7 @@ $$
 $$
 \returnType{Type: Matrix Fraction Integer}
 
-\section{Resolving Types}
+** Resolving Types
 \label{sec:Resolving Types}
 
 In this section we briefly describe an internal process by which
@@ -11074,7 +11074,7 @@ $$
 In other cases objects of type {\tt Any} can't be used by the
 operations you specified.
 \spadcommand{"string" + 3.14159}
-\begin{verbatim}
+#+begin_example
 There are 11 exposed and 5 unexposed library operations named + 
   having 2 argument(s) but none was determined to be applicable. 
   Use HyperDoc Browse, or issue
@@ -11090,7 +11090,7 @@ Cannot find a definition or applicable library operation named +
       
   Perhaps you should use "@" to indicate the required return type, 
   or "$" to specify which version of the function you need.
-\end{verbatim}
+#+end_example
 
 Although this example was contrived, your expressions may need to be
 qualified slightly to help Axiom resolve the types involved.  You may
@@ -11103,7 +11103,7 @@ to ``do what I mean.''  If Axiom is still being obtuse, give it some
 hints.  As you work with Axiom, you will learn where it needs a little
 help to analyze quickly and perform your computations.
 
-\section{Exposing Domains and Packages}
+** Exposing Domains and Packages
 \label{sec:Exposing Domains and Packages}
 
 In this section we discuss how Axiom makes some operations available
@@ -11128,7 +11128,7 @@ of the basic set of packages and domains that are exposed are in the
 exposure group ``basic.''  Here is an abbreviated sample of the file
 (without the Lisp parentheses):
 
-\begin{verbatim}
+#+begin_example
 basic
         AlgebraicNumber                          AN
         AlgebraGivenByStructuralConstants        ALGSC
@@ -11146,8 +11146,8 @@ basic
         ContinuedFraction                        CONTFRAC
         DecimalExpansion                         DECIMAL
         ...
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 categories
         AbelianGroup                             ABELGRP
         AbelianMonoid                            ABELMON
@@ -11159,7 +11159,7 @@ categories
         AlgebraicallyClosedFunctionSpace         ACFS
         ArcHyperbolicFunctionCategory            AHYP
         ...
-\end{verbatim}
+#+end_example
 
 For each constructor in a group, the full name and the abbreviation is
 given.  There are other groups in {\bf exposed.lsp} but initially only
@@ -11215,9 +11215,9 @@ $$
 
 Expose {\tt OutputForm}.
 \spadcommand{)set expose add constructor OutputForm }
-\begin{verbatim}
+#+begin_example
    OutputForm is now explicitly exposed in frame G82322 
-\end{verbatim}
+#+end_example
 
 This is what we get when {\tt OutputForm} is automatically available.
 \spadcommand{x + x}
@@ -11228,9 +11228,9 @@ $$
 
 Hide {\tt OutputForm} so we don't run into problems with any later examples!
 \spadcommand{)set expose drop constructor OutputForm }
-\begin{verbatim}
+#+begin_example
    OutputForm is now explicitly hidden in frame G82322 
-\end{verbatim}
+#+end_example
 
 Finally, exposure is done on a frame-by-frame basis.  A {\it frame}
 \index{frame!exposure and} is one of possibly several logical Axiom
@@ -11243,7 +11243,7 @@ created, made active and destroyed by the {\tt )frame} system command.
 use {\tt )set expose} in each one to add or drop constructors from
 view.
 
-\section{Commands for Snooping}
+** Commands for Snooping
 \label{sec:Commands for Snooping}
 
 To conclude this chapter, we introduce you to some system commands
@@ -11259,7 +11259,7 @@ not significant).  \index{what}
 Issue this to see a list of all operations with ``{\tt complex}'' in
 their names.  \index{what operation}
 \spadcommand{)what operation complex}
-\begin{verbatim}
+#+begin_example
 
 Operations whose names satisfy the above pattern(s):
 
@@ -11278,12 +11278,12 @@ pmComplexintegrate
    
 To get more information about an operation such as 
 complexZeros, issue the command )display op complexZeros 
-\end{verbatim}
+#+end_example
 
 If you want to see all domains with ``{\tt matrix}'' in their names,
 issue this.  \index{what domain}
 \spadcommand{)what domain matrix}
-\begin{verbatim}
+#+begin_example
 ----------------------- Domains -----------------------
 
 Domains with names matching patterns:
@@ -11300,24 +11300,24 @@ Domains with names matching patterns:
  RMATRIX  RectangularMatrix            
  SMATCAT- SquareMatrixCategory&
  SQMATRIX SquareMatrix
-\end{verbatim}
+#+end_example
 
 Similarly, if you wish to see all packages whose names contain ``{\tt
 gauss}'', enter this.  \index{what packages}
 \spadcommand{)what package gauss}
-\begin{verbatim}
+#+begin_example
 ---------------------- Packages -----------------------
 
 Packages with names matching patterns:
      gauss 
 
  GAUSSFAC GaussianFactorizationPackage
-\end{verbatim}
+#+end_example
 
 This command shows all the operations that {\tt Any} provides.
 Wherever {\tt \$} appears, it means ``{\tt Any}''.  \index{show}
 \spadcommand{)show Any}
-\begin{verbatim}
+#+begin_example
  Any  is a domain constructor
  Abbreviation for Any is ANY 
  This constructor is exposed in this frame.
@@ -11337,28 +11337,28 @@ Wherever {\tt \$} appears, it means ``{\tt Any}''.  \index{show}
  ?~=? : (%,%) -> Boolean
  showTypeInOutput : Boolean -> String
 
-\end{verbatim}
+#+end_example
 
 This displays all operations with the name {\tt complex}.
 \index{display operation}
 \spadcommand{)display operation complex}
-\begin{verbatim}
+#+begin_example
 There is one exposed function called complex :
  [1] (D1,D1) -> D from D if D has COMPCAT D1 and D1 has COMRING
-\end{verbatim}
+#+end_example
 
 Let's analyze this output.
 
 First we find out what some of the abbreviations mean.
 \spadcommand{)abbreviation query COMPCAT}
-\begin{verbatim}
+#+begin_example
    COMPCAT abbreviates category ComplexCategory 
-\end{verbatim}
+#+end_example
 
 \spadcommand{)abbreviation query COMRING}
-\begin{verbatim}
+#+begin_example
    COMRING abbreviates category CommutativeRing 
-\end{verbatim}
+#+end_example
 
 So if {\tt D1} is a commutative ring (such as the integers or floats) and
 {\tt D} belongs to {\tt ComplexCategory D1}, then there is an operation
@@ -11368,7 +11368,7 @@ domains belonging to {\tt ComplexCategory} is {\tt Complex}.
 
 %\setcounter{chapter}{2}
 
-\chapter{Using HyperDoc}
+* Using HyperDoc
 \label{sec:Using HyperDoc}
 
 \begin{figure}[htbp]
@@ -11388,7 +11388,7 @@ changes from a filled dot to an open circle.  The active areas are
 usually linked to other pages.  When you click on an active area, you
 move to the linked page.
 
-\section{Headings}
+** Headings
 \label{sec:Headings}
 Most pages have a standard set of buttons at the top of the page.
 This is what they mean:
@@ -11422,7 +11422,7 @@ The buttons are not displayed if they are not applicable to the page
 you are viewing.  For example, there is no \ReturnBitmap button on the
 top-level menu.
 
-\section{Key Definitions}
+** Key Definitions
 \label{sec:Key Definitions}
 
 The following keyboard definitions are in effect throughout HyperDoc.
@@ -11439,7 +11439,7 @@ The following keyboard definitions are in effect throughout HyperDoc.
 \item[Page Down] Scroll down one page.
 \end{description}
 
-\section{Scroll Bars}
+** Scroll Bars
 \label{sec:Scroll Bars}
 
 Whenever there is too much text to fit on a page, a 
@@ -11477,7 +11477,7 @@ screen is positioned at the very top of the page.  Use the
 \fbox{$\uparrow$} and \fbox{$\downarrow$} arrow keys to move the
 screen up and down one line at a time, respectively.
 
-\section{Input Areas}
+** Input Areas
 \label{sec:Input Areas}
 
 Input areas are boxes where you can put data.
@@ -11510,7 +11510,7 @@ You can also move from one input area to another using your mouse.
 Notice that each input area is active. Click on one of the areas.
 As you can see, the underscore cursor moves to that window.
 
-\section{Radio Buttons and Toggles}
+** Radio Buttons and Toggles
 \label{sec:Radio Buttons and Toggles}
 
 Some pages have {\it radio buttons} and {\it toggles}.
@@ -11529,7 +11529,7 @@ Unlike radio buttons, you can set a group of them any way you like.
 To change toggle the selection, move the cursor with the mouse to the
 button and click.
 
-\section{Search Strings}
+** Search Strings
 \label{sec:Search Strings}
 
 A {\it search string} is used for searching some database.  To learn
@@ -11567,7 +11567,7 @@ not adjacent.  Try search strings such as ``{\tt *dom*}''.  As you see,
 this search string matches ``{\tt domain}'', ``{\tt domain constructor}'',
 ``{\tt subdomain}'', and so on.
 
-\subsection{Logical Searches}
+*** Logical Searches
 \label{sec:Logical Searches}
 
 For more complicated searches, you can use ``{\tt and}'', ``{\tt or}'', and
@@ -11588,7 +11588,7 @@ For example,
 \end{center}
 is a valid expression.
 
-\section{Example Pages}
+** Example Pages
 \label{sec:Example Pages}
 
 Many pages have Axiom example commands.
@@ -11611,7 +11611,7 @@ If you want to get rid of it beforehand, use the {\bf Cancel} button
 of the X Window manager or issue the Axiom system command 
 {\tt )close.}  \index{close}
 
-\section{X Window Resources for HyperDoc}
+** X Window Resources for HyperDoc
 \label{sec:X Window Resources for HyperDoc}
 
 You can control the appearance of HyperDoc while running under Version
@@ -11680,7 +11680,7 @@ The default value is {\tt white}
 
 %\setcounter{chapter}{3}
 
-\chapter{Input Files and Output Styles}
+* Input Files and Output Styles
 \label{sec:Input Files and Output Styles}
 
 In this chapter we discuss how to collect Axiom statements
@@ -11696,7 +11696,7 @@ When we demonstrate a particular output style, we will need to turn
 \TeX{} formatting off and the output style on so that the correct output
 is shown in the text.
 
-\section{Input Files}
+** Input Files
 \label{sec:Input Files}
 
 In this section we explain what an {\it input file} is and
@@ -11715,14 +11715,14 @@ wish to read into Axiom more than one time.
 To read an input file into Axiom, use the {\tt )read} system command.
 \index{read} For example, you can read a file in a particular
 directory by issuing
-\begin{verbatim}
+#+begin_example
 )read /spad/src/input/matrix.input
-\end{verbatim}
+#+end_example
 
 The ``{\bf .input}'' is optional; this also works:
-\begin{verbatim}
+#+begin_example
 )read /spad/src/input/matrix
-\end{verbatim}
+#+end_example
 
 What happens if you just enter {\tt )read matrix.input} or even {\tt
 )read matrix}?  Axiom looks in your current working directory for
@@ -11734,9 +11734,9 @@ command.  The command {\tt {)cd}} by itself shows the current working
 \index{directory!default for searching} directory.  \index{cd} To
 change it to \index{file!input!where found} the {\tt {src/input}}
 subdirectory for user ``babar'', issue
-\begin{verbatim}
+#+begin_example
 )cd /u/babar/src/input
-\end{verbatim}
+#+end_example
 Axiom looks first in this directory for an input file.  If it is not
 found, it looks in the system's directories, assuming you meant some
 input file that was provided with Axiom.
@@ -11756,7 +11756,7 @@ file is in your home directory or in the directory you specified with
 \index{cd} {\tt {)cd}}.\\
 }
 
-\section{The .axiom.input File}
+** The .axiom.input File
 \label{sec:The .axiom.input File}
 
 When Axiom starts up, it tries to read the input file {\bf
@@ -11782,7 +11782,7 @@ If you then decide that you do want to be prompted, issue
 default setting so that new users do not leave Axiom
 inadvertently. The system command {\tt )pquit} always
 prompts you for confirmation.
-\section{Common Features of Using Output Formats}
+** Common Features of Using Output Formats
 \label{sec:Common Features of Using Output Formats}
 
 In this section we discuss how to start and stop the display
@@ -11815,9 +11815,9 @@ produced.
 Issue this to redirect FORTRAN output to, for example, the file
 {\bf linalg.sfort}.
 \spadcommand{)set output fortran linalg}
-\begin{verbatim}
+#+begin_example
    FORTRAN output will be written to file linalg.sfort .
-\end{verbatim}
+#+end_example
 
 You must {\it also} turn on the creation of FORTRAN output.
 The above just says where it goes if it is created.
@@ -11849,7 +11849,7 @@ formats!line length} {\tt )set output length} for all formats except
 FORTRAN.  \index{set output length} Use {\tt )set fortran fortlength}
 to change the FORTRAN line length from its default value of $72$.
 
-\section{Monospace Two-Dimensional Mathematical Format}
+** Monospace Two-Dimensional Mathematical Format
 \label{sec:Monospace Two-Dimensional Mathematical Format}
 
 This is the default output format for Axiom.  
@@ -11868,14 +11868,14 @@ temporarily turn off \TeX{} output.
 
 Here is an example of what it looks like.
 \spadcommand{matrix [ [i*x**i + j*\%i*y**j for i in 1..2] for j in 3..4]}
-\begin{verbatim}
+#+begin_example
 
         +     3           3     2+
         |3%i y  + x  3%i y  + 2x |
    (1)  |                        |
         |     4           4     2|
         +4%i y  + x  4%i y  + 2x +
-\end{verbatim}
+#+end_example
 \returnType{Type: Matrix Polynomial Complex Integer}
 
 Issue this to turn off this kind of formatting.
@@ -11892,7 +11892,7 @@ does not support the IBM extended ASCII character set.  If you are
 running on an IBM workstation, for example, issue 
 {\tt )set output characters default} to get better looking output.
 
-\section{TeX Format}
+** TeX Format
 \label{sec:TeX Format}
 
 Axiom can produce \TeX{} output for your \index{output formats!TeX
@@ -11906,7 +11906,7 @@ To turn on \TeX{} output formatting, issue this.
 \spadcommand{)set output tex on}
 
 Here is an example of its output.
-\begin{verbatim}
+#+begin_example
 matrix [ [i*x**i + j*\%i*y**j for i in 1..2] for j in 3..4]
 
 $$
@@ -11920,7 +11920,7 @@ $$
 \right]
 $$
 
-\end{verbatim}
+#+end_example
 This formats as
 $$
 \left[
@@ -11937,7 +11937,7 @@ To turn \TeX{} output formatting off, issue
 {\tt {)set output tex off}}.
 The \LaTeX macros in the output generated by Axiom
 are all standard except for the following definitions:
-\begin{verbatim}
+#+begin_example
 \def\csch{\mathop{\rm csch}\nolimits}
 
 \def\erf{\mathop{\rm erf}\nolimits}
@@ -11948,9 +11948,9 @@ are all standard except for the following definitions:
    {\left| {#2} \right. \hfill}
   }
 }
-\end{verbatim}
+#+end_example
 
-\section{IBM Script Formula Format}
+** IBM Script Formula Format
 \label{sec:IBM Script Formula Format}
 
 Axiom can \index{output formats!IBM Script Formula Format} produce IBM
@@ -11962,7 +11962,7 @@ To turn IBM Script Formula Format on, issue this.
 \spadcommand{)set output script on}
 
 Here is an example of its output.
-\begin{verbatim}
+#+begin_example
 matrix [ [i*x**i + j*%i*y**j for i in 1..2] for j in 3..4]
 
 .eq set blank @
@@ -11972,12 +11972,12 @@ matrix [ [i*x**i + j*%i*y**j for i in 1..2] for j in 3..4]
 <y sup 4> >+x> here < <4 @@ %i @@ <y sup 4> >+<2 @@
 <x up 2> > > > > right rb>
 :edf.
-\end{verbatim}
+#+end_example
 
 To turn IBM Script Formula Format output formatting off, issue this.
 \spadcommand{)set output script off}
 
-\section{FORTRAN Format}
+** FORTRAN Format
 \label{sec:FORTRAN Format}
 
 In addition to turning FORTRAN output on and off and stating where the
@@ -12018,9 +12018,9 @@ By default, the output goes to the screen and is displayed before the
 standard Axiom two-dimensional output.  In this example, an assignment
 to the variable $R1$ was generated because this is the result of step 1.
 \spadcommand{(x+y)**3}
-\begin{verbatim}
+#+begin_example
       R1=y**3+3*x*y*y+3*x*x*y+x**3
-\end{verbatim}
+#+end_example
 $$
 {y \sp 3}+{3 \  x \  {y \sp 2}}+{3 \  {x \sp 2} \  y}+{x \sp 3} 
 $$
@@ -12028,10 +12028,10 @@ $$
 
 Here is an example that illustrates the line breaking.
 \spadcommand{(x+y+z)**3}
-\begin{verbatim}
+#+begin_example
       R2=z**3+(3*y+3*x)*z*z+(3*y*y+6*x*y+3*x*x)*z+y**3+3*x*y
      &*y+3*x*x*y+x**3
-\end{verbatim}
+#+end_example
 $$
 {z \sp 3}+{{\left( {3 \  y}+{3 \  x} 
 \right)}
@@ -12059,20 +12059,20 @@ Axiom for $DIMENSION$ statements are also integers.
 To set the type of generated FORTRAN data, 
 \index{FORTRAN output format!data types}
 use one of the following:
-\begin{verbatim}
+#+begin_example
 )set fortran defaulttype REAL
 )set fortran defaulttype INTEGER
 )set fortran defaulttype COMPLEX
 )set fortran defaulttype LOGICAL
 )set fortran defaulttype CHARACTER
-\end{verbatim}
+#+end_example
 
 When temporaries are created, they are given a default type of {\tt REAL.}  
 Also, the {\tt REAL} versions of functions are used by default.
 \spadcommand{sin(x)}
-\begin{verbatim}
+#+begin_example
       R3=DSIN(x)
-\end{verbatim}
+#+end_example
 $$
 \sin 
 \left(
@@ -12087,12 +12087,12 @@ At optimization level 1, Axiom removes common subexpressions.
 \spadcommand{)set fortran optlevel 1}
 
 \spadcommand{(x+y+z)**3}
-\begin{verbatim}
+#+begin_example
       T2=y*y
       T3=x*x
       R4=z**3+(3*y+3*x)*z*z+(3*T2+6*x*y+3*T3)*z+y**3+3*x*T2+
      &3*T3*y+x**3
-\end{verbatim}
+#+end_example
 $$
 {z \sp 3}+{{\left( {3 \  y}+{3 \  x} 
 \right)}
@@ -12111,9 +12111,9 @@ precision double} Substitute {\tt single} for {\tt double}
 
 Complex constants display the precision.
 \spadcommand{2.3 + 5.6*\%i }
-\begin{verbatim}
+#+begin_example
       R5=(2.3D0,5.6D0)
-\end{verbatim}
+#+end_example
 $$
 {2.3}+{{5.6} \  i} 
 $$
@@ -12122,9 +12122,9 @@ $$
 The function names that Axiom generates depend on the chosen precision.
 \spadcommand{sin \%e}
 %%NOTE: the book shows DSIN(DEXP(1.0D0))
-\begin{verbatim}
+#+begin_example
       R6=DSIN(DEXP(1))
-\end{verbatim}
+#+end_example
 $$
 \sin 
 \left(
@@ -12137,9 +12137,9 @@ Reset the precision to {\tt single} and look at these two examples again.
 \spadcommand{)set fortran precision single}
 
 \spadcommand{2.3 + 5.6*\%i}
-\begin{verbatim}
+#+begin_example
       R7=(2.3,5.6)
-\end{verbatim}
+#+end_example
 $$
 {2.3}+{{5.6} \  i} 
 $$
@@ -12147,9 +12147,9 @@ $$
 
 \spadcommand{sin \%e}
 %%NOTE: the book shows SIN(EXP(1.))
-\begin{verbatim}
+#+begin_example
       R8=SIN(EXP(1))
-\end{verbatim}
+#+end_example
 $$
 \sin 
 \left(
@@ -12160,12 +12160,12 @@ $$
 Expressions that look like lists, streams, sets or matrices cause
 array code to be generated.
 \spadcommand{[x+1,y+1,z+1]}
-\begin{verbatim}
+#+begin_example
       T1(1)=x+1
       T1(2)=y+1
       T1(3)=z+1
       R9=T1
-\end{verbatim}
+#+end_example
 $$
 \left[
 {x+1}, {y+1}, {z+1} 
@@ -12178,13 +12178,13 @@ A temporary variable is generated to be the name of the array.
 \index{FORTRAN output format!arrays} This may have to be changed in
 your particular application.
 \spadcommand{set[2,3,4,3,5]}
-\begin{verbatim}
+#+begin_example
       T1(1)=2
       T1(2)=3
       T1(3)=4
       T1(4)=5
       R10=T1
-\end{verbatim}
+#+end_example
 $$
 \left\{
 2,  3,  4,  5 
@@ -12194,13 +12194,13 @@ $$
 
 By default, the starting index for generated FORTRAN arrays is $0$.
 \spadcommand{matrix [ [2.3,9.7],[0.0,18.778] ]}
-\begin{verbatim}
+#+begin_example
       T1(0,0)=2.3
       T1(0,1)=9.7
       T1(1,0)=0.0
       T1(1,1)=18.778
       T1
-\end{verbatim}
+#+end_example
 $$
 \left[
 \begin{array}{cc}
@@ -12218,13 +12218,13 @@ or $1$.
 
 Look at the code generated for the matrix again.
 \spadcommand{matrix [ [2.3,9.7],[0.0,18.778] ]}
-\begin{verbatim}
+#+begin_example
       T1(1,1)=2.3
       T1(1,2)=9.7
       T1(2,1)=0.0
       T1(2,2)=18.778
       T1
-\end{verbatim}
+#+end_example
 $$
 \left[
 \begin{array}{cc}
@@ -12242,7 +12242,7 @@ $$
 \providecommand{\ranb}{{\tt ]}}
 \providecommand{\vertline}{$|$}
 
-\chapter{Axiom System Commands}
+* Axiom System Commands
 \label{sec:Axiom System Commands}
 
 This chapter describes system commands, the command-line
@@ -12250,7 +12250,7 @@ facilities used to control the Axiom environment.
 The first section is an introduction and discusses the common
 syntax of the commands available.
 
-\section{Introduction}
+** Introduction
 \label{sec:Introduction}
 
 System commands are used to perform Axiom environment
@@ -12265,11 +12265,11 @@ Some commands are restricted: the commands
 \index{set userlevel interpreter}
 \index{set userlevel compiler}
 \index{set userlevel development}
-\begin{verbatim}
+#+begin_example
 )set userlevel interpreter
 )set userlevel compiler
 )set userlevel development
-\end{verbatim}
+#+end_example
 set the user-access level to the three possible choices.
 All commands are available at {\tt development} level and the fewest
 are available at {\tt interpreter} level.
@@ -12320,9 +12320,9 @@ For example, the syntax pattern description
 would imply that you must provide an actual file name for
 {\it fileName} but need not use the {\tt )quietly} option.
 Thus
-\begin{verbatim}
+#+begin_example
 )read matrix.input
-\end{verbatim}
+#+end_example
 is a valid instance of the above pattern.
 
 System command names and options may be abbreviated and may be in
@@ -12332,9 +12332,9 @@ particular situation (such as in file names).
 System command names and options may be abbreviated to the minimum
 number of starting letters so that the name or option is unique.
 Thus
-\begin{verbatim}
+#+begin_example
 )s Integer
-\end{verbatim}
+#+end_example
 is not a valid abbreviation for the {\tt )set} command,
 because both {\tt )set} and {\tt )show}
 begin with the letter ``s''.
@@ -12345,9 +12345,9 @@ either command names or options.
 In some syntax descriptions we use a vertical line ``\vertline''
 to indicate that you must specify one of the listed choices.
 For example, in
-\begin{verbatim}
+#+begin_example
 )set output fortran on | off
-\end{verbatim}
+#+end_example
 only {\tt on} and {\tt off} are acceptable words for following
 {\tt boot}.
 We also sometimes use ``...'' to indicate that additional arguments
@@ -12355,7 +12355,7 @@ or options of the listed form are allowed.
 Finally, in the syntax descriptions we may also list the syntax of
 related commands.
 
-\section{)abbreviation}
+** )abbreviation
 
 \index{abbreviation}
 
@@ -12403,18 +12403,18 @@ If no abbreviation or name is given, the names and corresponding
 abbreviations for {\it all} constructors are listed.
 
 The following shows the abbreviation for the constructor {\tt List}:
-\begin{verbatim}
+#+begin_example
 )abbreviation query List
-\end{verbatim}
+#+end_example
 The following shows the constructor name corresponding to the
 abbreviation {\tt NNI}:
-\begin{verbatim}
+#+begin_example
 )abbreviation query NNI
-\end{verbatim}
+#+end_example
 The following lists all constructor names and their abbreviations.
-\begin{verbatim}
+#+begin_example
 )abbreviation query
-\end{verbatim}
+#+end_example
 
 To add an abbreviation for a constructor, use this command with
 {\tt category}, {\tt domain} or {\tt package}.
@@ -12423,11 +12423,11 @@ To add an abbreviation for a constructor, use this command with
 \index{abbreviation category}
 The following add abbreviations to the system for a
 category, domain and package, respectively:
-\begin{verbatim}
+#+begin_example
 )abbreviation domain   SET Set
 )abbreviation category COMPCAT  ComplexCategory
 )abbreviation package  LIST2MAP ListToMap
-\end{verbatim}
+#+end_example
 If the {\tt )quiet} option is used,
 no output is displayed from this command.
 You would normally only define an abbreviation in a library source file.
@@ -12445,15 +12445,15 @@ for confirmation of the removal request.
 Either of the following commands
 will remove the abbreviation {\tt VECTOR2} and the
 constructor name {\tt VectorFunctions2} from the system:
-\begin{verbatim}
+#+begin_example
 )abbreviation remove VECTOR2
 )abbreviation remove VectorFunctions2
-\end{verbatim}
+#+end_example
 
 \par\noindent{\bf Also See:}
 {\tt )compile} 
 
-\section{)boot}
+** )boot
 
 \index{)boot}
 \index{boot}
@@ -12471,9 +12471,9 @@ constructor name {\tt VectorFunctions2} from the system:
 This command is used by Axiom system developers to execute
 expressions written in the BOOT language.
 For example,
-\begin{verbatim}
+#+begin_example
 )boot times3(x) == 3*x
-\end{verbatim}
+#+end_example
 creates and compiles the Common Lisp function ``times3''
 obtained by translating the BOOT code.
 
@@ -12484,7 +12484,7 @@ obtained by translating the BOOT code.
 {\tt )system} \index{)system}.
 
 
-\section{)cd}
+** )cd
 \index{)cd}
 
 \index{cd}
@@ -12533,7 +12533,7 @@ this has the same syntax as the operating system {\tt cd} command.
 {\tt )read} \index{)read}, and
 {\tt )spool} \index{)spool}.
 
-\section{)close}
+** )close
 \index{)close}
 \index{close}
 
@@ -12551,18 +12551,18 @@ This command is used to close down interpreter client processes.
 Such processes are started by HyperDoc to run Axiom examples
 when you click on their text. When you have finished examining or modifying the
 example and you do not want the extra window around anymore, issue
-\begin{verbatim}
+#+begin_example
 )close
-\end{verbatim}
+#+end_example
 to the Axiom prompt in the window.
 
 If you try to close down the last remaining interpreter client
 process, Axiom will offer to close down the entire Axiom
 session and return you to the operating system by displaying something
 like
-\begin{verbatim}
+#+begin_example
    This is the last Axiom session. Do you want to kill Axiom?
-\end{verbatim}
+#+end_example
 Type ``{\tt y}'' (followed by the Return key) if this is what you had in mind.
 Type ``{\tt n}'' (followed by the Return key) to cancel the command.
 
@@ -12576,7 +12576,7 @@ the entire Axiom session.
 
 
 
-\section{)clear}
+** )clear
 \index{)clear}
 \index{clear}
 
@@ -12600,58 +12600,58 @@ This command is used to remove function and variable declarations, definitions
 and values  from the workspace.
 To  empty the entire workspace  and reset the
 step counter to 1, issue
-\begin{verbatim}
+#+begin_example
 )clear all
-\end{verbatim}
+#+end_example
 To remove everything in the workspace but not reset the step counter, issue
-\begin{verbatim}
+#+begin_example
 )clear properties all
-\end{verbatim}
+#+end_example
 To remove everything about the object {\tt x}, issue
-\begin{verbatim}
+#+begin_example
 )clear properties x
-\end{verbatim}
+#+end_example
 To remove everything about the objects {\tt x, y} and {\tt f}, issue
-\begin{verbatim}
+#+begin_example
 )clear properties x y f
-\end{verbatim}
+#+end_example
 
 The word {\tt properties} may be abbreviated to the single letter
 ``{\tt p}''.
-\begin{verbatim}
+#+begin_example
 )clear p all
 )clear p x
 )clear p x y f
-\end{verbatim}
+#+end_example
 All definitions of functions and values of variables may be removed by either
-\begin{verbatim}
+#+begin_example
 )clear value all
 )clear v all
-\end{verbatim}
+#+end_example
 This retains whatever declarations the objects had.  To remove definitions and
 values for the specific objects {\tt x, y} and {\tt f}, issue
-\begin{verbatim}
+#+begin_example
 )clear value x y f
 )clear v x y f
-\end{verbatim}
+#+end_example
 To remove  the declarations  of everything while  leaving the  definitions and
 values, issue
-\begin{verbatim}
+#+begin_example
 )clear mode  all
 )clear m all
-\end{verbatim}
+#+end_example
 To remove declarations for the specific objects {\tt x, y} and {\tt f}, issue
-\begin{verbatim}
+#+begin_example
 )clear mode x y f
 )clear m x y f
-\end{verbatim}
+#+end_example
 The {\tt )display names} and {\tt )display properties} commands  may be used
 to see what is currently in the workspace.
 
 The command
-\begin{verbatim}
+#+begin_example
 )clear completely
-\end{verbatim}
+#+end_example
 does everything that {\tt )clear all} does, and also clears the internal
 system function and constructor caches.
 
@@ -12661,7 +12661,7 @@ system function and constructor caches.
 {\tt )undo} \index{)undo}.
 
 
-\section{)compile}
+** )compile
 \index{)compile}
 \index{compile}
 
@@ -12695,9 +12695,9 @@ for files with extension {\tt .spad}.
  
 Should you not want the {\tt )library} command automatically invoked, 
 call {\tt )compile} with the {\tt )nolibrary} option. For example,
-\begin{verbatim} 
+#+begin_example 
 )compile mycode )nolibrary
-\end{verbatim} 
+#+end_example 
 By default, the {\tt )library} system command exposes all domains and 
 categories it processes. This means that the Axiom intepreter will consider 
 those domains and categories when it is trying to resolve a reference to a 
@@ -12709,32 +12709,32 @@ that the code will be loaded on demand. In this case, you should use the
 {\tt )nolibrary} option on {\tt )compile} and the {\tt )noexpose} option in 
 the {\tt )library} command. For
 example,
-\begin{verbatim} 
+#+begin_example 
 )compile mycode.spad )nolibrary
 )library mycode )noexpose
-\end{verbatim} 
+#+end_example 
 Once you have established your own collection of compiled code, you may find
 it handy to use the )dir option on the )library command. This causes )library
 to process all compiled code in the specified directory. For example,
-\begin{verbatim} 
+#+begin_example 
 )library )dir /u/jones/quantum
-\end{verbatim} 
+#+end_example 
 You must give an explicit directory after )dir, even if you want all compiled
 code in the current working directory processed.
-\begin{verbatim} 
+#+begin_example 
 )library )dir .
-\end{verbatim} 
+#+end_example 
 You can compile category, domain, and package constructors contained in files
 with file extension {\tt .spad}. You can compile individual constructors or 
 every constructor in a file.
  
 The full filename is remembered between invocations of this command and 
 {\tt )edit} commands. The sequence of commands
-\begin{verbatim} 
+#+begin_example 
 )compile matrix.spad
 )edit
 )compile
-\end{verbatim} 
+#+end_example 
 will call the compiler, edit, and then call the compiler again on the file
 matrix.spad. If you do not specify a directory, the working current directory
 (see description of command )cd ) is searched for the file. If the file is
@@ -12762,13 +12762,13 @@ The {\tt )constructor} option is used to specify a particular constructor to
 compile. All other constructors in the file are ignored. The constructor name
 or abbreviation follows {\tt )constructor}. Thus either
 
-\begin{verbatim} 
+#+begin_example 
 )compile matrix.spad )constructor RectangularMatrix
-\end{verbatim}
+#+end_example
 or
-\begin{verbatim} 
+#+begin_example 
 )compile matrix.spad )constructor RMATRIX
-\end{verbatim}
+#+end_example
 compiles the {\tt RectangularMatrix} constructor defined in {\bf matrix.spad}.
  
 The {\tt )break} and {\tt )nobreak} options determine what the compiler does
@@ -12782,7 +12782,7 @@ variable then controls what happens.
 {\tt )library} \index{)library}.
 
 
-\section{)display}
+** )display
 \index{)display}
 \index{display}
 
@@ -12808,36 +12808,36 @@ This command is  used to display the contents of  the workspace and
 signatures of functions  with a  given  name.
 
 The command
-\begin{verbatim}
+#+begin_example
 )display names
-\end{verbatim}
+#+end_example
 lists the names of all user-defined  objects in the workspace.  This is useful
 if you do  not wish to see everything  about the objects and need  only be
 reminded of their names.
 
 The commands
-\begin{verbatim}
+#+begin_example
 )display all
 )display properties
 )display properties all
-\end{verbatim}
+#+end_example
 all do  the same thing: show  the values and  types and declared modes  of all
 variables in the  workspace.  If you have defined  functions, their signatures
 and definitions will also be displayed.
 
 To show all information about a  particular variable or user functions,
 for example, something named {\tt d}, issue
-\begin{verbatim}
+#+begin_example
 )display properties d
-\end{verbatim}
+#+end_example
 To just show the value (and the type) of {\tt d}, issue
-\begin{verbatim}
+#+begin_example
 )display value d
-\end{verbatim}
+#+end_example
 To just show the declared mode of {\tt d}, issue
-\begin{verbatim}
+#+begin_example
 )display mode d
-\end{verbatim}
+#+end_example
 
 All modemaps for a given operation  may be
 displayed by using {\tt )display operations}.
@@ -12847,9 +12847,9 @@ to an  operation.  This  includes the  types of the  arguments and  the return
 value, the  location of the  implementation and  any conditions on  the types.
 The modemap may contain patterns.  The following displays the modemaps for the
 operation \spadfunFrom{complex}{ComplexCategory}:
-\begin{verbatim}
+#+begin_example
 )d op complex
-\end{verbatim}
+#+end_example
 
 \par\noindent{\bf Also See:}
 {\tt )clear} \index{)clear},
@@ -12859,7 +12859,7 @@ operation \spadfunFrom{complex}{ComplexCategory}:
 {\tt )what} \index{)what}.
 
 
-\section{)edit}
+** )edit
 \index{)edit}
 \index{edit}
 
@@ -12878,9 +12878,9 @@ and {\tt )compile} commands to remember the name
 of the file on which you are working.
 By specifying the name fully, you  can edit any file you wish.
 Thus
-\begin{verbatim}
+#+begin_example
 )edit /u/julius/matrix.input
-\end{verbatim}
+#+end_example
 will place  you in an editor looking at the  file
 {\tt /u/julius/matrix.input}.
 \index{editing files}
@@ -12893,9 +12893,9 @@ it will try to open a separate {\tt xterm} running your editor if
 it thinks one is necessary.
 \index{Korn shell}
 For example, under the Korn shell, if you issue
-\begin{verbatim}
+#+begin_example
 export EDITOR=emacs
-\end{verbatim}
+#+end_example
 then the emacs
 \index{emacs}
 editor will be used by {\tt )edit}.
@@ -12907,9 +12907,9 @@ an empty unnamed file.
 
 It is possible to use the {\tt )system} command to edit a file directly.
 For example,
-\begin{verbatim}
+#+begin_example
 )system emacs /etc/rc.tcpip
-\end{verbatim}
+#+end_example
 calls {\tt emacs} to edit the file.
 \index{emacs}
 
@@ -12918,7 +12918,7 @@ calls {\tt emacs} to edit the file.
 {\tt )compile} \index{)compile}, and
 {\tt )read} \index{)read}.
 
-\section{)fin}
+** )fin
 \index{)fin}
 \index{fin}
 
@@ -12942,7 +12942,7 @@ function call to Common Lisp.
 {\tt )pquit} \index{)pquit} and
 {\tt )quit} \index{)quit}.
 
-\section{)frame}
+** )frame
 \label{sec:frame}
 \index{)frame}
 \index{frame}
@@ -12986,17 +12986,17 @@ have pretty strange names, since they are generated automatically.
 \index{frame names}
 To find out the names
 of all frames, issue
-\begin{verbatim}
+#+begin_example
 )frame names
-\end{verbatim}
+#+end_example
 It will indicate the name of the current frame.
 
 You create a new frame
 \index{frame new}
 ``{\bf quark}'' by issuing
-\begin{verbatim}
+#+begin_example
 )frame new quark
-\end{verbatim}
+#+end_example
 The history facility can be turned on by issuing either
 {\tt )set history on} or {\tt )history )on}.
 If the history facility is on and you are saving history information
@@ -13008,21 +13008,21 @@ you were doing in the
 \index{frame next}
 ``{\bf initial}'' frame, use
 \index{frame last}
-\begin{verbatim}
+#+begin_example
 )frame next
-\end{verbatim}
+#+end_example
 or
-\begin{verbatim}
+#+begin_example
 )frame last
-\end{verbatim}
+#+end_example
 to cycle through the ring of available frames to get back to
 ``{\bf initial}''.
 
 If you want to throw
 away a frame (say ``{\bf quark}''), issue
-\begin{verbatim}
+#+begin_example
 )frame drop quark
-\end{verbatim}
+#+end_example
 If you omit the name, the current frame is dropped.
 \index{frame drop}
 
@@ -13037,32 +13037,32 @@ You can bring things from another frame by using
 {\tt )frame import}.
 For example, to bring the {\tt f} and {\tt g} from the frame ``{\bf quark}''
 to the current frame, issue
-\begin{verbatim}
+#+begin_example
 )frame import quark f g
-\end{verbatim}
+#+end_example
 If you want everything from the frame ``{\bf quark}'', issue
-\begin{verbatim}
+#+begin_example
 )frame import quark
-\end{verbatim}
+#+end_example
 You will be asked to verify that you really want everything.
 
 There are two {\tt )set} flags
 \index{set message frame}
 to make it easier to tell where you are.
-\begin{verbatim}
+#+begin_example
 )set message frame on | off
-\end{verbatim}
+#+end_example
 will print more messages about frames when it is set on.
 By default, it is off.
-\begin{verbatim}
+#+begin_example
 )set message prompt frame
-\end{verbatim}
+#+end_example
 will give a prompt
 \index{set message prompt frame}
 that looks like
-\begin{verbatim}
+#+begin_example
 initial (1) ->
-\end{verbatim}
+#+end_example
 \index{prompt!with frame name}
 when you start up. In this case, the frame name and step make up the
 prompt.
@@ -13071,7 +13071,7 @@ prompt.
 {\tt )history} \index{)history} and
 {\tt )set} \index{)set}.
 
-\section{)hd}
+** )hd
 \index{)hd}
 \index{hd}
 
@@ -13087,16 +13087,16 @@ prompt.
 
 This command will start the HyperDoc facility if it is not running.
 Note that if it issues the message:
-\begin{verbatim}
+#+begin_example
 binding UNIX server socket: Address already in use
 (HyperDoc) Warning: Not connected to AXIOM Server!
-\end{verbatim}
+#+end_example
 then you probably already had HyperDoc running and the new
 copy cannot connect. In this circumstance HyperDoc will still
 work but certain interactions with Axiom will not, such as the
 Basic Commands facility.
 
-\section{)help}
+** )help
 \index{)help}
 \index{help}
 
@@ -13112,16 +13112,16 @@ Basic Commands facility.
 
 This command displays help information about system commands.
 If you issue
-\begin{verbatim}
+#+begin_example
 )help
-\end{verbatim}
+#+end_example
 then this very text will be shown.
 You can also give the name or abbreviation of a system command
 to display information about it.
 For example,
-\begin{verbatim}
+#+begin_example
 )help clear
-\end{verbatim}
+#+end_example
 will display the description of the {\tt )clear} system command.
 
 All this material is available in the Axiom User Guide
@@ -13131,7 +13131,7 @@ In HyperDoc, choose the {\bf Commands} item from the
 
 
 
-\section{)history}
+** )history
 \index{)history}
 \index{history}
 
@@ -13179,16 +13179,16 @@ Axiom.
 Axiom saves your input and output if the history facility is
 turned on (which is the default).
 This information is saved if either of
-\begin{verbatim}
+#+begin_example
 )set history on
 )history )on
-\end{verbatim}
+#+end_example
 has been issued.
 Issuing either
-\begin{verbatim}
+#+begin_example
 )set history off
 )history )off
-\end{verbatim}
+#+end_example
 will discontinue the recording of information.
 \index{history )on}
 \index{set history on}
@@ -13324,7 +13324,7 @@ the contents.
 {\tt )set} \index{)set}, and
 {\tt )undo} \index{)undo}.
 
-\section{)library}
+** )library
 \index{)library}
 \index{library}
 
@@ -13389,7 +13389,7 @@ constructors.
 {\tt )frame} \index{)frame}, and
 {\tt )set} \index{)set}.
 
-\section{)lisp}
+** )lisp
 \index{)lisp}
 \index{lisp}
 
@@ -13418,7 +13418,7 @@ Since this command is only useful  for evaluating single expressions, the
 {\tt )boot} \index{)boot}, and
 {\tt )fin} \index{)fin}.
 
-\section{)ltrace}
+** )ltrace
 \index{)ltrace}
 \index{ltrace}
 
@@ -13441,7 +13441,7 @@ It is not supported for general use.
 {\tt )lisp} \index{)lisp}, and
 {\tt )trace} \index{)trace}.
 
-\section{)pquit}
+** )pquit
 \index{)pquit}
 \index{pquit}
 
@@ -13491,7 +13491,7 @@ will be displayed and, indeed, Axiom would still be running.
 {\tt )quit} \index{)quit}, and
 {\tt )system} \index{)system}.
 
-\section{)quit}
+** )quit
 \index{)quit}
 \index{quit}
 
@@ -13515,9 +13515,9 @@ you cannot return to Axiom in the same state.
 {\tt )quit} differs from the {\tt )pquit} in that it asks for
 \index{pquit}
 confirmation only if the command
-\begin{verbatim}
+#+begin_example
 )set quit protected
-\end{verbatim}
+#+end_example
 has been issued.
 \index{set quit protected}
 Otherwise, {\tt )quit} will make Axiom terminate and return you
@@ -13527,9 +13527,9 @@ system).
 The default setting is {\tt )set quit protected} so that {\tt )quit}
 and {\tt )pquit} behave in the same way.
 If you do issue
-\begin{verbatim}
+#+begin_example
 )set quit unprotected
-\end{verbatim}
+#+end_example
 we
 \index{set quit unprotected}
 suggest that you do not (somehow) assign {\tt )quit} to be
@@ -13542,7 +13542,7 @@ executed when you press, say, a function key.
 {\tt )pquit} \index{)pquit}, and
 {\tt )system} \index{)system}.
 
-\section{)read}
+** )read
 \index{)read}
 \index{read}
 
@@ -13559,9 +13559,9 @@ executed when you press, say, a function key.
 This command is used to read {\bf .input} files into Axiom.
 \index{file!input}
 The command
-\begin{verbatim}
+#+begin_example
 )read matrix.input
-\end{verbatim}
+#+end_example
 will read the contents of the file {\bf matrix.input} into
 Axiom.
 The ``.input'' file extension is optional.
@@ -13582,7 +13582,7 @@ The {\tt )quiet} option suppresses output while the file is being read.
 {\tt )edit} \index{)edit}, and
 {\tt )history} \index{)history}.
 
-\section{)set}
+** )set
 \index{)set}
 \index{set}
 
@@ -13611,45 +13611,45 @@ main HyperDoc menu.
 The {\tt )set} command is command-driven with a menu display.
 It is tree-structured.
 To see all top-level nodes, issue {\tt )set} by itself.
-\begin{verbatim}
+#+begin_example
 )set
-\end{verbatim}
+#+end_example
 Variables with values have them displayed near the right margin.
 Subtrees of selections have ``{\tt ...}''
 displayed in the value field.
 For example, there are many kinds of messages, so issue
 {\tt )set message} to see the choices.
-\begin{verbatim}
+#+begin_example
 )set message
-\end{verbatim}
+#+end_example
 The current setting  for the variable that displays
 \index{computation timings!displaying}
 whether computation times
 \index{timings!displaying}
 are displayed is visible in the menu displayed by the last command.
 To see more information, issue
-\begin{verbatim}
+#+begin_example
 )set message time
-\end{verbatim}
+#+end_example
 This shows that time printing is on now.
 To turn it off, issue
-\begin{verbatim}
+#+begin_example
 )set message time off
-\end{verbatim}
+#+end_example
 \index{set message time}
 
 As noted above, not all settings have so many qualifiers.
 For example, to change the {\tt )quit} command to being unprotected
 (that is, you will not be prompted for verification), you need only issue
-\begin{verbatim}
+#+begin_example
 )set quit unprotected
-\end{verbatim}
+#+end_example
 \index{set quit unprotected}
 
 \par\noindent{\bf Also See:}
 {\tt )quit} \index{)quit}.
 
-\section{)show}
+** )show
 \index{)show}
 \index{show}
 
@@ -13669,12 +13669,12 @@ This command displays information about Axiom
 domain, package and category {\it constructors}.
 If no options are given, then the {\tt )operations} option is assumed.
 For example,
-\begin{verbatim}
+#+begin_example
 )show POLY
 )show POLY )operations
 )show Polynomial
 )show Polynomial )operations
-\end{verbatim}
+#+end_example
 each display basic information about the
 {\tt Polynomial} domain constructor and then provide a
 listing of operations.
@@ -13692,12 +13692,12 @@ name of the {\it library source file} for the constructor.
 If operation information about a specific domain is wanted,
 the full or abbreviated domain name may be used.
 For example,
-\begin{verbatim}
+#+begin_example
 )show POLY INT
 )show POLY INT )operations
 )show Polynomial Integer
 )show Polynomial Integer )operations
-\end{verbatim}
+#+end_example
 are among  the combinations that will
 display the operations exported  by the
 domain {\tt Polynomial(Integer)} (as opposed to the general
@@ -13709,7 +13709,7 @@ Attributes may be listed by using the {\tt )attributes} option.
 {\tt )set} \index{)set}, and
 {\tt )what} \index{)what}.
 
-\section{)spool}
+** )spool
 \index{)spool}
 \index{spool}
 
@@ -13728,9 +13728,9 @@ This command is used to save {\it (spool)} all Axiom input and output
 into a file, called a {\it spool file.}
 You can only have one spool file active at a time.
 To start spool, issue this command with a filename. For example,
-\begin{verbatim}
+#+begin_example
 )spool integrate.out
-\end{verbatim}
+#+end_example
 To stop spooling, issue {\tt )spool} with no filename.
 
 If the filename is qualified with a directory, then the output will
@@ -13746,7 +13746,7 @@ Axiom or is the directory you specified using the
 \par\noindent{\bf Also See:}
 {\tt )cd} \index{)cd}.
 
-\section{)synonym}
+** )synonym
 \index{)synonym}
 \index{synonym}
 
@@ -13766,39 +13766,39 @@ Axiom or is the directory you specified using the
 This command is used to create short synonyms for system command expressions.
 For example, the following synonyms  might simplify commands you often
 use.
-\begin{verbatim}
+#+begin_example
 )synonym save         history )save
 )synonym restore      history )restore
 )synonym mail         system mail
 )synonym ls           system ls
 )synonym fortran      set output fortran
-\end{verbatim}
+#+end_example
 Once defined, synonyms can be
 used in place of the longer  command expressions.
 Thus
-\begin{verbatim}
+#+begin_example
 )fortran on
-\end{verbatim}
+#+end_example
 is the same as the longer
-\begin{verbatim}
+#+begin_example
 )set fortran output on
-\end{verbatim}
+#+end_example
 To list all defined synonyms, issue either of
-\begin{verbatim}
+#+begin_example
 )synonyms
 )what synonyms
-\end{verbatim}
+#+end_example
 To list, say, all synonyms that contain the substring
 ``{\tt ap}'', issue
-\begin{verbatim}
+#+begin_example
 )what synonyms ap
-\end{verbatim}
+#+end_example
 
 \par\noindent{\bf Also See:}
 {\tt )set} \index{)set} and
 {\tt )what} \index{)what}.
 
-\section{)system}
+** )system
 \index{)system}
 \index{system}
 
@@ -13841,7 +13841,7 @@ possible.
 {\tt )pquit} \index{)pquit}, and
 {\tt )quit} \index{)quit}.
 
-\section{)trace}
+** )trace
 \index{)trace}
 \index{trace}
 
@@ -13922,13 +13922,13 @@ exceptions will be noted below.
 
 To list all functions, constructors, domains and packages that are
 traced, )issue
-\begin{verbatim}
+#+begin_example
 )trace
-\end{verbatim}
+#+end_example
 To untrace everything that is traced, issue
-\begin{verbatim}
+#+begin_example
 )trace )off
-\end{verbatim}
+#+end_example
 When a function is traced, the default system action is to display
 the arguments to the function and the return value when the
 function is exited.
@@ -13949,29 +13949,29 @@ functions can be traced by listing their names after
 {\tt )trace}.
 Any options that are present must follow the functions to be
 traced.
-\begin{verbatim}
+#+begin_example
 )trace f
-\end{verbatim}
+#+end_example
 traces the function {\tt f}.
 To untrace {\tt f}, issue
-\begin{verbatim}
+#+begin_example
 )trace f )off
-\end{verbatim}
+#+end_example
 Note that if a function name contains a special character, it will
 be necessary to escape the character with an underscore
 %
-\begin{verbatim}
+#+begin_example
 )trace _/D_,1
-\end{verbatim}
+#+end_example
 %
 To trace all domains or packages that are or will be created from a particular
 constructor, give the constructor name or abbreviation after
 {\tt )trace}.
 %
-\begin{verbatim}
+#+begin_example
 )trace MATRIX
 )trace List Integer
-\end{verbatim}
+#+end_example
 %
 The first command traces all domains currently instantiated with
 {\tt Matrix}.
@@ -14032,9 +14032,9 @@ function is untraced.
 \item[{\tt )depth} {\it n}]
 causes trace information to be shown for only {\it n} levels of
 recursion of the traced function.  The command
-\begin{verbatim}
+#+begin_example
 )trace fib )depth 10
-\end{verbatim}
+#+end_example
 will cause the display of only 10 levels of trace information for
 the recursive execution of a user function {\bf fib}.
 
@@ -14128,10 +14128,10 @@ causes local functions of the constructor to be traced.  Note that
 to untrace an individual local function, you must use the fully
 qualified internal name, using the escape character
 {\tt \_} before the semicolon.
-\begin{verbatim}
+#+begin_example
 )trace FRAC )local
 )trace FRAC_;cancelGcd )off
-\end{verbatim}
+#+end_example
 
 \item[{\tt )ops} {\it op1 {\tt [}... opN {\tt ]}}]
 By default, all operations from a domain or package are traced
@@ -14139,9 +14139,9 @@ when the domain or package is traced.  This option allows you to
 specify that only particular operations should be traced.  The
 command
 %
-\begin{verbatim}
+#+begin_example
 )trace Integer )ops min max _+ _-
-\end{verbatim}
+#+end_example
 %
 traces four operations from the domain {\tt Integer}.  Since
 {\tt +} and {\tt -} are special
@@ -14154,7 +14154,7 @@ to escape them with an underscore.
 {\tt )lisp} \index{)lisp}, and
 {\tt )ltrace} \index{)ltrace}.
 
-\section{)undo}
+** )undo
 \index{)undo}
 \index{undo}
 
@@ -14184,10 +14184,10 @@ point in the interactive session.
 The argument of an {\tt )undo} is an integer which must designate some
 step number in the interactive session.
 
-\begin{verbatim}
+#+begin_example
 )undo n
 )undo n )after
-\end{verbatim}
+#+end_example
 These commands return the state of the interactive
 environment to that immediately after step {\tt n}.
 If {\tt n} is a positive number, then {\tt n} refers to step nummber
@@ -14208,17 +14208,17 @@ the effect of the previous user expression).
 The command {\tt )undo 0} undoes any of the above system commands
 issued since the last user expression.
 
-\begin{verbatim}
+#+begin_example
 )undo n )before
-\end{verbatim}
+#+end_example
 This command returns the state of the interactive
 environment to that immediately before step {\tt n}.
 Any {\tt )undo} or {\tt )clear} system commands
 given before step {\tt n} will not be undone.
 
-\begin{verbatim}
+#+begin_example
 )undo )redo
-\end{verbatim}
+#+end_example
 This command reads the file {\tt redo.input}.
 created by the last {\tt )undo} command.
 This file consists of all user input lines, excluding those
@@ -14229,7 +14229,7 @@ backtracked over due to a previous {\tt )undo}.
 The command {\tt )history )write} will eliminate the ``undone'' command
 lines of your program.
 
-\section{)what}
+** )what
 \index{)what}
 \index{what}
 
@@ -14260,22 +14260,22 @@ This command is used to display lists of things in the system.  The
 patterns are all strings and, if present, restrict the contents of the
 lists.  Only those items that contain one or more of the strings as
 substrings are displayed.  For example,
-\begin{verbatim}
+#+begin_example
 )what synonym
-\end{verbatim}
+#+end_example
 displays all command synonyms,
-\begin{verbatim}
+#+begin_example
 )what synonym ver
-\end{verbatim}
+#+end_example
 displays all command synonyms containing the substring ``{\tt ver}'',
-\begin{verbatim}
+#+begin_example
 )what synonym ver pr
-\end{verbatim}
+#+end_example
 displays all command synonyms
 containing the substring  ``{\tt ver}'' or  the substring
 ``{\tt pr}''.
 Output similar to the following will be displayed
-\begin{verbatim}
+#+begin_example
 ---------------- System Command Synonyms -----------------
 
 user-defined synonyms satisfying patterns:
@@ -14285,7 +14285,7 @@ user-defined synonyms satisfying patterns:
   )apropos ....................... )what things
   )prompt ........................ )set message prompt
   )version ....................... )lisp *yearweek*
-\end{verbatim}
+#+end_example
 
 Several other things can be listed with the {\tt )what} command:
 
@@ -14330,7 +14330,7 @@ The command synonym  {\tt )apropos} is equivalent to
 {\tt )set} \index{)set}, and
 {\tt )show} \index{)show}.
 
-\section{Makefile}
+** Makefile
 This book is actually a literate program\cite{Knut92} and can contain 
 executable source code. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

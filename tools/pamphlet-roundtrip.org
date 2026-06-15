@@ -317,10 +317,13 @@ org-native phase must preserve.
 
 Two traps the script encodes:
 
-- *Tracked-only.*  It selects =git ls-files '*.org'=, not a working-tree
-  =grep=, so git-ignored build artifacts that happen to carry =:noweb yes=
-  (e.g. =src/interp/bookvol5.org=, regenerated during the build) never enter
-  the gate and never raise a false regression.
+- *All org-native sources, tracked-only.*  It selects every =git ls-files
+  '*.org'= (not just the =:noweb yes= build corpus, so pure-prose books with
+  no code chunks -- =bookvol0/1/3/4/10.1=, =bookvolbug=, ... -- are gated too),
+  minus =tools/= (literate-elisp) and =bookvolMIGRATION.org= (deliberately raw
+  LaTeX).  Using =ls-files= (not a working-tree =grep=) keeps git-ignored build
+  artifacts (e.g. the generated =src/interp/bookvol5.org=) out, so they never
+  raise a false regression.
 - *No =mapfile=.*  The recipe runs under macOS =/bin/bash= 3.2, which
   predates =mapfile= (bash 4); the candidate list is streamed through a temp
   file instead.

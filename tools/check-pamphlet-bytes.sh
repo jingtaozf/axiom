@@ -29,12 +29,14 @@ git show "$BASE:books/untanglec.c" > "$T/unt_base.c" 2>/dev/null || {
 cc -O2 -o "$T/unt_base" "$T/unt_base.c" 2>/dev/null || { echo "fatal: base untanglec build failed" >&2; exit 2; }
 cc -O2 -o "$T/unt_cur"  books/untanglec.c   2>/dev/null || { echo "fatal: current untanglec build failed" >&2; exit 2; }
 
-# Candidate sources: TRACKED .org carrying a ':noweb yes' chunk, excluding
-# tools/ (literate-elisp, not pamphlets) -- mirrors the regen-pamphlets target,
-# but tracked-only so git-ignored build artifacts (e.g. src/interp/bookvol5.org)
-# never enter the gate.  (No mapfile: portable to macOS /bin/bash 3.2.)
-git ls-files '*.org' | grep -vE '^tools/' | while read -r f; do
-  grep -Iq ':noweb yes' "$f" 2>/dev/null && echo "$f"; done | sort > "$T/files.txt"
+# Candidate sources: every TRACKED, org-native .org -- NOT just the ':noweb yes'
+# build corpus, so the pure-prose books (bookvol0/1/3/4/10.1, bookvolbug, ...)
+# that have no code chunks are gated too.  git ls-files keeps git-ignored build
+# artifacts (e.g. the generated src/interp/bookvol5.org) out.  Two exclusions:
+# tools/ (literate-elisp, not pamphlets) and bookvolMIGRATION.org (kept in raw
+# LaTeX on purpose -- the daly-style migration book is not org-native).
+# (No mapfile: portable to macOS /bin/bash 3.2.)
+git ls-files '*.org' | grep -vE '^tools/|bookvolMIGRATION' | sort > "$T/files.txt"
 
 SAME=0; DIFF=0; SKIP=0
 : > "$T/differ.txt"
