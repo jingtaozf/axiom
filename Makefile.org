@@ -9,7 +9,7 @@
 \eject
 \tableofcontents
 \newpage
-\section{The overall build process}
+** The overall build process
 
 Makefiles are responsible for building all of their subdirectories
 and then themselves. The system is built in the following order
@@ -25,40 +25,38 @@ and then themselves. The system is built in the following order
 \item src/algebra -- building input files
 \item src/algebra -- building xhtml files
 \item src/algebra -- building algebra files
-\begin{itemize}
-\item algebra bootstrap complete
-\item layer 0 of 24 complete
-\item layer 1 of 24 complete
-\item layer 2 of 24 complete
-\item layer 3 of 24 complete
-\item layer 4 of 24 complete
-\item layer 5 of 24 complete
-\item layer 6 of 24 complete
-\item layer 7 of 24 complete
-\item layer 8 of 24 complete
-\item layer 9 of 24 complete
-\item layer 10 of 24 complete
-\item layer 11 of 24 complete
-\item layer 12 of 24 complete
-\item layer 13 of 24 complete
-\item layer 14 of 24 complete
-\item layer 15 of 24 complete
-\item layer 16 of 24 complete
-\item layer 17 of 24 complete
-\item layer 18 of 24 complete
-\item layer 19 of 24 complete
-\item layer 20 of 24 complete
-\item layer 21 of 24 complete
-\item layer 22 of 24 complete
-\item layer 23 of 24 complete
-\item layer 0 copy complete
-\end{itemize}
+- algebra bootstrap complete
+- layer 0 of 24 complete
+- layer 1 of 24 complete
+- layer 2 of 24 complete
+- layer 3 of 24 complete
+- layer 4 of 24 complete
+- layer 5 of 24 complete
+- layer 6 of 24 complete
+- layer 7 of 24 complete
+- layer 8 of 24 complete
+- layer 9 of 24 complete
+- layer 10 of 24 complete
+- layer 11 of 24 complete
+- layer 12 of 24 complete
+- layer 13 of 24 complete
+- layer 14 of 24 complete
+- layer 15 of 24 complete
+- layer 16 of 24 complete
+- layer 17 of 24 complete
+- layer 18 of 24 complete
+- layer 19 of 24 complete
+- layer 20 of 24 complete
+- layer 21 of 24 complete
+- layer 22 of 24 complete
+- layer 23 of 24 complete
+- layer 0 copy complete
 \item src/etc   -- building etc
 \item src/doc   -- building doc files
 \item src/input -- running regression tests
 \end{enumerate}
 
-\section{General Makefile Structure}
+** General Makefile Structure
 
 Makefiles are responsible for four things. First, they have to set up
 the output directory structure so that all of the build machinery
@@ -74,7 +72,7 @@ method often fails for various reasons (e.g. permissions, incomplete
 builds, etc). Now we simply remove the created files directly.
 \newpage
 
-\subsection{The Top Level Makefile}
+*** The Top Level Makefile
 We have added a stanza to separate the build of documents from the build
 of source files. As much as possible we would like to do the document
 builds in parallel with the source builds. We kick off a make for the
@@ -270,9 +268,9 @@ clean:
 
 #+end_src
 
-\subsection{Environment}
+*** Environment
 
-\subsubsection{VERSION}
+**** VERSION
 The VERSION variable is a unique string intended to show up
 in the banner at startup time. I can be anything but is intended
 to be a unique way of identifying the CVS version so we can 
@@ -289,21 +287,21 @@ of its file information. See the YEARWEEK variable in the
 src/interp/Makefile.pamphlet and the {\tt yearweek} function in 
 src/interp/util.lisp.pamphlet.
 
-\subsubsection{SPAD}
+**** SPAD
 The SPAD environment variable is normally specified.
 It is expected to be a path to the top level directory of the
 shipped system. For example, if we want to build a linux system
 the SPAD variable should look like:
-\begin{verbatim}
+#+begin_example
     `pwd`/new/mnt/{\bf linux}
-\end{verbatim}
-\subsubsection{SYS}
+#+end_example
+**** SYS
 From the SPAD variable we look at the last directory name
 and create a version of Axiom for that system. The SYS
 environment variable is the last directory name in the SPAD
 variable.
 
-\subsubsection{SPD}
+**** SPD
 The SPD variable is taken to be the current working directory
 where this Makefile lives. This is obviously the root of the whole
 system source tree. All Makefiles form environment variables based
@@ -312,13 +310,13 @@ on this value.
 Next we see the six top-level directories discussed above being
 defined using the SPD variable. 
 
-\subsubsection{LSP}
+**** LSP
 This variable specifies where the LSP subdirectory lives.
 It is normally a directory at the top level of the system but
 we do not assume that to be true. Other lisps might require it
 to be elsewhere. 
 
-\subsubsection{GCLDIR}
+**** GCLDIR
 This file contained the only mention of the AKCLDIR variable which
 gives the path to the version of AKCL. Now that the system is running
 on GCL this variable has been renamed to GCLDIR. This cannot be eliminated
@@ -341,7 +339,7 @@ then SYS=linux). It is {\bf mandatory} that \verb|$AXIOM| does
 will return the string following the final slash and would thus return
 the empty string.
 
-\subsubsection{SRC}
+**** SRC
 The SRC subdirectory is a hand-generated, read-only top level 
 directory containing the source code. This is assumed to be completely
 system-independent and, in general, it can reside on a CD or NFS
@@ -349,7 +347,7 @@ mounted file system. This is useful for building several different
 kinds of systems (as specified by the SYS variable from a single
 source tree.
 
-\subsubsection{INT}
+**** INT
 
 The INT subdirectory is a machine-generated, system-independent
 top-level directory containing source code. Axiom builds from literate
@@ -360,28 +358,28 @@ done by machine, are system-independent. Therefore this subdirectory,
 once built, can reside with the SRC subdirectory on CD or NFS as a
 read-only branch.
 
-\subsubsection{OBJ}
+**** OBJ
 The OBJ subdirectory is a machine-generated, system-dependent
 top level directory containing things like compiler binaries. The
 OBJ directory is a cache of work. It can be erased at will. 
 Because it is system-dependent it needs to be written at build
 time by compilers for each specific system. 
 
-\subsubsection{MNT}
+**** MNT
 The MNT subdirectory is a complete, working copy of Axiom.
 This directory contains everything that is needed to run Axiom and
 can be copied anywhere. Everything in this directory takes its required
 information from the \verb|$AXIOM| shell variable. Once this directory is
 copied the SRC, INT, and OBJ subdirectories can be erased.
 
-\subsubsection{ZIPS}
+**** ZIPS
 The ZIPS subdirectory contains particular versions of subsystems
 that Axiom needs in tar-gzip format. The Makefiles will unpack them.
 It also contains patch files to these subsystems. The Makefile will
 apply those patches. Then it will configure and build the required
 subsystems.
 
-\subsubsection{TMP}
+**** TMP
 The TMP directory is used in place of normal unix tmp in order to
 avoid writing outside of our build tree.
 
@@ -393,7 +391,7 @@ TMP/trace file. If the build seems to hang while making a
 document file then check this file. It will contain the output
 of the latex command and the likely error in the tex file.
 
-\subsubsection{SPADBIN}
+**** SPADBIN
 The SPADBIN directory is the path to the executable 
 binary directory of the shipped system. The directory contains
 all of the executable commands, such as the {\tt document}
@@ -401,32 +399,32 @@ command. The {\tt document} command lives in the SRC/SCRIPTS
 subdirectory and will be copied to SPADBIN before we start
 walking the build subtree.
 
-\subsubsection{INC}
+**** INC
 The INC directory contains all the include files for the C
 programs.
 
-\subsubsection{The NOISE variable }
+**** The NOISE variable 
 The NOISE variable is used in the calls to the document
 command. In general, where the document command is called in
 the Makefiles it is called with the following form:
-\begin{verbatim}
+#+begin_example
    ${SPADBIN}/document ${NOISE} foo
-\end{verbatim}
+#+end_example
 with the default value of NOISE being:
-\begin{verbatim}
+#+begin_example
    NOISE="-o ${TMP}/trace"
-\end{verbatim}
+#+end_example
 
 The reason NOISE exists is that the latex command will
 generate a page of output which is uninteresting during the
 make. However if there is a latex syntax error in a pamphlet
 file the make will continue past the error due to the nonstopmode
 flag. To see the actual error message rerun the make as:
-\begin{verbatim}
+#+begin_example
   make NOISE=
-\end{verbatim}
+#+end_example
 
-\subsubsection{PART and SUBPART}
+**** PART and SUBPART
 Because of the size of this build we do everything possible to
 minimize the work necessary to rebuild. In order to allow
 finer control of the build we have two options that can be
@@ -435,35 +433,35 @@ is the SUBPART variable. The PART variable basically
 specifies which directory we wish to build.
 
 Setting the PART as:
-\begin{verbatim}
+#+begin_example
 PART=foo
-\end{verbatim}
+#+end_example
 will look for a stanza in the Makefile as:
-\begin{verbatim}
+#+begin_example
 \${PART}dir 
-\end{verbatim}
+#+end_example
 which expands to:
-\begin{verbatim}
+#+begin_example
 foodir
-\end{verbatim}
+#+end_example
 
 Variable PART can be specified (environment or command-line) as
 one of:
 
-\begin{verbatim}
+#+begin_example
  (all | lib | install | lisp | interp | comp | graph | hyper 
       | input | sman | boot | include | doc | algebra )
-\end{verbatim}
+#+end_example
 
 It is possible to be more specific with a directory using SUBPART.
 
 
-\subsubsection{DESTDIR and COMMAND}
+**** DESTDIR and COMMAND
 The install directory is /usr/local/axiom by default 
 but this can be changed on the command line by typing:
-\begin{verbatim}
+#+begin_example
 make DESTDIR=/yourabsolutepath COMMAND=fullPathAndCommand install
-\end{verbatim}
+#+end_example
 
 The COMMAND string has been modified to use the DESTDIR
 variable so we can properly find the axiom command.
@@ -471,7 +469,7 @@ variable so we can properly find the axiom command.
 The DOCUMENT variable is now set to replace the direct call
 to the document command. This will allow it to be
 changed on the command line.
-\section{The Environment}
+** The Environment
 #+NAME: ENVDEFAULTS
 #+begin_src common-lisp :noweb yes
 VERSION:="Axiom (May 2017)"
@@ -543,7 +541,7 @@ COQ:=
 
 #+end_src
 
-\subsection{The ENV variable}
+*** The ENV variable
 #+NAME: ENVAR
 #+begin_src common-lisp :noweb yes
 
@@ -600,7 +598,7 @@ ZIPS=${ZIPS}
 
 #+end_src
 
-\subsection{book}
+*** book
 This stanza constructs the book from the original pamphlet file.
 At this time there is no difference between the pamphlet file
 and straight latex (intentionally). Thus we just need to make 
@@ -628,7 +626,7 @@ book:
 	@ echo 80 The book is at ${MNT}/${SYS}/doc/book.dvi 
 
 #+end_src
-\subsection{tanglec.c}
+*** tanglec.c
 #+NAME: tanglec.c
 #+begin_src c :noweb yes
 
@@ -652,18 +650,42 @@ orgtangle: books/orgtangle.c
 srctangle-tools: tanglec untanglec orgtangle
 	@chmod +x ${BOOKS}/srctangle
 
+# Byte-exact gate for the org-native migration.  Regenerate every tracked
+# source pamphlet twice -- from BASE (with BASE's untanglec) and from the
+# working tree (with the current untanglec) -- and assert they are identical.
+# It flags EVERY pamphlet-byte change in BASE..worktree -- a format rewrite that
+# moved bytes AND a deliberate content edit -- so pick BASE = the commit before
+# the phase to read a green run as "byte-transparent".  BASE defaults to HEAD
+# (the script's own default when $(BASE) is empty).
+#   make check-pamphlet-bytes BASE=<commit-before-the-phase>
+check-pamphlet-bytes:
+	@echo t05 byte-exact pamphlet gate vs $(BASE)
+	@tools/check-pamphlet-bytes.sh $(BASE)
+
+# Regenerate a .pamphlet beside every migrated .org (those carrying a
+# ':noweb yes' chunk).  Only needed to build PDFs or to run the build in
+# AXIOM_TANGLE_VIA_PAMPHLET=1 mode; the default direct build never calls it.
+# Exclude tools/ : those literate-elisp files carry ':noweb yes' inside CODE
+# strings, are NOT pamphlets, and must not be untanglec'd (their `* heading'
+# lines are real org headings, not migrated LaTeX).
+regen-pamphlets: untanglec
+	@echo t03 regenerating .pamphlet files from migrated .org via untanglec
+	@grep -rIl ':noweb yes' --include='*.org' . | grep -vE '/\.git/|/tools/' | while read f ; do \
+	   ${BOOKS}/untanglec "$$f" > "$${f%.org}.pamphlet" ; \
+	 done
+
 #+end_src
 
-\subsection{src}
+*** src
 We should recompile the world with the .fn information but not here.
-\begin{verbatim}
+#+begin_example
 	( for i in `find . -name "*.lsp"` ; \
 	    do echo $$i ; touch $$i ; done )
 	( for i in `find . -name "*.lisp"` ; \
 	    do echo $$i ; touch $$i ; done )
 	@echo 15a remaking ${SRC}/interp for performance
 	@(cd src ; ${ENV} ${MAKE} )
-\end{verbatim}
+#+end_example
 
 #+NAME: src
 #+begin_src common-lisp :noweb yes
@@ -686,7 +708,7 @@ libspadclean:
 
 #+end_src
 
-\subsection{src setup}
+*** src setup
 #+NAME: srcsetup
 #+begin_src common-lisp :noweb yes
 srcsetup: ${SPD}/src/Makefile
@@ -695,7 +717,7 @@ srcsetup: ${SPD}/src/Makefile
 
 #+end_src
 
-\subsection{lsp}
+*** lsp
 We delegate the details of constructing common lisp to the Makefiles in
 the subtree. We need only ensure that the Makefiles are up to date.
 
@@ -705,7 +727,7 @@ GCL and thus will prevent GCL from rebuilding. We need to do this
 since we have no control over the GCL makefiles.
 
 The \verb|${OBJ}/${SYS}/bin| directory is where the lisps get built.
-\subsubsection{LSPMakefile}
+**** LSPMakefile
 We need to specialize the Makefile stanza based on the version
 of Lisp we plan to use. At the moment there are 3 GCL versions
 which run Axiom: 2.4.1, 2.5, and 2.6 These are incompatible versions
@@ -800,7 +822,7 @@ lspclean:
 	@rm -f ${LSP}/Makefile ${LSP}/Makefile.dvi
 
 #+end_src
-\subsection{install}
+*** install
 #+NAME: install
 #+begin_src common-lisp :noweb yes
 install:
@@ -821,7 +843,7 @@ install:
 	@echo 
 
 #+end_src
-\subsection{document}
+*** document
 
 Each file in the system is in pamphlet form. This stanza, which is not
 executed by default, will walk the directories generating the
@@ -841,7 +863,7 @@ document:
 	@(cd src ; ${ENV} ${MAKE} document )
 
 #+end_src
-\subsection{clean}
+*** clean
 #+NAME: clean
 #+begin_src common-lisp :noweb yes
 clean: 
@@ -860,7 +882,7 @@ clean:
 	@ for i in `find src -name "Makefile.dvi"` ; do rm -f $i ; done
 
 #+end_src
-\section{The Platform Makefiles}
+** The Platform Makefiles
 
 The Top Level Makefile examines the SPAD variable to determine
 the target build platform. It sets up the general structure
@@ -868,38 +890,38 @@ of the world. Then it invokes one of these platform Makefiles.
 Each of these Makefiles sets several
 environment variables that are specific to this platform.
 
-\subsubsection{The LDF variable }
+**** The LDF variable 
 
 The LDF variable is the generic loader flags. This gives information
 about where various libraries are located on specific platforms. On
 linux, for instance, the library libXpm.a is used by the graphics
 routines. This library is usually found in /usr/X11R6/bin/libXpm.a. 
 Thus, on the linux platform LDF is defined as
-\begin{verbatim}
+#+begin_example
 LDF=" -L/usr/X11R6/lib -L/usr/lib ${XLIB}/libXpm.a -lXpm"
-\end{verbatim}
+#+end_example
 
-\subsubsection{The AWK variable }
+**** The AWK variable 
 
 On most systems the gnu toolset is the default. Thus we can just use
 'awk' and the program works. However, on some systems we need to
 specify that we are using the gnu toolset, and we need to use
 gawk instead of awk.
 
-\subsubsection{The PATCH variable }
+**** The PATCH variable 
 
 On most systems the gnu toolset is the default. Thus we can just use
 'patch' and the program works. However, on some systems we need to
 specify that we are using the gnu toolset, and we need to use
 gpatch instead of patch.
 
-\subsubsection{The O variable }
+**** The O variable 
 Various Common Lisp systems prefer certain filename extensions.
 This defaults to ``o'' so a compile of foo.lisp becomes foo.o
 but other systems prefer .fasl so a compile of foo.lisp becomes
 foo.fasl. Change this based on the target lisp.
 
-\subsubsection{The LISP variable }
+**** The LISP variable 
 There are 3 kinds of "lisp" files in the Axiom build process.
 The first are the "clisp" files. These are common lisp files
 generated by the boot compiler. The second are the "lisp" files.
@@ -908,7 +930,7 @@ files. These are files generated by GNU Common Lisp. The LISP
 variable is used to name the third kind of files as this may
 change when the underlying common lisp is changed.
 
-\subsubsection{The DAASE variable}
+**** The DAASE variable
 Axiom uses 5 files, the *.daase files, which are called ``the
 databases''. They contain cross-reference, signatures,
 and other information needed by the interpreter and compiler.
@@ -927,17 +949,17 @@ given here is:
 so \verb|${SRC}/share/algebra/*.daase| will be the
 Axiom bootstrap database files.
 
-\subsubsection{The XLIB variable}
+**** The XLIB variable
 The XLIB variable tells us where the X11 libraries live.
 Axiom needs to use libXpm.a to build the graph subdirectory.
 
-\subsubsection{The SRCDIRS variable}
+**** The SRCDIRS variable
 The SRCDIRS variable is used in the src/Makefile.pamphlet
 to decide what directories to build on a given platform. This is
 needed at the moment because certain functions do not yet work on
 all platforms. 
 
-\subsubsection{The GCLVERSION variable }
+**** The GCLVERSION variable 
 GCLVERSION is the name of the GCL version. The one we used to
 build the original version of the system is gcl-2.4.1. The system
 will attempt to untar a file in the ZIPS directory with the
@@ -986,7 +1008,7 @@ forget to erase the lsp/Makefile the wrong patches will be applied.
 GCLVERSION=gcl-2.6.13pre
 #+end_src
 
-\subsubsection{Selecting the host Lisp flavor}
+**** Selecting the host Lisp flavor
 
 Historically the only host Lisp this build knew was the bundled GCL,
 so ``which Lisp'' was never a question the Makefile had to answer.
@@ -997,9 +1019,9 @@ existing platforms are not disturbed.
 
 The {\bf LISPFLAVOR} variable is that selector. It defaults to
 {\bf gcl}, which leaves every recipe exactly as it always was. Saying
-\begin{verbatim}
+#+begin_example
 make LISPFLAVOR=sbcl
-\end{verbatim}
+#+end_example
 selects the system SBCL instead. Two things change under sbcl. First,
 the compiled-object extension {\bf O} becomes {\bf fasl}: SBCL's
 compile-file emits fasl files, not the .o object modules GCL's
@@ -1018,7 +1040,7 @@ O:=fasl
 endif
 #+end_src
 
-\subsubsection{The GCLOPTS configure variable}
+**** The GCLOPTS configure variable
 The GCLOPTS lisp requires some parameters 
 for building which vary from system
 to system. We create an environment variable here so we can add options
@@ -1033,9 +1055,9 @@ if we set the GCLOPTS to build a local BFD.
 
 We are failing during build because "directoryp is undefined" along
 with the message
-\begin{verbatim}
+#+begin_example
 Error: Cannot get relocated section contents
-\end{verbatim}
+#+end_example
 #+NAME: GCLOPTS-LOCBFD
 #+begin_src common-lisp :noweb yes
 GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"
@@ -1056,7 +1078,7 @@ We need to add ``--enable-locbfd'' and ``--disable-dlopen'' due to the error
 #+begin_src common-lisp :noweb yes
 GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"
 #+end_src
-\subsection{Makefile.freebsd}
+*** Makefile.freebsd
 #+NAME: Makefile.freebsd
 #+begin_src common-lisp :noweb yes
 
@@ -1090,7 +1112,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.windows}
+*** Makefile.windows
 This is for the Windows port. We assume that the build will be done
 using GCC under MSYS.
 
@@ -1164,7 +1186,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.linux}
+*** Makefile.linux
 #+NAME: Makefile.linux
 #+begin_src common-lisp :noweb yes
 
@@ -1197,7 +1219,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.mandriva}
+*** Makefile.mandriva
 #+NAME: Makefile.mandriva
 #+begin_src common-lisp :noweb yes
 
@@ -1230,7 +1252,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.vector}
+*** Makefile.vector
 #+NAME: Makefile.vector
 #+begin_src common-lisp :noweb yes
 
@@ -1263,7 +1285,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.redhat72}
+*** Makefile.redhat72
 #+NAME: Makefile.redhat72
 #+begin_src common-lisp :noweb yes
 
@@ -1296,7 +1318,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.redhat9}
+*** Makefile.redhat9
 #+NAME: Makefile.redhat9
 #+begin_src common-lisp :noweb yes
 
@@ -1329,7 +1351,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.debian}
+*** Makefile.debian
 #+NAME: Makefile.debian
 #+begin_src common-lisp :noweb yes
 
@@ -1362,7 +1384,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.opensuse}
+*** Makefile.opensuse
 #+NAME: Makefile.opensuse
 #+begin_src common-lisp :noweb yes
 
@@ -1395,7 +1417,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.ubuntu}
+*** Makefile.ubuntu
 #+NAME: Makefile.ubuntu
 #+begin_src common-lisp :noweb yes
 
@@ -1428,7 +1450,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.mint}
+*** Makefile.mint
 #+NAME: Makefile.mint
 #+begin_src common-lisp :noweb yes
 
@@ -1461,7 +1483,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.ubuntu64}
+*** Makefile.ubuntu64
 #+NAME: Makefile.ubuntu64
 #+begin_src common-lisp :noweb yes
 
@@ -1494,7 +1516,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.centos}
+*** Makefile.centos
 #+NAME: Makefile.centos
 #+begin_src common-lisp :noweb yes
 
@@ -1527,7 +1549,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.macosxppc}
+*** Makefile.macosxppc
 #+NAME: Makefile.macosxppc
 #+begin_src common-lisp :noweb yes
 
@@ -1561,7 +1583,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.fedora}
+*** Makefile.fedora
 #+NAME: Makefile.fedora
 #+begin_src common-lisp :noweb yes
 
@@ -1595,27 +1617,27 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.fedora5}
+*** Makefile.fedora5
 #+NAME: Makefile.fedora5
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora6}
+*** Makefile.fedora6
 #+NAME: Makefile.fedora6
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora7}
+*** Makefile.fedora7
 #+NAME: Makefile.fedora7
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora8}
+*** Makefile.fedora8
 #+NAME: Makefile.fedora8
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora8-64}
+*** Makefile.fedora8-64
 Fedora 8 on a 64 bit machine requires gcl-2.6.8pre2
 #+NAME: Makefile.fedora8-64
 #+begin_src common-lisp :noweb yes
@@ -1650,32 +1672,32 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.fedora9}
+*** Makefile.fedora9
 #+NAME: Makefile.fedora9
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora10}
+*** Makefile.fedora10
 #+NAME: Makefile.fedora10
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora11}
+*** Makefile.fedora11
 #+NAME: Makefile.fedora11
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora12}
+*** Makefile.fedora12
 #+NAME: Makefile.fedora12
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.fedora13}
+*** Makefile.fedora13
 #+NAME: Makefile.fedora13
 #+begin_src common-lisp :noweb yes
 <<Makefile.fedora>>
 #+end_src
-\subsection{Makefile.gentoo}
+*** Makefile.gentoo
 #+NAME: Makefile.gentoo
 #+begin_src common-lisp :noweb yes
 
@@ -1709,7 +1731,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.fedora64}
+*** Makefile.fedora64
 #+NAME: Makefile.fedora64
 #+begin_src common-lisp :noweb yes
 
@@ -1743,7 +1765,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.fedora3}
+*** Makefile.fedora3
 Fedora Core 3 needs special GCL options for local bfd.
 #+NAME: Makefile.fedora3
 #+begin_src common-lisp :noweb yes
@@ -1778,7 +1800,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.MACOSX}
+*** Makefile.MACOSX
 On the MAC OSX someone decided (probably a BSDism) to rename the
 SIGCLD signal to SIGCHLD. In order to handle this in the 
 low level C socket code (in particular, in \verb|src/lib/fnct_key.c|)
@@ -1840,7 +1862,7 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\subsection{Makefile.BSD}
+*** Makefile.BSD
 On the MAC OSX someone decided (probably a BSDism) to rename the
 SIGCLD signal to SIGCHLD. In order to handle this in the 
 low level C socket code (in particular, in \verb|src/lib/fnct_key.c|)

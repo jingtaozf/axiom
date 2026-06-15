@@ -32,6 +32,69 @@ static int has_prefix(const char *s, long len, const char *p) {
   return len >= pl && memcmp(s, p, pl) == 0;
 }
 
+/* trimmed-equal to "\begin{verbatim}" */
+static int vb_begin(const char *s, long len) {
+  long a = 0, b = len;
+  while (a < b && (s[a] == ' ' || s[a] == '\t')) a++;
+  while (b > a && (s[b - 1] == ' ' || s[b - 1] == '\t' || s[b - 1] == '\r')) b--;
+  return b - a == 16 && memcmp(s + a, "\\begin{verbatim}", 16) == 0;
+}
+/* trimmed ends with "\end{verbatim}" */
+static int vb_end(const char *s, long len) {
+  long b = len;
+  while (b > 0 && (s[b - 1] == ' ' || s[b - 1] == '\t' || s[b - 1] == '\r')) b--;
+  return b >= 14 && memcmp(s + b - 14, "\\end{verbatim}", 14) == 0;
+}
+/* trimmed-equal to TOK: line is <lead ws> TOK <trail ws>.  On match set *lead to
+   the leading-ws length and *trail to the offset just past TOK, so the reverse
+   can re-emit the exact surrounding whitespace.  Used for #+begin_example /
+   #+end_example, the org-native form of a clean \begin{verbatim} block. */
+static int trimmed_eq(const char *s, long len, const char *tok, long *lead, long *trail) {
+  long a = 0, b = len, tl = (long) strlen(tok);
+  while (a < b && (s[a] == ' ' || s[a] == '\t')) a++;
+  while (b > a && (s[b - 1] == ' ' || s[b - 1] == '\t' || s[b - 1] == '\r')) b--;
+  if (b - a == tl && memcmp(s + a, tok, tl) == 0) { *lead = a; *trail = b; return 1; }
+  return 0;
+}
+/* Reverse the org-native heading rewrite on a PROSE line (outside chunks and
+   \begin{verbatim} blocks).  Mirrors pamphlet-roundtrip's pr--prose-rev:
+   `* X' .. `**** X' -> \chapter{X} .. \subsubsection{X}; a leading-comma escape
+   (org's own ,*  convention) is stripped one level; everything else is verbatim. */
+static void emit_prose(char *s, long len) {
+  long c = 0;
+  while (c < len && s[c] == ',') c++;
+  if (c < len && s[c] == '*') {
+    if (s[0] == ',') { fwrite(s + 1, 1, (size_t) (len - 1), stdout); return; }
+    long ns = 0;
+    while (ns < len && s[ns] == '*') ns++;
+    if (ns >= 1 && ns <= 4 && ns < len && s[ns] == ' ') {
+      static const char *cmd[5] = { 0, "\\chapter{", "\\section{",
+                                    "\\subsection{", "\\subsubsection{" };
+      fputs(cmd[ns], stdout);
+      fwrite(s + ns + 1, 1, (size_t) (len - ns - 1), stdout);
+      putchar('}');
+      return;
+    }
+  }
+  /* comma-escaped dash-item ",- X" (e.g. a math-array row) -> strip one comma */
+  if (c >= 1 && c < len && s[c] == '-' && c + 1 < len && s[c + 1] == ' ') {
+    fwrite(s + 1, 1, (size_t) (len - 1), stdout); return;
+  }
+  /* comma-escaped literal example marker ",#+begin_example" / ",#+end_example"
+     -- the forward escapes a prose line that would otherwise be read back as a
+     block opener -- strip one comma. */
+  if (c >= 1 && ((len - c == 15 && memcmp(s + c, "#+begin_example", 15) == 0) ||
+                 (len - c == 13 && memcmp(s + c, "#+end_example",   13) == 0))) {
+    fwrite(s + 1, 1, (size_t) (len - 1), stdout); return;
+  }
+  fwrite(s, 1, (size_t) len, stdout);   /* identity */
+}
+
+/* a list-item line: "- " + at least one char of content */
+static int is_dash_item(const char *s, long len) {
+  return len >= 3 && s[0] == '-' && s[1] == ' ';
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 2) { fprintf(stderr, "Usage: untanglec file.org\n"); return 1; }
   int fd = open(argv[1], O_RDONLY);
@@ -55,10 +118,53 @@ int main(int argc, char *argv[]) {
   }
   sp[si].start = ls; sp[si].len = bufsize - ls; si++;
 
-  int in_src = 0, first = 1;
+  int in_src = 0, in_verbatim = 0, in_example = 0, first = 1;
+  long lead, trail;
   for (i = 0; i < nspans; i++) {
     char *s = buf + sp[i].start;
     long len = sp[i].len;
+
+    /* State checks come FIRST, before either block-opener: a #+begin_example
+       line inside a raw \begin{verbatim} block -- or a \begin{verbatim} line
+       inside a #+begin_example block -- is raw CONTENT, not a marker.  At most
+       one of in_example/in_verbatim is set, so their order vs each other is
+       irrelevant; what matters is that BOTH precede the two openers below. */
+    if (in_example) {
+      if (!first) putchar('\n'); first = 0;
+      if (trimmed_eq(s, len, "#+end_example", &lead, &trail)) {
+        fwrite(s, 1, (size_t) lead, stdout);
+        fputs("\\end{verbatim}", stdout);
+        fwrite(s + trail, 1, (size_t) (len - trail), stdout);
+        in_example = 0;
+      } else {
+        fwrite(s, 1, (size_t) len, stdout);
+      }
+      continue;
+    }
+    /* Inside a prose \begin{verbatim} block (one the forward left raw) every
+       line is raw -- headings were never rewritten there, so don't reverse. */
+    if (in_verbatim) {
+      if (!first) putchar('\n'); first = 0;
+      fwrite(s, 1, (size_t) len, stdout);
+      if (vb_end(s, len)) in_verbatim = 0;
+      continue;
+    }
+
+    /* block openers (reached only when not already inside a block) */
+    if (!in_src && trimmed_eq(s, len, "#+begin_example", &lead, &trail)) {
+      if (!first) putchar('\n'); first = 0;
+      fwrite(s, 1, (size_t) lead, stdout);
+      fputs("\\begin{verbatim}", stdout);
+      fwrite(s + trail, 1, (size_t) (len - trail), stdout);
+      in_example = 1;
+      continue;
+    }
+    if (!in_src && vb_begin(s, len)) {
+      if (!first) putchar('\n'); first = 0;
+      fwrite(s, 1, (size_t) len, stdout);
+      in_verbatim = 1;
+      continue;
+    }
 
     if (has_prefix(s, len, "#+NAME: ")) {
       if (i + 1 < nspans) {
@@ -104,8 +210,30 @@ int main(int argc, char *argv[]) {
       }
     }
 
+    /* a prose run of "- X" lines reverses to one itemize block, exactly as the
+       forward dropped the \begin/\item/\end scaffolding */
+    if (!in_src && is_dash_item(s, len)) {
+      if (!first) putchar('\n'); first = 0;
+      fputs("\\begin{itemize}", stdout);
+      for (;;) {
+        putchar('\n');
+        fputs("\\item ", stdout);
+        fwrite(s + 2, 1, (size_t) (len - 2), stdout);
+        if (i + 1 < nspans) {
+          char *ns = buf + sp[i + 1].start;
+          long nl = sp[i + 1].len;
+          if (is_dash_item(ns, nl)) { i++; s = ns; len = nl; continue; }
+        }
+        break;
+      }
+      putchar('\n');
+      fputs("\\end{itemize}", stdout);
+      continue;
+    }
+
     if (!first) putchar('\n'); first = 0;
-    fwrite(s, 1, (size_t) len, stdout);   /* identity */
+    if (in_src) fwrite(s, 1, (size_t) len, stdout);   /* chunk code: verbatim */
+    else emit_prose(s, len);                          /* prose: reverse headings */
   }
   return 0;
 }

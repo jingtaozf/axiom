@@ -340,12 +340,27 @@ orgtangle: books/orgtangle.c
 srctangle-tools: tanglec untanglec orgtangle
 	@chmod +x ${BOOKS}/srctangle
 
+# Byte-exact gate for the org-native migration.  Regenerate every tracked
+# source pamphlet twice -- from BASE (with BASE's untanglec) and from the
+# working tree (with the current untanglec) -- and assert they are identical.
+# It flags EVERY pamphlet-byte change in BASE..worktree -- a format rewrite that
+# moved bytes AND a deliberate content edit -- so pick BASE = the commit before
+# the phase to read a green run as "byte-transparent".  BASE defaults to HEAD
+# (the script's own default when $(BASE) is empty).
+#   make check-pamphlet-bytes BASE=<commit-before-the-phase>
+check-pamphlet-bytes:
+	@echo t05 byte-exact pamphlet gate vs $(BASE)
+	@tools/check-pamphlet-bytes.sh $(BASE)
+
 # Regenerate a .pamphlet beside every migrated .org (those carrying a
 # ':noweb yes' chunk).  Only needed to build PDFs or to run the build in
 # AXIOM_TANGLE_VIA_PAMPHLET=1 mode; the default direct build never calls it.
+# Exclude tools/ : those literate-elisp files carry ':noweb yes' inside CODE
+# strings, are NOT pamphlets, and must not be untanglec'd (their `* heading'
+# lines are real org headings, not migrated LaTeX).
 regen-pamphlets: untanglec
 	@echo t03 regenerating .pamphlet files from migrated .org via untanglec
-	@grep -rIl ':noweb yes' --include='*.org' . | grep -v '/\.git/' | while read f ; do \
+	@grep -rIl ':noweb yes' --include='*.org' . | grep -vE '/\.git/|/tools/' | while read f ; do \
 	   ${BOOKS}/untanglec "$$f" > "$${f%.org}.pamphlet" ; \
 	 done
 

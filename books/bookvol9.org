@@ -4,14 +4,14 @@
 \pagenumbering{arabic}
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
-\chapter{The Axiom Compiler}
-\section{Makefile}
+* The Axiom Compiler
+** Makefile
 \sig{a}{b}
 This book is actually a literate program\cite{Knut92} and contains
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 
 
-\chapter{Overview}
+* Overview
 The Spad language is a mathematically oriented language intended for
 writing computational mathematics. It derives its logical structure
 from abstract algebra. It features ideas that are still not available
@@ -70,7 +70,7 @@ have very weak descriptions because we simply do not understand them
 either. Since this is a living document and the code for the system is
 actually the code you are reading we will expand parts as we go.
 
-\section{Syntax by Jacob Smith}
+** Syntax by Jacob Smith
 
 {\bf {\Large Module}}\\
 \includegraphics{ps/v9Module.eps}
@@ -216,11 +216,11 @@ or a delayed definition.
 by declaring the signatures of the required operations. A Spad category
 definition may extend existing Spad categories with new signatures. For
 example, the fragment
-\begin{verbatim}
+#+begin_example
    Monoid(): Category == with
       *: (%,%) -> %
       1: %
-\end{verbatim}
+#+end_example
 declares {\tt Monoid} as a Spad category with two signatures:
 \begin{enumerate}
 \item the symbol $*$ is a binary operation on the domain belonging to
@@ -230,10 +230,10 @@ to the category being defined.
 \end{enumerate}
 
 The following category definition
-\begin{verbatim}
+#+begin_example
    Group(): Category == Monoid with
      inverse: % -> %
-\end{verbatim}
+#+end_example
 extends {\tt Monoid} with the {\tt inverse} operation, to capture the
 mathematical notion of group structure. One can think of Spad categories
 as {\sl specifying} views on objects.
@@ -272,12 +272,12 @@ signatures it implements, and an implementation part called {\sl capsule}.
 The implementation part may define the representation of the object
 belonging to the domain, and provide definitions for operations declared
 in its {\sl Exports}. For example, the program fragment
-\begin{verbatim}
+#+begin_example
    IntMonoid(): Monoid == add
      Rep == Integer
      (x:%) * (y:%) == (rep x + rep y)$Integer
      1:% == 0::Integer
-\end{verbatim}
+#+end_example
 provides an implementation of {\tt IntMonoid} for the {\tt Monoid}
 specification as follows:
 \begin{itemize}
@@ -346,7 +346,7 @@ $+^{Integer\times Integer\to Integer}$, $345^{Integer}$, $true^{Boolean}$, etc.
 {\sl Identifier} An identifier is a finite sequence of characters. The set 
 of identifiers in Spad is countably infinite.
 
-\subsection{Language features}
+*** Language features
 
 The Spad programming language supports elements of dependent types, a
 result of the functorial nature of the data-structuring mechanisms 
@@ -361,7 +361,7 @@ types. The overload resolution algorithm exploits all context information,
 including arguments and target types, to select the best matching function.
 Implicit conversion is supported through the {\tt coerce} operator.
 
-\subsection{Sematics}
+*** Sematics
 
 The computational rules used to evaluate Spad programs are those of
 {\sl eager} semantics (and call-by-value), and the arguments of functions
@@ -372,7 +372,7 @@ of Spad programs, whereas the denotational semantics lets us associate
 mathematical functions to Spad programs. The latter allows us to formally
 talk about the notion of a derivative of a Spad program.
 
-\subsubsection{Operational semantics}
+**** Operational semantics
 
 The Spad language is imperative in the sense that its programs operate on
 stores by explicit modification. Values of Spad programs can be booleans,
@@ -413,7 +413,7 @@ v & \quad\quad {\rm if\ }x = l\\
 Each configuration is defined by structural induction on the syntax of
 Spad.
 
-\subsubsection{Denotational semantics}
+**** Denotational semantics
 
 The basic idea of algorithmic differentiation rests on the notion that a
 computer program computes a function whose range has a ring structure; and
@@ -554,8 +554,8 @@ where the $x_i$ are parameters of $v_0$
 \langle v^{\tau},\sigma,\Gamma,x^{\tau}==v^{\tau}\rangle$}
 \end{prooftree}
 
-\section{The Input}
-\begin{verbatim}
+** The Input
+#+begin_example
 )abbrev domain EQ Equation
 --FOR THE BENEFIT  OF LIBAX0 GENERATION
 ++ Author: Stephen M. Watt, enhancements by Johannes Grabmeier
@@ -767,20 +767,18 @@ Equation(S: Type): public == private where
             eq3 := eq2 pretend Equation S
             [subst(lhs eq1,eq3),subst(rhs eq1,eq3)]
 
-\end{verbatim}
+#+end_example
 
-\section{The Output, the EQ.nrlib directory}
+** The Output, the EQ.nrlib directory
 The Spad compiler generates several files in a directory named after
 the input abbreviation. The input file contains an abbreviation line:
-\begin{verbatim}
+#+begin_example
 )abbrev domain EQ Equation
-\end{verbatim}
+#+end_example
 for each category, domain, or package. The abbreviation line has 3 parts.
-\begin{itemize}
-\item one of ``category'', ``domain'', or ``package''
-\item the abbreviation for this domain (8 Uppercase Characters maximum)
-\item the name of this domain
-\end{itemize}
+- one of ``category'', ``domain'', or ``package''
+- the abbreviation for this domain (8 Uppercase Characters maximum)
+- the name of this domain
 
 Since the abbreviation for the Equation domain is EQ, the compiler will
 put all of its output into a subdirectory called ``EQ.nrlib''. The ``nrlib''
@@ -789,7 +787,7 @@ is a port of a very old VMLisp file format, simulated with directories.
 For the EQ input file, the compiler will create the following output files,
 each of which we will explain in detail below.
 
-\begin{verbatim}
+#+begin_example
   /research/test/int/algebra/EQ.nrlib:
   used 216 available 4992900
   drwxr-xr-x    2 root root  4096 2010-12-09 11:20 .
@@ -800,10 +798,10 @@ each of which we will explain in detail below.
   -rw-r--r--    1 root root 19228 2010-12-09 11:20 EQ.lsp
   -rw-r--r--    1 root root 36148 2010-12-09 11:20 index.kaf
   -rw-r--r--    1 root root  6236 2010-12-09 11:20 info
-\end{verbatim}
+#+end_example
 
-\section{The code.lsp and EQ.lsp files}
-\begin{verbatim}
+** The code.lsp and EQ.lsp files
+#+begin_example
 
 (/VERSIONCHECK 2) 
 
@@ -1510,9 +1508,9 @@ each of which we will explain in detail below.
                                   6 61 2 18 0 6 0 60)))))
           '|lookupComplete|))
 
-\end{verbatim}
+#+end_example
 
-\section{The code.o file}
+** The code.o file
 The Spad compiler translates the Spad language into Common Lisp.
 It eventually invokes the Common Lisp ``compile-file'' command to
 output files in binary. Depending on the lisp system this filename
@@ -1521,8 +1519,8 @@ depends on the Common Lisp in use.
 
 By default, Axiom uses Gnu Common Lisp (GCL), which generates ``.o'' files.
 
-\section{The info file}
-\begin{verbatim}
+** The info file
+#+begin_example
 
 ((* (($ $ $) (|arguments| (|eq2| . $) (|eq1| . $)) (S (* S S S))
      ($ (= $ S S)))
@@ -1658,9 +1656,9 @@ By default, Axiom uses Gnu Common Lisp (GCL), which generates ``.o'' files.
            (S (|subst| S S (|Equation| S)))
            ($ (|rhs| S $) (|lhs| S $))))
  (|swap| (($ $) (|arguments| (|eqn| . $)) ($ (|rhs| S $) (|lhs| S $))))) 
-\end{verbatim}
+#+end_example
 
-\section{The EQ.fn file}
+** The EQ.fn file
 \begin{verbatim}
 (in-package 'compiler)(init-fn)
 (ADD-FN-DATA '(
@@ -1920,7 +1918,7 @@ By default, Axiom uses Gnu Common Lisp (GCL), which generates ``.o'' files.
       RETURN-TYPE NIL ARG-TYPES (T) NO-EMIT NIL MACROS
       (VMLISP:HREM PROG1 VMLISP:HGET BOOT::LETT COND RETURN)) ))\end{verbatim}
 
-\section{The index.kaf file}
+** The index.kaf file
 
 Each constructor (e.g. EQ) had one library directory (e.g. EQ.nrlib). 
 This directory contained a random access file called the index.kaf file. 
@@ -1943,7 +1941,7 @@ the byte offset to the index. Due to the way the file is constructed, the
 index is at the end of the file. To read a kaf file, first read the
 integer, then seek to that location in the file, and do a (read).
 This will return the index, in this case:
-\begin{verbatim}
+#+begin_example
 (("slot1Info" 0 32444)
  ("documentation" 0 29640)
  ("ancestors" 0 28691)
@@ -1962,7 +1960,7 @@ This will return the index, in this case:
  ("constructorForm" 0 13191)
  ("compilerInfo" 0 4433)
  ("loadTimeStuff" 0 20))
-\end{verbatim}
+#+end_example
 
 This is a list of triples. The first item in each triple is a string
 that is used as a lookup key (e.g. ``operationAlist''). The second
@@ -1985,13 +1983,13 @@ Note that the information below has been reformatted to fit this
 document. In order to save space the index.kaf file is does not use
 prettyprint since it is normally only read by machine. 
 
-\subsection{The index offset byte}
-\begin{verbatim}
+*** The index offset byte
+#+begin_example
 35695
-\end{verbatim}
+#+end_example
 
-\subsection{The ``loadTimeStuff''}
-\begin{verbatim}
+*** The ``loadTimeStuff''
+#+begin_example
 (setf (get '|Equation| '|infovec|)
     (LIST '#(NIL NIL NIL NIL NIL NIL (|local| |#1|) '|Rep|
              (0 . |rightZero|) |EQ;lhs;$S;4| (|Factored| $)
@@ -2100,10 +2098,10 @@ prettyprint since it is normally only read by machine.
                                   2 23 0 94 0 1 2 18 0 0 0 59 2 18 0 0
                                   6 61 2 18 0 6 0 60)))))
           '|lookupComplete|))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``compilerInfo''}
-\begin{verbatim}
+*** The ``compilerInfo''
+#+begin_example
 (SETQ |$CategoryFrame|
       (|put| '|Equation| '|isFunctor|
              '(((|eval| ($ $ (|List| (|Symbol|)) (|List| |#1|)))
@@ -2445,20 +2443,20 @@ prettyprint since it is normally only read by machine.
                                        |noBranch|)))
                              (|Type|))
                         |$CategoryFrame|))))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``constructorForm''}
-\begin{verbatim}
+*** The ``constructorForm''
+#+begin_example
 (|Equation| S)
-\end{verbatim}
+#+end_example
 
-\subsection{The ``constructorKind''}
-\begin{verbatim}
+*** The ``constructorKind''
+#+begin_example
 |domain|
-\end{verbatim}
+#+end_example
 
-\subsection{The ``constructorModemap''}
-\begin{verbatim}
+*** The ``constructorModemap''
+#+begin_example
 (((|Equation| |#1|)
   (|Join| (|Type|)
           (CATEGORY |domain| (SIGNATURE = ($ |#1| |#1|))
@@ -2534,10 +2532,10 @@ prettyprint since it is normally only read by machine.
                   (SIGNATURE |subst| ($ $ $)) |noBranch|)))
   (|Type|))
  (T |Equation|))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``constructorCategory''}
-\begin{verbatim}
+*** The ``constructorCategory''
+#+begin_example
 (|Join| (|Type|)
         (CATEGORY |domain| (SIGNATURE = ($ |#1| |#1|))
             (SIGNATURE |equation| ($ |#1| |#1|))
@@ -2609,15 +2607,15 @@ prettyprint since it is normally only read by machine.
                 |noBranch|)
             (IF (|has| |#1| (|ExpressionSpace|))
                 (SIGNATURE |subst| ($ $ $)) |noBranch|)))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``sourceFile''}
-\begin{verbatim}
+*** The ``sourceFile''
+#+begin_example
 "/research/test/int/algebra/EQ.spad"
-\end{verbatim}
+#+end_example
 
-\subsection{The ``modemaps''}
-\begin{verbatim}
+*** The ``modemaps''
+#+begin_example
 ((= (*1 *1 *2 *2)
     (AND (|isDomain| *1 (|Equation| *2)) (|ofCategory| *2 (|Type|))))
  (|equation| (*1 *1 *2 *2)
@@ -2701,10 +2699,10 @@ prettyprint since it is normally only read by machine.
             (AND (|isDomain| *1 (|Equation| *2))
                  (|ofCategory| *2 (|Group|))
                  (|ofCategory| *2 (|Type|))))))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``operationAlist''}
-\begin{verbatim}
+*** The ``operationAlist''
+#+begin_example
 ((~= (((|Boolean|) $ $) NIL (|has| |#1| (|SetCategory|))))
  (|zero?| (((|Boolean|) $) NIL (|has| |#1| (|AbelianGroup|))))
  (|swap| (($ $) 22))
@@ -2786,12 +2784,12 @@ prettyprint since it is normally only read by machine.
     (($ (|Integer|) $) 76 (|has| |#1| (|AbelianGroup|)))
     (($ (|NonNegativeInteger|) $) NIL (|has| |#1| (|AbelianGroup|)))
     (($ (|PositiveInteger|) $) NIL (|has| |#1| (|AbelianSemiGroup|)))))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``superDomain''}
+*** The ``superDomain''
 
-\subsection{The ``signaturesAndLocals''}
-\begin{verbatim}
+*** The ``signaturesAndLocals''
+#+begin_example
 ((|EQ;subst;3$;43| ($ $ $)) (|EQ;inv;2$;42| ($ $))
  (|EQ;/;3$;41| ($ $ $)) (|EQ;dimension;Cn;40| ((|CardinalNumber|)))
  (|EQ;differentiate;$S$;39| ($ $ (|Symbol|)))
@@ -2819,17 +2817,17 @@ prettyprint since it is normally only read by machine.
  (|EQ;rhs;$S;5| (S $)) (|EQ;lhs;$S;4| (S $))
  (|EQ;equation;2S$;3| ($ S S)) (|EQ;=;2S$;2| ($ S S))
  (|EQ;factorAndSplit;$L;1| ((|List| $) $)))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``attributes''}
-\begin{verbatim}
+*** The ``attributes''
+#+begin_example
 ((|unitsKnown| OR (|has| |#1| (|Ring|)) (|has| |#1| (|Group|)))
  (|rightUnitary| |has| |#1| (|Ring|))
  (|leftUnitary| |has| |#1| (|Ring|)))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``predicates''}
-\begin{verbatim}
+*** The ``predicates''
+#+begin_example
 ((|HasCategory| |#1| '(|Field|)) (|HasCategory| |#1| '(|SetCategory|))
  (|HasCategory| |#1| '(|Ring|))
  (|HasCategory| |#1| (LIST '|PartialDifferentialRing| '(|Symbol|)))
@@ -2875,15 +2873,15 @@ prettyprint since it is normally only read by machine.
      (|HasCategory| |#1| '(|Monoid|)) (|HasCategory| |#1| '(|Ring|))
      (|HasCategory| |#1| '(|SemiGroup|))
      (|HasCategory| |#1| '(|SetCategory|))))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``abbreviation''}
-\begin{verbatim}
+*** The ``abbreviation''
+#+begin_example
 EQ
-\end{verbatim}
+#+end_example
 
-\subsection{The ``parents''}
-\begin{verbatim}
+*** The ``parents''
+#+begin_example
 (((|Type|) . T)
  ((|InnerEvalable| (|Symbol|) S) |has| S
   (|InnerEvalable| (|Symbol|) S))
@@ -2897,10 +2895,10 @@ EQ
  ((|PartialDifferentialRing| (|Symbol|)) |has| S
   (|PartialDifferentialRing| (|Symbol|)))
  ((|VectorSpace| S) |has| S (|Field|)))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``ancestors''}
-\begin{verbatim}
+*** The ``ancestors''
+#+begin_example
 (((|AbelianGroup|) |has| S (|AbelianGroup|))
  ((|AbelianMonoid|) |has| S (|AbelianGroup|))
  ((|AbelianSemiGroup|) |has| S (|AbelianSemiGroup|))
@@ -2922,10 +2920,10 @@ EQ
  ((|Rng|) |has| S (|Ring|)) ((|SemiGroup|) |has| S (|SemiGroup|))
  ((|SetCategory|) |has| S (|SetCategory|)) ((|Type|) . T)
  ((|VectorSpace| S) |has| S (|Field|)))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``documentation''}
-\begin{verbatim}
+*** The ``documentation''
+#+begin_example
 ((|constructor|
      (NIL "Equations as mathematical objects. All properties of the basis 
            domain,{} \\spadignore{e.g.} being an abelian group are carried 
@@ -2997,10 +2995,10 @@ EQ
  (|equation|
      (($ |#1| |#1|) "\\spad{equation(a,{}b)} creates an equation."))
  (= (($ |#1| |#1|) "\\spad{a=b} creates an equation.")))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``slotInfo''}
-\begin{verbatim}
+*** The ``slotInfo''
+#+begin_example
 (|Equation|
     (NIL (~= ((38 0 0) NIL (|has| |#1| (|SetCategory|))))
          (|zero?| ((38 0) NIL (|has| |#1| (|AbelianGroup|))))
@@ -3085,10 +3083,10 @@ EQ
             ((0 94 0) NIL (|has| |#1| (|AbelianSemiGroup|)))
             ((0 74 0) 76 (|has| |#1| (|AbelianGroup|)))
             ((0 71 0) NIL (|has| |#1| (|AbelianGroup|))))))
-\end{verbatim}
+#+end_example
 
-\subsection{The ``index''}
-\begin{verbatim}
+*** The ``index''
+#+begin_example
 (("slot1Info" 0 32444) ("documentation" 0 29640) ("ancestors" 0 28691)
  ("parents" 0 28077) ("abbreviation" 0 28074) ("predicates" 0 25442)
  ("attributes" 0 25304) ("signaturesAndLocals" 0 23933)
@@ -3098,11 +3096,11 @@ EQ
  ("constructorForm" 0 13191) ("compilerInfo" 0 4433)
  ("loadTimeStuff" 0 20))
 
-\end{verbatim}
+#+end_example
 
-\chapter{Compiler top level}
+* Compiler top level
 
-\section{Spad Program Representation}
+** Spad Program Representation
 
 From Davenport\cite{Dave84a} and Dos Reis et al.\cite{Dosr11}
 
@@ -3163,8 +3161,8 @@ a specific exported signature, or a pointer to a domain object or a
 category object.
 \end{itemize}
 
-\section{Global Data Structures}
-\section{Pratt Parsing}
+** Global Data Structures
+** Pratt Parsing
 Parsing involves understanding the association of symbols and operators.
 Vaughn Pratt \cite{Prat73} poses the question ``Given a substring AEB where A 
 takes a right argument, B a left, and E is an expression, does E associate
@@ -3190,12 +3188,10 @@ we can associate the Algebraics together and apply them as arguments to
 the Boolean.
 
 In more detail, there an ``association'' is a function of 4 types:
-\begin{itemize}
-\item $a_A$ -- The data type of the right argument
-\item $r_A$ -- The return type of the right argument
-\item $a_B$ -- The data type of the left argument
-\item $r_B$ -- The return type of the left argument
-\end{itemize}
+- $a_A$ -- The data type of the right argument
+- $r_A$ -- The return type of the right argument
+- $a_B$ -- The data type of the left argument
+- $r_B$ -- The return type of the left argument
 Note that the return types might depend on the type of the expression E.
 If all 4 are of the same class then the association is to the left.
 
@@ -3223,7 +3219,7 @@ primaries with coercions allowed from primaries to factors to terms.
 To be consistent with Algol, the primaries should be a right associative
 class (e.g. x$^{}$y$^{}$z)
 
-\section{)compile}
+** )compile
 This is the implementation of the )compile command.
 
 You use this command to invoke the new Axiom library compiler or the
@@ -3263,11 +3259,11 @@ the operating system when called from within Axiom.)
 The first thing {\tt )compile} does is look for a source code
 filename among its arguments.
 Thus
-\begin{verbatim}
+#+begin_example
 )compile mycode.spad
 )compile /u/jones/mycode.spad
 )compile mycode
-\end{verbatim}
+#+end_example
 all invoke {\tt )compiler} on the file 
 {\tt /u/jones/mycode.spad} if the current Axiom working
 directory is {\tt /u/jones.} (Recall that you can set the
@@ -3288,11 +3284,11 @@ an error message is displayed and the command terminates.
 The first thing {\tt )compile} does is look for a source code
 filename among its arguments.
 Thus
-\begin{verbatim}
+#+begin_example
 )compile mycode
 )co mycode
 )co mycode.spad
-\end{verbatim}
+#+end_example
 all invoke {\tt )compiler} on the file {\tt
 /u/jones/mycode.spad} if the current Axiom working
 directory is {\tt /u/jones.} Recall that you can set the
@@ -3314,9 +3310,9 @@ contents loaded on demand.
 Should you not want the {\tt )library} command automatically
 invoked, call {\tt )compile} with the {\tt )nolibrary} option.
 For example,
-\begin{verbatim}
+#+begin_example
 )compile mycode )nolibrary
-\end{verbatim}
+#+end_example
 
 By default, the {\tt )library} system command {\it exposes} all
 domains and categories it processes.
@@ -3330,27 +3326,27 @@ the code will be loaded on demand.
 In this case, you should use the {\tt )nolibrary} option on {\tt
 )compile} and the {\tt )noexpose} option in the {\tt )library}
 command. For example,
-\begin{verbatim}
+#+begin_example
 )compile mycode )nolibrary
 )library mycode )noexpose
-\end{verbatim}
+#+end_example
 
 Once you have established your own collection of compiled code,
 you may find it handy to use the {\tt )dir} option on the
 {\tt )library} command.
 This causes {\tt )library} to process all compiled code in the
 specified directory. For example,
-\begin{verbatim}
+#+begin_example
 )library )dir /u/jones/quantum
-\end{verbatim}
+#+end_example
 You must give an explicit directory after {\tt )dir}, even if you
 want all compiled code in the current working directory
 processed, e.g.
-\begin{verbatim}
+#+begin_example
 )library )dir .
-\end{verbatim}
+#+end_example
 
-\subsection{Spad compiler}
+*** Spad compiler
 This command compiles files with file extension {\tt .spad}
 with the Spad system compiler.  
 
@@ -3375,11 +3371,11 @@ constructors or every constructor in a file.
 
 The full filename is remembered between invocations of this command and
 {\tt )edit} commands. The sequence of commands
-\begin{verbatim}
+#+begin_example
 )compile matrix.spad
 )edit
 )compile
-\end{verbatim}
+#+end_example
 will call the compiler, edit, and then call the compiler again on the
 file {\bf matrix.spad.}  If you do not specify a {\it directory,} the
 working current directory is searched for the file.  If the file is
@@ -3410,13 +3406,13 @@ specify a particular constructor to compile.
 All other constructors in the file are ignored.
 The constructor name or abbreviation follows {\tt )constructor.}
 Thus either
-\begin{verbatim}
+#+begin_example
 )compile matrix.spad )constructor RectangularMatrix
-\end{verbatim}
+#+end_example
 or
-\begin{verbatim}
+#+begin_example
 )compile matrix.spad )constructor RMATRIX
-\end{verbatim}
+#+end_example
 compiles  the {\tt RectangularMatrix} constructor
 defined in {\bf matrix.spad.}
 
@@ -3427,7 +3423,7 @@ should stop at the first error.
 The value of the {\tt )set break} variable then controls what happens.
 
 \section{Operator Precedence Table Initialization} 
-\begin{verbatim}
+#+begin_example
 ; PURPOSE: This file sets up properties which are used by the Boot lexical
 ;          analyzer for bottom-up recognition of operators.  Also certain
 ;          other character-class definitions are included, as well as
@@ -3440,9 +3436,9 @@ The value of the {\tt )set break} variable then controls what happens.
 ;               3. RENAMETOK Table
 ;               4. GENERIC Table
 ;               5. Character syntax class predicates
-\end{verbatim}
-\subsection{LED and NUD Tables}
-\begin{verbatim}
+#+end_example
+*** LED and NUD Tables
+#+begin_example
 ; **** 1. LED and NUD Tables
  
 ; ** TABLE PURPOSE
@@ -3478,7 +3474,7 @@ The value of the {\tt )set break} variable then controls what happens.
 ; left priority of the second then collect the second operator into
 ; the right argument of the first operator. 
  
-\end{verbatim}
+#+end_example
 #+NAME: LEDNUDTables
 #+begin_src common-lisp :noweb yes
 ; ** TABLE CREATION
@@ -3565,7 +3561,7 @@ The value of the {\tt )set break} variable then controls what happens.
           (|else| 0 114)))
 
 #+end_src 
-\section{Gliph Table}
+** Gliph Table
 Gliphs are symbol clumps. The gliph property of a symbol gives
 the tree describing the tokens which begin with that symbol.
 The token reader uses the gliph property to determine the longest token.
@@ -3604,7 +3600,7 @@ keyboards which define equivalent tokens.
           (>\) \})))
  
 #+end_src
-\subsection{Generic function table}
+*** Generic function table
 GENERIC operators be suffixed by \$ qualifications in SPAD code.  
 \$ is then followed by a domain label, such as I for Integer, which 
 signifies which domain the operator refers to.  For example \verb|+$Integer|
@@ -3616,17 +3612,17 @@ is $+$ for Integers.
 
 #+end_src  
 
-\section{Giant steps, Baby steps}
+** Giant steps, Baby steps
 We will walk through the compiler with the EQ.spad example using a
 Giant-steps, Baby-steps approach. That is, we will show the large
 scale (Giant) transformations at each stage of compilation and discuss the
 details (Baby) in subsequent chapters.
-\chapter{The Parser}
-\section{EQ.spad}
+* The Parser
+** EQ.spad
 We will explain the compilation function using the file {\tt EQ.spad}.
 We trace the execution of the various functions to understand the actual
 call parameters and results returned. The {\tt EQ.spad} file is:
-\begin{verbatim}
+#+begin_example
 )abbrev domain EQ Equation
 --FOR THE BENEFIT  OF LIBAX0 GENERATION
 ++ Author: Stephen M. Watt, enhancements by Johannes Grabmeier
@@ -3838,9 +3834,9 @@ Equation(S: Type): public == private where
             eq3 := eq2 pretend Equation S
             [subst(lhs eq1,eq3),subst(rhs eq1,eq3)]
 
-\end{verbatim}
+#+end_example
 
-\section{boot transformations}
+** boot transformations
 
 \defun{string2BootTree}{string2BootTree}
 \calls{string2BootTree}{new2OldLisp}
@@ -3980,7 +3976,7 @@ Equation(S: Type): public == private where
 
 #+end_src
 
-\section{preparse}
+** preparse
 
 The first large transformation of this input occurs in the function
 preparse \index{preparse}. The preparse function reads the source file
@@ -4020,16 +4016,16 @@ semicolon delimited form.
 
 #+end_src
 
-\section{Parsing routines}
+** Parsing routines
 The {\bf initialize-preparse} expects to be called before the {\bf preparse}
 function. It initializes the state, in particular, it reads a single line
 from the input stream and stores it in {\tt \verb|$preparse-last-line|}.
 The caller gives a stream and the {\tt \verb|$preparse-last-line|} variable
 is initialized as:
-\begin{verbatim}
+#+begin_example
     2> (INITIALIZE-PREPARSE #<input stream "/tmp/EQ.spad">)
     <2 (INITIALIZE-PREPARSE ")abbrev domain EQ Equation")
-\end{verbatim}
+#+end_example
 \defun{initialize-preparse}{initialize-preparse}
 \seebook{initialize-preparse}{get-a-line}{5}
 \usesdollar{initialize-preparse}{index}
@@ -4049,7 +4045,7 @@ is initialized as:
 The {\bf preparse} function returns a list of pairs of the form:
 ( (linenumber . linestring) .... (linenumber . linestring))
 For instance, for the file {\tt EQ.spad}, we get:
-\begin{verbatim}
+#+begin_example
     2> (PREPARSE #<input stream "/tmp/EQ.spad">)
       3> (PREPARSE1 (")abbrev domain EQ Equation"))
         4> (|doSystemCommand| "abbrev domain EQ Equation")
@@ -4210,7 +4206,7 @@ For instance, for the file {\tt EQ.spad}, we get:
  (204 . "        subst(eq1,eq2) ==")
  (205 . "           (eq3 := eq2 pretend Equation S;")
  (206 . "            [subst(lhs eq1,eq3),subst(rhs eq1,eq3)])))")))
-\end{verbatim}
+#+end_example
 
 \defun{preparse}{preparse}
 \calls{preparse}{preparse}
@@ -4254,9 +4250,9 @@ For instance, for the file {\tt EQ.spad}, we get:
 
 \defun{preparse1}{Build the lines from the input for piles}
 The READLOOP calls preparseReadLine which returns a pair of the form
-\begin{verbatim}
+#+begin_example
 (number . string)
-\end{verbatim}
+#+end_example
 \calls{preparse1}{preparseReadLine}
 \calls{preparse1}{preparse-echo}
 \calls{preparse1}{fincomblock}
@@ -4281,7 +4277,7 @@ The READLOOP calls preparseReadLine which returns a pair of the form
 \refsdollar{preparse1}{in-stream}
 \sig{preparse1}{(List String)}{(List (Cons NNI String))}
 where the input {\bf List String} is the \verb|abbrev| line:
-\begin{verbatim}
+#+begin_example
 (")abbrev domain EQ Equation")
 \end{verbatim
 and the output is a {\bf List (Cons NNI String)} containing
@@ -4487,7 +4483,7 @@ where the result is a pair with the next input line number (\$index)
 and the input string.
 \begin{verbatim}
    (0 . ")abbrev domain EQ Equation")
-\end{verbatim}
+#+end_example
 #+NAME: defun preparseReadLine
 #+begin_src common-lisp :noweb yes
 (defun preparseReadLine (x)
@@ -4571,9 +4567,9 @@ and the input string.
 \sig{preparseReadLine1}{nil}{(Cons NNI String)}
 where the result is a pair with the next input line number (\$index)
 and the input string.
-\begin{verbatim}
+#+begin_example
    (0 . ")abbrev domain EQ Equation")
-\end{verbatim}
+#+end_example
 #+NAME: defun preparseReadLine1
 #+begin_src common-lisp :noweb yes
 (defun preparseReadLine1 ()
@@ -4625,7 +4621,7 @@ and the input string.
 
 #+end_src
 
-\section{I/O Handling}
+** I/O Handling
 \defun{preparse-echo}{preparse-echo}
 \uses{preparse-echo}{Echo-Meta}
 \refsdollar{preparse-echo}{EchoLineStack}
@@ -4640,7 +4636,7 @@ and the input string.
 
 #+end_src
 
-\subsection{Parsing stack}
+*** Parsing stack
 \defstruct{stack}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -4711,7 +4707,7 @@ and the input string.
 
 #+end_src
 
-\subsection{Parsing token}
+*** Parsing token
 \defstruct{token}
 A token is a Symbol with a Type.
 The type is either NUMBER, IDENTIFIER or SPECIAL-CHAR.
@@ -4787,7 +4783,7 @@ Token at head of input stream.
 
 #+end_src
 
-\subsection{Parsing reduction}
+*** Parsing reduction
 \defstruct{reduction}
 A reduction of a rule is any S-Expression the rule chooses to stack.
 #+NAME: initvars
@@ -4798,8 +4794,8 @@ A reduction of a rule is any S-Expression the rule chooses to stack.
 
 #+end_src
 
-\chapter{Parse Transformers}
-\section{Direct called parse routines}
+* Parse Transformers
+** Direct called parse routines
 \defun{parseTransform}{parseTransform}
 \calls{parseTransform}{parseTran}
 \usesdollar{parseTransform}{defOp}
@@ -4908,17 +4904,17 @@ A reduction of a rule is any S-Expression the rule chooses to stack.
 
 #+end_src
 
-\section{Indirect called parse routines}
+** Indirect called parse routines
 In the {\bf parseTran} function there is the code:
-\begin{verbatim}
+#+begin_example
      ((and (atom u) (setq fn (getl u '|parseTran|)))
        (funcall fn argl))
-\end{verbatim}
+#+end_example
 
 The functions in this section are called through the symbol-plist
 of the symbol being parsed. The original list read:
 
-\begin{verbatim}
+#+begin_example
   and          parseAnd
   @            parseAtSign
   CATEGORY     parseCategory
@@ -4959,7 +4955,7 @@ of the symbol being parsed. The original list read:
 ;;control-V    parseUpArrow
   VCONS        parseVCONS
   where        parseWhere
-\end{verbatim}
+#+end_example
 
 
 \defplist{and}{parseAnd}
@@ -6228,7 +6224,7 @@ of the symbol being parsed. The original list read:
 
 #+end_src
 
-\chapter{Compile Transformers}
+* Compile Transformers
 With some specific exceptions most compile transformers are invoked
 through the property list item ``{\tt special}''. When a specific
 keyword is encountered in a list form the {\tt compExpression} function
@@ -6308,14 +6304,14 @@ suitable for further processing.
 \verb|where|          & \refto{compWhere}
 \end{tabular}
 
-\section{Handline Category DEF forms}
+** Handline Category DEF forms
 This is the graph of the functions used for compDefine.
 The syntax is a graphviz dot file.
 To generate this graph as a JPEG file, type:
-\begin{verbatim}
+#+begin_example
 tangle v9compDefine.dot bookvol9.pamphlet >v9compdefine.dot
 dot -Tjpg v9compdefine.dot >v9compdefine.jpg
-\end{verbatim}
+#+end_example
 #+NAME: v9compDefine.dot
 #+begin_src common-lisp :noweb yes
 digraph pic {
@@ -6373,22 +6369,20 @@ digraph pic {
 #+end_src
 \includegraphics[scale=0.5]{ps/v9compdefine.eps}
 A Category is represented by a DEF form with 4 parts:
-\begin{itemize}
-\item a name
-\item a distnature
-\item an SC
-\item a body
-\end{itemize}
+- a name
+- a distnature
+- an SC
+- a body
 For example, the BasicType category is written as
-\begin{verbatim}
+#+begin_example
 BasicType(): Category == with
       "=": (%,%) -> Boolean    ++ x=y tests if x and y are equal.
       "~=": (%,%) -> Boolean   ++ x~=y tests if x and y are not equal.
    add
       _~_=(x:%,y:%) : Boolean == not(x=y)
-\end{verbatim}
+#+end_example
 Which compiles to the DEF form:
-\begin{verbatim}
+#+begin_example
   (DEF
    (|BasicType|)
    ((|Category|))
@@ -6403,7 +6397,7 @@ Which compiles to the DEF form:
         ((|Boolean|) $ $)
         (NIL NIL NIL)
         (IF (= |x| |y|) |false| |true|)))))
-\end{verbatim}
+#+end_example
 
 \defplist{def}{compDefine plist}
 We set up the {\tt compDefine} function to handle the DEF keyword
@@ -9394,26 +9388,26 @@ Make pattern variable substitutions.
 \defun{transformOperationAlist}{transformOperationAlist}
 This transforms the operationAlist which is written out onto LISPLIBs.
 The original form of this list is a list of items of the form:
-\begin{verbatim}
+#+begin_example
       ((<op> <signature>) (<condition> (ELT $ n)))
-\end{verbatim}
+#+end_example
 The new form is an op-Alist which has entries 
-\begin{verbatim}
+#+begin_example
        (<op> . signature-Alist)
-\end{verbatim}
+#+end_example
 where signature-Alist has entries 
-\begin{verbatim}
+#+begin_example
        (<signature> . item)
-\end{verbatim}
+#+end_example
 where item has form
-\begin{verbatim}
+#+begin_example
        (<slotNumber> <condition> <kind>)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
       where <kind> =
          NIL  => function
         CONST => constant ... and others
-\end{verbatim}
+#+end_example
 \calls{transformOperationAlist}{member}
 \calls{transformOperationAlist}{keyedSystemError}
 \calls{transformOperationAlist}{assoc}
@@ -10140,7 +10134,7 @@ Compute the lookup function (complete or incomplete)
 
 #+end_src
 
-\section{Code optimization routines}
+** Code optimization routines
 \defun{optimizeFunctionDef}{optimizeFunctionDef}
 \calls{optimizeFunctionDef}{rplac}
 \calls{optimizeFunctionDef}{sayBrightlyI}
@@ -10353,10 +10347,10 @@ simple kind of compile-time type evaluation.
 
 #+end_src
 
-\subsection{Special case optimizers}
+*** Special case optimizers
 Optimization functions are called through the OPTIMIZE property on the
 symbol property list. The current list is:
-\begin{verbatim}
+#+begin_example
    |call|       optCall
    seq          optSEQ
    eq           optEQ
@@ -10372,7 +10366,7 @@ symbol property list. The current list is:
    recordelt    optRECORDELT
    setrecordelt optSETRECORDELT
    recordcopy   optRECORDCOPY
-\end{verbatim}
+#+end_example
 
 Be aware that there are case-sensitivity issues. When found in the
 s-expression, each symbol in the left column will call a custom
@@ -11156,7 +11150,7 @@ optPackageCall.
 
 #+end_src
 
-\section{Functions to manipulate modemaps}
+** Functions to manipulate modemaps
 
 \defun{addDomain}{addDomain}
 \calls{addDomain}{identp}
@@ -11260,9 +11254,9 @@ optPackageCall.
 
 \defun{getDomainsInScope}{getDomainsInScope}
 The way XLAMs work:
-\begin{verbatim}
+#+begin_example
  ((XLAM ($1 $2 $3) (SETELT $1 0 $3)) X "c" V) ==> (SETELT X 0 V)
-\end{verbatim}
+#+end_example
 \calls{getDomainsInScope}{get}
 \refsdollar{getDomainsInScope}{CapsuleDomainsInScope}
 \refsdollar{getDomainsInScope}{insideCapsuleFunctionIfTrue}
@@ -12030,7 +12024,7 @@ add flag identifiers as literals in the environment
 
 #+end_src
 
-\section{Maintaining Modemaps}
+** Maintaining Modemaps
 \defun{addModemapKnown}{addModemapKnown}
 \calls{addModemapKnown}{addModemap0}
 \refsdollar{addModemapKnown}{e}
@@ -12119,13 +12113,13 @@ add flag identifiers as literals in the environment
 #+end_src
 
 
-\section{Indirect called comp routines}
+** Indirect called comp routines
 In the {\bf compExpression} function there is the code:
-\begin{verbatim}
+#+begin_example
   (if (and (atom (car x)) (setq fn (getl (car x) 'special)))
     (funcall fn x m e)
     (|compForm| x m e))))
-\end{verbatim}
+#+end_example
 
 
 \defplist{@}{compAdd plist}
@@ -15603,12 +15597,12 @@ We set up the
 #+end_src
 
 \defun{compVector}{compVector}
-\begin{verbatim}
+#+begin_example
 ;  null l => [$EmptyVector,m,e]
 ;  Tl:= [[.,mUnder,e]:= comp(x,mUnder,e) or return "failed" for x in l]
 ;  Tl="failed" => nil
 ;  [["VECTOR",:[T.expr for T in Tl]],m,e]
-\end{verbatim}
+#+end_example
 \calls{compVector}{comp}
 \usesdollar{compVector}{EmptyVector}
 #+NAME: defun compVector
@@ -15685,7 +15679,7 @@ We set up the
 
 #+end_src
 
-\section{Functions for coercion}
+** Functions for coercion
 \defun{coerce}{coerce}
 The function coerce is used by the old compiler for coercions.
 The function coerceInteractive is used by the interpreter.
@@ -16213,8 +16207,8 @@ This orders Unions
 
 #+end_src
 
-\chapter{Post Transformers}
-\section{Direct called postparse routines}
+* Post Transformers
+** Direct called postparse routines
 \defun{postTransform}{postTransform}
 \calls{postTransform}{postTran}
 \seebook{postTransform}{identp}{5}
@@ -16476,17 +16470,17 @@ This orders Unions
 
 #+end_src
 
-\section{Indirect called postparse routines}
+** Indirect called postparse routines
 In the {\bf postTran} function there is the code:
-\begin{verbatim}
+#+begin_example
      ((and (atom op) (setq f (getl op '|postTran|)))
       (funcall f x))
-\end{verbatim}
+#+end_example
 
 The functions in this section are called through the symbol-plist
 of the symbol being parsed. The original list read:
 
-\begin{verbatim}
+#+begin_example
   add            postAdd
   @              postAtSign
   :BF:           postBigFloat
@@ -16517,7 +16511,7 @@ of the symbol being parsed. The original list read:
   TupleCollect   postTupleCollect
   where          postWhere
   with           postWith
-\end{verbatim}
+#+end_example
 
 \defplist{add}{postAdd plist}
 #+NAME: postvars
@@ -17603,7 +17597,7 @@ of the symbol being parsed. The original list read:
 #+end_src
 
 
-\section{Support routines}
+** Support routines
 \defun{setDefOp}{setDefOp}
 \usesdollar{setDefOp}{defOp}
 \usesdollar{setDefOp}{topOp}
@@ -17837,7 +17831,7 @@ of the symbol being parsed. The original list read:
 #+end_src
 
 
-\chapter{DEF forms}
+* DEF forms
 
 \defdollar{defstack}
 #+NAME: initvars
@@ -17917,7 +17911,7 @@ of the symbol being parsed. The original list read:
 
 #+end_src
 
-\section{The PARSE code}
+** The PARSE code
 
 \defvar{tmptok}
 #+NAME: initvars
@@ -19181,18 +19175,18 @@ of the symbol being parsed. The original list read:
                (list 'until (pop-stack-1))))))
 
 #+end_src
-\subsection{The PARSE implicit routines}
+*** The PARSE implicit routines
 These symbols are not explicitly referenced in the source.
 Nevertheless, they are called during runtime. For example,
 PARSE-SemiColon is called in the chain:
-\begin{verbatim}
+#+begin_example
   PARSE-Enclosure {loc0=nil,loc1="(V  ==> Vector; "} [ihs=35]
    PARSE-Expr
     PARSE-LedPart
      PARSE-Operation
       PARSE-getSemanticForm
        PARSE-SemiColon
-\end{verbatim}
+#+end_example
 so there is a bit of indirection involved in the call.
 
 \defun{PARSE-Suffix}{PARSE-Suffix}
@@ -19397,18 +19391,16 @@ so there is a bit of indirection involved in the call.
 #+end_src
 
 
-\section{The PARSE support routines}
+** The PARSE support routines
 This section is broken up into 3 levels:
-\begin{itemize}
-\item String grabbing:    Match String, Match Advance String
-\item Token handling:     Current Token, Next Token, Advance Token
-\item Character handling: Current Char, Next Char, Advance Char
-\item Line handling:      Next Line, Print Next Line
-\item Error Handling
-\item Floating Point Support
-\item Dollar Translation
-\end{itemize}
-\subsection{String grabbing}
+- String grabbing:    Match String, Match Advance String
+- Token handling:     Current Token, Next Token, Advance Token
+- Character handling: Current Char, Next Char, Advance Char
+- Line handling:      Next Line, Print Next Line
+- Error Handling
+- Floating Point Support
+- Dollar Translation
+*** String grabbing
 String grabbing is the art of matching initial segments of the current
 line, and removing them from the line before the get tokenized if they
 match (or removing the corresponding current tokens).
@@ -19598,7 +19590,7 @@ NIL needed below since END\_UNIT is not generated by current parser
 
 #+end_src
 
-\subsection{Token Handling}
+*** Token Handling
 
 \defun{getToken}{getToken}
 \calls{getToken}{eqcar}
@@ -19788,7 +19780,7 @@ This makes the next token be the current token.
 
 #+end_src
 
-\subsection{Character handling}
+*** Character handling
 
 \defun{current-char}{current-char}
 This returns the current character of the line, initially blank for an 
@@ -19839,7 +19831,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Error handling}
+*** Error handling
 \defvar{meta-error-handler}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -19858,7 +19850,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Floating Point Support}
+*** Floating Point Support
 
 \defun{floatexpid}{floatexpid}
 \tpdhere{The use of and in spadreduce is undefined. rewrite this to loop}
@@ -19880,7 +19872,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Dollar Translation}
+*** Dollar Translation
 
 \defun{dollarTran}{dollarTran}
 \usesdollar{dollarTran}{InteractiveMode}
@@ -19895,7 +19887,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Applying metagrammatical elements of a production (e.g., Star).}
+*** Applying metagrammatical elements of a production (e.g., Star).
 \begin{itemize}
 \item {\bf must} means that if it is not present in the token stream, 
 it is a syntax error.
@@ -19972,7 +19964,7 @@ loop
       (go loop))))
 
 #+end_src
-\subsection{Stacking and retrieving reductions of rules.}
+*** Stacking and retrieving reductions of rules.
 
 \defvar{reduce-stack}
 Stack of results of reduced productions.
@@ -20001,15 +19993,15 @@ Stack of results of reduced productions.
 
 #+end_src
 
-\chapter{Comment Recording}
+* Comment Recording
 
 This is the graph of the functions used for recording comments.
 The syntax is a graphviz dot file.
 To generate this graph as a JPEG file, type:
-\begin{verbatim}
+#+begin_example
 tangle v9CommentRecording.dot bookvol9.pamphlet >v9cr.dot
 dot -Tjpg v9cr.dot >v9cr.jpg
-\end{verbatim}
+#+end_example
 #+NAME: v9CommentRecording.dot
 #+begin_src common-lisp :noweb yes
 digraph pic {
@@ -20040,7 +20032,7 @@ digraph pic {
 
 #+end_src
 
-\section{Comment Recording Layer 0 -- API}
+** Comment Recording Layer 0 -- API
 
 \defun{recordSignatureDocumentation}{recordSignatureDocumentation}
 This function is called externally by PARSE-Category.
@@ -20075,7 +20067,7 @@ This function is called externally by PARSE-Category.
 
 #+end_src
 
-\section{Comment Recording Layer 1}
+** Comment Recording Layer 1
 
 \defun{recordDocumentation}{recordDocumentation}
 \calls{recordDocumentation}{recordHeaderDocumentation}
@@ -20094,7 +20086,7 @@ This function is called externally by PARSE-Category.
 
 #+end_src
 
-\section{Comment Recording Layer 2}
+** Comment Recording Layer 2
 
 \defun{collectComBlock}{collectComBlock}
 \calls{collectComBlock}{collectAndDeleteAssoc}
@@ -20116,7 +20108,7 @@ This function is called externally by PARSE-Category.
 
 #+end_src
 
-\section{Comment Recording Layer 3}
+** Comment Recording Layer 3
 
 \defun{recordHeaderDocumentation}{recordHeaderDocumentation}
 This function is called externally by postDef.
@@ -20145,9 +20137,9 @@ This function is called externally by postDef.
 #+end_src
 
 \defun{collectAndDeleteAssoc}{collectAndDeleteAssoc}
-\begin{verbatim}
+#+begin_example
    u is (.. (x . a) .. (x . b) .. )  ==> (a b ..) 
-\end{verbatim}
+#+end_example
 deleting entries from u assumes that the first element is useless
 \refsdollar{collectAndDeleteAssoc}{comblocklist}
 #+NAME: defun collectAndDeleteAssoc
@@ -20169,7 +20161,7 @@ deleting entries from u assumes that the first element is useless
 
 #+end_src
 
-\chapter{Category handling}
+* Category handling
 
 \defun{getConstructorExports}{getConstructorExports}
 #+NAME: defun getConstructorExports
@@ -20184,7 +20176,7 @@ deleting entries from u assumes that the first element is useless
 
 #+end_src
 
-\chapter{Building libdb.text}
+* Building libdb.text
 \defun{extendLocalLibdb}{extendLocalLibdb}
 \calls{extendLocalLibdb}{buildLibdb}
 \calls{extendLocalLibdb}{union}
@@ -20225,12 +20217,12 @@ This function appears to have two use cases, one in which the domainList
 variable is undefined, in which case it writes out all of the constructors,
 and the other case where it writes out a single constructor.
 Formal for libdb.text:
-\begin{verbatim}
+#+begin_example
   constructors    Cname\#\I\sig \args   \abb \comments (C is C, D, P, X)
   operations      Op  \#\E\sig \conname\pred\comments (E is one of U/E)
   attributes      Aname\#\E\args\conname\pred\comments
   I = <x if exposed><d if category with a default package>
-\end{verbatim}
+#+end_example
 \calls{buildLibdb}{dsetq}
 \calls{buildLibdb}{ifcar}
 \seebook{buildLibdb}{deleteFile}{5}
@@ -20542,9 +20534,9 @@ Formal for libdb.text:
 #+end_src
 
 \defun{buildLibAttr}{buildLibAttr}
-\begin{verbatim}
+#+begin_example
   attributes      AKname\#\args\conname\pred\comments (K is U or C)
-\end{verbatim}
+#+end_example
 \calls{buildLibAttr}{form2LispString}
 \calls{buildLibAttr}{sublislis}
 \calls{buildLibAttr}{concatWithBlanks}
@@ -20601,15 +20593,15 @@ Formal for libdb.text:
 
 #+end_src
 
-\chapter{Comment Syntax Checking}
+* Comment Syntax Checking
 
 This is the graph of the functions used for comment syntax checking.
 The syntax is a graphviz dot file.
 To generate this graph as a JPEG file, type:
-\begin{verbatim}
+#+begin_example
 tangle v9CommentSyntaxChecking.dot bookvol9.pamphlet >v9csc.dot
 dot -Tjpg v9csc.dot >v9csc.jpg
-\end{verbatim}
+#+end_example
 #+NAME: v9CommentSyntaxChecking.dot
 #+begin_src common-lisp :noweb yes
 digraph hierarchy {
@@ -20859,7 +20851,7 @@ digraph hierarchy {
 }
 #+end_src
 
-\section{Comment Checking Layer 0 -- API}
+** Comment Checking Layer 0 -- API
 \defun{finalizeDocumentation}{finalizeDocumentation}
 \calls{finalizeDocumentation}{bright}
 \calls{finalizeDocumentation}{sayMSG}
@@ -20989,7 +20981,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 1}
+** Comment Checking Layer 1
 
 \defun{transDocList}{transDocList}
 \calls{transDocList}{sayBrightly}
@@ -21023,7 +21015,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 2}
+** Comment Checking Layer 2
 
 \defun{transDoc}{transDoc}
 \calls{transDoc}{checkDocError1}
@@ -21078,7 +21070,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 3}
+** Comment Checking Layer 3
 
 \defun{transformAndRecheckComments}{transformAndRecheckComments}
 \calls{transformAndRecheckComments}{sayBrightly}
@@ -21112,7 +21104,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 4}
+** Comment Checking Layer 4
 
 \defun{checkComments}{checkComments}
 \calls{checkComments}{checkGetMargin}
@@ -21247,7 +21239,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 5}
+** Comment Checking Layer 5
 
 \defun{checkArguments}{checkArguments}
 \calls{checkArguments}{hget}
@@ -21313,7 +21305,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 6}
+** Comment Checking Layer 6
 
 \defun{checkBeginEnd}{checkBeginEnd}
 \calls{checkBeginEnd}{length}
@@ -22017,7 +22009,7 @@ Note that {\tt u} should start with an open brace.
 
 #+end_src
 
-\section{Comment Checking Layer 7}
+** Comment Checking Layer 7
 
 \defun{checkDocError}{checkDocError}
 \calls{checkDocError}{checkDocMessage}
@@ -22111,7 +22103,7 @@ Note that {\tt u} should start with an open brace.
 
 #+end_src
 
-\section{Comment Checking Layer 8}
+** Comment Checking Layer 8
 
 \defun{checkAddIndented}{checkAddIndented}
 \calls{checkAddIndented}{firstNonBlankPosition}
@@ -22460,7 +22452,7 @@ Note that {\tt u} should start with an open brace.
 
 #+end_src
 
-\section{Comment Checking Layer 9}
+** Comment Checking Layer 9
 
 \defun{checkAddBackSlashes}{checkAddBackSlashes}
 \calls{checkAddBackSlashes}{strconc}
@@ -23057,7 +23049,7 @@ Since it has no side effects we define it to return nil.
 
 #+end_src
 
-\chapter{Utility Functions}
+* Utility Functions
 
 \defun{translabel}{translabel}
 \calls{translabel}{translabel1}
@@ -23456,12 +23448,10 @@ Return a pointer to the Nth cons of X, counting 0 as the first cons.
 #+end_src
  
 \defun{fincomblock}{fincomblock}
-\begin{itemize}
-\item NUM is the line number of the current line
-\item OLDNUMS is the list of line numbers of previous lines
-\item OLDLOCS is the list of previous indentation locations
-\item NCBLOCK is the current comment block
-\end{itemize}
+- NUM is the line number of the current line
+- OLDNUMS is the list of line numbers of previous lines
+- OLDLOCS is the list of previous indentation locations
+- NCBLOCK is the current comment block
 \calls{fincomblock}{preparse-echo}
 \usesdollar{fincomblock}{comblocklist}
 \usesdollar{fincomblock}{EchoLineStack}
@@ -23595,7 +23585,7 @@ test rather than the callers.
 
 #+end_src
  
-\chapter{The Compiler}
+* The Compiler
 
 \defdollar{newConlist}
 A list of new constructors discovered during compile.
@@ -23608,13 +23598,13 @@ compiles new local code.
 
 #+end_src
 
-\section{Compiling EQ.spad}
+** Compiling EQ.spad
 Given the top level command:
-\begin{verbatim}
+#+begin_example
 )co EQ
-\end{verbatim}
+#+end_example
 The default call chain looks like:
-\begin{verbatim}
+#+begin_example
 1> (|compiler| ...)
  2> (|compileSpad2Cmd| ...)
    Compiling AXIOM source code from file /tmp/A.spad
@@ -23744,35 +23734,35 @@ The default call chain looks like:
                        <24 (|comp2| ...)
                       <23 (|compNoStacking| ...)
                      <22 (|comp| ...)
-\end{verbatim}
+#+end_example
 
 In order to explain the compiler we will walk through the compilation of
 EQ.spad, which handles equations as mathematical objects. We start the
 system. Most of the structure in Axiom are circular so we have to the
 \verb|*print-cycle*| to true.
-\begin{verbatim}
+#+begin_example
 root@spiff:/tmp# axiom -nox
 
 (1) -> )lisp (setq *print-circle* t)
 
 Value = T
-\end{verbatim}
+#+end_example
 
 We trace the function we find interesting:
-\begin{verbatim}
+#+begin_example
 (1) -> )lisp (trace |compiler|)
 
 Value = (|compiler|)
-\end{verbatim}
+#+end_example
 
-\section{The top level compiler command}
+** The top level compiler command
 This is the graph of the functions used for compDefine.
 The syntax is a graphviz dot file.
 To generate this graph as a JPEG file, type:
-\begin{verbatim}
+#+begin_example
 tangle v9compDefine.dot bookvol9.pamphlet >v9compdefine.dot
 dot -Tjpg v9compiler.dot >v9compiler.jpg
-\end{verbatim}
+#+end_example
 #+NAME: v9compiler.dot
 #+begin_src common-lisp :noweb yes
 digraph pic {
@@ -23817,17 +23807,17 @@ digraph pic {
 \defun{compiler}{compiler}
 We compile the spad file. We can see that the {\bf compiler} function gets
 a list 
-\begin{verbatim}
+#+begin_example
 (1) -> )co EQ
 
   1> (|compiler| (EQ))
-\end{verbatim}
+#+end_example
 In order to find this file, the {\bf pathname} and {\bf pathnameType} 
 functions are used to find the location and pathname to the file. They
 {\bf pathnameType} function eventually returns the fact that this is
 a spad source file. Once that is known we call the {\bf compileSpad2Cmd}
 function with a list containing the full pathname as a string.
-\begin{verbatim}
+#+begin_example
   1> (|compiler| (EQ))
     2> (|pathname| (EQ))
     <2 (|pathname| #p"EQ")
@@ -23848,7 +23838,7 @@ function with a list containing the full pathname as a string.
       <3 (|pathname| #p"/tmp/EQ.spad")
     <2 (|pathnameType| "spad")
     2> (|compileSpad2Cmd| ("/tmp/EQ.spad"))
-\end{verbatim}
+#+end_example
 
 \seebook{compiler}{helpSpad2Cmd}{5}
 \seebook{compiler}{selectOptionLC}{5}
@@ -23925,26 +23915,26 @@ function with a list containing the full pathname as a string.
 This function sets up a constructor name (or nil if the whole file
 is to be compiled) and a set of options for the next layer of compile
 commands. For example, the call
-\begin{verbatim}
+#+begin_example
    )co dh )constructor DHMATRIX )functions identity
-\end{verbatim}
+#+end_example
 will look for the file {\tt dh.spad} and issue a call
-\begin{verbatim}
+#+begin_example
 (|compilerDoitWithScreenedLisplib| (|DenavitHartenbergMatrix|) (|c| |lib|))
-\end{verbatim}
+#+end_example
 \index{compilerDoitWithScreenedLisplib}
 
 The argument to this function, as noted above, is a list containing
 the string pathname to the file.
-\begin{verbatim}
+#+begin_example
     2> (|compileSpad2Cmd| ("/tmp/EQ.spad"))
-\end{verbatim}
+#+end_example
 
 Again we find a lot of redundant work. We finally end up calling
 {\bf compilerDoit} with a constructed argument list:
-\begin{verbatim}
+#+begin_example
     2> (|compilerDoit| NIL (|rq| |lib|))
-\end{verbatim}
+#+end_example
 \index{compilerDoit}
 
 
@@ -24170,7 +24160,7 @@ Again we find a lot of redundant work. We finally end up calling
 \defun{compilerDoit}{compilerDoit}
 This trivial function cases on the second argument to decide which 
 combination of operations was requested. For this case we see:
-\begin{verbatim}
+#+begin_example
 (1) -> )co EQ
    Compiling AXIOM source code from file /tmp/EQ.spad using old system 
       compiler.
@@ -24182,7 +24172,7 @@ combination of operations was requested. For this case we see:
     <2 (|/RQ,LIB| T)
   <1 (|compilerDoit| T)
 (1) -> 
-\end{verbatim}
+#+end_example
 \seebook{compilerDoit}{/rq}{5}
 \seebook{compilerDoit}{/rf}{5}
 \seebook{compilerDoit}{member}{5}
@@ -24236,7 +24226,7 @@ Compile with noisy output
 
 \defun{/RQ,LIB}{/RQ,LIB}
 This function simply calls {\bf \verb|/rf-1|}. 
-\begin{verbatim}
+#+begin_example
 (2) -> )co EQ
    Compiling AXIOM source code from file /tmp/EQ.spad using old system 
       compiler.
@@ -24247,7 +24237,7 @@ This function simply calls {\bf \verb|/rf-1|}.
       <3 (/RF-1 T)
     <2 (|/RQ,LIB| T)
   <1 (|compilerDoit| T)
-\end{verbatim}
+#+end_example
 \calls{/RQ,LIB}{/rf-1}
 \seebook{/RQ,LIB}{echo-meta}{5}
 \usesdollar{/RQ,LIB}{lisplib}
@@ -24262,7 +24252,7 @@ This function simply calls {\bf \verb|/rf-1|}.
 \defun{/rf-1}{/rf-1}
 Since this function is called with nil we fall directly into the
 call to the function {\bf spad}:
-\begin{verbatim}
+#+begin_example
 (2) -> )co EQ
    Compiling AXIOM source code from file /tmp/EQ.spad using old system 
       compiler.
@@ -24275,7 +24265,7 @@ call to the function {\bf spad}:
       <3 (/RF-1 T)
     <2 (|/RQ,LIB| T)
   <1 (|compilerDoit| T)
-\end{verbatim}
+#+end_example
 \seebook{/rf-1}{makeInputFilename}{5}
 \calls{/rf-1}{ncINTERPFILE}
 calls{/rf-1}{spad}
@@ -24297,7 +24287,7 @@ calls{/rf-1}{spad}
 
 \defun{spad}{spad}
 Here we begin the actual compilation process. 
-\begin{verbatim}
+#+begin_example
   1> (SPAD "/tmp/EQ.spad")
     2> (|makeInitialModemapFrame|)
     <2 (|makeInitialModemapFrame| ((NIL)))
@@ -24342,14 +24332,14 @@ Here we begin the actual compilation process.
   <1 (OPEN #<input stream "temp.text">)
   1> (OPEN "libdb.text" :DIRECTION :OUTPUT)
   <1 (OPEN #<output stream "libdb.text">)
-\end{verbatim}
+#+end_example
 
 The major steps in this process involve the {\bf preparse} function.
 (See book volume 5 for more details).
 The {\bf preparse} function  returns a list of pairs of the form:
 ( (linenumber . linestring) .... (linenumber . linestring))
 For instance, for the file {\tt EQ.spad}, we get:
-\begin{verbatim}
+#+begin_example
     <2 (PREPARSE (
  (19 . "Equation(S: Type): public == private where")
  (20 . " (Ex ==> OutputForm;")
@@ -24361,7 +24351,7 @@ For instance, for the file {\tt EQ.spad}, we get:
  (204 . "        subst(eq1,eq2) ==")
  (205 . "           (eq3 := eq2 pretend Equation S;")
  (206 . "            [subst(lhs eq1,eq3),subst(rhs eq1,eq3)])))")))
-\end{verbatim}
+#+end_example
 
 \catches{spad}{spad-reader}
 \seebook{spad}{addBinding}{5}
@@ -24446,7 +24436,7 @@ For instance, for the file {\tt EQ.spad}, we get:
 
 \defun{s-process}{Interpreter interface to the compiler}
 And the {\bf s-process} function which returns a parsed version of the input.
-\begin{verbatim}
+#+begin_example
     2> (S-PROCESS
 (|where|
  (== (|:| (|Equation| (|:| S |Type|)) |public|) |private|)
@@ -24797,7 +24787,7 @@ And the {\bf s-process} function which returns a parsed version of the input.
           (|subst| (|,| (|rhs| |eq1|) |eq3|))))))
       NIL)))))))
 
-\end{verbatim}
+#+end_example
 
 \calls{s-process}{curstrm}
 \calls{s-process}{def-rename}
@@ -24992,7 +24982,7 @@ And the {\bf s-process} function which returns a parsed version of the input.
 #+end_src
 
 Given:
-\begin{verbatim}
+#+begin_example
 CohenCategory(): Category == SetCategory with
 
   kind:(CExpr)->Boolean
@@ -25000,9 +24990,9 @@ CohenCategory(): Category == SetCategory with
   numberOfOperand:(CExpr)->Integer
   construct:(CExpr,CExpr)->CExpr
 
-\end{verbatim}
+#+end_example
 the resulting call looks like:
-\begin{verbatim}
+#+begin_example
  (|compOrCroak|
        (DEF (|CohenCategory|)
         ((|Category|))
@@ -25019,7 +25009,7 @@ the resulting call looks like:
            (|$DomainsInScope| 
             (FLUID . |true|)
             (special |$EmptyMode| |$NoValueMode|))))))
-\end{verbatim}
+#+end_example
 
 This compiler call expects the first argument {\tt x} 
 to be a {\tt DEF} form to compile,
@@ -25036,7 +25026,7 @@ The third argument, {\tt e}, is the environment.
 #+end_src
 
 This results in a call to the inner function with
-\begin{verbatim}
+#+begin_example
 (|compOrCroak1|
           (DEF (|CohenCategory|)
            ((|Category|))
@@ -25056,7 +25046,7 @@ This results in a call to the inner function with
           NIL 
           NIL 
           |comp|)
-\end{verbatim}
+#+end_example
 The inner function augments the environment with information
 from the compiler stack {\tt \$compStack} and
 {\tt \$compErrorMessageStack}. Note that these variables are passed
@@ -26851,7 +26841,7 @@ if \verb|$InteractiveMode| then use a null outputstream
 
 #+end_src
 
-\chapter{Level 1}
+* Level 1
 
 \defvar{current-fragment}
 A string containing remaining chars from readline; needed because
@@ -26872,13 +26862,13 @@ It then recursively calls itself
 \uses{read-a-line}{File-Closed}
 \sig{read-a-line}{FileStream}{String}
 where FileStream might be
-\begin{verbatim}
+#+begin_example
    #<input stream "/research/t1/src/algebra/EQ.spad">
-\end{verbatim}
+#+end_example
 and the returned string might be
-\begin{verbatim}
+#+begin_example
    ")abbrev domain EQ Equation"
-\end{verbatim}
+#+end_example
 #+NAME: defun read-a-line
 #+begin_src common-lisp :noweb yes
 (defun read-a-line (&optional (stream t))
@@ -26893,7 +26883,7 @@ and the returned string might be
 #+end_src
 
 
-\chapter{The Chunks}
+* The Chunks
 #+NAME: Compiler
 #+begin_src common-lisp :noweb yes
 (in-package "BOOT")

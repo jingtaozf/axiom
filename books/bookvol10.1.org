@@ -6,12 +6,12 @@
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
 % NOTE THAT ALL CITED ARTICLE ARE BY AUTHOR PERMISSION
-\chapter{Ordered Algebraic Structures, the GCD}
+* Ordered Algebraic Structures, the GCD
 
 This chapter is used by permission from ``Elements of
 Programming'' by Stepanov and McJones \cite{Step09}.
 
-\section{Basic Algebraic Structures}
+** Basic Algebraic Structures
 
 An element is called an {\sl identity element} of a binary operation
 if, when combined with any other element as the first or second
@@ -272,7 +272,7 @@ defined but are not everywhere defined. For example, the result of
 concatenation of strings may not be representable, because of memory
 limitations, but concatenation is associative where it is defined.
 
-\section{Ordered Algebraic Structures}
+** Ordered Algebraic Structures
 
 When a total ordering is defined on the elements of a structure in
 such a way that the ordering is consistent with the structure's
@@ -329,7 +329,7 @@ Absolute value satisfies the following properties.
 a \ne 0    & \Rightarrow & \abs{a} > 0
 \end{array}\]
 
-\section{Remainder}
+** Remainder
 
 We saw that repeated addition in an additive monoid induces
 multiplication by a non-negative integer. In an additive group, this
@@ -517,7 +517,7 @@ Archimedean monoid that was not halvable. The examples we gave -- line
 segments in Euclidean geometry, rational numbers, binary and ternary
 fractions -- are all halvable.
 
-\section{Greatest Common Divisor}
+** Greatest Common Divisor
 
 For $a \ge 0$ and $b > 0$ in an Archimedean monoid {\bf T}, we define 
 {\sl divisibility} as follows:
@@ -656,7 +656,7 @@ T fast\_subtractive\_gcd(T a, T b)\\
 The concept of Euclidean monoid gives us an abstract setting for the
 original Euclid algorithm, which was based on repeated subtraction.
 
-\section{Generalizing gcd}
+** Generalizing gcd
 
 We can use {\tt fast\_subtractive\_gcd} with integers because they
 constitute a Eucliden monoid. For integers, we could also use the
@@ -755,7 +755,7 @@ Since every commutative semiring is a semimodule over itself, this
 algorithm can be used even when {\tt quotient} returns the same type,
 as with polynomials over reals.
 
-\section{Stein gcd}
+** Stein gcd
 
 In 1961 Josef Stein discovered a new gcd algorithm for integers that
 is frequently faster than Euclid's algorithm. His algorithm depends on
@@ -779,7 +779,7 @@ primes in these domains; for example, the monomial $x$ for polynomials
 or $1+i$ for Gaussian integers. Stein gcd could be used in rings that
 are not Euclidean.
 
-\section{Quotient}
+** Quotient
 
 The derivation of fast quotient and remainder exactly parallels our
 earlier derivation of fast remainder. We derive an expression for the
@@ -850,7 +850,7 @@ quotient\_remainder\_nonnegative\_iterative(T a, T b)\\
 \}\\
 }
 
-\section{Quotient and Remainder for Negative Quantities}
+** Quotient and Remainder for Negative Quantities
 
 The definition of quotient and remainder used by many computer
 processors and programming languages handles negative quantities
@@ -957,7 +957,7 @@ quotient\_remainder(Domain(F) a, Domain(F) b, F quo\_rem)\\
 our requirements when their functional parameters satisfy the
 requirements for positive arguments.
 
-\section{Concepts and Their Models}
+** Concepts and Their Models
 
 We have been using integer types without formally defining the
 concept. Building on the ordered algebraic structures defined earlier
@@ -1032,7 +1032,7 @@ A concept is {\sl useful} if there are useful algorithms for which
 this is the most abstract setting. For example, parallel out-of-order
 reduction applies to any associative, commutative operation.
 
-\section{Computer Integer Types}
+** Computer Integer Types
 
 Computer instruction sets typically provide partial representations of
 natural numbers and integers. For example, a 
@@ -1064,7 +1064,7 @@ of $U_n$). Programming languages that provide full access to these
 hardware operations make it possible to write efficient and abstract
 software components involving integer types.
 
-\section{Conclusions}
+** Conclusions
 
 We can combine algorithms and mathematica strutures into a seamless
 whole by describing algorithms in abstract terms and adjusting
@@ -1072,11 +1072,11 @@ theories to fit algorithmic requirements. The mathematics and
 algorithms in this chapter are abstract restatements of results that
 are more than two thousand years old.
 
-\chapter{Why Computer Algebra Systems Can't Solve Simple Equations}
+* Why Computer Algebra Systems Can't Solve Simple Equations
 
 This is a paper by Richard Fateman \cite{Fate96a}.
 
-\section{Introduction}
+** Introduction
 
 Among the basic equations we might wish a computer to solve
 symbolically is the inverse of the power function, solving 
@@ -1100,7 +1100,7 @@ strange numbers are not the consequence of round-off error or some
 other numerical phenomena. The alleged solution is just not
 mathematically correct.
 
-\section{How to solve $y=z^w$ for $z$}
+** How to solve $y=z^w$ for $z$
 
 We assume that $y$ and $w$ are complex-valued variables in general,
 and the solution sought for $z$ is permitted to be complex as well. If
@@ -1131,7 +1131,7 @@ perhaps the argument and magnitude) of $w$ and $y$. We've already seen
 situations above where the solution set has zero, one, or more
 distinct solutions, giving us some hint as to what to expect.
 
-\section{A systemic attempt}
+** A systemic attempt
 
 There are any number of ways of approaching this problem from a naive
 complex-variables direction. We've tried quite a few, and believe this
@@ -1202,7 +1202,7 @@ equation (5).
 It would be nice if this were the end of it. Unfortunately, it is not
 so simple.
 
-\section{Branch Cuts}
+** Branch Cuts
 
 The solutions of the previous section fall apart in various ways
 because of singularities and the necessity of defining a branch cut in
@@ -1283,7 +1283,7 @@ though the annulus of the previous case were cut along the negative
 real axis and distorted. The two curves are joined in two places by
 segments of the negative real axis.
 
-\section{An example of the complex case}
+** An example of the complex case
 
 If we look at a particular instance of our equation, namely
 \[y=z^{i+1}\]
@@ -1307,7 +1307,7 @@ below. The solution exists between them. We give two figures to show
 the general shape; the first, two spirals, and then a close-up of them
 near the origin.
 
-\section{Conclusion}
+** Conclusion
 
 In the case of solving equations, one would like to have as much of
 the following information as possible: a description of the inverse
@@ -1359,7 +1359,7 @@ systems seem to use some version of 1 or 3.
 {\center{\includegraphics{ps/v101Fate1.eps}}}
 {\center{\includegraphics{ps/v101Fate2.eps}}}
 
-\chapter{Interval Arithmetic}
+* Interval Arithmetic
 Lambov \cite{Lamb06} defines a set of useful formulas for 
 computing intervals using the IEEE-754 floating-point standard.
 
@@ -1391,25 +1391,25 @@ and the maximum of the higher bounds) is performed as
 Lambov defines operations which, under the given rounding condition,
 give the tightest bounds.
 
-\section{Addition}
+** Addition
 \[ x + y = \left[\underline{x}+\underline{y},\overline{x}+\overline{y}\right]
 \subseteq \left<\nabla(\underline{x}+\underline{y})
 -\nabla((-\overline{x})+(-\overline{y}))\right>\]
 The negated sign of the higher bound ensures the proper direction
 of the rounding.
 
-\section{Sign Change}
+** Sign Change
 \[ -x = \left[-\overline{x},-\underline{x}\right] =
 \left<-\overline{x},\underline{x}\right> \]
 This is a single swap of the two values. No rounding is performed.
 
-\section{Subtraction}
+** Subtraction
 \[ x-y = \left[\underline{x}-\overline{y},\overline{x}-\underline{y}\right]
 \subseteq \left<\nabla(\underline{x}+(-\overline{y})),
 -\nabla((-\overline{x})+\underline{y})\right>\]
 Subtraction is implemented as $x+(-y)$.
 
-\section{Multiplication}
+** Multiplication
 \[ xy = \left[min(\underline{x}\underline{y},
                   \underline{x}\overline{y},
                   \overline{x}\underline{y},
@@ -1473,7 +1473,7 @@ d & = & \left\{
 which computes the rounded results of the original multiplication
 formula but achieves better performance.
 
-\section{Multiplication by a positive number}
+** Multiplication by a positive number
 If one of the numbers is known to be positive (e.g. a constant) then 
 \[ {\rm if\ }x > 0 {\rm\ then\ } xy \equiv
 \left[min(\underline{x}\underline{y},\overline{x}\underline{y}),
@@ -1482,14 +1482,14 @@ If one of the numbers is known to be positive (e.g. a constant) then
 \]
 This formula is faster than the general multiplication formula.
 
-\section{Multiplication of Two Positive Numbers}
+** Multiplication of Two Positive Numbers
 
 If both multiples are positive simply change the sign of the 
 higher bound on one of the arguments prior to multiplication.
 If one of the numbers is a constant this can be arranged to
 skip the sign change.
 
-\section{Division}
+** Division
 Division is an expensive operation.
 \[\frac{x}{y} =
 \left[
@@ -1549,7 +1549,7 @@ b & = & \left\{
 \end{array}
 \]
 
-\section{Reciprocal}
+** Reciprocal
 \[\frac{1}{x} = \left[\frac{1}{\overline{x}},\frac{1}{\underline{x}}\right]
 \subseteq 
 \left<\nabla\left(\frac{-1}{(-\overline{x})}\right),
@@ -1560,7 +1560,7 @@ which is undefined if $0 \in x$. Lambov implements this by checking for
 zero, followed by division of $-1$ by the argument and swapping the
 two components.   
 
-\section{Absolute Value}
+** Absolute Value
 
 \[\abs{x} = 
 \left[max(\underline{x},-\overline{x},0),
@@ -1569,11 +1569,11 @@ two components.
      -min(\underline{x},(-\overline{x}))\right>
 \]
 
-\section{Square}
+** Square
 \[x^2 = \abs{x}\abs{x}\]
 using multiplication by positive numbers, mentioned above.
 
-\section{Square Root}
+** Square Root
 
 \[\sqrt{x} = \left[\sqrt{\underline{x}},\sqrt{\overline{x}}\right]\]
 which is defined if $0 \le \underline{x}$
@@ -1612,7 +1612,7 @@ an exception. If it contains a negative part, the implementation will
 crop it to only its non-negative part to allow that computations
 such as $\sqrt{0}$ ca be carried out in exact real arithmetic.
 
-\chapter{Integration}
+* Integration
 
 An {\sl elementary function}\cite{Bro98b}
 \index{elementary function}
@@ -1665,14 +1665,14 @@ explicitly otherwise, have characteristic 0. If $K$ is a field, then
 $\overline{K}$ denotes its algebraic closure. For a polynomial $p$, 
 pp($p$) denotes the primitive
 part of $p$, {\sl i. e.} $p$ divided by the gcd of its coefficients.
-\section{Rational Functions}
+** Rational Functions
 By a {\sl rational function}, we mean a quotient of polynomials in the
 integration variable $x$. This means that other functions can appear
 in the integrand, provided they do not involve $x$, hence that the
 coefficients of our polynomials in $x$ lie in an arbitrary field $K$
 satisfying: $\forall{a} \in K,\ a^{\prime}=0$.
 
-\subsection{The full partial-fraction algorithm}
+*** The full partial-fraction algorithm
 This method, which dates back to Newton, Leibniz, and Bernoulli,
 should not be used in practice, yet it remains the method found in
 most calculus tests and is often taught. Its major drawback is the
@@ -1763,7 +1763,7 @@ original Risch algorithm is essentially a generalization of this
 approach that searches for integrals of arbitrary elementary functions
 in a form similar to \ref{Int4}.
 
-\subsection{The Hermite reduction}
+*** The Hermite reduction
 The major computational inconvenience of the full partial fraction
 approach is the need to factor polynomials over $\mathbb{R}$,
 $\mathbb{C}$, or $\overline{K}$, thereby introducing algebraic numbers
@@ -1833,7 +1833,7 @@ denominator. This process is repeated until the denominator is
 squarefree, yielding $g,h \in K(x)$ such that $f=g^{\prime}+h$ and $h$ has
 a squarefree denominator.
 
-\subsection{The Rothstein-Trager and Lazard-Rioboo-Trager algorithms}
+*** The Rothstein-Trager and Lazard-Rioboo-Trager algorithms
 Following the Hermite reduction, we only have to integrate fractions
 of the form $f=A/D$ with ${\rm deg}(A)<{\rm deg}(D)$ and $D$ squarefree. It
 follows from \ref{Int2} that
@@ -1887,7 +1887,7 @@ which implies then that the remainder by $Q_i$ is nonzero, see
 \cite{Muld97} for details and other alternatives for computing
 ${\rm pp}_x(R_{k_i})(a,x)$
 
-\section{Algebraic Functions}
+** Algebraic Functions
 By an {\sl algebraic function}, we mean an element of a finitely
 generated algebraic extension $E$ of the rational function field
 $K(x)$. This includes nested radicals and implicit algebraic
@@ -1934,7 +1934,7 @@ call $\sum_{i=1}^n A_iw_i \in {\bf O}_{K[x]}$ and
 $D \in K[x]$ respectively the {\sl numerator} and {\sl denominator} of
 $\alpha$ with respect to $w$. They are defined uniquely once the basis
 $w$ is fixed.
-\subsection{The Hermite reduction}
+*** The Hermite reduction
 Now that we have numerators and denominators for algebraic functions,
 we can attempt to generalize the Hermite reduction of the previous
 section, so let $f \in E$ be our integrand, 
@@ -2214,7 +2214,7 @@ so the new basis is $\overline{w}=(1,y,y^2,y^3/x)$, and the
 denominator of $f$ with respect to $\overline{w}$ is $x$, which is
 squarefree. 
 
-\subsection{Simple radical extensions}
+*** Simple radical extensions
 The integration algorithm becomes easier when $E$ is a simple radical
 extension of $K(x)$, {\sl i.e.} $E=K(x)[y]/(y^n-a)$ for some 
 $a \in K(x)$. Write $a=A/D$ where $A,D \in K[x]$, and let
@@ -2292,7 +2292,7 @@ solve \ref{Int7}, i.e.
 \]
 and the remaining integrand has a squarefree denominator.}
 
-\subsection{Liouville's Theorem}
+*** Liouville's Theorem
 Up to this point, the algorithms we have presented never fail, yet it
 can happen that an algebraic function does not have an elementary
 integral, for example
@@ -2330,7 +2330,7 @@ example,
 \log\left(\frac{\sqrt{-1}+x}{\sqrt{-1}-x}\right)
 \]
 
-\subsection{The integral part}
+*** The integral part
 Following the Hermite reduction, we can assume that we have a basis 
 $w=(w_1,\ldots,w_n)$ of $E$ over $K(x)$ made of integral elements such
 that our integrand is of the form $f=\sum_{i=1}^n A_iw_i/D$ where 
@@ -2414,7 +2414,7 @@ and make it normal at infinity between steps 4 and 5. This lazy
 variant can compute $\int{f~dx}$ whenever it is an element of $E$
 without computing an integral basis.
 
-\subsection{The logarithmic part}
+*** The logarithmic part
 Following the previous sections, we are left with solving equation
 \ref{Int14} for the constants $c_1,\ldots,c_k$ and for $u_1,\ldots,u_k$. We
 must make at this point the following additional assumptions:
@@ -2593,14 +2593,14 @@ which implies that
 =\frac{1}{3}\log\left(\frac{\sqrt{1-x^3}-1}{\sqrt{1-x^3}+1}\right)
 \]}
 
-\section{Elementary Functions}
+** Elementary Functions
 Let $f$ be an arbitrary elementary function. In order to generalize
 the algorithms of the previous sections, we need to build an algebraic
 model in which $f$ behaves in some sense like a rational or algebraic
 function. For that purpose, we need to formally define differential
 fields and elementary functions.
 
-\subsection{Differential algebra}
+*** Differential algebra
 A {\sl differential field} $(K,')$ is a field $K$ with a given map
 $a \rightarrow a^{\prime}$ from $K$ into $K$, satisfying
 $(a+b)^{\prime}=a^{\prime}+b^{\prime}$ and 
@@ -2692,7 +2692,7 @@ $\gcd(q_s,q_n)=1$, $q_s$ is special and all the squarefree factors of
 $q_n$ are normal. We call $q_s$ the {\sl special part} of $q$ and
 $q_n$ its {\sl normal part}.
 
-\subsection{The Hermite reduction}
+*** The Hermite reduction
 The Hermite reductions we presented for rational and algebraic
 functions work in exactly the same way algebraic extensions of
 monomial extensions of $K$, as long as we apply them only to the
@@ -2763,7 +2763,7 @@ implying that
 \]
 and the remaining integrand has a squarefree denominator.}
 
-\subsection{The polynomial reduction}
+*** The polynomial reduction
 In the transcendental case $E=K(t)$ and when $t$ is a monomial
 satisfying ${\rm deg}_t(t') \ge 2$, then it is possible to reduce the
 degree of the polynomial part of the integrand until it is smaller
@@ -2816,7 +2816,7 @@ Using \ref{Int15}, we get $\overline{P}=f-t'=f-(t^2+1)=xt$ so
 and since $x'\ne 0$, the above criterion imples that the remaining
 integral is not an elementary function.}
 
-\subsection{The residue criterion}
+*** The residue criterion
 Similarly to the Hermite reduction, the Rothstein-Trager and
 Lazard-Rioboo-Trager algorithms are easy to generalize to the
 transcendental case $E=K(t)$ for arbitrary monomials $t$: let 
@@ -2940,7 +2940,7 @@ which is coprime with $R$ in $K[z]$, implying that the integral \ref{Int17}
 is not an elementary function.
 }
 
-\subsection{The transcendental logarithmic case}
+*** The transcendental logarithmic case
 Suppose now that $t=\log(b)$ for some $b \in K^{*}$, and that
 $E=K(t)$. Then, every special polynomial must be in $K$, so, following
 the residue criterion, we must look for a solution $v \in K[t]$,
@@ -2981,7 +2981,7 @@ section can also be applied to real arc-tangent extensions, {\sl i.e.}
 $K(t)$ where $t$ is a monomial satisfying $t'=b'/(1+b^2)$ for some 
 $b \in K$.
 
-\subsection{The transcendental exponential case}
+*** The transcendental exponential case
 Suppose now that $t=e^b$ for some $b \in K$, and that $E =
 K(t)$. Then, every nonzero special polynomial must be of the form
 $at^m$ for $a \in K^{*}$ and $m \in \mathbb{N}$. Since
@@ -3017,7 +3017,7 @@ $K$. Bronstein \cite{Bron90c,Bron91a,Bron97} and Risch
 of equation when $K$ is an elementary extension of the rational
 function field.
 
-\subsection{The transcendental tangent case}
+*** The transcendental tangent case
 Suppose now that $t=\tan(b)$ for some $b \in K$, {\sl i.e.}
 $t'=b'(1+t^2)$, that $\sqrt{-1} \notin K$ and that $E=K(t)$. Then,
 every nonzero special polynomial must be of the form $a(t^2+1)^m$ for
@@ -3114,7 +3114,7 @@ d
 which has no solution in $\mathbb{Q}(x)$, implying that the integral
 is not an elementary function.}
 
-\subsection{The algebraic logarithmic case}
+*** The algebraic logarithmic case
 The transcendental logarithmic case method also generalizes to the
 case when $E=K(t)(y)$ is algebraic over $K(t)$, $t=log(b)$ for 
 $b \in K^{*}$ and $y$ is integral over $K[t]$: following the residue
@@ -3258,7 +3258,7 @@ In the general case when $E$ is not a radical extension of $K(t)$,
 expansions at infinity of $\sum_{i=1}^n v_iw_i$ with those of the form
 \ref{Int20} of $h$, see \cite{Bron90c,Risc68} for details.
 
-\subsection{The algebraic exponential case}
+*** The algebraic exponential case
 The transcendental exponential case method also generalizes to the
 case when $E=K(t)(y)$ is algebraic over $K(t)$, $t=e^b$ for $b \in K$
 and $y$ is integral over $K[t]$: following the residue criterion, we
@@ -3392,8 +3392,8 @@ constructing the divisors $\delta_j$ and the $u_j$'s as in that
 case. Again, the details are quite technical and can be found in 
 \cite{Bron90c,Risc68,Risc69a}.
 
-\chapter{Singular Value Decomposition}
-\section{Singular Value Decomposition Tutorial}
+* Singular Value Decomposition
+** Singular Value Decomposition Tutorial
 
 When you browse standard web sources like Wikipedia to learn about 
 Singular Value Decomposition \cite{Puff09} 
@@ -3851,7 +3851,7 @@ are the same. We are trying to predict patterns of how words occur
 in documents instead of trying to predict patterns of how players 
 score on holes.
 
-\chapter{Quaternions}
+* Quaternions
 from \cite{Altm05}:
 \begin{quotation}
 Quaternions are inextricably linked to rotations.
@@ -3883,9 +3883,9 @@ The purpose is to develop a tutorial introduction to the Axiom
 domain and its uses.
 \newpage
 
-\section{Quaternions}
+** Quaternions
 
-\section{Vectors, and their Composition}
+** Vectors, and their Composition
 
 {\bf 1}. For at least two centuries the geometrical representation 
 of the negative and imaginary algebraic quantities, $-1$ and $\sqrt{-1}$
@@ -5310,7 +5310,7 @@ Some very curious investigations connected with curves and surfaces
 of the second and third degrees are also there founded upon the 
 composition of vectors. 
 
-\section{Examples To Chapter 1.}
+** Examples To Chapter 1.
 
 1. The lines which join, towards the same parts, the extremities 
 of two equal and parallel lines are themselves equal and parallel. 
@@ -5392,7 +5392,7 @@ that the mean point of the triangle formed by these lines is a
 conjugate point of the curve. Hence that the vector $\alpha+\beta+\gamma$
 is a conjugate ray of the cone. ({\sl Ibid}. p. 96.) 
 
-\section{Products And Quotients of Vectors}
+** Products And Quotients of Vectors
 
 {\bf 45}. We now come to the consideration of questions in which 
 the Calculus of Quaternions differs entirely from any previous 
@@ -6174,7 +6174,7 @@ $$j\overline{OW}=\overline{OZ}$$
 whence\hbox{\hskip 2cm}$ij\overline{OW}=i\overline{OZ}=
 \overline{OS} = k\overline{OW}$ 
 
-* The negative sign, being a mere numerical factor, is evidently commutative 
+,* The negative sign, being a mere numerical factor, is evidently commutative 
 with $j$  indeed we may, if necessary, easily assure ourselves of the fact 
 that to turn the negative (or reverse) of a vector through a right 
 (or indeed any) angle, is the same thing as to turn the vector through 
@@ -6834,7 +6834,7 @@ that it must be perpendicular to each of the factors. It is easy to
 carry this farther, but enough has been said to show the character 
 of the reasoning. 
 
-\section{Examples To Chapter 2.}
+** Examples To Chapter 2.
 
 {\bf 1}. It is obvious from the properties of polar triangles that any 
 mode of representing versors by the {\sl sides} of a spherical triangle 
@@ -8643,7 +8643,7 @@ $$
 \frac{\beta\gamma}{\gamma\alpha}
 $$
 
-\section{Examples to Chapter 3}
+** Examples to Chapter 3
 
 {\bf 1}. Investigate, by quaternions, the requisite formulae for 
 changing from any one set of coordinate axes to another ; and 
@@ -8945,7 +8945,7 @@ the result of the preceding example ?
 
 \vfill
 \newpage
-\section{Axiom Examples}
+** Axiom Examples
 The basic operation for creating quaternions is {\bf quatern}.
 This is a quaternion over the rational numbers.
 \boxer{4.6in}{
@@ -9103,7 +9103,7 @@ i =
 \right]
 $$
 
-\chapter{Clifford Algebra}
+* Clifford Algebra
 
 This is quoted from John Fletcher's web page \cite{Flet09} (with permission).
 
@@ -9119,7 +9119,7 @@ of a Clifford number using the characteristic equation of the matrix
 and powers of the Clifford number. Examples are given for the algebras
 Clifford(2), Clifford(3) and Clifford(2,2).
 
-\section{Introduction}
+** Introduction
 
 Introductory texts on Clifford algebra state that for any chosen
 Clifford Algebra there is a matrix representation which is equivalent.
@@ -9142,7 +9142,7 @@ is to make it clear.  The examples have been first developed using a
 system of symbolic algebra described in another paper by this
 author \cite{Flet01}.  
 
-\section{Clifford Basis Matrix Theory}
+** Clifford Basis Matrix Theory
 
 The theory of the matrix basis is discussed extensively by
 Ablamowicz.  This theory will be illustrated here following the
@@ -9334,7 +9334,7 @@ This has been done in many cases by Ablamowicz.  This will now be
 developed to show how the inverse of a Clifford number can be obtained
 from the matrix representation.  
 
-\section{Calculation of the inverse of a Clifford number}
+** Calculation of the inverse of a Clifford number
 
 The matrix basis demonstrated above can be used to calculate the
 inverse of a Clifford number.  In simple cases this can be used to
@@ -9387,7 +9387,7 @@ Steps 4 and 5 are then easy once the coefficients are known.
 
 The method will now be demonstrated using some examples.
 
-\subsection{Example 1: Clifford (2)}
+*** Example 1: Clifford (2)
 
 In this case the matrix basis for a member of the Clifford algebra
 
@@ -9418,7 +9418,7 @@ which provides a general solution to the inverse in this algebra.
 
 \[c^{-1} = (2a_0 - c)/(a^2_0 - a^2_1 - a^2_2 + a^2_3) = 0\]
 
-\subsection{Example 2: Clifford (3)}
+*** Example 2: Clifford (3)
 
 A set of basis matrices for Clifford (3) as given by Abalmowicz and
 deduced are
@@ -9580,7 +9580,7 @@ giving
 This provides a general solution for the inverse together with two
 simple cases of wide usefulness.
 
-\subsection{Example 3: Clifford (2,2)}
+*** Example 3: Clifford (2,2)
 
 The following basis matrices are given by Ablamowicz \cite{Abla98}
 
@@ -9846,7 +9846,7 @@ n^{-1}_2 &=& -0.5 + 0.5e_1 + 0.5e_2 - 0.5e_1e_2 - 0.5e_1e_3\\
 Note that in some cases the inverse is linear in the original Clifford
 number, and in others it is nonlinear.
 
-\subsection{Conclusion}
+*** Conclusion
 
 The paper has demonstrated a method for the calculation of inverses of
 Clifford numbers by means of the matrix representation of the
@@ -9859,7 +9859,7 @@ and for more complex systems the algebra of the inverse can be
 generated and evaluated numerically for a particular example, given a
 system of computer algebra for Clifford algebra.
 
-\chapter{Package for Algebraic Function Fields}
+* Package for Algebraic Function Fields
 
 PAFF is a Package for Algebraic Function Fields in one variable
 by Ga\'etan Hach\'e
@@ -9903,32 +9903,32 @@ dynamic algebraic closure as proposed by D. Duval \cite{Duva95}.
 Example 1
 
 This example compute the genus of the projective plane curve defined by:
-\begin{verbatim}
+#+begin_example
        5    2 3      4
       X  + Y Z  + Y Z  = 0
-\end{verbatim}
+#+end_example
 over the field GF(2).
 
 First we define the field GF(2).
-\begin{verbatim}
+#+begin_example
 K:=PF 2
 R:=DMP([X,Y,Z],K)
 P:=PAFF(K,[X,Y,Z],BLQT)
-\end{verbatim}
+#+end_example
 
 We defined the polynomial of the curve.
-\begin{verbatim}
+#+begin_example
 C:R:=X**5 + Y**2*Z**3+Y*Z**4
-\end{verbatim}
+#+end_example
 
 We give it to the package PAFF(K,[X,Y,Z]) which was assigned to the
 variable $P$.
 
-\begin{verbatim}
+#+begin_example
 setCurve(C)$P
-\end{verbatim}
+#+end_example
 
-\chapter{Interpolation Formulas}
+* Interpolation Formulas
 {\center{\includegraphics[scale=0.80]{ps/lozenge2.eps}}}
 
 The lozenge diagram is a device for showing that a large number of
@@ -10336,7 +10336,7 @@ have decidable type checking or even type inference problems.  We will
 show that several formalisms have been developed during the last years
 which might be relevant in this respect.
  
-\section{Prelude}
+** Prelude
 \label{chprelude}
 
 We will recall some definitions and facts which will be needed later.
@@ -10345,9 +10345,9 @@ Moreover, we will fix the notation and will  give some
 discussions of the terminology used in this thesis in
 comparison to the one found in the literature.
 
-\subsection{Terminology}
+*** Terminology
 
-\subsubsection{Abstract Data Types}
+**** Abstract Data Types
 
 
 The term {\em data type} has many informal usages in programming and
@@ -10389,7 +10389,7 @@ thesis, the abstract data types in the former sense can also be used
 for the specification of other classes of computational objects than
 abstract data types in the latter sense.
 
-\subsubsection{Polymorphism}
+**** Polymorphism
 
 Although the term {\em polymorphic function} is used in the
 literature, there are usually no definitions given.
@@ -10481,7 +10481,7 @@ Nevertheless, we will sometimes use these terms with the flavor as is
 given in \cite{Fode83} when it will be clear how the language
 constructs in discussion can be translated into untyped ones.
 
-\subsubsection{Coercions}
+**** Coercions
 
 We will assume that we have a mechanism in the language to declare
 some functions between types to be {\em coercions}, i.\,e.\ conversion
@@ -10540,7 +10540,7 @@ avoid it.  Only in our notation we will be close to that terminology
 and will write $t_1 \subtype t_2$ if there is a coercion $\phi: t_1
 \longrightarrow t_2$.
 
-\subsection{General Notation}
+*** General Notation
 
 As usual we will use {\em ``iff''} for {\em ``if, and only
 if''}.\index{iff|ii}
@@ -10566,7 +10566,7 @@ The length of a string $s \in L^*$ will be denoted by $|s|$. \index{
 "| "|@$"|\cdot"|$|ii} We will also denote the cardinality of a set $A$
 by $|A|$.\index{ "| "|@$"|\cdot"|$|ii}
 
-\subsection{Partial Orders and Quasi-Lattices}
+*** Partial Orders and Quasi-Lattices
 
 {\bf Definition 1. (Preorder)}.
 \index{preorder|ii}
@@ -10758,7 +10758,7 @@ $d$ of $a$ and $b$ such that $d \not \leq c$ and $c \not \leq d$.
 These elements $a, b, c, d$ satisfy the conditions of the lemma.\qed
 \end{proof}
 
-\subsection{Order-Sorted Algebras}
+*** Order-Sorted Algebras
 
 There is a growing literature on order-sorted algebras.  Some
 comprehensive sources are the thesis of Schmidt-Schau{\ss}
@@ -11446,7 +11446,7 @@ semantics'' can be given to polymorphic types, as was shown by
 Reynolds \cite{Reyn84} for the objects of the second-order
 polymorphic lambda-calculus.
 
-\subsubsection{Properties of the Order-Sorted Signature of Types}
+**** Properties of the Order-Sorted Signature of Types
 \label{secproossty}
 
 The possibility to have multiple declarations of type constructors is
@@ -11524,7 +11524,7 @@ do not know whether there is an ``algebraic'' reason which implies
 that declarations violating injectivity are not necessary.  So this
 point might deserve further investigations.
 
-\subsubsection{Definition of Overloaded Functions}
+**** Definition of Overloaded Functions
 
 The formalism developed above is well suited to express the
 overloading which can be performed by category definitions.
@@ -11532,12 +11532,12 @@ overloading which can be performed by category definitions.
 A declaration such as
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 AbelianSemiGroup(): Category == SetCategory with
     --operations
       "+": ($,$) -> $            ++ x+y computes the sum of x and y
       "*": (PositiveInteger,$) -> $
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 would translate into 
@@ -11701,7 +11701,7 @@ $\tf{integer\_plus}$ has to be used for $\tf{+}$ if $t_{\cf{Ring}}$ is
 instantiated with the type constant $\tf{integer}$.  We will present
 this inference algorithm in the next section.
 
-\subsection{Type Inference}
+*** Type Inference
 \label{sectytycl}
 
 In the following we will show that the type inference problem is
@@ -11713,7 +11713,7 @@ In Sec.~\ref{secaxhasex} we will give some examples in which the {\sf
 Axiom} type inference mechanism fails whereas in {\sf Haskell} a type
 can be deduced.
 
-\subsubsection{Type Inference Rules of Mini-Haskell}
+**** Type Inference Rules of Mini-Haskell
 
 In Fig.~\ref{figtyns} the type inference rules for the language
 Mini-Haskell of Nipkow and Snelting \cite{Nipk91} are given.  This
@@ -11892,7 +11892,7 @@ there is a unique principal type.
 %(ABS) in which {\bf declaration} ....
 %only overloaded functions as instances of type classes
 
-\subsubsection{Types of Functions}
+**** Types of Functions
 \label{secaxhasex}
 
 In this section we want to show that the above results on the type
@@ -11903,7 +11903,7 @@ of {\sf Axiom}.
 \rule{\textwidth}{0.1pt}
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 ->fac n == if n < 3 then n else n * fac(n-1)
                                                            Type: Void
 ->fac 10
@@ -11943,7 +11943,7 @@ of {\sf Axiom}.
 
    (10)  theMap(*1;anonymousFunction;0;G1048;internal,502)
                                             Type: (Integer -> Integer)
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 \rule{\textwidth}{0.1pt}
@@ -11956,30 +11956,30 @@ of {\sf Axiom}.
 \rule{\textwidth}{0.1pt}
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 fact 0 = 1
 fact (n+1) = (n+1)*fact n
 Phase TYPE:
 fact :: Integral m => m -> m
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 
 \bigskip
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 square x = x * x
 Phase TYPE:
 square :: Num t => t -> t
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 
 \bigskip
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 mersenne i = 2^ i - 1
 addx x    =  \y -> y+x
 z::Integer
@@ -11993,7 +11993,7 @@ addx :: Num tv59 => tv59 -> tv59 -> tv59
 z :: Integer
 g :: Integer -> Integer
 h :: Integer
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 \rule{\textwidth}{0.1pt}
@@ -12079,17 +12079,17 @@ of equational reasoning and category theory.  Since many concepts in
 category theory are constructive, it seems to be possible to use some
 of these connections in a computer algebra system.
 
-\subsubsection{Typing of ``Declared Only'' Objects}
+**** Typing of ``Declared Only'' Objects
 
 Consider the Axiom dialogue:
 %\begin{progverb} 
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 ->a:Integer 
                                                             Type: Void 
 
 ->a+a a is declared as being in Integer but has not been given a value.
-\end{verbatim} 
+#+end_example 
 \end{footnotesize}
 %\end{progverb}
 
@@ -12110,9 +12110,9 @@ $$\mbox{(TYPE-AS)} \quad\quad {\displaystyle (A,
 \Sigma)\vdash x \:{\bf has\_type}\: \tau : (A+[x \mapsto \tau],
 \Sigma)} $$
 
-\subsection{Complexity of Type Inference}
+*** Complexity of Type Inference
 
-\subsubsection{The ML-fragment}
+**** The ML-fragment
 
 The type inference problem for the simply typed lambda calculus,
 i.\,e.\ the {\sf ML} core language without usage of {\tt let}
@@ -12182,7 +12182,7 @@ the complexity is exponentially.  The complexity of various type
 systems for {\sf Haskell}-like overloading has been investigated in
 \cite{Volp91}.
 
-\subsection{Algebraic Specifications of Type Classes}
+*** Algebraic Specifications of Type Classes
 
 Many important classes of objects occurring in computer algebra can be
 defined by a finite set of equations, e.\,g.\ monoids, groups, Abelian
@@ -12211,7 +12211,7 @@ semantics are relevant for the specification type classes.  Many
 references to such work are given in the survey of
 Wirsing~\cite{Wirs91}.
 
-\subsubsection{Some Hard-to-Specify Structures}
+**** Some Hard-to-Specify Structures
 
 Unfortunately, some very basic structures, namely integral domains
 (and fields) cannot be specified by equations, even if we allow
@@ -12299,7 +12299,7 @@ in which a operation can be defined constructively is applied to the
 problem of factorization of polynomials.
 \end{remark}
 
-\subsubsection{Algebraic Theories}
+**** Algebraic Theories
 
 So it seems to be a wise decision in the design of {\sf Axiom} to
 distinguish between ``axioms'' which are only stated in comments and
@@ -12373,7 +12373,7 @@ prove general theorems about such algebraic\footnote{Here
 present examples and applications of the resulting theory in diverse
 areas of mathematics.  \end{quote}
 
-\subsubsection{Type Classes with Higher-Order Functions}
+**** Type Classes with Higher-Order Functions
 
 Type inference remains decidable for a system with type classes even
 if higher-order functions are allowed in the way they are in {\sf
@@ -12406,11 +12406,11 @@ right-modules over a ring $R$.
 An example of a category having an element as a parameter is
 %\begin{progverb} 
 \begin{footnotesize}
-\begin{verbatim} 
+#+begin_example 
 PAdicIntegerCategory(p): Category == Definition where
   ++ This is the category of stream-based representations of
   ++ the p-adic integers.
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb} 
 It describes all domains implementing the $p$-adic integers for a
@@ -12456,7 +12456,7 @@ the distinction between first-order and second-order types becomes a
 problem.  However, such a distinction is very desirable, as we will
 show below.
 
-\subsubsection{Sequences}
+**** Sequences
 \label{chapseq}
 
 In {\sf Axiom} the operator $\tf{map}$ is defined by a simple
@@ -12475,7 +12475,7 @@ instances.  In Sec.~\ref{s43} we will use this view in order to show
 that many coercions will fulfill a condition that leads to a coherent
 type system.
 
-\subsubsection{Type Inference}
+**** Type Inference
 
 In \cite{Chen92} an extension of the type system of {\sf Haskell}
 is given allowing {\em types} as arguments in type classes.  It is
@@ -12507,7 +12507,7 @@ categories as arguments we could directly apply the results of Smolka.
 However, it is not clear whether these results are also useful for the
 cases we are interested in.
 
-\subsubsection{Algebraic Specifications of Parameterized Type Classes}
+**** Algebraic Specifications of Parameterized Type Classes
 
 As in the case of type classes, any specifications using the loose
 approach can be seen as specifications of parameterized type classes.
@@ -12515,7 +12515,7 @@ In the survey of Wirsing \cite{Wirs91} the relevant literature is
 cited.  Especially, in \cite{Wirs82} the important {\em pushout
 construction} for parameterized specifications has been studied.
 
-\subsection{Type Classes as First-Order Types}
+*** Type Classes as First-Order Types
 
 Categories in the type system of {\sf Axiom} resp.\ type classes in
 the one of {\sf Haskell} are second-order types.
@@ -12568,7 +12568,7 @@ is that of the relationship between objects and types, and not that of
 the relationship between types and type classes!\footnote{See
 Chapter~\ref{chtydeel} of this thesis for further discussions.}
 
-\subsubsection{Requirements of a System}
+**** Requirements of a System
 
 If types are structures, then the type classes correspond to model
 classes of certain theories.  Can we assume that such model classes do
@@ -12616,7 +12616,7 @@ a clear distinction between first-order types (which would include the
 constructs describing the equivalence classes) and the second-order
 types of type classes.
 
-\subsubsection{Universal Algebra}
+**** Universal Algebra
 
 In universal algebra, there are constructions which would imply the
 view of type classes as first-order objects.  Namely, as in
@@ -12643,7 +12643,7 @@ useful people work with them and not with the model classes.  Many
 books on model theory can serve as references for these remarks, some
 comprehensive ones are \cite{Chan90}, \cite{Poiz85}.
 
-\subsubsection{Category Theory}
+**** Category Theory
 
 The situation is different for category theory.  An important tool for
 category theory is the possibility to have a category of all
@@ -12677,7 +12677,7 @@ mathematics which it was supposed to model.}
 So it might be preferable to have a type system which allows some
 modeling of category theory but not a perfect correspondence.
 
-\subsubsection{Bounded Polymorphism}
+**** Bounded Polymorphism
 
 So in the main area of computer algebra there seems to be no need for
 a concept of type classes as first-order types. So we will only sketch
@@ -12781,7 +12781,7 @@ several authors --- e.\,g.\ in \cite{Limo92} and in \cite{Baum95} ---
 implying the need of non-strict inheritance in a computer algebra
 system!}
 
-\section{Coercions}
+** Coercions
 \label{chapcoer}
 
 In mathematics the convention to identify an object with its image
@@ -12805,7 +12805,7 @@ might be debatable for parts of a system in which new efficient
 algorithms have to be written, it is certainly necessary for a user
 interface.
 
-\subsection{General Remarks}
+*** General Remarks
 
 We will assume that we have a mechanism to declare some functions
 between types to be {\em implicit coercions\/} between these types (or
@@ -12824,7 +12824,7 @@ computer algebra system the requirement of set theoretic coercion
 functions does not seem to be a restriction at all!  
 \end{remark}
 
-\subsection{Coherence}
+*** Coherence
 \label{seccoh}
 
 In a larger system, it is possible that there are different ways to
@@ -12842,7 +12842,7 @@ of the system.  Besides the technical proof of the coherence theorem
 we will give some informal discussions about the significance of these
 conditions.
 
-\subsubsection{Motivating Examples}
+**** Motivating Examples
 
 Consider the expression $$ \tf{t} - \left( \begin{array}{cc} 1 & 0 \\
 3 & \frac{1}{2} \end{array} \right) $$ which --- as a mathematician
@@ -12889,7 +12889,7 @@ could coerce $A$ into $A \oplus B$ via a coercion $\phi_1$ and $B$
 into $A \oplus B$ via a coercion $\phi_2$. But then the image of $A$
 in $A \oplus A$ depends on the choice of the coercion function!
 
-\subsubsection{Definition}
+**** Definition
 
 
 Relying on the set theoretic semantics for our types and coercion
@@ -12905,7 +12905,7 @@ type system, if $\phi,\psi: t_1 \longrightarrow t_2$ are coercions
 then $\phi=\psi$.  
 \end{itemize}}
 
-\subsubsection{General Assumptions}
+**** General Assumptions
 
 It will be convenient to declare each identity function on a type to
 be an implicit coercion.
@@ -12931,7 +12931,7 @@ function is a coercion, all axioms of a category are fulfilled.\qed
 In the following we will always assume that assumption 1 holds
 even if we do not mention it explicitly.
 
-\subsubsection{Base Types}
+**** Base Types
 
 It is a good instrument for structuring data types to have only as few
 types as possible as base types but to construct them by a type
@@ -12948,7 +12948,7 @@ The subcategory of base types and coercions between base types forms a
 preorder, i.\,e.\ if $t_1$ and $t_2$ are base types and $\phi,\psi:
 t_1 \longrightarrow t_2$ are coercions then $\phi=\psi$.
 
-\subsubsection{Structural Coercions}
+**** Structural Coercions
 
 {\bf Definition 21. (Structural Coercions)} 
 {\sl The $n$-ary type
@@ -13105,7 +13105,7 @@ such class of groups is that of the finite polycyclic groups
 (cf. \cite{GAPx17}).
 \end{remark}
 
-\subsubsection{Direct Embeddings in Type Constructors}
+**** Direct Embeddings in Type Constructors
 
 {\bf Definition 22. (Direct Embeddings)}
 \label{defdiem}
@@ -13328,7 +13328,7 @@ appropriate definition of
 $${{\cal F}_f(t_1,\ldots,t_n,t'_1,\ldots,t'_n,
 \psi_1, \ldots, \psi_n)}.$$
 
-\subsubsection{A Coherence Theorem}
+**** A Coherence Theorem
 
 We are now ready to state the main result of this section.
 The assumptions 1, 2, 3, 4, and 5 are
@@ -13431,7 +13431,7 @@ hence $\phi=\psi$ again by assumption 4.
 \qed
 \end{proof}
 
-\subsection{Type Isomorphisms}
+*** Type Isomorphisms
 \label{chtyiso}
 
 In several important cases there is
@@ -13615,7 +13615,7 @@ efficient type inference algorithms so that it might be a reasonable
 requirement for a system.
 \end{remark}
 
-\subsubsection{Some Problematic Examples of Type Isomorphisms}
+**** Some Problematic Examples of Type Isomorphisms
 
 In this section we will collect some natural examples of type
 isomorphisms which arise in the context of computer algebra.  We will
@@ -13691,7 +13691,7 @@ not finitely axiomatizable &
 \caption{Some problematic examples of type isomorphisms}
 \end{figure}
 
-\subsection{A Type Coercion Problem}
+*** A Type Coercion Problem
 \label{scoercprbl}
 \label{begincoerpr}
 
@@ -13700,7 +13700,7 @@ which allow type-isomorphisms which correspond to an equational theory
 that is not finitely axiomatizable. In order to set up the example we
 first need a technical result.
 
-\subsubsection{A  Technical Result}
+**** A  Technical Result
 \label{s3}
 
 {\bf Definition 23.}
@@ -15202,7 +15202,7 @@ So the concept of types depending on elements is important for many
 computer algebra applications.  Unfortunately, as we will show below
 it is not possible to have type-safe compile-time type-checking.
 
-\subsubsection{Undecidability of Type Checking}
+**** Undecidability of Type Checking
 
 \label{undetychtydeel}
 
@@ -15297,7 +15297,7 @@ p_{k'}}$ requiring both to have the same type\footnote{Simple
 operations such as a test for equality or addition can serve as
 examples.}  will lead to a typing error or not.
 
-\subsubsection{Calculi Dealing with Types Depending on Elements}
+**** Calculi Dealing with Types Depending on Elements
 
 The results of this section show that it is useful to distinguish
 between domains and elements as parameters of domain constructors.
@@ -15541,7 +15541,7 @@ optimizations and reduces the need for {\tt coercions} and
 {\tt retractions} (described in Sutor and Jenks \cite{Suto87} and
 analyzed by Fortenbacher \cite{Fort90} in Axiom.
 
-\subsection{Object in Computer Algebra}
+*** Object in Computer Algebra
 
 Many computer algebra operations involve purely functional objects:
 functions or methods operate on objects and return a new object with a
@@ -15566,7 +15566,7 @@ number) with methods and functions for reading and updating its
 numerator and denominator or performing addition among rationals - to
 be an element of a recursively defined type (Bruce and Mitchell
 \cite{Bruc92}) like:
-\begin{verbatim}
+#+begin_example
 Rational : Category := with (
   new: (Integer,Integer) -> Rep ;
   numerator: Rep -> Integer ;
@@ -15574,7 +15574,7 @@ Rational : Category := with (
   SetNumDenom: Rep - (Integer,Integer) -> Rep ;
   + : Rep -> Rep -> Rep ;
   * : Rep -> Rep -> Rep ; etc. )
-\end{verbatim}
+#+end_example
 where {\sl Rep} stands for the type under scope, here {\sl Rational},
 or any subtype of {\sl Rational}.
 
@@ -15584,7 +15584,7 @@ new instance of Rational in response to a call to {\sl new} is placed
 within the function {\sl new} itself. Another notation identifies the
 representation of instances with the implementation of the
 representation, as in Pierce and Turner \cite{Pier93}
-\begin{verbatim}
+#+begin_example
 RationalFun := (Rep: Type) -> with (
   new: (Integer,Integer) -> Rep ;
   numerator: Rep -> Integer ;
@@ -15592,7 +15592,7 @@ RationalFun := (Rep: Type) -> with (
   SetNumDenom: Rep -> (Integer,Integer) -> Rep ;
   + : Rep -> Rep -> Rep ;
   * : Rep -> Rep -> Rep, etc. )
-\end{verbatim}
+#+end_example
 
 This method gives the caller of {\sl new} the responsibility for
 transforming the value returned by {\sl new} into a new Rational
@@ -15604,11 +15604,11 @@ or {\tt extensible records} (Cardelli \cite{Card88a}, Mitchell
 \cite{Mitc88a}, Wirth \cite{Wirt88}) which are implementation
 dependent; however, expressiveness is sacrificed. Using recursive
 types the above expressions can have any desirable formulation as in
-\begin{verbatim}
+#+begin_example
 RationalFun := (Rep < F(Rep)) -> with (
   new: (Integer,Integer) -> Rep ;
   etc. )
-\end{verbatim}
+#+end_example
 where {\bf F} can be the functor {\sl RationalFun} itself. This
 formulation is closer to our intuition about object-oriented
 programming with subtypes. It can be further enriched with other
@@ -15645,26 +15645,26 @@ either the internal state, or the hidden functions that operate on
 this state, or any other operation including the ones mentioned in the
 specification. This encapsulation is directly expressed by a (possibly
 recursively defined) existential type:
-\begin{verbatim}
+#+begin_example
 Rational:=((Rep: Type) +> with (Rep, RationalFun(Rep))) SomeRep
-\end{verbatim}
+#+end_example
 Abstracting {\sl RationalFun} from {\sl Rational} yields a higher
 order type operator that, given a specification, forms the
 {\tt type} of objects that satisfy it.
-\begin{verbatim}
+#+begin_example
 DeclareDomain := (Fun: Type -> Category) +>
   (((Rep: Type) +> with(Rep,Fun(Rep))) SomeRep)
-\end{verbatim}
+#+end_example
 The type of {\sl Rational} objects can now be expressed by applying
 the {\sl DeclareDomain} constructor to the specification of
 {\sl RationalFun}:
-\begin{verbatim}
+#+begin_example
 Rational := DeclareDomain(RationalFun)
-\end{verbatim}
+#+end_example
 or the shortcut:
-\begin{verbatim}
+#+begin_example
 Rational : RationalFun
-\end{verbatim}
+#+end_example
 
 In order to give proper treatment to the interaction between
 representations and subtyping, it is necessary to separate 
@@ -15673,18 +15673,18 @@ operators which capture the common structure of all object types. This
 separation is also important for the semantical construction of
 categories and the definition of the internal structures of the types.
 
-\subsection{Multiple Representations}
+*** Multiple Representations
 
 Rationals are created using the function {\sl box}, which captures the
 semantics of dynamic objects in object oriented programming. A
 rational number with {\tt representation} (x:Integer,y:Integer),
 {\tt internal state} (5,2) and method implementations:
-\begin{verbatim}
+#+begin_example
 numerator := (r:{x:Integer, y:Integer}) +> r.x
 denominator := (r:{x:Integer, y:Integer}) +> r.y
-\end{verbatim}
+#+end_example
 can be created as:
-\begin{verbatim}
+#+begin_example
 r: := box ( coerceTo ( ( Rep := {x:=5, y:=2},
   (numerator := (r:{x:Integer,y:Integer}) +> r.x ;
    + := (r:{x:Integer,y:Integer}) +> (arg: Rational) +>
@@ -15692,7 +15692,7 @@ r: := box ( coerceTo ( ( Rep := {x:=5, y:=2},
                                (r.y * denominator arg)
    etc. )),
   Rational ))
-\end{verbatim}
+#+end_example
 
 The {\sl coerce} function here is only a syntactic construct, which
 shows the compiler how to view the introduced list; in this example it
@@ -15702,10 +15702,10 @@ for building a rational.
 The {\sl box} function is helpful for the implementation of the
 {\sl new} function and the $+$ and $*$ operators which return new
 instances of Rational:
-\begin{verbatim}
+#+begin_example
 new:=(initX:Integer, initY:Integer) +>
    box ( coerceTo ( (Rep:={x:=initX,y:=initY},...), Rational))
-\end{verbatim}
+#+end_example
 
 Unlike Axiom, in object oriented systems based on {\tt delegation}
 (Ungar and Smith \cite{Unga91}) or on {\tt subtyping} the elements of an
@@ -15713,14 +15713,14 @@ object type have different internal representations and different
 internal representations of their functions. For example, a rational
 with representation type $(x:Integer)$ might be implemented as
 follows:
-\begin{verbatim}
+#+begin_example
 r2 := box ( coerceTo ( (Rep := {x:=5},
   (numerator := (r:{x:Integer}) +> r.x ;
    denominator := (r:{x:Integer}) +> 1 ;
    + := (r:{x:Integer}) +> (arg:Rational) +> new(r.x + numerator arg) ;
    etc. )),
   Rational ))
-\end{verbatim}
+#+end_example
 and the definition of {\sl new} changes accordingly. The functions
 {\sl SetNumDenom, numerator, denominator} have compatible signatures
 as in the previous implementation since we abstract
@@ -15761,13 +15761,13 @@ functions: this results in very complex calculi for modeling their
 behaviour, which do not scale up easily for applications in computer
 algebra.
 
-\subsection{Domains and Categories}
+*** Domains and Categories
 
 It is useful to have all the operations defined in the previous
 section in the class {\sl Rational}. In such case we assume a hidden
 {\sl common representation} for all objects of class {\sl Rational},
 so we can assume that Rational is defined locally:
-\begin{verbatim}
+#+begin_example
 let Rep := {x:Integer, y:Integer}
 in RationalDomain := coerce (
   (new := (m:Integer, n:Integer) +> box {x:=m, y:=n} ;
@@ -15775,7 +15775,7 @@ in RationalDomain := coerce (
    + := (s1:Rep) +> (s2:Rep) +> box(...) ;
    etc. ),
   RationalFun Rep)
-\end{verbatim}
+#+end_example
 
 Many simplifications can be performed. Since all the objects of
 {\sl RationalDomain} have the same representation, unboxing and
@@ -15798,7 +15798,7 @@ Liskov, Snyder, Atkinson, and Schaffert \cite{Lisk77} \cite{Lisk79}
 in CLU and, as we saw before, classes with {\tt private members} in
 object oriented languages.
 
-\subsubsection{Categories}
+**** Categories
 
 We have seen that the instances of a class may have various
 representations, while it is desirable to have an abstraction on the
@@ -15829,7 +15829,7 @@ Booleans, without any need for them to include operations like
 as arguments.
 
 We can transliterate this, using {\tt categories}:
-\begin{verbatim}
+#+begin_example
 RationalMeta := (Rep:Type) +> (
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
@@ -15837,19 +15837,19 @@ RationalMeta := (Rep:Type) +> (
   / : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep ;
-\end{verbatim}
+#+end_example
 
 This specification can be viewed as a coding for the
 {\tt algebraic structure} {\sl Field}: we write
-\begin{verbatim}
+#+begin_example
 Field:=RationalMeta
-\end{verbatim}
+#+end_example
 
 {\sl Rep} refers to the implementation of the domains declared as
 instances of Field:
-\begin{verbatim}
+#+begin_example
 Rational : Field
-\end{verbatim}
+#+end_example
 
 The programming language {\sl Haskell} defines similar constructs
 calling them {\tt typeclasses}. The analogous constructs for object
@@ -15865,7 +15865,7 @@ cause unsoundness in the type system. We will examine an alternative,
 which can be extended to support default definitions at category
 level.
 
-\subsubsection{Existential Types}
+**** Existential Types
 
 Categories are the way {\tt existential types} are coded in the type
 system. The category {\sl Field} corresponds to the existential type
@@ -15967,7 +15967,7 @@ The transparent type $\exists Rep = \tau.C$ can be reduced to the
 constraint $Rep=\tau$. In such case all the information about the
 representation of $D$ is lost: $D$ is an {\tt abstract type}.
 
-\subsubsection{Subtyping among Categories}
+**** Subtyping among Categories
 
 Categories build hierarchies analogous to the existing hierarchies in
 algebra as described by Davenport and Trager \cite{Dave90}. Although
@@ -16025,7 +16025,7 @@ decide if two domains share by checking their paths: if two domains
 derive from the same path then they share, otherwise we have to
 examine the sharing constraints in which they participate.
 
-\subsection{Domain Sharing}
+*** Domain Sharing
 
 In the previous section we mentioned the presence of
 {\tt transparent types}. The difference between opaque types, is that
@@ -16057,7 +16057,7 @@ $Integer$ is again an extension of any of them.
 
 Opaque and transparent types can be combined to control domain
 extensions and ensure their safety. In the definitions
-\begin{verbatim}
+#+begin_example
 Semigroup := with (+ : Rep -> Rep -> Rep )
 Monoid := with ( Semigroup; 0:Rep )
 D1 : with (Semigroup; Rep=Integer) := add (
@@ -16067,16 +16067,16 @@ D2 : Monoid := add (
    D1 ;
    Rep := D1 ;
    0:Rep := 0$Integer )
-\end{verbatim}
+#+end_example
 the domain $D_1$ shares with $Integer$. This allows a safe extension
 of $D_1$ in the body of $D_2$, which involves a value of type
 $Integer$. Since the type $Monoid$ of $D_2$ does not specify any
 sharing, $D_2$ is sharing with neither $Integer$ nor $D_1$. This does
 not mean that $D_2$ cannot be extended:
-\begin{verbatim}
+#+begin_example
 D3 : with ( Monoid; Rep=D2 ; double: Rep -> Rep) := add ( D2;
             double(x:Rep):Rep := x+x )
-\end{verbatim}
+#+end_example
 $D_3$ shares with $D_2$; instances of $D_2$ can be passed as arguments
 to the function $double$ defined in $D_3$.
 
@@ -16091,7 +16091,7 @@ suggests that name overloading in the same context is not recommended,
 although identifiers should be free to have different meanings in
 different contexts.
 
-\subsection{Packages and Categories}
+*** Packages and Categories
 
 Type systems which provide domains and abstract types can be
 transformed into systems with {\tt module types}, by flattening
@@ -16109,24 +16109,24 @@ the type $t$.
 In such case it is useful to consider packages with type components as
 instances of categories. For example, a package which implements
 rationals, and its corresponding type are:
-\begin{verbatim}
+#+begin_example
 RationalPack := (
   Rep := {x:Integer, y:Integer} ;
   + : Rep -> Rep -> Rep := a +> b +>
     {x := a.x*b.y + a.y*b.x, y:=a.x*b.x} ;
   ... )
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 FieldPack := with (
   Rep: Type ;
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
   * : Rep -> Rep -> Rep ;
   ... )
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 RationalCatPack := with (FieldPack; Rep = {x:Integer, y:Integer})
-\end{verbatim}
+#+end_example
 
 Categories which correspond to packages represent a type similar to an
 existential type, namely, a {\tt dependent sum type}
@@ -16147,7 +16147,7 @@ Packages can be nested inside other packages. {\tt Nested packages}
 are accessed by accessing their parent package recursively. The
 components of a package can depend on the type components of other
 nested packages as in:
-\begin{verbatim}
+#+begin_example
 PolynomialCat := with (
   R:Ring;
   E:OrderedAbelianMonoid;
@@ -16155,7 +16155,7 @@ PolynomialCat := with (
   leadingCoefficient: Rep -> Rep$R;
   degree: Rep -> Rep$E;
   ... )
-\end{verbatim}
+#+end_example
 
 In this way, {\sl extensions} on existing domains are easily
 implemented, by flattening domains to packages, and exposing their
@@ -16207,12 +16207,12 @@ One could argue that packages with multiple type components correspond
 to multiple domain definitions. This is in general impossible when the
 distinction in the interface (category) for the two domains is not
 clear:
-\begin{verbatim}
+#+begin_example
 PackMultCat := with (
   R: Type ;
   S: Type ;
   x: R -> S -> R )
-\end{verbatim}
+#+end_example
 In order to implement the above package as a combination of two domain
 categories, each category needs to reference the representation of the
 domains of the other. This involves parameterization, which we discuss
@@ -16278,7 +16278,7 @@ with(m:\sigma,\overline{\sigma})}\\
 \caption{\label{figure2}Subtyping rules for $\exists$-types}
 \end{figure}
 
-\subsection{Parameterization}
+*** Parameterization
 
 In the presentation of categories and domains in previous sections, we
 assumed that they are parameterized by the representation of their
@@ -16293,7 +16293,7 @@ code previously given for the creation of the objects $r_1$ and $r_2$,
 provides a concrete type for the representation as it is difficult to
 implement the functions without knowledge of the actual hidden type.
 
-\subsubsection{Parameterized Categories}
+**** Parameterized Categories
 
 What is hidden behind the notation we used is that it is possible to
 parameterize both domains and packages with other domains and
@@ -16302,7 +16302,7 @@ $\Sigma$-types and the conclusion that packages are more general than
 domains, we can assume that $\Sigma$-types and packages can be
 parameterized by other packages resulting in new $\Sigma$-types and
 packages respectively as in:
-\begin{verbatim}
+#+begin_example
 DictionaryCat (Keys: with
                       (T:Type;
                        eq:T->T->Boolean;
@@ -16314,7 +16314,7 @@ DictionaryCat (Keys: with
     at: T -> T$Keys -> T$Values ;
     update: T -> T$Keys -> T$Values -> T ;
     ... )
-\end{verbatim}
+#+end_example
 
 The parameterized category {\sl DictionaryCat} provides the interface
 of parameterized packages which receive two arguments: a package with
@@ -16333,7 +16333,7 @@ over a Ring, etc. \cite{Dave90} \cite{Dave91} which are actually
 simple $\Sigma$-types. Given the category of Polynomials as defined
 previously we can construct a parameterized package which returns
 implementations of polynomial types:
-\begin{verbatim}
+#+begin_example
 PolynomialRing(R:Ring,E:OrderedAbelianMonoid): PolynomialCat
   := add (
     R := R;
@@ -16343,7 +16343,7 @@ PolynomialRing(R:Ring,E:OrderedAbelianMonoid): PolynomialCat
     degree := e +> ... ;
     ...
   )
-\end{verbatim}
+#+end_example
 
 \begin{figure}[t]
 \[\begin{array}{|ll|}
@@ -16384,7 +16384,7 @@ constituents: extensions of their functionality is possible by
 accessing not only the structure, but also the implementation of the
 types of their components.
 
-\subsubsection{Dependent Products}
+**** Dependent Products
 
 The category {\sl DictionaryCat} corresponds to the {\tt product type}
 \[\Pi(K:Ord).\Pi(T:Set).\Sigma(t:Type).
@@ -16425,7 +16425,7 @@ Given the rules $\Pi$F-apply and $\Sigma$-forget, the new argument
 matches the type $\Sigma()$.[$x:Integer$], and the functor application
 returns $M$.
 
-\subsubsection{Subtyping of Products}
+**** Subtyping of Products
 
 As we have seen, the arguments of parameterized categories have sum
 types, while the body is also an instance of a sum type. The case of
@@ -16449,25 +16449,25 @@ in $C^\prime_1$
 \end{enumerate}
 or possibly both ([$\Pi$-sub]).
 
-\subsubsection{Sharing (Take Two)}
+**** Sharing (Take Two)
 
 Sharing among type components is of special importance in the case of
 functors and product types. The rule $\Sigma$-transparent for sharing
 is powerful enough to allow the definition of functors which combine
 or compose domains and packages:
-\begin{verbatim}
+#+begin_example
 RingFun (P1:Monoid) (P2: with (Monoid; Rep=P1.Rep)):Category :=
   with ( Monoid ;
          * : Rep - Rep -> Rep ;
          1 : Rep )
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
 BuildRing: RingFun := P1 +> P2 +>
   add ( P1;
         * := (+)$P2 ;
         1 := 0$P2 )
-\end{verbatim}
+#+end_example
 In this example, two monoids with the same representation are combined
 in order to form a ring. Since the category {\sl Monoid} already
 exists in the system, the only additional action is to add a sharing
@@ -16476,9 +16476,9 @@ constraint to it for $P2$.
 Without sharing the above construction is more complicated and less
 natural for modeling algebraic concepts. It would require the
 parameterization of algebraic categories with their representation:
-\begin{verbatim}
+#+begin_example
 RingFun(T:Type)(M1:Monoid(T))(M2:Monoid(T)):Category := ...
-\end{verbatim}
+#+end_example
 
 Such constructs demand the implicit or explicit creation of new
 hierarchies for parameterized monoid categories. The former increases
@@ -16496,7 +16496,7 @@ higher order categories by means of first order possibly nested
 constructs and sharings, which reduce the complexity and the
 computational load of the compiler.
 
-\subsubsection{Flattening Dependent Products}
+**** Flattening Dependent Products
 
 The application of dependent products for the generation of new sum
 types complicates the elaboration of programs and adds considerable
@@ -16521,11 +16521,11 @@ realistic implementation would demand the type of the keys and values
 to be accessible so as to perform computations other than the ones
 specified in this category, like transforming dictionaries to other
 structures. The category
-\begin{verbatim}
+#+begin_example
 DictionaryCat(Keys:=String; Values:=Integer)
-\end{verbatim}
+#+end_example
 could be defined as
-\begin{verbatim}
+#+begin_example
 DictionaryCat := with (
   Keys: with(Type;...);
   Values: Type;
@@ -16534,19 +16534,19 @@ DictionaryCat := with (
   ...
   );
   with (DictionaryCat; Keys=String; Values=Integer)
-\end{verbatim}
+#+end_example
 allowing dictionaries to expose the implementation of Keys and Values
 and propagate evntual sharing constraints.
 
 However, in some cases, instantiation of dependent products can serve
 modeling purposes better than dependent sums. For instance, a
 {\sl Ring} is a {\sl LeftModule} over itself:
-\begin{verbatim}
+#+begin_example
 LeftModules(R: with(AbelianGroup; SemiGroup)) :=
   (AbelianGroup;
    * : (Rep,R) -> Rep )
 Ring := with (LeftModules(%):...)
-\end{verbatim}
+#+end_example
 where the construct \% refers to the package which is an instance of
 the category we define (in this case {\sl Ring}). If $R$ were a nested
 package inside the definition of LeftModules then it should be defined
@@ -16645,7 +16645,7 @@ in
 \[(m:(\Pi M:C_1.C_2))m_1 \Rightarrow (m:C_1\rightarrow [m_1/M]C_2)m_1\]
 provided that $m_1$ can be shown to have the type $C_1$.
 
-\subsection{Subtyping of Domains}
+*** Subtyping of Domains
 
 Descriptions of {\tt sets} of entities which belong to various
 domains can be arranged into useful classification hierarchies. For
@@ -16667,9 +16667,9 @@ If $S\sqsubseteq T:C$, then an instance of $S$ may safely be used in
 any operation specified in $C$ where an instance of $T$ is expected.
 
 For example the function
-\begin{verbatim}
+#+begin_example
 foo(x:Rational) := (x+1) * x**2
-\end{verbatim}
+#+end_example
 can be safely applied to the integer argument 4 because it is possible
 to view any integer as a rational in the above operations. More
 important, since integers form a {\tt subring} of rationals, and the
@@ -16678,7 +16678,7 @@ do this substitution under the assumption that both {\sl Integer} and
 {\sl Rational} form a ring. This leads to the more general subrule
 [sub-val] (figure \ref{figure4}).
 
-\subsubsection{Coercions}
+**** Coercions
 
 Two formal accounts can be given for the semantics of subtyping. In
 the simpler view, the syntactic subtype relation $S\sqsubseteq T$
@@ -16773,7 +16773,7 @@ than any other path. For instance, if in the above paths the coercion
 $C\hookrightarrow D$ is added, then there is no way to choose any particular
 path.
 
-\subsubsection{Subtyping of Representations}
+**** Subtyping of Representations
 
 In this section we restrict ourselves to natural subtyping between
 types of run-time objects. The subtyping rules for records, arrow
@@ -16805,18 +16805,18 @@ By means of [+-sub] and [$\mu$-sub] our type system can assure that
 
 For continuing our analysis we introduce the category $Ring$ and
 repeat the definition of the category $Field$:
-\begin{verbatim}
+#+begin_example
 Ring := (Rep:Type) +> with (
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
   * : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep )
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 Field := (Rep: Type) +> Ring(Rep) with (
   / : Rep -> Rep -> Rep )
-\end{verbatim}
+#+end_example
 and $Field\sqsubseteq Ring$ given the subtyping rules for existential
 types above. This means that {\sl every instance of the category Field
 can be viewed as an instance of Ring} or {\sl every instance of an
@@ -16827,7 +16827,7 @@ be easily extended to rules for their instances.
 Given the definition of the type {\sl RationalFun} from above we can
 introduce in a similar way the type of integers which form a Ring. Our
 notation allows us to abstract the implementations away:
-\begin{verbatim}
+#+begin_example
 IntegerFun := (Rep:Type) +> (
   new: Integer -> Rep ;
   numerator: Rep -> Integer ;
@@ -16838,7 +16838,7 @@ IntegerFun := (Rep:Type) +> (
   * : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep ; )
-\end{verbatim}
+#+end_example
 It is not the case that $IntegerFun\sqsubseteq RationalFun$ since the
 specification of integers does not include the record field $/$,
 leaving $IntegerFun$ with one field less than $RationalFun$.
@@ -16848,7 +16848,7 @@ coercions, as we saw in the previous section. The problem is that
 coercions are expensive in computational resources and in some cases
 they can introduce inconsistencies.
 
-\subsection{Type Classes}
+*** Type Classes
 
 In this section, we are concerned with modeling subtyping without use
 of coercions. We introduce the concept of type classes, which has some
@@ -16867,41 +16867,41 @@ relationship, but in an algebraic relationship based in terms of
 {\tt subrings}, {\tt subfields}, etc. We introduce type classes in
 order to provide the facility of viewing Integer as a {\tt subring} of
 Rational:
-\begin{verbatim}
+#+begin_example
 RationalRing := (Rep:Type) +> with (
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
   * : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep )
-\end{verbatim}
+#+end_example
 
 This declares that any eventual subtype of rational which happens to
 be an instance of {\sl Ring} implements the operations declared in the
 type class {\sl RationalRing}. Since {\sl Integer} forms a subring of
 {\sl Rational}, from the definition
-\begin{verbatim}
+#+begin_example
 IntegerRing := (Rep:Type) +> RationalRing(Rep)
-\end{verbatim}
+#+end_example
 we may conclude:
 \[IntegerRing\sqsubseteq RationalRing\]
 The declaration of $Integer$ as instance of the type class
 $IntegerRing$ is straightforward:
-\begin{verbatim}
+#+begin_example
 Integer :: IntegerRing
-\end{verbatim}
+#+end_example
 while for Rationals we need one additional type class:
-\begin{verbatim}
+#+begin_example
 RationalField := (Rep:Type) +> RationalRing(Rep) with (
   / : Rep -> Rep -> Rep )
 
 Rational :: RationalField
-\end{verbatim}
+#+end_example
 
 Given the function definition
-\begin{verbatim}
+#+begin_example
 dblSqrd(x::Rational) := (x+x)*(x+x)
-\end{verbatim}
+#+end_example
 by means of type classes the system infers the most general signature
 for $dblSqrd$:
 \[\Gamma,\forall a::RationalRing \vdash dblSqrd :
@@ -16912,7 +16912,7 @@ $Rational$: we have managed to define a natural subtype relationship
 between integers and rationals, which comes in accordance with the
 algebraic semantics of the terms.
 
-\subsubsection{Definition of Type Classes}
+**** Definition of Type Classes
 
 For the definition of type classes we assume that operations do not
 belong to a type but to an algebra (that is, a particular collection
@@ -17008,7 +17008,7 @@ followed. This means that although the initial constructions of type
 classes depends on the category hierarchy, after the introduction of
 new values they can include more declarations.
 
-\subsubsection{Coercions vs. Typeclasses}
+**** Coercions vs. Typeclasses
 
 Typeclasses allow a different kind of behaviour than coercions. If
 there is a coercion from $A$ to $B$, but we can perform the operations
@@ -17023,7 +17023,7 @@ It is worth noting that none of the forgoing would have been possible
 if the type variable $Rep$ was not introduced in the definition of
 domains and categories. Suppose that Rational and Integer had the
 definitions
-\begin{verbatim}
+#+begin_example
 Rational := ( ...
   + : Rational -> Rational -> Rational
   etc. )
@@ -17031,7 +17031,7 @@ Rational := ( ...
 Integer := ( ...
   + : Integer -> Integer -> Integer
   etc. )
-\end{verbatim}
+#+end_example
 
 This would influence the definitions of RationalFun and IntegerFun
 respectively, and finally the definitions of RationalRing and
@@ -17054,7 +17054,7 @@ implementation requires multiple dictionaries, most of which may never
 be used. This approach would decrease the efficiency of the system
 without acutally bringing any substantial benefit.
 
-\subsection{Comparison with Related Work}
+*** Comparison with Related Work
 
 The type system we have presented is an extension of Axiom's type
 system with the introduction of strong sums, higher order functors,
@@ -17170,7 +17170,7 @@ or package. This implies that two occurrences of
 {\sl Polynomial(Integer,x)} in the same context may not have
 compatible carrier sets.
 
-\subsubsection{Conditional Categories}
+**** Conditional Categories
 
 A feature of Axiom which we have not elaborated in this paper are
 {\tt conditional categories}, that is, parameterized categories whose
@@ -17189,10 +17189,10 @@ argument of a conditional category (and thus its body) can increase in
 the presence of recursive definitions in a way similar to that
 encountered at the $F_{\le}$ type system which has been shown by
 Pierce \cite{Pier91a} to be undecidable. For example, given the definitions:
-\begin{verbatim}
+#+begin_example
 C():Category == with (if % has Ring then Ring)
 t: C() == add ...
-\end{verbatim}
+#+end_example
 it is not clear whether $t$ is a $Ring$, and the system may loop. The
 above situation is handled in {\sl Gauss} (Monagan \cite{Mona93}) purely
 syntactially by viewing \% as the category in scope and checking if
@@ -17205,7 +17205,7 @@ by other higher order systems (like $F_{\le}$), and can implement in a
 unique way many applications from computer algebra where it can
 increase our understanding about the interaction of types.
 
-\subsection{Conclusions}
+*** Conclusions
 
 We have presented selected parts of a type system for symbolic
 computation which is sound and consistent, and powerful enough for
@@ -17266,9 +17266,9 @@ by translating them to SML constructs.
 This chapter is based on a PhD thesis by Nicolas James Doye
 \cite{Doye97}. Changes have been made to integrate it.
 
-\section{Introduction}
+** Introduction
 \label{DoyeChap1}
-\subsection{Abstract Datatypes in General}
+*** Abstract Datatypes in General
 \label{DoyeSec1.4}
 
 Abstract datatypes provide a way of specifying a type. As a (useful)
@@ -17324,7 +17324,7 @@ Other types often have more complicated lattices of
 relationships. These relationships are often able to be abstracted out
 to apply all the instance types of a particular abstract data type.
 
-\subsection{The Problem}
+*** The Problem
 \label{DoyeSec1.5}
 
 A commonly encountered difficulty in languages which utilise types is
@@ -17402,7 +17402,7 @@ is {\sl not} algorithmic. One of the aims is to provide
 an algorithm (algorithm \ref{Doye7.4.1}) to create unique
 (theorems \ref{Doye6.5.4}, \ref{Doye7.6.7}) coercions.
 
-\subsection{Examples of how Axiom coerces}
+*** Examples of how Axiom coerces
 \label{DoyeSec1.6}
 
 Axiom knows (or believes) that all functions called {\tt coerce} are
@@ -17410,7 +17410,7 @@ coercions and will use them to ``build'' other coercions using certain
 rules, and special cases defined in the interpreter. Here we give
 examples of how Axiom coerces between certain common types.
 
-\subsubsection{Simple examples}
+**** Simple examples
 \label{DoyeSubSec1.6.1}
 
 \begin{DoyeExample}
@@ -17434,10 +17434,10 @@ $\mathbb{Z}\rightarrow\mathbb{Z}[X]$:
 In Axiom. the type {\tt UnivariatePolynomial(X,Integer)} typically
 represents $\mathbb{Z}[X]$. This is constructed by the type
 constructor,
-\begin{verbatim}
+#+begin_example
    UnivariatePolynomial:(S:Symbol,R:Ring) ->
       PolynomialCategory(R,NonNegativeInteger,Symbol)
-\end{verbatim}
+#+end_example
 {\bf UnivariatePolynomial} exports a function
 \[{\rm coerce : R} \rightarrow \%\]
 which is the natural monomorphism including the ring {\tt R} in the
@@ -17498,19 +17498,19 @@ $\mathbb{Z}_{25}\rightarrow\mathbb{Z}_5$
 
 Axiom cannot coerce from {\tt IntegerMod(25)} to {\tt IntegerMod(5)}.
 
-\subsubsection{Structural coercions}
+**** Structural coercions
 \label{DoyeSubSec1.6.9}
 
 The structural coercions are ``lifts'' of other coercions. In the case
 of {\tt Lists}, one may perform a structural coercion as follows:
-\begin{verbatim}
+#+begin_example
    coerce(x:List(A)):List(B) == map(coerce,x)@List(B)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
    map(f:List(A) -> List(B),x:List(A)):List(B) ==
      nullp(x) => nil()$List(B)
      cons(f(car(x)),map(f,cdr(x)))
-\end{verbatim}
+#+end_example
 
 In the case of {\tt Polynomials}, a similar {\tt map} function exists
 which uses $+$ instead of {\tt cons}
@@ -17520,7 +17520,7 @@ since matrices are of fixed sizes -- unlike sets, lists, and
 polynomials -- a default valued matrix $(0)$ has to be created, then
 all the values substituted into (added to) it).
 
-\subsection{Mathematical solution overview}
+*** Mathematical solution overview
 \label{DoyeSec1.7}
 
 The solution to the questions raised in section \ref{DoyeSec1.5} rely
@@ -17550,7 +17550,7 @@ In section \ref{DoyeSec1.8} we will show an analogy with moving
 buildings to the solution of changing the type of (i.e. coercing)
 something. 
 
-\subsection{Constructing coercions algorithmically}
+*** Constructing coercions algorithmically
 \label{DoyeSec1.8}
 
 Consider the following analogy.
@@ -17573,7 +17573,7 @@ engineers crying. This person was clearly a magician.
 
 So here is your algorithm for moving London bridge, and hence any
 future bridge.
-\begin{verbatim}
+#+begin_example
   If the original bridge has no bricks left then finished.
   Else,
     take a brick from the top of the original bridge.
@@ -17587,7 +17587,7 @@ future bridge.
     Endif.
   Endif.
   Repeat.
-\end{verbatim}
+#+end_example
 
 Indeed, you realize that this method will work for other brick-based
 constructions, or indeed anything that is ``built''. (Obviously, there
@@ -17634,10 +17634,10 @@ underlying ring (a monomial)
 So we see that at least two of the most basic types in computer
 algebra are constructed in this way.
 
-\section{Types in Computer Algebra}
+** Types in Computer Algebra
 \label{DoyeChap2}
 
-\subsection{Introduction}
+*** Introduction
 \label{DoyeSec2.1}
 
 Axiom's main view of things is that every object has a type, and that
@@ -17675,7 +17675,7 @@ following reasons:
 \item functoriality (section \ref{DoyeSubSec2.5.3})
 \end{enumerate}
 
-\subsubsection{Economy of effort}
+**** Economy of effort
 \label{DoyeSubSec2.5.1}
 
 The most obvious reason for this is the view of inheritance. A
@@ -17688,7 +17688,7 @@ theorem in some generality, i.e. for all the objects in a category,
 then one does not have to go around proving the theorem for each
 object of the category.
 
-\subsubsection{Interest}
+**** Interest
 \label{DoyeSubSec2.5.2}
 
 Some categories are interesting and some are not. For example,
@@ -17703,7 +17703,7 @@ One may think of the designer's concept of ``interest'' as congruent
 to ``useful'' (usually to the user, but occasionally to the
 designers).
 
-\subsubsection{Functoriality}
+**** Functoriality
 \label{DoyeSubSec2.5.3}
 
 This is called ``higher order Polymorphism'' in \cite{Crol93}. There
@@ -17754,7 +17754,7 @@ thinks of one's type as belonging to the smaller, concrete
 usually thinks of one's type as being in the larger, more abstract
 {\tt ListAggregate}.
 
-\section{Category Theory}
+** Category Theory
 \label{DoyeChap3}
 
 As we have already hinted at, category theory is one of the main
@@ -17766,7 +17766,7 @@ The definitive text on Category Theory is Mac Lane \cite{Macl91}. The
 amount of theory we require is relative small. We define categories
 without worrying about Russell's Paradox \cite{Mend87}.
 
-\subsection{About Category Theory}
+*** About Category Theory
 \label{DoyeSec3.2}
 
 \noindent
@@ -18035,7 +18035,7 @@ of {\tt PolynomialCategory(R,.,.)} which is a subcategory of
 It is this first form of subcategory relation that provides Axiom's
 inheritance mechanism.
 
-\subsection{Categories and Axiom}
+*** Categories and Axiom
 \label{DoyeSec3.3}
 
 \begin{DoyeNotation}
@@ -18088,7 +18088,7 @@ work.
 We will discuss what it means to be a ``natural map'' and how this
 related to categorical arrows.
 
-\subsection{Functors and Axiom}
+*** Functors and Axiom
 \label{DoyeSec3.4}
 
 Axiom describes its domain constructors as functors, and this is
@@ -18100,7 +18100,7 @@ The difficulties with constructors which take domain elements for
 arguments disappear when considering the argument use in the 
 footnote in section \ref{DoyeSec3.3}.
 
-\subsection{Coercion and category theory}
+*** Coercion and category theory
 \label{DoyeSec3.5}
 
 If {\bf coerce : A $\rightarrow$ B}, then we are going to have that
@@ -18119,7 +18119,7 @@ coerce:TCat(A)\rightarrow TCat(B)}\]
 In many types (and some other languages) {\bf T} is acting like the
 familiar ``map'' operator on the {\bf coerce} function.
 
-\subsection{Conclusion}
+*** Conclusion
 \label{DoyeSec3.6}
 
 We have seen in this section how category theory and abstract
@@ -18129,7 +18129,7 @@ are ideologically similar.
 We have also shown how Axiom's functors interact with coercions from a
 category theoretical perspective.
 
-\section{Order sorted algebra}
+** Order sorted algebra
 \label{DoyeChap4}
 
 In this section we will introduce the concepts of universal
@@ -18143,7 +18143,7 @@ an algebra.
 All the work in this section is taken from \cite{Dave93a} except for a
 couple examples.
 
-\subsection{Universal Algebra}
+*** Universal Algebra
 \label{DoyeSec4.2}
 
 Universal algebra will provide us with a natural way of representing
@@ -18316,7 +18316,7 @@ possible. Otherwise think of the map as taking 0 to 1; 1 to 2; 2 to
 2$\times$2; 3 to 2$\times$2$\times$2; and so on.} $n\mapsto 2^n$ is 
 a homomorphism.
 
-\subsection{Term Algebras}
+*** Term Algebras
 \label{DoyeSec4.3}
 
 Term algebras provide us with at least one example of an algebra for
@@ -18375,7 +18375,7 @@ $T_\Sigma(X)$ is called the {\rm term algebra}, and an element
 of $T_\Sigma(X)$ is called a {\rm term}.
 \end{DoyeDefinition}
 
-\subsection{Order-sorted algebras}
+*** Order-sorted algebras
 \label{DoyeSec4.4}
 
 Order sorted algebras extend the concept of universal algebras by
@@ -18549,7 +18549,7 @@ that $(\forall s \in S)(\forall x \in X_s)$
 
 The proof may be found in \cite{Dave93a}
 
-\subsection{Extension of signatures}
+*** Extension of signatures
 \label{DoyeSec4.5}
 
 In this section we will formalise what we mean for one algebra to be
@@ -18606,7 +18606,7 @@ This is applying the forgetful functor (from the category
 (corresponding to) $T$ to that (corresponding to) $\Sigma$) to
 $\langle A,\alpha\rangle$.
 
-\subsection{The equational calculus}
+*** The equational calculus
 \label{DoyeSec4.6}
 
 Again, we borrow heavily from Davenport's lecture
@@ -18955,7 +18955,7 @@ does not allow for the existence of $S^\prime$). Thus a theory
 $\Omega_1$ is a protecting extension of another $\Omega_0$ iff
 $\Omega_1$ is complete and consistent with respect to $\Omega_0$.
 
-\subsection{Signatures, theories, varieties, and Axiom}
+*** Signatures, theories, varieties, and Axiom
 \label{DoyeSec4.7}
 
 Axiom's type system uses the terminology from category theory, yet its
@@ -19019,7 +19019,7 @@ protecting extension of that {\bf Category}.
 In section \ref{DoyeChap9} we will discuss how Axiom differs from order
 sorted algebra and how we may remedy this situation.
 
-\subsection{Conclusion}
+*** Conclusion
 \label{DoyeSec4.8}
 
 In this section we have introduced all the basics of order sorted
@@ -19043,7 +19043,7 @@ theories. Theories further enhance the usefulness of signatures by
 ensuring certain equations will hold in any model (algebra) of the
 theory (signature).
 
-\section{Extending order sorted algebra}
+** Extending order sorted algebra
 \label{DoyeChap5}
 
 We will discuss how partial functions and conditional signatures may
@@ -19060,7 +19060,7 @@ this work uses order sorted algebra as its framework.
 Last, we define what we mean by a coercion. This definition is
 fundamental to the rest of this work.
 
-\subsection{Partial Functions}
+*** Partial Functions
 \label{DoyeSec5.2}
 
 This subsection is based on \cite{Broy88} after a suggestion by
@@ -19339,7 +19339,7 @@ any type recursively required for construction (definition
 \ref{Doye7.6.5})) then the strong equality in the definition of
 strictness puts us in good shape.
 
-\subsection{Conditional varieties}
+*** Conditional varieties
 \label{DoyeSec5.3}
 
 Axiom contains the notion of ``conditional {\bf Categories}'' or in
@@ -19663,7 +19663,7 @@ $\langle\langle\Sigma^{NC(A)},\hat{S}\rangle\hat{S}\rangle$ must be a
 protecting extension of 
 $\langle\langle\overline{\Sigma},\overline{S}\rangle,\overline{S}\rangle$.
 
-\subsection{A Category theory approach}
+*** A Category theory approach
 \label{DoyeSec5.4}
 
 This section is an aside from the rest of the section. We are not
@@ -19705,7 +19705,7 @@ So we see that both categories and theories collect together similar
 types. This abstraction of information forms the basis of abstract
 datatyping.
 
-\subsection{Coercion}
+*** Coercion
 \label{DoyeSec5.5}
 
 In this work we are interested in coercions which so far have been
@@ -19811,7 +19811,7 @@ is not a coercion'' existed and a user required that homomorphism then
 either the user only required a conversion or the theory lattice for
 the algebra system has not been designed correctly.
 
-\subsection{Conclusion}
+*** Conclusion
 \label{DoySec5.6}
 
 In this section we have shown how classical order sorted algebra may
@@ -19824,7 +19824,7 @@ We have also mentioned some of the correlation between category theory
 and universal algebra. Finally we have made the important definition
 of a coercion and demonstrated why the definition is necessarily strict.
 
-\section{Coherence}
+** Coherence
 \label{DoyeChap6}
 
 We will look at a conjecture by Weber which is important to our
@@ -19842,7 +19842,7 @@ All the work in this section (except the explanation of ``$n$-ary type
 constructor'') and the next are from Weber 
 \cite{Webe93b} and \cite{Webe95}. All the rest is original work.
 
-\subsection{Weber's work I: definitions}
+*** Weber's work I: definitions
 \label{DoyeSec6.2}
 
 This section contains the definitions from Weber's thesis
@@ -20041,7 +20041,7 @@ be the {\rm set of direct embedding positions} of $f$
 The definition of $\mathcal{D}_f$ is a technical definition of
 Weber's, needed for one of his assumptions (\ref{Doye6.3.5}).
 
-\subsection{Weber's work II: Assumptions and a conjecture}
+*** Weber's work II: Assumptions and a conjecture
 \label{DoyeSec6.3}
 
 This section provides all the assumptions and results which Weber used
@@ -20283,12 +20283,12 @@ If $\phi$ is of form 6.2 and $\psi$ is of form 6.4 then assumption
 hypothesis we have $\psi_1=\psi_2$ and hence $\phi=\psi$ again by
 assumption 6.3.5.\QED
 
-\subsection{The coherence theorem}
+*** The coherence theorem
 \label{DoyeSec6.4}
 
 In the above proof, there seem to be some irregularities.
 
-\subsubsection{On coercibility and complexity}
+**** On coercibility and complexity
 
 Weber states in the proof that
 \[t\trianglelefteq t^\prime\Rightarrow{\rm com}(t)\le
@@ -20317,14 +20317,14 @@ counterexample to Weber's claim, that
 
 Thus Weber's assertion in invalid.
 
-\subsubsection{Structural coercions (in the ``proof'')}
+**** Structural coercions (in the ``proof'')
 
 In equation 6.2 (and similarly equation 6.4) $\phi$ is given as a
 function
 \[f(\ldots,t,\ldots)\rightarrow f(\ldots,s_1,\ldots)\]
 however, $\phi$ is supposed to be a function of $t$.
 
-\subsubsection{Structural coercions (syntax)}
+**** Structural coercions (syntax)
 
 Weber calls the structural coercion function from
 $f(s_1,\ldots,s_n)$ to $f(t_1,\ldots,t_n)$
@@ -20345,7 +20345,7 @@ target of $f(\phi_1,\ldots,\phi_n)$. This also demonstrates the
 uniqueness of $f(\phi_1,\ldots,\phi_n)$ and guarantees that assumption
 6.3.4 holds.
 
-\subsubsection{Identity coercions}
+**** Identity coercions
 
 Weber states in assumption 6.3.1 that the identity function is a
 coercion. However, he never proves this to be unique. Indeed,
@@ -20373,7 +20373,7 @@ We will of course allow any number of functions from a type to itself,
 including conversions. It is merely the number of coercions which we
 are restricting.
 
-\subsubsection{Composition of coercions}
+**** Composition of coercions
 
 It is possibly symptomatic of the previous errors that Weber has
 neglected to cover all the possible case of $\phi$ and $\psi$.
@@ -21048,7 +21048,7 @@ This coercion can still not be built from our four basic types, thus
 defining such a coercion contradicts our assumptions for the coherence
 theorem.
 
-\subsection{Extending the coherence theorem}
+*** Extending the coherence theorem
 \label{DoyeSec6.5}
 
 First, Weber's ``proof'' of his conjecture \ref{Doye6.3.7} relies on
@@ -21218,7 +21218,7 @@ the proof.\QED
 Thus we have relaxed an important one of the conditions of the
 coherence theorem \ref{Doye6.4.7} and proved that the theorem still holds.
 
-\subsection{Conclusion}
+*** Conclusion
 \label{DoyeSec6.6}
 
 In this section we stated all the mathematics needed to state Weber's
@@ -21236,7 +21236,7 @@ we implement our type constructors (they must satisfy the assumptions)
 and how we create our coercions (compositions of the four basic types)
 all our coercions are then unique.
 
-\section{The automated coercion algorithm}
+** The automated coercion algorithm
 \label{DoyeChap7}
 
 We will introduce some extra mathematics which will allow us to state
@@ -21246,7 +21246,7 @@ algorithm are, in fact, homomorphisms. Indeed, we may even guarantee
 that these are coercions in the sense of definition
 \ref{Doye5.5.2}.
 
-\subsection{Finitely generated algebras}
+*** Finitely generated algebras
 \label{DoyeSec7.2}
 
 In this section we will define what it means to say that an algebra is
@@ -21331,7 +21331,7 @@ the empty list.
 Notice that we have not yet defined a way of differentiating between
 which constructors construct which element. We will do this now.
 
-\subsection{Constructibility}
+*** Constructibility
 \label{DoyeSec7.3}
 
 We now come to the most important concept of this thesis. The aim of
@@ -21533,7 +21533,7 @@ having to force $+$ to be a constructor of
 {\bf Fraction Polynomial Integer}, or indeed {\bf leadingMonomial},
 etc. to be available in {\bf Fraction Polynomial Integer}.
 
-\subsection{The algorithm}
+*** The algorithm
 \label{DoyeSec7.4}
 
 We are now in a position to state the automated coercion algorithm.
@@ -21688,7 +21688,7 @@ $createCoerce(\langle A,\alpha\rangle,\langle B,\beta\rangle):=$\\
 so the algorithm presented above allows us to algorithmically
 reconstruct elements of one type as elements of another.
 
-\subsection{Existence of the coercion}
+*** Existence of the coercion
 \label{DoyeSec7.5}
 
 Before we prove that the automated coercion algorithm constructs a
@@ -21714,7 +21714,7 @@ If all the constructors of $\langle A,\alpha\rangle$ are available in
 $\langle B,\beta\rangle$ but no homomorphism (coercion) exists then
 this could be because of (at least one of) the following causes.
 
-\subsubsection{One of the coercions to be used does not exist}
+**** One of the coercions to be used does not exist
 
 At least one of the types which is required for construction or
 recursively required for construction (and which is not the carrier of
@@ -21723,7 +21723,7 @@ target. Provided the algorithm checks at construction time that every
 coercion used directly or indirectly by $\psi_i$ exists (or is
 constructible) then we may report an error at an early stage.
 
-\subsubsection{Non-homomorphic constructors}
+**** Non-homomorphic constructors
 
 The fact that $\langle\langle\Sigma,S\rangle,S\rangle$ is a protecting
 extension of
@@ -21762,7 +21762,7 @@ Thus the automated coercion algorithm will error at any early stage
 from not being able to find
 $\langle\langle\Delta,\mathcal{D}\rangle,\mathcal{D}\rangle$.
 
-\subsection{Proving homomorphicity and coerciveness}
+*** Proving homomorphicity and coerciveness
 \label{DoyeSec7.6}
 We now make some notational definitions so that we may prove the final
 result of the section. That is, we will show that algorithm
@@ -21989,7 +21989,7 @@ $\langle\langle\Delta,\mathcal{D}\rangle,\mathcal{D}\rangle$, since it
 must specify the smallest variety to which both
 $\langle A,\alpha\rangle$ and $\langle B,\beta\rangle$ belong.
 
-\subsection{Conclusion}
+*** Conclusion
 \label{DoyeSec7.7}
 
 In conclusion, we have shown that it is possible to create a
@@ -22004,7 +22004,7 @@ and the homomorphism is from the theory which specifies the smallest
 variety to which both types belong, then it is the unique
 {\sl coercion} between the two types.
 
-\section{Implementation Details}
+** Implementation Details
 \label{DoyeChap8}
 
 The basic design was as follows. To perform a coercion from a
@@ -22023,7 +22023,7 @@ The automated coercion function should be integrated with the current
 coercion mechanism in Axiom. This was done by inserting the relevant
 line at the correct point of the function {\bf coerceInteractive}.
 
-\subsection{Labelling operstors}
+*** Labelling operstors
 \label{DoyeSec8.4}
 
 We had to decide on a mechanism to mark which operators were
@@ -22068,7 +22068,7 @@ for each special function which were read and stored at compile time
 for each {\bf Domain}. We could then read them at run-time using the
 Axiom interpreter's built in $++$ comments reader.
 
-\subsection{Getting information from domains}
+*** Getting information from domains
 \label{DoyeSec8.5}
 The $++$ comments were gathered for a {\bf Domain} by recursion up the
 {\bf Category} inheritance lattice, using the {\bf GETDATABASE}
@@ -22097,7 +22097,7 @@ worked around easily.
 The special function lists from both {\bf Domain}s were compared and
 the required functions were extracted from both.
 
-\subsection{Checking information from domains}
+*** Checking information from domains
 \label{DoyeSec8.6}
 
 For each special function, a check was performed to see whether that
@@ -22117,7 +22117,7 @@ Thus the homomorphism created by the automated coercion algorithm was
 always equivalent to definition of a conditional homomorphism given in
 section \ref{DoyeSec5.3}.
 
-\subsection{Flaws in the implementation}
+*** Flaws in the implementation
 \label{DoyeSec8.7}
 
 The implementation was originally envisaged as a fully working piece
@@ -22229,7 +22229,7 @@ symbols and operators. Similarly between sorts and carriers
 (Sections \ref{DoyeSec9.3}, \ref{DoyeSec9.6})
 \end{enumerate}
 
-\subsection{Conclusion}
+*** Conclusion
 \label{DoyeSec8.8}
 
 We conclude that the automated coercion algorithm is probably
@@ -22238,7 +22238,7 @@ create a version which works. However, it would take someone with
 deeper knowledge of the code to force a complete integration of the
 current implementation with the Axiom interpretation.
 
-\section{Making Axiom algebraically correct}
+** Making Axiom algebraically correct
 \label{DoyeChap9}
 
 We will discuss various details which need to be changed to make a
@@ -22248,7 +22248,7 @@ varieties (specified by order-sorted theories) and that the
 {\bf Domains} act more like our notion of order-sorted algebras more
 correctly.
 
-\subsection{Explicitly defined theories}
+*** Explicitly defined theories
 \label{DoyeSec9.2}
 
 In Axiom, the {\bf Categories} were originally intended to be akin to
@@ -22259,7 +22259,7 @@ The {\bf Categories} do behave and look to the casual observer like
 they were specified by multi-sorted algebraic type theories, but there
 are some clear differences.
 
-\subsection{Operator symbols and names}
+*** Operator symbols and names
 \label{DoyeSec9.3}
 
 In Axiom, if a category defines an operator symbol
@@ -22413,7 +22413,7 @@ and then modemap selection would be as fast as in the current version
 of Axiom, but the hash could be used (going in the other direction) to
 determine $s$ and $q$ for the automated coercion algorithm.
 
-\subsection{Moving certain operators}
+*** Moving certain operators
 \label{DoyeSec9.4}
 
 Another factor which stops Axiom acting totally homomorphically, is
@@ -22498,7 +22498,7 @@ algorithm would still not be applicable
 This is merely one example of many such operators which could require
 moving.
 
-\subsection{Retyping certain sorts}
+*** Retyping certain sorts
 \label{DoyeSec9.5}
 
 As in section \ref{DoyeSec9.4}, this is best illustrated by an
@@ -22530,7 +22530,7 @@ but a different idea of equality.
 
 This is one of many such cases in Axiom.
 
-\subsection{Sorts and their order}
+*** Sorts and their order
 \label{DoyeSec9.6}
 
 We have been discussing Axiom's {\bf Category} inheritance system as
@@ -22625,7 +22625,7 @@ compile time, on a per-{\bf Category} or per-{\bf Type} basis.
 Thus, any {\bf Category} which does not extend {\bf SortOrder} would
 be a non-order-sorted signature.
 
-\subsection{Altering Axiom's databases}
+*** Altering Axiom's databases
 \label{DoyeSec9.7}
 
 Axiom has many built in databases for looking up comments, functions,
@@ -22646,7 +22646,7 @@ Axiom's {\bf Category} system. Without this restriction, altering a
 {\bf Category} further up the lattice could cause the database
 information to become outdated for all of its descendants.
 
-\subsection{Conclusion}
+*** Conclusion
 \label{DoyeSec9.8}
 
 Axiom behaves very similarly to a language based on order sorted
@@ -22706,10 +22706,10 @@ Category definitions do not explictly order their sorts
 
 We have presented methods for addressing all of these differences.
 
-\section{Conclusions}
+** Conclusions
 \label{DoyeChap10}
 
-\subsection{Summary}
+*** Summary
 \label{DoyeSec10.2}
 
 \subsubsection{Category theory and order sorted algebras as the bases for
@@ -22761,7 +22761,7 @@ Finally, we discussed how Axiom signatures could be compiled to
 contain extra information which would enhance the speed of the
 automated coercion algorithm (section \ref{DoyeSec9.7}).
 
-\subsubsection{On coherence}
+**** On coherence
 \label{Doye10.2.3}
 
 In section \ref{DoyeChap6} we first stated all the mathematics used by
@@ -22776,7 +22776,7 @@ In section \ref{DoyeSec6.5} we then showed that it was possible to
 relax one of the assumptions which Weber made, and still have a
 coherent type system. (The extended coherence theorem \ref{Doye6.5.4})
 
-\subsubsection{The automated coercion algorithm}
+**** The automated coercion algorithm
 \label{Doye10.2.4}
 In section \ref{DoyeSec7.2}
 we provided enough mathematics to show that the automated coercion
@@ -22793,7 +22793,7 @@ that theorem.
 In section \ref{DoyeChap8} we showed that a demonstration
 implementation of this algorith is possible in Axiom.
 
-\subsection{Future work and extensions}
+*** Future work and extensions
 \label{DoyeSec10.3}
 We have presented in this thesis the basis for a mathematically sound
 computer algebra system. We have also shown that it would be possible
@@ -22819,7 +22819,7 @@ multiple inheritance.
 This chapter is based on Schwarz \cite{Schw87} ``Programming with
 Abstract Data Types: The Symmetry Package SPDE in Scratchpad''.
 
-\section{Symmetries of Differential Equations and the Scratchpad Package SPDE}
+** Symmetries of Differential Equations and the Scratchpad Package SPDE
 
 Symmetry analysis is the only systematic way to obtain solutions of
 differential equations. Yet it is rarely applied for that purpose and
@@ -23011,7 +23011,7 @@ similarly organized. The reason for choosing DK as an example has been
 that it is short enough to be reproduced on a single page but still
 contains all the relevant details.
 
-\begin{verbatim}
+#+begin_example
 )abbreviate domain DK DifferentialKernel
 DifferenetialKernel: Cat == Tar where
   I ==> Integer
@@ -23041,7 +23041,7 @@ DifferenetialKernel: Cat == Tar where
         -- creates DK from LDFV and record VAR
     VarDK: $ -> List VAR
         -- returns record VAR of argument
-\end{verbatim}
+#+end_example
 
 After the various modules which build up the full package SPDE have
 been established~ their mutual relations have to be investigated. All
@@ -23063,7 +23063,7 @@ significant difference~ the interconnections between modules have been
 marked with heavy ~nes whereas for all dependencies on the package
 constructor SPDE thin lines are applied.
 
-\chapter{Primality Testing Revisited by James Davenport}
+* Primality Testing Revisited by James Davenport
 
 This is from Davenport \cite{Dave92}
 
@@ -23154,7 +23154,7 @@ principle, we are only concerned with the problem of testing
 relatively large numbers: numbers less than $25\cdot 10^9$ are covered
 by Pomerance {\sl et al.} \cite{Pome80}.
 
-\section{Rabin revisited}
+** Rabin revisited
 
 Throughout this paper, we assume that all integers to be tested for
 primality are positive and odd. We use the standard notation
@@ -23217,7 +23217,7 @@ Our starting code for Axiom's implementation (slightly modified from
 that distributed with Axiom release 1, in particular to split out the
 auxiliary function {\tt rabinProvesComposite}, but using the same
 algorithm) is 
-\begin{verbatim}
+#+begin_example
                          Original Code
 
 [ 1] prime? n ==
@@ -23249,14 +23249,14 @@ algorithm) is
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
 where we have numbered the lines for ease of refernce. {\bf I} is the
 datatype of $n$, and can be thought of as being the integers. 
 {\tt smallPrimes} is a list of primes up to 313, and 
 {\tt nextSmallPrime} is therefore 317.
 
-\section{Non-square-free numbers}
+** Non-square-free numbers
 
 If Rabin's algorithm is handed a number $N$ with a repeated prime
 factor $p^k$, then the factor of $p^{k-1}$ in $\hat{\phi}(N)$ will
@@ -23275,7 +23275,7 @@ perfect $p$-th power is at most 1/317. This compares favourably with
 some of the probabilities that will be analysed later, and shows the
 practical utility of this preliminary test.
 
-\section{Jaeschke analysed}
+** Jaeschke analysed
 
 Let us analyse the number $J$ more closely. To begin with, both $J_1$
 and $J_2$ are prime. These numbers can be written as
@@ -23344,7 +23344,7 @@ estimated ``time to find a rogue value'' of $5\cdot 10^{21}$. We can,
 in fact, be surprised that $J$ is as large as it is -- perhaps a
 smaller value exists.
 
-\section{Roots of $-1$}
+** Roots of $-1$
 
 Here we look at observation (A) above -- that a suspicious human being
 would observe more than two square roots of $-1$, and hence deduce
@@ -23353,7 +23353,7 @@ algorithm. This is certainly true -- how programmable, and how widely
 applicable, is it? A global (to {\tt prime?} and 
 {\tt rabinProvesComposite}) variable {\tt rootsMinus1} is added, whose
 type is a {\tt Set} of {\tt I}. The code now reads:
-\begin{verbatim}
+#+begin_example
                          "Roots of -1" Modifications
 
 [ 1] prime? n ==
@@ -23389,7 +23389,7 @@ type is a {\tt Set} of {\tt I}. The code now reads:
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
 These changes certainly stop the algorithm from returning ``N is
 probably prime'' on the Jaeschke number, and do not otherwise alter
@@ -23404,7 +23404,7 @@ will not take effect (but those proposed in the next section will). In
 general it is hard to analyse the precise contribution of these
 changes, other than to be certain that it is never negative.
 
-\section{The ``maximial 2-part'' test}
+** The ``maximial 2-part'' test
 
 Here we attempt to generalise observation (B) above. Let us suppose
 that $N$ is still the composite number that we wish to prove is
@@ -23431,7 +23431,7 @@ We need a global (to {\tt prime?} and {\tt rabinProvesComposite})
 variable {\tt count2Order} whose type is a {\tt Vector} of
 {\tt NonNegativeInteger}s. This variable is used to count the number
 of elements of each 2-order.
-\begin{verbatim}
+#+begin_example
                          "Maximal 2-part" Modifications
 
 [ 1] prime? n ==
@@ -23474,12 +23474,12 @@ of elements of each 2-order.
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 We currently collect more information than we use. Again, this 
 modification to the Rabin algorithm proves that the Jaeschke number 
 is not prime.
 
-\section{How would one defeat these modifications?}
+** How would one defeat these modifications?
 
 It is all very well to propose new algorithms, an demonstrate that
 they are ``better'' than the old ones, but might they really have
@@ -23528,7 +23528,7 @@ $144^n$. In addition, both $K+1$ and $6K+1$ have to be prime. For
 $n=10$, the probability of this is about 1/25, so we might expect to
 find such an $N$ at around $2\cdot 10^{24}$.
 
-\section{Leech's attack}
+** Leech's attack
 
 Leech \cite{Leec92} has suggested an attack of the form 
 $N=(K+1)\cdot (2K+1)\cdot (3K+1)$. If the three factors are prime
@@ -23577,7 +23577,7 @@ quadratic non-residue modulo the first two factors, but a residue
 modulo the last, hence ensuring that Rabin's algorithm with $x=5$
 always says ``$N$ is certainly composite''.
 
-\section{The $(K+1)\cdot (2K+1)$ attack}
+** The $(K+1)\cdot (2K+1)$ attack
 
 This attack has been used recently by Arnault \cite{Arna91} to defeat
 the set of $x$-values
@@ -23608,18 +23608,16 @@ following.
 {\bf Theorem} {\sl If N is an odd composite number, such that N is not
 divisible by 3, and more than 1/8 of the x-values yield ``N is
 probably prime'' then one of the following holds}
-\begin{itemize}
-\item {\sl N is a Carmichael number with precisely three prime factors}
-\item $3N+1$ {\sl is a perfect square}
-\item $8N+1$ {\sl is a perfect square}
-\end{itemize}
+- {\sl N is a Carmichael number with precisely three prime factors}
+- $3N+1$ {\sl is a perfect square}
+- $8N+1$ {\sl is a perfect square}
 
 $8(K+1)\cdot (2K+1)+1=(4K+3)^2$, so this attack is a special case of
 the above theorem. There seems no reason not to test both the
 exceptional conditions in the Damgard-Landrock Theorem -- such numbers
 are always composite, except for trivial cases ruled out by lines
 before [ 5]. 
-\begin{verbatim}
+#+begin_example
                          "Damgard-Landrock" Modifications
 
 [ 1] prime? n ==
@@ -23666,9 +23664,9 @@ before [ 5].
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
-\section{Conclusions}
+** Conclusions
 
 It is certainly possible to draw more information from a fixed set of
 $x$-values than Rabin's original algorithm does, and we have explained
@@ -23694,7 +23692,7 @@ statement by Lenstra \cite{Lens81} (see also Koblitz \cite{Kobl87})
 that, if suitable assumptions similar to the generalised Riemann
 hypothesis are made, the 70 $\text{log}^2~N$ values suffice, which
 would be a $O(\text{log}^5~N)$ primality test.
-\begin{verbatim}
+#+begin_example
            The Pomerance et al. Modifications
 
 [ 0a] PomeranceList:=[25326001::I,161304001::I,960946321::I,1157839381::I,
@@ -23753,9 +23751,9 @@ would be a $O(\text{log}^5~N)$ primality test.
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
            O(Log^4 N) Modifications
 
 [ 0a] PomeranceList:=[25326001::I,161304001::I,960946321::I,1157839381::I,
@@ -23816,9 +23814,9 @@ would be a $O(\text{log}^5~N)$ primality test.
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
-\chapter{Finite Fields in Axiom (Grabmeier/Scheerhorn)}
+* Finite Fields in Axiom (Grabmeier/Scheerhorn)
 
 This was written by Johannes Grabmeier and Alfred Scheerhorn.
 \href{http://axiom-developer.org/axiom-website/GroupTheoryII/Salomone.html}
@@ -23871,7 +23869,7 @@ constructions of polynomials. In section \ref{section12}
 we finally give results of
 time comparison of the various representations.
 
-\section{Basic theory and notations}
+** Basic theory and notations
 \label{section2}
 
 \href{http://axiom-developer.org/axiom-website/GroupTheoryII/Salomone.html}
@@ -23988,14 +23986,14 @@ Again, with $\alpha$ all of its conjugates are normal over $F$, too.
 Therefore we call an irreducible polynomial $f\in F[X]$ of degree $n$
 normal over $F$, if the roots of $f$ in $GF(q^n)$ are linearly independent.
 
-\section{Categories for finite field domains}
+** Categories for finite field domains
 \label{section3}
 
 Each domain in Axiom which represents a finite field is an object
 in the category
-\begin{verbatim}
+#+begin_example
    FFIELDC FiniteFieldCategory
-\end{verbatim}
+#+end_example
 
 This category defines functions which are typical for finite sets as
 {\tt order} or {\tt random} and those which are typical for finite
@@ -24006,9 +24004,9 @@ multiplicative group structure as {\tt primitiveElement},
 see section \ref{section4.3}
 
 Functions which need to know the {\sl groundfield} $F$ are defined in
-\begin{verbatim}
+#+begin_example
    FAXF(F)  FiniteAlgebraicExtensionField(F)
-\end{verbatim}
+#+end_example
 These are functions considering the extension field as an algebra of
 finite rank over $F$, 
 see section \ref{section4.1}, and functions concerning the 
@@ -24031,14 +24029,14 @@ see section \ref{section11}. NOt that
 this of course does not affect the ability to build arbitrary towers
 of finite field extensions.
 
-\section{General finite field functions}
+** General finite field functions
 \label{section4}
 
 Let $E=GF(q^n)$ and $F=GF(q)$ be represented by {\tt E} of type 
 {\tt FAXF(F)} and {\tt F} respectively. The characteristic of $E$ is 
 given by {\tt characteristic()\$E}.
 
-\subsection{$E$ as an algebra of rank $n$ over $F$}
+*** $E$ as an algebra of rank $n$ over $F$
 \label{section4.1}
 
 The degree $n$ of $E$ over $F$ is returned by {\tt extensionDegree()\$E}
@@ -24108,7 +24106,7 @@ Similarly we get the minimal polynomial of $\alpha$ over $L$ by
 \[\prod_{i=0}^{m-1}{(X-\alpha^{q^{id}})}\]
 where $m$ denotes the degree of $\alpha$ over $L$.
 
-\subsection{The $F[X]$-module structure of $E$}
+*** The $F[X]$-module structure of $E$
 \label{section4.2}
 
 In this section we discuss the three operations
@@ -24153,7 +24151,7 @@ The function {\tt linearAssociatedLog}$(\alpha)$ with only one argument
 computed the linear associated logarithm of $\alpha$ to the base given by
 {\tt normalElement()\$E}.
 
-\subsection{The cyclic group $E^*$}
+*** The cyclic group $E^*$
 \label{section4.3}
 
 The inheritance mechanisms of Axiom provide for each multiplicative
@@ -24172,18 +24170,18 @@ Note that this implementation requires factorizing the order $(q^n-1)$ of
 the multiplicative group. Other functions as {\tt discreteLog} also need
 these factors. Since factoring $(q^n-1)$ is time expensive, 
 the factorization of $(q^n-1)$ is stored in a global variable
-\begin{verbatim}
+#+begin_example
    facOfGroupSize: List Record(factor:Integer,exponent:Integer)
-\end{verbatim}
+#+end_example
 in the respective domain. To make this information available to the category
 for default implementations, we export the function
-\begin{verbatim}
+#+begin_example
    factorsOfCyclicGroupSize()
-\end{verbatim}
+#+end_example
 which returns the factorization. $(q^n-1)$ is factored only the first time
 this function is called.
 
-\subsection{Discrete logarithm}
+*** Discrete logarithm
 \label{section4.4}
 
 For the computation of discrete logarithms we implemented the
@@ -24200,15 +24198,15 @@ see \cite{Odly85} or \cite{Pohl78}.
 
 To compute discrete logarithms in cyclic groups of prime order $p$ we
 use Shank's algorithm implemented by
-\begin{verbatim}
+#+begin_example
    shanksDiscLogAlgorithm:(M,M,NonNegativeInteger) ->
                            Union(NonNegativeInteger,"failed")
-\end{verbatim}
+#+end_example
 in the package {\tt DiscreteLogarithmPackage(M)} and {\tt M} has to be
 of type {\tt Join(Monoid,Finite)}, i.e. a finite multiplicative Monoid.
-\begin{verbatim}
+#+begin_example
    shanksDiscLogAlgorithm(b,a,p)
-\end{verbatim}
+#+end_example
 computes $e$ with $b^e=a$ assuming that $b$ and $a$ are elements of a
 finite cyclic group of order $p$. If no such $e$ exists, it returns
 {\tt "failed"}.
@@ -24227,9 +24225,9 @@ is for a fixed prime factor $p$ of $(q^n-1)$ always the same. To compute
 logarithms to the base given by {\tt primitiveElement()\$E} efficiently,
 the tables needed by Shanks algorithm are precomputed and stored in the
 global variable
-\begin{verbatim}
+#+begin_example
    discLogTable : Table(PI,Table(PI,NNI))
-\end{verbatim}
+#+end_example
 in {\tt E}. It is initialized at the first call of the function
 {\tt discreteLog}. Here {\tt PI} abbreviates {\tt PositiveInteger}
 and {\tt NNI} abbreviates {\tt NonNegativeInteger}.
@@ -24237,22 +24235,22 @@ and {\tt NNI} abbreviates {\tt NonNegativeInteger}.
 To implement the discrete logarithm function on category level in 
 {\tt FiniteFieldCategory}, we have to make this data available to the
 category. This is done by exporting the function
-\begin{verbatim}
+#+begin_example
    tableForDiscreteLogarithm: Integer -> Table(PI,NNI)
-\end{verbatim}
+#+end_example
 Called with a prime divisor $p$ of $q^n-1$ as argument, it returns a
 table of size roughly $\tilde{p}\approx\sqrt{p}$, whose $k$-th entry for
 $0 \le k < \tilde{p}$ is of the form
-\begin{verbatim}
+#+begin_example
    [lookup(a**k),k) : Record(key:PI,entry:PI)
-\end{verbatim}
+#+end_example
 where $a=\alpha^{(q^n-1)/p}$
 
 We implemented two functions for discrete logarithms:
-\begin{verbatim}
+#+begin_example
    discreteLog: E     -> NonNegativeInteger
    discreteLog: (E,E) -> Unioin(NonNegativeInteger,"failed")
-\end{verbatim}
+#+end_example
 The first one computes discrete logarithms to the base
 {\tt primitiveElement()\$E} using the precomputed tables. 
 {\tt discreteLog(b,a)} computes ${\rm log}_b(a)$ if $a$ belongs
@@ -24260,14 +24258,14 @@ to the cyclic group generated by $b$ and fails otherwise. This function
 does not use the table {\tt discLogTable}. No initialization of this
 table is performed using the second function.
 
-\subsection{Elements of maximal order}
+*** Elements of maximal order
 \label{section4.5}
 
 The functions
-\begin{verbatim}
+#+begin_example
    primitiveElement()$E
    normalElement()$E
-\end{verbatim}
+#+end_example
 yields a primitive element of $E$ and a generator of a normal basis of
 $E$ over $F$, respectively. The first having maximal multiplicative order
 $(q^n-1)$, the second maximal linear associated order $(X^n-1)$.
@@ -24288,16 +24286,16 @@ Extended Riemann Hypothesis, see \cite{Shou92}.
 
 To aviod searching a second time for the same element, we store the results
 after the first computation of such an element using the helper functions
-\begin{verbatim}
+#+begin_example
    createPrimitiveElement()$E
    createNormalElement()$E
-\end{verbatim}
+#+end_example
 
 The functions
-\begin{verbatim}
+#+begin_example
   primitive?
   normal?
-\end{verbatim}
+#+end_example
 check whether the multiplicative resp. linear associated order of an
 element is maximal.
 
@@ -24312,18 +24310,18 @@ of $E$ over $F$ we use Theorem 2.39 of \cite{Lidl83}: $\alpha\in E$ generates a
 normal basis of $E$ over $F$ if and only if $(X^n-1)$ and
 $\sum_{i=0}^{n-1}{\alpha^{q^i}X^{n-1-i}}$ are relatively prime in $E[X]$
 
-\subsection{Enumeration of elements of $E$}
+*** Enumeration of elements of $E$
 \label{section4.6}
 
 The number of elements of $E$ can be found out by calling {\tt size()\$E}.
 The elements of {\tt E} are enumerated by 
-\begin{verbatim}
+#+begin_example
    index: PositiveInteger -> E
-\end{verbatim}
+#+end_example
 with inverse
-\begin{verbatim}
+#+begin_example
    lookup: E -> PositiveInteger
-\end{verbatim}
+#+end_example
 
 These functions implement a bijection between {\tt E} and the set of 
 positive integers $\{1,2,\ldots,q^n\}$. They allow iterating over all
@@ -24334,7 +24332,7 @@ complicated way. For time efficiency reasons these functions have different
 implementations according to the different representations. ALl of them have
 in common that {\tt index}$(q^n)=0\$E$ and {\tt lookup}$(0\$E)=q^n$.
 
-\subsection{Conversion between elements of the field and its groundfield}
+*** Conversion between elements of the field and its groundfield
 \label{section4.7}
 
 To check whether a given element $\alpha$, representation by {\tt a} in
@@ -24349,15 +24347,15 @@ by {\tt ::} in Axiom. If {\tt a} is the representation of $\alpha$ in
 All these functions depend on the representation used and are explained in
 the sections according to the special representations.
 
-\section{Prime field}
+** Prime field
 \label{section5}
 
 Let $p$ be a prime number. Since $GF(p)\simeq\mathbb{Z}/p\mathbb{Z}$
 in Axiom the internal representation of elements of the domains
-\begin{verbatim}
+#+begin_example
    IPF(p)   InnerPrimeField(p)
    PF(p)    PrimeField(p)
-\end{verbatim}
+#+end_example
 is {\tt IntegerMod(p)}, from which most functions are inherited. The
 only difference between {\tt IPF} and {\tt PF} is, that in {\tt PF} it 
 is checked whether the parameter $p$ is prime while this is not checked
@@ -24369,17 +24367,17 @@ prime field as an extension of degree 1 of itself. For recursions
 depending e.g. on the extension degree and simply for completeness,
 we have decided to make {\tt PrimeField} an {\tt FiniteAlgebraicExtensionField}
 of itself. The trivial implementations include
-\begin{verbatim}
+#+begin_example
    normalElement()    == 1
    inGroundField?(a)  == true
    generator()        == 1
-\end{verbatim}
+#+end_example
 
 Since the value returned by {\tt generator()} should be a root of the
 defining polynomial of the field extension, we had to code
 {\tt definingPolynomial} to be $X-1$ and not e.g. $X$.
 
-\subsection{Extension Constructors of Finite Fields}
+*** Extension Constructors of Finite Fields
 \label{section5.1}
 
 There are three choices to make when one wants to construct a
@@ -24426,7 +24424,7 @@ compiler, we had to create all these different names as explained above.
 As soon as the new compiler will support this we may consider to unify
 these domain domain names, see section \ref{section11}.
 
-\section{Polynomial basis representation}
+** Polynomial basis representation
 \label{section6}
 
 Let $E=GF(q^n)$ be an extension of degree $n$ over $F=GF(q)$. Then
@@ -24439,12 +24437,12 @@ $\beta\in E$ uniquely in the form:
 \[\beta=\sum_{i=0}^{n-1}{b_i\alpha^i},\quad b_i\in F\]
 
 This kind of representation is used in the domains
-\begin{verbatim}
+#+begin_example
    FFP   FiniteFieldExtensionByPolynomial
    FFX   FiniteFieldExtension
    IFF   InnerFiniteField
    FF    FiniteField
-\end{verbatim}
+#+end_example
 
 The only difference between these domains are the different natures of
 their parameterization, 
@@ -24456,9 +24454,9 @@ defined by $f$.
 
 For the internal representation of elements of $E$ we use polynomials
 modulo $f$. This structure is in Axiom implemented by the domain
-\begin{verbatim}
+#+begin_example
    SAE(F,SUP(F),f)  SimpleAlgebraicExtension(F,SUP(F),f)
-\end{verbatim}
+#+end_example
 Here {\tt SUP(F)} abbreviates {\tt SparseUnivariatePolynomial(F)} a
 domain representing polynomials over $F$. Most arithmetic operations are
 inherited from this domain. There are only a few functions which have a
@@ -24467,11 +24465,11 @@ special implementation.
 The imbedding of {\tt F} in {\tt E} is obvious:
 $\sum_{i=0}^{n-1}{a_i\alpha^i}$ is in $F$ if and only if
 $a_1,a_2,\ldots,a_{n-1}=0$. Using this, the functions
-\begin{verbatim}
+#+begin_example
    retract:       E -> F
    coerce:        F -> E
    inGroundfield? E -> Boolean
-\end{verbatim}
+#+end_example
 are implemented in the obvious way.
 
 To check whether $\beta$ is normal in $E$ over $F$ we proceed as follows.
@@ -24487,7 +24485,7 @@ $\beta$. The functions {\tt trace} and {\tt norm} compute the trace and
 norm of $\beta$ over $F$ by computing the trace and determinant of this
 matrix, respectively.
 
-\section{Cyclic group representation}
+** Cyclic group representation
 \label{section7}
 
 In this section we make use of the fact, that the multiplicative group of 
@@ -24499,11 +24497,11 @@ its discrete logarithm $e$ to $\alpha$, i.e. the element
 $0 \le e \le q^n-1$ with $\alpha^e=\beta$.
 
 In the three domains
-\begin{verbatim}
+#+begin_example
    FFCGP   FiniteFieldCyclicGroupExtensionByPolynomial
    FFCGX   FiniteFieldCyclicGroupExtension
    FFCG    FiniteFieldCyclicGroup
-\end{verbatim}
+#+end_example
 the nonzero field elements are represented by powers of a fixed primitive
 element. Let {\tt F} be a finite field domain representing $F$, $E$ the
 extension of $F$ defined by the monic, irreducible polynomial $f(x) \in F[X]$
@@ -24522,16 +24520,16 @@ This table is of size about $q^n/2$. For efficiency reasons we also want
 to use {\tt SmallInteger} and not {\tt Integer} as the internal 
 representation of the field elements. Therefore we restricted ourself
 to a field size of maximal $2^{20}$ elements:
-\begin{verbatim}
+#+begin_example
    if sizeFF > 2**20 then
      error "field too large for cyclic group representation"
-\end{verbatim}
+#+end_example
 
 A nonzero element $\beta\in E$ is represented by the unique
 $n \in \{0,1,\ldots,q^n-2\}$ of type {\tt SmallInteger} with
 $\alpha^n=\beta$ and $0\in E$ is represented by the {\tt SmallInteger} $-1$.
 
-\subsection{Operations of multiplicative nature}
+*** Operations of multiplicative nature
 \label{section7.1}
 
 The implementation of the operations concerning the multiplicative group
@@ -24560,7 +24558,7 @@ Computing the multiplicative order of elements is done by
 Therefore an element $\beta$ is primitive in $E$ if and only if its
 representation is relatively prime to $q^n-1$.
 
-\subsection{Addition and Zech logarithm}
+*** Addition and Zech logarithm
 \label{section7.2}
 
 Addition is performed via the Zech (or Jacobi) logarithm $Z(k)$ which is
@@ -24569,9 +24567,9 @@ defined by
 
 In the domain {\tt E} the Zech logarithm array is stored in the global
 variable
-\begin{verbatim}
+#+begin_example
    zechlog : PrimitiveArray(SmallInteger)
-\end{verbatim}
+#+end_example
 of the datatype of length $(q^n+1)/2$. Its $k$-th entry
 corresponds to $Z(k)$. $Z(k)$ is undefined, if $\alpha^k+1=0$. 
 This exception appears in characteristic 2 if $k=0$ and in odd
@@ -24623,18 +24621,18 @@ over $F$ is given by the minimal integer $d>0$ for which
 $eq^d\equiv e{\rm\ mod\ }(q^n-1)$. The trace and the norm function
 are computed directly using (1) on page 6.
 
-\subsection{Time expensive operations}
+*** Time expensive operations
 \label{section7.3}
 
 But there remain some operations, which are quite time expensive.
 That are those operations, which change the representation of the
 field elements:
-\begin{verbatim}
+#+begin_example
    coerce:      F -> E
    retract:     E -> F
    represents:  Vector F -> E
    coordinates: E -> Vector F
-\end{verbatim}
+#+end_example
 
 Let $\beta=N_{E/F}(\alpha)$ be the norm of $\alpha$ over $F$. 
 Since $\beta$ is primitive in $F$, every nonzero element $\gamma$
@@ -24664,7 +24662,7 @@ an element $\beta$ in\\
 and computes its discrete logarithm to base $\alpha$ in that domain.
 This logarithm is the representation of $\beta$ in {\tt E}.
 
-\section{Normal basis representation}
+** Normal basis representation
 \label{section8}
 
 Let $E=GF(q^n)$ be an extension of degree $n$ over the finite
@@ -24675,11 +24673,11 @@ linearly independent over $F$. Then $\alpha$ is normal in $E$
 over $F$ and every element of $E$ can be expressed in the form
 \[\beta=\sum_{i=0}^{n-1}{b_i\alpha^{q^i}}\] 
 with $b_i\in F$. This kind of representation is used in the domains
-\begin{verbatim}
+#+begin_example
    FFNBP   FiniteFieldNormalBasisExtensionByPolynomial
    FFNBX   FiniteFieldNormalBasisExtension
    FFNB    FiniteFieldNormalBasis
-\end{verbatim}
+#+end_example
 
 Let {\tt F} be a finite field domain representing $F$ and
 {\tt E:=FFNBP(F,f)} the normal basis extension of $F$ by $f$.
@@ -24703,12 +24701,12 @@ The lengthy code for the arithmetic is shared by the three different
 versions of normal basis representations and the package
 {\tt FiniteFieldFunctions}. Hence, we decide to have a 
 parameterized package
-\begin{verbatim}
+#+begin_example
    INBFF   InnerNormalBasisFieldFunctions(F)
-\end{verbatim}
+#+end_example
 where most of the arithmetic in {\tt E} is performed.
 
-\subsection{Operations of additive nature}
+*** Operations of additive nature
 \label{section8.1}
 
 All field functions concerning the cyclic $F[X]$-module structure
@@ -24755,7 +24753,7 @@ $\beta=\sum_{i=0}^{n-1}{b_i\alpha^{q^i}}$ is simply computed by
 Traces onto intermediate fields of $F \le E$ are computed in a
 similar fashion.
 
-\subsection{Multiplication and normal basis complexity}
+*** Multiplication and normal basis complexity
 \label{section8.2}
 
 In the contrary to the {\sl additive} functions, the operations
@@ -24792,9 +24790,9 @@ a base for given $(q,n)$ is unsolved.
 
 The algorithm described by A. Wassermann in \cite{Wass89} is implemented
 in the function
-\begin{verbatim}
+#+begin_example
    createLowComplexityNormalBasis(n)
-\end{verbatim}
+#+end_example
 in the package {\tt FiniteFieldFunctions(F)}. If for the given
 $(q,n)$ a direct construction of a low complexity normal basis
 is possible, the algorithm computes the multiplication matrix of
@@ -24802,9 +24800,9 @@ this base and the function returns this matrix in form of a
 variable of type 
 {\tt Vector List Record(value:F,index:SmallInteger)} (see below).
 If such a construction is not possible for $(q,n)$ the function
-\begin{verbatim}
+#+begin_example
    createNormalPoly(n)$FiniteFieldPolynomialPackage(F)
-\end{verbatim}
+#+end_example
 is called to produce a normal polynomial of degree $n$. To have the
 nice embedding $d\mapsto(d,d,\ldots,d)$ of {\tt F} in {\tt E},
 the computed normal basis has in both cases the property that its
@@ -24819,9 +24817,9 @@ would hardly speed up the multiplication time.
 
 This is why we store $M_\alpha$ in the domain $E$ in a global
 variable of the form
-\begin{verbatim}
+#+begin_example
    multTable : Vector List Record(value:F,index:SmallInteger)
-\end{verbatim}
+#+end_example
 
 The entry $m_{i,j}$ of $M_\alpha$ corresponds to the element of
 {\tt multTable.i} with {\tt index} $j-1$ and {\tt value} $m_{i,j}$.
@@ -24836,7 +24834,7 @@ it is initialized by an automatic call of the function
 {\tt FinitFieldFunctions(F)}.
 
 The user has access to the multiplication matrix of the field by
-\begin{verbatim}
+#+begin_example
    getMultiplicationTable: () ->
         Vector List Record(value:F,index:SmallInteger)
      ++ getMultiplicationTable() returns the multiplication
@@ -24844,14 +24842,14 @@ The user has access to the multiplication matrix of the field by
    getMultiplicationMatrix: () -> Matrix F
      ++ getMultiplicationMatrix() returns the multiplication
      ++ table in the form of a matrix
-\end{verbatim}
+#+end_example
 
 The complexity of the normal basis can be found out by calling
-\begin{verbatim}
+#+begin_example
    sizeMultiplication:() -> NonNegativeInteger
-\end{verbatim}
+#+end_example
 
-\subsection{Norm and multiplicative inverse}
+*** Norm and multiplicative inverse
 \label{section8.3}
 
 The functions {\tt norm} and {\tt inv} are the power functions with
@@ -24863,7 +24861,7 @@ It computes
 \[expPot(\beta,k,d)=\prod_{i=0}^{k-1}{\beta^{q^{id}}}\]
 for $\beta\in E$ and integers $k,d>0$ is computed by the (slightly
 simplified) algorithm
-\begin{verbatim}
+#+begin_example
    expPot(beta,k,d) ==
      e:Integer:=0
      gamma:E:=1
@@ -24871,7 +24869,7 @@ simplified) algorithm
        if bit?(k,i) then gamma:=gamma * beta**(q**e); e:=e+d
        beta:=beta * beta**(q**d); d:=2*d
      return(gamma)
-\end{verbatim}
+#+end_example
 where {\tt length(k)} denotes the number of bits of $k$, i.e.
 $\ceiling{log_2(k+1)}$, and {\tt bit?(k,i)} tests whether the
 $i$-th bit of $k$, binary represented, is set or not. The average
@@ -24896,7 +24894,7 @@ and then $\beta^{-1}=(\beta\gamma)^{-1}\cdot\gamma$. Notice that the
 inversion of $\beta\gamma$ is performed in $F$. Altogether we used
 $3/2\ceiling{log_2(n)}+2$ multiplications in $E$.
 
-\subsection{Exponentiation}
+*** Exponentiation
 \label{section8.4}
 
 Next we show how we have implemented the function
@@ -24923,10 +24921,10 @@ The computation of such
 $k\sim log_q log_q(e)-log_q log_q log_q(e)$ is performed using
 exclusively {\tt SmallInteger} arithmetic to minimize the decision
 time. It is supported by the two global variables
-\begin{verbatim}
+#+begin_example
    logq:List SmallInteger
    expTable:List List SmallInteger
-\end{verbatim}
+#+end_example
 which contain some precomputed auxiliary values.
 
 Then the actual number of multiplications is compared with the
@@ -24937,7 +24935,7 @@ chosen.
 The ideas of this divide and conquer algorithm are due to Stinson,
 see \cite{Stin90}, for the case $q=2$.
 
-\section{Homomorphisms between finite fields}
+** Homomorphisms between finite fields
 \label{section9}
 
 Changing an object from one finite field to another can be necessary
@@ -24952,9 +24950,9 @@ last situation we also change the representation.
 These data type conversions - called {\sl coercions} in Axiom, and
 hence are under the control of the interpreter - are realized by the
 package 
-\begin{verbatim}
+#+begin_example
    FFHOM FiniteFieldHomomorphisms 
-\end{verbatim}
+#+end_example
 
 It is parameterized by three parameters: a source field $K_1$
 represented by {\tt K1}, a target field $K_2$ represented by {\tt K2}
@@ -24967,15 +24965,15 @@ However, this package cannot be used for the general situation as this
 settings suggests. We had to restrict ourselves to the case where both
 {\tt K1} and {\tt K2} are realized as simple extensions of {\tt F},
 i.e. of type 
-\begin{verbatim} 
+#+begin_example 
    FiniteAlgebraicExtensionField(F)
-\end{verbatim}
+#+end_example
 
 To implement the general case also, it would be necessary to have a
 function 
-\begin{verbatim} 
+#+begin_example 
    groundfield: () -> FiniteFieldCategory
-\end{verbatim}
+#+end_example
 
 Its result could be used for package calling functions of that
 subfield. Using such a function it would be possible to build a
@@ -24987,17 +24985,17 @@ will be available.
 The source field and the destination field may appear in arbitrary
 order in the parametrization of {\tt FFHOM}, since {\tt FFHOM}
 supports coercions in both directions: 
-\begin{verbatim} 
+#+begin_example 
    coerce: K1 -> K2 
    coerce: K2 -> K1 
-\end{verbatim}
+#+end_example
 
 Restricted to $K_1 \cap K_2$ these two mappings are inverses of each
 other, i.e. for $\alpha \in K_1 \cap K_2$ and $a$ being a
 representation of $\alpha$ in {\tt K1} or in {\tt K2} holds:
-\begin{verbatim} 
+#+begin_example 
    coerce(coerce(a)$FFHOM(K1,F,K2))$FFHOM(K1,F,K2)=a
-\end{verbatim}
+#+end_example
 
 To be independent of the ordering of the arguments we have ordered the
 fields inside the package by comparing the defining polynomials of the
@@ -25008,9 +25006,9 @@ To explain the details of the implementation let $\beta\in K_1$ and
 distinguish between some cases:
 
 First check whether $\beta$ is in $F$. In this case 
-\begin{verbatim}
+#+begin_example
    retract(b)@F$K1::K2 
-\end{verbatim} 
+#+end_example 
 is used.
 
 The next case is that {\tt K1} and {\tt K2} are constructed using the
@@ -25018,17 +25016,17 @@ same defining polynomial $f$. If furthermore {\tt K1} and {\tt K2} are
 represented in the same say, the elements of {\tt K1} and {\tt K2} are
 represented completely identical. Therefore the coercion may be
 performed by 
-\begin{verbatim} 
+#+begin_example 
    b pretend K2 
-\end{verbatim}
+#+end_example
 
 Now assume that one of {\tt K1} and {\tt K2} is represented using
 cyclic groups and the other one represented by a polynomial basis.
 
 If {\tt K1} is cyclically represented, we coerce by 
-\begin{verbatim}
+#+begin_example
    represents(coordinates(b)$K1)$K2 
-\end{verbatim} 
+#+end_example 
 and vice versa, if {\tt K2} is cyclically represented.
 
 All remaining cases are treated in the same way which we explain
@@ -25036,17 +25034,17 @@ now. Denote by {\tt degree1} and {\tt degree2} the extension degrees
 of $K_1$ and $K_2$ over $F$, respectively. The first time a coercion
 from {\tt K1} into {\tt K2}, or vice versa, is called, two conversion
 matrices stored in global variables 
-\begin{verbatim} 
+#+begin_example 
    conMat1to2:Matrix F 
      -- conversion Matrix for the conversion direction K1 -> K2
    conMat2to1:Matrix F 
      -- conversion Matrix for the conversion direction K2 -> K1 
-\end{verbatim} 
+#+end_example 
 in the package are initialized. Once these
 matrices are initialized, the coercion is performed by
-\begin{verbatim} 
+#+begin_example 
    represents(conMat1to2 * coordinates(b)$K1)$K2
-\end{verbatim}
+#+end_example
 
 Notice, that we do not have to care about the coercion between cyclic
 representation and polynomial representation as above, since this step
@@ -25084,7 +25082,7 @@ $M$ is computed efficiently by using the function
 {\tt reducedQPowers} in the package\\
 {\tt FiniteFieldPolynomialPackage(F)}.
 
-\subsection{Conversion between different extensions}
+*** Conversion between different extensions
 \label{section9.2}
 
 Now suppose that {\tt K1} and {\tt K2} are built using different
@@ -25103,9 +25101,9 @@ $n_2 \ge n_1$.
 We first compute a root 
 $\alpha_1=\sum_{i=0}^{n_2-1}{a_i\alpha_2^i}$ of {\tt defpol1} in a
 polynomial basis representation {\tt FFP(F,defpol2)} of $K_2$ using
-\begin{verbatim}
+#+begin_example
    rootOfIrreduciblePoly(defpol1)$FFPOLY2(FFP(F,defpol2),F)
-\end{verbatim}
+#+end_example
 
 By powering this root we compute the Matrix 
 $R=(r_{i,j}) \in F^{n_2\times n_1}$ defined by
@@ -25137,40 +25135,40 @@ matrix $M_1\in F^{n_1\times n_1}$ and compute
 \[R:=RM_1,\quad S:=M_1^{-1}S\].
 
 After this computation $R$ and $S$ are the desired conversion matrices
-\begin{verbatim}
+#+begin_example
    conMat1to2:=R
    conMat2to1:=S
-\end{verbatim}
+#+end_example
 
 Now we can coerce from {\tt K1} into {\tt K2} by
-\begin{verbatim}
+#+begin_example
    represents(conMat1to2 * coordinates(b)$K1)$K2
-\end{verbatim}
+#+end_example
 and in the other direction by
-\begin{verbatim}
+#+begin_example
    represents(conMat2to1 * coordinates(b)$K2)$K1
-\end{verbatim}
+#+end_example
 
-\section{Polynomials over finite fields}
+** Polynomials over finite fields
 \label{section10}
 
 Let $F=GF(q)$ and $E=GF(q^n)$ be represented by the domain
 {\tt F} and {\tt E}, respectively. There are two packages with
 functions concerning polynomials over finite fields.
-\begin{verbatim}
+#+begin_example
    FFPOLY(F)      FiniteFieldPolynomialPackage(F)
    FFPOLY2(E,F)   FiniteFieldPolynomialPackage2(E,F)
-\end{verbatim}
+#+end_example
 
-\subsection{Root finding}
+*** Root finding
 \label{section10.1}
 
 Although Axiom has a good factorizer for polynomials over fields,
 which can be used to find roots in extensions, we have implemented
 a function
-\begin{verbatim}
+#+begin_example
    rootOfIrreduciblePoly(f)
-\end{verbatim}
+#+end_example
 in the package {\tt FFPOLY2(E,F)}. This function computes only one
 root in $E$ of a monic, irreducible polynomial $f\in F[X]$. This is
 useful as in section \ref{section9} 
@@ -25180,7 +25178,7 @@ package {\tt FFHOM}. Furthermore, this implementation is in general
 faster than the whole factorization. It uses Berlekamp's algorithm
 as described in chap.3.4 of \cite{Lidl83}.
 
-\subsection{Polynomials with certain properties}
+*** Polynomials with certain properties
 \label{section10.2}
 
 In {\tt FFPOLY(F)} there are functions concerning the properties
@@ -25197,12 +25195,12 @@ described below, and compute the number of polynomials of a given
 degree of a certain kind.
 
 The functions for normal polynomials are for example
-\begin{verbatim}
+#+begin_example
    normal?(f)
    createNormalPoly(n)
    nextNormalPoly(f)
    numberOfNormalPoly(n)
-\end{verbatim}
+#+end_example
 
 Unfortunately, there is no formula known to compute the number of
 primitive and normal polynomials of a given degree. Up to this
@@ -25211,7 +25209,7 @@ properties. To get these functions one has to substitute {\tt normal}
 by {\tt irreducible}, {\tt primitive}, or {\tt normalPrimitive}
 (or equivently {\tt primitiveNormal}), respectively.
 
-\subsection{Testing whether a polynomial is of a given kind}
+*** Testing whether a polynomial is of a given kind
 \label{section10.3}
 
 The function {\tt irreducible?} is in the package
@@ -25242,7 +25240,7 @@ and only if this $n$ residues are linearly independent over $F$.
 To check whether a polynomial is primitive and normal we have to
 combine both tests.
 
-\subsection{Searching the next polynomial of a given kind}
+*** Searching the next polynomial of a given kind
 \label{section10.4}
 
 In this section we describe various total orderings on the set of
@@ -25292,7 +25290,7 @@ All of the functions yield {\tt "failed"} when called with a
 polynomial of degree $n$, which is greater than the greatest 
 polynomial with the required property.
 
-\subsection{Creating polynomials}
+*** Creating polynomials
 \label{section10.5}
 
 To create an irreducible polynomial Axiom proceeds as follows.
@@ -25329,7 +25327,7 @@ analogically. We set $f_{n-1}=-1$ and $f_0=(-1)^nc$, where
 $c=${\tt primitiveElement()\$F}. Then
 {\tt nextNormalPrimitivePoly}$(X^n-X^{n-1}+f_0)$ is called.
 
-\subsection{Number of polynomials of a given kind and degree}
+*** Number of polynomials of a given kind and degree
 \label{section10.6}
 
 Formulae for the number of polynomials of the above kinds can be
@@ -25353,7 +25351,7 @@ where the product ranges over the degrees $n_i$ of the distinct
 monic irreducible polynomials appearing in the canonical 
 factorization of $(X^n-1)$ in $F[X]$, see Theorem 3.73 in \cite{Lidl83}.
 
-\subsection{Some other functions concerning polynomials}
+*** Some other functions concerning polynomials
 \label{section10.7}
 
 There are two functions for generating random polynomials.
@@ -25388,7 +25386,7 @@ Therefore we implemented the function
 of $n$ polynomials. This array is computed efficiently using the
 fact that powering by $q$ is a $F$-linear operation.
 
-\section{Future directions}
+** Future directions
 
 As already mentioned in the text the new compiler will open much
 more flexibility with datatypes. This could be used for an 
@@ -25540,7 +25538,7 @@ Although the multiplication time is much higher in the normal
 basis representation, the adaptive exponentiation algorithm
 yields for high exponents lower exponentiation times.
 
-\section{Dependencies between the constructors}
+** Dependencies between the constructors
 \label{section13}
 
 The picture on the next page visualises the dependencies between
@@ -25549,16 +25547,16 @@ the different constructors of the finite field world of Axiom.
 Here is the list of used abbreviations:
 
 {\bf Categories}
-\begin{verbatim}
+#+begin_example
    CHARNZ  CharacteristicNonZero
    FPC     FieldOfPrimeCharacteristic
    XF      ExtensionField
    FFC     FiniteFieldCategory
    FAXF    FiniteAlgebraicExtensionField
-\end{verbatim}
+#+end_example
 
 {\bf Domains}
-\begin{verbatim}
+#+begin_example
    SAE     SimpleAlgebraicExtension
    IPF     InnerPrimeField
    PF      PrimeField
@@ -25572,17 +25570,17 @@ Here is the list of used abbreviations:
    FF      FiniteField
    FFCG    FiniteFieldCyclicGroup
    FFNB    FiniteFieldNormalBasis
-\end{verbatim}
+#+end_example
 
 {\bf Packages}
-\begin{verbatim}
+#+begin_example
    DLP     DiscreteLogarithmPackage
    FFF     FiniteFieldFunctions
    INBFF   InnerNormalBasisFieldFunctions
    FFPOLY  FiniteFieldPolynomialPackage
    FFPOLY2 FiniteFieldPolynomialPackage2
    FFHOM   FiniteFieldHomomorphisms
-\end{verbatim}
+#+end_example
 
 \chapter[Real Quantifier Elimination]
 {Real Quantifier Elimination Tutorial by Hoon Hong}
@@ -25592,7 +25590,7 @@ Kyushu University in Japan in 2005. The state of the art
 has moved a bit but this is an excellent presentation up
 to that date.\cite{Hong05}
 
-\section{Overview}
+** Overview
 
 {\bf What is the real quantifier elimination problem?} As a simple example,
 consider the following ``toy'' problem: Find a condition on $b$ and $c$ such
@@ -25684,7 +25682,7 @@ There are also a few books that give and exposition on the subject
 Marie-Francoius Roy (1986)
 \end{itemize}
 
-\section{General Methods}
+** General Methods
 
 We begin by describing several general methods that work for arbitrary
 formulas. We will start with the historically first method (by
@@ -25692,7 +25690,7 @@ Tarski\cite{Tars48}), then proceed to the next important method of cylindrical
 algebraic decomposition (by Collins\cite{Coll75}), then conclude with recent
 methods with better asymptotic computing bounds.
 
-\subsection{The First Method}
+*** The First Method
 
 Alfred Tarski, the Polish-born U.S. mathematician, logician and
 philosopher, discovered the first quantifier elimination algorithm
@@ -25712,7 +25710,7 @@ finite tower of exponential functions in the number of variables. But
 it contains several important ideas/techniques that had significant
 influence on the later methods.
 
-\subsubsection{Method}
+**** Method
 
 Tarski’s method carries out a series of reduction steps until it comes
 down to some simple cases which are tackled using 
@@ -25940,7 +25938,7 @@ to see if $n_+$ is indeed $k$. When there are free variables, we need
 to parameterize the method. This concludes the description of Tarski's
 method.
 
-\subsection{Cylindrical Algebraic Decomposition Method}
+*** Cylindrical Algebraic Decomposition Method
 
 Collins\cite{Coll75}, a former Ph.D. student of Rosser (the logician known
 for Church-Rosser property of Lambda calculus) introduced a new method
@@ -25967,7 +25965,7 @@ Hong's implementation
 is currently used in several engineering/sicientific applications.
 In this section, we describe the method and various improvements.
 
-\subsubsection{Method}
+**** Method
 
 We first begin by explaining the name of the method:
 {\sl Cylindrical Algebraic Decomposition}
@@ -26241,7 +26239,7 @@ over $c$ as described above
 \noindent
 \hrulefill
 
-\subsubsection{Improvements}
+**** Improvements
 
 \noindent
 
@@ -26430,7 +26428,7 @@ construct stacks over them. When there are many equational constraints
 in the input formulas, the accumulated reduction on the number of
 stack constructions can be drastic.
 
-\subsection{Quantifier-Block Elimination Methods}
+*** Quantifier-Block Elimination Methods
 
 During last decade, there was an intensive research on improving
 asymptotic worst case computing bounds 
@@ -26456,7 +26454,7 @@ coefficients, and $n_i$ is the number of quantifiers in the $i$-th
 quantifier block. The ω best asymptotic bound so far (obtained by
 Renegar) is is $L(log~L)(log~log~L)(md)^{\prod_{k=0}^\omega O(n_k)}$.
 
-\subsubsection{Method}
+**** Method
 
 There are several methods with the similar complexity bounds.
 \cite{Grig88a}, 
@@ -26795,7 +26793,7 @@ algorithms proposed in the literature so far.
 Renegar\cite{Rene92}, by generalizing the above algorithm, gave a
 quantifier elimination algorithm for the first order theory of the reals.
 
-\section{Special Methods}
+** Special Methods
 
 During last several years, there have been efforts for developing
 methods that work on a restricted class of inputs. Such research is
@@ -26803,13 +26801,13 @@ motivated by the observation that one can identify interesting and
 useful sub-class of problems and that one might be able to develop
 more efficient (in practice) methods for them.
 
-\subsection{Low Degrees}
+*** Low Degrees
 
 Weispfenning\cite{Weis88}\cite{Weis94}\cite{Weis97},
 Loos\cite{Loos93}, Anai\cite{Anai00} and others devised methods for
 formulas where the bound variables occur in low degrees (1,2, and 3).
 
-\subsubsection{Restricted Problem Class}
+**** Restricted Problem Class
 
 A formula with one quantifier is called $degree~n$ if the bound variable
 occur in degree at most $n$. We would like to find methods for formulas
@@ -26820,7 +26818,7 @@ method to eliminate all the quantifiers one at a time, starting from
 the innermost ones, provided that the result of each quantifier
 elimination stays degree at most $n$ (in the remaining bound variables).
 
-\subsubsection{Method}
+**** Method
 
 In order to get the main intuition, let us consider the case when
 there are no free variables. The initial idea is similar to that of
@@ -26987,7 +26985,7 @@ several optimizations are described, such as
 reducing the size of the sample set by utilizing the relational operators,
 the boolean structure, the quantification structure, etc.
 
-\subsection{Constrained by Quadratic Equation}
+*** Constrained by Quadratic Equation
 
 Hong\cite{Hong93}\cite{Hong93a}
 devised an algorithm that eliminates a quantifier
@@ -27006,7 +27004,7 @@ the introduction of extraneous factors. Further the variant resultant
 calculus has some nice properties and might provide some new way to
 higher degrees.
 
-\subsubsection{Restricted Problem Class}
+**** Restricted Problem Class
 
 A formula is said to be {\sl constrained by a quadratic equation} if it is
 of the following form:
@@ -27018,7 +27016,7 @@ where
 $a_2,a_1$ and $a_0$ do not have a common real zero in $\mathbb{R}^r$.
 \end{itemize}
 
-\subsubsection{Mathematical Tool: Slope Resultants}
+**** Mathematical Tool: Slope Resultants
 
 Let us first define a variant of resultant, which we call {\sl slope}
 resultant. Later we will use this while developing a quantifier
@@ -27095,7 +27093,7 @@ c_m^{k+1}b_k   & {\rm if}~i = n^\prime ~{\rm and}~ j = n^\prime\\
 {\sl where $a_\mu=0$ if $\mu > m$ or $\mu < 0$ and $b_\nu=0$ if
 $\nu > n$ or $\nu < 0$}\quad$\blacksquare$
 
-\subsubsection{Method}
+**** Method
 
 Now we are ready to give a quantifier elimination algorithm that
 utilizes the slope resultants. Without losing generality, let us
@@ -27217,7 +27215,7 @@ is the maximum of the integer coefficient bit lengths. Experiments
 with implementation suggest that the algorithm is sufficiently
 efficient to be useful in practice.
 
-\subsection{Single Atomic Formula}
+*** Single Atomic Formula
 
 Gonzales-Vega\cite{Gonz98} gave algorithms for formulas with single
 atomic formula. The algorithms first compute a finite number of
@@ -27227,7 +27225,7 @@ mathematical tool used is the Sturm-Habicht sequence\cite{Gonz89}
 which is essentially a careful adaptation of Sturm's sequence to the
 subresultant chain.
 
-\subsubsection{Restricted Problem Class}
+**** Restricted Problem Class
 
 Let $P_n(\underbar{a},x)$ denote the polynomial
 $x^n+a_{n-1}x^{n-1}+\ldots+a_1x+a_0$. Then we are interested in the
@@ -27242,7 +27240,7 @@ following two types:
 \end{array}\]
 for even $n$.
 
-\subsubsection{Mathematical Tool: Sturm-Habicht}
+**** Mathematical Tool: Sturm-Habicht
 
 Let $\mathbb{D}$ be an integral domain
 
@@ -27352,7 +27350,7 @@ Then let}
 \[{\rm {\bf C}}({\rm {\bf stha}}_p(P,Q),\ldots,{\rm {\bf stha}}_0(P,Q))=
 c_+(P;Q)-c_-(P;Q)\quad\blacksquare\]
 
-\subsubsection{Method}
+**** Method
 
 Let us tackle now the two types of quantifier elimination problems
 mentioned above. From now, let
@@ -27410,7 +27408,7 @@ Again we will have to expand the right hand side by checking all the
 possible sign conditions over the {\bf stha} polynomials and keeping
 those making ${\bf C}>0$.
 
-\section{Approximate Methods}
+** Approximate Methods
 
 By now, it is well understood both theoretically and experimentally
 that the full exact quantifier elimination is intrinsically difficult,
@@ -27440,7 +27438,7 @@ The word ``approximate'' carries different meanings in different
 contexts. In this section, we survey two different interpretations and
 methods for them: {\sl generic} and {\sl volume-approximate}.
 
-\subsection{Generic Quantifier Elimination}
+*** Generic Quantifier Elimination
 
 One often observes that exact algorithms spend most of their computing
 time in analyzing and taking care of non-generic cases. But the
@@ -27455,7 +27453,7 @@ cases usually form a measure-zero set, and thus generically correct
 answers are different from the exact answers only by measure zero
 sets. Thus, it can be also viewed as being {\sl correct up to measure zero}.
 
-\subsubsection{Problem}
+**** Problem
 
 We begin by giving a precise statement of the generic quantifier
 elimination problem. 
@@ -27539,7 +27537,7 @@ no (generic) quantifiers and $F$ and $G$ are generically equaivalent.
 \quad$\blacksquare$
 \end{itemize}
 
-\subsubsection{Method}
+**** Method
 
 A natural way is to take an existing exact algorithm and turn it into
 a generic one. We will do so with the method of (partial) cylindrical
@@ -27767,7 +27765,7 @@ construct a quantifier free formula $G$ such that it is true on all the
 true cells and false on all the false cells.\quad$\blacksquare$
 \end{itemize}
 
-\subsection{Volume Approximate Quantifier Elimination}
+*** Volume Approximate Quantifier Elimination
 
 \noindent
 
@@ -27776,7 +27774,7 @@ elimination and a method for it. Let us first clarify what is meant by
 ``volume approximate'' quantifier elimination. It was further improved
 by Andreas Neubacher and completed by Stefan Ratschan\cite{Rats02}.
 
-\subsubsection{Problem}
+**** Problem
 
 We define the volume approximate quantifier elimination problem as
 follows. Devise an algorithm for
@@ -27815,7 +27813,7 @@ through the technical details in this tutorial. Intuitively, we will
 interpret that two boxes are disjoint if their intersection is either
 empty or belongs to the boundaries.
 
-\subsubsection{Method}
+**** Method
 
 \noindent
 One natural idea is to approximate each atomic formula by two
@@ -28272,7 +28270,7 @@ is true on $v$. Thus, the two outputs do not overlap.
 
 \end{itemize}
 
-\subsubsection{Termination}
+**** Termination
 
 Does the algorithm ({\sl VolumeApproxQE}) terminate always? The answer is
 {\sl almost always}. Now we will discuss a few causes of non-termination and
@@ -28338,9 +28336,9 @@ forms, Krawszyk's operator, etc
 Among them, the method of the measure-quantifier seems to be the most
 useful in practice.
 
-\chapter{Potential Future Algebra}
+* Potential Future Algebra
 {\center{\includegraphics[scale=0.70]{ps/v101toe.eps}}}
-\chapter{Groebner Basis by Siddharth Bhat}
+* Groebner Basis by Siddharth Bhat
 
 Quoting Philip Zucker \cite{Zuck19}, the Groebner basis algorithm is: 
 \begin{quote}
@@ -28359,17 +28357,17 @@ elimination.
 Siddharth Bhat \cite{Bhat19}
 wrote a couple blog posts on groebner basis which we quote here.
 
-\section{A Grobner Basis example}
+** A Grobner Basis example
 
 Here's a fun little problem, whose only solution I know involves a
 fair bit of math and computer algebra.
 
 We are given the grammar for a language $L$:
-\begin{verbatim}
+#+begin_example
    E = T +_mod8 T | T = -_mod8 T
    T = V | V ^ V | V ^ V ^ V
    V = 'a1' | 'a2' | ...
-\end{verbatim}
+#+end_example
 
 where \verb|+_mod8| is addition modulo 8, \verb|-_mod8| is subtraction
 modulo 8, and \verb|^| is XOR.
@@ -28381,9 +28379,9 @@ Since we have addition, we can perform multiplication by a constant by
 repeated addition. So we can perform \verb|3*a| as \verb|a+a+a|.
 
 We are then given the input expression
-\begin{verbatim}
+#+begin_example
    (a0 ^ a1 ^ a2 ^ a3)
-\end{verbatim}
+#+end_example
 We wish t find an equivalent expression in terms of the above language
 $L$. 
 
@@ -28399,35 +28397,35 @@ why it's natural to reach for them to solve this problem, the code,
 and eventual solution. 
 
 As a spoiler, the solution is:
-\begin{verbatim}
+#+begin_example
    a^b^c^d =
       -a - b + c + 3*d - 3*axorb - axorc
       + axord - bxorc + bxord + 3*cxord
       - 3*axorbxorc - axorbxord
       + axorcxord + bxorcxord
-\end{verbatim}
+#+end_example
 
 Clearly, this contains only additions/subtractions and multiplication
 by a constant.
 
-\subsection{What the hell is Grobner Basis?}
+*** What the hell is Grobner Basis?
 
 The nutshell is that a grobner basis is a way to construct rewrite
 rules which also understand arithmetic (I learnt this viewpoint from
 the book ``Term Rewriting and All That''. Fantastic book in
 general). Expanding on the nutshell, assuming we have a term rewriting
 system:
-\begin{verbatim}
+#+begin_example
   A -> -1*B -- (1)
   C -> B^2  -- (2)
-\end{verbatim}
+#+end_example
 over an alphabet \verb|(A, B, C)|.
 
 Now, given the string \verb|C + AB|, we wish to find out if it can be
 rewritten to 0 or not. Let's try to substitute and see what happens.
-\begin{verbatim}
+#+begin_example
    C + AB -2-> B^2 + AB -1-> B^2 + (-1*B)B
-\end{verbatim}
+#+end_example
 
 At this point, we're stuck! We don't have rewrite rules to allow us to
 rewrite \verb|(-1*B)B| into \verb|-B^2|. Indeed, creating such a list
@@ -28435,9 +28433,9 @@ would be infinitely long. But if we are willing to accept that we
 somehow have the rewrite rules that correspond to polynomial
 arithmetic, where we view \verb|A,B,C| as variables, then we can
 rewrite the above string to 0.
-\begin{verbatim}
+#+begin_example
    B^2 + (-1*B)B -> B^2 - B^2 -> 0
-\end{verbatim}
+#+end_example
 
 A Grobner basis is the algorithmic / mathematical machine that allows
 us to perform this kind of sumbstitution.
@@ -28448,24 +28446,24 @@ arithmetic. What's so complicated about that? To understand why this
 is not always so easy, let's consider a pathologicial, specially
 constructed example.
 
-\subsection{A complicated example that shattters dreams}
+*** A complicated example that shattters dreams
 
 Here's the patheologicial example:
-\begin{verbatim}
+#+begin_example
    A -> 1     -- (1)
    AB -> -B^2 -- (2)
-\end{verbatim}
+#+end_example
 
 And we consider the string \verb|S = AB + B^2|. If we blindly apply
 the first rule, we arrive at
-\begin{verbatim}
+#+begin_example
    S = AB + B^2 -1-> 1B + B^2 = B + B^2 (STUCK)
-\end{verbatim}
+#+end_example
 
 However, if we apply (2) and then (1)
-\begin{verbatim}
+#+begin_example
    S = AB + B^2 -2-> -B^2 + B^2 -> 0
-\end{verbatim}
+#+end_example
 
 This tells us that we can't just apply the rewrite rules
 willy-nilly. It's sensitive to the order of the rewrites! That is, the
@@ -28485,7 +28483,7 @@ most often described.
 Now that we have a handle on what a grobner basis is, let's go on to
 solve the original problem.
 
-\subsection{An explanation through a slightly simpler problem}
+*** An explanation through a slightly simpler problem
 
 I'll first demonstrate the idea of how to solve the original problem
 by solving a slightly simpler problem:
@@ -28493,32 +28491,32 @@ by solving a slightly simpler problem:
 Rewrite \verb|a^b^c| in terms of \verb|a^b|, \verb|b^c|, \verb|c^a|
 and the same \verb|+_mod8| instruction set as the original
 problem. The only difference this time is that we do not have 
-\begin{verbatim}
+#+begin_example
    T -> V ^ V ^ V
-\end{verbatim}
+#+end_example
 
 The idea is to construct the polynomial ring over \verb|Z/8Z|
 (integers modulo 8) with variables a, b, c, axorb, bxorc, axorc. Now,
 we know that 
-\begin{verbatim}
+#+begin_example
    a^b = a + b - 2ab
-\end{verbatim}
+#+end_example
 So, we setup rewrite rules such that 
-\begin{verbatim}
+#+begin_example
    a + b - 2ab -> axorb
    b + c - 2bc -> bxorc
    c + a - 2ca -> cxora
-\end{verbatim}
+#+end_example
 
 We construct the polynomial
-\begin{verbatim}
+#+begin_example
    f(a, b, c) = a^b^c
-\end{verbatim}
+#+end_example
 which has been written in terms of addition and multiplication,
 defined as
-\begin{verbatim}
+#+begin_example
    f_orig(a, b, c) = 4*a*b*c - 2*a*b - 2*a*c - 2*b*c + a + b + c
-\end{verbatim}
+#+end_example
 We then rewrite \verb|f_orig| with respect to our rewrite
 rules. Hopefully, the rewrite rules should give us a clean expression
 in terms of one variable and two-variable xor's. There is the danger
@@ -28527,47 +28525,47 @@ such a term \verb|(2*b*axorc)| in this case, but it does not appear in
 the original problem.
 
 Create a ring with variables a, b, c, axorb, bxorc, axorc.
-\begin{verbatim}
+#+begin_example
    R = IntegerModRing(8)['a, b, c, axorb, bxorc, axorc']
    (a, b, c, axorb, bxorc, axorc) = R.gens()
-\end{verbatim}
+#+end_example
 
 XOR in terms of polynomials
-\begin{verbatim}
+#+begin_example
    def xor2(x, y): return x + y - 2*x*y
-\end{verbatim}
+#+end_example
 
 Define the ideal which allows us to rewrite 
 \verb|xor2(a,b)->axorb|, and so on we also add the relation
 \verb|a^2-a=0 => a=0| or \verb|a=1| in case this helps the solver.
-\begin{verbatim}
+#+begin_example
    I = ideal((axorb - xor2(a,b), 
               bxorc - xors(b,c), 
               axorc - xor2(a,c), 
               a*a-a, b*b-b, c*c-c))
-\end{verbatim}
+#+end_example
 
 The polynomial representing \verb|a^b^c| we wish to reduce
-\begin{verbatim}
+#+begin_example
    f_orig = xor2(a, b, c)
-\end{verbatim}
+#+end_example
 
 We take the groebner basis of the ring to reduce the polynomial $f$
-\begin{verbatim}
+#+begin_example
    IG = I.groebner_basis()
-\end{verbatim}
+#+end_example
 
 We reduce \verb|a^b^c| with respect to the groebner basis.
-\begin{verbatim}
+#+begin_example
    f_reduced = f_orig.reduce(IG)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    print("value of a^b^c:\n\t%s\n\treduced: %s" % (f_orig, f_reduced))
-\end{verbatim}
+#+end_example
 
 Code to evaluate the function $f$ on all inputs to check correctness.
-\begin{verbatim}
+#+begin_example
    def evalxor2(f)
      for (i, j, k) in [(i, j, k) 
        for i in [0, 1] 
@@ -28578,19 +28576,19 @@ Code to evaluate the function $f$ on all inputs to check correctness.
                                  axorb=i^^j, bxorc=j^^k, axorc=i^^k)
              print("%s^%s^%s: ref(%s) =?= f(%s): %s" %
                (i, j, k, ref, eval, ref == eval))
-\end{verbatim}
+#+end_example
 
 Check original formulation is correct
-\begin{verbatim}
+#+begin_example
    print("evaluating original f for sanity check")
    evalxor2(f_orig)
-\end{verbatim}
+#+end_example
 
 Check reduced formulation is correct
-\begin{verbatim}
+#+begin_example
    print("evaluating reduced f:")
    evalxor2(f_reduced)
-\end{verbatim}
+#+end_example
 
 Running the code gives us the redued polynomial
 \verb|-2*b*axorc+b+axorc| which unfortunately contains a term that is 
@@ -28599,14 +28597,14 @@ my friend that she is unaware of a solution to this problem (writing
 \verb|a^b^c| in terms of smaller xors and sums).
 
 The full code output is:
-\begin{verbatim}
+#+begin_example
    value of a^b^c:
      4*a*b*c - 2*a*b - 2*a*c - 2*b*c + a + b + c
      reduced: -2*b*axorc + b + axorc
    evaluating original f for sanity check:
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    0^0^0: ref(0) =?= f(0): True
    0^0^1: ref(1) =?= f(1): True
    0^1^0: ref(1) =?= f(1): True
@@ -28615,9 +28613,9 @@ The full code output is:
    1^0^1: ref(0) =?= f(0): True
    1^1^0: ref(0) =?= f(0): True
    1^1^1: ref(1) =?= f(1): True
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    evaluating reduced f:
    0^0^0: ref(0) =?= f(0): True
    0^0^1: ref(1) =?= f(1): True
@@ -28627,24 +28625,24 @@ The full code output is:
    1^0^1: ref(0) =?= f(0): True
    1^1^0: ref(0) =?= f(0): True
    1^1^1: ref(1) =?= f(1): True
-\end{verbatim}
+#+end_example
 
 That is, both the original polynomial and the reduced polynomial match
 the expected results. But the reduced polynomial is not in our
 language $L$, since it has a term that is a product of $b$ with
 $axorc$.
-\begin{verbatim}
+#+begin_example
    -a - b + c + 3*d - 3*axorb - axorc
    + axord - bxorc + bxord + 3*cxord
    - 3*axorbxorc - axorbxord
    + axorcxord + bxorcxord
-\end{verbatim}
+#+end_example
 
 which happily has no products between terms! It also passes our sanity
 check, so we've now found the answer.
 
 The full output is:
-\begin{verbatim}
+#+begin_example
    value of a^b^c^d:
      4*a*b*c + 4*a*b*d + 4*a*c*d + 4*b*c*d - 2*a*b -2*a*c - 2*b*c
      - 2*a*d - 2*b*d - 2*c*d + a + b + c + d
@@ -28652,9 +28650,9 @@ The full output is:
       -a - b + c + 3*d - 3*axorb - axorc + axord - bxorc + bxord
       + 3*cxord - 3*axorbxorc - axorbxord + axorcxord + bxorcxord
  
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    evaluating original a^b^c^d
    0^0^0^0: ref(0) =?= f(0): True
    0^0^0^1: ref(1) =?= f(1): True
@@ -28672,9 +28670,9 @@ The full output is:
    1^1^0^1: ref(1) =?= f(1): True
    1^1^1^0: ref(1) =?= f(1): True
    1^1^1^1: ref(0) =?= f(0): True
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    evaluating reduced a^b^c^d
    0^0^0^0: ref(0) =?= f(0): True
    0^0^0^1: ref(1) =?= f(1): True
@@ -28692,10 +28690,10 @@ The full output is:
    1^1^0^1: ref(1) =?= f(1): True
    1^1^1^0: ref(1) =?= f(1): True
    1^1^1^1: ref(0) =?= f(0): True
-\end{verbatim}
+#+end_example
 
 Code for \verb|a^b^c^d|
-\begin{verbatim}
+#+begin_example
 def xor3(x, y, z): return xor2(x, xor2(y, z))
 
 R = IntegerModRing(8)['a, b, c, d, axorb, axorc, axord,
@@ -28744,11 +28742,11 @@ evalxor3(f_orig)
 print("evaluating reduced a^b^c^d")
 evalxor3(f_reduced)
 
-\end{verbatim}
+#+end_example
 
-\section{Ideals as Rewrite Systems}
+** Ideals as Rewrite Systems
 
-\subsection{A motivating example}
+*** A motivating example
 
 The question a Grobner basis allows us to answer is this: can the
 polynomial
@@ -28772,7 +28770,7 @@ division starts to matter! Ideally, we want an algorithm which is
 {\sl not sensitive} to the order in which we choose to apply these
 changes. $x^2+1$
 
-\subsection{The rewrite rule perspective}
+*** The rewrite rule perspective
 
 An alternative viewpoint of asking ``can this be factorized'', is to
 ask ``can we look at the factorization as a rewrite rule?''. For this
@@ -28806,7 +28804,7 @@ regardless of the order in which we apply them. It's also
 {\sl correct}, in that it only rewrites to 0 if the original system
 has {\sl some way} to rewrite to 0.
 
-\subsection{Buchberger's algorithm}
+*** Buchberger's algorithm
 
 We need to identify {\sl critical pairs}, which in this setting are
 called S-polynomials.
@@ -28822,16 +28820,16 @@ The S-polynomial induced by $f_i$, $f_j$ is defined as
 \[S(f_i,f_j)=m_if_i - m_if_j\]
 
 
-\chapter{Greatest Common Divisor}
+* Greatest Common Divisor
 Greatest Common Divisor
-\chapter{Polynomial Factorization}
+* Polynomial Factorization
 Polynomial Factorization
 
 
-\chapter{Differential Forms}
+* Differential Forms
 This is quoted from Wheeler \cite{Whee12}.
 
-\section{From differentials to differential forms}
+** From differentials to differential forms
 
 In a formal sense, we may define differentials as the vector space of
 linear mappings from curves to the reals, that is, given a
@@ -28861,7 +28859,7 @@ taken in one order, {\bf n} has one sign. If the opposite order is
 taken then {\bf -n} results. Similarly, volume integrals change sign
 if we change from a right- or left-handed coordinate system.
 
-\subsection{The wedge product}
+*** The wedge product
 
 We can build this alternating sign into our convention for writing
 differential forms by introducing a formal antisymmetric product,
@@ -29054,7 +29052,7 @@ The coefficients
 are essentially the components of the cross product. We will see this in
 more detail below when we discuss the curl.
 
-\subsection{The exterior derivative}
+*** The exterior derivative
 
 We may regard the differential of any function, say $f(x,y,z)$, as the
 1-form:
@@ -29167,7 +29165,7 @@ Then apply the exterior derivative gives
 \end{array}\]
 so that the exterior derivative can also reproduce the divergence.
 
-\subsection{The Hodge dual}
+*** The Hodge dual
 
 To truly have the curl we need a way to turn a 2-form into a vector, i.e.,
 a 1-form and a way to turn a 3-form into a 0-form. This leads us to 
@@ -29219,16 +29217,16 @@ generalizations, we must first explore properties of the metric and
 look at coordinate transformations. This will allow us to define the
 Hodge dula in arbitrary coordinates.
 
-\chapter{Pade approximant}
+* Pade approximant
 Pade approximant
 \chapter[Schwartz-Zippel lemma]
 {Schwartz-Zippel lemma and testing polynomial identities}
 Schwartz-Zippel lemma and testing polynomial identities
-\chapter{Chinese Remainder Theorem}
+* Chinese Remainder Theorem
 Chinese Remainder Theorem
-\chapter{Gaussian Elimination}
+* Gaussian Elimination
 Gaussian Elimination
-\chapter{Diophantine Equations}
+* Diophantine Equations
 Diophantine Equations
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

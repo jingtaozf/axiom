@@ -20,7 +20,7 @@
 )clear all
  
 #+end_src
-\section{Hamiltonian Biquaternions}
+** Hamiltonian Biquaternions
 
 Define the type $Q$ of Hamiltonian biquaternions (not to be confused with
 Clifford biquaternions which are an entirely different object)
@@ -97,7 +97,7 @@ matrixq(x:Q):Matrix C == matrix _
 --E 6
 
 #+end_src
-\section{The Pauli basis Biquaternions}
+** The Pauli basis Biquaternions
 
 The quaternion package in axiom is based upon the Hamiltonian basis,
 i, j, k, in contrast to the Pauli basis used in the Morgan papers which
@@ -181,7 +181,7 @@ siglist(x:Q):List C == [real x, -imagK(x)*%i, -imagJ(x)*%i, %i*imagI(x)]
 --E 11
 
 #+end_src
-\section{Biquaternion Calculus}
+** Biquaternion Calculus
 
 Define the quaternion derivative (Morgan, 2001, Eq. 2)
 #+NAME: *
@@ -249,9 +249,9 @@ F:Q:=Ft(x,y,z)*sig0+Fx(x,y,z)*sig1+Fy(x,y,z)*sig2+Fz(x,y,z)*sig3
 #+end_src
 In the Pauli basis the derivative of this biquat should produce
 (Morgan 2001, eq 1):
-\begin{verbatim}
+#+begin_example
   D(Ft+F.sigma)=div(F)+(grad(Ft)+%i*curl(F)).sigma
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -277,7 +277,7 @@ siglist(D(F,x,y,z))
 --E 18
 
 #+end_src
-\section{Biquaternion Exponential}
+** Biquaternion Exponential
 
 Define a function that evaluates the Biquat exponential by beginning
 with the biquat rotation.
@@ -292,9 +292,9 @@ used by Gsponer and others. A biquat $[{\bf a}, {\bf b}, {\bf c}, {\bf d}]$
 has scalar component ${\bf a}$ which may have itself an imaginary component.
 The component $[{\bf 0}, {\bf b}, {\bf c}, {\bf d}]$ is its vector 
 component which again may be complex:
-\begin{verbatim}
+#+begin_example
  [0,b,c,d]=[0,Re(b),Re(c),Re(d)]+[0,Im(b),Im(c),Im(d)]=Re(Vec(q))+Im(Vec(q))
-\end{verbatim}
+#+end_example
 Thus, for us, a ``real quaternion'' has real scalar and vector components
 and does not refer to a quaternion with only a scalar component as it would
 in the language adopted by the quatern package in Axiom.
@@ -460,9 +460,9 @@ nn:=siglist(exp(-%i::Q*qx))
 
 #+end_src
 To express a proof of equality such as:
-\begin{verbatim}
+#+begin_example
   rot(theta,q) = exp((-theta/2)*%i*q)
-\end{verbatim}
+#+end_example
 for arbitrary real $\theta$ and biquaternion real using vector $q$ as one 
 would in Maple, we need to express the fact that $q$ is a vector quantity
 with real coefficients in the Pauli basis representing a unit magnitude
@@ -484,7 +484,7 @@ qnv:=q1*sig1+q2*sig2+sqrt(1-q1^2-q2^2)*sig3
 --E 27
 
 #+end_src
-\section{Assumptions about Variables}
+** Assumptions about Variables
 
 Now, in the equations that will result, we will obtain subexpressions of the
 form $\sqrt{\theta^2}$. The positive root will always be appropriate in
@@ -494,9 +494,9 @@ that would otherwise have to be properly selected to get an equality. Thus,
 one means to get the desired simplification is to perform the restriction
 of $\theta$ to positive values. My current understanding is: Axiom does not
 support variables with properties in the sense that Maple does (the 
-*assume* facility).
+,*assume* facility).
 
-\section{Problems}
+** Problems
 
 Returning to the case at hand, let's expand a test of equality to the
 four biquat components and seek a way to prove that each component 
@@ -569,7 +569,7 @@ How are symbolic manipulations, proofs and solutions to be carried out
 without this basic notion? I am let to think that Axiom can only be
 considered a semi-numerical software system.
 
-\section{Rules and Pattern Matching}
+** Rules and Pattern Matching
 
 Let's try another way to answer question 1 by using symbolic pattern
 matching ``rules''. Define a rule that recognizes the specific case of
@@ -753,7 +753,7 @@ map(x+->posxRule x, testqeq)
 --E 40
 
 #+end_src
-\section{Algebraic Domain of Computation}
+** Algebraic Domain of Computation
 
 Recall that Axiom does things in a fundamentally {\sl algebraic} rather
 than {\sl symbolic} way. So although the pattern matching approach

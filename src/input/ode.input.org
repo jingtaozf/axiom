@@ -10,7 +10,7 @@
 \eject
 \tableofcontents
 \eject
-\section{License}
+** License
 #+NAME: license
 #+begin_src common-lisp :noweb yes
 --Copyright The Numerical Algorithms Group Limited 1991.
@@ -140,23 +140,23 @@ solve(deqz,y,z=0,[1]) -- BUG!
 
 #+end_src
 I think the bug is in
-\begin{verbatim}
+#+begin_example
    file odeef.spad
    constructor ODEEF
    function solve(diffeq:F,y:OP,center:EQ,y0:List F)
-\end{verbatim}
+#+end_example
 
 the second line of the body was
 
-\begin{verbatim}
+#+begin_example
    kx:K:=kernel x
-\end{verbatim}
+#+end_example
 
 which uses uninitialised x. I think it should be
 
-\begin{verbatim}
+#+begin_example
    kx:K:=kernel(retract(lhs(center))@SY)
-\end{verbatim}
+#+end_example
 
 as the line immediately below it. That change certainly fixes THIS bug!
 

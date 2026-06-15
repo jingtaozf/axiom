@@ -9,8 +9,8 @@
 \eject
 \tableofcontents
 \eject
-\section{License}
-\begin{verbatim}
+** License
+#+begin_example
 ;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
 ;; All rights reserved.
 ;;
@@ -42,9 +42,9 @@
 ;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-\end{verbatim}
+#+end_example
 
-\section{Hosting these C utilities on SBCL}
+** Hosting these C utilities on SBCL
 
 This file is the clearest illustration of why the GCL binding cannot be
 carried verbatim to SBCL, and of the right response.
@@ -211,7 +211,7 @@ OS CWD, so we must update both."
 #+end_src
 The MYCOMBINE function causes a problem as of GCL-2.6.8pre.
 Camm has rewritten it. This used to read:
-\begin{verbatim}
+#+begin_example
 #+(AND KCL (NOT ELF))
 (Clines
 "unsigned int MYCOMBINE(i,j)"
@@ -220,7 +220,7 @@ Camm has rewritten it. This used to read:
 "return ( (((j & 16777215) @<< 6)+i) % 1073741789);"
 "}"
 )
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 #+(AND KCL (NOT ELF))

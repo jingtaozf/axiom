@@ -9,7 +9,7 @@
 \eject
 \tableofcontents
 \eject
-\subsection{toplevel}
+*** toplevel
 The function top-level is the very root of the normal invocation
 history stack. Control will pass to the restart function which is 
 also in this file.
@@ -24,8 +24,8 @@ previous definition.
 ;;(defun toplevel (&rest foo) (lisp::unwind))
 
 #+end_src
-\section{License}
-\begin{verbatim}
+** License
+#+begin_example
 ;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
 ;; All rights reserved.
 ;;
@@ -57,7 +57,7 @@ previous definition.
 ;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -114,7 +114,7 @@ We need to repatch this for GCL-2.6.8pre2. There appears to be an issue
 about the proper handling of directory names. The pathname returned by
 truename does not appear to be a string so we need to call namestring.
 It used to read:
-\begin{verbatim}
+#+begin_example
 (defun |cd| (args)
   (cond ((null args)
 #+(and :lucid :ibm/370)
@@ -132,7 +132,7 @@ It used to read:
   (setq *default-pathname-defaults* (pathname $current-directory))
   (|sayKeyedMsg| "The current AXIOM default directory is %1"
    (list (namestring $current-directory))))
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 (defun |cd| (args)

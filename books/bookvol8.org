@@ -4,7 +4,7 @@
 \pagenumbering{arabic}
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
-\chapter{Overview}
+* Overview
 \label{Overview}
 This book contains 5 programs, all related to the graphics subsystem.
 
@@ -19,13 +19,11 @@ They can also be run standalone using the program ``viewalone''
 (See Section \ref{viewalone} on page~\pageref{viewalone}).
 
 
-\begin{itemize}
-\item viewman/viewman.c.pamphlet -- int main (void)
-\item viewalone/viewalone.c.pamphlet -- int main (int argc,char *argv[])
-\item view2d/main2d.c.pamphlet -- int main(void) 
-\item view3d/main3d.c.pamphlet -- int main(void) 
-\item view3d/testcol.c.pamphlet -- void main(void) 
-\end{itemize}
+- viewman/viewman.c.pamphlet -- int main (void)
+- viewalone/viewalone.c.pamphlet -- int main (int argc,char *argv[])
+- view2d/main2d.c.pamphlet -- int main(void) 
+- view3d/main3d.c.pamphlet -- int main(void) 
+- view3d/testcol.c.pamphlet -- void main(void) 
 
 The section ``gdraws'' 
 (see \ref{gdraws} on page~\pageref{gdraws})
@@ -35,45 +33,41 @@ functions for the X routines, as in GDrawArc versus XDrawArc.
 When the Xoption is set the X routine is called. When the PSoption 
 is set the postscript routines are generated.
 
-\section{Environment Settings}
-\subsection{X11 .Xdefaults}
-\begin{itemize}
-\item Axiom.2D.Font
-\item Axiom.2D.messageFont (default: Axiom.2D.Font)
-\item Axiom.2D.postscriptFile (default: "axiom2d.ps")
-\item Axiom.2D.messageFont (default: Axiom.2D.Font)
-\item Axiom.2D.buttonFont (default: Axiom.2D.Font)
-\item Axiom.2D.headerFont (default: Axiom.2D.Font)
-\item Axiom.2D.titleFont (default: Axiom.2D.Font)
-\item Axiom.2D.graphFont (default: Axiom.2D.Font)
-\item Axiom.2D.unitFont (default: Axiom.2D.Font)
-\item Axiom.2D.monochrome (default: off)
-\item Axiom.2D.inverse (default: off)
-\item Axiom.3D.Font
-\item Axiom.3D.postscriptFile (default: "axiom3d.ps")
-\item Axiom.3D.messageFont (default: Axiom.3D.Font)
-\item Axiom.3D.buttonFont (default: Axiom.3D.Font)
-\item Axiom.3D.headerFont (default: Axiom.3D.Font)
-\item Axiom.3D.titleFont (default: Axiom.3D.Font)
-\item Axiom.3D.lightingFont (default: Axiom.3D.Font)
-\item Axiom.3D.volumeFont (default: Axiom.3D.Font)
-\item Axiom.3D.monochrome (default: off)
-\item Axiom.3D.inverse (default: off)
-\end{itemize}
-\subsection{Shell Variables}
-\begin{itemize}
-\item DISPLAY
-\item AXIOM
-\item \$AXIOM/bli/view2d
-\item \$AXIOM/bli/view3d
-\item HOME
-\item HOME/.Xdefaults
-\item XENVIRONMENT
-\item XENVIRONMENT/.Xdefaults-
-\item DEVE
-\end{itemize}
-\section{Pre-release change history}
-\begin{verbatim}
+** Environment Settings
+*** X11 .Xdefaults
+- Axiom.2D.Font
+- Axiom.2D.messageFont (default: Axiom.2D.Font)
+- Axiom.2D.postscriptFile (default: "axiom2d.ps")
+- Axiom.2D.messageFont (default: Axiom.2D.Font)
+- Axiom.2D.buttonFont (default: Axiom.2D.Font)
+- Axiom.2D.headerFont (default: Axiom.2D.Font)
+- Axiom.2D.titleFont (default: Axiom.2D.Font)
+- Axiom.2D.graphFont (default: Axiom.2D.Font)
+- Axiom.2D.unitFont (default: Axiom.2D.Font)
+- Axiom.2D.monochrome (default: off)
+- Axiom.2D.inverse (default: off)
+- Axiom.3D.Font
+- Axiom.3D.postscriptFile (default: "axiom3d.ps")
+- Axiom.3D.messageFont (default: Axiom.3D.Font)
+- Axiom.3D.buttonFont (default: Axiom.3D.Font)
+- Axiom.3D.headerFont (default: Axiom.3D.Font)
+- Axiom.3D.titleFont (default: Axiom.3D.Font)
+- Axiom.3D.lightingFont (default: Axiom.3D.Font)
+- Axiom.3D.volumeFont (default: Axiom.3D.Font)
+- Axiom.3D.monochrome (default: off)
+- Axiom.3D.inverse (default: off)
+*** Shell Variables
+- DISPLAY
+- AXIOM
+- \$AXIOM/bli/view2d
+- \$AXIOM/bli/view3d
+- HOME
+- HOME/.Xdefaults
+- XENVIRONMENT
+- XENVIRONMENT/.Xdefaults-
+- DEVE
+** Pre-release change history
+#+begin_example
 This directory contains the C source code for the Scratchpad's
 graphics. Comments given to the maintenance program refer to 
 version numbers. The versions are documented below, starting with
@@ -288,36 +282,36 @@ version27:
   view3d: initialize the numOfPolygons and polygons field right before they're
   used (as opposed to whereever i had them before)
   view3d: modified=[component.c]
-\end{verbatim}
+#+end_example
 
-\chapter{Graphics File Formats}
-\section{The viewFile data file format}
+* Graphics File Formats
+** The viewFile data file format
 The viewFile is a control file for graph information. It contains
 settings for particular graphs. There are some general window
 settings that apply to the whole graph window followed by 9
 graph settings, one for each possible graph shown.
-\subsection{The viewType}
+*** The viewType
 The viewType (A) is a switch used to decide what tool will be used to
 display the graph. At present there are 4 values defined (in the
 file [[src/graph/include/action.h]]) which are:
-\begin{verbatim}
+#+begin_example
 /* Viewport Types */
 #define view3DType     1
 #define viewGraphType  2
 #define view2DType     3
 #define viewTubeType   4
-\end{verbatim}
+#+end_example
 In the example below the integer value is '3', at (A), 
 therefore it is of 'view2DType' meaning a 2D graph.
 
 This value is read in [[src/graph/viewalone/viewalone.c]]
-\subsection{The title}
+*** The title
 The title, at (B), is read in [[src/graph/viewalone/spoon2d.c]].
 It can be a maximum of 256 characters.
-\subsection{The window boundaries}
+*** The window boundaries
 There are 4 integers, at (C), the X, Y, Width, and Height
 which represent the window size in pixels.
-\subsection{The graph specifications}
+*** The graph specifications
 There are, at (D), a series of specifications for the 9
 possible graphs. They are all in groups of 6 lines, one
 per graph. These lines are stored in a data structure called
@@ -362,7 +356,7 @@ Stored in [[graphStateArray[i].selected]].
 \end{list}
 \end{list}
 
-\begin{verbatim}
+#+begin_example
 3                                          (A)
 x*x                                        (B)
 0 0 400 400                                (C)
@@ -420,11 +414,11 @@ x*x                                        (B)
 0 0
 1 1 0 1 0 0 0
 0 0
-\end{verbatim}
-\section{The graph file format}
+#+end_example
+** The graph file format
 There are up to 9 files, named [ [[graph0]] .. [[graph8]] ].
 There is one file per graph as indicated by the [[data]] file above.
-\subsection{The bounding values}
+*** The bounding values
 There are 4 integers (\%d format) at (A) giving the xmin, ymin, xmax, and
 ymax values for the graph. These are stored in
 [[graphArray[i].xmin]], [[graphArray[i].ymin]], [[graphArray[i].xmax]],
@@ -467,7 +461,7 @@ These are pointed to by the [[aList]] structure. There are as many
 copies of this data as there are points in the graph (G)
 \end{list}
 
-\begin{verbatim}
+#+begin_example
 -3 0 3 9                           (A)  
 0.166667 0.111111                  (B)
 1.49012e-08 -0.5                   (C)
@@ -525,8 +519,8 @@ copies of this data as there are points in the graph (G)
 0.458333 0.340278 0 2
 0.479167 0.418403 0 2
 0.5 0.5 0 2
-\end{verbatim}
-\section{The parabola}
+#+end_example
+** The parabola
 #+NAME: parabola.view/data
 #+begin_src common-lisp :noweb yes
 3
@@ -647,7 +641,7 @@ x*x
 0.479167 0.418403 0 2
 0.5 0.5 0 2
 #+end_src
-\section{3D graph information}
+** 3D graph information
 For the 3D graph information we have
 a table view of this information:
 
@@ -692,7 +686,7 @@ a table view of this information:
 \end{tabular}
 
 A data file, with uninteresting lines snipped is:
-\begin{verbatim}
+#+begin_example
 1
 -1 1 -1 1 -0.998628 0.998628
 -1*y^2+x^2
@@ -731,8 +725,8 @@ A data file, with uninteresting lines snipped is:
 ..<snip>..
 782
 783
-\end{verbatim}
-\chapter{include}
+#+end_example
+* include
 \label{include}
 This chapter contains the include files. Unlike normal C programs
 we replace the 'include' directive by the actual chunk from this
@@ -743,7 +737,7 @@ in faster compile times.
 The include files are collected from both the view* programs and 
 the low level C code that supports them, including libspad which,
 in general, have the file extension of 'h1' rather than 'h'.
-\section{actions.h}
+** actions.h
 #+NAME: include/actions.h
 #+begin_src c :noweb yes
 /* from bookvol8 chunk include/actions.h */
@@ -868,7 +862,7 @@ in general, have the file extension of 'h1' rather than 'h'.
 #define hitherPlaneData    116 /* for 3D */
 
 #+end_src
-\section{colors.h}
+** colors.h
 This include file appears not to be used. 
 However, the moColor macro IS used but not included.
 #+NAME: include/colors.h
@@ -925,7 +919,7 @@ However, the moColor macro IS used but not included.
 #define moColor(h,s) ((mono)?foregroundColor:XSolidColor(h,s))
 #define moColor_BG(h,s) ((mono)?backgroundColor:XSolidColor(h,s))
 #+end_src
-\section{component.h}
+** component.h
 \index{component.h}
 #+NAME: include/component.h
 #+begin_src c :noweb yes
@@ -1008,7 +1002,7 @@ typedef struct _LLLPoint { /* meaning list of list of list of points */
 } LLLPoint;
 
 #+end_src
-\section{g.h}
+** g.h
 \index{g.h}
 #+NAME: include/g.h
 #+begin_src c :noweb yes
@@ -1070,7 +1064,7 @@ typedef struct _GCstruct {
 } GCstruct, *GCptr;
 
 #+end_src
-\section{nox10.h}
+** nox10.h
 \index{nox10.h}
 #+NAME: include/nox10.h
 #+begin_src c :noweb yes
@@ -1138,7 +1132,7 @@ typedef struct _XAssocTable {
 } XAssocTable;
 
 #+end_src
-\section{override.h}
+** override.h
 \index{override.h}
 #+NAME: include/override.h
 #+begin_src c :noweb yes
@@ -1155,7 +1149,7 @@ typedef struct _XAssocTable {
    title bars. */
 
 #+end_src
-\section{rgb.h}
+** rgb.h
 \index{rgb.h}
 \index{struct!RGB}
 \index{RGB struct}
@@ -1179,7 +1173,7 @@ typedef struct _HLS {
 } HLS ;
 
 #+end_src
-\section{spadcolors.h}
+** spadcolors.h
 \index{spadcolors.h}
 #+NAME: include/spadcolors.h
 #+begin_src c :noweb yes
@@ -1214,7 +1208,7 @@ extern int       num;
 
 <<include/rgb.h>>
 #+end_src
-\section{tube.h}
+** tube.h
 \index{tube.h}
 #+NAME: include/tube.h
 #+begin_src c :noweb yes
@@ -1344,7 +1338,7 @@ typedef struct _pointInfo {
 } pointInfo;
 
 #+end_src
-\section{view2d.h}
+** view2d.h
 \index{view2d.h}
 #+NAME: include/view2d.h
 #+begin_src c :noweb yes
@@ -1452,7 +1446,7 @@ typedef struct _graphStateStruct {
 
 /* need spline color, axes color, units color... */
 #+end_src
-\section{view3d.h}
+** view3d.h
 \index{view3d.h}
 \index{component.h}
 #+NAME: include/view3d.h
@@ -1547,7 +1541,7 @@ typedef struct _boxSideStruct {
 } boxSideStruct;
 
 #+end_src
-\section{viewcommand.h}
+** viewcommand.h
 \index{viewcommand.h}
 #+NAME: include/viewcommand.h
 #+begin_src c :noweb yes
@@ -1556,7 +1550,7 @@ typedef struct _boxSideStruct {
 
 #define viewportClosing 1
 #+end_src
-\section{view.h}
+** view.h
 \index{view.h}
 #+NAME: include/view.h
 #+begin_src c :noweb yes
@@ -1619,7 +1613,7 @@ exitWithAck(RootWindow(dsply,scrn),Window,-1); \
 } 
 
 #+end_src
-\section{write.h}
+** write.h
 \index{write.h}
 #+NAME: include/write.h
 #+begin_src c :noweb yes
@@ -1634,7 +1628,7 @@ exitWithAck(RootWindow(dsply,scrn),Window,-1); \
 #define aPostscript 3
 #define anImage	4
 #+end_src
-\section{xdefs.h}
+** xdefs.h
 \index{xdefs.h}
 #+NAME: include/xdefs.h
 #+begin_src c :noweb yes
@@ -3565,17 +3559,17 @@ extern void XSpadFillArc(Display *, Drawable, int, int, unsigned int,
 extern void XSpadFillArcs(Display *, Drawable, XArc *, int, int, int );
 #+end_src
 
-\chapter{viewman}
+* viewman
 \label{viewman}
 \index{viewman}
-\section{viewman Call Graph}
+** viewman Call Graph
 This was generated by the GNU cflow program with the argument list.
 Note that the line:NNNN numbers refer to the line in the code after
 it has been tangled from this file.
-\begin{verbatim}
+#+begin_example
 cflow --emacs -l -n -b -T --omit-arguments viewman.c
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ;; This file is generated by GNU cflow 1.3. -*- cflow -*-
     2 {   0} +-main() <int main () line:1342>
     3 {   1}   +-bsdSignal()
@@ -3691,9 +3685,9 @@ cflow --emacs -l -n -b -T --omit-arguments viewman.c
   109 {   2}     +-get_string()
   110 {   2}     +-strlen()
   111 {   2}     \-readViewport() <int readViewport () line:1299> [see 23]
-\end{verbatim}
-\section{Constants and Headers}
-\subsection{defines}
+#+end_example
+** Constants and Headers
+*** defines
 \index{defines}
 #+NAME: viewman
 #+begin_src common-lisp :noweb yes
@@ -3711,7 +3705,7 @@ cflow --emacs -l -n -b -T --omit-arguments viewman.c
 #define spadActionMode
 
 #+end_src
-\subsection{System includes}
+*** System includes
 #+NAME: viewman
 #+begin_src common-lisp :noweb yes
 #include <assert.h>
@@ -3731,7 +3725,7 @@ cflow --emacs -l -n -b -T --omit-arguments viewman.c
 #include <unistd.h>
 
 #+end_src
-\subsection{Local includes}
+*** Local includes
 \index{actions.h}
 \index{view2d.h}
 \index{view3d.h}
@@ -3750,7 +3744,7 @@ cflow --emacs -l -n -b -T --omit-arguments viewman.c
 <<include/util.h1>>
 
 #+end_src
-\subsection{extern references}
+*** extern references
 #+NAME: viewman
 #+begin_src common-lisp :noweb yes
 extern int acknow;
@@ -3778,7 +3772,7 @@ extern viewManager *viewports;
 extern int viewType;
 
 #+end_src
-\subsection{forward references}
+*** forward references
 #+NAME: viewman
 #+begin_src common-lisp :noweb yes
 int readViewport(viewManager *viewPort,void *info,int size);
@@ -3790,7 +3784,7 @@ void makeView2DFromSpadData(view2DStruct *viewdata,
 void makeView3DFromSpadData(view3DStruct *viewdata,int typeOfViewport);
 
 #+end_src
-\subsection{global variables}
+*** global variables
 #+NAME: viewman
 #+begin_src common-lisp :noweb yes
 Display *dsply;
@@ -3818,8 +3812,8 @@ char        *s1,
   propertyBuffer[256];/* XProperty buffer */
 
 #+end_src
-\section{Code}
-\subsection{endChild}
+** Code
+*** endChild
 \index{viewman!endChild}
 \index{endChild viewman}
 #+NAME: viewman
@@ -3829,7 +3823,7 @@ void endChild(int sig) {
 }
 
 #+end_src
-\subsection{rmViewMgr}
+*** rmViewMgr
 Given a pointer to a viewManager, this procedure removes it
 from the viewport list.
 \index{viewman!rmViewMgr}
@@ -3910,7 +3904,7 @@ void rmViewMgr(viewManager *slotPtr) {
 } /* rmViewMgr() */
 
 #+end_src
-\subsection{closeChildViewport}
+*** closeChildViewport
 Given a pointer to a viewport structure (viewManager) this 
 procedure first waits for the actual process to die and then 
 removes it from the list of viewports via rmViewMgr(). 
@@ -3925,7 +3919,7 @@ void closeChildViewport(viewManager *slotPtr) {
 }  /* closeChildViewport */
 
 #+end_src
-\subsection{goodbye}
+*** goodbye
 Kill all children (how mean) and then kill self.
 \index{viewman!goodbye}
 \index{goodbye viewman}
@@ -3943,7 +3937,7 @@ void goodbye(int sig) {
 }
 
 #+end_src
-\subsection{funView2D}
+*** funView2D
 \index{viewman!funView2D}
 \index{funView2D viewman}
 #+NAME: viewman
@@ -4045,7 +4039,7 @@ void funView2D(int viewCommand) {
 }
 
 #+end_src
-\subsection{forkView2D}
+*** forkView2D
 \index{viewman!forkView2D}
 \index{forkView2D viewman}
 #+NAME: viewman
@@ -4147,7 +4141,7 @@ void forkView2D(void) {
 }    /* forkView2D() */
 
 #+end_src
-\subsection{sendGraphToView2D}
+*** sendGraphToView2D
 \index{viewman!sendGraphToView2D}
 \index{sendGraphToView2D viewman}
 #+NAME: viewman
@@ -4229,7 +4223,7 @@ void sendGraphToView2D(int i,int there,viewManager *viewport,
 }
 
 #+end_src
-\subsection{funView3D}
+*** funView3D
 \index{viewman!funView3D}
 \index{funView3D viewman}
 #+NAME: viewman
@@ -4377,7 +4371,7 @@ void funView3D(int viewCommand) {
 }
 
 #+end_src
-\subsection{forkView3D}
+*** forkView3D
 \index{viewman!forkView3D}
 \index{forkView3D viewman}
 #+NAME: viewman
@@ -4503,7 +4497,7 @@ void forkView3D(int typeOfViewport) {
 }    /* forkView3D() */
 
 #+end_src
-\subsection{makeView2DFromSpadData}
+*** makeView2DFromSpadData
 \index{viewman!makeView2DFromSpadData}
 \index{makeView2DFromSpadData viewman}
 #+NAME: viewman
@@ -4538,7 +4532,7 @@ void makeView2DFromSpadData(view2DStruct *viewdata,
 }
 
 #+end_src
-\subsection{makeView3DFromSpadData}
+*** makeView3DFromSpadData
 \index{viewman!makeView3DFromSpadData}
 \index{makeView3DFromSpadData viewman}
 #+NAME: viewman
@@ -4647,7 +4641,7 @@ void makeView3DFromSpadData(view3DStruct *viewdata,int typeOfViewport) {
 }
 
 #+end_src
-\subsection{makeGraphFromSpadData}
+*** makeGraphFromSpadData
 \index{viewman!makeGraphFromSpadData}
 \index{makeGraphFromSpadData viewman}
 #+NAME: viewman
@@ -4712,7 +4706,7 @@ graphStruct *makeGraphFromSpadData(void) {
 }
   
 #+end_src
-\subsection{discardGraph}
+*** discardGraph
 \index{viewman!discardGraph}
 \index{discardGraph viewman}
 #+NAME: viewman
@@ -4728,7 +4722,7 @@ void discardGraph(graphStruct *theGraph) {
 }
 
 #+end_src
-\subsection{readViewport}
+*** readViewport
 \index{viewman!readViewport}
 \index{readViewport viewman}
 #+NAME: viewman
@@ -4742,7 +4736,7 @@ again:
 }
 
 #+end_src
-\subsection{superSelect}
+*** superSelect
 The function superselect!, if select returns a -1
 due to an interrupt (EINTR), this routine checks to see if it's a
 child viewport that has closed. Expected global variables: 
@@ -4782,7 +4776,7 @@ int superSelect(int n,int *rd,int *wr,int *ex,char *timeout) {
 }
 
 #+end_src
-\subsection{brokenPipe}
+*** brokenPipe
 \index{viewman!brokenPipe}
 \index{brokenPipe viewman}
 #+NAME: viewman
@@ -4793,7 +4787,7 @@ void brokenPipe(int sig) {
 }
 
 #+end_src
-\subsection{main}
+*** main
 The function superselect!, if select returns a -1
 due to an interrupt (EINTR), this routine checks to see if it's a
 child viewport that has closed. Expected global variables: 
@@ -4938,16 +4932,16 @@ int main(void) {
 }
 
 #+end_src
-\chapter{viewalone}
+* viewalone
 \label{viewalone}
-\section{viewalone Call Graph}
+** viewalone Call Graph
 This was generated by the GNU cflow program with the argument list.
 Note that the line:NNNN numbers refer to the line in the code after
 it has been tangled from this file.
-\begin{verbatim}
+#+begin_example
 cflow --emacs -l -n -b -T --omit-arguments viewalone.c
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ;; This file is generated by GNU cflow 1.3. -*- cflow -*-
     2 {   0} +-main() <int main () line:924>
     3 {   1}   +-printf()
@@ -5014,9 +5008,9 @@ cflow --emacs -l -n -b -T --omit-arguments viewalone.c
    62 {   3}       +-printf()
    63 {   3}       \-write()
    64 {   2}     \-sleep()
-\end{verbatim}
-\section{Constants and Headers}
-\subsection{System includes}
+#+end_example
+** Constants and Headers
+*** System includes
 #+NAME: viewalone
 #+begin_src common-lisp :noweb yes
 #include <stdlib.h>
@@ -5025,7 +5019,7 @@ cflow --emacs -l -n -b -T --omit-arguments viewalone.c
 #include <stdio.h>
 
 #+end_src
-\subsection{Local includes}
+*** Local includes
 \index{view3d.h}
 \index{view2d.h}
 \index{actions.h}
@@ -5039,7 +5033,7 @@ cflow --emacs -l -n -b -T --omit-arguments viewalone.c
 <<include/util.h1>>
 
 #+end_src
-\subsection{defines}
+*** defines
 #+NAME: viewalone
 #+begin_src common-lisp :noweb yes
       /* Viewport Commands */
@@ -5057,7 +5051,7 @@ cflow --emacs -l -n -b -T --omit-arguments viewalone.c
 #define yes 1
 
 #+end_src
-\subsection{extern references}
+*** extern references
 #+NAME: viewalone
 #+begin_src common-lisp :noweb yes
 
@@ -5079,7 +5073,7 @@ extern char filename[256];
 extern char pathname[256];
 
 #+end_src
-\subsection{global variables}
+*** global variables
 #+NAME: viewalone
 #+begin_src common-lisp :noweb yes
 
@@ -5107,8 +5101,8 @@ int viewOkay  = 0;
 int viewType;
 
 #+end_src
-\section{Code}
-\subsection{sendGraphToView2D}
+** Code
+*** sendGraphToView2D
 \index{viewalone!sendGraphToView2D}
 \index{sendGraphToView2D viewalone}
 #+NAME: viewalone
@@ -5168,7 +5162,7 @@ void sendGraphToView2D(int i,int there,viewManager *viewP) {
 }
 
 #+end_src
-\subsection{makeView2DFromFileData}
+*** makeView2DFromFileData
 \index{viewalone!makeView2DFromFileData}
 \index{makeView2DFromFileData viewalone}
 #+NAME: viewalone
@@ -5330,7 +5324,7 @@ void makeView2DFromFileData(view2DStruct *doView2D) {
 } /* makeView2DFromFileData */
 
 #+end_src
-\subsection{makeView3DFromFileData}
+*** makeView3DFromFileData
 \index{viewalone!makeView3DFromFileData}
 \index{makeView3DFromFileData viewalone}
 #+NAME: viewalone
@@ -5433,7 +5427,7 @@ void makeView3DFromFileData(int type) {
 }
 
 #+end_src
-\subsection{spoonView2D}
+*** spoonView2D
 \index{viewalone!spoonView2D}
 \index{spoonView2D viewalone}
 #+NAME: viewalone
@@ -5518,7 +5512,7 @@ void spoonView2D(void) {
 }    /* forkView2D() */
 
 #+end_src
-\subsection{spoonView3D}
+*** spoonView3D
 This file forks a child process and exits the parent. It 
 has the same general form as ../viewman/funView3D() and so 
 changes there may require similar changes here. 
@@ -5621,7 +5615,7 @@ void spoonView3D(int type) {
 }    /* spoonView3D() */
 
 #+end_src
-\subsection{main}
+*** main
 \index{viewalone!main}
 \index{main viewalone}
 #+NAME: viewalone
@@ -5669,16 +5663,16 @@ file to use for viewalone. The parabola example is detailed in the
 chapter on Graphics File Formats. The directory parabola.view will
 contain the data and graph0 files and is autogenerated from the
 documentation in that chapter.
-\chapter{view2d}
+* view2d
 \label{view2d}
-\section{view2d Call Graph}
+** view2d Call Graph
 This was generated by the GNU cflow program with the argument list.
 Note that the line:NNNN numbers refer to the line in the code after
 it has been tangled from this file.
-\begin{verbatim}
+#+begin_example
 cflow --emacs -l -n -b -T --omit-arguments view2d.c
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ;; This file is generated by GNU cflow 1.3. -*- cflow -*-
     2 {   0} +-main() <int main () line:4640>
     3 {   1}   +-XOpenDisplay()
@@ -6112,9 +6106,9 @@ cflow --emacs -l -n -b -T --omit-arguments view2d.c
                    | <void getGraphFromViewman () line:2882> [see 69]
   376 {   3}       \-clickedOnGraphSelect() 
                      <void clickedOnGraphSelect () line:3070> (R) [see 296]
-\end{verbatim}
-\section{Constants and Headers}
-\subsection{System includes}
+#+end_example
+** Constants and Headers
+*** System includes
 #+NAME: view2d
 #+begin_src common-lisp :noweb yes
 #include <limits.h>
@@ -6136,7 +6130,7 @@ cflow --emacs -l -n -b -T --omit-arguments view2d.c
 #endif
 
 #+end_src
-\subsection{local includes}
+*** local includes
 \index{actions.h}
 \index{g.h}
 \index{nox10.h}
@@ -6166,7 +6160,7 @@ cflow --emacs -l -n -b -T --omit-arguments view2d.c
 <<include/xdefs.h>>
 
 #+end_src
-\subsection{static variables}
+*** static variables
 #+NAME: view2d
 #+begin_src common-lisp :noweb yes
 static void drawControlPushButton(int  , int );
@@ -6175,7 +6169,7 @@ static int doit=0;  /* globish variable for picking/dropping/clearing */
       /* - all sorts of 2 button sequence events (command & graph #). */
 
 #+end_src
-\subsection{structs}
+*** structs
 \index{struct!buttonStruct}
 \index{buttonStruct struct}
 #+NAME: view2d
@@ -6246,7 +6240,7 @@ typedef struct _xPointStruct {
 } xPointStruct;
 
 #+end_src
-\subsection{defines}
+*** defines
 #+NAME: view2d
 #+begin_src common-lisp :noweb yes
 #define numBits (8*sizeof(int))
@@ -6513,7 +6507,7 @@ static XPoint translateArrow[translateArrowN] = {
 #define isNaN(v) (v != v)
 
 #+end_src
-\subsection{extern references}
+*** extern references
 #+NAME: view2d
 #+begin_src common-lisp :noweb yes
 extern Display       *dsply;
@@ -6558,7 +6552,7 @@ extern int mono, totalColors,
 extern float aspectR;
 
 #+end_src
-\subsection{forward references}
+*** forward references
 #+NAME: view2d
 #+begin_src common-lisp :noweb yes
 extern int initButtons(buttonStruct * );
@@ -6630,7 +6624,7 @@ static int TrivHashCode(Window , int );
 #endif
 
 #+end_src
-\subsection{global variables}
+*** global variables
 #+NAME: view2d
 #+begin_src common-lisp :noweb yes
 Window        rtWindow,viewman;
@@ -6731,8 +6725,8 @@ char    *PSfilename;    /* output file name used in user directory */
 char *envAXIOM;    /* environment variable AXIOM or DEVE */
 
 #+end_src
-\section{Code}
-\subsection{initButtons}
+** Code
+*** initButtons
 Creates the fields for each button window in the
 two dimensional control panel, and returns the
 number of buttons created.
@@ -7352,7 +7346,7 @@ int initButtons(buttonStruct *buttons) {
 }
 
 #+end_src
-\subsection{writeControlTitle}
+*** writeControlTitle
 \index{view2d!writeControlTitle}
 \index{writeControlTitle view2d}
 #+NAME: view2d
@@ -7369,7 +7363,7 @@ void writeControlTitle(void) {
 } /* writeControlTitle() */
 
 #+end_src
-\subsection{makeMessageFromData}
+*** makeMessageFromData
 \index{view2d!makeMessageFromData}
 \index{makeMessageFromData view2d}
 #+NAME: view2d
@@ -7410,7 +7404,7 @@ void makeMessageFromData(int whichGraph) {
 } /* makeMessageFromData() */
 
 #+end_src
-\subsection{writeControlMessage}
+*** writeControlMessage
 \index{view2d!writeControlMessage}
 \index{writeControlMessage view2d}
 #+NAME: view2d
@@ -7429,7 +7423,7 @@ void writeControlMessage(void) {
 }
 
 #+end_src
-\subsection{drawControlPanel}
+*** drawControlPanel
 \index{view2d!drawControlPanel}
 \index{drawControlPanel view2d}
 #+NAME: view2d
@@ -7615,7 +7609,7 @@ void drawControlPanel(void) {
 }    /*** drawControlPanel ***/
 
 #+end_src
-\subsection{getControlXY}
+*** getControlXY
 \index{view2d!getControlXY}
 \index{getControlXY view2d}
 #+NAME: view2d
@@ -7676,7 +7670,7 @@ controlXY getControlXY(int whereDoYouWantPanel) {
 }
 
 #+end_src
-\subsection{makeControlPanel}
+*** makeControlPanel
 \index{view2d!makeControlPanel}
 \index{makeControlPanel view2d}
 #+NAME: view2d
@@ -7764,7 +7758,7 @@ controlPanelStruct *makeControlPanel(void) {
 } /* makeControlPanel() */
 
 #+end_src
-\subsection{putControlPanelSomewhere}
+*** putControlPanelSomewhere
 This routine puts up the control panel associated with the viewport
 passed in.  It first tries to put it to the right of the viewport. If
 there isn't enough room there, it tries the bottom and so on going
@@ -7793,7 +7787,7 @@ void putControlPanelSomewhere(int whereDoesPanelGo) {
 }
 
 #+end_src
-\subsection{clearControlMessage}
+*** clearControlMessage
 \index{view2d!clearControlMessage}
 \index{clearControlMessage view2d}
 #+NAME: view2d
@@ -7805,7 +7799,7 @@ void clearControlMessage(void) {
 }
 
 #+end_src
-\subsection{getGraphFromViewman}
+*** getGraphFromViewman
 This routine should be called right after a read of the graph key 
 was made from the viewport manager (or defined in some other way).
 \index{view2d!getGraphFromViewman}
@@ -7897,7 +7891,7 @@ void getGraphFromViewman(int i) {
 }   /* getGraphFromViewman */
 
 #+end_src
-\subsection{freeGraph}
+*** freeGraph
 \index{view2d!freeGraph}
 \index{freeGraph view2d}
 #+NAME: view2d
@@ -7917,7 +7911,7 @@ void freeGraph(int i) {
 }
 
 #+end_src
-\subsection{mergeDatabases}
+*** mergeDatabases
 \index{view2d!mergeDatabases}
 \index{mergeDatabases view2d}
 #+NAME: view2d
@@ -7959,7 +7953,7 @@ void mergeDatabases(void) {
 }
 
 #+end_src
-\subsection{getPotValue}
+*** getPotValue
 \index{view2d!getPotValue}
 \index{getPotValue view2d}
 #+NAME: view2d
@@ -7976,7 +7970,7 @@ mouseCoord getPotValue(short eX,short eY,short xH,short yH) {
 } /* getPotValue() */
 
 #+end_src
-\subsection{doPick}
+*** doPick
 \index{view2d!doPick}
 \index{doPick view2d}
 #+NAME: view2d
@@ -7998,7 +7992,7 @@ void doPick(int i,int bKey) {
 }
 
 #+end_src
-\subsection{doDrop}
+*** doDrop
 \index{view2d!doDrop}
 \index{doDrop view2d}
 #+NAME: view2d
@@ -8031,7 +8025,7 @@ void doDrop(int i,int bKey) {
 }
 
 #+end_src
-\subsection{clickedOnGraphSelect}
+*** clickedOnGraphSelect
 \index{view2d!clickedOnGraphSelect}
 \index{clickedOnGraphSelect view2d}
 #+NAME: view2d
@@ -8087,7 +8081,7 @@ void clickedOnGraphSelect(int i,int bKey) {
 }
 
 #+end_src
-\subsection{drawControlPushButton}
+*** drawControlPushButton
 \index{view2d!drawControlPushButton}
 \index{drawControlPushButton view2d}
 #+NAME: view2d
@@ -8107,7 +8101,7 @@ static void drawControlPushButton(int isOn, int index) {
 }
 
 #+end_src
-\subsection{buttonAction}
+*** buttonAction
 \index{view2d!buttonAction}
 \index{buttonAction view2d}
 #+NAME: view2d
@@ -8359,7 +8353,7 @@ void buttonAction(int bKey) {
 }
 
 #+end_src
-\subsection{processEvents}
+*** processEvents
 \index{view2d!processEvents}
 \index{processEvents view2d}
 #+NAME: view2d
@@ -8672,7 +8666,7 @@ void processEvents(void) {
 } /* processEvents() */
 
 #+end_src
-\subsection{clickedOnGraph}
+*** clickedOnGraph
 \index{view2d!clickedOnGraph}
 \index{clickedOnGraph view2d}
 #+NAME: view2d
@@ -8734,7 +8728,7 @@ void clickedOnGraph(int i,int bKey) {
 }
 
 #+end_src
-\subsection{readViewman}
+*** readViewman
 \index{view2d!readViewman}
 \index{readViewman view2d}
 #+NAME: view2d
@@ -8748,7 +8742,7 @@ int readViewman(void * info,int size) {
 }
 
 #+end_src
-\subsection{spadAction}
+*** spadAction
 \index{view2d!spadAction}
 \index{spadAction view2d}
 #+NAME: view2d
@@ -8947,7 +8941,7 @@ int spadAction(void) {
 }
 
 #+end_src
-\subsection{absolute}
+*** absolute
 \index{view2d!absolute}
 \index{absolute view2d}
 #+NAME: view2d
@@ -8961,7 +8955,7 @@ float absolute(float x) {
 }
 
 #+end_src
-\subsection{goodbye}
+*** goodbye
 \index{view2d!goodbye}
 \index{goodbye view2d}
 #+NAME: view2d
@@ -8999,7 +8993,7 @@ void goodbye(int sig) {
 }
 
 #+end_src
-\subsection{writeTitle}
+*** writeTitle
 \index{view2d!writeTitle}
 \index{writeTitle view2d}
 #+NAME: view2d
@@ -9018,7 +9012,7 @@ void writeTitle(void) {
 }
 
 #+end_src
-\subsection{drawTheViewport}
+*** drawTheViewport
 \index{view2d!drawTheViewport}
 \index{drawTheViewport view2d}
 #+NAME: view2d
@@ -9421,7 +9415,7 @@ void drawTheViewport(int dFlag) {
 }           /* drawViewport() */
 
 #+end_src
-\subsection{makeViewport}
+*** makeViewport
 \index{view2d!makeViewport}
 \index{makeViewport view2d}
 #+NAME: view2d
@@ -9516,7 +9510,7 @@ viewPoints *makeViewport(char *title,int vX,int vY,int vW,int vH,int showCP) {
 }
 
 #+end_src
-\subsection{makeView2D}
+*** makeView2D
 \index{view2d!makeView2D}
 \index{makeView2D view2d}
 #+NAME: view2d
@@ -9536,7 +9530,7 @@ viewPoints *makeView2D(view2DStruct *viewdata) {
 }    /* makeView2D */
 
 #+end_src
-\subsection{writeViewport}
+*** writeViewport
 \index{view2d!writeViewport}
 \index{writeViewport view2d}
 #+NAME: view2d
@@ -9685,7 +9679,7 @@ int writeViewport(int thingsToWrite) {
 }
 
 #+end_src
-\subsection{main}
+*** main
 The main function performs the following steps
 \begin{enumerate}
 \item calls XOpenDisplay 
@@ -9948,16 +9942,16 @@ int main(void) {
 } /* main() */
 
 #+end_src
-\chapter{view3d}
+* view3d
 \label{view3d}
-\section{view3d Call Graph}
+** view3d Call Graph
 This was generated by the GNU cflow program with the argument list.
 Note that the line:NNNN numbers refer to the line in the code after
 it has been tangled from this file.
-\begin{verbatim}
+#+begin_example
 cflow --emacs -l -n -b -T --omit-arguments view3d.c
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ;; This file is generated by GNU cflow 1.3. -*- cflow -*-
     2 {   0} +-main() <int main () line:10360>
     3 {   1}   +-NIL()
@@ -10576,9 +10570,9 @@ cflow --emacs -l -n -b -T --omit-arguments view3d.c
   549 {   3}       +-writeControlMessage() 
                    | <void writeControlMessage () line:3819> [see 252]
   550 {   3}       \-buttonAction() <void buttonAction () line:5298> [see 463]
-\end{verbatim}
-\section{Constants and Headers}
-\subsection{System includes}
+#+end_example
+** Constants and Headers
+*** System includes
 #+NAME: view3d
 #+begin_src common-lisp :noweb yes
 #include <limits.h>
@@ -10596,7 +10590,7 @@ cflow --emacs -l -n -b -T --omit-arguments view3d.c
 #include <X11/Xutil.h>
 
 #+end_src
-\subsection{Local includes}
+*** Local includes
 \index{view3d.h}
 \index{actions.h}
 \index{g.h}
@@ -10628,7 +10622,7 @@ cflow --emacs -l -n -b -T --omit-arguments view3d.c
 <<include/xdefs.h>>
 
 #+end_src
-\subsection{defines}
+*** defines
 #+NAME: view3d
 #+begin_src common-lisp :noweb yes
 #define BH	31  /* button window height */
@@ -11316,8 +11310,8 @@ static char *eyeMess1 = "Eye";
 #define StellarColors 9
 
 #+end_src
-\subsection{static variables}
-\begin{verbatim}
+*** static variables
+#+begin_example
 static char *event_name[] = {
   "",                        /* 0  */
   "",                        /* 1  */
@@ -11355,7 +11349,7 @@ static char *event_name[] = {
   "ClientMessage",           /* 33 */
   "MappingNotify"            /* 34 */
   };
-\end{verbatim}
+#+end_example
 
 This is a description of script character labels for the x, y, and z axes 
 #+NAME: view3d
@@ -11387,7 +11381,7 @@ static float labels[basicScreen][7] = {
   {0,9,102,0,9,105,labelColor}};  
 
 #+end_src
-\subsection{structs}
+*** structs
 \index{struct!buttonStruct}
 \index{buttonStruct struct}
 #+NAME: view3d
@@ -11512,7 +11506,7 @@ typedef struct _controlXY {
 } controlXY;
 
 #+end_src
-\subsection{extern references}
+*** extern references
 #+NAME: view3d
 #+begin_src common-lisp :noweb yes
 extern Display          *dsply;
@@ -11643,7 +11637,7 @@ extern int              smoothConst;
 extern int              smoothError;
 
 #+end_src
-\subsection{forward references}
+*** forward references
 #+NAME: view3d
 #+begin_src common-lisp :noweb yes
 extern viewTriple * traverse(int );
@@ -11803,7 +11797,7 @@ static int TrivHashCode(Window , int );
 #endif
 
 #+end_src
-\subsection{global variables}
+*** global variables
 #+NAME: view3d
 #+begin_src common-lisp :noweb yes
 float A[4][4];
@@ -12039,8 +12033,8 @@ float zClipMinN; /* normalized values for clip volume */
 int zoomed=yes;
 
 #+end_src
-\section{Code}
-\subsection{initButtons}
+** Code
+*** initButtons
 Creates the fields for each button window in the
 three dimensional control panel, and returns the
 number of buttons created.
@@ -12376,7 +12370,7 @@ int initButtons(buttonStruct *buttons) {
 } /* initButtons() */
 
 #+end_src
-\subsection{closeViewport}
+*** closeViewport
 This closes all of the windows created for the
 control panel window and the viewport window of
 the current graph being displayed.
@@ -12411,7 +12405,7 @@ void closeViewport(void) {
 } /* closeViewport() */
 
 #+end_src
-\subsection{scaleComponents}
+*** scaleComponents
 \index{view3d!scaleComponents}
 \index{scaleComponents view3d}
 #+NAME: view3d
@@ -12487,7 +12481,7 @@ void scaleComponents(void) {
 } /* scaleComponents() */
 
 #+end_src
-\subsection{makeTriangle}
+*** makeTriangle
 Given three indices to three points, a triangular polygon is created 
 and inserted into the polygon list of viewData. If two or more of the 
 points are coincidental, no polygon is created since that would be a 
@@ -12516,7 +12510,7 @@ void makeTriangle(int a, int b, int c) {
 } /* makeTriangle() */
 
 #+end_src
-\subsection{triangulate}
+*** triangulate
 Only if there is more than one list do we triangulate; a single list 
 is used for either a space curve or simply a point.  Actually, in that 
 case, we now make "flat" *polygons, flagged by the primitiveType field 
@@ -12618,7 +12612,7 @@ void triangulate(void) {
 } /* triangulate */
 
 #+end_src
-\subsection{readComponentsFromViewman}
+*** readComponentsFromViewman
 \index{view3d!readComponentsFromViewman}
 \index{readComponentsFromViewman view3d}
 #+NAME: view3d
@@ -12678,7 +12672,7 @@ void readComponentsFromViewman(void) {
 } /* readComponentsFromViewman() */
 
 #+end_src
-\subsection{calcNormData}
+*** calcNormData
 Calculates the surface normals for the polygons that make up the tube.
 Also finds the fourth coefficient to the plane equation:
 \[
@@ -12733,7 +12727,7 @@ void calcNormData(void) {
 }  /* calcNormData() */
 
 #+end_src
-\subsection{make3DComponents}
+*** make3DComponents
 Read in all the 3D data from the viewport manager and construct the 
 model of it. The model is based upon a list of lists of lists of points. 
 Each top level list makes a component in 3-space. The interpretation 
@@ -12788,7 +12782,7 @@ viewPoints *make3DComponents(void) {
 } /* make3DComponents */
 
 #+end_src
-\subsection{draw3DComponents}
+*** draw3DComponents
 \index{view3d!draw3DComponents}
 \index{draw3DComponents view3d}
 #+NAME: view3d
@@ -12823,12 +12817,10 @@ void draw3DComponents(int dFlag) {
 #+end_src
 This is where we interpret the list of lists of lists of points struct.
 We want to extract the following forms of data:
-\begin{itemize}
-\item individual points (drawn as filled points)
-\item lines (space curves)
-\item defined polygon primitives
-\item surfaces
-\end{itemize}
+- individual points (drawn as filled points)
+- lines (space curves)
+- defined polygon primitives
+- surfaces
 the last one is the one that will replace the function of 2 variables,
 tubes as well as 3D parameterized functions of 2 variables.
 Since there could be many other ways of constructing 
@@ -13162,7 +13154,7 @@ Here's the convention used to figure that out:
 } /* draw3DComponents() */
 
 #+end_src
-\subsection{drawColorMap}
+*** drawColorMap
 \index{view3d!drawColorMap}
 \index{drawColorMap view3d}
 #+NAME: view3d
@@ -13226,7 +13218,7 @@ void drawColorMap (void) {
 }  /* drawColorMap() */
 
 #+end_src
-\subsection{writeControlTitle}
+*** writeControlTitle
 We need the window argument here because there are multiple control 
 panels in 3D.
 \index{view3d!writeControlTitle}
@@ -13244,7 +13236,7 @@ void writeControlTitle(Window w) {
 }  /* writeControlTitle() */
 
 #+end_src
-\subsection{clearControlMessage}
+*** clearControlMessage
 \index{view3d!clearControlMessage}
 \index{clearControlMessage view3d}
 #+NAME: view3d
@@ -13261,7 +13253,7 @@ void clearControlMessage(void) {
 }
 
 #+end_src
-\subsection{writeControlMessage}
+*** writeControlMessage
 \index{view3d!writeControlMessage}
 \index{writeControlMessage view3d}
 #+NAME: view3d
@@ -13283,7 +13275,7 @@ void writeControlMessage(void) {
 }
 
 #+end_src
-\subsection{drawControlPanel}
+*** drawControlPanel
 \index{view3d!drawControlPanel}
 \index{drawControlPanel view3d}
 #+NAME: view3d
@@ -13814,7 +13806,7 @@ void drawControlPanel(void) {
 }  /* drawControlPanel() */
 
 #+end_src
-\subsection{getControlXY}
+*** getControlXY
 Determines the x and y coordinate where the control panel is to be
 placed, based upon where the mouse button was pressed within the graph
 viewport window.
@@ -13885,7 +13877,7 @@ controlXY getControlXY(int whereDoYouWantPanel) {
 }
 
 #+end_src
-\subsection{makeControlPanel}
+*** makeControlPanel
 \index{view3d!makeControlPanel}
 \index{makeControlPanel view3d}
 #+NAME: view3d
@@ -13978,7 +13970,7 @@ controlPanelStruct *makeControlPanel(void) {
 } /* makeControlPanel() */
 
 #+end_src
-\subsection{putControlPanelSomewhere}
+*** putControlPanelSomewhere
 This routine puts up the control panel associated with the viewport passed
 in. It first tries to put it to the right of the viewport.  If there isn't
 enough room, it tries the bottom and so on going clockwise. If the viewport
@@ -14008,7 +14000,7 @@ void putControlPanelSomewhere(int whereDoesPanelGo) {
 }
 
 #+end_src
-\subsection{phong}
+*** phong
 A general routine for determining the intensity values at
 a particular point using the Phong illumination model with Phong shading
 \index{view3d!phong}
@@ -14058,7 +14050,7 @@ float phong(triple pt,float N[3]) {
 }
 
 #+end_src
-\subsection{hueValue}
+*** hueValue
 \index{view3d!hueValue}
 \index{hueValue view3d}
 #+NAME: view3d
@@ -14071,7 +14063,7 @@ int hueValue(float val) {
 }
 
 #+end_src
-\subsection{getHue}
+*** getHue
 \index{view3d!getHue}
 \index{getHue view3d}
 #+NAME: view3d
@@ -14090,7 +14082,7 @@ int getHue(float val) {
 }
 
 #+end_src
-\subsection{Value}
+*** Value
 \index{view3d!Value}
 \index{Value view3d}
 #+NAME: view3d
@@ -14116,7 +14108,7 @@ float Value(float n1, float n2, float hue) {
 }
 
 #+end_src
-\subsection{hlsTOrgb}
+*** hlsTOrgb
 \index{view3d!hlsTOrgb}
 \index{hlsTOrgb view3d}
 #+NAME: view3d
@@ -14138,7 +14130,7 @@ RGB hlsTOrgb(float h,float l,float s) {
 }
 
 #+end_src
-\subsection{initLightButtons}
+*** initLightButtons
 Creates the fields for each button window in the three dimensional 
 lighting subpanel, and returns the number of buttons created.
 \index{view3d!initLightButtons}
@@ -14232,7 +14224,7 @@ int initLightButtons(buttonStruct *lightButtons) {
 }
 
 #+end_src
-\subsection{makeLightingPanel}
+*** makeLightingPanel
 \index{view3d!makeLightingPanel}
 \index{makeLightingPanel view3d}
 #+NAME: view3d
@@ -14315,7 +14307,7 @@ int makeLightingPanel(void) {
 }  /* makeLightingPanel() */
 
 #+end_src
-\subsection{drawLightingAxes}
+*** drawLightingAxes
 \index{view3d!drawLightingAxes}
 \index{drawLightingAxes view3d}
 #+NAME: view3d
@@ -14399,7 +14391,7 @@ void drawLightingAxes(void) {
 }   /* drawLightingAxes */
 
 #+end_src
-\subsection{drawLightTransArrow}
+*** drawLightTransArrow
 \index{view3d!drawLightTransArrow}
 \index{drawLightTransArrow view3d}
 #+NAME: view3d
@@ -14474,7 +14466,7 @@ void drawLightTransArrow(void) {
 }  /* drawLightTransArrow() */
 
 #+end_src
-\subsection{drawLightingPanel}
+*** drawLightingPanel
 \index{view3d!drawLightingPanel}
 \index{drawLightingPanel view3d}
 #+NAME: view3d
@@ -14683,7 +14675,7 @@ void drawLightingPanel(void) {
 }  /* drawLightingPanel */
 
 #+end_src
-\subsection{theHandler}
+*** theHandler
 \index{view3d!theHandler}
 \index{theHandler view3d}
 #+NAME: view3d
@@ -14696,7 +14688,7 @@ int theHandler(Display *display,XErrorEvent *event) {
 }
 
 #+end_src
-\subsection{mergeDatabases}
+*** mergeDatabases
 \index{view3d!mergeDatabases}
 \index{mergeDatabases view3d}
 #+NAME: view3d
@@ -14736,7 +14728,7 @@ void mergeDatabases(void) {
 }
 
 #+end_src
-\subsection{getMeshNormal}
+*** getMeshNormal
 \index{view3d!getMeshNormal}
 \index{getMeshNormal view3d}
 #+NAME: view3d
@@ -14766,7 +14758,7 @@ void getMeshNormal(float x0,float y0,float z0,float x1,float y1,float z1,
 } /* getMeshNormal() */
 
 #+end_src
-\subsection{normalizeVector}
+*** normalizeVector
 \index{view3d!normalizeVector}
 \index{normalizeVector view3d}
 #+NAME: view3d
@@ -14785,7 +14777,7 @@ void normalizeVector(float *v) {
 } /* normalizeVector() */
 
 #+end_src
-\subsection{dotProduct}
+*** dotProduct
 \index{view3d!dotProduct}
 \index{dotProduct view3d}
 #+NAME: view3d
@@ -14807,7 +14799,7 @@ to linkThing. All you need to do is change the define statement to rename
 your structure to linkThing. The first argument you pass to the sort routine 
 is a pointer to the unsorted list. The function returns with that same 
 pointer pointing to a sorted list. 
-\begin{verbatim}
+#+begin_example
   Usage:                                           
     linkElement *msort(p,min,max,compare)          
       linkElement *L;                              
@@ -14832,9 +14824,9 @@ pointer pointing to a sorted list.
         returns a -1 if X is less than Y           
                    0 if X is the same as Y         
                and 1 if X is greater than Y        
-\end{verbatim}
+#+end_example
 
-\subsection{merge}
+*** merge
 \index{view3d!merge}
 \index{merge view3d}
 #+NAME: view3d
@@ -14873,7 +14865,7 @@ linkThing *merge(linkThing *p, linkThing *q,
 } /* merge() */
 
 #+end_src
-\subsection{msort}
+*** msort
 \index{view3d!msort}
 \index{msort view3d}
 #+NAME: view3d
@@ -14897,7 +14889,7 @@ linkThing *msort(linkThing *p,int min,int max,
 } /* msort() */
 
 #+end_src
-\subsection{getPotValue}
+*** getPotValue
 \index{view3d!getPotValue}
 \index{getPotValue view3d}
 #+NAME: view3d
@@ -14918,7 +14910,7 @@ mouseCoord getPotValue(short eX,short eY,short xH,short yH) {
 } /* getPotValue() */
 
 #+end_src
-\subsection{getLinearPotValue}
+*** getLinearPotValue
 \index{view3d!getLinearPotValue}
 \index{getLinearPotValue view3d}
 #+NAME: view3d
@@ -14931,7 +14923,7 @@ mouseCoord getLinearPotValue(short eX,short eY,short xH,short yH) {
 } /* getLinearPotValue() */
 
 #+end_src
-\subsection{buttonAction}
+*** buttonAction
 \index{view3d!buttonAction}
 \index{buttonAction view3d}
 #+NAME: view3d
@@ -15642,7 +15634,7 @@ void buttonAction(int bKey) {
 } /* processEvents() */
 
 #+end_src
-\subsection{processEvents}
+*** processEvents
 X Event Processing
 \index{view3d!processEvents}
 \index{processEvents view3d}
@@ -16362,7 +16354,7 @@ void processEvents(void) {
 }	  /* processEvents() */
 
 #+end_src
-\subsection{project}
+*** project
 Orthogonal projection for a point setting the ith Xpoint as well.
 \index{view3d!project}
 \index{project view3d}
@@ -16399,7 +16391,7 @@ void project(viewTriple * aViewTriple,XPoint *someXpoints,int i) {
 }
 
 #+end_src
-\subsection{projectAPoint}
+*** projectAPoint
 Orthogonal projection for a point. sort of like the above, 
 but no Xpoint assignment.
 \index{view3d!projectAPoint}
@@ -16437,7 +16429,7 @@ void projectAPoint(viewTriple *aViewTriple) {
 }
 
 #+end_src
-\subsection{projectAllPoints}
+*** projectAllPoints
 \index{view3d!projectAllPoints}
 \index{projectAllPoints view3d}
 #+NAME: view3d
@@ -16460,7 +16452,7 @@ void projectAllPoints(void) {
 } /* projectAllPoints() */
 
 #+end_src
-\subsection{projectAllPolys}
+*** projectAllPolys
 Orthogonal projection of all the polygons in a given list in one
 go. pz holds the projected depth info for hidden surface removal. 
 Polygons totally outside of the window dimensions after projection 
@@ -16525,7 +16517,7 @@ void projectAllPolys(poly *pList) {
 }   /* projectAllPolys */
 
 #+end_src
-\subsection{projectAPoly}
+*** projectAPoly
 Orthogonal projection of all a polygon. pz holds the projected depth info
 for hidden surface removal.
 \index{view3d!projectAPoly}
@@ -16590,7 +16582,7 @@ void projectAPoly(poly *p) {
 }  /*  projectAPoly */
 
 #+end_src
-\subsection{projectStuff}
+*** projectStuff
 Sort of like the project stuff in tube.c but used exclusively for the
 functions of two variables. probably will need to be changed later to
 be more general (i.e. have everybody use the viewTriple point structure).
@@ -16633,7 +16625,7 @@ void projectStuff(float x,float y,float z,int *px,int *py,float *Pz) {
 }
 
 #+end_src
-\subsection{makeQuitPanel}
+*** makeQuitPanel
 \index{view3d!makeQuitPanel}
 \index{makeQuitPanel view3d}
 #+NAME: view3d
@@ -16693,7 +16685,7 @@ int makeQuitPanel(void) {
 }  /* makeQuitPanel() */
 
 #+end_src
-\subsection{drawQuitPanel}
+*** drawQuitPanel
 \index{view3d!drawQuitPanel}
 \index{drawQuitPanel view3d}
 #+NAME: view3d
@@ -16730,7 +16722,7 @@ void drawQuitPanel(void) {
 }  /* drawQuitPanel */
 
 #+end_src
-\subsection{initQuitButtons}
+*** initQuitButtons
 \index{view3d!initQuitButtons}
 \index{initQuitButtons view3d}
 #+NAME: view3d
@@ -16768,7 +16760,7 @@ int initQuitButtons(buttonStruct *quitButtons) {
 }
 
 #+end_src
-\subsection{makeSavePanel}
+*** makeSavePanel
 \index{view3d!makeSavePanel}
 \index{makeSavePanel view3d}
 #+NAME: view3d
@@ -16828,7 +16820,7 @@ int makeSavePanel(void) {
 }  /* makeSavePanel() */
 
 #+end_src
-\subsection{drawSavePanel}
+*** drawSavePanel
 \index{view3d!drawSavePanel}
 \index{drawSavePanel view3d}
 #+NAME: view3d
@@ -16859,7 +16851,7 @@ void drawSavePanel(void) {
 }  /* drawSavePanel */
 
 #+end_src
-\subsection{initSaveButtons}
+*** initSaveButtons
 \index{view3d!initSaveButtons}
 \index{initSaveButtons view3d}
 #+NAME: view3d
@@ -16909,7 +16901,7 @@ int initSaveButtons(buttonStruct *saveButtons) {
 }
 
 #+end_src
-\subsection{getCBufferAxes}
+*** getCBufferAxes
 \index{view3d!getCBufferAxes}
 \index{getCBufferAxes view3d}
 #+NAME: view3d
@@ -16920,7 +16912,7 @@ char getCBufferAxes(int ix) {
 }
 
 #+end_src
-\subsection{putCBufferAxes}
+*** putCBufferAxes
 \index{view3d!putCBufferAxes}
 \index{putCBufferAxes view3d}
 #+NAME: view3d
@@ -16930,7 +16922,7 @@ void putCBufferAxes(int ix,char val) {
 }
 
 #+end_src
-\subsection{getCBufferIndx}
+*** getCBufferIndx
 \index{view3d!getCBufferIndx}
 \index{getCBufferIndx view3d}
 #+NAME: view3d
@@ -16941,7 +16933,7 @@ int getCBufferIndx(int ix) {
 }
 
 #+end_src
-\subsection{putCBufferIndx}
+*** putCBufferIndx
 \index{view3d!putCBufferIndx}
 \index{putCBufferIndx view3d}
 #+NAME: view3d
@@ -16951,7 +16943,7 @@ void putCBufferIndx(int ix,int val) {
 }
 
 #+end_src
-\subsection{putZBuffer}
+*** putZBuffer
 \index{view3d!putZBuffer}
 \index{putZBuffer view3d}
 #+NAME: view3d
@@ -16961,7 +16953,7 @@ void putZBuffer(int ix,float val) {
 }
 
 #+end_src
-\subsection{getZBuffer}
+*** getZBuffer
 \index{view3d!getZBuffer}
 \index{getZBuffer view3d}
 #+NAME: view3d
@@ -16971,7 +16963,7 @@ float getZBuffer(int ix) {
 }
 
 #+end_src
-\subsection{putImageX}
+*** putImageX
 \index{view3d!putImageX}
 \index{putImageX view3d}
 #+NAME: view3d
@@ -16981,7 +16973,7 @@ void putImageX(int ix,char val) {
 }
 
 #+end_src
-\subsection{drawPhongSpan}
+*** drawPhongSpan
 This routine sets the buffer values for each span of pixels which
 intersect the current scanline.
 \index{view3d!drawPhongSpan}
@@ -17057,7 +17049,7 @@ void drawPhongSpan(triple pt,float N[3],int dFlag) {
 }
 
 #+end_src
-\subsection{scanPhong}
+*** scanPhong
 This routine takes all polygons that intersect with the current scanline 
 and calculates the intersecting x and z points as well as the color at 
 each point.  Interpolation is done according to Phong.
@@ -17177,7 +17169,7 @@ void scanPhong(int dFlag) {
 }
 
 #+end_src
-\subsection{boxTObuffer}
+*** boxTObuffer
 boxTObuffer() writes the projection of the x,y  bounding box to the z-buffer.
 \index{view3d!boxTObuffer}
 \index{boxTObuffer view3d}
@@ -17245,7 +17237,7 @@ void boxTObuffer(void) {
 }
 
 #+end_src
-\subsection{clipboxTObuffer}
+*** clipboxTObuffer
 clipboxTObuffer() writes the projection of the x,y,z clipping region
 box to the z-buffer.
 \index{view3d!clipboxTObuffer}
@@ -17315,7 +17307,7 @@ void clipboxTObuffer(void) {
 }
 
 #+end_src
-\subsection{axesTObuffer}
+*** axesTObuffer
 axesTObuffer() writes the projection of the x,y,z axes to the z-buffer.
 \index{view3d!axesTObuffer}
 \index{axesTObuffer view3d}
@@ -17380,7 +17372,7 @@ void axesTObuffer(void) {
 }
 
 #+end_src
-\subsection{scanLines}
+*** scanLines
 scanLines() scanline z-buffer algorithm initialize z-buffer and color
 buffer for all scanlines.
 \index{view3d!scanLines}
@@ -17538,7 +17530,7 @@ void scanLines(int dFlag) {
 }
 
 #+end_src
-\subsection{freePolyList}
+*** freePolyList
 frees up the global scanList l-l
 \index{view3d!freePolyList}
 \index{freePolyList view3d}
@@ -17558,7 +17550,7 @@ void freePolyList(void) {
 } /* freePolyList() */
 
 #+end_src
-\subsection{showAxesLabels}
+*** showAxesLabels
 showAxesLabels() writes the axes labels onto the viewmap of a graph.
 \index{view3d!showAxesLabels}
 \index{showAxesLabels view3d}
@@ -17614,7 +17606,7 @@ void showAxesLabels(int dFlag) {
 }
 
 #+end_src
-\subsection{makeTriangle}
+*** makeTriangle
 changeColorMap() modifies the color map for moving in and out of
 smooth shading.
 \index{view3d!makeTriangle}
@@ -17682,7 +17674,7 @@ void changeColorMap(void) {
 }
 
 #+end_src
-\subsection{drawPhong}
+*** drawPhong
 A general routine for displaying a list of polygons using a simple
 scanline z-buffer algorithm with phong shading.
 \index{view3d!drawPhong}
@@ -17822,7 +17814,7 @@ void drawPhong(int dFlag) {
 
 #+end_src
 
-\subsection{readViewman}
+*** readViewman
 \index{view3d!readViewman}
 \index{readViewman view3d}
 #+NAME: view3d
@@ -17835,7 +17827,7 @@ int readViewman(void *info,int size) {
 }
 
 #+end_src
-\subsection{scalePoint}
+*** scalePoint
 \index{view3d!scalePoint}
 \index{scalePoint view3d}
 #+NAME: view3d
@@ -17851,7 +17843,7 @@ void scalePoint(viewTriple *p) {
 } /* scalePoint */
 
 #+end_src
-\subsection{spadAction}
+*** spadAction
 \index{view3d!spadAction}
 \index{spadAction view3d}
 #+NAME: view3d
@@ -18133,7 +18125,7 @@ int spadAction(void) {
 }
 
 #+end_src
-\subsection{traverse}
+*** traverse
 Returns the nth point in a point resevoir.
 \index{view3d!traverse}
 \index{traverse view3d}
@@ -18148,7 +18140,7 @@ viewTriple *traverse(int n) {
 } /* traverse */
 
 #+end_src
-\subsection{absolute}
+*** absolute
 \index{view3d!absolute}
 \index{absolute view3d}
 #+NAME: view3d
@@ -18159,7 +18151,7 @@ float absolute(float x) {
 }
 
 #+end_src
-\subsection{getRandom}
+*** getRandom
 \index{view3d!getRandom}
 \index{getRandom view3d}
 #+NAME: view3d
@@ -18171,7 +18163,7 @@ float getRandom(void) {
 }
 
 #+end_src
-\subsection{normDist}
+*** normDist
 \index{view3d!normDist}
 \index{normDist view3d}
 #+NAME: view3d
@@ -18194,7 +18186,7 @@ triple normDist(void) {
 }
 
 #+end_src
-\subsection{goodbye}
+*** goodbye
 \index{view3d!goodbye}
 \index{goodbye view3d}
 #+NAME: view3d
@@ -18212,7 +18204,7 @@ void goodbye(int sig) {
 }           /* goodbye */
 
 #+end_src
-\subsection{drawLineComponent}
+*** drawLineComponent
 \index{view3d!drawLineComponent}
 \index{drawLineComponent view3d}
 #+NAME: view3d
@@ -18257,7 +18249,7 @@ void drawLineComponent(poly * p, int dFlag) {
 }
 
 #+end_src
-\subsection{drawOpaquePolygon}
+*** drawOpaquePolygon
 \index{view3d!drawOpaquePolygon}
 \index{drawOpaquePolygon view3d}
 #+NAME: view3d
@@ -18321,7 +18313,7 @@ void drawOpaquePolygon(poly *p,GC aGC,GC anotherGC,int dFlag) {
 }
 
 #+end_src
-\subsection{copyPolygons}
+*** copyPolygons
 Copies the given list of polygons into a newly allocated list
 \index{view3d!copyPolygons}
 \index{copyPolygons view3d}
@@ -18398,7 +18390,7 @@ poly *copyPolygons(poly *polygonList) {
 }
 
 #+end_src
-\subsection{minMaxPolygons}
+*** minMaxPolygons
 Sets up the xmin, etc, for each polygon for sorting and extent checking.
 \index{view3d!minMaxPolygons}
 \index{minMaxPolygons view3d}
@@ -18445,12 +18437,12 @@ void minMaxPolygons(poly *aPoly) {
 }  /* minMaxPolygons */
 
 #+end_src
-\subsection{polyCompare}
-\begin{verbatim}
+*** polyCompare
+#+begin_example
 returns -1 if p1 < p2
          0 if p1 = p2
          1 if p1 > p2
-\end{verbatim}
+#+end_example
 Note that this is the reverse of what the msort requested.
 This is so that the list will be sorted from max to min.
 \index{view3d!polyCompare}
@@ -18464,7 +18456,7 @@ int polyCompare(poly *p1,poly *p2) {
 }
 
 #+end_src
-\subsection{makeTriangle}
+*** makeTriangle
 Sets the global variable eyePoint[] to where the viewer is pointed towards.
 \index{view3d!makeTriangle}
 \index{makeTriangle view3d}
@@ -18477,7 +18469,7 @@ void calcEyePoint(void) {
 }
 
 #+end_src
-\subsection{makeTriangle}
+*** makeTriangle
 A general routine for displaying a list of polygons 
 with the proper hidden surfaces removed. Assumes the 
 list of polygons is in viewData.polygons. Needs a 
@@ -18622,7 +18614,7 @@ void drawRenderedPolygon(poly *p,int dFlag) {
 } /* drawRenderedPolygon */
 
 #+end_src
-\subsection{freePointResevoir}
+*** freePointResevoir
 \index{view3d!freePointResevoir}
 \index{freePointResevoir view3d}
 #+NAME: view3d
@@ -18637,7 +18629,7 @@ void freePointResevoir(void) {
 } /* freePointResevoir */
 
 #+end_src
-\subsection{freeListOfPolygons}
+*** freeListOfPolygons
 Frees up a list of polygons.
 \index{view3d!freeListOfPolygons}
 \index{freeListOfPolygons view3d}
@@ -18653,7 +18645,7 @@ void freeListOfPolygons(poly *pList) {
 } /* freeListOfPolygons() */
 
 #+end_src
-\subsection{drawPolygons}
+*** drawPolygons
 \index{view3d!drawPolygons}
 \index{drawPolygons view3d}
 #+NAME: view3d
@@ -18788,7 +18780,7 @@ void drawPolygons(int dFlag) {
 } /* drawPolygons */
 
 #+end_src
-\subsection{lessThan}
+*** lessThan
 Compares two floating point numbers for	precision of up to one
 place in a thousand. Returns 1 if true 0 otherwise.
 \index{view3d!lessThan}
@@ -18803,7 +18795,7 @@ int lessThan(float x,float y) {
 }
 
 #+end_src
-\subsection{greaterThan}
+*** greaterThan
 Compares two floating point numbers for	precision of up to one
 place in a thousand. Returns 1 if true 0 otherwise.
 \index{view3d!greaterThan}
@@ -18818,7 +18810,7 @@ int greaterThan(float x,float y) {
 }
 
 #+end_src
-\subsection{isNaN}
+*** isNaN
 \index{view3d!isNaN}
 \index{isNaN view3d}
 #+NAME: view3d
@@ -18828,7 +18820,7 @@ int isNaN(float v) {
 }
 
 #+end_src
-\subsection{isNaNPoint}
+*** isNaNPoint
 \index{view3d!isNaNPoint}
 \index{isNaNPoint view3d}
 #+NAME: view3d
@@ -18838,7 +18830,7 @@ int isNaNPoint(float x,float y,float z) {
 }
 
 #+end_src
-\subsection{equal}
+*** equal
 \index{view3d!equal}
 \index{equal view3d}
 #+NAME: view3d
@@ -18851,7 +18843,7 @@ int equal(float x,float y) {
 }
 
 #+end_src
-\subsection{matrixMultiply4x4}
+*** matrixMultiply4x4
 \index{view3d!matrixMultiply4x4}
 \index{matrixMultiply4x4 view3d}
 #+NAME: view3d
@@ -18892,7 +18884,7 @@ void matrixMultiply4x4(float xxA[4][4],float xxB[4][4],float array[4][4]) {
 }
 
 #+end_src
-\subsection{vectorMatrix4}
+*** vectorMatrix4
 \index{view3d!vectorMatrix4}
 \index{vectorMatrix4 view3d}
 #+NAME: view3d
@@ -18905,7 +18897,7 @@ void vectorMatrix4(float xxD[4],float xxE[4][4],float xxF[4]) {
 }
 
 #+end_src
-\subsection{ROTATE}
+*** ROTATE
 \index{view3d!ROTATE}
 \index{ROTATE view3d}
 #+NAME: view3d
@@ -18930,7 +18922,7 @@ void ROTATE(float xxR[4][4]) {
 }
 
 #+end_src
-\subsection{ROTATE1}
+*** ROTATE1
 \index{view3d!ROTATE1}
 \index{ROTATE1 view3d}
 #+NAME: view3d
@@ -18955,7 +18947,7 @@ void ROTATE1(float xxR[4][4]) {
 }
 
 #+end_src
-\subsection{SCALE}
+*** SCALE
 \index{view3d!SCALE}
 \index{SCALE view3d}
 #+NAME: view3d
@@ -18968,7 +18960,7 @@ void SCALE(float x,float y,float z,float xxS[4][4]) {
 }
 
 #+end_src
-\subsection{TRANSLATE}
+*** TRANSLATE
 \index{view3d!TRANSLATE}
 \index{TRANSLATE view3d}
 #+NAME: view3d
@@ -18981,7 +18973,7 @@ void TRANSLATE(float x,float y,float z,float xxT[4][4]) {
 }
 
 #+end_src
-\subsection{writeTitle}
+*** writeTitle
 Definition for the axes and labels - this is the minimun that will be
 drawn on the window - thus allowing the user some idea of the
 orientation of the coordinate axes when rotating, etc. The
@@ -19010,7 +19002,7 @@ void writeTitle(void) {
 }
 
 #+end_src
-\subsection{drawPreViewport}
+*** drawPreViewport
 Draws the axes and boxes before the actual stuff. All incoming signals
 should be block and no check for pending X events are made.
 \index{view3d!drawPreViewport}
@@ -19284,7 +19276,7 @@ void drawPreViewport(int dFlag) {
 }
 
 #+end_src
-\subsection{drawTheViewport}
+*** drawTheViewport
 \index{view3d!drawTheViewport}
 \index{drawTheViewport view3d}
 #+NAME: view3d
@@ -19375,7 +19367,7 @@ void drawTheViewport(int dFlag) {
 } /* drawTheViewport */
 
 #+end_src
-\subsection{makeViewport}
+*** makeViewport
 \index{view3d!makeViewport}
 \index{makeViewport view3d}
 #+NAME: view3d
@@ -19588,7 +19580,7 @@ viewPoints *makeViewport(void) {
 } /* makeViewport() */
 
 #+end_src
-\subsection{postMakeViewport}
+*** postMakeViewport
 Post processing when creating a viewport.
 Assign min,max values for the box volume.
 \index{view3d!postMakeViewport}
@@ -19664,7 +19656,7 @@ void postMakeViewport(void) {
 }
 
 #+end_src
-\subsection{keepDrawingViewport}
+*** keepDrawingViewport
 \index{view3d!keepDrawingViewport}
 \index{keepDrawingViewport view3d}
 #+NAME: view3d
@@ -19704,7 +19696,7 @@ int keepDrawingViewport(void) {
 }
 
 #+end_src
-\subsection{initVolumeButtons}
+*** initVolumeButtons
 \index{view3d!initVolumeButtons}
 \index{initVolumeButtons view3d}
 #+NAME: view3d
@@ -19832,7 +19824,7 @@ int initVolumeButtons(buttonStruct *volumeButtons) {
 }
 
 #+end_src
-\subsection{makeVolumePanel}
+*** makeVolumePanel
 \index{view3d!makeVolumePanel}
 \index{makeVolumePanel view3d}
 #+NAME: view3d
@@ -19893,7 +19885,7 @@ void makeVolumePanel(void) {
 }  /* makeVolumePanel() */
 
 #+end_src
-\subsection{drawClipXBut}
+*** drawClipXBut
 \index{view3d!drawClipXBut}
 \index{drawClipXBut view3d}
 #+NAME: view3d
@@ -19956,7 +19948,7 @@ void drawClipXBut(void) {
 }
 
 #+end_src
-\subsection{drawClipYBut}
+*** drawClipYBut
 \index{view3d!drawClipYBut}
 \index{drawClipYBut view3d}
 #+NAME: view3d
@@ -20020,7 +20012,7 @@ void drawClipYBut(void) {
 }
 
 #+end_src
-\subsection{drawClipZBut}
+*** drawClipZBut
 \index{view3d!drawClipZBut}
 \index{drawClipZBut view3d}
 #+NAME: view3d
@@ -20053,7 +20045,7 @@ void drawClipZBut(void) {
 }
 
 #+end_src
-\subsection{drawClipVolume}
+*** drawClipVolume
 \index{view3d!drawClipVolume}
 \index{drawClipVolume view3d}
 #+NAME: view3d
@@ -20109,7 +20101,7 @@ void drawClipVolume(void) {
 } /* drawClipVolume() */
 
 #+end_src
-\subsection{drawHitherControl}
+*** drawHitherControl
 \index{view3d!drawHitherControl}
 \index{drawHitherControl view3d}
 #+NAME: view3d
@@ -20160,7 +20152,7 @@ void drawHitherControl(void) {
 }
 
 #+end_src
-\subsection{drawEyeControl}
+*** drawEyeControl
 \index{view3d!drawEyeControl}
 \index{drawEyeControl view3d}
 #+NAME: view3d
@@ -20204,7 +20196,7 @@ void drawEyeControl(void) {
 }
 
 #+end_src
-\subsection{drawFrustrum}
+*** drawFrustrum
 \index{view3d!drawFrustrum}
 \index{drawFrustrum view3d}
 #+NAME: view3d
@@ -20237,7 +20229,7 @@ void drawFrustrum(void) {
 } /* drawFrustrum() */
 
 #+end_src
-\subsection{drawVolumePanel}
+*** drawVolumePanel
 \index{view3d!drawVolumePanel}
 \index{drawVolumePanel view3d}
 #+NAME: view3d
@@ -20370,7 +20362,7 @@ void drawVolumePanel(void) {
 } /* drawVolumePanel() */
 
 #+end_src
-\subsection{writeViewport}
+*** writeViewport
 \index{view3d!writeViewport}
 \index{writeViewport view3d}
 #+NAME: view3d
@@ -20518,7 +20510,7 @@ int writeViewport(int thingsToWrite) {
 }
 
 #+end_src
-\subsection{main}
+*** main
 \index{view3d!main}
 \index{main view3d}
 #+NAME: view3d
@@ -20805,7 +20797,7 @@ int main(void) {
 }     /* main() */
      
 #+end_src
-\chapter{gdraws}
+* gdraws
 \label{gdraws}
 
 This section contains a set of functions for handling 
@@ -20818,7 +20810,7 @@ This directory consists of all the Gdraw functions.
 The subdirectory PS contains all the ps drawing functions in support of
 the Gdraw functions.
 
-\subsection{Gdraw}
+*** Gdraw
 
 A Gdraw function, using a draw option dFlsg as input, provides drawings
 capability on different output devices.  Currently, Gdraw supports routines
@@ -20826,7 +20818,7 @@ both in Xwindows functions, and in postscript functions on
 a postscript printer/interpreter.
 
 The general drawing functions are (see file for description of functionality)
-\begin{verbatim}
+#+begin_example
  1.  Gdrawarc.c
  2.  Gdrawstring.c
  3.  Gdraw.c
@@ -20860,29 +20852,29 @@ In order to generate a postscript output, we first initializ file names and
 paths to be used by our program by using
 \begin{verbatim}
 	InitPs(viewWindow, titleWindow)    [in GinitPS.c]
-\end{verbatim}
+#+end_example
 then call the G draw routines with option "PS", which would generate postscript
 drawing commands.  Then create the output file (OUTPUT.ps by default) by using
-\begin{verbatim}
+#+begin_example
 	makePSfile(viewWindow, titleWindow, title)   [in GcreatePS.c]
-\end{verbatim}
+#+end_example
 
 The output file would be in local directory, i.e., the directory where Axiom
 or viewalone, etc., was started up.
 
 The following routines are used to test out the Gdraw functions:
-\begin{verbatim}
+#+begin_example
 1.  main.c      creates windows, and titles and processes Xwindow events.
 2.  data.c      creates data for drawing and call Gdraw routines.
 3.  menu.c      draws menu when mouse clicks in viewWindow
 4.  yesorno.c   determines if mouse click in menu means "yes" or "no".
 5.  loadfont.c 	loads font for display
-\end{verbatim}
+#+end_example
 
 The Gdraw routines have been written in such a way that they are usable by
 both view3d and view2d.  
 
-\subsection{To use G Functions}
+*** To use G Functions
 
 In order to draw in postscript, use GSetForeground to set the foreground 
 colors for the drawing (and fill) functions.  Use GSetLineAttributes
@@ -20925,7 +20917,7 @@ font can be set in user program.  Right now, it uses only 1 font.
 units on the axes.
 \end{itemize}
 
-\section{gfun.c}
+** gfun.c
 Indices for PostScript draw procedures.
 
 The order of these defined variables are very important; they are used
@@ -20973,7 +20965,7 @@ typedef struct _psStruct {	/* data structure for ps routines info */
 psStruct psData[psDrawNo];	/* need psDrawNo of them */
 
 #+end_src
-\subsection{filecopy}
+*** filecopy
 \label{filecopy}
 \index{gdraws!filecopy}
 Given 2 file pointers, this function copies file ifp to file ofp
@@ -20987,7 +20979,7 @@ static void filecopy(FILE * ifp, FILE * ofp)
 }
 
 #+end_src
-\subsection{PSCreateFile}
+*** PSCreateFile
 \label{PSCreateFile}
 \index{gdraws!PSCreateFile}
 PSCreateFile generates the output file by using the order of defined
@@ -21040,7 +21032,7 @@ int PSCreateFile(
 }
 
 #+end_src
-\subsection{GdrawsDrawFrame}
+*** GdrawsDrawFrame
 \label{GdrawsDrawFrame}
 \index{gdraws!GdrawsDrawFrame}
 This function draws the frame of the picture, which corresponds to the
@@ -21075,7 +21067,7 @@ int GdrawsDrawFrame(
 }
 
 #+end_src
-\subsection{GdrawsSetDimension}
+*** GdrawsSetDimension
 \label{GdrawsSetDimension}
 \index{gdraws!GdrawsSetDimension}
 GdrawsSetDimension sets the dimension of the picture.
@@ -21116,7 +21108,7 @@ int GdrawsSetDimension(Window viewWindow, Window titleWindow) {
 }
 
 #+end_src
-\subsection{GDrawImageString}
+*** GDrawImageString
 \label{GDrawImageString}
 \index{gdraws!GDrawImageString}
 GDrawImageString draws an image text string 
@@ -21157,7 +21149,7 @@ int GDrawImageString(
 }
 
 #+end_src
-\subsection{GDrawArc}
+*** GDrawArc
 \label{GDrawArc}
 \index{gdraws!GDrawArc}
 GDrawArc draws an arc.
@@ -21197,7 +21189,7 @@ int GDrawArc(
 }
 
 #+end_src
-\subsection{GDrawLine}
+*** GDrawLine
 \label{GDrawLine}
 \index{gdraws!GDrawLine}
 GDrawLine draws a line.
@@ -21235,7 +21227,7 @@ int GDrawLine(
 }
 
 #+end_src
-\subsection{GDrawLines}
+*** GDrawLines
 \label{GDrawLines}
 \index{gdraws!GDrawLines}
 GDrawLines draws lines.
@@ -21281,7 +21273,7 @@ int GDrawLines(
 }
 
 #+end_src
-\subsection{GDrawPoint}
+*** GDrawPoint
 \label{GDrawPoint}
 \index{gdraws!GDrawPoint}
 GDrawPoint draws a point.
@@ -21319,7 +21311,7 @@ int GDrawPoint(
 }
 
 #+end_src
-\subsection{GDrawRectangle}
+*** GDrawRectangle
 \label{GDrawRectangle}
 \index{gdraws!GDrawRectangle}
 GDrawRectangle draws a rectangle.
@@ -21357,7 +21349,7 @@ int GDrawRectangle(
 }
 
 #+end_src
-\subsection{GDraw3DButtonIn}
+*** GDraw3DButtonIn
 \label{GDraw3DButtonIn}
 \index{gdraws!GDraw3DButtonIn}
 GDraw3DButtonOut draws a rectangle with 3D shading on rhs and bottom
@@ -21379,7 +21371,7 @@ int GDraw3DButtonOut(
 }
 
 #+end_src
-\subsection{GDraw3DButtonIn}
+*** GDraw3DButtonIn
 \label{GDraw3DButtonIn}
 \index{gdraws!GDraw3DButtonIn}
 GDraw3DButtonIn draws a rectangle with 3D shading on lhs and top
@@ -21402,7 +21394,7 @@ int GDraw3DButtonIn(
 }
 
 #+end_src
-\subsection{GDrawPushButton}
+*** GDrawPushButton
 \label{GDrawPushButton}
 \index{gdraws!GDrawPushButton}
 GDrawPushButton draws a push button whose appearance depends on ``isOn.''
@@ -21434,7 +21426,7 @@ int GDrawPushButton(
 }
 
 #+end_src
-\subsection{GDrawString}
+*** GDrawString
 \label{GDrawString}
 \index{gdraws!GDrawString}
 Draws a string.
@@ -21474,7 +21466,7 @@ int GDrawString(
 }
 
 #+end_src
-\subsection{GFillArc}
+*** GFillArc
 \label{GFillArc}
 \index{gdraws!GFillArc}
 Draws and fills an arc with foreground color.
@@ -21515,7 +21507,7 @@ int GFillArc(
 }
 
 #+end_src
-\subsection{PSGlobalInit}
+*** PSGlobalInit
 \label{PSGlobalInit}
 \index{gdraws!PSGlobalInit}
 Initializes the path and files to be used.
@@ -21617,7 +21609,7 @@ int PSGlobalInit(void) {
 }
 
 #+end_src
-\subsection{PSInit}
+*** PSInit
 \label{PSInit}
 \index{gdraws!PSInit}
 This needs to be called for every postscript file generated.
@@ -21653,7 +21645,7 @@ int PSInit(Window vw, Window tw) {
 }
 
 #+end_src
-\subsection{PSCreateContext}
+*** PSCreateContext
 \label{PSCreateContext}
 \index{gdraws!PSCreateContext}
 This procedure sets the line attributes; notice that lineWidth is not set
@@ -21702,7 +21694,7 @@ int PSCreateContext(
 }
 
 #+end_src
-\subsection{PSfindGC}
+*** PSfindGC
 \label{PSfindGC}
 \index{gdraws!PSfindGC}
 Looks into GC linked list with gc (unsigned long) as index to find the
@@ -21724,7 +21716,7 @@ char *PSfindGC(GC gc) {
 }
 
 #+end_src
-\subsection{GSetForeground}
+*** GSetForeground
 \label{GSetForeground}
 \index{gdraws!GSetForeground}
 Sets foreground color.
@@ -21762,7 +21754,7 @@ int GSetForeground(
 }
 
 #+end_src
-\subsection{GSetBackground}
+*** GSetBackground
 \label{GSetBackground}
 \index{gdraws!GSetBackground}
 Sets background color.
@@ -21800,7 +21792,7 @@ int GSetBackground(
 }
 
 #+end_src
-\subsection{GSetLineAttributes}
+*** GSetLineAttributes
 \label{GSetLineAttributes}
 \index{gdraws!GSetLineAttributes}
 (See \ref{XSetLineAttributes} on page~\pageref{XSetLineAttributes}),
@@ -21875,7 +21867,7 @@ int GSetLineAttributes(
 }
 
 #+end_src
-\subsection{PSClose}
+*** PSClose
 \label{PSClose}
 \index{gdraws!PSClose}
 This procedure frees the data structure used for GC information, and also
@@ -21896,7 +21888,7 @@ int PSClose(void) {
 }
 
 #+end_src
-\subsection{centerX}
+*** centerX
 \label{centerX}
 \index{gdraws!centerX}
 #+NAME: gfun.c
@@ -21916,7 +21908,7 @@ int centerX(GC viewGCx,char * theString,int strlength,int windowWidth)
 }
 
 #+end_src
-\subsection{centerY}
+*** centerY
 \label{centerY}
 \index{gdraws!centerY}
 #+NAME: gfun.c
@@ -21938,7 +21930,7 @@ int centerY(GC viewGCy,int windowHeight) {
 }
 
 #+end_src
-\subsection{PSColorPolygon}
+*** PSColorPolygon
 \label{PSColorPolygon}
 \index{gdraws!PSColorPolygon}
 PSColorPolygon draws and fills a polygon given data in XPoint.
@@ -21973,7 +21965,7 @@ int PSColorPolygon(
 
 
 #+end_src
-\subsection{PSColorwOutline}
+*** PSColorwOutline
 \label{PSColorwOutline}
 \index{gdraws!PSColorwOutline}
 PSColorwOutline draws and also outlines the colored polygon.
@@ -22005,7 +21997,7 @@ int PSColorwOutline(
 }
 
 #+end_src
-\subsection{PSDrawColor}
+*** PSDrawColor
 \label{PSDrawColor}
 \index{gdraws!PSDrawColor}
 This function does what XDraw would do, notice that only a subset of
@@ -22038,7 +22030,7 @@ int PSDrawColor(
 }
 
 #+end_src
-\subsection{PSFillPolygon}
+*** PSFillPolygon
 \label{PSFillPolygon}
 \index{gdraws!PSFillPolygon}
 PSFillPolygon draws and fills a polygon given data in XPoint.
@@ -22071,7 +22063,7 @@ int PSFillPolygon(
 }
 
 #+end_src
-\subsection{PSFillwOutline}
+*** PSFillwOutline
 \label{PSFillwOutline}
 \index{gdraws!PSFillwOutline}
 PSFillwOutline draws and also outlines the filled polygon.
@@ -22101,7 +22093,7 @@ int PSFillwOutline(
 }
 
 #+end_src
-\subsection{TrivEqual}
+*** TrivEqual
 \label{TrivEqual}
 \index{gdraws!TrivEqual}
 #+NAME: gfun.c
@@ -22112,7 +22104,7 @@ static int TrivEqual(Window s1,Window s2) {
 }
 
 #+end_src
-\subsection{TrivHashCode}
+*** TrivHashCode
 \label{TrivHashCode}
 \index{gdraws!TrivHashCode}
 #+NAME: gfun.c
@@ -22123,7 +22115,7 @@ static int TrivHashCode(Window s,int size) {
 }
 
 #+end_src
-\subsection{XCreateAssocTable}
+*** XCreateAssocTable
 \label{XCreateAssocTable}
 \index{gdraws!XCreateAssocTable}
 #+NAME: gfun.c
@@ -22138,7 +22130,7 @@ HashTable *XCreateAssocTable(int size) {
 }
 
 #+end_src
-\subsection{XMakeAssoc}
+*** XMakeAssoc
 \label{XMakeAssoc}
 \index{gdraws!XMakeAssoc}
 #+NAME: gfun.c
@@ -22149,7 +22141,7 @@ void XMakeAssoc(Display * dsp, HashTable *table, Window w, int * p) {
 }
 
 #+end_src
-\subsection{XLookUpAssoc}
+*** XLookUpAssoc
 \label{XLookUpAssoc}
 \index{gdraws!XLookUpAssoc}
 #+NAME: gfun.c
@@ -22160,7 +22152,7 @@ int *XLookUpAssoc(Display * dsp, HashTable *table,Window w) {
 }
 
 #+end_src
-\subsection{XDeleteAssoc}
+*** XDeleteAssoc
 \label{XDeleteAssoc}
 \index{gdraws!XDeleteAssoc}
 #+NAME: gfun.c
@@ -22171,9 +22163,9 @@ void XDeleteAssoc(Display * dsp,HashTable * table, Window w) {
 }
 
 #+end_src
-\section{The postscript command definitions}
-\subsection{colorpoly}
-\begin{verbatim}
+** The postscript command definitions
+*** colorpoly
+#+begin_example
 operand stack configuration in order to use psColorPoly:
 	psFillPoly
 	XPoint[0].y
@@ -22185,7 +22177,7 @@ operand stack configuration in order to use psColorPoly:
 	graphics-context dictionary
 this draws a polygon by connecting all the points and fills the
 region with foreground color
-\end{verbatim}
+#+end_example
 \index{psfiles!colorpoly}
 \index{colorpoly psfiles}
 #+NAME: psfiles/colorpoly
@@ -22203,8 +22195,8 @@ region with foreground color
         def
 
 #+end_src
-\subsection{colorwol}
-\begin{verbatim}
+*** colorwol
+#+begin_example
 operand stack configuration in order to use psDrawFilled:
 	psFillwOL
 	XPoint[0].y
@@ -22216,7 +22208,7 @@ operand stack configuration in order to use psDrawFilled:
 	graphics-context dictionary
 this draws lines connecting all the points and fills the
 region with background color (default: 1, or white).
-\end{verbatim}
+#+end_example
 \index{psfiles!colorwol}
 \index{colorwol psfiles}
 #+NAME: psfiles/colorwol
@@ -22234,8 +22226,8 @@ region with background color (default: 1, or white).
         def
 
 #+end_src
-\subsection{drawarc}
-\begin{verbatim}
+*** drawarc
+#+begin_example
 operand stack configuration in order to use psDrawArc:
 	psDrawArc
 	angle2
@@ -22249,7 +22241,7 @@ this draws an arc whose origin is at x, y, and whose width
 and height specifies the rectangle which encases the arc.
 Origin is at upper left corner of rectangle.
 This function uses "scale" to make cricles and ellipses.
-\end{verbatim}
+#+end_example
 \index{psfiles!drawarc}
 \index{drawarc psfiles}
 #+NAME: psfiles/drawarc
@@ -22274,8 +22266,8 @@ This function uses "scale" to make cricles and ellipses.
         def
 
 #+end_src
-\subsection{drawcolor}
-\begin{verbatim}
+*** drawcolor
+#+begin_example
 operand stack configuration in order to use psDrawColor:
 	psDraw
 	vlist[0].y
@@ -22286,7 +22278,7 @@ operand stack configuration in order to use psDrawColor:
 	vlist[n].x
 	graphics-context dictionary
 to draw lines connecting points in vlist[0] to vlist[n]
-\end{verbatim}
+#+end_example
 \index{psfiles!drawcolor}
 \index{drawcolor psfiles}
 #+NAME: psfiles/drawcolor
@@ -22303,8 +22295,8 @@ to draw lines connecting points in vlist[0] to vlist[n]
         def
 
 #+end_src
-\subsection{drawIstr}
-\begin{verbatim}
+*** drawIstr
+#+begin_example
 operand stack configuration in order to use psDrawIStr:
 	psDrawIStr
 	window type: title or window
@@ -22314,7 +22306,7 @@ operand stack configuration in order to use psDrawIStr:
 	graphics-context dictionary
 it draws a text string in foreground color on top of bounding box of
 string, which is in background color.
-\end{verbatim}
+#+end_example
 \index{psfiles!drawIstr}
 \index{drawIstr psfiles}
 #+NAME: psfiles/drawIstr
@@ -22357,8 +22349,8 @@ string, which is in background color.
         def
 
 #+end_src
-\subsection{drawline}
-\begin{verbatim}
+*** drawline
+#+begin_example
 operand stack configuration in order to use psDrawLine:
 	psDrawLine
 	y0
@@ -22367,7 +22359,7 @@ operand stack configuration in order to use psDrawLine:
 	x1
 	graphics-context dictionary
 this draws a line from (x0, y0) to (x1, y1).
-\end{verbatim}
+#+end_example
 \index{psfiles!drawline}
 \index{drawline psfiles}
 #+NAME: psfiles/drawline
@@ -22382,8 +22374,8 @@ this draws a line from (x0, y0) to (x1, y1).
         def
 
 #+end_src
-\subsection{drawlines}
-\begin{verbatim}
+*** drawlines
+#+begin_example
 operand stack configuration in order to use psDrawLines:
 	psDrawLines
 	points[0].y
@@ -22394,7 +22386,7 @@ operand stack configuration in order to use psDrawLines:
 	points[n].x
 	graphics-context dictionary
 this draws lines connecting all the points.
-\end{verbatim}
+#+end_example
 \index{psfiles!drawlines}
 \index{drawlines psfiles}
 #+NAME: psfiles/drawlines
@@ -22411,15 +22403,15 @@ this draws lines connecting all the points.
         def
 
 #+end_src
-\subsection{drawpoint}
-\begin{verbatim}
+*** drawpoint
+#+begin_example
 operand stack configuration in order to use psDrawPoint:
 	psDrawPoint
 	y0
 	x0
 	graphics-context dictionary
 this draws a point at (x0, y0).
-\end{verbatim}
+#+end_example
 \index{psfiles!drawpoint}
 \index{drawpoint psfiles}
 #+NAME: psfiles/drawpoint
@@ -22434,8 +22426,8 @@ this draws a point at (x0, y0).
         def
 
 #+end_src
-\subsection{draw}
-\begin{verbatim}
+*** draw
+#+begin_example
 operand stack configuration in order to use psDraw:
 	psDraw
 	vlist[0].y
@@ -22446,7 +22438,7 @@ operand stack configuration in order to use psDraw:
 	vlist[n].x
 	graphics-context dictionary
 to draw lines connecting points in vlist[0] to vlist[n]
-\end{verbatim}
+#+end_example
 \index{psfiles!draw}
 \index{draw psfiles}
 #+NAME: psfiles/draw
@@ -22463,8 +22455,8 @@ to draw lines connecting points in vlist[0] to vlist[n]
         def
 
 #+end_src
-\subsection{drawrect}
-\begin{verbatim}
+*** drawrect
+#+begin_example
 operand stack configuration in order to use psDrawRect:
 	psDrawRect
 	y
@@ -22474,7 +22466,7 @@ operand stack configuration in order to use psDrawRect:
 	graphics-context dictionary
 this draws an outline of a rectangle whose origin is at (x,y) and is width
 + 1 wide and height + 1 tall.
-\end{verbatim}
+#+end_example
 \index{psfiles!drawrect}
 \index{drawrect psfiles}
 #+NAME: psfiles/drawrect
@@ -22488,8 +22480,8 @@ this draws an outline of a rectangle whose origin is at (x,y) and is width
         def
 
 #+end_src
-\subsection{drawstr}
-\begin{verbatim}
+*** drawstr
+#+begin_example
 operand stack configuration in order to use psDrawStr:
 	psDrawStr
 	y
@@ -22497,7 +22489,7 @@ operand stack configuration in order to use psDrawStr:
 	string
 	graphics-context dictionary
 this function draws a text string at (x,y).
-\end{verbatim}
+#+end_example
 \index{psfiles!drawstr}
 \index{drawstr psfiles}
 #+NAME: psfiles/drawstr
@@ -22512,8 +22504,8 @@ this function draws a text string at (x,y).
         def
 
 #+end_src
-\subsection{drwfilled}
-\begin{verbatim}
+*** drwfilled
+#+begin_example
 operand stack configuration in order to use psDrawFilled:
 	psDrawFilled
 	vlist[0].y
@@ -22525,7 +22517,7 @@ operand stack configuration in order to use psDrawFilled:
 	graphics-context dictionary
 this draws lines connecting all the points and fills the
 region with background color (default: 1, or white).
-\end{verbatim}
+#+end_example
 \index{psfiles!drwfilled}
 \index{drwfilled psfiles}
 #+NAME: psfiles/drwfilled
@@ -22542,7 +22534,7 @@ region with background color (default: 1, or white).
         def
 
 #+end_src
-\subsection{end}
+*** end
 \index{psfiles!end}
 \index{end psfiles}
 #+NAME: psfiles/end
@@ -22556,8 +22548,8 @@ showpage
 
 %-------------------------- end --------------------------%
 #+end_src
-\subsection{fillarc}
-\begin{verbatim}
+*** fillarc
+#+begin_example
 operand stack configuration in order to use psFillArc:
 	psFillArc
 	y center of rectangle
@@ -22573,7 +22565,7 @@ this draws and fills an arc whose origin is at x, y, and whose width
 and height specifies the rectangle which encases the arc.
 Origin is at upper left corner of rectangle.
 This function uses "scale" to make cricles and ellipses.
-\end{verbatim}
+#+end_example
 \index{psfiles!fillarc}
 \index{fillarc psfiles}
 #+NAME: psfiles/fillarc
@@ -22599,8 +22591,8 @@ This function uses "scale" to make cricles and ellipses.
         def
 
 #+end_src
-\subsection{fillpoly}
-\begin{verbatim}
+*** fillpoly
+#+begin_example
 operand stack configuration in order to use psDrawFilled:
 	psFillPoly
 	XPoint[0].y
@@ -22612,7 +22604,7 @@ operand stack configuration in order to use psDrawFilled:
 	graphics-context dictionary
 this draws a polygon by connecting all the points and fills the
 region with foreground color
-\end{verbatim}
+#+end_example
 \index{psfiles!fillpoly}
 \index{fillpoly psfiles}
 #+NAME: psfiles/fillpoly
@@ -22630,8 +22622,8 @@ region with foreground color
         def
 
 #+end_src
-\subsection{fillwol}
-\begin{verbatim}
+*** fillwol
+#+begin_example
 operand stack configuration in order to use psDrawFilled:
 	psFillwOL
 	XPoint[0].y
@@ -22643,7 +22635,7 @@ operand stack configuration in order to use psDrawFilled:
 	graphics-context dictionary
 this draws lines connecting all the points and fills the
 region with background color (default: 1, or white).
-\end{verbatim}
+#+end_example
 \index{psfiles!fillwol}
 \index{fillwol psfiles}
 #+NAME: psfiles/fillwol
@@ -22662,9 +22654,9 @@ region with background color (default: 1, or white).
         def
 
 #+end_src
-\subsection{header}
-\begin{verbatim}
-\end{verbatim}
+*** header
+#+begin_example
+#+end_example
 \index{psfiles!header}
 \index{header psfiles}
 #+NAME: psfiles/header
@@ -22826,7 +22818,7 @@ region with background color (default: 1, or white).
 	def
 
 #+end_src
-\subsection{setup}
+*** setup
 \index{psfiles!setup}
 \index{setup psfiles}
 #+NAME: psfiles/setup
@@ -22838,18 +22830,18 @@ region with background color (default: 1, or white).
    mark					%% mark bottom of our stack
 
 #+end_src
-\chapter{The APIs}
+* The APIs
 \label{TheAPIs}
-\section{Graphics API}
+** Graphics API
 
-\subsection{XDrawString}
+*** XDrawString
 \label{XDrawString}
 \index{X11!XDrawString}
 XDrawString draws an 8-bit text string, foreground only. 
-\begin{verbatim}
+#+begin_example
 XDrawString (Display *display, Drawable drawable, GC gc, 
              int x, int y, char *string, int length);
-\end{verbatim}
+#+end_example
 
 \begin{itemize}
 \item {\tt display} --
@@ -22881,13 +22873,13 @@ origin, and ts\_y\_origin. Each character image, as defined by the font
 in gc, is treated as an additional mask for a fill operation on the
 drawable.
 
-\subsection{XDrawPoint}
+*** XDrawPoint
 \label{XDrawPoint}
 \index{X11!XDrawPoint}
 From the Xlib Drawing Primitives, XDrawPoint draws a point.
-\begin{verbatim}
+#+begin_example
 XDrawPoint (Display *display, Drawable drawable, GC gc, int x, int y);
-\end{verbatim}
+#+end_example
 {\bf Arguments}
 \begin{itemize}
 \item {\tt display} --
@@ -22908,14 +22900,14 @@ drawable. XDrawPoint uses these graphics context components: function,
 plane\_mask, foreground, subwindow\_mode, clip x origin, clip\_y\_origin,
 and clip\_mask. 
 
-\subsection{XDrawLine}
+*** XDrawLine
 \label{XDrawLine}
 \index{X11!XDrawLine}
 From the Xlib Drawing Primitives, XDrawLine draws a line between two points. 
-\begin{verbatim}
+#+begin_example
 XDrawLine(Display *display, Drawable drawable, GCgc, 
           int x1, int y1, int x2, int y2);
-\end{verbatim}
+#+end_example
 \begin{itemize}
 \item {\tt display} --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
@@ -22948,14 +22940,14 @@ components: foreground, background, tile, stipple, ts\_x\_origin,
 ts\_y\_origin, dash\_offset, and dash\_list.  XDrawLine is not
 affected by tile or stipple in the GC.
 
-\subsection{XDrawImageString}
+*** XDrawImageString
 \label{XDrawImageString}
 \index{X11!XDrawImageString}
 XDrawlmageString draws image text characters. 
-\begin{verbatim}
+#+begin_example
 XDrawImageString(Display *display, Drawable drawable, GC gc, int x, int y,
                  char *string, int length);
-\end{verbatim}
+#+end_example
 
 \begin{itemize}
 \item {\tt display} --
@@ -22987,15 +22979,15 @@ descent are as would be returned by XQuery-TextExtents using gc and
 string.
 
 
-\subsection{XFillArc}
+*** XFillArc
 \label{XFillArc}
 \index{X11!XFillArc}
 From the Xlib Drawing Primitives, XFillArc fills an arc. 
-\begin{verbatim}
+#+begin_example
 XFillArc (Display *display, Drawable drawable, GC gc, 
           int x, int y, unsigned int width, unsigned int height,
           int angle1, int angle2);
-\end{verbatim}
+#+end_example
 
 {\bf Arguments}
 \begin{itemize}
@@ -23040,16 +23032,16 @@ and clip\_mask. This function also uses these graphics context
 mode-dependent components: foreground, background, tile, stipple, ts
 x origin, and ts\_y\_ origin.
 
-\subsection{XDrawArc}
+*** XDrawArc
 \label{XDrawArc}
 \index{X11!XDrawArc}
 From the Xlib Drawing Primitives, XDrawArc draws an arc fitting inside
 a rectangle.
 
-\begin{verbatim}
+#+begin_example
 XDrawArc(Display *display, Drawable drawable, GC gc, int x, int y, 
          unsigned int width, unsigned int height, int angle1, int angle2);
-\end{verbatim}
+#+end_example
 \begin{itemize}
 \item {\tt display} --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
@@ -23103,14 +23095,14 @@ foreground, background, tile, stipple, ts x origin, ts\_y\_origin,
 dash\_offset, and dash\_list. XDrawArc is not affected by the tile or
 stipple in the GC.
 
-\subsection{XSetForeground}
+*** XSetForeground
 \label{XSetForeground}
 \index{X11!XSetForeground}
 In Xlib, in the Graphics Context,
 XSetForeground m set the foreground pixel value in a graphics context. 
-\begin{verbatim}
+#+begin_example
 XSetForeground (Display *display, GC gc, unsigned long foreground);
-\end{verbatim}
+#+end_example
 {\bf Arguments}
 \begin{itemize}
 \item {\tt display} -- 
@@ -23120,14 +23112,14 @@ Specifies a pointer to the Display structure; returned from XOpenDisplay.
 Specifies the foreground you want to set for the specified graphics context. 
 \end{itemize}
 
-\subsection{XSetBackground}
+*** XSetBackground
 \label{XSetBackground}
 \index{X11!XSetBackground}
 In Xlib, in the Graphics Context,
 XSetBackground m set the background pixel value in a graphics context. 
-\begin{verbatim}
+#+begin_example
 XSetBackground (Display *display, GC gc, unsigned long background);
-\end{verbatim}
+#+end_example
 {\bf Arguments}
 \begin{itemize}
 \item {\tt display} -- 
@@ -23137,7 +23129,7 @@ Specifies a pointer to the Display structure; returned from XOpenDisplay.
 Specifies the background you want to set for the specified graphics context. 
 \end{itemize}
 
-\subsection{XSetLineAttributes}
+*** XSetLineAttributes
 \label{XSetLineAttributes}
 \index{X11!XSetLineAttributes}
 In Xlib, in the Graphics Context, the function XSetLineAttributes 
@@ -23161,24 +23153,24 @@ Specifies the line-join style you want to set for the specified graphics con-
 text. Possible values are JoinMiter, JoinRound, or JoinBevel. 
 \end{itemize}
 
-\subsection{DefaultScreen}
+*** DefaultScreen
 \label{DefaultScreen}
 \index{X11!DefaultScreen}
 The DefaultScreen macro returns the default screen number referenced in
 the XOpenDisplay routine.
 
-\subsection{RootWindow}
+*** RootWindow
 \label{RootWindow}
 \index{X11!RootWindow}
  The RootWindow macro returns the root window.
 
-\subsection{XCreateAssocTable}
+*** XCreateAssocTable
 \index{X11!XCreateAssocTable}
 Create a new association table (X10). Note that we have our own version
 of this function. 
-\begin{verbatim}
+#+begin_example
   XAssocTable *XCreateAssocTable(int size) 
-\end{verbatim}
+#+end_example
 {\bf Arguments}
 \begin{itemize}
 \item {\tt size} 
@@ -23197,21 +23189,21 @@ per buckets is 8.  If there is an error allocating memory for the
 XAssocTable, a NULL pointer is returned.
 
 {\bf Structures}
-\begin{verbatim}
+#+begin_example
 typedef struct { 
     XAssoc *buckets; /* pointer to first bucket in array */ 
     int size;        /* table size (number of buckets) */ 
   } XAssocTable; 
-\end{verbatim}
+#+end_example
 
-\subsection{XOpenDisplay}
+*** XOpenDisplay
 \label{XOpenDisplay}
 \index{X11!XOpenDisplay}
 To open a connection to the X server that controls a display, 
 use XOpenDisplay().
-\begin{verbatim}
+#+begin_example
     Display *XOpenDisplay(char *displayname);
-\end{verbatim}
+#+end_example
 {\bf Arguments}
 \begin{itemize}
 \item {\tt displayname} Specifies the hardware display name, which
@@ -23227,9 +23219,9 @@ dependent. Strings in the Host Portable Character Encoding are
 supported; support for other characters is implementation
 dependent. On POSIX-conformant systems, the display name or DISPLAY
 environment variable can be a string in the format:
-\begin{verbatim}
+#+begin_example
     hostname:number.screennumber
-\end{verbatim}
+#+end_example
 
 {\tt hostname} Specifies the name of the host machine on which the display
 is physically attached. You follow the hostname with either a single
@@ -23248,9 +23240,9 @@ other than C.
 
 For example, the following would specify screen 1 of display 0 on the
 machine named ``dual-headed'':
-\begin{verbatim}
+#+begin_example
     dual-headed:0.1 
-\end{verbatim}
+#+end_example
 The XOpenDisplay() function returns a Display structure that serves as
 the connection to the X server and that contains all the information
 about that X server. XOpenDisplay() connects your application to the X
@@ -23274,7 +23266,7 @@ the DefaultScreen() macro (or the XDefaultScreen() function). You can
 access elements of the Display and Screen structures only by using the
 information macros or functions. 
 
-\section{X11 API calls}
+** X11 API calls
 \begin{itemize}
 \item XSolidColor
 \begin{itemize}
@@ -23457,11 +23449,11 @@ information macros or functions.
 \item XSelectInput(dsply, menu, KeyPressMask|ButtonPressMask|ExposureMask);
 \end{itemize}
 
-\chapter{libspad}
+* libspad
 These are library routines to support the graphics. Two of them,
 ({\bf cfuns-c} and {\bf sockio-c}, get integrated into the lisp image.
 
-\section{bsdsignal.c}
+** bsdsignal.c
 The system defines a set of signals that may be delivered to a
 process. Signal delivery resembles the occurrence of a hardware
 interrupt: the signal is normally blocked from further occurrence, the
@@ -23619,13 +23611,13 @@ the value -1 is returned and the global variable {\sl errno} is set to indicate
 the error.
 
 Signal handlers should have either the ANSI C prototype:
-\begin{verbatim}
+#+begin_example
   void handler(int);
-\end{verbatim}
+#+end_example
 or the POSIX SA\_SIGINFO prototype:
-\begin{verbatim}
+#+begin_example
   void handler(int, siginfo_t *info, ucontext_t *uap);
-\end{verbatim}
+#+end_example
 
 The handler function should match the SA\_SIGINFO prototype 
 when the SA\_SIGINFO 
@@ -23750,7 +23742,7 @@ propogate that platform variable.
 
 #+end_src
 
-\section{cfuns-c.c}
+** cfuns-c.c
 #+NAME: cfuns-c.c
 #+begin_src c :noweb yes
 
@@ -23885,16 +23877,16 @@ int writeablep(char *path) {
 #+end_src
 
 This function does not appear to be used anywhere
-\begin{verbatim}
+#+begin_example
 int CLgetpid(void) {
      return getpid();
 }
-\end{verbatim}
+#+end_example
 
 This function does not appear to be used in axiom. It has been
 replaced by native lisp code in {\tt fname.lisp} in the function
 {\tt file-readablep}.
-\begin{verbatim}
+#+begin_example
 int readablep(char *path) {
     struct stat buf;
     int code;
@@ -23912,10 +23904,10 @@ int readablep(char *path) {
         return ((buf.st_mode & S_IROTH) != 0);
     }
 }
-\end{verbatim}
+#+end_example
 
 This function does not appear to be used anywhere.
-\begin{verbatim}
+#+begin_example
 long findString(char *file, char *string) {
     int nstring, charpos;
     FILE *fn;
@@ -23930,10 +23922,10 @@ long findString(char *file, char *string) {
             return charpos;
     return -1;
 }
-\end{verbatim}
+#+end_example
 
 This function does not appear to be used anywhere.
-\begin{verbatim}
+#+begin_example
 int copyEnvValue(char *varName, char *buffer) {
     char *s;
     s = getenv(varName);
@@ -23943,9 +23935,9 @@ int copyEnvValue(char *varName, char *buffer) {
     return strlen(s);
 }
 
-\end{verbatim}
+#+end_example
 
-\section{cursor.c}
+** cursor.c
 #+NAME: cursor.c
 #+begin_src c :noweb yes
 
@@ -24055,7 +24047,7 @@ Cursor_shape(int shape)
 
 #+end_src
 
-\section{edin.c}
+** edin.c
 #+NAME: edin.c
 #+begin_src c :noweb yes
 
@@ -24976,7 +24968,7 @@ send_buff_to_child(int chann)
 
 #+end_src
 
-\section{emupty.c}
+** emupty.c
 #+NAME: emupty.c
 #+begin_src c :noweb yes
 
@@ -25167,7 +25159,7 @@ return x;
 }
 #+end_src
 
-\section{fnct-key.c}
+** fnct-key.c
 
 On the MAC OSX the signal [[SIGCLD]] has been renamed to [[SIGCHLD]].
 In order to handle this change we need to ensure that the platform
@@ -25506,7 +25498,7 @@ handle_function_key(int key,int  chann)
 }
 #+end_src
 
-\section{halloc.c}
+** halloc.c
 #+NAME: halloc.c
 #+begin_src c :noweb yes
 
@@ -25534,7 +25526,7 @@ halloc(int bytes,char * msg)
 }
 #+end_src
 
-\section{hash.c}
+** hash.c
 #+NAME: hash.c
 #+begin_src c :noweb yes
 
@@ -25723,7 +25715,7 @@ alloc_string(char *str)
 }
 #+end_src
 
-\section{openpty.c}
+** openpty.c
 
 The main function is {\tt ptyopen}. It simply opens up both sides of a
 pseudo-terminal. It uses and saves the pathnames for
@@ -25731,7 +25723,7 @@ the devices which were actually opened.
 
 If it fails it simply exits the program.
 
-\begin{verbatim}
+#+begin_example
  ptyopen(controller, server, controllerPath, serverPath) 
  int *controller;     The file descriptor for controller side
  int *server;         The file descriptor for the server side 
@@ -25739,7 +25731,7 @@ If it fails it simply exits the program.
                         on return and can be taken out of the 
                         call sequence
  char *serverPath;
-\end{verbatim}
+#+end_example
 The path name  vars should be declared of size 11 or more
 
 The device {\tt /dev/ptmx} is the pseudo-terminal master device.
@@ -25975,7 +25967,7 @@ See the note above about the MACOS platform change.
 
 #+end_src
 
-\section{pixmap.c}
+** pixmap.c
 
 On the [[MAC OSX]] platform they defined [[zopen]]. Since the function
 is only used in this file we simply rename it to [[zzopen]].
@@ -26269,7 +26261,7 @@ write_pixmap_file(Display *dsp, int scr, char  *fn,
 #endif
 #+end_src
 
-\section{prt.c}
+** prt.c
 #+NAME: prt.c
 #+begin_src c :noweb yes
 
@@ -26652,7 +26644,7 @@ back_over_current_char(void)
 
 #+end_src
 
-\section{sockio-c.c}
+** sockio-c.c
 #+NAME: sockio-c.c
 #+begin_src c :noweb yes
 
@@ -27683,7 +27675,7 @@ NANQ(void)
 }
 #+end_src
 
-\section{spadcolors.c}
+** spadcolors.c
 #+NAME: spadcolors.c
 #+begin_src c :noweb yes
 
@@ -28162,7 +28154,7 @@ This routine used to have the following code block. However this
 code block makes no sense. To see why you need to know that an
 XColor object looks like:
 
-\begin{verbatim}
+#+begin_example
 /*
  * Data structure used by color operations
  */
@@ -28172,7 +28164,7 @@ typedef struct {
         char flags;  /* do_red, do_green, do_blue */
         char pad;
 } XColor;
-\end{verbatim}
+#+end_example
 This routine used to set the values of all of the elements of the XColor struct
 except [[pixel]]. This is usually done to specify a desired color in RGB
 values. To try to get a pixel value close to that color you call XAllocColor.
@@ -28180,7 +28172,7 @@ This routine sets up the desired color values but it never asks for the pixel
 (which is really an index into the colormap of the nearest color) value that
 corresponds to the desired color. In fact it uses pixel without ever giving
 it a value. I've rewritten that code.
-\begin{verbatim}
+#+begin_example
 {
     unsigned long plane_masks[1];
     int i, count;
@@ -28216,7 +28208,7 @@ it a value. I've rewritten that code.
         return (0);
     }
 }
-\end{verbatim}
+#+end_example
 #+NAME: spadcolors.c
 #+begin_src c :noweb yes
 {
@@ -28271,7 +28263,7 @@ most closely matches our requested RGB values.
 }
 #+end_src
 
-\section{util.c}
+** util.c
 #+NAME: util.c
 #+begin_src c :noweb yes
 
@@ -28394,7 +28386,7 @@ getWindowSizeXY(Display *display,Window w)
 }
 #+end_src
 
-\section{wct.c}
+** wct.c
 #+NAME: wct.c
 #+begin_src c :noweb yes
 
@@ -29116,7 +29108,7 @@ find_wct(void)
 }
 #+end_src
 
-\section{xdither.c}
+** xdither.c
 #+NAME: xdither.c
 #+begin_src c :noweb yes
 
@@ -29320,7 +29312,7 @@ XDitherArcs(Display *display,Drawable  drawable, GC gc, XArc *arcs,int narcs)
 #endif /* MSYSplatform */
 #+end_src
 
-\section{xshade.c}
+** xshade.c
 #+NAME: xshade.c
 #+begin_src c :noweb yes
 
@@ -29506,7 +29498,7 @@ XShadeArcs(Display *display, Drawable drawable, XArc *arcs, int narcs)
 
 #+end_src
 
-\section{xspadfill.c}
+** xspadfill.c
 
 This file contains the routines needed to dither using the
 spadcolors. The routines will have names such as XSpadFill, $\ldots$
@@ -29774,15 +29766,15 @@ XSpadFillArcs(Display *dsply, Drawable drawable, XArc * arcs, int narcs,
 
 #+end_src
 
-\section{edible.c}
-\subsection{edible Call Graph}
+** edible.c
+*** edible Call Graph
 This was generated by the GNU cflow program with the argument list.
 Note that the line:NNNN numbers refer to the line in the code after
 it has been tangled from this file.
-\begin{verbatim}
+#+begin_example
 cflow --emacs -l -n -b -T --omit-arguments edible.c
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ;; This file is generated by GNU cflow 1.3. -*- cflow -*-
     2 {   0} +-main() <int main () line:122>
     3 {   1}   +-ptyopen()
@@ -29905,13 +29897,13 @@ cflow --emacs -l -n -b -T --omit-arguments edible.c
   120 {   1}   +-back_up()
   121 {   1}   +-print_whole_buff()
   122 {   1}   \-do_reading()
-\end{verbatim}
+#+end_example
 
 Compiling this function with the compiler flag -DAXIOM\_UNLIKELY will
 enable logging.
 
 This can be compiled by hand using
-\begin{verbatim}
+#+begin_example
 ./tanglec bookvol8.pamphlet bsdsignal.c >bsdsignal.c
 gcc -c bsdsignal.c
 ./tanglec bookvol8.pamphlet cursor.c >cursor.c  
@@ -29928,7 +29920,7 @@ gcc -c prt.c
 gcc -c wct.c
 ./tanglec bookvol8.pamphlet edible.c >edible.c
 gcc -o clef edible.c *.o
-\end{verbatim}
+#+end_example
 
 #+NAME: edible.c
 #+begin_src c :noweb yes
@@ -30478,7 +30470,7 @@ set_function_chars(void)
 }
 #+end_src
 
-\chapter{Makefile}
+* Makefile
 #+NAME: Makefile
 #+begin_src common-lisp :noweb yes
 BOOK=${SPD}/books/bookvol8.pamphlet

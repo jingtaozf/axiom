@@ -675,16 +675,16 @@ documentclass{article}
 
 #+end_src
 Waldek Hebisch points out that, in the expression:
-\begin{verbatim}
+#+begin_example
   reduce(+,[1.0/i for i in 1..20000])
-\end{verbatim}
+#+end_example
 a significant amount of the time is spent in this function.
 A special case was added to significantly reduce the execution time.
 This was a problem in GCL as of 2.6.8pre and may be fixed in future
 releases. If it is fixed then the original definition, which was
-\begin{verbatim}
+#+begin_example
 (defun LIST2VEC (list) (coerce list 'vector))
-\end{verbatim}
+#+end_example
 can be restored.
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1105,7 +1105,7 @@ can be restored.
 
 #+end_src
 
-\begin{verbatim}
+#+begin_example
 
 In GCL 2.4.1:
 (setq *print-escape* nil)
@@ -1115,7 +1115,7 @@ In GCL 2.5:
 (setq *print-escape* nil)
 (write-to-string '|a|) ==> "|a|"
 
-\end{verbatim}
+#+end_example
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1576,10 +1576,10 @@ In GCL 2.5:
 #+end_src
 The static declaration causes a problem as of GCL-2.6.8pre.
 Camm issued a fix. This used to read:
-\begin{verbatim}
+#+begin_example
 #+AKCL
 (clines "static int mem_value(x ,i)object x;int i; { return ((short *)x)[i];}")
-\end{verbatim}
+#+end_example
 This whole C excursion exists because CLtL1 had no way to ask a hash
 table for its test: the snippet casts the table object to a short
 array and reads GCL's internal layout at offset 12. ANSI added
@@ -1929,7 +1929,7 @@ work there.
   (close (libstream-indexstream rstream)))
 
 #+end_src
-\section{GCL code.lsp name change}
+** GCL code.lsp name change
 When we compile an algebra file we create an nrlib directory which contains
 several files. One of the files is named code.lsp. 
 On certain platforms this causes linking problems for GCL. 
@@ -3370,7 +3370,7 @@ LP  (COND ((NULL X)
 ; 15.5 Using Lists as Sets
 
 #+end_src
-\section{DEFUN CONTAINED}
+** DEFUN CONTAINED
 The CONTAINED predicate is used to walk internal structures
 such as modemaps to see if the $X$ object occurs within $Y$. One
 particular use is in a function called isPartialMode (see
@@ -3480,7 +3480,7 @@ ends up being CONTAINED \verb|$EmptyMode| Y.
 ; 17.6 Changing the Dimensions of an Array
  
 #+end_src
-\section{Performance change}
+** Performance change
 Camm has identified a performace problem during compiles. There is
 a loop that continually adds one element to a vector. This causes
 the vector to get extended by 1 and copied. These patches fix the 
@@ -3493,13 +3493,13 @@ can likely improve things further with an appropriate (declare
 (:dynamic-extent ...)) in the right place -- gcl will allocate such
 lists on the C stack (very fast).
 
-\subsection{lengthenvec}
+*** lengthenvec
 The original code was:
-\begin{verbatim}
+#+begin_example
 (defun lengthenvec (v n)
   (if (adjustable-array-p v) (adjust-array v n)
     (replace (make-array n) v)))
-\end{verbatim}
+#+end_example
 
 \end{chunk}
 #+NAME: *
@@ -5149,7 +5149,7 @@ terminals and empty or at-end files.  In Common Lisp, we must assume record size
 
 
 #+end_src
-\begin{verbatim}
+#+begin_example
 This file contains most of the code that puts properties on
 identifiers in the Scratchpad II system.  If it was not possible
 to actually put the code here, we have pointers to where such
@@ -5163,7 +5163,7 @@ o  coerceRetract puts the "retract" property on constructors.
 o  there is some code at the end of SPECEVAL BOOT that puts "up"
    properties on some special handlers.
 
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 

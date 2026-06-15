@@ -27,6 +27,93 @@ edge cases (malformed markers, trailing text) are handled as we find them.
 (require 'pamphlet2org)   ; for pamphlet2org--detect-lang
 #+END_SRC
 
+* Phase 1: org-native headings (reversible prose rewrite)
+
+Only the chunk scaffolding HAD to move to org; the prose stayed raw LaTeX.
+Phase 1 makes the *headings* org-native too -- =\chapter{X}= <-> =* X=,
+=\section= <-> =**=, =\subsection= <-> =***=, =\subsubsection= <-> =****= --
+while staying byte-reversible.  Two rules keep it a true bijection:
+
+- Convert ONLY a bare =^\section{X}$= line; a heading with trailing text
+  (=\section{X}\label{..}=) stays verbatim.
+- A prose line that is zero-or-more commas then =*= would be read back as a
+  heading (or an already-escaped one), so escape it with a leading comma --
+  org's own =,*= convention.  The reverse strips exactly one comma.
+
+Applied to PROSE only: chunk code and =\begin{verbatim}= blocks are skipped.
+The C =books/untanglec.c= carries the exact same reverse so the build
+regenerates byte-identical .pamphlet (verified over all 1000 files).
+
+#+BEGIN_SRC elisp
+(defun pamphlet-roundtrip--prose-fwd (line)
+  "Prose line: pamphlet -> org-native heading, or escape a leading-*/leading-- line."
+  (cond
+   ((string-match "\\`\\\\chapter{\\([^}]*\\)}\\'" line)       (concat "* "    (match-string 1 line)))
+   ((string-match "\\`\\\\subsubsection{\\([^}]*\\)}\\'" line) (concat "**** " (match-string 1 line)))
+   ((string-match "\\`\\\\subsection{\\([^}]*\\)}\\'" line)    (concat "*** "  (match-string 1 line)))
+   ((string-match "\\`\\\\section{\\([^}]*\\)}\\'" line)       (concat "** "   (match-string 1 line)))
+   ((string-match "\\`,*\\*" line) (concat "," line))
+   ;; a literal "- X" prose line (e.g. a math-array row "- & - & ...") would be
+   ;; read back as an org list item, so escape it like the *-case (phase 2)
+   ((string-match "\\`,*- " line) (concat "," line))
+   ;; a literal "#+begin_example"/"#+end_example" prose line would be read back
+   ;; as a block marker (phase 3), so escape it with org's own ,#+ convention
+   ((string-match "\\`,*#\\+\\(begin\\|end\\)_example\\'" line) (concat "," line))
+   (t line)))
+
+(defun pamphlet-roundtrip--prose-rev (line)
+  "Prose line: org-native heading -> pamphlet, or unescape one leading comma."
+  (cond
+   ((string-match "\\`,*\\*" line)
+    (if (eq (aref line 0) ?,)
+        (substring line 1)
+      (cond
+       ((string-match "\\`\\*\\*\\*\\* \\(.*\\)\\'" line) (concat "\\subsubsection{" (match-string 1 line) "}"))
+       ((string-match "\\`\\*\\*\\* \\(.*\\)\\'" line)    (concat "\\subsection{"    (match-string 1 line) "}"))
+       ((string-match "\\`\\*\\* \\(.*\\)\\'" line)       (concat "\\section{"       (match-string 1 line) "}"))
+       ((string-match "\\`\\* \\(.*\\)\\'" line)          (concat "\\chapter{"       (match-string 1 line) "}"))
+       (t line))))
+   ;; a comma-escaped "- X" line (non-comma "- X" is a real list item, handled
+   ;; by the itemize reverse before this helper is ever reached)
+   ((string-match "\\`,*- " line)
+    (if (eq (aref line 0) ?,) (substring line 1) line))
+   ;; a comma-escaped example marker -> strip one comma (an unescaped
+   ;; "#+begin_example"/"#+end_example" is a real block, handled before this)
+   ((string-match "\\`,*#\\+\\(begin\\|end\\)_example\\'" line)
+    (if (eq (aref line 0) ?,) (substring line 1) line))
+   (t line)))
+#+END_SRC
+
+* Phase 3: org-native verbatim blocks (=#+begin_example=)
+
+Phase 1/2 left =\begin{verbatim}..\end{verbatim}= prose blocks raw -- they were
+the skip zone where headings and itemize escapes did not fire.  Phase 3 makes
+the *clean* ones org-native: =\begin{verbatim}= <-> =#+begin_example=,
+=\end{verbatim}= <-> =#+end_example=, with the block's content emitted verbatim
+between them.  =org-latex-example-block= exports a =#+begin_example= as a
+=verbatim= environment, so this is the inverse of org's own LaTeX backend.
+
+Three rules keep it a byte bijection, so only *clean* blocks convert:
+
+- *Both delimiters must trim exactly.*  =\begin{verbatim}= converts only when
+  the line trims to exactly that token (leading/trailing whitespace is carried
+  by =string-replace=); the block ends at the first line whose trim *ends with*
+  =\end{verbatim}=, and converts only when that end trims to exactly the token.
+  A block whose =\end= carries trailing content (=...))\end{verbatim}=), or a
+  commented =%\begin{verbatim}=, or a =\verb|\begin{verbatim}|= mention, stays
+  raw -- =#+end_example= must stand alone on its line, so those cannot convert.
+- *No marker collision inside.*  A block whose content already holds a line
+  trimming to =#+begin_example=/=#+end_example= stays raw (none exist in the
+  corpus, but the guard keeps the reverse unambiguous).
+- *Whitespace is preserved exactly*, so an indented =  \begin{verbatim}= round
+  trips through =  #+begin_example=.
+
+The forward lives in =pamphlet-roundtrip-to-org= (a look-ahead that scans to the
+matching =\end=); the reverse in =pamphlet-roundtrip-to-pamphlet= and, for the
+build, in =books/untanglec.c='s =#+begin_example= handling.  All three carry the
+identical rule -- verified byte-exact over the corpus by =check-pamphlet-bytes=
+(2232 blocks across 98 files) and by =to-pamphlet(to-org(P)) == P=.
+
 * Forward: pamphlet -> org
 
 #+BEGIN_SRC elisp
@@ -35,9 +122,9 @@ edge cases (malformed markers, trailing text) are handled as we find them.
   ;; Keep ALL split fields (including the trailing "" from a final \n, and any
   ;; empty lines) and join without appending -- this preserves the exact
   ;; trailing-newline state, so a file with no final newline round-trips too.
-  (let ((out '()) (in-chunk nil) (in-verbatim nil) (lines (split-string text "\n")))
-    (dolist (line lines)
-      (let ((trimmed (string-trim line)))
+  (let ((out '()) (in-chunk nil) (lines (split-string text "\n")))
+    (while lines
+      (let* ((line (pop lines)) (trimmed (string-trim line)))
         (cond
          (in-chunk
           (cond
@@ -51,10 +138,29 @@ edge cases (malformed markers, trailing text) are handled as we find them.
            ((string-match "\\`\\\\getchunk{\\([^}]*\\)}\\'" line)
             (push (format "<<%s>>" (match-string 1 line)) out))
            (t (push line out))))
-         (in-verbatim
-          (push line out)
-          (when (string-suffix-p "\\end{verbatim}" trimmed)
-            (setq in-verbatim nil)))
+         ;; a CLEAN \begin{verbatim}..\end{verbatim} block -- both delimiters trim
+         ;; exactly, no #+begin_example/#+end_example line inside -- becomes an org
+         ;; #+begin_example block (string-replace keeps the markers' surrounding
+         ;; whitespace).  Messy blocks (\end with trailing content, etc.) stay raw,
+         ;; exactly as before.  untanglec.c carries the identical rule.
+         ((string= trimmed "\\begin{verbatim}")
+          (let ((content '()) endline)
+            (while (and lines (not (string-suffix-p "\\end{verbatim}"
+                                                    (string-trim (car lines)))))
+              (push (pop lines) content))
+            (setq endline (car lines) content (nreverse content))
+            (if (and endline
+                     (string= (string-trim endline) "\\end{verbatim}")
+                     (not (cl-some (lambda (c) (member (string-trim c)
+                                                       '("#+begin_example" "#+end_example")))
+                                   content)))
+                (progn (pop lines)
+                       (push (string-replace "\\begin{verbatim}" "#+begin_example" line) out)
+                       (dolist (c content) (push c out))
+                       (push (string-replace "\\end{verbatim}" "#+end_example" endline) out))
+              (push line out)
+              (dolist (c content) (push c out))
+              (when endline (push (pop lines) out)))))
          ;; \begin{chunk}{NAME}EXTRA at column 0 -- NAME up to the first }, EXTRA
          ;; (e.g. a stray }) appended to #+begin_src for exact reversal
          ((string-match "\\`\\\\begin{chunk}{\\([^}]*\\)}\\(.*\\)\\'" line)
@@ -65,14 +171,30 @@ edge cases (malformed markers, trailing text) are handled as we find them.
                           (pamphlet2org--detect-lang name filename) extra)
                   out)
             (setq in-chunk t)))
-         ((string= trimmed "\\begin{verbatim}")
-          (push line out)
-          (setq in-verbatim t))
+         ;; itemize block (prose): a CANONICAL \begin{itemize}..\end{itemize}
+         ;; (every inner line a single-line `\item X', no blank/\item[/nesting)
+         ;; becomes org `- X' lines; anything else stays verbatim.  The dropped
+         ;; \begin/\item/\end are re-derived by the inverse (and untanglec.c).
+         ((string= line "\\begin{itemize}")
+          (let ((items '()) (block '()) (canonical t))
+            (while (and lines (not (string= (car lines) "\\end{itemize}")))
+              (let ((l (pop lines)))
+                (push l block)
+                (if (string-match "\\`\\\\item \\(.+\\)\\'" l)
+                    (push (match-string 1 l) items)
+                  (setq canonical nil))))
+            (if (and lines (string= (car lines) "\\end{itemize}") canonical items)
+                (progn (pop lines)
+                       (dolist (it (nreverse items)) (push (concat "- " it) out)))
+              (push "\\begin{itemize}" out)
+              (dolist (l (nreverse block)) (push l out))
+              (when (and lines (string= (car lines) "\\end{itemize}")) (push (pop lines) out)))))
          ;; getchunk/<<>> are only converted INSIDE chunks (where org-babel
          ;; noweb actually expands them).  In prose, both \getchunk{x} and a
          ;; literal <<x>> stay verbatim, so a literal <<x>> (e.g. bookvol11)
-         ;; is never mistaken for a reference on the way back.
-         (t (push line out)))))
+         ;; is never mistaken for a reference on the way back.  Prose headings
+         ;; and leading-*/- escapes are handled by --prose-fwd.
+         (t (push (pamphlet-roundtrip--prose-fwd line) out)))))
     (string-join (nreverse out) "\n")))
 #+END_SRC
 
@@ -82,10 +204,30 @@ edge cases (malformed markers, trailing text) are handled as we find them.
 (defun pamphlet-roundtrip-to-pamphlet (text)
   "Reverse `pamphlet-roundtrip-to-org': org TEXT back to pamphlet."
   (let ((out '()) (lines (split-string text "\n")) (pfx pamphlet2org--src-prefix)
-        (in-src nil))
+        (in-src nil) (in-verbatim nil) (in-example nil))
     (while lines
-      (let ((line (pop lines)))
+      (let* ((line (pop lines)) (trimmed (string-trim line)))
         (cond
+         ;; State checks come FIRST, both before either opener: a #+begin_example
+         ;; line inside a raw \begin{verbatim} block -- or a \begin{verbatim} line
+         ;; inside a #+begin_example block -- is raw CONTENT, not a marker.  At
+         ;; most one state is set, so their relative order is irrelevant; what
+         ;; matters is that BOTH precede the two openers.
+         (in-example
+          (if (string= trimmed "#+end_example")
+              (progn (push (string-replace "#+end_example" "\\end{verbatim}" line) out)
+                     (setq in-example nil))
+            (push line out)))
+         (in-verbatim   ; a block the forward left raw (e.g. \end carried content)
+          (push line out)
+          (when (string-suffix-p "\\end{verbatim}" trimmed) (setq in-verbatim nil)))
+         ;; block openers (reached only when not already inside a block).  The
+         ;; string-replace preserves the marker line's surrounding whitespace.
+         ((and (not in-src) (string= trimmed "#+begin_example"))
+          (push (string-replace "#+begin_example" "\\begin{verbatim}" line) out)
+          (setq in-example t))
+         ((and (not in-src) (string= trimmed "\\begin{verbatim}"))
+          (push line out) (setq in-verbatim t))
          ((string-prefix-p (concat pfx "NAME: ") line)
           (let ((name (substring line (length (concat pfx "NAME: ")))))
             (if (and lines (string-prefix-p (concat pfx "begin_src ") (car lines)))
@@ -94,7 +236,7 @@ edge cases (malformed markers, trailing text) are handled as we find them.
                                   (match-string 1 bs) "")))
                   (push (format "\\begin{chunk}{%s}%s" name extra) out)
                   (setq in-src t))
-              (push line out))))             ; lone #+NAME in prose: keep raw
+              (push (pamphlet-roundtrip--prose-rev line) out))))   ; lone #+NAME: prose
          ((and in-src (string-prefix-p (concat pfx "end_src") line))
           (push (concat "\\end{chunk}"
                         (substring line (length (concat pfx "end_src"))))
@@ -104,7 +246,18 @@ edge cases (malformed markers, trailing text) are handled as we find them.
          ;; a literal <<x>> in prose stays as-is
          ((and in-src (string-match "\\`<<\\([^>]*\\)>>\\'" line))
           (push (format "\\getchunk{%s}" (match-string 1 line)) out))
-         (t (push line out)))))
+         ;; a prose run of `- X' lines reverses to one \begin{itemize}.. block,
+         ;; exactly re-inserting the scaffolding the forward dropped.  A literal
+         ;; `- ' line was escaped to `,- ' by the forward, so it does not match.
+         ((and (not in-src) (string-match "\\`- \\(.+\\)\\'" line))
+          (let ((items (list (match-string 1 line))))
+            (while (and lines (string-match "\\`- \\(.+\\)\\'" (car lines)))
+              (push (match-string 1 (pop lines)) items))
+            (push "\\begin{itemize}" out)
+            (dolist (it (nreverse items)) (push (concat "\\item " it) out))
+            (push "\\end{itemize}" out)))
+         ;; chunk code raw; prose gets the heading reverse / comma-unescape
+         (t (push (if in-src line (pamphlet-roundtrip--prose-rev line)) out)))))
     (string-join (nreverse out) "\n")))
 #+END_SRC
 
@@ -152,6 +305,50 @@ Returns (:ok N :differ N :failures (RELPATH ...))."
     (dolist (x (nreverse fails)) (message "  FAIL %s" x))
     (list :ok ok :differ bad :failures fails)))
 #+END_SRC
+
+* Build-path byte gate (=check-pamphlet-bytes.sh=)
+
+=pamphlet-roundtrip-test-all= above proves the *elisp* converter is
+reversible on the upstream pamphlets, in memory.  It does not exercise the
+path the build actually takes: the C =books/untanglec.c= reading the
+*migrated tracked =.org=*.  =tools/check-pamphlet-bytes.sh= closes that gap
+and is the per-phase gate.
+
+Its invariant needs no allowlist: regenerate every tracked source pamphlet
+twice -- once from a BASE ref with BASE's own =untanglec=, once from the
+working tree with the current =untanglec= -- and assert the two are
+byte-identical.  It compares *build output across =BASE..worktree=* and so
+flags *every* pamphlet-byte change in that range -- a prose rewrite that
+accidentally moved bytes *and* a deliberate content edit (an SBCL code patch,
+a Makefile rewiring) both show as DIFFER.  To read a green run as "the rewrite
+was byte-transparent", pick BASE so the rewrite under test is the only delta
+to the tree (e.g. BASE = the commit just before the phase).  Allowlist-free
+means it judges nothing and reports every difference -- not that content edits
+are hidden.
+
+Two traps the script encodes:
+
+- *All org-native sources, tracked-only.*  It selects every =git ls-files
+  '*.org'= (not just the =:noweb yes= build corpus, so pure-prose books with
+  no code chunks -- =bookvol0/1/3/4/10.1=, =bookvolbug=, ... -- are gated too),
+  minus =tools/= (literate-elisp) and =bookvolMIGRATION.org= (deliberately raw
+  LaTeX).  Using =ls-files= (not a working-tree =grep=) keeps git-ignored build
+  artifacts (e.g. the generated =src/interp/bookvol5.org=) out, so they never
+  raise a false regression.
+- *No =mapfile=.*  The recipe runs under macOS =/bin/bash= 3.2, which
+  predates =mapfile= (bash 4); the candidate list is streamed through a temp
+  file instead.
+
+Run it after each phase (BASE defaults to HEAD):
+
+#+BEGIN_SRC sh
+make check-pamphlet-bytes BASE=<pre-phase-ref>   # e.g. the commit before phase 1
+# or directly:
+tools/check-pamphlet-bytes.sh <pre-phase-ref>
+#+END_SRC
+
+Exit 0 means the rewrite was byte-transparent; exit 1 lists every pamphlet
+whose bytes moved.
 
 * Migration + build helpers
 
