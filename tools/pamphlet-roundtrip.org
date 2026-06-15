@@ -46,27 +46,35 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
 
 #+BEGIN_SRC elisp
 (defun pamphlet-roundtrip--prose-fwd (line)
-  "Prose line: pamphlet -> org-native heading, or escape a leading-* collision."
+  "Prose line: pamphlet -> org-native heading, or escape a leading-*/leading-- line."
   (cond
    ((string-match "\\`\\\\chapter{\\([^}]*\\)}\\'" line)       (concat "* "    (match-string 1 line)))
    ((string-match "\\`\\\\subsubsection{\\([^}]*\\)}\\'" line) (concat "**** " (match-string 1 line)))
    ((string-match "\\`\\\\subsection{\\([^}]*\\)}\\'" line)    (concat "*** "  (match-string 1 line)))
    ((string-match "\\`\\\\section{\\([^}]*\\)}\\'" line)       (concat "** "   (match-string 1 line)))
    ((string-match "\\`,*\\*" line) (concat "," line))
+   ;; a literal "- X" prose line (e.g. a math-array row "- & - & ...") would be
+   ;; read back as an org list item, so escape it like the *-case (phase 2)
+   ((string-match "\\`,*- " line) (concat "," line))
    (t line)))
 
 (defun pamphlet-roundtrip--prose-rev (line)
   "Prose line: org-native heading -> pamphlet, or unescape one leading comma."
-  (if (string-match "\\`,*\\*" line)
-      (if (eq (aref line 0) ?,)
-          (substring line 1)
-        (cond
-         ((string-match "\\`\\*\\*\\*\\* \\(.*\\)\\'" line) (concat "\\subsubsection{" (match-string 1 line) "}"))
-         ((string-match "\\`\\*\\*\\* \\(.*\\)\\'" line)    (concat "\\subsection{"    (match-string 1 line) "}"))
-         ((string-match "\\`\\*\\* \\(.*\\)\\'" line)       (concat "\\section{"       (match-string 1 line) "}"))
-         ((string-match "\\`\\* \\(.*\\)\\'" line)          (concat "\\chapter{"       (match-string 1 line) "}"))
-         (t line)))
-    line))
+  (cond
+   ((string-match "\\`,*\\*" line)
+    (if (eq (aref line 0) ?,)
+        (substring line 1)
+      (cond
+       ((string-match "\\`\\*\\*\\*\\* \\(.*\\)\\'" line) (concat "\\subsubsection{" (match-string 1 line) "}"))
+       ((string-match "\\`\\*\\*\\* \\(.*\\)\\'" line)    (concat "\\subsection{"    (match-string 1 line) "}"))
+       ((string-match "\\`\\*\\* \\(.*\\)\\'" line)       (concat "\\section{"       (match-string 1 line) "}"))
+       ((string-match "\\`\\* \\(.*\\)\\'" line)          (concat "\\chapter{"       (match-string 1 line) "}"))
+       (t line))))
+   ;; a comma-escaped "- X" line (non-comma "- X" is a real list item, handled
+   ;; by the itemize reverse before this helper is ever reached)
+   ((string-match "\\`,*- " line)
+    (if (eq (aref line 0) ?,) (substring line 1) line))
+   (t line)))
 #+END_SRC
 
 * Forward: pamphlet -> org
@@ -78,8 +86,8 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
   ;; empty lines) and join without appending -- this preserves the exact
   ;; trailing-newline state, so a file with no final newline round-trips too.
   (let ((out '()) (in-chunk nil) (in-verbatim nil) (lines (split-string text "\n")))
-    (dolist (line lines)
-      (let ((trimmed (string-trim line)))
+    (while lines
+      (let* ((line (pop lines)) (trimmed (string-trim line)))
         (cond
          (in-chunk
           (cond
@@ -110,11 +118,29 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
          ((string= trimmed "\\begin{verbatim}")
           (push line out)
           (setq in-verbatim t))
+         ;; itemize block (prose): a CANONICAL \begin{itemize}..\end{itemize}
+         ;; (every inner line a single-line `\item X', no blank/\item[/nesting)
+         ;; becomes org `- X' lines; anything else stays verbatim.  The dropped
+         ;; \begin/\item/\end are re-derived by the inverse (and untanglec.c).
+         ((string= line "\\begin{itemize}")
+          (let ((items '()) (block '()) (canonical t))
+            (while (and lines (not (string= (car lines) "\\end{itemize}")))
+              (let ((l (pop lines)))
+                (push l block)
+                (if (string-match "\\`\\\\item \\(.+\\)\\'" l)
+                    (push (match-string 1 l) items)
+                  (setq canonical nil))))
+            (if (and lines (string= (car lines) "\\end{itemize}") canonical items)
+                (progn (pop lines)
+                       (dolist (it (nreverse items)) (push (concat "- " it) out)))
+              (push "\\begin{itemize}" out)
+              (dolist (l (nreverse block)) (push l out))
+              (when (and lines (string= (car lines) "\\end{itemize}")) (push (pop lines) out)))))
          ;; getchunk/<<>> are only converted INSIDE chunks (where org-babel
          ;; noweb actually expands them).  In prose, both \getchunk{x} and a
          ;; literal <<x>> stay verbatim, so a literal <<x>> (e.g. bookvol11)
          ;; is never mistaken for a reference on the way back.  Prose headings
-         ;; (and leading-* escapes) are handled by --prose-fwd.
+         ;; and leading-*/- escapes are handled by --prose-fwd.
          (t (push (pamphlet-roundtrip--prose-fwd line) out)))))
     (string-join (nreverse out) "\n")))
 #+END_SRC
@@ -154,6 +180,16 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
          ;; a literal <<x>> in prose stays as-is
          ((and in-src (string-match "\\`<<\\([^>]*\\)>>\\'" line))
           (push (format "\\getchunk{%s}" (match-string 1 line)) out))
+         ;; a prose run of `- X' lines reverses to one \begin{itemize}.. block,
+         ;; exactly re-inserting the scaffolding the forward dropped.  A literal
+         ;; `- ' line was escaped to `,- ' by the forward, so it does not match.
+         ((and (not in-src) (string-match "\\`- \\(.+\\)\\'" line))
+          (let ((items (list (match-string 1 line))))
+            (while (and lines (string-match "\\`- \\(.+\\)\\'" (car lines)))
+              (push (match-string 1 (pop lines)) items))
+            (push "\\begin{itemize}" out)
+            (dolist (it (nreverse items)) (push (concat "\\item " it) out))
+            (push "\\end{itemize}" out)))
          ;; chunk code raw; prose gets the heading reverse / comma-unescape
          (t (push (if in-src line (pamphlet-roundtrip--prose-rev line)) out)))))
     (string-join (nreverse out) "\n")))

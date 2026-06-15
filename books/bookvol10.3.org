@@ -89077,12 +89077,10 @@ package converts from one tree (graph) structure to another.
 
 This conversion is done in two stages using an intermediate Tree String
 structure. This Tree String structure represents HTML where:
-\begin{itemize}
-\item leafs represents unstructured text
-\item string in leafs contains the text
-\item non-leafs represents xml elements
-\item string in non-leafs represents xml attributes
-\end{itemize}
+- leafs represents unstructured text
+- string in leafs contains the text
+- non-leafs represents xml elements
+- string in non-leafs represents xml attributes
 
 This is created by traversing OutputForm while building up the Tree String
 structure.
@@ -147085,10 +147083,8 @@ Permutation(S) : SIG == CODE where
 *** Introduction by Martin Baker
 
 Permutation groups are defined by 2 domains:
-\begin{itemize}
-\item PermutationGroup
-\item Permutation
-\end{itemize}
+- PermutationGroup
+- Permutation
 Permutation is a domain which can be used to compute permutations. It
 is also an implementation of Group category.
 \begin{itemize}
@@ -147127,11 +147123,9 @@ with thousands of elements. TODO can we quantify this better?
 To do this we need to represent the group in a way that does not
 need to compute or store all the possible elements of the group,
 yet still be able to calculate:
-\begin{itemize}
-\item The order of the group.
-\item Test permutations to check if they are elements of the group.
-\item Express elements as words in the group.
-\end{itemize}
+- The order of the group.
+- Test permutations to check if they are elements of the group.
+- Express elements as words in the group.
 To do this we use the theory of stabilizer chains and Schreier's
 subgroup lemma. This requires us to compute 'base and strong
 generators'
@@ -147145,13 +147139,11 @@ that may be called in the future.
 *** PermutationGroup Representation
 
 There are many ways to represent a (finite) group, for instance:
-\begin{itemize}
-\item Cayley Table,
-\item Cayley Graph,
-\item Permutations,
-\item Presentation,
-\item Representation.
-\end{itemize}
+- Cayley Table,
+- Cayley Graph,
+- Permutations,
+- Presentation,
+- Representation.
 
 These all have advantages and disadvantages, not all of the operations
 that we might want to do to a given group can be done efficiently in
@@ -147180,10 +147172,8 @@ function called 'bsgs1' see below.
 
 In order to get some intuition lets look at the dihedral group of dimension 3.
 This can be defined using 2 generators:
-\begin{itemize}
-\item {\bf r} - for rotate (modulo 3)
-\item {\bf m} - for mirror
-\end{itemize}
+- {\bf r} - for rotate (modulo 3)
+- {\bf m} - for mirror
 
 \begin{center}
 \includegraphics{ps/v103permgrp01.eps}
@@ -147341,10 +147331,8 @@ subgroups that can form such a sequence?
 
 In the example 1 above (D3). Looking at the Cayley diagram there are some
 obvious candidates for our first subgroup:
-\begin{itemize}
-\item $e$ and $m$
-\item $e$, $r$ and $r^2$
-\end{itemize}
+- $e$ and $m$
+- $e$, $r$ and $r^2$
 
 However, we don't choose these, we choose subgroups base on stabilizers and
 orbits.
@@ -147460,11 +147448,9 @@ with it because vectors are defined over Type.
 So, for example
 
 If a permutation is say (1 2 3) and the vector is [2,3,1] this means
-\begin{itemize}
-\item point 1 maps to point 2
-\item point 2 maps to point 3
-\item point 3 maps to point 1
-\end{itemize}
+- point 1 maps to point 2
+- point 2 maps to point 3
+- point 3 maps to point 1
 
 \begin{center}
 \includegraphics{ps/v103permgrp15.eps}
@@ -147472,11 +147458,9 @@ If a permutation is say (1 2 3) and the vector is [2,3,1] this means
 \vskip 0.5cm
 
 If a permutation is say (1 2) and the vector is [2,1,3] this means
-\begin{itemize}
-\item point 1 maps to point 2
-\item point 2 maps to point 1
-\item point 3 maps to point 3
-\end{itemize}
+- point 1 maps to point 2
+- point 2 maps to point 1
+- point 3 maps to point 3
 
 \begin{center}
 \includegraphics{ps/v103permgrp16.eps}
@@ -147789,17 +147773,13 @@ any given $g$ we should {\bf not} have $g=eval(g,s)$ for every $s$.
 
 For $S$ to be a stabilizer chain for all $i=\{0\ldots n\}$ 
 then $S\cap G^i = G^i$ where
-\begin{itemize}
-\item $S$ is the entire sequence
-\item $G^i$ is the $i^{th}$ (sub)group
-\end{itemize}
+- $S$ is the entire sequence
+- $G^i$ is the $i^{th}$ (sub)group
 so this is the case:
-\begin{itemize}
-\item $(3 4),(2 4 3),(1 2)\cap (3 4),(2 4 3),(1 2) = (3 4),(2 4 3),(1 2)$
-\item $(3 4),(2 4 3),(1 2)\cap (3 4),(2 4 3) = (3 4),(2 4 3)$
-\item $(3 4),(2 4 3),(1 2)\cap (3 4) = (3 4)$
-\item $(3 4),(2 4 3),(1 2)\cap Id = Id$
-\end{itemize}
+- $(3 4),(2 4 3),(1 2)\cap (3 4),(2 4 3),(1 2) = (3 4),(2 4 3),(1 2)$
+- $(3 4),(2 4 3),(1 2)\cap (3 4),(2 4 3) = (3 4),(2 4 3)$
+- $(3 4),(2 4 3),(1 2)\cap (3 4) = (3 4)$
+- $(3 4),(2 4 3),(1 2)\cap Id = Id$
 
 *** Example 3 - Semiregular or Free Action (Id is only Stabilizer)
 
@@ -147945,11 +147925,9 @@ The Schreier vector is generatoed by working back from the base point as
 show in this example for D3.
 
 Orbit for point 1 is [1,2,3]. Schreier vector for point 1 is (-1,1,2)
-\begin{itemize}
-\item Point 1 is the base point
-\item Point 2 gets to the base point using gen index 1
-\item Point 3 gets to the base point using gen index 2
-\end{itemize}
+- Point 1 is the base point
+- Point 2 gets to the base point using gen index 1
+- Point 3 gets to the base point using gen index 2
 
 \begin{center}
 \includegraphics{ps/v103permgrp20.eps}
@@ -148041,10 +148019,8 @@ from any other points.
 \vskip 0.5cm
 
 So a Schreier vector depends on
-\begin{itemize}
-\item The base point
-\item The set of generators used
-\end{itemize}
+- The base point
+- The set of generators used
 
 \begin{center}
 \includegraphics{ps/v103permgrp29.eps}
@@ -148104,10 +148080,8 @@ described above?
 
 The stabilizer of point 1 defines a subgroup. In example 1 this is the group
 containing
-\begin{itemize}
-\item the identiy element whose vector is [1 2 3] or $e$ in the diagram
-\item the element whose vector is [1 3 2] or $rm$ in the diagram
-\end{itemize}
+- the identiy element whose vector is [1 2 3] or $e$ in the diagram
+- the element whose vector is [1 3 2] or $rm$ in the diagram
 
 TO get the cosets for this group we construct the orbit and then apply
 {\tt cosetRep1} above for each point
@@ -148132,12 +148106,10 @@ The {\tt bsgs} function returns {\tt sizeOfGroup} but the real purpose is the
 side effect of setting {\tt information} in \%.
 
 The parameters are
-\begin{itemize}
-\item {\bf group} in this instance
-\item {\bf wordProblem} is true if we want to initialize for wordProblem
-\item {\bf maxLoops} if zero then calculate from the (approximate) base length
-\item {\bf diff} if word problem then subtract this from maxLoops.
-\end{itemize}
+- {\bf group} in this instance
+- {\bf wordProblem} is true if we want to initialize for wordProblem
+- {\bf maxLoops} if zero then calculate from the (approximate) base length
+- {\bf diff} if word problem then subtract this from maxLoops.
 
 Here are some examples: Dihedral Group 3
 

@@ -65,7 +65,16 @@ static void emit_prose(char *s, long len) {
       return;
     }
   }
+  /* comma-escaped dash-item ",- X" (e.g. a math-array row) -> strip one comma */
+  if (c >= 1 && c < len && s[c] == '-' && c + 1 < len && s[c + 1] == ' ') {
+    fwrite(s + 1, 1, (size_t) (len - 1), stdout); return;
+  }
   fwrite(s, 1, (size_t) len, stdout);   /* identity */
+}
+
+/* a list-item line: "- " + at least one char of content */
+static int is_dash_item(const char *s, long len) {
+  return len >= 3 && s[0] == '-' && s[1] == ' ';
 }
 
 int main(int argc, char *argv[]) {
@@ -153,6 +162,27 @@ int main(int argc, char *argv[]) {
         putchar('}');
         continue;
       }
+    }
+
+    /* a prose run of "- X" lines reverses to one itemize block, exactly as the
+       forward dropped the \begin/\item/\end scaffolding */
+    if (!in_src && is_dash_item(s, len)) {
+      if (!first) putchar('\n'); first = 0;
+      fputs("\\begin{itemize}", stdout);
+      for (;;) {
+        putchar('\n');
+        fputs("\\item ", stdout);
+        fwrite(s + 2, 1, (size_t) (len - 2), stdout);
+        if (i + 1 < nspans) {
+          char *ns = buf + sp[i + 1].start;
+          long nl = sp[i + 1].len;
+          if (is_dash_item(ns, nl)) { i++; s = ns; len = nl; continue; }
+        }
+        break;
+      }
+      putchar('\n');
+      fputs("\\end{itemize}", stdout);
+      continue;
     }
 
     if (!first) putchar('\n'); first = 0;

@@ -22701,11 +22701,9 @@ These are called pforms, for short.
 
 The pform data structure
 
-\begin{itemize}
-\item Leaves: [hd, tok, pos] where pos is optional
-\item Trees:  [hd, tree, tree, ...]
-\item hd is either an id or (id . alist)
-\end{itemize}
+- Leaves: [hd, tok, pos] where pos is optional
+- Trees:  [hd, tree, tree, ...]
+- hd is either an id or (id . alist)
 
 The leaves are:
 
@@ -32386,46 +32384,44 @@ be the first entry of the pair and the ``user level'' of the command
 will be the second entry. 
 
 See:\\
-\begin{itemize}
-\item The \fnref{abbreviations} command
-\item The \fnref{boot} command
-\item The \fnref{browse} command
-\item The \fnref{cd} command
-\item The \fnref{clear} command
-\item The \fnref{close} command
-\item The \fnref{compile} command
-\item The \fnref{copyright} command
-\item The \fnref{credits} command
-\item The \fnref{display} command
-\item The \fnref{edit} command
-\item The \fnref{fin} command
-\item The \fnref{frame} command
-\item The \fnref{help} command
-\item The \fnref{history} command
-\item The \fnref{lisp} command
-\item The \fnref{library} command
-\item The \fnref{license} command
-\item The \fnref{load} command
-\item The \fnref{ltrace} command
-\item The \fnref{pquit} command
-\item The \fnref{quit} command
-\item The \fnref{read} command
-\item The \fnref{regress} command
-\item The \fnref{savesystem} command
-\item The \fnref{set} command
-\item The \fnref{show} command
-\item The \fnref{spool} command
-\item The \fnref{summary} command
-\item The \fnref{synonym} command
-\item The \fnref{system} command
-\item The \fnref{tangle} command
-\item The \fnref{trace} command
-\item The \fnref{trademark} command
-\item The \fnref{undo} command
-\item The \fnref{what} command
-\item The \fnref{with} command
-\item The \fnref{workfiles} command
-\end{itemize}
+- The \fnref{abbreviations} command
+- The \fnref{boot} command
+- The \fnref{browse} command
+- The \fnref{cd} command
+- The \fnref{clear} command
+- The \fnref{close} command
+- The \fnref{compile} command
+- The \fnref{copyright} command
+- The \fnref{credits} command
+- The \fnref{display} command
+- The \fnref{edit} command
+- The \fnref{fin} command
+- The \fnref{frame} command
+- The \fnref{help} command
+- The \fnref{history} command
+- The \fnref{lisp} command
+- The \fnref{library} command
+- The \fnref{license} command
+- The \fnref{load} command
+- The \fnref{ltrace} command
+- The \fnref{pquit} command
+- The \fnref{quit} command
+- The \fnref{read} command
+- The \fnref{regress} command
+- The \fnref{savesystem} command
+- The \fnref{set} command
+- The \fnref{show} command
+- The \fnref{spool} command
+- The \fnref{summary} command
+- The \fnref{synonym} command
+- The \fnref{system} command
+- The \fnref{tangle} command
+- The \fnref{trace} command
+- The \fnref{trademark} command
+- The \fnref{undo} command
+- The \fnref{what} command
+- The \fnref{with} command
+- The \fnref{workfiles} command
 
 ** Variables Used
 \defdollar{systemCommands}
@@ -32525,22 +32521,18 @@ of their arguments. Here we dispatch the functions which implement
 these commands.
 
 There are four standard commands which receive arguments
-\begin{itemize}
-\item boot
-\item lisp
-\item synonym 
-\item system
-\end{itemize}
+- boot
+- lisp
+- synonym 
+- system
 
 There are six standard commands which do not receive arguments -- 
-\begin{itemize}
-\item quit
-\item fin
-\item pquit
-\item credits
-\item copyright
-\item trademark
-\end{itemize}
+- quit
+- fin
+- pquit
+- credits
+- copyright
+- trademark
 
 As these commands do not necessarily
 exhaust those mentioned in \verb|$noParseCommands|, we provide a
@@ -34281,23 +34273,19 @@ So the basic process is that the Axiom ``)browse'' command opens a
 socket and listens for http requests. Based on the type of request
 (either 'GET' or 'POST') and the content of the request, which is
 one of:
-\begin{itemize}
-\item command - algebra request/response
-\item lispcall - a lisp s-expression to be evaluated
-\item showcall - an Axiom )show command
-\end{itemize}
+- command - algebra request/response
+- lispcall - a lisp s-expression to be evaluated
+- showcall - an Axiom )show command
 the multiServ function will call a handler function to evaluate
 the command line and construct a response. GET requests result
 in a new browser page. POST requests result in an inline result.
 
 Most responses contain the fields:
-\begin{itemize}
-\item stepnum - this is the Axiom step number 
-\item command - this is the original command from the browser
-\item algebra - this is the Axiom 2D algebra output
-\item mathml - this is the MathML version of the Axiom algebra
-\item type - this is the type of the Axiom result
-\end{itemize}
+- stepnum - this is the Axiom step number 
+- command - this is the original command from the browser
+- algebra - this is the Axiom 2D algebra output
+- mathml - this is the MathML version of the Axiom algebra
+- type - this is the type of the Axiom result
 
 ** Browsers, MathML, and Fonts
 This work has the Firefox browser as its target. Firefox has built-in
@@ -39352,12 +39340,10 @@ the actual and expected results is reported.
 
 In order to regression test axiom results we created a standard
 file format. This format has 3 kinds of markers:
-\begin{itemize}
-\item ``--S'' marker which must have a integer test number
-\item ``--R'' marker lines, one per expected output from axiom
-\item ``--E'' marker which has an integer matching the preceeding ``--S''
-\item ``--I'' marker ignores the line, useful for gensyms and random
-\end{itemize}
+- ``--S'' marker which must have a integer test number
+- ``--R'' marker lines, one per expected output from axiom
+- ``--E'' marker which has an integer matching the preceeding ``--S''
+- ``--I'' marker ignores the line, useful for gensyms and random
 Because these markers use Axiom's standard comment prefix they
 are valid lines in input files and are ignored by the ``)read''
 command. They are simply copied to the output file. This allows
@@ -47850,10 +47836,8 @@ searchCurrentEnv(x,currentEnv) ==
 
 *** Line Buffer
 The philosophy of lines is that
-\begin{itemize}
-\item NEXT LINE will always return a non-blank line or fail.
-\item Every line is terminated by a blank character.
-\end{itemize}
+- NEXT LINE will always return a non-blank line or fail.
+- Every line is terminated by a blank character.
 Hence there is always a current character, because there is never a 
 non-blank line, and there is always a separator character between tokens 
 on separate lines. Also, when a line is read, the character pointer is 
@@ -48245,12 +48229,10 @@ is how the depsys load surfaced it. All three now say
 
 \defun{ioclear}{ioclear}
 The IO state manipulation routines assume that
-\begin{itemize}
-\item one I/O stream pair is in effect at any moment
-\item there is a current line
-\item there is a current token and a next token
-\item there is a reduction stack
-\end{itemize}
+- one I/O stream pair is in effect at any moment
+- there is a current line
+- there is a current token and a next token
+- there is a reduction stack
 \calls{ioclear}{line-clear}
 \calls{ioclear}{reduce-stack-clear}
 \uses{ioclear}{current-fragment}
@@ -50029,12 +50011,10 @@ critical. The interp.daase depends on prior computations and has
 to be written out last.
 
 The build-name-to-pamphlet-hash builds a hash table whose key->value is:
-\begin{itemize}
-\item abbreviation $->$ pamphlet file name
-\item abbreviation-line $->$ pamphlet file position
-\item constructor $->$ pamphlet file name
-\item constructor-line $->$ pamphlet file position
-\end{itemize}
+- abbreviation $->$ pamphlet file name
+- abbreviation-line $->$ pamphlet file position
+- constructor $->$ pamphlet file name
+- constructor-line $->$ pamphlet file position
 is the symbol of the constructor name and whose value is the name of
 the source file without any path information. We  hash the 
 constructor abbreviation to pamphlet file name.
@@ -54081,13 +54061,11 @@ This is a simpler interpface to RDEFIOSTREAM
 \defun{getBrowseDatabase}{OperationQuery getDatabase function support}
 This function, called as \verb|getBrowseDatabase(arg)| returns a list of
 appropriate entries in the browser database. The legal values for arg are
-\begin{itemize}
-\item ``o'' (operations)
-\item ``k'' (constructors)
-\item ``d'' (domains)
-\item ``c'' (categories)
-\item ``p'' (packages)
-\end{itemize}
+- ``o'' (operations)
+- ``k'' (constructors)
+- ``d'' (domains)
+- ``c'' (categories)
+- ``p'' (packages)
 \calls{getBrowseDatabase}{member}
 \calls{getBrowseDatabase}{grepConstruct}
 \usesdollar{getBrowseDatabase}{includeUnexposed?}
@@ -55302,22 +55280,20 @@ and the length of the symbol name:
 
 When the current token does not carry any data i.e. when 
 {\tt OMgetType} returns a marker, i.e. one of:
-\begin{itemize}
-\item {\tt OMtokenApp},
-\item {\tt OMtokenEndApp},
-\item {\tt OMtokenAttr},
-\item {\tt OM tokenEndAttr},
-\item {\tt OMtokenAtp},
-\item {\tt OMtokenEndAtp},
-\item {\tt OMtokenError},
-\item {\tt OMtokenEndError},
-\item {\tt OMtokenObject},
-\item {\tt OMtokenEndObject},
-\item {\tt OMtokenBind},
-\item {\tt OMtokenEndBind},
-\item {\tt OMtokenBVar}
-\item {\tt OMtokenEndBVar} 
-\end{itemize}
+- {\tt OMtokenApp},
+- {\tt OMtokenEndApp},
+- {\tt OMtokenAttr},
+- {\tt OM tokenEndAttr},
+- {\tt OMtokenAtp},
+- {\tt OMtokenEndAtp},
+- {\tt OMtokenError},
+- {\tt OMtokenEndError},
+- {\tt OMtokenObject},
+- {\tt OMtokenEndObject},
+- {\tt OMtokenBind},
+- {\tt OMtokenEndBind},
+- {\tt OMtokenBVar}
+- {\tt OMtokenEndBVar} 
 it is necessary to call the correct function to remove the marker. The
 available functions are
 
@@ -56075,12 +56051,10 @@ specified in the OpenMath specification.
 
 There are 4 known OpenMath encodings which are set up in the OpenMathEncoding
 domain in Volume 10.3.
-\begin{itemize}
-\item Unknown 
-\item Binary
-\item XML
-\item SGML
-\end{itemize}
+- Unknown 
+- Binary
+- XML
+- SGML
 
 *** Axiom specific functions
 This is used in OpenMathPackage in Volume 10.4.
@@ -56269,19 +56243,17 @@ Most of these functions are in the OpenMathDevice domain in Volume 10.3.
 The only exception seems to be the om-stringPtrToString and 
 om-stringToStringPtr functions which are called in the domains that
 export primitives. Currently these are:
-\begin{itemize}
-\item Complex (10.3)
-\item DoubleFloat (10.3)
-\item Float (10.3)
-\item Fraction (10.3)
-\item Integer (10.3)
-\item List (10.3)
-\item SingleInteger (10.3)
-\item String (10.3)
-\item Symbol (10.3)
-\item ExpressionToOpenMath (10.4)
-\item OpenMathPackage (10.4)
-\end{itemize}
+- Complex (10.3)
+- DoubleFloat (10.3)
+- Float (10.3)
+- Fraction (10.3)
+- Integer (10.3)
+- List (10.3)
+- SingleInteger (10.3)
+- String (10.3)
+- Symbol (10.3)
+- ExpressionToOpenMath (10.4)
+- OpenMathPackage (10.4)
 
 Note that putSymbol2 is not implemented.
 \begin{verbatim}
@@ -59958,24 +59930,22 @@ constraining the domains. The possible tests are
 \end{itemize}
 \item {\bf text} which takes a string argument which may contain latex-like
 format strings.
-\begin{itemize}
-\item a plain string
-\item {\bf beginmenu}
-\item {\bf blankline}
-\item {\bf centerline}
-\item {\bf em} with an argument to be emphasized
-\item {\bf indent} sets the column 
-\item {\bf indentrel} does a relative indent by a positive or negative amount
-\item {\bf inputStrings}
-\item {\bf item} occurs between a beginmenu and endmenu text 
-\item {\bf lispdownlink} takes a string and a function to call
-\item {\bf lisplinks}
-\item {\bf menuitemstyle} takes a set of characters as an argument
-\item {\bf newline}
-\item {\bf space} with a numeric argument of the number of spaces
-\item {\bf tab} with a numeric argument indicating the tab column
-\item {\bf vspace} with the number of blank lines needed
-\end{itemize}
+- a plain string
+- {\bf beginmenu}
+- {\bf blankline}
+- {\bf centerline}
+- {\bf em} with an argument to be emphasized
+- {\bf indent} sets the column 
+- {\bf indentrel} does a relative indent by a positive or negative amount
+- {\bf inputStrings}
+- {\bf item} occurs between a beginmenu and endmenu text 
+- {\bf lispdownlink} takes a string and a function to call
+- {\bf lisplinks}
+- {\bf menuitemstyle} takes a set of characters as an argument
+- {\bf newline}
+- {\bf space} with a numeric argument of the number of spaces
+- {\bf tab} with a numeric argument indicating the tab column
+- {\bf vspace} with the number of blank lines needed
 \item {\bf bcStrings} which takes a list. The first element is the width
 of the input box, the second is the default contents, the third is the
 name of the variable to hold the contents, and the fourth is the domains
