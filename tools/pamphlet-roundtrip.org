@@ -56,6 +56,9 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
    ;; a literal "- X" prose line (e.g. a math-array row "- & - & ...") would be
    ;; read back as an org list item, so escape it like the *-case (phase 2)
    ((string-match "\\`,*- " line) (concat "," line))
+   ;; a literal "#+begin_example"/"#+end_example" prose line would be read back
+   ;; as a block marker (phase 3), so escape it with org's own ,#+ convention
+   ((string-match "\\`,*#\\+\\(begin\\|end\\)_example\\'" line) (concat "," line))
    (t line)))
 
 (defun pamphlet-roundtrip--prose-rev (line)
@@ -73,6 +76,10 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
    ;; a comma-escaped "- X" line (non-comma "- X" is a real list item, handled
    ;; by the itemize reverse before this helper is ever reached)
    ((string-match "\\`,*- " line)
+    (if (eq (aref line 0) ?,) (substring line 1) line))
+   ;; a comma-escaped example marker -> strip one comma (an unescaped
+   ;; "#+begin_example"/"#+end_example" is a real block, handled before this)
+   ((string-match "\\`,*#\\+\\(begin\\|end\\)_example\\'" line)
     (if (eq (aref line 0) ?,) (substring line 1) line))
    (t line)))
 #+END_SRC
@@ -201,23 +208,24 @@ identical rule -- verified byte-exact over the corpus by =check-pamphlet-bytes=
     (while lines
       (let* ((line (pop lines)) (trimmed (string-trim line)))
         (cond
-         ;; #+begin_example (org-native form of a clean verbatim block) reverses
-         ;; to \begin{verbatim}; content is raw; #+end_example closes it.  The
-         ;; string-replace preserves the marker line's surrounding whitespace.
+         ;; State checks come FIRST, both before either opener: a #+begin_example
+         ;; line inside a raw \begin{verbatim} block -- or a \begin{verbatim} line
+         ;; inside a #+begin_example block -- is raw CONTENT, not a marker.  At
+         ;; most one state is set, so their relative order is irrelevant; what
+         ;; matters is that BOTH precede the two openers.
          (in-example
           (if (string= trimmed "#+end_example")
               (progn (push (string-replace "#+end_example" "\\end{verbatim}" line) out)
                      (setq in-example nil))
             (push line out)))
+         (in-verbatim   ; a block the forward left raw (e.g. \end carried content)
+          (push line out)
+          (when (string-suffix-p "\\end{verbatim}" trimmed) (setq in-verbatim nil)))
+         ;; block openers (reached only when not already inside a block).  The
+         ;; string-replace preserves the marker line's surrounding whitespace.
          ((and (not in-src) (string= trimmed "#+begin_example"))
           (push (string-replace "#+begin_example" "\\begin{verbatim}" line) out)
           (setq in-example t))
-         ;; inside a prose \begin{verbatim} block leave every line raw -- a block
-         ;; whose \end carried trailing content was left raw (not org-ified), so
-         ;; the forward never rewrote headings there and we must not reverse them
-         (in-verbatim
-          (push line out)
-          (when (string-suffix-p "\\end{verbatim}" trimmed) (setq in-verbatim nil)))
          ((and (not in-src) (string= trimmed "\\begin{verbatim}"))
           (push line out) (setq in-verbatim t))
          ((string-prefix-p (concat pfx "NAME: ") line)

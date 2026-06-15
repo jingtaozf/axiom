@@ -80,6 +80,13 @@ static void emit_prose(char *s, long len) {
   if (c >= 1 && c < len && s[c] == '-' && c + 1 < len && s[c + 1] == ' ') {
     fwrite(s + 1, 1, (size_t) (len - 1), stdout); return;
   }
+  /* comma-escaped literal example marker ",#+begin_example" / ",#+end_example"
+     -- the forward escapes a prose line that would otherwise be read back as a
+     block opener -- strip one comma. */
+  if (c >= 1 && ((len - c == 15 && memcmp(s + c, "#+begin_example", 15) == 0) ||
+                 (len - c == 13 && memcmp(s + c, "#+end_example",   13) == 0))) {
+    fwrite(s + 1, 1, (size_t) (len - 1), stdout); return;
+  }
   fwrite(s, 1, (size_t) len, stdout);   /* identity */
 }
 
@@ -117,8 +124,11 @@ int main(int argc, char *argv[]) {
     char *s = buf + sp[i].start;
     long len = sp[i].len;
 
-    /* Inside a prose #+begin_example block (org-native form of a clean verbatim
-       block): content is raw; #+end_example closes it back to \end{verbatim}. */
+    /* State checks come FIRST, before either block-opener: a #+begin_example
+       line inside a raw \begin{verbatim} block -- or a \begin{verbatim} line
+       inside a #+begin_example block -- is raw CONTENT, not a marker.  At most
+       one of in_example/in_verbatim is set, so their order vs each other is
+       irrelevant; what matters is that BOTH precede the two openers below. */
     if (in_example) {
       if (!first) putchar('\n'); first = 0;
       if (trimmed_eq(s, len, "#+end_example", &lead, &trail)) {
@@ -131,22 +141,22 @@ int main(int argc, char *argv[]) {
       }
       continue;
     }
+    /* Inside a prose \begin{verbatim} block (one the forward left raw) every
+       line is raw -- headings were never rewritten there, so don't reverse. */
+    if (in_verbatim) {
+      if (!first) putchar('\n'); first = 0;
+      fwrite(s, 1, (size_t) len, stdout);
+      if (vb_end(s, len)) in_verbatim = 0;
+      continue;
+    }
+
+    /* block openers (reached only when not already inside a block) */
     if (!in_src && trimmed_eq(s, len, "#+begin_example", &lead, &trail)) {
       if (!first) putchar('\n'); first = 0;
       fwrite(s, 1, (size_t) lead, stdout);
       fputs("\\begin{verbatim}", stdout);
       fwrite(s + trail, 1, (size_t) (len - trail), stdout);
       in_example = 1;
-      continue;
-    }
-
-    /* Inside a prose \begin{verbatim} block every line is raw -- the forward
-       never rewrote headings there, so we must not reverse them here.  (Blocks
-       whose \end carried trailing content were left raw, not org-ified.) */
-    if (in_verbatim) {
-      if (!first) putchar('\n'); first = 0;
-      fwrite(s, 1, (size_t) len, stdout);
-      if (vb_end(s, len)) in_verbatim = 0;
       continue;
     }
     if (!in_src && vb_begin(s, len)) {
