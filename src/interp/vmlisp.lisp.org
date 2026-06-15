@@ -1929,7 +1929,7 @@ work there.
   (close (libstream-indexstream rstream)))
 
 #+end_src
-\section{GCL code.lsp name change}
+** GCL code.lsp name change
 When we compile an algebra file we create an nrlib directory which contains
 several files. One of the files is named code.lsp. 
 On certain platforms this causes linking problems for GCL. 
@@ -3370,7 +3370,7 @@ LP  (COND ((NULL X)
 ; 15.5 Using Lists as Sets
 
 #+end_src
-\section{DEFUN CONTAINED}
+** DEFUN CONTAINED
 The CONTAINED predicate is used to walk internal structures
 such as modemaps to see if the $X$ object occurs within $Y$. One
 particular use is in a function called isPartialMode (see
@@ -3480,7 +3480,7 @@ ends up being CONTAINED \verb|$EmptyMode| Y.
 ; 17.6 Changing the Dimensions of an Array
  
 #+end_src
-\section{Performance change}
+** Performance change
 Camm has identified a performace problem during compiles. There is
 a loop that continually adds one element to a vector. This causes
 the vector to get extended by 1 and copied. These patches fix the 
@@ -3493,7 +3493,7 @@ can likely improve things further with an appropriate (declare
 (:dynamic-extent ...)) in the right place -- gcl will allocate such
 lists on the C stack (very fast).
 
-\subsection{lengthenvec}
+*** lengthenvec
 The original code was:
 \begin{verbatim}
 (defun lengthenvec (v n)

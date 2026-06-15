@@ -32,6 +32,42 @@ static int has_prefix(const char *s, long len, const char *p) {
   return len >= pl && memcmp(s, p, pl) == 0;
 }
 
+/* trimmed-equal to "\begin{verbatim}" */
+static int vb_begin(const char *s, long len) {
+  long a = 0, b = len;
+  while (a < b && (s[a] == ' ' || s[a] == '\t')) a++;
+  while (b > a && (s[b - 1] == ' ' || s[b - 1] == '\t' || s[b - 1] == '\r')) b--;
+  return b - a == 16 && memcmp(s + a, "\\begin{verbatim}", 16) == 0;
+}
+/* trimmed ends with "\end{verbatim}" */
+static int vb_end(const char *s, long len) {
+  long b = len;
+  while (b > 0 && (s[b - 1] == ' ' || s[b - 1] == '\t' || s[b - 1] == '\r')) b--;
+  return b >= 14 && memcmp(s + b - 14, "\\end{verbatim}", 14) == 0;
+}
+/* Reverse the org-native heading rewrite on a PROSE line (outside chunks and
+   \begin{verbatim} blocks).  Mirrors pamphlet-roundtrip's pr--prose-rev:
+   `* X' .. `**** X' -> \chapter{X} .. \subsubsection{X}; a leading-comma escape
+   (org's own ,*  convention) is stripped one level; everything else is verbatim. */
+static void emit_prose(char *s, long len) {
+  long c = 0;
+  while (c < len && s[c] == ',') c++;
+  if (c < len && s[c] == '*') {
+    if (s[0] == ',') { fwrite(s + 1, 1, (size_t) (len - 1), stdout); return; }
+    long ns = 0;
+    while (ns < len && s[ns] == '*') ns++;
+    if (ns >= 1 && ns <= 4 && ns < len && s[ns] == ' ') {
+      static const char *cmd[5] = { 0, "\\chapter{", "\\section{",
+                                    "\\subsection{", "\\subsubsection{" };
+      fputs(cmd[ns], stdout);
+      fwrite(s + ns + 1, 1, (size_t) (len - ns - 1), stdout);
+      putchar('}');
+      return;
+    }
+  }
+  fwrite(s, 1, (size_t) len, stdout);   /* identity */
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 2) { fprintf(stderr, "Usage: untanglec file.org\n"); return 1; }
   int fd = open(argv[1], O_RDONLY);
@@ -55,10 +91,25 @@ int main(int argc, char *argv[]) {
   }
   sp[si].start = ls; sp[si].len = bufsize - ls; si++;
 
-  int in_src = 0, first = 1;
+  int in_src = 0, in_verbatim = 0, first = 1;
   for (i = 0; i < nspans; i++) {
     char *s = buf + sp[i].start;
     long len = sp[i].len;
+
+    /* Inside a prose \begin{verbatim} block every line is raw -- the forward
+       never rewrote headings there, so we must not reverse them here. */
+    if (in_verbatim) {
+      if (!first) putchar('\n'); first = 0;
+      fwrite(s, 1, (size_t) len, stdout);
+      if (vb_end(s, len)) in_verbatim = 0;
+      continue;
+    }
+    if (!in_src && vb_begin(s, len)) {
+      if (!first) putchar('\n'); first = 0;
+      fwrite(s, 1, (size_t) len, stdout);
+      in_verbatim = 1;
+      continue;
+    }
 
     if (has_prefix(s, len, "#+NAME: ")) {
       if (i + 1 < nspans) {
@@ -105,7 +156,8 @@ int main(int argc, char *argv[]) {
     }
 
     if (!first) putchar('\n'); first = 0;
-    fwrite(s, 1, (size_t) len, stdout);   /* identity */
+    if (in_src) fwrite(s, 1, (size_t) len, stdout);   /* chunk code: verbatim */
+    else emit_prose(s, len);                          /* prose: reverse headings */
   }
   return 0;
 }

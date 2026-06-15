@@ -4,14 +4,14 @@
 \pagenumbering{arabic}
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
-\chapter{The Axiom Compiler}
-\section{Makefile}
+* The Axiom Compiler
+** Makefile
 \sig{a}{b}
 This book is actually a literate program\cite{Knut92} and contains
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 
 
-\chapter{Overview}
+* Overview
 The Spad language is a mathematically oriented language intended for
 writing computational mathematics. It derives its logical structure
 from abstract algebra. It features ideas that are still not available
@@ -70,7 +70,7 @@ have very weak descriptions because we simply do not understand them
 either. Since this is a living document and the code for the system is
 actually the code you are reading we will expand parts as we go.
 
-\section{Syntax by Jacob Smith}
+** Syntax by Jacob Smith
 
 {\bf {\Large Module}}\\
 \includegraphics{ps/v9Module.eps}
@@ -346,7 +346,7 @@ $+^{Integer\times Integer\to Integer}$, $345^{Integer}$, $true^{Boolean}$, etc.
 {\sl Identifier} An identifier is a finite sequence of characters. The set 
 of identifiers in Spad is countably infinite.
 
-\subsection{Language features}
+*** Language features
 
 The Spad programming language supports elements of dependent types, a
 result of the functorial nature of the data-structuring mechanisms 
@@ -361,7 +361,7 @@ types. The overload resolution algorithm exploits all context information,
 including arguments and target types, to select the best matching function.
 Implicit conversion is supported through the {\tt coerce} operator.
 
-\subsection{Sematics}
+*** Sematics
 
 The computational rules used to evaluate Spad programs are those of
 {\sl eager} semantics (and call-by-value), and the arguments of functions
@@ -372,7 +372,7 @@ of Spad programs, whereas the denotational semantics lets us associate
 mathematical functions to Spad programs. The latter allows us to formally
 talk about the notion of a derivative of a Spad program.
 
-\subsubsection{Operational semantics}
+**** Operational semantics
 
 The Spad language is imperative in the sense that its programs operate on
 stores by explicit modification. Values of Spad programs can be booleans,
@@ -413,7 +413,7 @@ v & \quad\quad {\rm if\ }x = l\\
 Each configuration is defined by structural induction on the syntax of
 Spad.
 
-\subsubsection{Denotational semantics}
+**** Denotational semantics
 
 The basic idea of algorithmic differentiation rests on the notion that a
 computer program computes a function whose range has a ring structure; and
@@ -554,7 +554,7 @@ where the $x_i$ are parameters of $v_0$
 \langle v^{\tau},\sigma,\Gamma,x^{\tau}==v^{\tau}\rangle$}
 \end{prooftree}
 
-\section{The Input}
+** The Input
 \begin{verbatim}
 )abbrev domain EQ Equation
 --FOR THE BENEFIT  OF LIBAX0 GENERATION
@@ -769,7 +769,7 @@ Equation(S: Type): public == private where
 
 \end{verbatim}
 
-\section{The Output, the EQ.nrlib directory}
+** The Output, the EQ.nrlib directory
 The Spad compiler generates several files in a directory named after
 the input abbreviation. The input file contains an abbreviation line:
 \begin{verbatim}
@@ -802,7 +802,7 @@ each of which we will explain in detail below.
   -rw-r--r--    1 root root  6236 2010-12-09 11:20 info
 \end{verbatim}
 
-\section{The code.lsp and EQ.lsp files}
+** The code.lsp and EQ.lsp files
 \begin{verbatim}
 
 (/VERSIONCHECK 2) 
@@ -1512,7 +1512,7 @@ each of which we will explain in detail below.
 
 \end{verbatim}
 
-\section{The code.o file}
+** The code.o file
 The Spad compiler translates the Spad language into Common Lisp.
 It eventually invokes the Common Lisp ``compile-file'' command to
 output files in binary. Depending on the lisp system this filename
@@ -1521,7 +1521,7 @@ depends on the Common Lisp in use.
 
 By default, Axiom uses Gnu Common Lisp (GCL), which generates ``.o'' files.
 
-\section{The info file}
+** The info file
 \begin{verbatim}
 
 ((* (($ $ $) (|arguments| (|eq2| . $) (|eq1| . $)) (S (* S S S))
@@ -1660,7 +1660,7 @@ By default, Axiom uses Gnu Common Lisp (GCL), which generates ``.o'' files.
  (|swap| (($ $) (|arguments| (|eqn| . $)) ($ (|rhs| S $) (|lhs| S $))))) 
 \end{verbatim}
 
-\section{The EQ.fn file}
+** The EQ.fn file
 \begin{verbatim}
 (in-package 'compiler)(init-fn)
 (ADD-FN-DATA '(
@@ -1920,7 +1920,7 @@ By default, Axiom uses Gnu Common Lisp (GCL), which generates ``.o'' files.
       RETURN-TYPE NIL ARG-TYPES (T) NO-EMIT NIL MACROS
       (VMLISP:HREM PROG1 VMLISP:HGET BOOT::LETT COND RETURN)) ))\end{verbatim}
 
-\section{The index.kaf file}
+** The index.kaf file
 
 Each constructor (e.g. EQ) had one library directory (e.g. EQ.nrlib). 
 This directory contained a random access file called the index.kaf file. 
@@ -1985,12 +1985,12 @@ Note that the information below has been reformatted to fit this
 document. In order to save space the index.kaf file is does not use
 prettyprint since it is normally only read by machine. 
 
-\subsection{The index offset byte}
+*** The index offset byte
 \begin{verbatim}
 35695
 \end{verbatim}
 
-\subsection{The ``loadTimeStuff''}
+*** The ``loadTimeStuff''
 \begin{verbatim}
 (setf (get '|Equation| '|infovec|)
     (LIST '#(NIL NIL NIL NIL NIL NIL (|local| |#1|) '|Rep|
@@ -2102,7 +2102,7 @@ prettyprint since it is normally only read by machine.
           '|lookupComplete|))
 \end{verbatim}
 
-\subsection{The ``compilerInfo''}
+*** The ``compilerInfo''
 \begin{verbatim}
 (SETQ |$CategoryFrame|
       (|put| '|Equation| '|isFunctor|
@@ -2447,17 +2447,17 @@ prettyprint since it is normally only read by machine.
                         |$CategoryFrame|))))
 \end{verbatim}
 
-\subsection{The ``constructorForm''}
+*** The ``constructorForm''
 \begin{verbatim}
 (|Equation| S)
 \end{verbatim}
 
-\subsection{The ``constructorKind''}
+*** The ``constructorKind''
 \begin{verbatim}
 |domain|
 \end{verbatim}
 
-\subsection{The ``constructorModemap''}
+*** The ``constructorModemap''
 \begin{verbatim}
 (((|Equation| |#1|)
   (|Join| (|Type|)
@@ -2536,7 +2536,7 @@ prettyprint since it is normally only read by machine.
  (T |Equation|))
 \end{verbatim}
 
-\subsection{The ``constructorCategory''}
+*** The ``constructorCategory''
 \begin{verbatim}
 (|Join| (|Type|)
         (CATEGORY |domain| (SIGNATURE = ($ |#1| |#1|))
@@ -2611,12 +2611,12 @@ prettyprint since it is normally only read by machine.
                 (SIGNATURE |subst| ($ $ $)) |noBranch|)))
 \end{verbatim}
 
-\subsection{The ``sourceFile''}
+*** The ``sourceFile''
 \begin{verbatim}
 "/research/test/int/algebra/EQ.spad"
 \end{verbatim}
 
-\subsection{The ``modemaps''}
+*** The ``modemaps''
 \begin{verbatim}
 ((= (*1 *1 *2 *2)
     (AND (|isDomain| *1 (|Equation| *2)) (|ofCategory| *2 (|Type|))))
@@ -2703,7 +2703,7 @@ prettyprint since it is normally only read by machine.
                  (|ofCategory| *2 (|Type|))))))
 \end{verbatim}
 
-\subsection{The ``operationAlist''}
+*** The ``operationAlist''
 \begin{verbatim}
 ((~= (((|Boolean|) $ $) NIL (|has| |#1| (|SetCategory|))))
  (|zero?| (((|Boolean|) $) NIL (|has| |#1| (|AbelianGroup|))))
@@ -2788,9 +2788,9 @@ prettyprint since it is normally only read by machine.
     (($ (|PositiveInteger|) $) NIL (|has| |#1| (|AbelianSemiGroup|)))))
 \end{verbatim}
 
-\subsection{The ``superDomain''}
+*** The ``superDomain''
 
-\subsection{The ``signaturesAndLocals''}
+*** The ``signaturesAndLocals''
 \begin{verbatim}
 ((|EQ;subst;3$;43| ($ $ $)) (|EQ;inv;2$;42| ($ $))
  (|EQ;/;3$;41| ($ $ $)) (|EQ;dimension;Cn;40| ((|CardinalNumber|)))
@@ -2821,14 +2821,14 @@ prettyprint since it is normally only read by machine.
  (|EQ;factorAndSplit;$L;1| ((|List| $) $)))
 \end{verbatim}
 
-\subsection{The ``attributes''}
+*** The ``attributes''
 \begin{verbatim}
 ((|unitsKnown| OR (|has| |#1| (|Ring|)) (|has| |#1| (|Group|)))
  (|rightUnitary| |has| |#1| (|Ring|))
  (|leftUnitary| |has| |#1| (|Ring|)))
 \end{verbatim}
 
-\subsection{The ``predicates''}
+*** The ``predicates''
 \begin{verbatim}
 ((|HasCategory| |#1| '(|Field|)) (|HasCategory| |#1| '(|SetCategory|))
  (|HasCategory| |#1| '(|Ring|))
@@ -2877,12 +2877,12 @@ prettyprint since it is normally only read by machine.
      (|HasCategory| |#1| '(|SetCategory|))))
 \end{verbatim}
 
-\subsection{The ``abbreviation''}
+*** The ``abbreviation''
 \begin{verbatim}
 EQ
 \end{verbatim}
 
-\subsection{The ``parents''}
+*** The ``parents''
 \begin{verbatim}
 (((|Type|) . T)
  ((|InnerEvalable| (|Symbol|) S) |has| S
@@ -2899,7 +2899,7 @@ EQ
  ((|VectorSpace| S) |has| S (|Field|)))
 \end{verbatim}
 
-\subsection{The ``ancestors''}
+*** The ``ancestors''
 \begin{verbatim}
 (((|AbelianGroup|) |has| S (|AbelianGroup|))
  ((|AbelianMonoid|) |has| S (|AbelianGroup|))
@@ -2924,7 +2924,7 @@ EQ
  ((|VectorSpace| S) |has| S (|Field|)))
 \end{verbatim}
 
-\subsection{The ``documentation''}
+*** The ``documentation''
 \begin{verbatim}
 ((|constructor|
      (NIL "Equations as mathematical objects. All properties of the basis 
@@ -2999,7 +2999,7 @@ EQ
  (= (($ |#1| |#1|) "\\spad{a=b} creates an equation.")))
 \end{verbatim}
 
-\subsection{The ``slotInfo''}
+*** The ``slotInfo''
 \begin{verbatim}
 (|Equation|
     (NIL (~= ((38 0 0) NIL (|has| |#1| (|SetCategory|))))
@@ -3087,7 +3087,7 @@ EQ
             ((0 71 0) NIL (|has| |#1| (|AbelianGroup|))))))
 \end{verbatim}
 
-\subsection{The ``index''}
+*** The ``index''
 \begin{verbatim}
 (("slot1Info" 0 32444) ("documentation" 0 29640) ("ancestors" 0 28691)
  ("parents" 0 28077) ("abbreviation" 0 28074) ("predicates" 0 25442)
@@ -3100,9 +3100,9 @@ EQ
 
 \end{verbatim}
 
-\chapter{Compiler top level}
+* Compiler top level
 
-\section{Spad Program Representation}
+** Spad Program Representation
 
 From Davenport\cite{Dave84a} and Dos Reis et al.\cite{Dosr11}
 
@@ -3163,8 +3163,8 @@ a specific exported signature, or a pointer to a domain object or a
 category object.
 \end{itemize}
 
-\section{Global Data Structures}
-\section{Pratt Parsing}
+** Global Data Structures
+** Pratt Parsing
 Parsing involves understanding the association of symbols and operators.
 Vaughn Pratt \cite{Prat73} poses the question ``Given a substring AEB where A 
 takes a right argument, B a left, and E is an expression, does E associate
@@ -3223,7 +3223,7 @@ primaries with coercions allowed from primaries to factors to terms.
 To be consistent with Algol, the primaries should be a right associative
 class (e.g. x$^{}$y$^{}$z)
 
-\section{)compile}
+** )compile
 This is the implementation of the )compile command.
 
 You use this command to invoke the new Axiom library compiler or the
@@ -3350,7 +3350,7 @@ processed, e.g.
 )library )dir .
 \end{verbatim}
 
-\subsection{Spad compiler}
+*** Spad compiler
 This command compiles files with file extension {\tt .spad}
 with the Spad system compiler.  
 
@@ -3441,7 +3441,7 @@ The value of the {\tt )set break} variable then controls what happens.
 ;               4. GENERIC Table
 ;               5. Character syntax class predicates
 \end{verbatim}
-\subsection{LED and NUD Tables}
+*** LED and NUD Tables
 \begin{verbatim}
 ; **** 1. LED and NUD Tables
  
@@ -3565,7 +3565,7 @@ The value of the {\tt )set break} variable then controls what happens.
           (|else| 0 114)))
 
 #+end_src 
-\section{Gliph Table}
+** Gliph Table
 Gliphs are symbol clumps. The gliph property of a symbol gives
 the tree describing the tokens which begin with that symbol.
 The token reader uses the gliph property to determine the longest token.
@@ -3604,7 +3604,7 @@ keyboards which define equivalent tokens.
           (>\) \})))
  
 #+end_src
-\subsection{Generic function table}
+*** Generic function table
 GENERIC operators be suffixed by \$ qualifications in SPAD code.  
 \$ is then followed by a domain label, such as I for Integer, which 
 signifies which domain the operator refers to.  For example \verb|+$Integer|
@@ -3616,13 +3616,13 @@ is $+$ for Integers.
 
 #+end_src  
 
-\section{Giant steps, Baby steps}
+** Giant steps, Baby steps
 We will walk through the compiler with the EQ.spad example using a
 Giant-steps, Baby-steps approach. That is, we will show the large
 scale (Giant) transformations at each stage of compilation and discuss the
 details (Baby) in subsequent chapters.
-\chapter{The Parser}
-\section{EQ.spad}
+* The Parser
+** EQ.spad
 We will explain the compilation function using the file {\tt EQ.spad}.
 We trace the execution of the various functions to understand the actual
 call parameters and results returned. The {\tt EQ.spad} file is:
@@ -3840,7 +3840,7 @@ Equation(S: Type): public == private where
 
 \end{verbatim}
 
-\section{boot transformations}
+** boot transformations
 
 \defun{string2BootTree}{string2BootTree}
 \calls{string2BootTree}{new2OldLisp}
@@ -3980,7 +3980,7 @@ Equation(S: Type): public == private where
 
 #+end_src
 
-\section{preparse}
+** preparse
 
 The first large transformation of this input occurs in the function
 preparse \index{preparse}. The preparse function reads the source file
@@ -4020,7 +4020,7 @@ semicolon delimited form.
 
 #+end_src
 
-\section{Parsing routines}
+** Parsing routines
 The {\bf initialize-preparse} expects to be called before the {\bf preparse}
 function. It initializes the state, in particular, it reads a single line
 from the input stream and stores it in {\tt \verb|$preparse-last-line|}.
@@ -4625,7 +4625,7 @@ and the input string.
 
 #+end_src
 
-\section{I/O Handling}
+** I/O Handling
 \defun{preparse-echo}{preparse-echo}
 \uses{preparse-echo}{Echo-Meta}
 \refsdollar{preparse-echo}{EchoLineStack}
@@ -4640,7 +4640,7 @@ and the input string.
 
 #+end_src
 
-\subsection{Parsing stack}
+*** Parsing stack
 \defstruct{stack}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -4711,7 +4711,7 @@ and the input string.
 
 #+end_src
 
-\subsection{Parsing token}
+*** Parsing token
 \defstruct{token}
 A token is a Symbol with a Type.
 The type is either NUMBER, IDENTIFIER or SPECIAL-CHAR.
@@ -4787,7 +4787,7 @@ Token at head of input stream.
 
 #+end_src
 
-\subsection{Parsing reduction}
+*** Parsing reduction
 \defstruct{reduction}
 A reduction of a rule is any S-Expression the rule chooses to stack.
 #+NAME: initvars
@@ -4798,8 +4798,8 @@ A reduction of a rule is any S-Expression the rule chooses to stack.
 
 #+end_src
 
-\chapter{Parse Transformers}
-\section{Direct called parse routines}
+* Parse Transformers
+** Direct called parse routines
 \defun{parseTransform}{parseTransform}
 \calls{parseTransform}{parseTran}
 \usesdollar{parseTransform}{defOp}
@@ -4908,7 +4908,7 @@ A reduction of a rule is any S-Expression the rule chooses to stack.
 
 #+end_src
 
-\section{Indirect called parse routines}
+** Indirect called parse routines
 In the {\bf parseTran} function there is the code:
 \begin{verbatim}
      ((and (atom u) (setq fn (getl u '|parseTran|)))
@@ -6228,7 +6228,7 @@ of the symbol being parsed. The original list read:
 
 #+end_src
 
-\chapter{Compile Transformers}
+* Compile Transformers
 With some specific exceptions most compile transformers are invoked
 through the property list item ``{\tt special}''. When a specific
 keyword is encountered in a list form the {\tt compExpression} function
@@ -6308,7 +6308,7 @@ suitable for further processing.
 \verb|where|          & \refto{compWhere}
 \end{tabular}
 
-\section{Handline Category DEF forms}
+** Handline Category DEF forms
 This is the graph of the functions used for compDefine.
 The syntax is a graphviz dot file.
 To generate this graph as a JPEG file, type:
@@ -10140,7 +10140,7 @@ Compute the lookup function (complete or incomplete)
 
 #+end_src
 
-\section{Code optimization routines}
+** Code optimization routines
 \defun{optimizeFunctionDef}{optimizeFunctionDef}
 \calls{optimizeFunctionDef}{rplac}
 \calls{optimizeFunctionDef}{sayBrightlyI}
@@ -10353,7 +10353,7 @@ simple kind of compile-time type evaluation.
 
 #+end_src
 
-\subsection{Special case optimizers}
+*** Special case optimizers
 Optimization functions are called through the OPTIMIZE property on the
 symbol property list. The current list is:
 \begin{verbatim}
@@ -11156,7 +11156,7 @@ optPackageCall.
 
 #+end_src
 
-\section{Functions to manipulate modemaps}
+** Functions to manipulate modemaps
 
 \defun{addDomain}{addDomain}
 \calls{addDomain}{identp}
@@ -12030,7 +12030,7 @@ add flag identifiers as literals in the environment
 
 #+end_src
 
-\section{Maintaining Modemaps}
+** Maintaining Modemaps
 \defun{addModemapKnown}{addModemapKnown}
 \calls{addModemapKnown}{addModemap0}
 \refsdollar{addModemapKnown}{e}
@@ -12119,7 +12119,7 @@ add flag identifiers as literals in the environment
 #+end_src
 
 
-\section{Indirect called comp routines}
+** Indirect called comp routines
 In the {\bf compExpression} function there is the code:
 \begin{verbatim}
   (if (and (atom (car x)) (setq fn (getl (car x) 'special)))
@@ -15685,7 +15685,7 @@ We set up the
 
 #+end_src
 
-\section{Functions for coercion}
+** Functions for coercion
 \defun{coerce}{coerce}
 The function coerce is used by the old compiler for coercions.
 The function coerceInteractive is used by the interpreter.
@@ -16213,8 +16213,8 @@ This orders Unions
 
 #+end_src
 
-\chapter{Post Transformers}
-\section{Direct called postparse routines}
+* Post Transformers
+** Direct called postparse routines
 \defun{postTransform}{postTransform}
 \calls{postTransform}{postTran}
 \seebook{postTransform}{identp}{5}
@@ -16476,7 +16476,7 @@ This orders Unions
 
 #+end_src
 
-\section{Indirect called postparse routines}
+** Indirect called postparse routines
 In the {\bf postTran} function there is the code:
 \begin{verbatim}
      ((and (atom op) (setq f (getl op '|postTran|)))
@@ -17603,7 +17603,7 @@ of the symbol being parsed. The original list read:
 #+end_src
 
 
-\section{Support routines}
+** Support routines
 \defun{setDefOp}{setDefOp}
 \usesdollar{setDefOp}{defOp}
 \usesdollar{setDefOp}{topOp}
@@ -17837,7 +17837,7 @@ of the symbol being parsed. The original list read:
 #+end_src
 
 
-\chapter{DEF forms}
+* DEF forms
 
 \defdollar{defstack}
 #+NAME: initvars
@@ -17917,7 +17917,7 @@ of the symbol being parsed. The original list read:
 
 #+end_src
 
-\section{The PARSE code}
+** The PARSE code
 
 \defvar{tmptok}
 #+NAME: initvars
@@ -19181,7 +19181,7 @@ of the symbol being parsed. The original list read:
                (list 'until (pop-stack-1))))))
 
 #+end_src
-\subsection{The PARSE implicit routines}
+*** The PARSE implicit routines
 These symbols are not explicitly referenced in the source.
 Nevertheless, they are called during runtime. For example,
 PARSE-SemiColon is called in the chain:
@@ -19397,7 +19397,7 @@ so there is a bit of indirection involved in the call.
 #+end_src
 
 
-\section{The PARSE support routines}
+** The PARSE support routines
 This section is broken up into 3 levels:
 \begin{itemize}
 \item String grabbing:    Match String, Match Advance String
@@ -19408,7 +19408,7 @@ This section is broken up into 3 levels:
 \item Floating Point Support
 \item Dollar Translation
 \end{itemize}
-\subsection{String grabbing}
+*** String grabbing
 String grabbing is the art of matching initial segments of the current
 line, and removing them from the line before the get tokenized if they
 match (or removing the corresponding current tokens).
@@ -19598,7 +19598,7 @@ NIL needed below since END\_UNIT is not generated by current parser
 
 #+end_src
 
-\subsection{Token Handling}
+*** Token Handling
 
 \defun{getToken}{getToken}
 \calls{getToken}{eqcar}
@@ -19788,7 +19788,7 @@ This makes the next token be the current token.
 
 #+end_src
 
-\subsection{Character handling}
+*** Character handling
 
 \defun{current-char}{current-char}
 This returns the current character of the line, initially blank for an 
@@ -19839,7 +19839,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Error handling}
+*** Error handling
 \defvar{meta-error-handler}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -19858,7 +19858,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Floating Point Support}
+*** Floating Point Support
 
 \defun{floatexpid}{floatexpid}
 \tpdhere{The use of and in spadreduce is undefined. rewrite this to loop}
@@ -19880,7 +19880,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Dollar Translation}
+*** Dollar Translation
 
 \defun{dollarTran}{dollarTran}
 \usesdollar{dollarTran}{InteractiveMode}
@@ -19895,7 +19895,7 @@ equivalent to.
 
 #+end_src
 
-\subsection{Applying metagrammatical elements of a production (e.g., Star).}
+*** Applying metagrammatical elements of a production (e.g., Star).
 \begin{itemize}
 \item {\bf must} means that if it is not present in the token stream, 
 it is a syntax error.
@@ -19972,7 +19972,7 @@ loop
       (go loop))))
 
 #+end_src
-\subsection{Stacking and retrieving reductions of rules.}
+*** Stacking and retrieving reductions of rules.
 
 \defvar{reduce-stack}
 Stack of results of reduced productions.
@@ -20001,7 +20001,7 @@ Stack of results of reduced productions.
 
 #+end_src
 
-\chapter{Comment Recording}
+* Comment Recording
 
 This is the graph of the functions used for recording comments.
 The syntax is a graphviz dot file.
@@ -20040,7 +20040,7 @@ digraph pic {
 
 #+end_src
 
-\section{Comment Recording Layer 0 -- API}
+** Comment Recording Layer 0 -- API
 
 \defun{recordSignatureDocumentation}{recordSignatureDocumentation}
 This function is called externally by PARSE-Category.
@@ -20075,7 +20075,7 @@ This function is called externally by PARSE-Category.
 
 #+end_src
 
-\section{Comment Recording Layer 1}
+** Comment Recording Layer 1
 
 \defun{recordDocumentation}{recordDocumentation}
 \calls{recordDocumentation}{recordHeaderDocumentation}
@@ -20094,7 +20094,7 @@ This function is called externally by PARSE-Category.
 
 #+end_src
 
-\section{Comment Recording Layer 2}
+** Comment Recording Layer 2
 
 \defun{collectComBlock}{collectComBlock}
 \calls{collectComBlock}{collectAndDeleteAssoc}
@@ -20116,7 +20116,7 @@ This function is called externally by PARSE-Category.
 
 #+end_src
 
-\section{Comment Recording Layer 3}
+** Comment Recording Layer 3
 
 \defun{recordHeaderDocumentation}{recordHeaderDocumentation}
 This function is called externally by postDef.
@@ -20169,7 +20169,7 @@ deleting entries from u assumes that the first element is useless
 
 #+end_src
 
-\chapter{Category handling}
+* Category handling
 
 \defun{getConstructorExports}{getConstructorExports}
 #+NAME: defun getConstructorExports
@@ -20184,7 +20184,7 @@ deleting entries from u assumes that the first element is useless
 
 #+end_src
 
-\chapter{Building libdb.text}
+* Building libdb.text
 \defun{extendLocalLibdb}{extendLocalLibdb}
 \calls{extendLocalLibdb}{buildLibdb}
 \calls{extendLocalLibdb}{union}
@@ -20601,7 +20601,7 @@ Formal for libdb.text:
 
 #+end_src
 
-\chapter{Comment Syntax Checking}
+* Comment Syntax Checking
 
 This is the graph of the functions used for comment syntax checking.
 The syntax is a graphviz dot file.
@@ -20859,7 +20859,7 @@ digraph hierarchy {
 }
 #+end_src
 
-\section{Comment Checking Layer 0 -- API}
+** Comment Checking Layer 0 -- API
 \defun{finalizeDocumentation}{finalizeDocumentation}
 \calls{finalizeDocumentation}{bright}
 \calls{finalizeDocumentation}{sayMSG}
@@ -20989,7 +20989,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 1}
+** Comment Checking Layer 1
 
 \defun{transDocList}{transDocList}
 \calls{transDocList}{sayBrightly}
@@ -21023,7 +21023,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 2}
+** Comment Checking Layer 2
 
 \defun{transDoc}{transDoc}
 \calls{transDoc}{checkDocError1}
@@ -21078,7 +21078,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 3}
+** Comment Checking Layer 3
 
 \defun{transformAndRecheckComments}{transformAndRecheckComments}
 \calls{transformAndRecheckComments}{sayBrightly}
@@ -21112,7 +21112,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 4}
+** Comment Checking Layer 4
 
 \defun{checkComments}{checkComments}
 \calls{checkComments}{checkGetMargin}
@@ -21247,7 +21247,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 5}
+** Comment Checking Layer 5
 
 \defun{checkArguments}{checkArguments}
 \calls{checkArguments}{hget}
@@ -21313,7 +21313,7 @@ digraph hierarchy {
 
 #+end_src
 
-\section{Comment Checking Layer 6}
+** Comment Checking Layer 6
 
 \defun{checkBeginEnd}{checkBeginEnd}
 \calls{checkBeginEnd}{length}
@@ -22017,7 +22017,7 @@ Note that {\tt u} should start with an open brace.
 
 #+end_src
 
-\section{Comment Checking Layer 7}
+** Comment Checking Layer 7
 
 \defun{checkDocError}{checkDocError}
 \calls{checkDocError}{checkDocMessage}
@@ -22111,7 +22111,7 @@ Note that {\tt u} should start with an open brace.
 
 #+end_src
 
-\section{Comment Checking Layer 8}
+** Comment Checking Layer 8
 
 \defun{checkAddIndented}{checkAddIndented}
 \calls{checkAddIndented}{firstNonBlankPosition}
@@ -22460,7 +22460,7 @@ Note that {\tt u} should start with an open brace.
 
 #+end_src
 
-\section{Comment Checking Layer 9}
+** Comment Checking Layer 9
 
 \defun{checkAddBackSlashes}{checkAddBackSlashes}
 \calls{checkAddBackSlashes}{strconc}
@@ -23057,7 +23057,7 @@ Since it has no side effects we define it to return nil.
 
 #+end_src
 
-\chapter{Utility Functions}
+* Utility Functions
 
 \defun{translabel}{translabel}
 \calls{translabel}{translabel1}
@@ -23595,7 +23595,7 @@ test rather than the callers.
 
 #+end_src
  
-\chapter{The Compiler}
+* The Compiler
 
 \defdollar{newConlist}
 A list of new constructors discovered during compile.
@@ -23608,7 +23608,7 @@ compiles new local code.
 
 #+end_src
 
-\section{Compiling EQ.spad}
+** Compiling EQ.spad
 Given the top level command:
 \begin{verbatim}
 )co EQ
@@ -23765,7 +23765,7 @@ We trace the function we find interesting:
 Value = (|compiler|)
 \end{verbatim}
 
-\section{The top level compiler command}
+** The top level compiler command
 This is the graph of the functions used for compDefine.
 The syntax is a graphviz dot file.
 To generate this graph as a JPEG file, type:
@@ -26851,7 +26851,7 @@ if \verb|$InteractiveMode| then use a null outputstream
 
 #+end_src
 
-\chapter{Level 1}
+* Level 1
 
 \defvar{current-fragment}
 A string containing remaining chars from readline; needed because
@@ -26893,7 +26893,7 @@ and the returned string might be
 #+end_src
 
 
-\chapter{The Chunks}
+* The Chunks
 #+NAME: Compiler
 #+begin_src common-lisp :noweb yes
 (in-package "BOOT")

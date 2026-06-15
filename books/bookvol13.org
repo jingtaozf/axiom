@@ -248,7 +248,7 @@ math and the code.}\\
 -- Benjamin Pierce \cite{Pier17}
 \end{quote}
 
-\chapter{Why this effort will not succeed}
+* Why this effort will not succeed
 
 \begin{quote}
 When something is important enough, you do it even if the odds
@@ -641,7 +641,7 @@ a path enabling a proof. A second is {\sl deployment constraints}
 imposed on the system to enforce {\sl environmental assumptions}
 necessary for proofs.
 
-\section{General problems with formal verification}
+** General problems with formal verification
 
 In Moy and Wallenburg \cite{Moyx10} we find:
 \begin{enumerate}
@@ -673,7 +673,7 @@ if the immplementation of the underlying theorem prover or static
 analyzer contains problems.
 \end{enumerate}
 
-\chapter{Progress Will Occur}
+* Progress Will Occur
 
 At the very lowest level there have been some truly impressive steps
 toward formal verification of low-level implmentation details.
@@ -748,7 +748,7 @@ Axiom have ``hand waving'' specifications that need to be expanded to
 properly return 'failed' when that is expected. This is a 'good thing'
 and a useful by-product of combining proof and computer algebra.
 
-\chapter{Here is a problem}
+* Here is a problem
 
 \begin{quote}
 The world needs both logicians and verifiers, and we need one
@@ -775,9 +775,9 @@ Gordon \cite{Myre09a}. They 'forward compile' the code to $f$, collect
 the result as $f^\prime$, and then prove the $f=f^\prime$. This proof
 is sufficient to show that the compile step is correct.
 
-\section{Proving the Algebra}
-\subsection{Defining the Spad syntax}
-\subsection{Defining the Spad semantics}
+** Proving the Algebra
+*** Defining the Spad syntax
+*** Defining the Spad semantics
 
 Gordon \cite{Gord89} describes formal reasoning about programs that
 can be based directly on the semantics of the programming language, or
@@ -792,7 +792,7 @@ Manna and Waldinger \cite{Mann78a} introduce the notion of
 Floyd \cite{Floy67}, Back \cite{Back81}, Caldwell \cite{Cald97},
 Filliatre \cite{Fill03}, Filliatre and Paskevich \cite{Fill13}
 
-\subsection{Type Resolution}
+*** Type Resolution
 
 In Kaes \cite{Kaes88} we find that there is a semantical difference
 between overloading and polymorphism: in the case of the overloaded
@@ -910,7 +910,7 @@ equivalent to the assertion that {\tt a} is a subtype of {\tt b}. This
 suggests a relation between this work and work on bounded
 quantification and on subtypes.
 
-\section{Proving the Logic}
+** Proving the Logic
 
 Soundness has two aspects, closed world and open world. \cite{Bonn18}
 
@@ -964,7 +964,7 @@ Davis \cite{Davi09},
 Myreen and Davis \cite{Myre11}, Myreen and Davis \cite{Myre14},
 Davis and Myreen \cite{Davi15}
 
-\subsection{Typing and Subtyping}
+*** Typing and Subtyping
 
 Dolan's PhD Thesis \cite{Dola16} on Algebraic Subtyping. 
 Henri Tuhola \cite{Tuho18} notes that
@@ -985,11 +985,11 @@ support for subtyping cares about the direction of data flow. With
 subtyping, a source of data must provide at least the guarantees that
 the destination requires, but is free to provide more.
 
-\subsection{Defining the Algebra specifications}
+*** Defining the Algebra specifications
 
 Talpin and Jouvelot \cite{Talp92}
 
-\subsection{Termination}
+*** Termination
 
 Hughes \cite{Hugh90} talks about a lazy approach to termination, while
 gluing programs together. Functional languages allow whole progams to
@@ -1025,7 +1025,7 @@ of programs.
 
 Katz and Manna \cite{Katz75} take a closer look at termination.
 
-\section{Proving the Lisp}
+** Proving the Lisp
 
 Guttman, et al. \cite{Gutt95} in the VL!SP project showed how to
 produce a comprehensively verified implementation for a
@@ -1042,11 +1042,11 @@ as most functions are not total.
 
 Myreen \cite{Myre12}
 
-\section{Proving the Compiler}
+** Proving the Compiler
 
 Myreen \cite{Myre10}
 
-\section{Proving to the metal}
+** Proving to the metal
 
 Myreen, Slind, and Gordon \cite{Myre09a} presents a compiler which
 produces machine code from functions defined in the logic of a theorem
@@ -1085,7 +1085,7 @@ Jump/Brance conditionally & PC = Register if (condition) else nop\\
 \hline
 \end{tabular}
 
-\section{Setting up the problem}
+** Setting up the problem
 
 The GCD function will be our first example of a proof.
 
@@ -1127,7 +1127,7 @@ $D(a,b)$ = set of common divisors of $a$ and $b$.
 $\gcd(a,b) = \max{D(a,b)}$
 
 
-\section{Axiom NNI GCD}
+** Axiom NNI GCD
 
 NonNegativeInteger inherits {\tt gcd} from {\tt Integer} up the ``add chain''
 since it is a subtype of {\tt Integer}. {\tt Integer} has {\tt EuclideanDomain}
@@ -1236,7 +1236,7 @@ with the test case results of:
                                                         Type: PositiveInteger
 \end{verbatim}
 
-\section{Mathematics}
+** Mathematics
 
 From Buchberger \cite{Buch97},
 
@@ -1292,7 +1292,7 @@ and
 \[\textrm{Find w such that }t \cdot u - t \cdot v = t \cdot w\]
 
 
-\section{Approaches}
+** Approaches
 There are several systems that could be applied to approach the proof.
 
 The plan is to initially look at Coq and ACL2.  Coq seems to be
@@ -1355,7 +1355,7 @@ clang -O4 -S -emit-llvm foo.c
 Both Coq and the Hardin translator use OCAML \cite{OCAM14} so we will have to
 learn that language.
 
-\chapter{Theory}
+* Theory
 The proof of the Euclidean algorithm has been known since Euclid.
 We need to study an existing proof and use it to guide our use of
 Coq along the same lines, if possible. Some of the ``obvious''
@@ -1399,7 +1399,7 @@ We quote the {\bf Division Theorem} proof \cite{Wiki14b}:
 For every pair of integers $a$, $b$ where $b \ne 0$, there exist unique
 integers $q,r$ such that $a = qb + r$ and $0 \le r \le \abs{b}$.
 
-\subsection{Hoare's axioms and gcd proof}
+*** Hoare's axioms and gcd proof
 From Hoare \cite{Hoar69}
 
 \begin{tabular}{rll}
@@ -1426,7 +1426,7 @@ where
 occurrences of $x$
 \end{itemize}
 
-\section{The Division Algorithm}
+** The Division Algorithm
 From Judson \cite{Juds15},
 
 An Application of the Principle of Well-Ordering that we will use
@@ -1529,13 +1529,13 @@ d & = & ra+sb
 \end{array}
 \]
 
-\section{Floating Point Proofs}
+** Floating Point Proofs
 
 Bagnara, Bagnara, Biselli, Chiara, and Gori \cite{Bagn19}
 {\bf Correct Approximation of IEEE 754 Floating-Point Arithmetic 
 for Program Verification}
 
-\chapter{GCD in Miranda by Broda, et al.}
+* GCD in Miranda by Broda, et al.
 
 In Broda, et al. \cite[p. 55]{Brod94} they consider the greatest
 common divisor, {\tt gcd}, of two natural numbers:
@@ -1700,7 +1700,7 @@ call $gcd y (x{\rm\ mod\ }y)$, the recursion variant $x{\rm\ mod\ }y$
 is less than $y$, the variant for $gcd x y$.
 \end{itemize}
 
-\chapter{GCD in COQ}
+* GCD in COQ
 
 \begin{verbatim}
 Fixpoint Pgcdn (n: nat) (a b : positive) : positive :=
@@ -1736,7 +1736,7 @@ Lemma Zgcd_is_gcd : forall a b, Zis_gcd a b (Zgcd a b).
 
 \end{verbatim}
 
-\chapter{GCD in Nuprl by Anne Trostle}
+* GCD in Nuprl by Anne Trostle
 
 Quoted from \cite{Tros13}:
 
@@ -1821,8 +1821,8 @@ produces a function of the pair $(m,n)$ would require induction on the
 pair itself which isn't as intuitive or easy to understand as natural
 induction on a single variable.
 
-\chapter{Software Details}
-\section{Installed Software}
+* Software Details
+** Installed Software
 Install CLANG, LLVM
 \begin{verbatim}
 http://llvm.org/releases/download.html
@@ -1838,7 +1838,7 @@ let rec gcd a b = if b = 0 then a else gcd b (a mod b)
 val gcd : int -> int -> int = <fun>
 \end{verbatim}
 
-\chapter{Temporal Logic of Actions (TLA)}
+* Temporal Logic of Actions (TLA)
 \begin{quote}
 {\bf Sloppiness is easier than precision and rigor}
 -- Leslie Lamport \cite{Lamp14a}
@@ -1868,7 +1868,7 @@ justified claim indeed is implied {\sl by} its cited facts. If a TLA+
 theorem has a proof with no unjustified claims, then, as a result of
 checking the proof, TLAPS verifies the truth of the theorem.
 
-\section{The algorithm}
+** The algorithm
 
 The well-known Euclidean algorithm can be written in the PlusCal 
 language as follows:
@@ -1888,7 +1888,7 @@ The PlusCal translator translates this algorithm into a TLA+ specification
 that we could prove correct. However, in this tutorial, we shall write a
 somewhat simpler specification of Euclid's algorithm directly in TLA+.
 
-\subsection{Creating a new TLA+ module}
+*** Creating a new TLA+ module
 
 In order to get the definitions of arithmetic operators ($+$, $-$, etc.),
 we shall make this specification {\sl extend} the {\tt Integers} 
@@ -1899,7 +1899,7 @@ standard module.
 EXTENDS Integers
 \end{verbatim}
 
-\subsection{Definitions}
+*** Definitions
 
 We shall then define the GCD of two integers. For that purpose, let us
 define the predicate ``p divides q'' as follows: p divides q iff there
@@ -1933,7 +1933,7 @@ For convenience, we shall also define the set of all positive integers as:
 Number = Nat \ {0}
 \end{verbatim}
 
-\subsection{Constants and variables}
+*** Constants and variables
 We then define the two constants and two variables needed to describe
 the Euclidean algorithm, where M and N are the values whose GCD is to
 be computed:
@@ -1942,7 +1942,7 @@ CONSTANTS M, N
 VARIABLES x, y
 \end{verbatim}
 
-\subsection{The specification}
+*** The specification
 We define the initial state of the Euclidean algorithm as follows:
 \begin{verbatim}
 Init == (x = M) /\ (y = N)
@@ -1988,7 +1988,7 @@ Hence we want to prove the following theorem named Correctness:
 THEOREM Correctness == Spec => []ResultCorrect
 \end{verbatim}
 
-\subsection{Summary}
+*** Summary
 
 \begin{verbatim}
 --------------------- Module Euclid ----------------------
@@ -2019,8 +2019,8 @@ ResultCorrect == (x = y) => x = GCD(M,N)
 THEOREM Correctness == Spec => []ResultCorrect
 \end{verbatim}
 
-\section{A simple proof}
-\subsection{The invariant}
+** A simple proof
+*** The invariant
 
 Intuitively, the theorem Correctness holds because the implementation
 guarantees the following {\sl invariant}
@@ -2034,7 +2034,7 @@ That is, {\tt InductiveInvariant} holds for the initial state (i.e.,
 the state specified by {\tt Init}) and is preserved by the 
 next-state relation {\tt [Next]\_}$<<x,y>>$
 
-\subsection{Checking proofs}
+*** Checking proofs
 
 First we need to assume that constants M and N are not equal to zero
 \begin{verbatim}
@@ -2060,7 +2060,7 @@ and SMT. The default behavior of TLAPS is to send obligations first to
 an SMT solver (by default CVC3), then if that fails to the automatic
 prover Zenon, then if Zenon fails to Isabelle (with the tactic ``auto'').
 
-\subsection{Using facts and definitions}
+*** Using facts and definitions
 The obligation cannot be proved because TLAPS treats the symbols
 {\tt Init} and {\tt InductiveInvariant} as opaque identifiers unless
 it is explicitly instructed to expand their definitions using the
@@ -2131,7 +2131,7 @@ THEOREM Correctness == Spec => []ResultCorrect
 \end{verbatim}
 
 
-\section{Divisibility Definition}
+** Divisibility Definition
 In Shoup \cite{Sho08} we find the divisibility definition.
 
 Given the integers, $a$ and $b$
@@ -2151,13 +2151,13 @@ proof: \[ a | b \implies |a| \le |b|; b | a \implies |b| \le |a|;
 {\rm \ therefore\ } |a|=|b| \implies a = \pm b\]
 \[ a | 1 \iff a = \pm 1\]
 
-\chapter{COQ proof of GCD}
-\section{Basics of the Calculus of Constructions}
+* COQ proof of GCD
+** Basics of the Calculus of Constructions
 Coquand \cite{Coqu86} \cite{Wiki17} 
 defines the Calculus of Constructions which can
 be considered an extension of the Curry-Howard Isomorphism. The components
 are
-\subsection{Terms}
+*** Terms
 A {\sl term} in the calculus of constructions is constructed using the
 following rules:
 \begin{itemize}
@@ -2182,7 +2182,7 @@ an example of a large type)
 \item {\bf T} itself, which is the type of large types.
 \end{enumerate}
 
-\subsection{Judgements}
+*** Judgements
 
 The calculus of constructions allows proving {\bf typing judgements}
 \[x_1:A_1, x_2:A_2, \ldots \vdash t:B\]
@@ -2209,7 +2209,7 @@ which means
 {\rm\ is\ a\ valid\ judgement,\ then\ so\ is\ }
 {\bf \Gamma^\prime} \vdash {\bf C : D}\]
 
-\subsection{Inference Rules}
+*** Inference Rules
 
 In Frade \cite{Frad08} we find:
 
@@ -2254,7 +2254,7 @@ In Frade \cite{Frad08} we find:
 
 \end{array}\]
 
-\subsection{Defining Logical Operators}
+*** Defining Logical Operators
 
 \[\begin{array}{cccc}
 A\Rightarrow B & \equiv & \forall x:A.B & (x\notin B)\\
@@ -2266,7 +2266,7 @@ A\vee B & \equiv & \forall C:P.(A\Rightarrow C)\Rightarrow(B\Rightarrow C)
 \Rightarrow C &\\
 \end{array}\]
 
-\subsection{Defining Types}
+*** Defining Types
 
 The basic data types used in computer science can be defined within the
 Calculus of Constructions:
@@ -2291,7 +2291,7 @@ Note that Booleans and Naturals are defined in the same way as in
 Church encoding. However additional problems raise from propositional
 extensionality and proof irrelevance.
 
-\section{Why does COQ have Prop?}
+** Why does COQ have Prop?
 
 From a stackexchange post \cite{Stac17} we find the question:
 
@@ -2356,7 +2356,7 @@ the remaining bits $k$, i.e., it computes everything. If we extract from
 then the program will only compute the lowest bit $b$. The machine cannot
 tell which is the correct one, the user has to tell it what he wants.
 
-\section{Source code of COQ GCD Proof}
+** Source code of COQ GCD Proof
 This is the proof of GCD \cite{Coqu16a} in the COQ \cite{Coqu16} sources:
 \begin{verbatim}
 Library Coq.ZArith.Znumtheory
@@ -2715,7 +2715,7 @@ Theorem not_prime_divide:
  
 \end{verbatim}
 
-\chapter{LEAN proof of GCD}
+* LEAN proof of GCD
 This is the proof of GCD \cite{Avig14} in the LEAN \cite{Avig16} sources:
 \begin{verbatim}
 /-
@@ -3092,7 +3092,7 @@ end nat
 
 \end{verbatim}
 
-\chapter{Formal Pre- and Post-conditions}
+* Formal Pre- and Post-conditions
 In Boldo \cite{Bold11} we find an effort to verify floating point software
 using preconditions, postconditions, and assertions. Quoting:
 
@@ -3144,7 +3144,7 @@ int index(int t[], int n, int v) {
 }
 \end{verbatim}
 
-\chapter{Types and Signatures}
+* Types and Signatures
 
 We need to start from a base of the existing types in Common Lisp,
 eventually providing Axiom combinations or specializations.
@@ -3177,7 +3177,7 @@ LeftNearSemiRing := Theory {
     forall x,y,z : U. (x * y) * z = x * (y * z);
 \end{verbatim}
 
-\chapter{COQ nat vs Axiom NNI}
+* COQ nat vs Axiom NNI
 
 COQ's nat domain includes a proof of GCD.
 
@@ -3191,7 +3191,7 @@ subtraction to Integer whereas Coq will not.
 
 COQ's nat domain \cite{COQnat} is
 
-\subsection{Library Coq.Init.Nat}
+*** Library Coq.Init.Nat
 
 \begin{verbatim}
 Require Import Notations Logic Datatypes.
@@ -3492,7 +3492,7 @@ Definition ldiff a b := bitwise (fun b b' => andb b (negb b')) a a b.
 Definition lxor a b := bitwise xorb (max a b) a b.
 \end{verbatim}
 
-\chapter{Binary Power in COQ by Casteran and Sozeau}
+* Binary Power in COQ by Casteran and Sozeau
 
 From Casteran and Sozeau \cite{Cast16}:
 
@@ -3566,7 +3566,7 @@ matrices using the most efficient of both algorithms.
 Thus, let us throw away our previous definition, and try to define them in
 a more generic framework.
 
-\section{On Monoids}
+** On Monoids
 
 {\bf Definition 2.1} {\sl A monoid is a mathematical structure composed of}
 \begin{itemize}
@@ -3625,7 +3625,7 @@ Argument scopes are [type_scope _ _ _ _]
 one_left is transparent
 \end{verbatim}
 
-\subsection{Classes and Instances}
+*** Classes and Instances
 
 Members of a given class are called {\sl instances} of this class. 
 Instances are defined to the Coq system through the {\tt Instance}
@@ -3710,7 +3710,7 @@ inferred from the {\tt Monoid A dot one} type. This syntactic sugar
 helps abbreviate bindings for classes with parameters. The resulting
 internal Coq term is exactly the same as the first definition above.
 
-\subsection{Instance Resolution}
+*** Instance Resolution
 
 The attentive reader has certainly noticed that in the last
 computation, the binary operation {\tt Zmult} and the neutral element 1
@@ -3745,8 +3745,8 @@ The implementation of type classes in Coq can retrieve the instance
 {\tt ZMult} from the type {\tt Z}, then filling the arguments {\tt ZMult}
 and 1 from {\tt ZMult}'s definition.
 
-\section{More Monoids}
-\subsection{Matrices over some ring}
+** More Monoids
+*** Matrices over some ring
 
 We all know that multiplication of square matrices is associative and
 admits identity matrices as neutral elements. For simplicity's sake let us
@@ -3824,7 +3824,7 @@ Compute fibonacci 20.
  :Z
 \end{verbatim}
 
-\section{Reasoning within a Type Class}
+** Reasoning within a Type Class
 
 We are now able to consider again the equivalence between two functions
 for computing powers. Let use define the binary algorithm for any monoid.
@@ -3853,7 +3853,7 @@ Compute binary_power 2 100.
  = 1267650600228229401496703205376 : Z
 \end{verbatim}
 
-\subsection{The Equivalence Proof}
+*** The Equivalence Proof
 
 The proof of equivalence between {\tt power} and {\tt binary\_power}
 is quite long, and can be split in several lemmas. Thus, it is useful
@@ -3940,7 +3940,7 @@ Lemma power_of_square : forall x n, (x * x) ** n = x ** n * x ** n.
 Qed.
 \end{verbatim}
 
-\subsection{Final Steps}
+*** Final Steps
 
 We are now able to prove that the auxiliary function
 {\tt binary\_power\_mult} satisfies its intuitive meaning. 
@@ -3979,7 +3979,7 @@ Proof.
 Qed.
 \end{verbatim}
 
-\subsection{Discharging the Context}
+*** Discharging the Context
 
 It is time to close the section we opened for writing our proof of
 equivalence. The theorem {\tt binary\_power\_ok} is now provided
@@ -4010,7 +4010,7 @@ binary_power_ok Mfib 56
 
 \end{verbatim}
 
-\subsection{Subclasses}
+*** Subclasses
 
 We could prove many useful equalities in the section {\tt about\_power}.
 Nevertheless, we couldn't prove the equality $(xy)^n=x^ny^n$ because it
@@ -4083,7 +4083,7 @@ power_of_mult 3 4 5
      : power (4 * 5) 3 = power 4 3 * power 5 3
 \end{verbatim}
 
-\chapter{Proof Tower Layer: C11 using CH$_2$O}
+* Proof Tower Layer: C11 using CH$_2$O
 
 From Krebbers \cite{Kreb17}
 
@@ -4133,7 +4133,7 @@ Lemma gcd\_correct $\Gamma$ $\delta$ R J T C y z $\mu$1 $\gamma$1 $\mu$2 $\gamma
 Proof.\\
 End gcd.\\
 
-\chapter{Other Ideas to Explore}
+* Other Ideas to Explore
 
 \section{Aczel \cite{Acze13}} 
 Homotopy Type Theory
@@ -4227,7 +4227,7 @@ gcd(u,v) = gcd(v,u)\\
 gcd(u,v) = gcd(v, u mod v)\\
 gcd(u,0) = u
 
-\section{Igarashi et al. [Igar75]}
+** Igarashi et al. [Igar75]
 
 Igarashi et al. \cite{Igar75}
 
@@ -4379,7 +4379,7 @@ program. Q(e) denotes the substitution of e for x in Q(x). In V6,
 B[i] denotes the $i^{th}$ element in array B. In each of the rules A
 can be Null. Q-if denotes a 'marked' Boolean assertion Q.
 
-\section{Kamareddine [Kama15]}
+** Kamareddine [Kama15]
 
 Kamareddine \cite{Kama15}
 Computerising Mathematical Text explores various ways of 
@@ -4410,7 +4410,7 @@ algorithm.
 
 \appendix
 
-\chapter{The Global Environment}
+* The Global Environment
 
 Let $S$ be a set. Let $\circ$ be a binary operation. 
 Let $+$ be an additive operation. Let $*$ be a multiplicative operation.
@@ -4492,9 +4492,9 @@ $q$ and $r$ in $R$ such that $a=bq+r$ and either $r=0$ or
 $f(r)<f(b)$ 
 \end{axiom}
 
-\chapter{Related work}
+* Related work
 
-\section{Overview of related work}
+** Overview of related work
 
 \subsection{Adams \cite{Adam01}}
 
@@ -6491,7 +6491,7 @@ with polymorphically order-sorted data types.
 
 Chapter 5
 
-\subsection{Strub, Pierre Yves}
+*** Strub, Pierre Yves
 \begin{verbatim}
 Formal Proofs and Decision Procedures  (Strub, Pierre Yves)
 htps://www.youtube.com/watch?v=YgOoDNIT8A8
@@ -6661,7 +6661,7 @@ for further computation.
 
 \appendix
 
-\chapter{Untyped Lambda in Common Lisp}
+* Untyped Lambda in Common Lisp
 See Garret \cite{Garr14}
 
 This is a compiler for the untyped lambda calculus.
@@ -6720,7 +6720,7 @@ perform over 5.5 times as fast as the binary GCD on one computer
 architecture having a multiply instruction. Independent research
 by Jebelean points to the same conclusion. 
 
-\subsection{LeanProver}
+*** LeanProver
 
 On the LeanProver chat \cite{Lean19}, agro1986 wrote:
 

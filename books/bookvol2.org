@@ -5,11 +5,11 @@
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
 
-\chapter{The Axiom System by James H. Davenport}
+* The Axiom System by James H. Davenport
 This is (mostly) quoted verbatim, with permission, 
 from Davenport\cite{Dave92a}.
 
-\section{A little history}
+** A little history
 
 In 1978 the present author spent two months at IBM Yorktown Heights,
 as part of the Computer Algebra Group, which had developed the
@@ -53,7 +53,7 @@ first product of this process). Axiom is the end product of this
 process of reflection.
 \end{tabular}
 
-\section{Axiom's philosophy}
+** Axiom's philosophy
 
 Axiom shares with Maple the desire to build a system consisting of a
 kernel and loadable modules, written in an appropriately high-level
@@ -173,7 +173,7 @@ The spurious power series expansion at line 6: is necessary to avoid
 the confusion at line 5:, where the variable $x$ is separated from
 the power series in $x$.
 
-\section{Axiom's typing scheme}
+** Axiom's typing scheme
 
 The typing scheme of Axiom can be described as a two-level typing
 scheme with single inheritance of types and multiple inheritance of
@@ -335,7 +335,7 @@ since they have no idea whether such a contraction will always be
 possible -- if the programmer knows that it will always be possible, they
 have to declare the fact.
 
-\subsection{Aren't all these types confusing?}
+*** Aren't all these types confusing?
 
 The casual user need not concern themselves with the type system: those
 functions that most other systems provide, and which correspond to
@@ -472,7 +472,7 @@ This means that a new domain which can be printed at all
 Fortran and indeed in any other ways that get added later, without
 having to modify the domain at all.
 
-\section{Some AXIOM facilities}
+** Some AXIOM facilities
 \label{Some AXIOM facilities}
 
 Computer algebra is often also called ``symbolic manipulation'', and 
@@ -669,7 +669,7 @@ going all the way up to the limit required by {\tt )set streams calculate},
 it can find no non-zero terms. Puiseux series have many uses in
 algebraic geometry. See Davenport\cite{Dave81}
 
-\subsection{How does one keep track of all this?}
+*** How does one keep track of all this?
 
 There seem to be so many different names and domains around in the
 Axiom system. How does one keep track of them all, and know what to
@@ -800,7 +800,7 @@ and similarly we stipulate that the domain $R$ which is the
 parameter to {\tt Matrix} must belong to the second-order type 
 system {\tt Ring}.
 
-\section{Categories}
+** Categories
 
 {\bf Principle 6}. {\sl The Axiom library declares a family of second-order 
 types, known as {\bf categories}. The categories are arranged in a directed 
@@ -1290,11 +1290,11 @@ It can clearly be seen that, in {\tt Expression RomanNumeral}, the
 coefficients are indeed members of {\tt RomanNumeral}, but the exponents
 are not.
 
-\chapter{How does one program in the Axiom system by James H. Davenport}
+* How does one program in the Axiom system by James H. Davenport
 This is (mostly) quoted verbatim, with permission, 
 from Davenport\cite{Dave92b}.
 
-\section{Introduction}
+** Introduction
 
 Axiom can be used in essentially three ways. The first corresponds to
 the ``pocket calculator'' style of use -- simple commands can be typed
@@ -1345,7 +1345,7 @@ other, much as programmed functions on a pocket calculator.
 In the third style, we define new complete data types to Axiom. 
 It is this third style of programming that this paper addresses.
 
-\section{Programming concepts}
+** Programming concepts
 
 Axiom has several fundamental concepts, which we have to outline briefly.
 
@@ -1529,9 +1529,9 @@ an element $p$ of {\tt UnivariatePolynomial(x,R)} computes
 {\bf Constructor} & The generic term including category, functor, and package.
 \end{tabular}
 
-\section{A first problem -- Weighted Polynomials}
+** A first problem -- Weighted Polynomials
 
-\subsection{The problem definition}
+*** The problem definition
 
 Our aim iere is to emulate CAMAL's (Fitch\cite{Fitc74}) handling of
 ``weighted polynomials'', a concept which is also found in Reduce
@@ -1692,7 +1692,7 @@ internal representation of {\tt FreeModule}, hence the {\tt Rep} line
 further examples of this methodology later on, as method (4) for the 
 definition of Axiom functors.
 
-\subsection{The problem specification}
+*** The problem specification
 
 Proceeding in a top-down fashion, we can see that we are going to need
 a construction which takes as arguments a {\tt Ring} $R$, some weights
@@ -1840,7 +1840,7 @@ representation of the domain being added to can invalidate the new
 domain being built.
 \end{itemize}
 
-\subsection{The problem implementation}
+*** The problem implementation
 
 Let us first try the third method, where we use {\tt PolynomialRing} as
 our representation. The essentials of our implementation will then
@@ -2015,7 +2015,7 @@ definition of equality.
 {\sl However}, were a later author of {\sl PolynomialRing} to add other
 definitions, these would be picked up instead.
 
-\subsection{Miscellaneous definitions}
+*** Miscellaneous definitions
 
 Here we give some miscellaneous definitions that should form part of
 the implementation of {\tt WeightedPolynomials}. The first three lines
@@ -2103,9 +2103,9 @@ to almost any other desired behaviour.
     reduce("+",(reverse [paren(t1.c::OutputForm) for t1 in p])::List OutputForm
 \end{verbatim}
 
-\section{A second problem -- FourierSeries}
+** A second problem -- FourierSeries
 
-\subsection{The problem definition}
+*** The problem definition
 
 Our aim here is to implement an equivalent of CAMAL's (Fitch\cite{Fitc74})
 handling of truncated Fourier series. We have some domain of ``angles''
@@ -2131,7 +2131,7 @@ on the ability to divide by any non-zero integer, i.e. that the
 coefficients should be an Algebra over $\mathbb{Q}$, the Axiom
 type {\tt Fraction Integer}.
 
-\subsection{The problem specification}
+*** The problem specification
 
 The header of our type Fourier Series now nearly writes itself. The
 arguments of the trigonometric functions had better be an ordered set,
@@ -2327,12 +2327,12 @@ is done below.
       +/[+/[multiply(t1,t2) for t2 in x2] for t1 in x1]
 \end{verbatim}
 
-\chapter{Axiom and Type Theory by Albrecht Fortenbacher}
+* Axiom and Type Theory by Albrecht Fortenbacher
 
 Fortenbacher \cite{Fort90} worked with the SCRATCHPAD project at IBM
 Research, publishing an early paper on Type Inference and Coercion.
 
-\section{Type Inference in Computer Algebra}
+** Type Inference in Computer Algebra
 
 Early computer algebra systems did not have a sophisticated type
 system, mainly due to the small number of computational domains. With
@@ -2426,7 +2426,7 @@ regular. In the next section, we define its semantics based on rewrite
 rules, which allows to decide the predicate coercibility and
 furthermore.
 
-\section{The Coercion Graph}
+** The Coercion Graph
 
 As indicated in the last section, coercion is a basic tools for type
 inference. Also, in a system with hundreds of computational domains,
@@ -2566,7 +2566,7 @@ bounded path (as opposed to any path). In practice, these two
 approaches seem to coincide, because admissibility is very general and
 can be achieved easily.
 
-\section{Coercion Functions as Rewrite Rules}
+** Coercion Functions as Rewrite Rules
 
 Given infinitely many domains and coercion functions, how can a
 coercion path between domains $D$ and $D^\prime$ be constructed?
@@ -2635,8 +2635,8 @@ the behavior of coercion solely depends on the coercion rewrite rules
 (and on functions $\iota$ and $f$ used to state conditions for bounded
 paths). 
 
-\chapter{Axiom and Category Theory}
-\section{Covariance and Contravariance}
+* Axiom and Category Theory
+** Covariance and Contravariance
 Axiom has an order relation between types. The types can be in one of
 five possible relationships. 
 
@@ -2674,7 +2674,7 @@ that PositiveInteger $<$ Float.
 Antisymmetric means that PositiveInteger $<$ Float implies
 not(Float $<$ PositiveInteger).
 
-\section{Axiom Type Lattice}
+** Axiom Type Lattice
 
 The types in Axiom form a lattice based on the order relationship.
 It is a lattice because Axiom supports multiple inheritance.
@@ -2713,7 +2713,7 @@ Roland Backhouse and Marcel Bijsterveld
 ``Category Theory as Coherently Constructive Lattice Theory''
 November 1994
 
-\section{Terms to Understand}
+** Terms to Understand
 
 Suppose we wish to join Complex with Polynomial(Integer).
 What would elements of this combination look like?
@@ -2738,7 +2738,7 @@ We end up with a domain of Complex(Polynomial(Integer)).
                                            Type: Polynomial(Complex(Integer))
 \end{verbatim}
 
-\section{Category Definition}
+** Category Definition
 A category has four parts. 
 We need a set of objects, usually represented as dots. 
 We need a set of arrows (maps, morphisms), from dot to dot. 
@@ -2816,7 +2816,7 @@ The category CommutativeRing R can be mapped to a Group with the functor
 $GL_n$ which is the group of invertible NxN matrices with entries in
 the CommutativeRing R.
 
-\section{Monoids and Groups}
+** Monoids and Groups
 
 Given a single element set and a set of arrows from that element to
 itself we know from the associative property that $(fg)h = f(gh)$ and 
@@ -2846,13 +2846,13 @@ The functor F must preserve identity so $F(id(x)) = id(F(x))$.
 The functor F must take commuting diagrams to commuting diagrams.
 \end{itemize}
 
-\chapter{Axiom Implementation Details}
-\section{Makefile}
+* Axiom Implementation Details
+** Makefile
 This book is actually a literate program\cite{Knut92} and can contain 
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 
-\chapter{Writing Spad Code}
-\section{The Description: label and the )describe command}
+* Writing Spad Code
+** The Description: label and the )describe command
 The describe command will print out the comments associated with Axiom
 source code elements. For the category, domain, and package sections
 the text is taken from the Description: keyword.
@@ -2969,10 +2969,10 @@ non-commutative algebra, LiePolynomial and XPBWPolynomial.
 \end{verbatim}
 which is correct.
 
-\chapter{Writing test cases}
+* Writing test cases
 
 \appendix
-\chapter{The Principles of Axiom}
+* The Principles of Axiom
 {\bf Principle 1}. {\sl AXIOM has an interpreter for interactive use, much
 like any other system, and a compiler for creating new user-defined
 data types. The compiler emphasises strict type-checking, whilst the
@@ -3041,7 +3041,7 @@ then recursively up the {\tt add} chain, without examining defaulting
 packages. If this fails to find a definition, then the defaulting 
 packages are searched, from most specific to most general.}
 
-\chapter{The Axiom Conventions}
+* The Axiom Conventions
 {\bf Convention 1}. 
 {\sl Juxtaposition corresponds to (unary) function application.}
 
@@ -3107,8 +3107,8 @@ corresponding Axiom library lives. The defaults for category {\tt Cat},
 with abbreviation {\tt CAT}, are called {\tt Cat\&} , 
 with abbreviation {\tt CAT-}.}
 
-\chapter{Example Code}
-\section{domain WP WeightedPolynomials}
+* Example Code
+** domain WP WeightedPolynomials
 --Copyright The Numerical Algorithms Group Limited 1992.
 #+NAME: domain WP WeightedPolynomials
 #+begin_src common-lisp :noweb yes
@@ -3239,7 +3239,7 @@ WeightedPolynomials(R,VarSet,E,P,vl,wl,wtlevel) : SIG == CODE where
       w
 #+end_src
 
-\section{domain OWP OrdinaryWeightedPolynomials}
+** domain OWP OrdinaryWeightedPolynomials
 --Copyright The Numerical Algorithms Group Limited 1992.
 
 #+NAME: domain OWP OrdinaryWeightedPolynomials
@@ -3291,7 +3291,7 @@ OrdinaryWeightedPolynomials(R,vl,wl,wtlevel) : SIG == CODE where
                          Polynomial(R),vl,wl,wtlevel)
 #+end_src
 
-\section{domain WP2 WeightedPolynomials2}
+** domain WP2 WeightedPolynomials2
 #+NAME: domain WP2 WeightedPolynomials2
 #+begin_src common-lisp :noweb yes
 )abbrev domain WP2 WeightedPolynomials2
@@ -3432,7 +3432,7 @@ WeightedPolynomials2(R,Varset,E,P,vl,wl,wtlevel) : SIG == CODE where
              ::List OutputForm)
 #+end_src
 
-\section{domain FCOMP FourierComponent}
+** domain FCOMP FourierComponent
 --Copyright The Numerical Algorithms Group Limited 1992
 #+NAME: domain FCOMP FourierComponent
 #+begin_src common-lisp :noweb yes
@@ -3494,7 +3494,7 @@ FourierComponent(E) : SIG == CODE where
       y.SinIfTrue
 #+end_src
 
-\section{domain FSERIES FourierSeries}
+** domain FSERIES FourierSeries
 #+NAME: domain FSERIES FourierSeries
 #+begin_src common-lisp :noweb yes
 )abbrev domain FSERIES FourierSeries
@@ -3581,7 +3581,7 @@ FourierSeries(R,E) : SIG == CODE where
       [[sin a,r]]
 #+end_src  
 
-\chapter{The Makefile}
+* The Makefile
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 PROJECT=bookvol2

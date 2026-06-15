@@ -48,7 +48,7 @@ later.
 
 But first, a crash course on elliptic curves and finite fields.
 
-\section{Elliptic Curves}
+** Elliptic Curves
 
 An elliptic curve is represented algebraically as an equation of the form:
 
@@ -146,7 +146,7 @@ example:
 Here, 7P has been broken down into two point doubling steps and two
 point addition steps.  
 
-\section{Finite Fields}
+** Finite Fields
 
 A finite field, in the context of ECDSA, can be thought of as a
 predefined range of positive numbers within which every calculation
@@ -172,7 +172,7 @@ a:mod7:=9
 
 #+end_src
 
-\section{Putting it Together}
+** Putting it Together
 
 ECDSA uses elliptic curves in the context of a finite field, which
 greatly changes their appearance but not their underlying equations or
@@ -312,7 +312,7 @@ look for the two points with first component of 47, which are
 [47,28] and [47,39]. Thus the reflection point of [47,39] is 
 [47,28].
 
-\section{Back to ECDSA and Bitcoin}
+** Back to ECDSA and Bitcoin
 
 A protocol such as Bitcoin selects a set of parameters for the
 elliptic curve and its finite field representation that is fixed for
@@ -425,7 +425,7 @@ security of that protocol. If you know the secret numbers, you can
 completely break any instantiation of Dual\_\_DRBG.
 \end{quote}
 
-\section{Private Keys and Public Keys}
+** Private Keys and Public Keys
 
 With these formalities out of the way, we are now in a position to
 understand private and public keys and how they are related. Here it
@@ -567,7 +567,7 @@ compressed public key, by keeping just the x value and noting which
 half of the curve the point is on. From this partial information we
 can recover both coordinates.
 
-\section{Signing Data with the Private Key}
+** Signing Data with the Private Key
 
 Now that we have a private and public key pair, let's sign some data!
 
@@ -667,7 +667,7 @@ before, we have hidden some gory details by computing it elsewhere):
 As with the private and public keys, this signature is normally
 represented by a hexadecimal string.  
 
-\section{Verifying the Signature with the Public Key}
+** Verifying the Signature with the Public Key
 
 We now have some data and a signature for that data. A third party who
 has our public key can receive our data and signature, and verify that
@@ -800,7 +800,7 @@ Clearly step 5 is the bulk of the work. For the final step,
 
 Our signature is valid!
 
-\section{Bitcoin addresses}
+** Bitcoin addresses
 
 Bitcoin does not just check the keys. A bitcoin address is not a public
 key. It is the hash of a public key. The relationship is\cite{11}
@@ -840,7 +840,7 @@ made with the spender's private key. The hash of the public key can
 be checked (the spender's "address") and the signature can be checked
 with the public key.
 
-\subsection{Base68 encoding}
+*** Base68 encoding
 The bitcoin base58 encoding\cite{12}
 
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
@@ -862,7 +862,7 @@ Value&Char &Value&Char &Value&Char &Value&Char \\
  56  &  y  & 57  &  z 
 \end{tabular} 
 
-\section{Test Vectors}
+** Test Vectors
 Bitcoin test examples.\cite{8}
 \begin{verbatim}
 Curve: secp256k1

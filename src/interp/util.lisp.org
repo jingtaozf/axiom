@@ -9,7 +9,7 @@
 \eject
 \tableofcontents
 \eject
-\section{util.lisp}
+** util.lisp
 This file is a collection of utility functions that are useful
 for system level work. A couple of the functions, {\bf build-depsys}
 and {\bf build-interpsys} interface to the src/interp/Makefile.
@@ -29,7 +29,7 @@ search Emacs TAGS files.
 A fifth group of related functions are some translated boot
 functions we need to define here so they work and are available
 at load time.
-\subsection{Building Depsys (build-depsys)}
+*** Building Depsys (build-depsys)
 The {\bf depsys} image is one of the two images we build from
 the src/interp subdirectory (the other is {\bf interpsys}). We
 use {\bf depsys} as a compile-time image as it contains all of
@@ -57,7 +57,7 @@ loaded.
 ;;                      :rpages 1000 :hole 2000) )
 
 #+end_src
-\subsubsection{make-depsys}
+**** make-depsys
 When we are building a {\bf depsys} image for AKCL (now GCL) we need
 need to initialize some optimization routines. Each time a file is
 compiled in GCL we collect some function information and write it
@@ -92,7 +92,7 @@ into the image. It used to read:
   )
 
 #+end_src
-\subsection{Building Interpsys (build-interpsys)}
+*** Building Interpsys (build-interpsys)
 \begin{verbatim}
 ;############################################################################
 ;# autoload dependencies
@@ -312,7 +312,7 @@ After this function is called the image is clean and can be saved.
              (setq $SYSCOMMANDS (NREVERSE $SYSCOMMANDS)))))))
 
 #+end_src
-\subsubsection{GCL porting changes}
+**** GCL porting changes
 GCL likes to output lines of the form:
 \begin{verbatim}
 ;; Note: Tail-recursive call of |matSuperList1| was replaced by iteration.
@@ -324,7 +324,7 @@ he was debugging tail-recursive replacement and it never was removed.
   #+:AKCL
   (setq compiler::*suppress-compiler-notes* t)
 #+end_src
-\subsection{The variables}
+*** The variables
 Various lisps use different ``extensions'' on the filename to indicate
 that a file has been compiled. We set this variable correctly depending
 on the system we are using.
@@ -339,7 +339,7 @@ on the system we are using.
 
 #+end_src
 
-\subsection{The autoload list}
+*** The autoload list
 There are several subsystems within {\bf AXIOM} that are not normally
 loaded into a running system. They will be loaded only if you invoke
 one of the functions listed here. Each of these listed functions will
@@ -350,7 +350,7 @@ overwritten, the function call is retried and now succeeds. Files
 containing functions listed here are assumed to exist in the 
 {\bf autoload} subdirectory. The list of files to load is defined
 in the src/interp/Makefile.
-\subsubsection{setBootAutloadProperties}
+**** setBootAutloadProperties
 This function is called by {\bf build-interpsys}. It takes two lists.
 The first is a list of functions that need to be used as 
 ``autoload triggers''. The second is a list of files to load if one
@@ -370,7 +370,7 @@ This helper function is listed below.
 )
 
 #+end_src
-\subsubsection{setBootAutoLoadProperty}
+**** setBootAutoLoadProperty
 This is a helper function to set up the autoload trigger. It sets
 the function cell of each symbol to {\bf mkBootAutoLoad} which is
 listed below. 
@@ -380,7 +380,7 @@ listed below.
   (setf (symbol-function func) (|mkBootAutoLoad| func file-list)) )
 
 #+end_src
-\subsubsection{mkBootAutoLoad}
+**** mkBootAutoLoad
 This is how the autoload magic happens. Every function named in the
 autoload lists is actually just another name for this function. When
 the named function is called we call {\bf boot-load} on all of the
@@ -397,7 +397,7 @@ call succeeds.
                   (apply (symbol-function fn) args)))))
 
 #+end_src
-\subsubsection{boot-load}
+**** boot-load
 This function knows where the {\bf autoload} subdirectory lives.
 It is called by {\bf mkBootAutoLoad} above to find the necessary
 files.
@@ -411,7 +411,7 @@ files.
     (load name)))
 
 #+end_src
-\subsubsection{setNAGBootAutloadProperties}
+**** setNAGBootAutloadProperties
 This is a further refinement of the autoload scheme. Since the
 Numerical Algorithms Group (NAG) fortran library contains many
 functions we subdivide the NAG library subsystem into chapters.
@@ -428,7 +428,7 @@ which files to load.
     file-list))
 
 #+end_src
-\subsubsection{get-NAG-chapter}
+**** get-NAG-chapter
 This function is used to find the names of the files to load.
 On solaris 9 under GCL the original implementation will fail because
 the max number of arguments is 63. We rewrite it to get around this
@@ -453,7 +453,7 @@ problem. It originally read:
   (nreverse r)))
 
 #+end_src
-\subsubsection{nag-files}
+**** nag-files
 We analyze the function names to decide which chapter we are in.
 We load files based on the chapter.
 #+NAME: nag-files
@@ -465,7 +465,7 @@ We load files based on the chapter.
      filelist)))
 
 #+end_src
-\subsubsection{chapter-name}
+**** chapter-name
 The library names follow a convention that allows us to extract
 the chapter name. 
 #+NAME: chapter-name
@@ -481,7 +481,7 @@ the chapter name.
 )
 
 #+end_src
-\subsubsection{parse-functions}
+**** parse-functions
 This is the {\bf boot parser} subsystem. It is only needed by 
 developers who translate boot code to Common Lisp.
 #+NAME: parse-functions
@@ -496,7 +496,7 @@ developers who translate boot code to Common Lisp.
 ;        init-boot/spad-reader))
 
 #+end_src
-\subsubsection{comp-functions}
+**** comp-functions
 This is the {\bf spad compiler} subsystem. It is only needed by
 developers who write or modify algebra code.
 #+NAME: comp-functions
@@ -514,7 +514,7 @@ developers who write or modify algebra code.
 ;        |sublisV|))
 
 #+end_src
-\subsubsection{browse-functions}
+**** browse-functions
 This is the {\bf browser} subsystem. It will get autoloaded only
 if you use the browse function of the {\bf hypertex} system.
 #+NAME: browse-functions
@@ -549,7 +549,7 @@ if you use the browse function of the {\bf hypertex} system.
         |syscomPage|))
 
 #+end_src
-\subsubsection{translate-functions}
+**** translate-functions
 This is a little used subsystem to generate {\bf ALDOR} code
 from {\bf Spad} code. Frankly, I'd be amazed if it worked.
 #+NAME: translate-functions
@@ -561,7 +561,7 @@ from {\bf Spad} code. Frankly, I'd be amazed if it worked.
         ))
 
 #+end_src
-\subsubsection{debug-functions}
+**** debug-functions
 These are some {\bf debugging} functions that I use. I can't imagine
 why you might autoload them but they don't need to be in a running
 system.
@@ -576,7 +576,7 @@ system.
         |showImp|))
 
 #+end_src
-\subsubsection{anna-functions}
+**** anna-functions
 The {\bf ANNA} subsystem, invoked thru {\bf hypertex}, is an
 expert system that understands the Numerical Algorithms Group (NAG)
 fortran library. 
@@ -611,7 +611,7 @@ fortran library.
         |annaOdeDefaultSolve2|))
 
 #+end_src
-\subsubsection{nagbr-functions}
+**** nagbr-functions
 The Numerical Algorithms Group (NAG) fortran library has a set
 of cover functions. These functions need to be loaded if you use
 the NAG library.
@@ -653,8 +653,8 @@ the NAG library.
       ))
 
 #+end_src
-\subsection{The command-line build functions}
-\subsubsection{translist}
+*** The command-line build functions
+**** translist
 Translate a list of boot files to common lisp.
 #+NAME: translist
 #+begin_src common-lisp :noweb yes
@@ -664,7 +664,7 @@ Translate a list of boot files to common lisp.
           fns))
 
 #+end_src
-\subsubsection{translate}
+**** translate
 Translate a single boot file to common lisp
 #+NAME: translate
 #+begin_src common-lisp :noweb yes
@@ -679,7 +679,7 @@ Translate a single boot file to common lisp
     (boot bootfile (make-pathname :type "lisp" :defaults bootfile))))
 
 #+end_src
-\subsubsection{compile-boot-file}
+**** compile-boot-file
 Translate a single boot file to common lisp, compile it 
 and load it.
 #+NAME: compile-boot-file
@@ -696,7 +696,7 @@ and load it.
 )
 
 #+end_src
-\subsubsection{retranslate-file-if-necessary}
+**** retranslate-file-if-necessary
 Retranslate a single boot file if it has been changed.
 #+NAME: retranslate-file-if-necessary
 #+begin_src common-lisp :noweb yes
@@ -712,7 +712,7 @@ Retranslate a single boot file if it has been changed.
                       (boot bootfile lfile) (list bootfile))))))
 
 #+end_src
-\subsubsection{retranslate-directory}
+**** retranslate-directory
 Translate a directory of boot code to common lisp if the boot code
 is newer.
 #+NAME: retranslate-directory
@@ -725,7 +725,7 @@ is newer.
       (mapcan #'retranslate-file-if-necessary files)))
 
 #+end_src
-\subsubsection{recompile-nrlib-if-necessary}
+**** recompile-nrlib-if-necessary
 Recompile a single library's lisp file if it is out of date.
 The {\bf recompile-lib-file-if-necessary} is defined in nlib.lisp.
 #+NAME: recompile-nrlib-if-necessary
@@ -735,7 +735,7 @@ The {\bf recompile-lib-file-if-necessary} is defined in nlib.lisp.
   (lift-nrlib-name (namestring lib)))
 
 #+end_src
-\subsubsection{lift-nrlib-name}
+**** lift-nrlib-name
 We used to use FOO.nrlib/code.o files for algebra. However there
 was no need for this additional level of indirection since the rest
 of the information in an nrlib is now kept in the daase files. Thus
@@ -747,7 +747,7 @@ we lift the FOO.nrlib/code.o to FOO.o in the final system.
   nil)
 
 #+end_src
-\subsubsection{recompile-lib-directory}
+**** recompile-lib-directory
 Recompile library lisp code if necessary.
 #+NAME: recompile-lib-directory
 #+begin_src common-lisp :noweb yes
@@ -759,7 +759,7 @@ Recompile library lisp code if necessary.
       (mapcan #'recompile-nrlib-if-necessary files)))
 
 #+end_src
-\subsubsection{recompile-all-files}
+**** recompile-all-files
 Force recompilation of all lisp files in a directory.
 #+NAME: recompile-all-files
 #+begin_src common-lisp :noweb yes
@@ -771,7 +771,7 @@ Force recompilation of all lisp files in a directory.
      (mapcar #'compile-file files)))
 
 #+end_src
-\subsubsection{recompile-directory}
+**** recompile-directory
 This function will compile any lisp code that has changed in a directory.
 #+NAME: recompile-directory
 #+begin_src common-lisp :noweb yes
@@ -783,7 +783,7 @@ This function will compile any lisp code that has changed in a directory.
       (mapcan #'recompile-file-if-necessary files)))
 
 #+end_src
-\subsubsection{recompile-file-if-necessary}
+**** recompile-file-if-necessary
 This is a helper function that checks the time stamp between
 the given file and its compiled binary. If the file has changed
 since it was last compiled this function will recompile it.
@@ -800,7 +800,7 @@ since it was last compiled this function will recompile it.
              (list bfile)))))
 
 #+end_src
-\subsubsection{our-write-date}
+**** our-write-date
 Get the write date of a file. In GCL we need to check that it
 exists first. This is a simple helper function.
 #+NAME: our-write-date
@@ -809,7 +809,7 @@ exists first. This is a simple helper function.
                                   (file-write-date file)))
 
 #+end_src
-\subsubsection{fe}
+**** fe
 I'm unsure what this does but I believe it is related to an interpreter
 command. Invoking ``)fe'' in the interpreter tries to get at the 
 src/interp/TAGS file.
@@ -829,7 +829,7 @@ src/interp/TAGS file.
                         (load (make-pathname :type *bin-path* :defaults tlispfile)))
       (load tlispfile))))
 #+end_src
-\subsubsection{fc}
+**** fc
 I'm unsure what this does but I believe it is related to an interpreter
 command. Invoking ``)fc'' in the interpreter tries to get at the 
 src/interp/TAGS file.
@@ -838,7 +838,7 @@ src/interp/TAGS file.
 (defun fc (function file) (fe function file t))
 
 #+end_src
-\subsubsection{compspadfiles}
+**** compspadfiles
 The {\bf compspadfiles} function will recompile a list of {\bf spad} files.
 The filelist should be a file containing names of files to compile.
 #+NAME: compspadfiles
@@ -854,7 +854,7 @@ The filelist should be a file containing names of files to compile.
               (spad fname (concat (pathname-name fname) ".out"))))))
 
 #+end_src
-\subsubsection{load-directory}
+**** load-directory
 Load a whole subdirectory of compiled files
 #+NAME: load-directory
 #+begin_src common-lisp :noweb yes
@@ -866,7 +866,7 @@ Load a whole subdirectory of compiled files
       (mapcar #'load files)))
 
 #+end_src
-\subsubsection{interp-make-directory}
+**** interp-make-directory
 This is used by the ")cd" system command.
 #+NAME: interp-make-directory
 #+begin_src common-lisp :noweb yes
@@ -897,7 +897,7 @@ This is used by the ")cd" system command.
       direc))))
 
 #+end_src
-\subsubsection{make-directory}
+**** make-directory
 Make a directory relative to the {\bf \$spadroot} variable.
 #+NAME: make-directory
 #+begin_src common-lisp :noweb yes
@@ -923,7 +923,7 @@ Make a directory relative to the {\bf \$spadroot} variable.
       direc))))
 
 #+end_src
-\subsubsection{recompile-all-libs}
+**** recompile-all-libs
 Occasionally it will be necessary to iterate over all of the nrlib
 directories and compile each of the code.lsp files in every nrlib.
 This function will do that. A correct call looks like:
@@ -944,7 +944,7 @@ where the [[${SYS}]] variable is same as the one set at build time.
        files)))
 
 #+end_src
-\subsubsection{recompile-all-algebra-files}
+**** recompile-all-algebra-files
 We occasionally need to completely rebuild the algebra from the spad
 files. This function will iterate across a directory containing all
 of the spad files and attempt to recompile them. A correct call looks
@@ -978,7 +978,7 @@ and all of the matching files would be recompiled.
        files)))
 
 #+end_src
-\subsubsection{boottocl}
+**** boottocl
 The {\bf boottocl} function is the workhorse function that translates
 {\bf .boot} files to {\bf Common Lisp}. It basically wraps the actual
 {\bf boot} function call to ensure that we don't truncate lines 
@@ -1003,7 +1003,7 @@ because of {\bf *print-level*} or {\bf *print-length*}.
                                "/../../int/interp/foo.clisp")))))
 
 #+end_src
-\subsubsection{yearweek}
+**** yearweek
 We need a way of distinguishing different versions of the system.
 There used to be a way to touch the src/timestamp file whenever
 you checked in a change to the change control subsystem. 
@@ -1038,7 +1038,7 @@ format string from the file [[src/doc/msgs/s2-us.msgs]].
       (setq *yearweek* "no timestamp")))
 
 #+end_src
-\subsubsection{makelib}
+**** makelib
 Make will not compare dates across directories.
 Rather than copy all of the code.lsp files to the MNT directory
 we run this function to compile the files that are out of date
@@ -1108,7 +1108,7 @@ need to be compiled without optimize due to compiler bugs
       (compile-lib-file dotlsp :output-file doto)))))))
 
 #+end_src
-\subsubsection{makespad}
+**** makespad
 Make will not compare dates across directories.
 In particular, it cannot compare the algebra files because there
 is a one-to-many correspondence. This function will walk over
@@ -1185,10 +1185,10 @@ quality we check anyway.
      (format tmp ")co ~a~%" spad))))))
 
 #+end_src
-\subsection{Constructing TAGS}
+*** Constructing TAGS
 TAGS are useful for finding functions if you run Emacs. We have a
 set of functions that construct TAGS files for Axiom.
-\subsubsection{make-tags-file}
+**** make-tags-file
 Run the etags command on all of the lisp code. Then run the
 {\bf spadtags-from-directory} function on the boot code. The
 final TAGS file is constructed in the {\bf tmp} directory.
@@ -1202,7 +1202,7 @@ final TAGS file is constructed in the {\bf tmp} directory.
   (obey "cat /tmp/boot.TAGS >> /tmp/TAGS"))
 
 #+end_src
-\subsubsection{spadtags-from-directory}
+**** spadtags-from-directory
 This function will walk across a directory and call 
 {\bf spadtags-from-file} on each file.
 #+NAME: spadtags-from-directory
@@ -1230,7 +1230,7 @@ This function will walk across a directory and call
                      (write-line line tagstream)))))))
 
 #+end_src
-\subsubsection{spadtags-from-file}
+**** spadtags-from-file
 This function knows how to find function names in {\bf boot} code
 so we can add them to the TAGS file using standard etags format.
 #+NAME: spadtags-from-file
@@ -1271,7 +1271,7 @@ so we can add them to the TAGS file using standard etags format.
                                           line-count char-count))  )))))))
 
 #+end_src
-\subsubsection{write-tag-line}
+**** write-tag-line
 This function knows how to write a single line into a TAGS file
 using the etags file format.
 #+NAME: write-tag-line
@@ -1285,7 +1285,7 @@ using the etags file format.
   (terpri tagstream))
 
 #+end_src
-\subsubsection{blankcharp}
+**** blankcharp
 This is a trivial predicate for calls to {\bf position-if-not} in the
 {\bf findtag} function.
 #+NAME: blankcharp
@@ -1293,7 +1293,7 @@ This is a trivial predicate for calls to {\bf position-if-not} in the
 (defun blankcharp (c) (char= c #\Space))
 
 #+end_src
-\subsubsection{findtag}
+**** findtag
 The {\bf findtag} function is a user-level function to figure out
 which file contains a given tag. This is sometimes useful if Emacs
 is not around or TAGS are not loaded.
@@ -1338,7 +1338,7 @@ is not around or TAGS are not loaded.
                        (return (cons sourcefile tagline))))))))
 
 #+end_src
-\subsubsection{match-lisp-tag}
+**** match-lisp-tag
 The {\bf match-lisp-tag} function is used by {\bf findtag}. This
 function assumes that \\ can only appear as first character of name.
 #+NAME: match-lisp-tag
@@ -1361,8 +1361,8 @@ function assumes that \\ can only appear as first character of name.
              (eq tag (read-from-string tagline nil nil :start pos))) ))
 
 #+end_src
-\subsection{Translated Boot functions}
-\subsubsection{string2SpadTree}
+*** Translated Boot functions
+**** string2SpadTree
 #+NAME: string2SpadTree
 #+begin_src common-lisp :noweb yes
 (DEFUN |string2SpadTree| (LINE)
@@ -1380,7 +1380,7 @@ function assumes that \\ can only appear as first character of name.
     PARSEOUT))
 
 #+end_src
-\section{License}
+** License
 \begin{verbatim}
 ;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
 ;; All rights reserved.

@@ -343,9 +343,12 @@ srctangle-tools: tanglec untanglec orgtangle
 # Regenerate a .pamphlet beside every migrated .org (those carrying a
 # ':noweb yes' chunk).  Only needed to build PDFs or to run the build in
 # AXIOM_TANGLE_VIA_PAMPHLET=1 mode; the default direct build never calls it.
+# Exclude tools/ : those literate-elisp files carry ':noweb yes' inside CODE
+# strings, are NOT pamphlets, and must not be untanglec'd (their `* heading'
+# lines are real org headings, not migrated LaTeX).
 regen-pamphlets: untanglec
 	@echo t03 regenerating .pamphlet files from migrated .org via untanglec
-	@grep -rIl ':noweb yes' --include='*.org' . | grep -v '/\.git/' | while read f ; do \
+	@grep -rIl ':noweb yes' --include='*.org' . | grep -vE '/\.git/|/tools/' | while read f ; do \
 	   ${BOOKS}/untanglec "$$f" > "$${f%.org}.pamphlet" ; \
 	 done
 

@@ -23,8 +23,8 @@ June 2, 1997
 )set message auto off
 )clear all
 #+end_src
-\section{Number Domains}
-\subsection{Big integers}
+** Number Domains
+*** Big integers
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -81,7 +81,7 @@ gcd(bi,bia)
 --E 6
 
 #+end_src
-\subsection{Rational numbers}
+*** Rational numbers
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -106,7 +106,7 @@ rn:=1/2+2/15-64/47
 --R                                                      Type: Fraction(Integer)
 --E 8
 #+end_src
-\subsection{Complex numbers}
+*** Complex numbers
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -131,7 +131,7 @@ real(cn)+%i*imag(cn)
 --R                                           Type: Expression(Complex(Integer))
 --E 10
 #+end_src
-\subsection{Algebraic numbers}
+*** Algebraic numbers
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -242,7 +242,7 @@ sqrt(x^2+2*(sqrt5-cbrt3)*x+5-2*sqrt5*cbrt3+cbrt3^2)
 --R                                                    Type: Expression(Integer)
 --E 22
 #+end_src
-\subsection{Big floating point numbers}
+*** Big floating point numbers
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -371,8 +371,8 @@ log(1.0+1.0*%i)
 --R                                                         Type: Complex(Float)
 --E 37
 #+end_src
-\section{Polynomials}
-\subsection{Basic operations}
+** Polynomials
+*** Basic operations
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -499,7 +499,7 @@ gcd(f1,f2)
 --E 47
 
 #+end_src
-\subsection{Factorization}
+*** Factorization
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -554,7 +554,7 @@ factor fa
 --R                                          Type: Factored(Polynomial(Integer))
 --E 51
 #+end_src
-\subsection{Groebner bases}
+*** Groebner bases
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -618,7 +618,7 @@ solve(polys,vars)
 --E 55
 
 #+end_src
-\section{Rational functions}
+** Rational functions
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -727,8 +727,8 @@ partialFraction(numerator(t1)::FACU,denominator(t1)::FACU)
 --R             Type: PartialFraction(UnivariatePolynomial(x,Fraction(Integer)))
 --E 60
 #+end_src
-\section{Solving Equations}
-\subsection{Linear systems}
+** Solving Equations
+*** Linear systems
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -741,7 +741,7 @@ solve([2*x1+x2+3*x3-9, x1-2*x2+x3+2, 3*x1+2*x2+2*x3-7],[x1,x2,x3])
 --R                    Type: List(List(Equation(Fraction(Polynomial(Integer)))))
 --E 61
 #+end_src
-\subsection{Nonlinear equations}
+*** Nonlinear equations
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -773,7 +773,7 @@ solve(log(acos(asin(x^(2/3)-b)-1))+2,x)
 --R                                    Type: List(Equation(Expression(Integer)))
 --E 63
 #+end_src
-\subsection{Nonlinear systems}
+*** Nonlinear systems
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -805,8 +805,8 @@ solve([alpha*c1-beta*c1^2-gamma*c1*c2+epsilon*c3,_
 --R
 --E 64
 #+end_src
-\section{Analytical Operations}
-\subsection{Limits}
+** Analytical Operations
+*** Limits
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -838,7 +838,7 @@ limit((2*x+5)/(3*x-2),x=%plusInfinity)
 --R            Type: Union(OrderedCompletion(Fraction(Polynomial(Integer))),...)
 --E 67
 #+end_src
-\subsection{Taylor series}
+*** Taylor series
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -855,7 +855,7 @@ series(%e^x,x=0)
 --R                       Type: UnivariatePuiseuxSeries(Expression(Integer),x,0)
 --E 68
 #+end_src
-\subsection{Summation and Products}
+*** Summation and Products
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -905,7 +905,7 @@ sum(n*2^n/factorial(n+2),n)
 --R                                                    Type: Expression(Integer)
 --E 72
 #+end_src
-\subsection{Integration}
+*** Integration
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -980,7 +980,7 @@ integrate(2*x*%e^(x^2)*log(x)+%e^(x^2)/x+(log(x)-2)/(log(x)^2+x)^2+_
 --R                                         Type: Union(Expression(Integer),...)
 --E 77
 #+end_src
-\subsection{Ordinary differential equations}
+*** Ordinary differential equations
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1024,7 +1024,7 @@ solve(D(y(x),x,2)+4*D(y(x),x)+4*y(x)-x*exp(x)=0,y,x)
 --RType: Union(Record(particular: Expression(Integer),basis: List(Expression(Integer))),...)
 --E 81
 #+end_src
-\subsection{Substitutions -- pattern matching}
+*** Substitutions -- pattern matching
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1149,7 +1149,7 @@ intRules int(a^(a+1),a)
 --R                                                    Type: Expression(Integer)
 --E 87
 #+end_src
-\section{Matrices}
+** Matrices
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -1251,20 +1251,20 @@ eigenvectors v
 --E 94
 
 #+end_src
-\section{Graphics}
-\subsection{2D Graphics}
+** Graphics
+*** 2D Graphics
 \begin{verbatim}
  
 draw(sin(%e*x),x=0..%pi)
 draw([besselJ(0,x),besselJ(2,x),besselJ(5,x)],x=0..10,_
       title=="Bessel Functions BesselJ(n,x)")
 \end{verbatim}
-\subsection{3D Graphics}
+*** 3D Graphics
 \begin{verbatim}
 draw(sin(%pi*sin(x+y)),x=-3..3,y=-3..3)
 draw(tan(x*y),x=-2/3*%pi..2/3*%pi,y=-2/3*%pi..2/3*%pi)
 \end{verbatim}
-\subsection{Parametric plots}
+*** Parametric plots
 \begin{verbatim}
 draw(surface(sin(v),sin(2*v)*sin(u),sin(2*v)*cos(u)),_
      u=0..2*%pi,v=-%pi/2..%pi/2)

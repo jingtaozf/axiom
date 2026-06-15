@@ -4,11 +4,11 @@
 \pagenumbering{arabic}
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
-\chapter{Introduction}
+* Introduction
 This book contains the pages which will be displayed by HyperDoc.
 The code for HyperDoc is in Volume 7\cite{Book07}
 
-\section{Setting up the Hyperdoc fonts and colors}
+** Setting up the Hyperdoc fonts and colors
 For these images we used the following settings in the X11 resouces.
 #+NAME: Xresource.txt
 #+begin_src common-lisp :noweb yes
@@ -46,8 +46,8 @@ using the command
    xlsfonts
 \end{verbatim}
 
-\chapter{Release Notes}
-\section{releasenotes.ht}
+* Release Notes
+** releasenotes.ht
 \pagetitle{releaseNotes}{releasenotes.ht}{What is new in Axiom}
 \pagepic{ps/v71releasenotes.eps}{releasenotes}{0.65}
 \pagefrom{Root Page}{RootPage}
@@ -4173,14 +4173,14 @@ The algebra runs on Windows.
 \end{page}
 
 #+end_src
-\chapter{Special hyperdoc pages}
-\section{util.ht}
+* Special hyperdoc pages
+** util.ht
 This file contains macros for the Axiom HyperDoc hypertext facility.
 Most of the macros for the system are here though there may be some in
 individual .ht files that are of a local nature.
 \index{files!util.ht}
 \index{util.ht files}
-\subsection{Names of software and facilities}
+*** Names of software and facilities
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\Browse}{Browse}
@@ -4196,7 +4196,7 @@ individual .ht files that are of a local nature.
 {Click on \  \UpButton{} \  to go back to what you were doing.}}
 
 #+end_src
-\subsection{Special hooks to Unix}
+*** Special hooks to Unix
 All unix commands should be done as macros defined here so we don't
 have to go hunting when moving between Unix versions.
 #+NAME: util.ht
@@ -4210,7 +4210,7 @@ have to go hunting when moving between Unix versions.
 \newcommand{\menuunixwindow}[2]{\item\unixwindow{\menuitemstyle{#1}}{#2}}
 
 #+end_src
-\subsection{HyperDoc menu macros}
+*** HyperDoc menu macros
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 % Example:
@@ -4260,7 +4260,7 @@ have to go hunting when moving between Unix versions.
 {\tab{3}\item#1\tab{8}\downlink{\menuitemstyle{#2}}{#3}\newline}
 
 #+end_src
-\subsection{Bitmaps and bitmap manipulation macros}
+*** Bitmaps and bitmap manipulation macros
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\htbmdir}{\env{AXIOM}/doc/bitmaps}
@@ -4285,7 +4285,7 @@ have to go hunting when moving between Unix versions.
 {\centerline{\inputpixmap{\env{AXIOM}/doc/pixmaps/{#1}}}}
 
 #+end_src
-\subsection{HyperDoc button objects}
+*** HyperDoc button objects
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\ContinueButton}[1]{\downlink{Click here}{#1} to continue.}
@@ -4301,7 +4301,7 @@ have to go hunting when moving between Unix versions.
              {\htbmfile{unpick}}}}
 
 #+end_src
-\subsection{Standard HyperDoc button configurations}
+*** Standard HyperDoc button configurations
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\autobutt}[1]{\helppage{#1}}
@@ -4318,7 +4318,7 @@ have to go hunting when moving between Unix versions.
 {\inputbox[#1]{#2}{\htbitmap{xbox}}{\htbitmap{xopenbox}}}
 
 #+end_src
-\subsection{HyperDoc graphics macros}
+*** HyperDoc graphics macros
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 % Including viewport bitmaps within \HyperName pages:
@@ -4345,7 +4345,7 @@ have to go hunting when moving between Unix versions.
 \newcommand{\spadviewportasbutton}[1]{\axiomViewportasbutton{#1}}
 
 #+end_src
-\subsection{TeX and LaTeX compatibility macros}
+*** TeX and LaTeX compatibility macros
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 %% Begin macros that are needed because HD uses the wrong names
@@ -4456,7 +4456,7 @@ have to go hunting when moving between Unix versions.
 \newcommand{\bs}{\\}
 
 #+end_src
-\subsection{Book and .ht page macros}
+*** Book and .ht page macros
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\beginImportant}{\horizontalline}
@@ -4583,7 +4583,7 @@ of operations defined by \spadtype{#1}.}
 \newcommand{\glossSee}[2]{\lispdownlink{#1}{(|htGloss| '|#2|)}}
 
 #+end_src
-\subsection{Browse macros}
+*** Browse macros
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\undocumented}[0]{is not documented yet}
@@ -4615,7 +4615,7 @@ of operations defined by \spadtype{#1}.}
 \newcommand{\spadignore}[1]{#1}
 
 #+end_src
-\subsection{Support for output and graph paste-ins}
+*** Support for output and graph paste-ins
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\axiomcommand}[1]{\spadcommand{#1}}
@@ -4645,7 +4645,7 @@ of operations defined by \spadtype{#1}.}
 }
 
 #+end_src
-\subsection{Hook for including a local menu item on the rootpage}
+*** Hook for including a local menu item on the rootpage
 #+NAME: util.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\localinfo}{}
@@ -4715,11 +4715,11 @@ The page you requested was not found in the Hyperdoc database.
 \end{page}
 
 #+end_src
-\chapter{Hyperdoc pages}
+* Hyperdoc pages
 The hyperdoc pages can be viewed as a forest of rooted pages.
 The main routine in hypertex will look for a page called ``RootPage''.
 \pagefrom{Root Page}{RootPage}
-\section{rootpage.ht}
+** rootpage.ht
 \pagetitle{RootPage}{rootpage.ht}{Axiom HyperDoc Top Level}
 \pagepic{ps/v71rootpage.eps}{RootPage}{0.50}
 \pageto{Basic Commands}{BasicCommand}
@@ -5191,7 +5191,7 @@ A glossary of Axiom terms.
 
 #+end_src
 
-\section{algebra.ht}
+** algebra.ht
 \pagetitle{AlgebraPage}{algebra.ht}{Abstract Algebra}
 \pagepic{ps/v71algebrapage.eps}{AlgebraPage}{0.50}
 \pagefrom{Topics}{TopicPage}
@@ -5240,7 +5240,7 @@ Some functions of interest to number theorists.
 \end{page}
 
 #+end_src
-\section{alist.ht}
+** alist.ht
 \pagetitle{AssociationListXmpPage}{alist.ht}{AssociationList}
 \pagepic{ps/v71associationlistxmppage.eps}{AssociationListXmpPage}{0.50}
 \pageto{Table}{TableXmpPage}
@@ -5515,7 +5515,7 @@ Type: AssociationList(String,Record(monthsOld: Integer,gender: String))
 
 
 #+end_src
-\section{array1.ht}
+** array1.ht
 \pagetitle{OneDimensionalArrayXmpPage}{array1.ht}{OneDimensionalArray}
 \pagepic{ps/v71onedimensionalarrayxmppage.eps}
 {OneDimensionalArrayXmpPage}{0.50}
@@ -5755,7 +5755,7 @@ for i in 1..10 repeat a.i := i; a\bound{a1 }\free{a }}
 \end{paste}\end{patch}
 
 #+end_src
-\section{array2.ht}
+** array2.ht
 \pagetitle{TwoDimensionalArrayXmpPage}{array2.ht}{TwoDimensionalArray}
 \pagepic{ps/v71twodimensionalarrayxmppage.eps}
 {TwoDimensionalArrayXmpPage}{0.50}
@@ -6352,7 +6352,7 @@ For information on related topics, see
 
 
 #+end_src
-\section{basic.ht}
+** basic.ht
 \pagetitle{BasicCommand}{basic.ht}{Basic Commands}
 \pagepic{ps/v71basiccommand.eps}{BasicCommand}{0.50}
 \pagefrom{Root Page}{RootPage}
@@ -6433,7 +6433,7 @@ What would you like to do?
 \end{page}
  
 #+end_src
-\section{bbtree.ht}
+** bbtree.ht
 \pagetitle{BalancedBinaryTreeXmpPage}{bbtree.ht}{BalancedBinaryTree}
 \pagepic{ps/v71balancedbinarytreexmppage.eps}{BalancedBinaryTreeXmpPage}{0.50}
 #+NAME: bbtree.ht
@@ -6722,7 +6722,7 @@ squares := [x**2 rem m for x in \% for m in lm]\bound{t6 }\free{t5 }}
 \end{paste}\end{patch}
 
 #+end_src
-\section{binary.ht}
+** binary.ht
 \pagetitle{BinaryExpansionXmpPage}{binary.ht}{BinaryExpansion}
 \pagepic{ps/v71binaryexpansionxmppage.eps}{BinaryExpansionXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -6927,7 +6927,7 @@ p := binary(1/4)*x**2 + binary(2/3)*x + binary(4/9)\bound{p }}
 #+end_src
 
 % TPDHERE unused?
-\section{bmcat.ht}
+** bmcat.ht
 \pagetitle{BitMaps}{bmcat.ht}{Bit Map Catalog}
 #+NAME: bmcat.ht
 #+begin_src common-lisp :noweb yes
@@ -6995,7 +6995,7 @@ p := binary(1/4)*x**2 + binary(2/3)*x + binary(4/9)\bound{p }}
 \end{page}
 
 #+end_src
-\section{bop.ht}
+** bop.ht
 \pagetitle{BasicOperatorXmpPage}{bop.ht}{BasicOperator}
 \pagepic{ps/v71basicoperatorxmppage.eps}{BasicOperatorXmpPage}{0.50}
 #+NAME: bop.ht
@@ -7443,7 +7443,7 @@ setProperty(y, "use", "unknown function" :: None )\free{y }\bound{spy }}
 
 
 #+end_src
-\section{bstree.ht}
+** bstree.ht
 \pagetitle{BinarySearchTreeXmpPage}{bstree.ht}{BinarySearchTree}
 \pagepic{ps/v71binarysearchtreexmppage.eps}{BinarySearchTreeXmpPage}{0.50}
 #+NAME: bstree.ht
@@ -7749,7 +7749,7 @@ buildFromRoot ls == reduce(insertRoot,ls,emptybst)\bound{x2 }\free{x1 e }}
 \end{paste}\end{patch}
 
 #+end_src
-\section{card.ht}
+** card.ht
 \pagetitle{CardinalNumberXmpPage}{card.ht}{CardinalNumber}
 \pagepic{ps/v71cardinalnumberxmppage.eps}{CardinalNumberXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -8234,7 +8234,7 @@ generalized continuum hypothesis in this way.
 \end{paste}\end{patch}
 
 #+end_src
-\section{carten.ht}
+** carten.ht
 \pagetitle{CartesianTensorXmpPage}{carten.ht}{CartesianTensor}
 \pagepic{ps/v71cartesiantensorxmppage.eps}{CartesianTensorXmpPage}{0.50}
 #+NAME: carten.ht
@@ -9512,7 +9512,7 @@ contract(epsilon*Tm*epsilon, 1,2) = 2 * determinant m\free{epsilon Tm m }}
 \end{paste}\end{patch}
 
 #+end_src
-\section{cclass.ht}
+** cclass.ht
 \pagetitle{CharacterClassXmpPage}{cclass.ht}{CharacterClass}
 \pagepic{ps/v71characterclassxmppage.eps}{CharacterClassXmpPage}{0.50}
 #+NAME: cclass.ht
@@ -9871,7 +9871,7 @@ cl1:=charClass [char "a", char "e", char "i", char "o", char "u", char "y"]
 \end{paste}\end{patch}
 
 #+end_src
-\section{char.ht}
+** char.ht
 \pagetitle{CharacterXmpPage}{char.ht}{Character}
 \pagepic{ps/v71characterxmppage.eps}{CharacterXmpPage}{0.50}
 \pageto{CharacterClass}{CharacterClassXmpPage}
@@ -11135,7 +11135,7 @@ rhs := 2*(gam s * gam m*gam n*gam r + gam r*gam n*gam m*gam s)
 \end{paste}\end{patch}
 
 #+end_src
-\section{complex.ht}
+** complex.ht
 \pagetitle{ComplexXmpPage}{complex.ht}{Complex}
 \pagepic{ps/v71complexxmppage.eps}{ComplexXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -11520,7 +11520,7 @@ You can \spadfunFrom{factor}{Complex} Gaussian integers.
 \end{paste}\end{patch}
 
 #+end_src
-\section{contfrac.ht}
+** contfrac.ht
 \pagetitle{ContinuedFractionXmpPage}{contfrac.ht}{ContinuedFraction}
 \pagepic{ps/v71continuedfractionxmppage.eps}{ContinuedFractionXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -12330,7 +12330,7 @@ Type: ContinuedFraction UnivariatePolynomial(x,Fraction Integer)
 #+end_src
 
 % TPDHERE: unused?
-\section{cphelp.ht}
+** cphelp.ht
 \pagetitle{CPHelp}{cphelp.ht}{Control Panel Bits}
 #+NAME: cphelp.ht
 #+begin_src common-lisp :noweb yes
@@ -12366,7 +12366,7 @@ Close the viewport: \helpbit{close3D}
 \end{page}
 
 #+end_src
-\section{cycles.ht}
+** cycles.ht
 \pagetitle{CycleIndicatorsXmpPage}{cycles.ht}{CycleIndicators}
 \pagepic{ps/v71cycleindicatorsxmppage.eps}{CycleIndicatorsXmpPage}{0.50}
 #+NAME: cycles.ht
@@ -13609,7 +13609,7 @@ cap(dihedral 30,complete 7*complete 8*complete 5*complete 10)}
 
 #+end_src
 
-\section{coverex.ht}
+** coverex.ht
 \pagetitle{ExampleCoverPage}{coverex.ht}{Examples Of Axiom Commands}
 \pagepic{ps/v71examplecoverpage.eps}{ExampleCoverPage}{0.50}
 \pageto{Differentiation}{Menuexdiff}
@@ -15721,7 +15721,7 @@ Type: Union(OrderedCompletion Fraction Polynomial Integer,...)
 \end{paste}\end{patch}
 
 #+end_src
-\section{decimal.ht}
+** decimal.ht
 
 \pagetitle{DecimalExpansionXmpPage}{decimal.ht}{Decimal Expansion}
 \pagepic{ps/v71decimalexpansionxmppage.eps}{DecimalExpansionXmpPage}{0.50}
@@ -15922,7 +15922,7 @@ These numbers are bona fide algebraic objects.
 
 #+end_src
 
-\section{derham.ht}
+** derham.ht
 \pagetitle{DeRhamComplexXmpPage}{derham.ht}{DeRhamComplex}
 \pagepic{ps/v71derhamcomplexxmppage.eps}{DeRhamComplexXmpPage}{0.50}
 #+NAME: derham.ht
@@ -16728,7 +16728,7 @@ consists of the eight forms: \spad{1}, \spad{dx}, \spad{dy}, \spad{dz},
 \end{paste}\end{patch}
 
 #+end_src
-\section{dfloat.ht}
+** dfloat.ht
 \pagetitle{DoubleFloatXmpPage}{dfloat.ht}{DoubleFloat}
 \pagepic{ps/v71doublefloatxmppage.eps}{DoubleFloatXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -17004,7 +17004,7 @@ Section 8.1\ignore{ugProblemNumeric}, and
 \end{paste}\end{patch}
 
 #+end_src
-\section{dmp.ht}
+** dmp.ht
 \pagetitle{DistributedMultivariatePolyXmpPage}{dmp.ht}
 {DistributedMultivariatePoly}
 \pagepic{ps/v71distributedmultivariatepolyxmppage.eps}
@@ -17261,7 +17261,7 @@ Type: List HomogeneousDistributedMultivariatePolynomial([z,y,x],Fraction Integer
 \end{paste}\end{patch}
 
 #+end_src
-\section{eq.ht}
+** eq.ht
 \pagetitle{EquationXmpPage}{eq.ht}{Equation}
 \pagepic{ps/v71equationxmppage.eps}{EquationXmpPage}{0.50}
 #+NAME: eq.ht
@@ -17538,7 +17538,7 @@ all one has to do is ask!
 \end{paste}\end{patch}
 
 #+end_src
-\section{eqtbl.ht}
+** eqtbl.ht
 \pagetitle{EqTableXmpPage}{eqtbl.ht}{EqTable}
 \pagepic{ps/v71eqtablexmppage.eps}{EqTableXmpPage}{0.50}
 \pageto{notitle}{TableXmpPage}
@@ -17690,7 +17690,7 @@ can be stored under each.
 #+end_src
 
 % TPDHERE unused?
-\section{evalex.ht}
+** evalex.ht
 \pagetitle{PrefixEval}{evalex.ht}{Example of Standard Evaluation}
 #+NAME: evalex.ht
 #+begin_src common-lisp :noweb yes
@@ -17810,7 +17810,7 @@ Try it:
 
 #+end_src
 
-\section{exdiff.ht}
+** exdiff.ht
 \pagetitle{ExDiffBasic}{exdiff.ht}{Computing Derivatives}
 \pagepic{ps/v71exdiffbasic.eps}{ExDiffBasic}{0.50}
 #+NAME: exdiff.ht
@@ -18290,7 +18290,7 @@ See \downlink{``User-Defined Functions, Macros and Rules''}
 \end{paste}\end{patch}
 
 #+end_src
-\section{exlap.ht}
+** exlap.ht
 \pagetitle{ExLapSimplePole}{exlap.ht}{Laplace transform with a single pole}
 \pagepic{ps/v71exlapsimplepole.eps}{ExLapSimplePole}{0.50}
 #+NAME: exlap.ht
@@ -18494,7 +18494,7 @@ An example with some interesting special functions.
 \autobuttons\end{page}
 
 #+end_src
-\section{exint.ht}
+** exint.ht
 \pagetitle{ExIntRationalFunction}{exint.ht}{Integral of a Rational Function}
 \pagepic{ps/v71exintrationalfunction.eps}{ExIntRationalFunction}{0.50}
 #+NAME: exint.ht
@@ -19019,7 +19019,7 @@ handle some of them:
 \end{paste}\end{patch}
 
 #+end_src
-\section{exlimit.ht}
+** exlimit.ht
 \pagetitle{ExLimitBasic}{exlimit.ht}{Computing Limits}
 \pagepic{ps/v71exlimitbasic.eps}{ExLimitBasic}{0.50}
 \pageto{notitle}{ExLimitTwoSided}
@@ -19402,7 +19402,7 @@ For example:
 \end{paste}\end{patch}
 
 #+end_src
-\section{exmatrix.ht}
+** exmatrix.ht
 \pagetitle{ExMatrixBasicFunction}{exmatrix.ht}
 {Basic Arithmetic Operations on Matrices}
 \pagepic{ps/v71exmatrixbasicfunction.eps}{ExMatrixBasicFunction}{0.50}
@@ -19880,7 +19880,7 @@ The function \spadfun{rank} gives you the rank of a matrix:
 \end{paste}\end{patch}
 
 #+end_src
-\section{expr.ht}
+** expr.ht
 \pagetitle{ExpressionXmpPage}{expr.ht}{Expression}
 \pagepic{ps/v71expressionxmppage.eps}{ExpressionXmpPage}{0.50}
 \pageto{notitle}{KernelXmpPage}
@@ -20518,7 +20518,7 @@ Type: SparseMultivariatePolynomial(Integer,Kernel Expression Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{explot2d.ht}
+** explot2d.ht
 \pagetitle{ExPlot2DFunctions}{explot2d.ht}{Plotting Functions of One Variable}
 \pagepic{ps/v71explot2dfunctions.eps}{ExPlot2DFunctions}{0.50}
 #+NAME: explot2d.ht
@@ -20637,7 +20637,7 @@ Here the region of the sketch is {\em -2 <= x <= 2, -2 <= y <= 1}.
 \end{paste}\end{patch}
 
 #+end_src
-\section{explot3d.ht}
+** explot3d.ht
 \pagetitle{ExPlot3DFunctions}{explot3d.ht}{Plotting Functions of Two Variables}
 \pagepic{ps/v71explot3dfunctions.eps}{ExPlot3DFunctions}{0.50}
 #+NAME: explot3d.ht
@@ -20765,7 +20765,7 @@ Here is the {\em twisted cubic curve}:
 
 #+end_src
 
-\section{expose.ht}
+** expose.ht
 % TPDHERE unused?
 \pagetitle{helpExpose}{expose.ht}{Exposure}
 #+NAME: expose.ht
@@ -20908,7 +20908,7 @@ will {\em not} be added.
 \end{page}
 
 #+end_src
-\section{exseries.ht}
+** exseries.ht
 
 \pagetitle{ExSeriesConvert}{exseries.ht}{Converting Expressions to Series}
 \pagepic{ps/v71exseriesconvert.eps}{ExSeriesConvert}{0.50}
@@ -21216,7 +21216,7 @@ You get a sequence of partial sums.
 \end{paste}\end{patch}
 
 #+end_src
-\section{exsum.ht}
+** exsum.ht
 \pagetitle{ExSumListEntriesI}{exsum.ht}{Summing the Entries of a List I}
 \pagepic{ps/v71exsumlistentriesi.eps}{ExSumListEntriesI}{0.50}
 #+NAME: exsum.ht
@@ -21608,7 +21608,7 @@ Type: Union(OrderedCompletion Fraction Polynomial Integer,...)
 \end{paste}\end{patch}
 
 #+end_src
-\section{farray.ht}
+** farray.ht
 \pagetitle{FlexibleArrayXmpPage}{farray.ht}{FlexibleArray}
 \pagepic{ps/v71flexiblearrayxmppage.eps}{FlexibleArrayXmpPage}{0.50}
 \pageto{notitle}{OneDimensionalArrayXmpPage}
@@ -21994,7 +21994,7 @@ The previous value is returned.
 \end{paste}\end{patch}
 
 #+end_src
-\section{file.ht}
+** file.ht
 \pagetitle{FileXmpPage}{file.ht}{File}
 \pagepic{ps/v71filexmppage.eps}{FileXmpPage}{0.50}
 \pageto{notitle}{TextFileXmpPage}
@@ -22308,7 +22308,7 @@ For more information on related topics, see
 \end{paste}\end{patch}
 
 #+end_src
-\section{float.ht}
+** float.ht
 \pagetitle{FloatXmpPage}{float.ht}{Float}
 \pagepic{ps/v71floatxmppage.eps}{FloatXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -23294,7 +23294,7 @@ Reset \spadfunFrom{digits}{Float} to its default value.
 \end{paste}\end{patch}
 
 #+end_src
-\section{fname.ht}
+** fname.ht
 \pagetitle{FileNameXmpPage}{fname.ht}{FileName}
 \pagepic{ps/v71filenamexmppage.eps}{FileNameXmpPage}{0.50}
 #+NAME: fname.ht
@@ -23714,7 +23714,7 @@ with the given extension, and the same defaults are used.
 \end{paste}\end{patch}
 
 #+end_src
-\section{fr.ht}
+** fr.ht
 \pagetitle{FactoredXmpPage}{fr.ht}{Factored}
 \pagepic{ps/v71factoredxmppage.eps}{FactoredXmpPage}{0.50}
 \pagefrom{Primes and Factorization}{ugxIntegerPrimesPage}
@@ -24680,7 +24680,7 @@ You can differentiate with respect to a variable.
 \end{paste}\end{patch}
 
 #+end_src
-\section{fr2.ht}
+** fr2.ht
 \pagetitle{FactoredFnsTwoXmpPage}{fr2.ht}{FactoredFunctions2}
 \pagepic{ps/v71factoredfnstwoxmppage.eps}{FactoredFnsTwoXmpPage}{0.50}
 \pagefrom{Creating New Factored Objects}{ugxFactoredNewPage}
@@ -24841,7 +24841,7 @@ Section 8.13\ignore{ugProblemGalois}.
 \end{paste}\end{patch}
 
 #+end_src
-\section{frac.ht}
+** frac.ht
 \pagetitle{FractionXmpPage}{frac.ht}{Fraction}
 \pagepic{ps/v71fractionxmppage.eps}{FractionXmpPage}{0.50}
 \pageto{Integer}{IntegerXmpPage}
@@ -25165,7 +25165,7 @@ in Section 2.7\ignore{ugTypesConvert}.
 \end{paste}\end{patch}
 
 #+end_src
-\section{fparfrac.ht}
+** fparfrac.ht
 \pagetitle{FullPartialFracExpansionXmpPage}{fparfrac.ht}
 {FullPartialFracExpansion}
 \pagepic{ps/v71fullpartialfracexpansionxmppage.eps}
@@ -25686,7 +25686,7 @@ Type: Fraction UnivariatePolynomial(x,Fraction Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{function.ht}
+** function.ht
 \pagetitle{FunctionPage}{function.ht}{Functions in Axiom}
 \pagepic{ps/v71functionpage.eps}{FunctionPage}{0.50}
 \pagefrom{Topics}{TopicPage}
@@ -26386,7 +26386,7 @@ matcher}{ugUserRulesPage}.
 \end{patch}
 
 #+end_src
-\section{gbf.ht}
+** gbf.ht
 \pagetitle{GroebnerFactorizationPkgXmpPage}{gbf.ht}
 {GroebnerFactorizationPkg}
 \pagepic{ps/v71groebnerfactorizationpkgxmppage.eps}
@@ -26596,7 +26596,7 @@ Type: List List DistributedMultivariatePolynomial([x,y,z],Fraction Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{gloss.ht}
+** gloss.ht
 \pagetitle{GlossaryPage}{gloss.ht}{Glossary}
 \pagepic{ps/v71glossarypage.eps}{GlossaryPage}{0.50}
 \pagefrom{Reference}{TopReferencePage}
@@ -27651,7 +27651,7 @@ Each interactive \spadgloss{frame} has its own workspace.
 for glossary entry matching \inputstring{pattern}{24}{*}\end{page}
 
 #+end_src
-\section{graphics.ht}
+** graphics.ht
 \pagetitle{GraphicsPage}{graphics.ht}{Graphics}
 \pagepic{ps/v71graphicspage.eps}{GraphicsPage}{0.50}
 \pagefrom{Topics}{TopicPage}
@@ -30735,7 +30735,7 @@ indicates where Axiom stores the viewports.
 \end{paste}\end{patch}
 
 #+end_src
-\section{grpthry.ht}
+** grpthry.ht
 \pagetitle{GroupTheoryPage}{grpthry.ht}{Group Theory}
 \pagepic{ps/v71grouptheorypage.eps}{GroupTheoryPage}{0.50}
 \pageto{notitle}{InfoGroupTheoryPage}
@@ -31829,7 +31829,7 @@ Axiom.
 \autobuttons \end{page}
 
 #+end_src
-\section{gstbl.ht}
+** gstbl.ht
 \pagetitle{GeneralSparseTableXmpPage}{gstbl.ht}{GeneralSparseTable}
 \pagepic{ps/v71generalsparsetablexmppage.eps}{GeneralSparseTableXmpPage}{0.50}
 \pageto{notitle}{TableXmpPage}
@@ -32000,7 +32000,7 @@ Type: GeneralSparseTable(String,Integer,KeyedAccessFile Integer,0)
 \end{paste}\end{patch}
 
 #+end_src
-\section{heap.ht}
+** heap.ht
 \pagetitle{HeapXmpPage}{heap.ht}{Heap}
 \pagepic{ps/v71heapxmppage.eps}{HeapXmpPage}{0.50}
 \pageto{notitle}{FlexibleArrayXmpPage}
@@ -32065,7 +32065,7 @@ Apply \spadfun{heapsort} to present elements in order.
 \end{page}
 
 #+end_src
-\section{hexadec.ht}
+** hexadec.ht
 \pagetitle{HexExpansionXmpPage}{hexadec.ht}{HexadecimalExpansion}
 \pagepic{ps/v71hexexpansionxmppage.eps}{HexExpansionXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -32257,7 +32257,7 @@ These numbers are bona fide algebraic objects.
 \end{paste}\end{patch}
 
 #+end_src
-\section{int.ht}
+** int.ht
 \pagetitle{IntegerXmpPage}{int.ht}{Integer}
 \pagepic{ps/v71integerxmppage.eps}{IntegerXmpPage}{0.50}
 \pagefrom{Integers}{IntegerPage}
@@ -33420,7 +33420,7 @@ Roman numerals.
 \end{paste}\end{patch}
 
 #+end_src
-\section{intheory.ht}
+** intheory.ht
 \pagetitle{IntNumberTheoryFnsXmpPage}{intheory.ht}
 {IntegerNumberTheoryFunctions}
 \pagepic{ps/v71intnumbertheoryfnsxmppage.eps}{IntNumberTheoryFnsXmpPage}{0.50}
@@ -33992,7 +33992,7 @@ quadratic field with discriminant \spad{d}.
 \end{paste}\end{patch}
 
 #+end_src
-\section{kafile.ht}
+** kafile.ht
 \pagetitle{KeyedAccessFileXmpPage}{kafile.ht}{KeyedAccessFile}
 \pagepic{ps/v71keyedaccessfilexmppage.eps}{KeyedAccessFileXmpPage}{0.50}
 \pageto{notitle}{FileXmpPage}
@@ -34471,7 +34471,7 @@ For more information on related topics,  see
 \end{paste}\end{patch}
 
 #+end_src
-\section{kernel.ht}
+** kernel.ht
 \pagetitle{KernelXmpPage}{kernel.ht}{Kernel}
 \pagepic{ps/v71kernelxmppage.eps}{KernelXmpPage}{0.50}
 \pageto{notitle}{BasicOperatorXmpPage}
@@ -34922,7 +34922,7 @@ take apart expression objects.
 \end{paste}\end{patch}
 
 #+end_src
-\section{lazm3pk.ht}
+** lazm3pk.ht
 \pagetitle{LazardSetSolvingPackageXmpPage}{lazm3pk.ht}
 {LazardSetSolvingPackage}
 \pagepic{ps/v71lazardsetsolvingpackagexmppage.eps}
@@ -36183,7 +36183,7 @@ Type: List SquareFreeRegularTriangularSet(Integer,IndexedExponents OrderedVariab
 \end{paste}\end{patch}
 
 #+end_src
-\section{lexp.ht}
+** lexp.ht
 \pagetitle{LieExponentialsXmpPage}{lexp.ht}{LieExponentials}
 \pagepic{ps/v71lieexponentialsxmppage.eps}{LieExponentialsXmpPage}{0.50}
 #+NAME: lexp.ht
@@ -36484,7 +36484,7 @@ Calculations
 \end{paste}\end{patch}
 
 #+end_src
-\section{lextripk.ht}
+** lextripk.ht
 \pagetitle{LexTriangularPkgXmpPage}{lextripk.ht}{LexTriangularPackage}
 \pagepic{ps/v71lextriangularpkgxmppage.eps}{LexTriangularPkgXmpPage}{0.50}
 #+NAME: lextripk.ht
@@ -39303,7 +39303,7 @@ Type: List Record(complexRoots: SparseUnivariatePolynomial Integer,coordinates: 
 \end{paste}\end{patch}
 
 #+end_src
-\section{lib.ht}
+** lib.ht
 \pagetitle{LibraryXmpPage}{lib.ht}{Library}
 \pagepic{ps/v71libraryxmppage.eps}{LibraryXmpPage}{0.50}
 \pageto{notitle}{FileXmpPage}
@@ -39503,7 +39503,7 @@ For more information on related topics, see
 #+end_src
 
 % TPDHERE unused?
-\section{link.ht}
+** link.ht
 \pagetitle{htxl}{link.ht}{The Axiom Link to NAG Software}
 \pageto{Introduction to the NAG Library Link}{nagLinkIntroPage}
 \pageto{Access the Link from HyperDoc}{htxl1}
@@ -40476,7 +40476,7 @@ complex z, v = 0,1,2,... \newline
 \end{page}
 
 #+end_src
-\section{list.ht}
+** list.ht
 \pagetitle{ListXmpPage}{list.ht}{List}
 \pagepic{ps/v71listxmppage.eps}{ListXmpPage}{0.50}
 \pageto{notitle}{ugxListCreatePage}
@@ -41340,7 +41340,7 @@ See \downlink{`Stream'}{StreamXmpPage}\ignore{Stream} for more information.
 \end{paste}\end{patch}
 
 #+end_src
-\section{lodo.ht}
+** lodo.ht
 \pagetitle{LinearOrdinaryDifferentialOperatorXmpPage}{lodo.ht}
 {LinearOrdinaryDifferentialOperator}
 \pagepic{ps/v71linearordinarydifferentialoperatorxmppage.eps}
@@ -41858,7 +41858,7 @@ Type: LinearOrdinaryDifferentialOperator(Expression Integer,theMap NIL)
 \end{paste}\end{patch}
 
 #+end_src
-\section{lodo1.ht}
+** lodo1.ht
 \pagetitle{LinearOrdinaryDifferentialOperatorOneXmpPage}{lodo1.ht}
 {LinearOrdinaryDifferentialOperator1}
 \pagepic{ps/v71linearordinarydifferentialoperatoronexmppage.eps}
@@ -42409,7 +42409,7 @@ Type: LinearOrdinaryDifferentialOperator1 Fraction UnivariatePolynomial(x,Intege
 \end{paste}\end{patch}
 
 #+end_src
-\section{lodo2.ht}
+** lodo2.ht
 \pagetitle{LinearODEOperatorTwoXmpPage}{lodo2.ht}
 {LinearOrdinaryDifferentialOperator2}
 \pagepic{ps/v71linearodeoperatortwoxmppage.eps}
@@ -43111,7 +43111,7 @@ Type: DirectProductMatrixModule(3,UnivariatePolynomial(x,Integer),SquareMatrix(3
 \end{paste}\end{patch}
 
 #+end_src
-\section{lpoly.ht}
+** lpoly.ht
 \pagetitle{LiePolynomialXmpPage}{lpoly.ht}{LiePolynomial}
 \pagepic{ps/v71liepolynomialxmppage.eps}{LiePolynomialXmpPage}{0.50}
 #+NAME: lpoly.ht
@@ -43708,7 +43708,7 @@ Evaluation
 \end{paste}\end{patch}
 
 #+end_src
-\section{lword.ht}
+** lword.ht
 \pagetitle{LyndonWordXmpPage}{lword.ht}{LyndonWord}
 \pagepic{ps/v71lyndonwordxmppage.eps}{LyndonWordXmpPage}{0.50}
 #+NAME: lword.ht
@@ -44196,7 +44196,7 @@ Checks and coercions
 \end{paste}\end{patch}
 
 #+end_src
-\section{magma.ht}
+** magma.ht
 \pagetitle{MagmaXmpPage}{magma.ht}{Magma}
 \pagepic{ps/v71magmaxmppage.eps}{MagmaXmpPage}{0.50}
 #+NAME: magma.ht
@@ -44661,7 +44661,7 @@ Check ordering
 \end{paste}\end{patch}
 
 #+end_src
-\section{man0.ht}
+** man0.ht
 \pagetitle{RefSearchPage}{man0.ht}{Reference Search}
 \pagepic{ps/v71refsearchpage.eps}{RefSearchPage}{0.50}
 \pagefrom{Reference}{TopReferencePage}
@@ -45308,7 +45308,7 @@ is not accepted).
 #+end_src
 
 % TPDHERE unused?
-\section{mapping.ht}
+** mapping.ht
 \pagetitle{DomainMapping}{mapping.ht}{Domain {\bf Mapping(T,S,...)}}
 %\pagepic{ps/v71domainmapping.eps}{DomainMapping}{0.50}
 \pageto{Description}{LispFunctions}
@@ -45372,7 +45372,7 @@ defined in the Axiom language.
 
 #+end_src
 
-\section{mappkg1.ht}
+** mappkg1.ht
 \pagetitle{MappingPackageOneXmpPage}{mappkg1.ht}{MappingPackage1}
 \pagepic{ps/v71mappingpackageonexmppage.eps}{MappingPackageOneXmpPage}{0.50}
 #+NAME: mappkg1.ht
@@ -45989,7 +45989,7 @@ Type: ((Fraction Integer,Fraction Integer) -> Fraction Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{mset.ht}
+** mset.ht
 \pagetitle{MultiSetXmpPage}{mset.ht}{MultiSet}
 \pagepic{ps/v71multisetxmppage.eps}{MultiSetXmpPage}{0.50}
 #+NAME: mset.ht
@@ -46274,7 +46274,7 @@ Check some inclusion relations.
 \end{paste}\end{patch}
 
 #+end_src
-\section{matrix.ht}
+** matrix.ht
 \pagetitle{MatrixXmpPage}{matrix.ht}{Matrix}
 \pagepic{ps/v71matrixxmppage.eps}{MatrixXmpPage}{0.50}
 \pageto{notitle}{ugxMatrixCreatePage}
@@ -47375,7 +47375,7 @@ Section 1.7\ignore{ugIntroTwoDim},
 \end{paste}\end{patch}
 
 #+end_src
-\section{mkfunc.ht}
+** mkfunc.ht
 \pagetitle{MakeFunctionXmpPage}{mkfunc.ht}{MakeFunction}
 \pagepic{ps/v71makefunctionxmppage.eps}{MakeFunctionXmpPage}{0.50}
 \pageto{notitle}{ugUserMakePage}
@@ -47635,7 +47635,7 @@ in Section 6.14\ignore{ugUserMake}.
 \end{paste}\end{patch}
 
 #+end_src
-\section{mpoly.ht}
+** mpoly.ht
 \pagetitle{MultivariatePolyXmpPage}{mpoly.ht}
 {MultivariatePolynomial}
 \pagepic{ps/v71multivariatepolyxmppage.eps}{MultivariatePolyXmpPage}{0.50}
@@ -47942,7 +47942,7 @@ Type: MultivariatePolynomial([x,z],Fraction UnivariatePolynomial(y,Integer))
 #+end_src
 
 % TPDHERE unused?
-\section{newuser.ht}
+** newuser.ht
 \pagetitle{NoMoreHelpPage}{newuser.ht}{No More Help :-(}
 %\pagepic{ps/v71nomorehelppage.eps}{NoMoreHelpPage}{0.50}
 #+NAME: newuser.ht
@@ -47967,7 +47967,7 @@ Type: MultivariatePolynomial([x,z],Fraction UnivariatePolynomial(y,Integer))
 \end{page}
 
 #+end_src
-\section{none.ht}
+** none.ht
 \pagetitle{NoneXmpPage}{none.ht}{None}
 \pagepic{ps/v71nonexmppage.eps}{NoneXmpPage}{0.50}
 #+NAME: none.ht
@@ -48048,7 +48048,7 @@ type directly, such as \spadtype{List NonNegativeInteger}, do it this way.
 \end{paste}\end{patch}
 
 #+end_src
-\section{numbers.ht}
+** numbers.ht
 \pagetitle{NumberPage}{numbers.ht}{Axiom Number Types}
 \pagepic{ps/v71numberpage.eps}{NumberPage}{0.50}
 \pagefrom{Axiom Topics}{TopicPage}
@@ -48999,7 +48999,7 @@ n**n - n + 41 is not prime.
 \end{paste}\end{patch}
 
 #+end_src
-\section{oct.ht}
+** oct.ht
 \pagetitle{OctonionXmpPage}{oct.ht}{Octonion}
 \pagepic{ps/v71octonionxmppage.eps}{OctonionXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -49460,7 +49460,7 @@ Since the result is \spad{0}, the norm is multiplicative.
 \end{paste}\end{patch}
 
 #+end_src
-\section{odpol.ht}
+** odpol.ht
 \pagetitle{OrderlyDifferentialPolyXmpPage}{odpol.ht}
 {OrderlyDifferentialPolynomial}
 \pagepic{ps/v71orderlydifferentialpolyxmppage.eps}
@@ -50351,7 +50351,7 @@ Type: List OrderlyDifferentialPolynomial Fraction Integer
 \end{paste}\end{patch}
 
 #+end_src
-\section{op.ht}
+** op.ht
 \pagetitle{OperatorXmpPage}{op.ht}{Operator}
 \pagepic{ps/v71operatorxmppage.eps}{OperatorXmpPage}{0.50}
 #+NAME: op.ht
@@ -50896,7 +50896,7 @@ Here is the evaluation.
 \end{paste}\end{patch}
 
 #+end_src
-\section{ovar.ht}
+** ovar.ht
 \pagetitle{OrderedVariableListXmpPage}{ovar.ht}{OrderedVariableList}
 \pagepic{ps/v71orderedvariablelistxmppage.eps}
 {OrderedVariableListXmpPage}{0.50}
@@ -51019,7 +51019,7 @@ Check that the ordering is right
 \end{paste}\end{patch}
 
 #+end_src
-\section{perman.ht}
+** perman.ht
 \pagetitle{PermanentXmpPage}{perman.ht}{Permanent}
 \pagepic{ps/v71permanentxmppage.eps}{PermanentXmpPage}{0.50}
 #+NAME: perman.ht
@@ -51128,7 +51128,7 @@ Here are some derangement numbers, which you see grow quite fast.
 \end{paste}\end{patch}
 
 #+end_src
-\section{pfr.ht}
+** pfr.ht
 \pagetitle{PartialFractionXmpPage}{pfr.ht}{PartialFraction}
 \pagepic{ps/v71partialfractionxmppage.eps}{PartialFractionXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -51471,7 +51471,7 @@ Type: PartialFraction UnivariatePolynomial(x,Fraction Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{poly.ht}
+** poly.ht
 \pagetitle{PolynomialPage}{poly.ht}{Polynomials}
 \pagepic{ps/v71polynomialpage.eps}{PolynomialPage}{0.50}
 \pagefrom{Topics}{TopicPage}
@@ -52185,7 +52185,7 @@ Finding the roots of a system of polynomials.
 \end{page}
 
 #+end_src
-\section{poly1.ht}
+** poly1.ht
 \pagetitle{PolynomialXmpPage}{poly1.ht}{Polynomial}
 \pagepic{ps/v71polynomialxmppage.eps}{PolynomialXmpPage}{0.50}
 \pageto{notitle}{DistributedMultivariatePolyXmpPage}
@@ -53322,7 +53322,7 @@ Type: Record(quotient: Polynomial Integer,remainder: Polynomial Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{quat.ht}
+** quat.ht
 \pagetitle{QuaternionXmpPage}{quat.ht}{Quaternion}
 \pagepic{ps/v71quaternionxmppage.eps}{QuaternionXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -53606,7 +53606,7 @@ The norm is the quaternion times its conjugate.
 \end{paste}\end{patch}
 
 #+end_src
-\section{radix.ht}
+** radix.ht
 \pagetitle{RadixExpansionXmpPage}{radix.ht}{RadixExpansion}
 \pagepic{ps/v71radixexpansionxmppage.eps}{RadixExpansionXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -54013,7 +54013,7 @@ More examples of expansions are available in
 \end{paste}\end{patch}
 
 #+end_src
-\section{reclos.ht}
+** reclos.ht
 \pagetitle{RealClosureXmpPage}{reclos.ht}{RealClosure}
 \pagepic{ps/v71realclosurexmppage.eps}{RealClosureXmpPage}{0.50}
 #+NAME: reclos.ht
@@ -55679,7 +55679,7 @@ Type: UnivariatePolynomial(x,RealClosure Fraction Integer)
 #+end_src
 
 % TPDHERE unused?
-\section{record.ht}
+** record.ht
 \pagetitle{DomainRecord}{record.ht}{Domain {\bf Record(a:A,...,b:B)}}
 \pageto{Description}{LispFunctions}
 \pageto{Operations}{LispFunctions}
@@ -55749,7 +55749,7 @@ defined in the Axiom language.
 
 #+end_src
 
-\section{regset.ht}
+** regset.ht
 \pagetitle{RegularTriangularSetXmpPage}{regset.ht}{RegularTriangularSet}
 \pagepic{ps/v71regulartriangularsetxmppage.eps}
 {RegularTriangularSetXmpPage}{0.50}
@@ -57182,7 +57182,7 @@ Type: List RegularTriangularSet(Integer,IndexedExponents OrderedVariableList [x,
 \end{paste}\end{patch}
 
 #+end_src
-\section{roman.ht}
+** roman.ht
 \pagetitle{RomanNumeralXmpPage}{roman.ht}{RomanNumeral}
 \pagepic{ps/v71romannumeralxmppage.eps}{RomanNumeralXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -57447,7 +57447,7 @@ Type: Union(UnivariateTaylorSeries(RomanNumeral,x,0),...)
 \end{paste}\end{patch}
 
 #+end_src
-\section{seg.ht}
+** seg.ht
 \pagetitle{SegmentXmpPage}{seg.ht}{Segment}
 \pagepic{ps/v71segmentxmppage.eps}{SegmentXmpPage}{0.50}
 \pageto{notitle}{SegmentBindingXmpPage}
@@ -57699,7 +57699,7 @@ and \downlink{`UniversalSegment'}{UniversalSegmentXmpPage}
 \end{paste}\end{patch}
 
 #+end_src
-\section{segbind.ht}
+** segbind.ht
 \pagetitle{SegmentBindingXmpPage}{segbind.ht}{SegmentBinding}
 \pagepic{ps/v71segmentbindingxmppage.eps}{SegmentBindingXmpPage}{0.50}
 \pageto{notitle}{SegmentXmpPage}
@@ -57856,7 +57856,7 @@ For more information on related topics, see
 \end{paste}\end{patch}
 
 #+end_src
-\section{set.ht}
+** set.ht
 \pagetitle{SetXmpPage}{page.ht}{Set}
 \pagepic{ps/v71setxmppage.eps}{SetXmpPage}{0.50}
 \pageto{notitle}{ListXmpPage}
@@ -58315,7 +58315,7 @@ For more information about lists, see
 \end{paste}\end{patch}
 
 #+end_src
-\section{sint.ht}
+** sint.ht
 \pagetitle{SingleIntegerXmpPage}{sint.ht}{SingleInteger}
 \pagepic{ps/v71singleintegerxmppage.eps}{SingleIntegerXmpPage}{0.50}
 \pagefrom{Axiom Number Types}{NumberPage}
@@ -58601,7 +58601,7 @@ To see the other operations, use the Browse Hyperdoc facility
 \end{paste}\end{patch}
 
 #+end_src
-\section{sqmatrix.ht}
+** sqmatrix.ht
 \pagetitle{SqMatrixXmpPage}{sqmatrix.ht}{SquareMatrix}
 \pagepic{ps/v71sqmatrixxmppage.eps}{SqMatrixXmpPage}{0.50}
 \pageto{notitle}{MatrixXmpPage}
@@ -58781,7 +58781,7 @@ in Section 2.11\ignore{ugTypesExpose}, and
 \end{paste}\end{patch}
 
 #+end_src
-\section{sregset.ht}
+** sregset.ht
 \pagetitle{SqFreeRegTriangSetXmpPage}{sregset.ht}
 {SquareFreeRegularTriangularSet}
 \pagepic{ps/v71sqfreeregtriangsetxmppage.eps}{SqFreeRegTriangSetXmpPage}{0.50}
@@ -59395,7 +59395,7 @@ Type: List Record(val: NewSparseMultivariatePolynomial(Integer,OrderedVariableLi
 \end{paste}\end{patch}
 
 #+end_src
-\section{stbl.ht}
+** stbl.ht
 \pagetitle{SparseTableXmpPage}{stbl.ht}{SparseTable}
 \pagepic{ps/v71sparsetablexmppage.eps}{SparseTableXmpPage}{0.50}
 \pageto{notitle}{TableXmpPage}
@@ -59571,7 +59571,7 @@ For more information, see
 \end{paste}\end{patch}
 
 #+end_src
-\section{stream.ht}
+** stream.ht
 \pagetitle{StreamXmpPage}{stream.ht}{Stream}
 \pagepic{ps/v71streamxmppage.eps}{StreamXmpPage}{0.50}
 \pageto{notitle}{ugLangItsPage}
@@ -59860,7 +59860,7 @@ in Section 8.9\ignore{ugProblemSeries},
 \end{paste}\end{patch}
 
 #+end_src
-\section{string.ht}
+** string.ht
 \pagetitle{StringXmpPage}{string.ht}{String}
 \pagepic{ps/v71stringxmppage.eps}{StringXmpPage}{0.50}
 \pageto{notitle}{CharacterXmpPage}
@@ -60641,7 +60641,7 @@ a different first argument is used.
 \end{paste}\end{patch}
 
 #+end_src
-\section{strtbl.ht}
+** strtbl.ht
 \pagetitle{StringTableXmpPage}{strtbl.ht}{StringTable}
 \pagepic{ps/v71stringtablexmppage.eps}{StringTableXmpPage}{0.50}
 \pageto{notitle}{TableXmpPage}
@@ -60739,7 +60739,7 @@ for s in split("My name is Ian Watt.",char " ")
 \end{paste}\end{patch}
 
 #+end_src
-\section{symbol.ht}
+** symbol.ht
 \pagetitle{SymbolXmpPage}{symbol.ht}{Symbol}
 \pagepic{ps/v71symbolxmppage.eps}{SymbolXmpPage}{0.50}
 #+NAME: symbol.ht
@@ -61287,7 +61287,7 @@ Type: Record(sub: List OutputForm,sup: List OutputForm,presup: List OutputForm,p
 \end{paste}\end{patch}
 
 #+end_src
-\section{table.ht}
+** table.ht
 \pagetitle{TableXmpPage}{table.ht}{Table}
 \pagepic{ps/v71tablexmppage.eps}{TableXmpPage}{0.50}
 \pageto{notitle}{AssociationListXmpPage}
@@ -61745,7 +61745,7 @@ for more information.
 \end{paste}\end{patch}
 
 #+end_src
-\section{textfile.ht}
+** textfile.ht
 \pagetitle{TextFileXmpPage}{textfile.ht}{TextFile}
 \pagepic{ps/v71textfilexmppage.eps}{TextFileXmpPage}{0.50}
 \pageto{notitle}{FileXmpPage}
@@ -62014,7 +62014,7 @@ For more information on related topics,  see
 \end{paste}\end{patch}
 
 #+end_src
-\section{topics.ht}
+** topics.ht
 \pagetitle{TopicPage}{page.ht}{Axiom Topics}
 \pagepic{ps/v71topicpage.eps}{TopicPage}{0.50}
 \pagefrom{Root Page}{RootPage}
@@ -62187,7 +62187,7 @@ Solve differential equations.
 #+end_src
 
 % TPDHERE unused?
-\section{type.ht}
+** type.ht
 \pagetitle{CategoryType}{type.ht}{Category {\bf Type}}
 %\pagepic{ps/v71categorytype.eps}{CategoryType}{0.50}
 #+NAME: type.ht
@@ -62208,7 +62208,7 @@ and \spadtype{Aggregate}, the category of all data structures.
 #+end_src
 
 % TPDHERE unused?
-\section{union.ht}
+** union.ht
 \pagetitle{DomainUnion}{union.ht}{Domain {\bf Union(a:A,...,b:B)}}
 %\pagepic{ps/v71categorytype.eps}{CategoryType}{0.50}
 \pageto{Description}{LispFunctions}
@@ -62343,7 +62343,7 @@ defined in the Axiom language.
 
 #+end_src
 
-\section{uniseg.ht}
+** uniseg.ht
 \pagetitle{UniversalSegmentXmpPage}{uniseg.ht}{UniversalSegment}
 \pagepic{ps/v71universalsegmentxmppage.eps}{UniversalSegmentXmpPage}{0.50}
 \pageto{notitle}{SegmentXmpPage}
@@ -62557,7 +62557,7 @@ For more information on related topics,  see
 \end{paste}\end{patch}
 
 #+end_src
-\section{up.ht}
+** up.ht
 \pagetitle{UnivariatePolyXmpPage}{up.ht}{UnivariatePolynomial}
 \pagepic{ps/v71univariatepolyxmppage.eps}{UnivariatePolyXmpPage}{0.50}
 \pageto{notitle}{ugProblemFactorPage}
@@ -63453,7 +63453,7 @@ Type: UnivariatePolynomial(b1,Fraction Polynomial Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{oreup.ht}
+** oreup.ht
 \pagetitle{UnivariateSkewPolyXmpPage}{up.ht}{UnivariateSkewPolynomial}
 \pagepic{ps/v71univariateskewpolyxmppage.eps}{UnivariateSkewPolyXmpPage}{0.50}
 #+NAME: oreup.ht
@@ -63764,7 +63764,7 @@ and \delta as an inner derivative:
 \end{page}
 
 #+end_src
-\section{vector.ht}
+** vector.ht
 \pagetitle{VectorXmpPage}{vector.ht}{Vector}
 \pagepic{ps/v71vectorxmppage.eps}{VectorXmpPage}{0.50}
 \pageto{notitle}{OneDimensionalArrayXmpPage}
@@ -64056,7 +64056,7 @@ to display the full list of operations defined by
 \end{paste}\end{patch}
 
 #+end_src
-\section{void.ht}
+** void.ht
 \pagetitle{VoidXmpPage}{void.ht}{Void}
 \pagepic{ps/v71voidxmppage.eps}{VoidXmpPage}{0.50}
 #+NAME: void.ht
@@ -64201,7 +64201,7 @@ Once a value has been converted to \spadtype{Void}, it cannot be recovered.
 
 #+end_src
 
-\section{wutset.ht}
+** wutset.ht
 
 \pagetitle{WuWenTsunTriangularSetXmpPage}{wutset.ht}{WuWenTsunTriangularSet}
 \pagepic{ps/v71wuwentsuntriangularsetxmppage.eps}
@@ -64612,7 +64612,7 @@ Type: List WuWenTsunTriangularSet(Integer,IndexedExponents OrderedVariableList [
 \end{paste}\end{patch}
 
 #+end_src
-\section{xmpexp.ht}
+** xmpexp.ht
 \pagetitle{ExamplesExposedPage}{xmpexp.ht}
 {Some Examples of Domains and Packages}
 \pagepic{ps/v71examplesexposedpage.eps}{ExamplesExposedPage}{0.50}
@@ -64827,7 +64827,7 @@ Click on any item below to see that section.
 \end{page}
 
 #+end_src
-\section{xpbwpoly.ht}
+** xpbwpoly.ht
 \pagetitle{XPBWPolynomialXmpPage}{xpbwpoly.ht}{XPBWPolynomial}
 \pagepic{ps/v71xpbwpolynomialxmppage.eps}{XPBWPolynomialXmpPage}{0.50}
 #+NAME: xpbwpoly.ht
@@ -65886,7 +65886,7 @@ Type: Record(k: PoincareBirkhoffWittLyndonBasis Symbol,c: Fraction Integer)
 \end{paste}\end{patch}
 
 #+end_src
-\section{xpoly.ht}
+** xpoly.ht
 \pagetitle{XPolynomialXmpPage}{xpoly.ht}{XPolynomial}
 \pagepic{ps/v71xpolynomialxmppage.eps}{XPolynomialXmpPage}{0.50}
 #+NAME: xpoly.ht
@@ -66250,7 +66250,7 @@ and the shuffle-product of {\bf pr} by {\bf r}:
 \end{paste}\end{patch}
 
 #+end_src
-\section{xpr.ht}
+** xpr.ht
 \pagetitle{XPolynomialRingXmpPage}{xpr.ht}{XPolynomialRing}
 \pagepic{ps/v71xpolynomialringxmppage.eps}{XPolynomialRingXmpPage}{0.50}
 #+NAME: xpr.ht
@@ -66708,7 +66708,7 @@ Type: XPolynomialRing(SquareMatrix(2,Fraction Integer),OrderedFreeMonoid Symbol)
 \end{paste}\end{patch}
 
 #+end_src
-\section{zdsolve.ht}
+** zdsolve.ht
 \pagetitle{ZeroDimSolvePkgXmpPage}{zdsolve.ht}
 {ZeroDimensionalSolvePackage}
 \pagepic{ps/v71zerodimsolvepkgxmppage.eps}{ZeroDimSolvePkgXmpPage}{0.50}
@@ -69267,7 +69267,7 @@ Type: List Record(complexRoots: SparseUnivariatePolynomial Integer,coordinates: 
 \end{paste}\end{patch}
 
 #+end_src
-\section{zlindep.ht}
+** zlindep.ht
 \pagetitle{IntegerLinearDependenceXmpPage}{zlindep.ht}
 {IntegerLinearDependence}
 \pagepic{ps/v71integerlineardependencexmppage.eps}
@@ -69496,7 +69496,7 @@ To express a given element in terms of other elements, use the operation
 
 #+end_src
 
-\chapter{Users Guide Pages (ug.ht)}
+* Users Guide Pages (ug.ht)
 \pagetitle{UsersGuidePage}{page.ht}{Users Guide}
 \pagepic{ps/v71usersguidepage.eps}{UsersGuidePage}{0.50}
 \pagefrom{Reference}{TopReferencePage}
@@ -69576,7 +69576,7 @@ Appendices.
 \end{page}
 
 #+end_src
-\chapter{Users Guide Chapter 0 (ug00.ht)}
+* Users Guide Chapter 0 (ug00.ht)
 \pagetitle{ugWhatsNewTwoTwoPage}{ug00.ht}
 {What's New for May 2008}
 \pagepic{ps/v71ugwhatsnewtwotwopage.eps}{ugWhatsNewTwoTwoPage}{0.50}
@@ -69968,7 +69968,7 @@ of exported functions, an encoded signature and numerical index.
 \end{page}
 
 #+end_src
-\chapter{Users Guide Chapter 1 (ug01.ht)}
+* Users Guide Chapter 1 (ug01.ht)
 \pagetitle{ugIntroPage}{ug01.ht}{An Overview of Axiom}
 \pagepic{ps/v71ugintropage.eps}{ugIntroPage}{0.50}
 \pagefrom{Numeric Functions}{ugProblemNumericPage}
@@ -76218,7 +76218,7 @@ and return to the operating system.
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 2 (ug02.ht)}
+* Users Guide Chapter 2 (ug02.ht)
 \pagetitle{ugTypesPage}{ug02.ht}{Using Types and Modes}
 \pagepic{ps/v71ugtypespage.eps}{ugTypesPage}{0.50}
 \pageto{notitle}{ugTypesBasicPage}
@@ -80721,7 +80721,7 @@ for more information on function types.
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 3 (ug03.ht)}
+* Users Guide Chapter 3 (ug03.ht)
 \pagetitle{ugHyperPage}{ug03.ht}{Using Hyperdoc}
 \pagepic{ps/v71ughyperpage.eps}{ugHyperPage}{0.50}
 \pageto{notitle}{YouTriedIt}
@@ -81270,7 +81270,7 @@ This is the color used for the background of all windows.
 \autobuttons
 \end{page}
 #+end_src
-\chapter{Users Guide Chapter 4 (ug04.ht)}
+* Users Guide Chapter 4 (ug04.ht)
 \pagetitle{ugInOutPage}{ug04.ht}{Input Files and Output Styles}
 \pagepic{ps/v71uginoutpage.eps}{ugInOutPage}{0.50}
 \pageto{notitle}{ugInOutInPage}
@@ -82381,7 +82381,7 @@ To turn MathML output formatting off, issue
 
 #+end_src
 
-\chapter{Users Guide Chapter 5 (ug05.ht)}
+* Users Guide Chapter 5 (ug05.ht)
 \pagetitle{ugLangPage}{ug05.ht}
 {Introduction to the Axiom Interactive Language}
 \pagepic{ps/v71uglangpage.eps}{ugLangPage}{0.50}
@@ -86213,7 +86213,7 @@ it left off.
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 6 (ug06.ht)}
+* Users Guide Chapter 6 (ug06.ht)
 \pagetitle{ugUserPage}{ug06.ht}{User-Defined Functions, Macros and Rules}
 \pagepic{ps/v71uguserpage.eps}{ugUserPage}{0.50}
 \pageto{notitle}{ugUserFunMacPage}
@@ -93196,7 +93196,7 @@ or by building a new domain of objects for your application.
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 7 (ug07.ht)}
+* Users Guide Chapter 7 (ug07.ht)
 #+NAME: ug07.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\optArg}[1]{{{\tt [}{#1}{\tt ]}}}
@@ -98565,7 +98565,7 @@ This indicates which font type is used for the {\bf x},
 \end{page}
 
 #+end_src
-\chapter{Users Guide Chapter 8 (ug08.ht)}
+* Users Guide Chapter 8 (ug08.ht)
 \pagetitle{ugProblemPage}{ug08.ht}{Advanced Problem Solving}
 \pagepic{ps/v71ugproblempage.eps}{ugProblemPage}{0.50}
 \pageto{notitle}{ugProblemNumericPage}
@@ -111297,7 +111297,7 @@ Type: AlgebraGivenByStructuralConstants(Fraction Integer,4,[AB,Ab,aB,ab],[MATRIX
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 10 (ug10.ht)}
+* Users Guide Chapter 10 (ug10.ht)
 \pagetitle{ugIntProgPage}{ug10.ht}{Interactive Programming}
 \pagepic{ps/v71ugintprogpage.eps}{ugIntProgPage}{0.50}
 \pageto{notitle}{ugAppGraphicsPage}
@@ -113103,7 +113103,7 @@ The surface.
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 11 (ug11.ht)}
+* Users Guide Chapter 11 (ug11.ht)
 \pagetitle{ugPackagesPage}{ug11.ht}{Packages}
 \pagepic{ps/v71ugpackagespage.eps}{ugPackagesPage}{0.50}
 \pageto{notitle}{ugIntProgPage}
@@ -114350,7 +114350,7 @@ environment and produces the result.  \endscroll \autobuttons
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 12 (ug12.ht)}
+* Users Guide Chapter 12 (ug12.ht)
 \pagetitle{ugCategoriesPage}{ug12.ht}{Categories}
 \pagepic{ps/v71ugcategoriespage.eps}{ugCategoriesPage}{0.50}
 \pagefrom{Domain Constructors}{ugTypesBasicDomainConsPage}
@@ -115289,7 +115289,7 @@ before the {\tt with}.
 \end{page}
 
 #+end_src
-\chapter{Users Guide Chapter 13 (ug13.ht)}
+* Users Guide Chapter 13 (ug13.ht)
 \pagetitle{ugDomainsPage}{ug13.ht}{Domains}
 \pagepic{ps/v71ugdomainspage.eps}{ugDomainsPage}{0.50}
 \pageto{notitle}{ugPackagesDomsPage}
@@ -117436,7 +117436,7 @@ How many distinct names of operations involving matrices are there?
 \end{paste}\end{patch}
 
 #+end_src
-\chapter{Users Guide Chapter 14 (ug14.ht)}
+* Users Guide Chapter 14 (ug14.ht)
 \pagetitle{ugBrowsePage}{ug14.ht}{Browse}
 \pagepic{ps/v71ugbrowsepage.eps}{ugBrowsePage}{0.50}
 \pageto{notitle}{ugBrowseStartPage}
@@ -118408,7 +118408,7 @@ For example, for the category default package
 \end{page}
 
 #+end_src
-\chapter{Users Guide Chapter 15 (ug15.ht)}
+* Users Guide Chapter 15 (ug15.ht)
 \pagetitle{ugWhatsNewPage}{ug15.ht}{What's New in Axiom Version 2.0}
 \pagepic{ps/v71ugwhatsnewpage.eps}{ugWhatsNewPage}{0.50}
 #+NAME: ug15.ht
@@ -120518,7 +120518,7 @@ middle of the section
 \end{page}
 
 #+end_src
-\chapter{Users Guide Chapter 16 (ug16.ht)}
+* Users Guide Chapter 16 (ug16.ht)
 #+NAME: ug16.ht
 #+begin_src common-lisp :noweb yes
 \newcommand{\lanb}{{\tt [}}
@@ -122876,7 +122876,7 @@ The command synonym  {\tt )apropos} is equivalent to
 \end{page}
 
 #+end_src
-\chapter{Users Guide Chapter 21 (ug21.ht)}
+* Users Guide Chapter 21 (ug21.ht)
 \pagetitle{ugAppGraphicsPage}{ug21.ht}{Programs for Axiom Images}
 \pagepic{ps/v71ugappgraphicspage.eps}{ugAppGraphicsPage}{0.50}
 #+NAME: ug21.ht
@@ -123864,7 +123864,7 @@ var1Steps\ ==\ 28,\ var2Steps\ ==\ 28)}\newline
 \end{page}
 
 #+end_src
-\chapter{Hypertex Language Pages}
+* Hypertex Language Pages
 % TPDHERE unused?
 \pagetitle{Hyperdoc}{hyperdoc.ht}{Creating Hyperdoc Pages}
 \pageto{notitle}{ViewportPage}
@@ -123891,7 +123891,7 @@ facility for viewports. yuck.
 \end{page}
 
 #+end_src
-\section{htxadvpage1.ht}
+** htxadvpage1.ht
 \pagetitle{HTXAdvPage1}{htxadvpage1.ht}{Input Areas}
 \pageto{notitle}{HTXAdvPage2}
 #+NAME: htxadvpage1.ht
@@ -124017,7 +124017,7 @@ File to edit \tab{16}
 \end{patch}
 
 #+end_src
-\section{htxadvpage2.ht}
+** htxadvpage2.ht
 \pagetitle{HTXAdvPage2}{htxadvpage2.ht}{Radio buttons}
 \pageto{notitle}{HTXAdvPage3}
 #+NAME: htxadvpage2.ht
@@ -124155,7 +124155,7 @@ be deactivated.
 \end{page}
 
 #+end_src
-\section{htxadvpage3.ht}
+** htxadvpage3.ht
 \pagetitle{HTXAdvPage3}{htxadvpage3.ht}{Macros}
 \pageto{notitle}{HTXAdvPage4}
 #+NAME: htxadvpage3.ht
@@ -124228,7 +124228,7 @@ Hyperdoc form and TeX form a mechanical process.
 \end{page}
 
 #+end_src
-\section{htxadvpage4.ht}
+** htxadvpage4.ht
 \pagetitle{HTXAdvPage4}{htxadvpage4.ht}{Patch and Paste}
 \pageto{notitle}{HTXAdvPage5}
 #+NAME: htxadvpage4.ht
@@ -124371,7 +124371,7 @@ again. In that way, we close the chain of replacements.
 \end{page}
 
 #+end_src
-\subsection{patch1 patch}
+*** patch1 patch
 \label{patch1}
 \index{patch!patch1!htxadvpage4.ht}
 \index{htxadvpage4.ht!patch!patch1}
@@ -124383,7 +124383,7 @@ final
 \end{patch}
 
 #+end_src
-\subsection{Patch1 patch}
+*** Patch1 patch
 \label{Patch1}
 \index{patch!Patch1!htxadvpage4.ht}
 \index{htxadvpage4.ht!patch!Patch1}
@@ -124398,7 +124398,7 @@ final
 \end{patch}
 
 #+end_src
-\subsection{Patch2 patch}
+*** Patch2 patch
 \label{Patch2}
 \index{patch!Patch2!htxadvpage4.ht}
 \index{htxadvpage4.ht!patch!Patch2}
@@ -124413,7 +124413,7 @@ initial
 \end{patch}
 
 #+end_src
-\section{htxadvpage5.ht}
+** htxadvpage5.ht
 \pagetitle{HTXAdvPage5}{htxadvpage5.ht}{Axiom paste-ins}
 \pageto{notitle}{HTXAdvPage6}
 #+NAME: htxadvpage5.ht
@@ -124546,7 +124546,7 @@ click on the buttons to the left of each command.
 \end{page}
 
 #+end_src
-\section{htxadvpage6.ht}
+** htxadvpage6.ht
 \pagetitle{HTXAdvPage6}{htxadvpage6.ht}{Miscellaneous}
 \pageto{notitle}{HTXAdvTopPage}
 #+NAME: htxadvpage6.ht
@@ -124623,7 +124623,7 @@ delimit the header and footer regions.
 \end{page}
 
 #+end_src
-\subsection{HTXAdvPage6xPatch1 patch}
+*** HTXAdvPage6xPatch1 patch
 \label{HTXAdvPage6xPatch1}
 \index{patch!HTXAdvPage6xPatch1!htxadvpage6.ht}
 \index{htxadvpage6.ht!patch!HTXAdvPage6xPatch1}
@@ -124641,7 +124641,7 @@ delimit the header and footer regions.
 \end{patch}
 
 #+end_src
-\subsection{HTXAdvPage6xPatch1A patch}
+*** HTXAdvPage6xPatch1A patch
 \label{HTXAdvPage6xPatch1A}
 \index{patch!HTXAdvPage6xPatch1A!htxadvpage6.ht}
 \index{htxadvpage6.ht!patch!HTXAdvPage6xPatch1A}
@@ -124659,7 +124659,7 @@ delimit the header and footer regions.
 \end{patch}
 
 #+end_src
-\subsection{HTXAdvPage6xPatch2 patch}
+*** HTXAdvPage6xPatch2 patch
 \label{HTXAdvPage6xPatch2}
 \index{patch!HTXAdvPage6xPatch2!htxadvpage6.ht}
 \index{htxadvpage6.ht!patch!HTXAdvPage6xPatch2}
@@ -124677,7 +124677,7 @@ delimit the header and footer regions.
 \end{patch}
 
 #+end_src
-\subsection{HTXAdvPage6xPatch2A patch}
+*** HTXAdvPage6xPatch2A patch
 \label{HTXAdvPage6xPatch2A}
 \index{patch!HTXAdvPage6xPatch2A!htxadvpage6.ht}
 \index{htxadvpage6.ht!patch!HTXAdvPage6xPatch2A}
@@ -124695,7 +124695,7 @@ delimit the header and footer regions.
 \end{patch}
 
 #+end_src
-\subsection{HTXAdvPage6xPatch3 patch}
+*** HTXAdvPage6xPatch3 patch
 \label{HTXAdvPage6xPatch3}
 \index{patch!HTXAdvPage6xPatch3!htxadvpage6.ht}
 \index{htxadvpage6.ht!patch!HTXAdvPage6xPatch3}
@@ -124711,7 +124711,7 @@ delimit the header and footer regions.
 \end{patch}
 
 #+end_src
-\subsection{HTXAdvPage6xPatch3A patch}
+*** HTXAdvPage6xPatch3A patch
 \label{HTXAdvPage6xPatch3A}
 \index{patch!HTXAdvPage6xPatch3A!htxadvpage6.ht}
 \index{htxadvpage6.ht!patch!HTXAdvPage6xPatch3A}
@@ -124727,7 +124727,7 @@ delimit the header and footer regions.
 \end{patch}
 
 #+end_src
-\section{htxadvtoppage.ht}
+** htxadvtoppage.ht
 \pagetitle{HTXAdvTopPage}{htxadvtoppage.ht}{Advanced features in Hyperdoc}
 \pageto{notitle}{HTXAdvPage1}
 \pageto{notitle}{HTXAdvPage2}
@@ -124752,7 +124752,7 @@ delimit the header and footer regions.
 \end{page}
 
 #+end_src
-\section{htxformatpage1.ht}
+** htxformatpage1.ht
 \pagetitle{HTXFormatPage1}{htxformatpage1.ht}{Using the special characters}
 \pageto{notitle}{HTXFormatPage2}
 #+NAME: htxformatpage1.ht
@@ -124797,7 +124797,7 @@ into one word in the example above. This no longer occurs.
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage1xPatch1 patch}
+*** HTXFormatPage1xPatch1 patch
 \label{HTXFormatPage1xPatch1}
 \index{patch!HTXFormatPage1xPatch1!htxformatpage1.ht}
 \index{htxformatpage1.ht!patch!HTXFormatPage1xPatch1}
@@ -124820,7 +124820,7 @@ the characters \$, \\, \{, \}, \[, \],  \%, \#
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage1xPatch2 patch}
+*** HTXFormatPage1xPatch2 patch
 \label{HTXFormatPage1xPatch2}
 \index{patch!HTXFormatPage1xPatch2!htxformatpage1.ht}
 \index{htxformatpage1.ht!patch!HTXFormatPage1xPatch2}
@@ -124845,7 +124845,7 @@ a steady rise
 \end{patch}
 
 #+end_src
-\section{htxformatpage2.ht}
+** htxformatpage2.ht
 \pagetitle{HTXFormatPage2}{htxformatpage2.ht}{Formatting without commands}
 #+NAME: htxformatpage2.ht
 #+begin_src common-lisp :noweb yes
@@ -124931,7 +124931,7 @@ Finite{}Field{}Cyclic{}Group{}Extension{}ByPolynomial
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage2xPatch1 patch}
+*** HTXFormatPage2xPatch1 patch
 \label{HTXFormatPage2xPatch1}
 \index{patch!HTXFormatPage2xPatch1!htxformatpage2.ht}
 \index{htxformatpage2.ht!patch!HTXFormatPage2xPatch1}
@@ -124955,7 +124955,7 @@ word    spacing is       not  important
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage2xPatch2 patch}
+*** HTXFormatPage2xPatch2 patch
 \label{HTXFormatPage2xPatch2}
 \index{patch!HTXFormatPage2xPatch2!htxformatpage2.ht}
 \index{htxformatpage2.ht!patch!HTXFormatPage2xPatch2}
@@ -124973,7 +124973,7 @@ sentence.
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage2xPatch2A patch}
+*** HTXFormatPage2xPatch2A patch
 \label{HTXFormatPage2xPatch2A}
 \index{patch!HTXFormatPage2xPatch2A!htxformatpage2.ht}
 \index{htxformatpage2.ht!patch!HTXFormatPage2xPatch2A}
@@ -124992,7 +124992,7 @@ sentence.
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage2xPatch3 patch}
+*** HTXFormatPage2xPatch3 patch
 \label{HTXFormatPage2xPatch3}
 \index{patch!HTXFormatPage2xPatch3!htxformatpage2.ht}
 \index{htxformatpage2.ht!patch!HTXFormatPage2xPatch3}
@@ -125013,7 +125013,7 @@ Start another paragraph.
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage2xPatch3A patch}
+*** HTXFormatPage2xPatch3A patch
 \label{HTXFormatPage2xPatch3A}
 \index{patch!HTXFormatPage2xPatch3A!htxformatpage2.ht}
 \index{htxformatpage2.ht!patch!HTXFormatPage2xPatch3A}
@@ -125035,7 +125035,7 @@ Start another paragraph.
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage2xPatch4 patch}
+*** HTXFormatPage2xPatch4 patch
 \label{HTXFormatPage2xPatch4}
 \index{patch!HTXFormatPage2xPatch4!htxformatpage2.ht}
 \index{htxformatpage2.ht!patch!HTXFormatPage2xPatch4}
@@ -125055,7 +125055,7 @@ Finite{}Field{}Cyclic{}Group{}Extension{}ByPolynomial
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage2xPatch4A patch}
+*** HTXFormatPage2xPatch4A patch
 \label{HTXFormatPage2xPatch4A}
 \index{patch!HTXFormatPage2xPatch4A!htxformatpage2.ht}
 \index{htxformatpage2.ht!patch!HTXFormatPage2xPatch4A}
@@ -125076,7 +125076,7 @@ Finite{}Field{}Cyclic{}Group{}Extension{}ByPolynomial
 \end{patch}
 
 #+end_src
-\section{htxformatpage3.ht}
+** htxformatpage3.ht
 \pagetitle{HTXFormatPage3}{htxformatpage3.ht}{Using different fonts}
 #+NAME: htxformatpage3.ht
 #+begin_src common-lisp :noweb yes
@@ -125167,7 +125167,7 @@ active Axiom commands.
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage3xPatch1 patch}
+*** HTXFormatPage3xPatch1 patch
 \label{HTXFormatPage3xPatch1}
 \index{patch!HTXFormatPage3xPatch1!htxformatpage3.ht}
 \index{htxformatpage3.ht!patch!HTXFormatPage3xPatch1}
@@ -125190,7 +125190,7 @@ this is {\em emphasised} text
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage3xPatch2 patch}
+*** HTXFormatPage3xPatch2 patch
 \label{HTXFormatPage3xPatch2}
 \index{patch!HTXFormatPage3xPatch2!htxformatpage3.ht}
 \index{htxformatpage3.ht!patch!HTXFormatPage3xPatch2}
@@ -125213,7 +125213,7 @@ this is {\em emphasised} text
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage3xPatch3 patch}
+*** HTXFormatPage3xPatch3 patch
 \label{HTXFormatPage3xPatch3}
 \index{patch!HTXFormatPage3xPatch3!htxformatpage3.ht}
 \index{htxformatpage3.ht!patch!HTXFormatPage3xPatch3}
@@ -125237,7 +125237,7 @@ and this is \{\\rm roman\}\}}
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage3xPatch4 patch}
+*** HTXFormatPage3xPatch4 patch
 \label{HTXFormatPage3xPatch4}
 \index{patch!HTXFormatPage3xPatch4!htxformatpage3.ht}
 \index{htxformatpage3.ht!patch!HTXFormatPage3xPatch4}
@@ -125260,7 +125260,7 @@ and this is \{\\rm roman\}\}}
 \end{patch}
 
 #+end_src
-\section{htxformatpage4.ht}
+** htxformatpage4.ht
 \pagetitle{HTXFormatPage4}{htexformatpage4.ht}{Indentation}
 #+NAME: htxformatpage4.ht
 #+begin_src common-lisp :noweb yes
@@ -125370,7 +125370,7 @@ This    spacing     will be      preserved
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch1 patch}
+*** HTXFormatPage4xPatch1 patch
 \label{HTXFormatPage4xPatch1}
 \index{patch!HTXFormatPage4xPatch1!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch1}
@@ -125386,7 +125386,7 @@ let us start a new line \newline here
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch1A patch}
+*** HTXFormatPage4xPatch1A patch
 \label{HTXFormatPage4xPatch1A}
 \index{patch!HTXFormatPage4xPatch1A!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch1A}
@@ -125402,7 +125402,7 @@ let us start a new line \newline here
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch2 patch}
+*** HTXFormatPage4xPatch2 patch
 \label{HTXFormatPage4xPatch2}
 \index{patch!HTXFormatPage4xPatch2!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch2}
@@ -125420,7 +125420,7 @@ let us start a new line\newline\indent{10} here
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch2A patch}
+*** HTXFormatPage4xPatch2A patch
 \label{HTXFormatPage4xPatch2A}
 \index{patch!HTXFormatPage4xPatch2A!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch2A}
@@ -125438,7 +125438,7 @@ let us start a new line\newline\indent{10} here
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch3 patch}
+*** HTXFormatPage4xPatch3 patch
 \label{HTXFormatPage4xPatch3}
 \index{patch!HTXFormatPage4xPatch3!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch3}
@@ -125455,7 +125455,7 @@ be some heading.} Carry on
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch3A patch}
+*** HTXFormatPage4xPatch3A patch
 \label{HTXFormatPage4xPatch3A}
 \index{patch!HTXFormatPage4xPatch3A!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch3A}
@@ -125472,7 +125472,7 @@ be some heading.} Carry on
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch4 patch}
+*** HTXFormatPage4xPatch4 patch
 \label{HTXFormatPage4xPatch4}
 \index{patch!HTXFormatPage4xPatch4!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch4}
@@ -125506,7 +125506,7 @@ Green-Red\tab{17}4\tab{25}Blue-Black\tab{42}6\newline
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch5 patch}
+*** HTXFormatPage4xPatch5 patch
 \label{HTXFormatPage4xPatch5}
 \index{patch!HTXFormatPage4xPatch5!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch5}
@@ -125524,7 +125524,7 @@ This    spacing     will be      preserved
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage4xPatch5A patch}
+*** HTXFormatPage4xPatch5A patch
 \label{HTXFormatPage4xPatch5A}
 \index{patch!HTXFormatPage4xPatch5A!htxformatpage4.ht}
 \index{htxformatpage4.ht!patch!HTXFormatPage4xPatch5A}
@@ -125545,7 +125545,7 @@ This    spacing     will be      preserved
 \end{patch}
 
 #+end_src
-\section{htxformatpage5.ht}
+** htxformatpage5.ht
 \pagetitle{HTXFormatPage5}{htxformatpage5.ht}{Creating Lists and Tables}
 \pageto{notitle}{HTXFormatPage6}
 #+NAME: htxformatpage5.ht
@@ -125667,7 +125667,7 @@ in the table. Here is a table of color names.
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage5xPatch1 patch}
+*** HTXFormatPage5xPatch1 patch
 \label{HTXFormatPage5xPatch1}
 \index{patch!HTXFormatPage5xPatch1!htxformatpage5.ht}
 \index{htxformatpage5.ht!patch!HTXFormatPage5xPatch1}
@@ -125691,7 +125691,7 @@ new line will be indented
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage5xPatch1A patch}
+*** HTXFormatPage5xPatch1A patch
 \label{HTXFormatPage5xPatch1A}
 \index{patch!HTXFormatPage5xPatch1A!htxformatpage5.ht}
 \index{htxformatpage5.ht!patch!HTXFormatPage5xPatch1A}
@@ -125717,7 +125717,7 @@ Here is a \\newline new line in an item.}\newline
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage5xPatch2 patch}
+*** HTXFormatPage5xPatch2 patch
 \label{HTXFormatPage5xPatch2}
 \index{patch!HTXFormatPage5xPatch2!htxformatpage5.ht}
 \index{htxformatpage5.ht!patch!HTXFormatPage5xPatch2}
@@ -125746,7 +125746,7 @@ is no more interesting than any other part of the item.
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage5xPatch2A patch}
+*** HTXFormatPage5xPatch2A patch
 \label{HTXFormatPage5xPatch2A}
 \index{patch!HTXFormatPage5xPatch2A!htxformatpage5.ht}
 \index{htxformatpage5.ht!patch!HTXFormatPage5xPatch2A}
@@ -125780,7 +125780,7 @@ the inner list.}\newline
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage5xPatch3 patch}
+*** HTXFormatPage5xPatch3 patch
 \label{HTXFormatPage5xPatch3}
 \index{patch!HTXFormatPage5xPatch3!htxformatpage5.ht}
 \index{htxformatpage5.ht!patch!HTXFormatPage5xPatch3}
@@ -125802,7 +125802,7 @@ the inner list.}\newline
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage5xPatch3A patch}
+*** HTXFormatPage5xPatch3A patch
 \label{HTXFormatPage5xPatch3A}
 \index{patch!HTXFormatPage5xPatch3A!htxformatpage5.ht}
 \index{htxformatpage5.ht!patch!HTXFormatPage5xPatch3A}
@@ -125825,7 +125825,7 @@ the inner list.}\newline
 \end{patch}
 
 #+end_src
-\section{htxformatpage6}
+** htxformatpage6
 \pagetitle{HTXFormatPage6}{htxformatpage6.ht}{Boxes and Lines}
 #+NAME: htxformatpage6.ht
 #+begin_src common-lisp :noweb yes
@@ -125866,7 +125866,7 @@ across the window. This might be useful for added emphasis.
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage6xPatch1 patch}
+*** HTXFormatPage6xPatch1 patch
 \label{HTXFormatPage6xPatch1}
 \index{patch!HTXFormatPage6xPatch1!htxformatpage6.ht}
 \index{htxformatpage6.ht!patch!HTXFormatPage6xPatch1}
@@ -125889,7 +125889,7 @@ across the window. This might be useful for added emphasis.
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage6xPatch2 patch}
+*** HTXFormatPage6xPatch2 patch
 \label{HTXFormatPage6xPatch2}
 \index{patch!HTXFormatPage6xPatch2!htxformatpage6.ht}
 \index{htxformatpage6.ht!patch!HTXFormatPage6xPatch2}
@@ -125912,7 +125912,7 @@ across the window. This might be useful for added emphasis.
 \end{patch}
 
 #+end_src
-\section{htxformatpage7}
+** htxformatpage7
 \pagetitle{HTXFormatPage7}{htxformatpage7.ht}{Micro-Spacing}
 #+NAME: htxformatpage7.ht
 #+begin_src common-lisp :noweb yes
@@ -125999,7 +125999,7 @@ on the RISC System/6000.
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage7xPatch1 patch}
+*** HTXFormatPage7xPatch1 patch
 \label{HTXFormatPage7xPatch1}
 \index{patch!HTXFormatPage7xPatch1!htxformatpage7.ht}
 \index{htxformatpage7.ht!patch!HTXFormatPage7xPatch1}
@@ -126024,7 +126024,7 @@ underlined\space{-10}__________
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage7xPatch2 patch}
+*** HTXFormatPage7xPatch2 patch
 \label{HTXFormatPage7xPatch2}
 \index{patch!HTXFormatPage7xPatch2!htxformatpage7.ht}
 \index{htxformatpage7.ht!patch!HTXFormatPage7xPatch2}
@@ -126041,7 +126041,7 @@ x\hspace{1}x\hspace{2}x\hspace{3}x\hspace{4}x
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage7xPatch2A patch}
+*** HTXFormatPage7xPatch2A patch
 \label{HTXFormatPage7xPatch2A}
 \index{patch!HTXFormatPage7xPatch2A!htxformatpage7.ht}
 \index{htxformatpage7.ht!patch!HTXFormatPage7xPatch2A}
@@ -126059,7 +126059,7 @@ x\hspace{1}x\hspace{2}x\hspace{3}x\hspace{4}x
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage7xPatch3 patch}
+*** HTXFormatPage7xPatch3 patch
 \label{HTXFormatPage7xPatch3}
 \index{patch!HTXFormatPage7xPatch3!htxformatpage7.ht}
 \index{htxformatpage7.ht!patch!HTXFormatPage7xPatch3}
@@ -126083,7 +126083,7 @@ R\space{-1}~\vspace{-18}æv\vspace{-32}
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage7xPatch3A patch}
+*** HTXFormatPage7xPatch3A patch
 \label{HTXFormatPage7xPatch3A}
 \index{patch!HTXFormatPage7xPatch3A!htxformatpage7.ht}
 \index{htxformatpage7.ht!patch!HTXFormatPage7xPatch3A}
@@ -126107,7 +126107,7 @@ R\space{-1}~\vspace{-18}æv\vspace{-32}
 \end{patch}
 
 #+end_src
-\section{htxformatpage8}
+** htxformatpage8
 \pagetitle{HTXFormatPage8}{htxformatpage8.ht}{Bitmaps and Images}
 #+NAME: htxformatpage8.ht
 #+begin_src common-lisp :noweb yes
@@ -126179,7 +126179,7 @@ or
 \end{page}
 
 #+end_src
-\subsection{HTXFormatPage8xPatch1 patch}
+*** HTXFormatPage8xPatch1 patch
 \label{HTXFormatPage8xPatch1}
 \index{patch!HTXFormatPage8xPatch1!htxformatpage8.ht}
 \index{htxformatpage8.ht!patch!HTXFormatPage8xPatch1}
@@ -126202,7 +126202,7 @@ or
 \end{patch}
 
 #+end_src
-\subsection{HTXFormatPage8xPatch2 patch}
+*** HTXFormatPage8xPatch2 patch
 \label{HTXFormatPage8xPatch2}
 \index{patch!HTXFormatPage8xPatch2!htxformatpage8.ht}
 \index{htxformatpage8.ht!patch!HTXFormatPage8xPatch2}
@@ -126217,7 +126217,7 @@ or
 \end{paste}
 \end{patch}
 #+end_src
-\subsection{HTXFormatPage8xPatch2A patch}
+*** HTXFormatPage8xPatch2A patch
 \label{HTXFormatPage8xPatch2A}
 \index{patch!HTXFormatPage8xPatch2A!htxformatpage8.ht}
 \index{htxformatpage8.ht!patch!HTXFormatPage8xPatch2A}
@@ -126234,7 +126234,7 @@ or
 \end{patch}
 
 #+end_src
-\section{htxformattoppage.ht}
+** htxformattoppage.ht
 \pagetitle{HTXFormatTopPage}{htxformattoppage.ht}
 {Formatting in Hyperdoc}
 \pageto{notitle}{HTXFormatPage1}
@@ -126268,7 +126268,7 @@ You can learn about these facilities by clicking on the topics below.
 
 
 #+end_src
-\section{htxintropage1.ht}
+** htxintropage1.ht
 \pagetitle{HTXIntroPage1}{htxintropage1.ht}{What Hyperdoc does}
 \pageto{notitle}{HTXIntroPage2}
 \pageto{notitle}{ugHyperPage}
@@ -126317,7 +126317,7 @@ more.
 \end{page}
 
 #+end_src
-\section{htxintropage2.ht}
+** htxintropage2.ht
 \pagetitle{HTXIntroPage2}{htxintropage2.ht}{How Hyperdoc does it}
 \pageto{notitle}{HTXIntroPage3}
 #+NAME: htxintropage2.ht
@@ -126374,7 +126374,7 @@ some simple text into it.
 
 
 #+end_src
-\section{htxintropage3.ht}
+** htxintropage3.ht
 \pagetitle{HTXIntroPage3}{htxintropage3.ht}{A simple text page}
 \pageto{notitle}{HTXLinkPage6}
 \pageto{notitle}{HTXTryPage}
@@ -126480,7 +126480,7 @@ moment) any of the Hyperdoc special characters.
 
 
 #+end_src
-\section{htxintrotoppage.ht}
+** htxintrotoppage.ht
 \pagetitle{HTXIntroTopPage}{htxintrotoppage.ht}{First Steps}
 \pageto{notitle}{HTXIntroPage1}
 \pageto{notitle}{HTXIntroPage2}
@@ -126516,7 +126516,7 @@ Hyperdoc before proceeding.
 \end{page}
 
 #+end_src
-\section{htxlinkpage1.ht}
+** htxlinkpage1.ht
 \pagetitle{HTXLinkPage1}{htxlinkpage1.ht}{Linking to a named page}
 \pageto{notitle}{HTXLinkTopPage}
 \pageto{notitle}{TestHelpPage}
@@ -126611,7 +126611,7 @@ will display the {\tt TestHelpPage} page in a new window.
 \end{page}
 
 #+end_src
-\subsection{HTXLinkPage1xPatch1 patch}
+*** HTXLinkPage1xPatch1 patch
 \label{HTXLinkPage1xPatch1}
 \index{patch!HTXLinkPage1xPatch1!htxlinkpage1.ht}
 \index{htxlinkpage1.ht!patch!HTXLinkPage1xPatch1}
@@ -126630,7 +126630,7 @@ menu}{HTXLinkTopPage}\newline
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage1xPatch1A patch}
+*** HTXLinkPage1xPatch1A patch
 \label{HTXLinkPage1xPatch1A}
 \index{patch!HTXLinkPage1xPatch1A!htxlinkpage1.ht}
 \index{htxlinkpage1.ht!patch!HTXLinkPage1xPatch1A}
@@ -126663,7 +126663,7 @@ menu}{HTXLinkTopPage}\newline
 \end{page}
 
 #+end_src
-\section{htxlinkpage2.ht}
+** htxlinkpage2.ht
 \pagetitle{HTXLinkPage2}{htxlinkpage2.ht}{Standard Pages}
 \pageto{notitle}{HTXLinkPage6}
 \pageto{notitle}{SpadNotConnectedPage}
@@ -126758,7 +126758,7 @@ these files in
 \end{page}
 
 #+end_src
-\subsection{HTXLinkPage2xPatch1 patch}
+*** HTXLinkPage2xPatch1 patch
 \label{HTXLinkPage2xPatch1}
 \index{patch!HTXLinkPage2xPatch1!htxlinkpage2.ht}
 \index{htxlinkpage2.ht!patch!HTXLinkPage2xPatch1}
@@ -126779,7 +126779,7 @@ these files in
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage2xPatch1A patch}
+*** HTXLinkPage2xPatch1A patch
 \label{HTXLinkPage2xPatch1A}
 \index{patch!HTXLinkPage2xPatch1A!htxlinkpage2.ht}
 \index{htxlinkpage2.ht!patch!HTXLinkPage2xPatch1A}
@@ -126801,7 +126801,7 @@ these files in
 \end{patch}
 
 #+end_src
-\section{htxlinkpage3.ht}
+** htxlinkpage3.ht
 \pagetitle{HTXLinkPage3}{htxlinkpage3.ht}{Active Axiom commands}
 \pageto{notitle}{HTXLinkPage4}
 #+NAME: htxlinkpage3.ht.ht
@@ -126964,7 +126964,7 @@ It is explained \downlink{later on}{HTXAdvPage5}.
 \end{page}
 
 #+end_src
-\subsection{HTXLinkPage3xPatch1 patch}
+*** HTXLinkPage3xPatch1 patch
 \label{HTXLinkPage3xPatch1}
 \index{patch!HTXLinkPage3xPatch1!htxlinkpage3.ht}
 \index{htxlinkpage3.ht!patch!HTXLinkPage3xPatch1}
@@ -126980,7 +126980,7 @@ It is explained \downlink{later on}{HTXAdvPage5}.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage3xPatch1A patch}
+*** HTXLinkPage3xPatch1A patch
 \label{HTXLinkPage3xPatch1A}
 \index{patch!HTXLinkPage3xPatch1A!htxlinkpage3.ht}
 \index{htxlinkpage3.ht!patch!HTXLinkPage3xPatch1A}
@@ -126996,7 +126996,7 @@ It is explained \downlink{later on}{HTXAdvPage5}.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage3xPatch2 patch}
+*** HTXLinkPage3xPatch2 patch
 \label{HTXLinkPage3xPatch2}
 \index{patch!HTXLinkPage3xPatch2!htxlinkpage3.ht}
 \index{htxlinkpage3.ht!patch!HTXLinkPage3xPatch2}
@@ -127016,7 +127016,7 @@ It is explained \downlink{later on}{HTXAdvPage5}.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage3xPatch2A patch}
+*** HTXLinkPage3xPatch2A patch
 \label{HTXLinkPage3xPatch2A}
 \index{patch!HTXLinkPage3xPatch2A!htxlinkpage3.ht}
 \index{htxlinkpage3.ht!patch!HTXLinkPage3xPatch2A}
@@ -127036,7 +127036,7 @@ It is explained \downlink{later on}{HTXAdvPage5}.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage3xPatch3 patch}
+*** HTXLinkPage3xPatch3 patch
 \label{HTXLinkPage3xPatch3}
 \index{patch!HTXLinkPage3xPatch3!htxlinkpage3.ht}
 \index{htxlinkpage3.ht!patch!HTXLinkPage3xPatch3}
@@ -127056,7 +127056,7 @@ f 3
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage3xPatch3A patch}
+*** HTXLinkPage3xPatch3A patch
 \label{HTXLinkPage3xPatch3A}
 \index{patch!HTXLinkPage3xPatch3A!htxlinkpage3.ht}
 \index{htxlinkpage3.ht!patch!HTXLinkPage3xPatch3A}
@@ -127076,7 +127076,7 @@ f 3
 \end{patch}
 
 #+end_src
-\section{htxlinkpage4.ht}
+** htxlinkpage4.ht
 \pagetitle{HTXLinkPage4}{htxlinkpage4.ht}{Linking to Lisp}
 \pageto{notitle}{HTXLinkPage5}
 #+NAME: htxlinkpage4.ht
@@ -127309,7 +127309,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch1A patch}
+*** HTXLinkPage4xPatch1A patch
 \label{HTXLinkPage4xPatch1A}
 \index{patch!HTXLinkPage4xPatch1A!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch1A}
@@ -127329,7 +127329,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch2 patch}
+*** HTXLinkPage4xPatch2 patch
 \label{HTXLinkPage4xPatch2}
 \pageto{Definition}{LispFunctions}
 \index{patch!HTXLinkPage4xPatch2!htxlinkpage4.ht}
@@ -127353,7 +127353,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch2A patch}
+*** HTXLinkPage4xPatch2A patch
 \label{HTXLinkPage4xPatch2A}
 \index{patch!HTXLinkPage4xPatch2A!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch2A}
@@ -127381,7 +127381,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch3 patch}
+*** HTXLinkPage4xPatch3 patch
 \label{HTXLinkPage4xPatch3}
 \index{patch!HTXLinkPage4xPatch3!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch3}
@@ -127397,7 +127397,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch3A patch}
+*** HTXLinkPage4xPatch3A patch
 \label{HTXLinkPage4xPatch3A}
 \index{patch!HTXLinkPage4xPatch3A!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch3A}
@@ -127413,7 +127413,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch4 patch}
+*** HTXLinkPage4xPatch4 patch
 \label{HTXLinkPage4xPatch4}
 \index{patch!HTXLinkPage4xPatch4!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch4}
@@ -127429,7 +127429,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch4A patch}
+*** HTXLinkPage4xPatch4A patch
 \label{HTXLinkPage4xPatch4A}
 \index{patch!HTXLinkPage4xPatch4A!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch4A}
@@ -127446,7 +127446,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch5 patch}
+*** HTXLinkPage4xPatch5 patch
 \label{HTXLinkPage4xPatch5}
 \index{patch!HTXLinkPage4xPatch5!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch5}
@@ -127472,7 +127472,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage4xPatch5A patch}
+*** HTXLinkPage4xPatch5A patch
 \label{HTXLinkPage4xPatch5A}
 \index{patch!HTXLinkPage4xPatch5A!htxlinkpage4.ht}
 \index{htxlinkpage4.ht!patch!HTXLinkPage4xPatch5A}
@@ -127498,7 +127498,7 @@ allowed here.  You should also specify just the top level type.
 \end{patch}
 
 #+end_src
-\section{htxlinkpage5.ht}
+** htxlinkpage5.ht
 \pagetitle{HTXLinkPage5}{htxlinkpage5.ht}{Linking to Unix}
 #+NAME: htxlinkpage5.ht
 #+begin_src common-lisp :noweb yes
@@ -127577,7 +127577,7 @@ a file by clicking on its name.
 \end{page}
 
 #+end_src
-\subsection{HTXLinkPage5xPatch1 patch}
+*** HTXLinkPage5xPatch1 patch
 \label{HTXLinkPage5xPatch1}
 \index{patch!HTXLinkPage5xPatch1!htxlinkpage5.ht}
 \index{htxlinkpage5.ht!patch!HTXLinkPage5xPatch1}
@@ -127593,7 +127593,7 @@ a file by clicking on its name.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage5xPatch1A patch}
+*** HTXLinkPage5xPatch1A patch
 \label{HTXLinkPage5xPatch1A}
 \index{patch!HTXLinkPage5xPatch1A!htxlinkpage5.ht}
 \index{htxlinkpage5.ht!patch!HTXLinkPage5xPatch1A}
@@ -127609,7 +127609,7 @@ a file by clicking on its name.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage5xPatch2 patch}
+*** HTXLinkPage5xPatch2 patch
 \label{HTXLinkPage5xPatch2}
 \index{patch!HTXLinkPage5xPatch2!htxlinkpage5.ht}
 \index{htxlinkpage5.ht!patch!HTXLinkPage5xPatch2}
@@ -127626,7 +127626,7 @@ a file by clicking on its name.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage5xPatch2A patch}
+*** HTXLinkPage5xPatch2A patch
 \label{HTXLinkPage5xPatch2A}
 \index{patch!HTXLinkPage5xPatch2A!htxlinkpage5.ht}
 \index{htxlinkpage5.ht!patch!HTXLinkPage5xPatch2A}
@@ -127643,7 +127643,7 @@ a file by clicking on its name.
 \end{patch}
 
 #+end_src
-\section{htxlinkpage6.ht}
+** htxlinkpage6.ht
 \pagetitle{HTXLinkPage6}{htxlinkpage6.ht}
 {How to use your pages with Hyperdoc}
 #+NAME: htxlinkpage6.ht
@@ -127760,7 +127760,7 @@ you are using. In the {\bf /bin/csh}, it would be
 \end{page}
 
 #+end_src
-\subsection{HTXLinkPage6xPatch1 patch}
+*** HTXLinkPage6xPatch1 patch
 \label{HTXLinkPage6xPatch1}
 \index{patch!HTXLinkPage6xPatch1!htxlinkpage6.ht}
 \index{htxlinkpage6.ht!patch!HTXLinkPage6xPatch1}
@@ -127832,7 +127832,7 @@ the file will be deemed missing and {\bf htadd} will fail.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage6xPatch1A patch}
+*** HTXLinkPage6xPatch1A patch
 \label{HTXLinkPage6xPatch1A}
 \index{patch!HTXLinkPage6xPatch1A!htxlinkpage6.ht}
 \index{htxlinkpage6.ht!patch!HTXLinkPage6xPatch1A}
@@ -127847,7 +127847,7 @@ the file will be deemed missing and {\bf htadd} will fail.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage6xPatch2 patch}
+*** HTXLinkPage6xPatch2 patch
 \label{HTXLinkPage6xPatch2}
 \index{patch!HTXLinkPage6xPatch2!htxlinkpage6.ht}
 \index{htxlinkpage6.ht!patch!HTXLinkPage6xPatch2}
@@ -127882,7 +127882,7 @@ are preferred over later ones.
 \end{patch}
 
 #+end_src
-\subsection{HTXLinkPage6xPatch2A patch}
+*** HTXLinkPage6xPatch2A patch
 \label{HTXLinkPage6xPatch2A}
 \index{patch!HTXLinkPage6xPatch2A!htxlinkpage6.ht}
 \index{htxlinkpage6.ht!patch!HTXLinkPage6xPatch2A}
@@ -127897,7 +127897,7 @@ are preferred over later ones.
 \end{patch}
 
 #+end_src
-\section{htxlinktoppage.ht}
+** htxlinktoppage.ht
 \pagetitle{HTXLinkTopPage}{htxlinktoppage.ht}{Actions in Hyperdoc}
 \pageto{notitle}{HTXLinkPage1}
 \pageto{notitle}{HTXLinkPage2}
@@ -127924,7 +127924,7 @@ You can learn about these facilities by clicking on the topics below.
 \end{page}
 
 #+end_src
-\section{htxtoppage.ht}
+** htxtoppage.ht
 \pagetitle{HTXTopPage}{htxtoppage.ht}{Extending Hyperdoc}
 \pagepic{ps/v71htxtoppage.eps}{HTXTopPage}{0.50}
 \pagefrom{Reference}{TopReferencePage}
@@ -127957,7 +127957,7 @@ Hyperdoc page database that Axiom uses.
 \end{page}
 
 #+end_src
-\section{htxtrypage.ht}
+** htxtrypage.ht
 \pagetitle{HTXTryPage}{htxtrypage.ht}{Try out Hyperdoc}
 \pagepic{ps/v71htxtrypage.eps}{HTXTryPage}{0.50}
 #+NAME: htxtrypage.ht
@@ -128011,8 +128011,8 @@ macro or patch definitions.}
 \end{page}
 
 #+end_src
-\chapter{NAG Library Routines}
-\section{nagaux.ht}
+* NAG Library Routines
+** nagaux.ht
 \pagetitle{manpageXXonline}{nagaux.ht}{NAG On-line Documentation}
 \pagepic{ps/v71manpagexxonline.eps}{manpageXXonline}{0.50}
 #+NAME: nagaux.ht
@@ -135096,7 +135096,7 @@ macro or patch definitions.}
 \end{page}
 
 #+end_src
-\section{nagc.ht}
+** nagc.ht
 \pagetitle{manpageXXc02}{nagc.ht}{ Zeros of Polynomials}
 \pagepic{ps/v71manpagexxc02.eps}{manpageXXc02}{0.50}
 #+NAME: nagc.ht
@@ -139258,7 +139258,7 @@ macro or patch definitions.}
 \end{page}
 
 #+end_src
-\section{nagd.ht}
+** nagd.ht
 \pagetitle{manpageXXd01}{nagd.ht}{ Quadrature}
 \pagepic{ps/v71manpagexxd01.eps}{manpageXXd01}{0.50}
 #+NAME: nagd.ht
@@ -149765,7 +149765,7 @@ D02KEF(3NAG)                 D02KEF                  D02KEF(3NAG)
 \end{page}
 
 #+end_src
-\section{nage.ht}
+** nage.ht
 \pagetitle{manpageXXe01}{nage.ht}{ Interpolation}
 \pagepic{ps/v71manpagexxe01.eps}{manpageXXe01}{0.50}
 #+NAME: nage.ht
@@ -166453,7 +166453,7 @@ D02KEF(3NAG)                 D02KEF                  D02KEF(3NAG)
 \end{page}
 
 #+end_src
-\section{nagf.ht}
+** nagf.ht
 \pagetitle{manpageXXf}{nagf.ht}{ Linear Algebra}
 \pagepic{ps/v71manpagexxf.eps}{manpageXXf}{0.50}
 #+NAME: nagf.ht
@@ -180056,7 +180056,7 @@ D02KEF(3NAG)                 D02KEF                  D02KEF(3NAG)
 
 #+end_src
 
-\section{nags.ht}
+** nags.ht
 \pagetitle{manpageXXs}{nags.ht}{ Approximations of Special Functions}
 \pagepic{ps/v71manpagexxs.eps}{manpageXXs}{0.50}
 #+NAME: nags.ht
@@ -188015,7 +188015,7 @@ D02KEF(3NAG)                 D02KEF                  D02KEF(3NAG)
 \end{page}
 
 #+end_src
-\section{nagx.ht}
+** nagx.ht
 \pagetitle{manpageXXx01}{nagx.ht}{ Mathematical Constants}
 #+NAME: nagx.ht
 #+begin_src common-lisp :noweb yes
@@ -189591,8 +189591,8 @@ D02KEF(3NAG)                 D02KEF                  D02KEF(3NAG)
 \end{page}
 
 #+end_src
-\chapter{NAG ASP Example Code}
-\section{aspex.ht}
+* NAG ASP Example Code
+** aspex.ht
 \pagetitle{Asp1ExampleCode}{aspex.ht}{Asp1 Example Code}
 #+NAME: aspex.ht
 #+begin_src common-lisp :noweb yes
@@ -190523,8 +190523,8 @@ D02KEF(3NAG)                 D02KEF                  D02KEF(3NAG)
 \end{page}
 
 #+end_src
-\chapter{NAG ANNA Expert System}
-\section{annaex.ht}
+* NAG ANNA Expert System
+** annaex.ht
 \pagetitle{UXANNA}{annaex.ht}{Axiom/NAG Expert System}
 #+NAME: annaex.ht
 #+begin_src common-lisp :noweb yes
@@ -191560,7 +191560,7 @@ speeding the process and retaining efficiency.
 \end{page}
 
 #+end_src
-\chapter{ANNA Algebra Code}
+* ANNA Algebra Code
 \begin{verbatim}
 )co annacat.spad
 )co cont.spad
@@ -191582,7 +191582,7 @@ speeding the process and retaining efficiency.
 )co routines.spad
 )co tools.spad
 \end{verbatim}
-\chapter{Page hierarchy layout}
+* Page hierarchy layout
 This is the forest of pages in hyperdoc. Any page at the leftmost
 margin is a root page. Notice that the roots are disconnnected.
 The only reachable pages are those from the "RootPage" page below.
@@ -193247,7 +193247,7 @@ nagx.ht
 
 
 \end{verbatim}
-\chapter{Makefile}
+* Makefile
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 BOOK=${SPD}/books/bookvol7.1.pamphlet

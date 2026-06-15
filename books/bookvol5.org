@@ -5,8 +5,8 @@
 \mainmatter
 \setcounter{chapter}{0} % Chapter 1
 
-\chapter{Type Inference and Coercion}
-\section{Introduction}
+* Type Inference and Coercion
+** Introduction
 
 The Axiom system is centered on a strongly typed abstract datatype
 programming language with multiple inheritance. The compiler for this
@@ -68,7 +68,7 @@ can be coerced to {\bf T3}. In Axiom, the resolve facility is driven
 by a rule system, by information about coercions, and by the structure
 of the datatypes involved.
 
-\section{Overview of the Abstract Datatype System}
+** Overview of the Abstract Datatype System
 
 It is not within the scope of this chapter to fully discuss the Axiom
 abstract datatype system. This section is an overview of those terms
@@ -91,7 +91,7 @@ existence of other implemented operations. For example, a default
 implementation of binary ``-" can be given by using unary ``-'' and
 binary ``+"".
 
-\subsection{Categories}
+*** Categories
 
 A domain is an instance of an abstract datatype specified by one or
 more categories. Categories serve to group together domains with
@@ -171,7 +171,7 @@ defines a category constructor that contains all operation signatures
 and attributes from both the categories {\bf Finite} and
 {\bf ListCategory(S)}.
 
-\subsection{Domains}
+*** Domains
 
 Domains are created by domain constructors and are objects. They
 provide a representation for an instance of an abstract datatype,
@@ -239,7 +239,7 @@ compiler knows where operations will be located in domains and can
 compile efficient function calls. This information is part of a
 structure associated with each operation called a {\sl modemap}.
 
-\subsection{Packages}
+*** Packages
 
 A package is a special kind of domain in that it provides no new
 objects to the system (other than the package itself). It consists of
@@ -266,7 +266,7 @@ of the second. This, along with the last example of the previous
 section, demonstrates the need for a systematic search mechanism of
 the Axiom library.
 
-\subsection{Modemaps}
+*** Modemaps
 
 A {\sl modemap} is a syntactic specification of an operation. It gives
 the name of the operation, source and target datatypes for its
@@ -338,7 +338,7 @@ given domain or package. For example, {\bf Matrix(RationalNumber)}
 will have an {\sl {\bf inverse}} operation whereas {\bf Matrix(Integer)}
 will not, since {\bf RationalNumber} is a field but {\bf Integer} is not.
 
-\subsection{Interpretation}
+*** Interpretation
 
 The role of the interpreter is to evaluate input expressions entered
 by the user. In addition to computations, these expressions may be
@@ -354,7 +354,7 @@ applicable modemap for $f$. If this modemap has a return type of {\bf T},
 $f$ is applied to the (possibly coerced) arguments to yield a result $t$
 and subsequent value pair $<t$,T$>$.
 
-\subsection{Modemap Selection}
+*** Modemap Selection
 
 Given a function call $f(x,y,\ldots)$ and evaluated arguments $<a$,A$>$,
 $<b$,B$>$, $\ldots$ as in the previous section, the interpreter 
@@ -462,7 +462,7 @@ the result $5/3$ and pair $<$5/3,RationalNumber$>$.
 
 A {\sl force} is an operation performed on one or more types to satisfy
 a predicate. For example, the predicate ``*1 has {\bf Field}'' where
-*1 has a tentative substitution {\bf Integer} results in the forcing
+,*1 has a tentative substitution {\bf Integer} results in the forcing
 of {\bf Integer} to {\bf RationalNumber} by the application of
 {\bf QuotientField}, i.e. {\bf QuotientField(Integer)} is equivalent
 to {\bf RationalNumber}. As another example, $x$ has default type
@@ -479,7 +479,7 @@ definition of the cost function, any modemap which directly matches
 the argument types (e.g. {\bf A=D}, {B=E}, etc.) will have the 
 cheapest cost.
 
-\subsection{Ambiguity}
+*** Ambiguity
 
 Two remaining modemaps are said to be {\sl ambiguous} unless there are
 coercions to and from the respective substitution datatypes for the
@@ -492,7 +492,7 @@ interpreter to apply the functions ``*'' and {\sl foo} from the
 domain or package {\bf D}. Package calling is the only way to identify
 uniquely functions of no arguments if they are ambiguous.
 
-\subsection{Modes}
+*** Modes
 
 If the explicit conversion {\tt p::P} or {\tt p::P(?)} is given, 
 {\tt p} is converted to a polynomial. The datatype of coefficients
@@ -519,7 +519,7 @@ must be in the innermost constructor call position (e.g.
 not seemed burdensome, though a future area of research might be the
 extension of the merging process to more general modes.
 
-\section{The Coerce Facility}
+** The Coerce Facility
 
 Our goal in the design of the coerce facility is to have as much as
 possible controlled by modemap selection of compiled Axiom
@@ -528,7 +528,7 @@ over the behaviour of the interpreter and removes the requirement of
 having a system developer tune the interpreter for dealing with new
 datatypes. The coerce facility has several components.
 
-\subsection{Coerce by Function}
+*** Coerce by Function
 
 The interpreter does modemap selection for an operation named
 {\sl {\bf coerce}} that has the appropriate argument and target
@@ -564,7 +564,7 @@ cannot, therefore, be part of the category of {\bf List}. Such an
 explicit coercion can be provided in a package, but is, in fact,
 handled by the general mechanism described in the next section.
 
-\subsection{Coerce by Mapping}
+*** Coerce by Mapping
 
 When the interpreter encounters a coercion of the form
 \begin{verbatim}
@@ -586,7 +586,7 @@ compiled code, it allows the package writer to automatically provide
 an interpreter mechanism of ``lifting'' coercions from {\bf T1} to
 {\bf T1} to {\bf D(T1)} and {\bf D(T2)}.
 
-\subsection{Coerce by Internal System Code}
+*** Coerce by Internal System Code
 
 Some special cases of coercions are handled by internal system code
 rather than compiled Axiom code. These typically involve polynomials
@@ -611,7 +611,7 @@ and the old target now have the same top level constructor
 on the underlying domains {\bf Gaussian(Polynomial(Integer))} and
 {\bf Polynomial(Gaussian(Integer))}.
 
-\subsection{Coercion of Algebraic Constants}
+*** Coercion of Algebraic Constants
 
 Several categories specify the existence of constants. For example,
 {\bf AbelianMonoid} specifies the operation ``$+$'':\$ $\rightarrow$ \$'' and
@@ -620,7 +620,7 @@ category with specified constants and the object of {\bf T1} to be
 coerced is one of the constants, the corresponding constant in {\bf T2}
 may be extacted and returned.
 
-\subsection{Retraction}
+*** Retraction
 
 A retraction is a coercion of an object of a domain to a more specific
 (degenerate) domain. Unlike other forms of coercion where the target
@@ -652,7 +652,7 @@ would be called to see if the object was a constant polynomial. If the
 result was {\sl true}, {\sl {\bf retract}} can be called to extract the
 constant.
 
-\subsection{Coercion Query}
+*** Coercion Query
 
 There are situations where one wishes to know ahead of time whether it
 is possible to coerce an object of type {\bf T1} to one of type 
@@ -666,7 +666,7 @@ system will respond ``no'' when asked whether an object of
 As we saw above, though, retractions can be performed for constant
 polynomials.
 
-\section{The Resolve Facility}
+** The Resolve Facility
 
 The resolve facility is used to determine a type {\bf T3} to which two
 types {\bf T1} and {\bf T2} can be coerced. It is used when an
@@ -698,7 +698,7 @@ statements and error statements. Its rule is
 After some checks for special cases, the resolve facility has three
 components.
 
-\subsection{Resolve by Coercion Query}
+*** Resolve by Coercion Query
 
 If {\bf T1} $=$ {\bf T2}, then the resolve of the pair is just {\bf T1}.
 If {\bf T1} can be coerced to {\bf T2} and {\bf T2} cannot be coerced to
@@ -706,7 +706,7 @@ If {\bf T1} can be coerced to {\bf T2} and {\bf T2} cannot be coerced to
 and {\bf T2} are coercable to one another, an arbitrary but canonical
 choice is made and returned.
 
-\subsection{Resolve by Rules}
+*** Resolve by Rules
 
 The interpreter has an internal database of rules which it tries to use
 to resolve two types. The rules are not complete, as they only attempt
@@ -722,7 +722,7 @@ constructor {\bf Polynomial} and then the resolve facility is called
 again with different arguments. The second call may or may not use
 the rule system. 
 
-\subsection{Resolve by Type Destructuring}
+*** Resolve by Type Destructuring
 
 This type of resolution is similar to the process involved in the
 coercion described in the last paragraph of ``Coerce by Internal
@@ -732,7 +732,7 @@ which both of the original types are coerceable. This is a recursive
 process and involves using the coercion query facility to determine
 what tower rearrangements are possible.
 
-\section{An Example}
+** An Example
 As an example of coerce and resolve, we describe the inference involved
 in determining that the expression $x+1/2$ evaluates to an object of the
 datatype {\bf Polynomial(RationalNumber)}. We assume $x$ has not 
@@ -764,7 +764,7 @@ datatype {\bf Polynomial(RationalNumber)}
 and return the result
 \end{itemize}
 
-\section{Acknowledgement}
+** Acknowledgement
 
 In addition to the authors, Richard Jenks and Robert Sutor, three people
 \index{Jenks, Richard}
@@ -784,13 +784,13 @@ selection facilities in 1986.
 
 
 
-\chapter{The Interpreter}
+* The Interpreter
 The Axiom interpreter is a large common lisp program. 
 It has several forms of interaction and run from
 terminal in a standalone fashion, run under the control of a
 session handler program, run as a web server, or run in a unix
 pipe. 
-\chapter{The Fundamental Data Structures}
+* The Fundamental Data Structures
 
 \defdollar{PatternVariableList}
 These are temporary variable names that will be replaced by 
@@ -816,7 +816,7 @@ FormalMapVariableList.
 
 #+end_src
 
-\section{Frames and the Interpreter Frame Ring}
+** Frames and the Interpreter Frame Ring
 \label{TheFrameMechanism}
 
 Axiom has the notion of ``frames''. A frame is a data structure which
@@ -970,7 +970,7 @@ The frame collects and uses a few top level variables. These are:
 These variables can also be changed by the frame mechanism when the user
 requests changing to a different frame.
 
-\section{Data Structures}
+** Data Structures
 
 The interpreter information is kept in a frame which is a 10 part data
 structure of the form (see \ref{emptyInterpreterFrame}).
@@ -1031,7 +1031,7 @@ indicate which one is the current frame.
 frame into the current frame
 \end{itemize}
 
-\section{Frame Access Macros}
+** Frame Access Macros
 
 First Frame Component -- frameName
 \defmacro{frameName}
@@ -1137,7 +1137,7 @@ Tenth Frame Component -- frameExposureData
 
 #+end_src
 
-\section{Functions to manipulate frames}
+** Functions to manipulate frames
 
 \Defun{frame}{The top level frame command}
 \calls{frame}{frameSpad2Cmd}
@@ -1714,7 +1714,7 @@ this function will destructively change it to (2 3 1).
 
 #+end_src
 
-\section{Global variables associated with the frame}
+** Global variables associated with the frame
 \defdollar{interpreterFrameRing}
 All existing frames are kept in a ring held in this variable.
 #+NAME: initvars
@@ -1765,14 +1765,14 @@ Every successful expression evaluated increments this number until a
 
 #+end_src
 
-\section{Interpreter Functions using Frames}
+** Interpreter Functions using Frames
 
 The {\bf \ref{restart}} function
 
 The {\bfref undoSteps} function, part of the undo mechanism can
 reset the \verb|$InteractiveFrame|.
 
-\chapter{The Message Mechanism}
+* The Message Mechanism
 Throughout the interpreter there are messages printed using a symbol
 for a database lookup. This was done to enable translation of these
 messages languages other than English.
@@ -1936,7 +1936,7 @@ and that ``fn'' is to be called on ``args'' to get the text.
 
 #+end_src
 
-\chapter{The History Mechanism}
+* The History Mechanism
 \defdollar{HiFiAccess}
 The \verb|$HiFiAccess| is set by initHist to T. It is a flag
 used by the history mechanism to record whether the history function
@@ -2031,8 +2031,8 @@ as part of the history file name.
 
 #+end_src
 
-\chapter{The undo mechanism}
-\section{Data Structures}
+* The undo mechanism
+** Data Structures
 \verb|$frameRecord = [delta1, delta2,... ]| where
 delta(i) contains changes in the ``backwards'' direction.
 Each delta(i) has the form \verb|((var . proplist)...)| where
@@ -2056,7 +2056,7 @@ The \verb|$previousBindings| is a copy of the
 \verb|CAAR $InteractiveFrame|. This is used to
 compute the delta(i)s stored in \verb|$frameRecord|.
 
-\section{Initial Undo Variables}
+** Initial Undo Variables
 
 \defdollar{frameRecord}
 #+NAME: initvars
@@ -2079,7 +2079,7 @@ compute the delta(i)s stored in \verb|$frameRecord|.
 
 #+end_src
 
-\section{The undo functions}
+** The undo functions
 \defun{undo}{undo}
 \calls{undo}{stringPrefix?}
 \calls{undo}{pname}
@@ -2505,8 +2505,8 @@ Properties of r ::
 
 #+end_src
 
-\chapter{Tracing}
-\section{The help text}
+* Tracing
+** The help text
 #+NAME: trace.help
 #+begin_src common-lisp :noweb yes
 ====================================================================
@@ -2730,7 +2730,7 @@ o )ltrace
 \fnref{lisp}
 \fnref{ltrace}}
 
-\section{The trace global variables}
+** The trace global variables
 
 \defdollar{breakCondition}
 #+NAME: initvars
@@ -3040,7 +3040,7 @@ This is the size limit of output during tracing. See \ref{smallEnough}
 
 #+end_src
 
-\section{The trace initialization}
+** The trace initialization
 #+NAME: postvars
 #+begin_src common-lisp :noweb yes
 (eval-when (eval load)
@@ -3052,7 +3052,7 @@ This is the size limit of output during tracing. See \ref{smallEnough}
 
 #+end_src
 
-\section{The trace functions}
+** The trace functions
 \defun{trace}{The Top Level )trace Command Handler}
 \calls{trace}{traceSpad2Cmd}
 #+NAME: defun trace
@@ -6469,9 +6469,9 @@ the maximum length allowed.
 
 #+end_src
 
-\chapter{Exposure groups}
+* Exposure groups
 
-\section{Functions to manipulate exposure}
+** Functions to manipulate exposure
 
 \Defun{setExposeAddGroup}{Expose a group}
 Note that \verb|$localExposureData| is a vector of lists.
@@ -6888,7 +6888,7 @@ It consists of [exposed groups,exposed constructors,hidden constructors]
 
 #+end_src
 
-\section{Exposure Data Structures}
+** Exposure Data Structures
 \defdollar{localExposureData}
 #+NAME: postvars
 #+begin_src common-lisp :noweb yes
@@ -8240,9 +8240,9 @@ otherwise the new algebra won't be loaded by the interpreter when needed.
 
 #+end_src
 
-\chapter{The global variables}
+* The global variables
 
-\subsection{Credits}
+*** Credits
 Axiom has a very long history and many people have contributed to the
 effort, some in large ways and some in small ways. Any and all effort
 deserves recognition. There is no other criteria than contribution
@@ -8602,7 +8602,7 @@ $SpadServerName = "/tmp/.d"
 #+end_src
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Starting Axiom}
+* Starting Axiom
 
 This chapter details the internal processing behind an Axiom console
 session where the user types ``1'' and gets a result.
@@ -8746,7 +8746,7 @@ that ended with an underscore, the Axiom continuation character. The
 second is an Integer which will be the step number printed at the
 prompt.
 
-\section{An Overview of a Simple Input}
+** An Overview of a Simple Input
 Here we walk through details of Axiom's default behavior when handling
 a simple input, the number 1. Many details are skipped in order to 
 provide a simple overview of the interpreter operation. Further
@@ -8856,7 +8856,7 @@ and waits for further input.
 \end{verbatim}
 Now Axiom is ready for the next input.
 
-\section{Parsing the input}
+** Parsing the input
 We now examine the magic portion above which has several phases.
 The first phase constructs a data structure called a Delay. This
 data structure is the core data structure of the ``zipper'' parser.
@@ -8865,7 +8865,7 @@ The ``zipper'' parser is unique to Axiom. It was invented by Bill
 Burge who did research in recursive techniques, including parsing.
 For insight, see his article on Stream Procesing Functions \cite{Burg74}.
 
-\subsection{Creating a Delay -- incString}
+*** Creating a Delay -- incString
 The \bfref{intloopProcessString} has the nested function call
 \begin{verbatim}
  (|intloopProcess| n t
@@ -8936,7 +8936,7 @@ structure which will eventually be evaluated. We continue this process
 with the call to \bfref{next} which builds a delay with the function
 \bfref{next1} and the current delay.
 
-\subsection{Creating a Delay -- next}
+*** Creating a Delay -- next
 \begin{verbatim}
       3> (|next| |lineoftoks| 
            (|nonnullstream| |incZip1| |incRenumberLine| 
@@ -8958,7 +8958,7 @@ with the call to \bfref{next} which builds a delay with the function
                (|nonnullstream| |incIgen1| 0))))
 \end{verbatim}
 
-\subsection{Creating a Delay -- ncloopParse}
+*** Creating a Delay -- ncloopParse
 `We continue building a larger delay, this time with a call to
 \bfref{next} with the function argument \bfref{ncloopParse} and the
 existing delay.
@@ -8993,7 +8993,7 @@ Finally we call \bfref{intloopProcess} with the step number {\bf stepno},
 whether we are talking to the console {\bf interactive} and the delay
 we just constructed {\bf delay}
 
-\subsection{Evaluating a Delay -- intloopProcess}
+*** Evaluating a Delay -- intloopProcess
 
 At this point we have created a large delay. Now we begin to evaluate it.
 
@@ -13735,10 +13735,10 @@ PositiveInteger
       <3 (|intloopProcess| 2)
 \end{verbatim}
 
-\chapter{Axiom Details}
-\section{Variables Used}
-\section{Data Structures}
-\section{Functions}
+* Axiom Details
+** Variables Used
+** Data Structures
+** Functions
 \defunsec{set-restart-hook}{Set the restart hook}
 When a lisp image containing code is reloaded there is a hook to
 allow a function to be called. In our case it is the restart
@@ -14046,8 +14046,8 @@ itself cannot be read outside GCL.
 
 #+end_src
 
-\chapter{Handling Terminal Input}
-\section{Streams}
+* Handling Terminal Input
+** Streams
 \defvar{curinstream}
 The curinstream variable is set to the value of the 
 \verb|*standard-input*| common lisp
@@ -14150,7 +14150,7 @@ This variable is used in the undo mechanism.
 
 #+end_src
 
-\subsection{\$newspad}
+*** \$newspad
 The \verb|$newspad| is set to T in ncTopLevel.
 \defdollar{newspad}
 #+NAME: initvars
@@ -14338,7 +14338,7 @@ with this hack and will try to convince the GCL crowd to fix this.
 
 #+end_src
 
-\section{The Read-Eval-Print Loop}
+** The Read-Eval-Print Loop
 \defun{intloopReadConsole}{intloopReadConsole}
 Note that this function relies on the fact that lisp can do tail-recursion.
 The function recursively invokes itself.
@@ -14427,7 +14427,7 @@ will end up as a recursive call to ourselves.
 
 #+end_src
 
-\section{Helper Functions}
+** Helper Functions
 \defunsec{getenviron}{Get the value of an evironment variable}
 \calls{getenviron}{getenv}
 #+NAME: defun getenviron 0
@@ -17535,7 +17535,7 @@ Note that incRgen recursively wraps this function in a delay list.
 
 #+end_src
 
-\chapter{The Token Scanner}
+* The Token Scanner
 
 \defvar{scanKeyWords}
 #+NAME: postvars
@@ -18918,7 +18918,7 @@ This function is used to build the scanKeyTable
 
 #+end_src
 
-\chapter{Input Stream Parser}
+* Input Stream Parser
 
 \defun{npParse}{Input Stream Parser}
 \catches{npParse}{trappoint}
@@ -22101,7 +22101,7 @@ This was rewritten by NAG to remove flet.
 
 #+end_src
 
-\section{Functions on interpreter objects}
+** Functions on interpreter objects
 Interpreter objects used to be called triples because they had the
 structure [value, type, environment].  For many years, the environment
 was not used, so finally in January, 1990, the structure of objects
@@ -22217,7 +22217,7 @@ These are the new structure functions.
 
 #+end_src
 
-\section{Macro handling}
+** Macro handling
 \defun{phMacro}{phMacro}
 \tpdhere{The pform function has a leading percent sign}
 \begin{verbatim}
@@ -22693,8 +22693,8 @@ the original Macro pform.
 
 #+end_src
 
-\chapter{Pftrees}
-\section{Abstract Syntax Trees Overview}
+* Pftrees
+** Abstract Syntax Trees Overview
 
 Th functions create and examine abstract syntax trees.  
 These are called pforms, for short.
@@ -22806,7 +22806,7 @@ argument
 of the form ('expression expr position)
 \end{itemize}
 
-\section{Structure handlers}
+** Structure handlers
 
 \defun{pfGlobalLinePosn}{pfGlobalLinePosn}
 \calls{pfGlobalLinePosn}{poGlobalLinePosn}
@@ -23206,7 +23206,7 @@ of the form ('expression expr position)
 
 #+end_src
 
-\section{Special Nodes}
+** Special Nodes
 
 \defun{pfListOf}{Create a Listof node}
 \calls{pfListOf}{pfTree}
@@ -23235,7 +23235,7 @@ of the form ('expression expr position)
 
 #+end_src
 
-\section{Leaves}
+** Leaves
 
 \defun{pfDocument}{Create a Document node}
 \calls{pfDocument}{pfLeaf}
@@ -23472,7 +23472,7 @@ of the form ('expression expr position)
 
 #+end_src
 
-\section{Trees}
+** Trees
 
 \defun{pfTree}{Construct a tree node}
 #+NAME: defun pfTree 0
@@ -25027,7 +25027,7 @@ of the form ('expression expr position)
 
 #+end_src
 
-\chapter{Pftree to s-expression translation}
+* Pftree to s-expression translation
 Pftree to s-expression translation.  Used to interface the new parser
 technology to the interpreter.  The input is a parseTree and the
 output is an old-parser-style s-expression.
@@ -26116,7 +26116,7 @@ output is an old-parser-style s-expression.
 
 #+end_src
 
-\chapter{Stream Utilities}
+* Stream Utilities
 The input stream is parsed into a large s-expression by repeated calls
 to Delay. Delay takes a function f and an argument x and returns a list
 consisting of \verb|("nonnullstream" f x)|. Eventually multiple calls are made
@@ -26163,7 +26163,7 @@ explains the strange parsing technique).
 
 #+end_src
 
-\chapter{Code Piles}
+* Code Piles
 The insertpiles function converts a line-list to a line-forest where
 a line is a token-dequeue and has a column which is an integer.
 An A-forest is an A-tree-list
@@ -26438,7 +26438,7 @@ Only enpiles forests with $>=2$ trees
 
 #+end_src
 
-\chapter{Dequeue Functions}
+* Dequeue Functions
 The dqUnit makes a unit dq i.e. a dq with one item, from the item
 \defun{dqUnit}{dqUnit}
 #+NAME: defun dqUnit 0
@@ -26487,9 +26487,9 @@ The dqAppend function appends 2 dq's, destroying the first
 
 #+end_src
 
-\chapter{Message Handling}
+* Message Handling
 
-\section{The Line Object}
+** The Line Object
 
 \defun{lnCreate}{Line object creation}
 This is called in only one place, the incLine1 function.
@@ -26577,7 +26577,7 @@ This is called in only one place, the incLine1 function.
 #+end_src
 
 
-\section{Messages}
+** Messages
 
 \defun{msgCreate}{msgCreate}
 \begin{verbatim}
@@ -27887,8 +27887,8 @@ This is called from parameter list of nc message functions
 
 #+end_src
 
-\chapter{The Interpreter Syntax}
-\section{syntax assignment}
+* The Interpreter Syntax
+** syntax assignment
 \label{assignment}
 \index{assignment}
 \index{syntax!assignment}
@@ -28049,7 +28049,7 @@ There is no syntactic form for multiple delayed assignments.
 
 #+end_src
 
-\section{syntax blocks}
+** syntax blocks
 \label{blocks}
 \index{blocks}
 \index{syntax!blocks}
@@ -28150,7 +28150,7 @@ o )help lists
 \fnref{parallel}
 \fnref{lists}}
 
-\section{system clef}
+** system clef
 \label{clef}
 \index{clef}
 \index{syntax!clef}
@@ -28204,7 +28204,7 @@ DOS and ANSI terminal arrow key sequences are recognized, and act like:
 
 #+end_src 
 
-\section{syntax collection}
+** syntax collection
 \label{collection}
 \index{collection}
 \index{syntax!collection}
@@ -28280,7 +28280,7 @@ ten terms.
 
 #+end_src
 
-\section{syntax for}
+** syntax for
 \label{for}
 \index{for}
 \index{syntax!for}
@@ -28490,7 +28490,7 @@ This displays each of the factors of 2400000:
 
 #+end_src
 
-\section{syntax if}
+** syntax if
 \label{if}
 \index{if}
 \index{syntax!if}
@@ -28596,7 +28596,7 @@ These are both equivalent to the following:
 
 #+end_src
 
-\section{syntax iterate}
+** syntax iterate
 \label{iterate}
 \index{iterate}
 \index{syntax!iterate}
@@ -28628,7 +28628,7 @@ Display the even integers from 2 to 5:
 
 #+end_src
 
-\section{syntax leave}
+** syntax leave
 \label{leave}
 \index{leave}
 \index{syntax!leave}
@@ -28708,7 +28708,7 @@ lets you simulate the action of leave.
 
 #+end_src
 
-\section{syntax parallel}
+** syntax parallel
 \label{parallel}
 \index{parallel}
 \index{syntax!parallel}
@@ -28819,7 +28819,7 @@ Here are useful rules for composing loop expressions:
 
 #+end_src
 
-\section{syntax repeat}
+** syntax repeat
 \label{repeat}
 \index{repeat}
 \index{syntax!repeat}
@@ -29019,7 +29019,7 @@ o )help lists
 \fnref{parallel}
 \fnref{lists}}
 
-\section{syntax suchthat}
+** syntax suchthat
 \label{suchthat}
 \index{suchthat}
 \index{syntax!suchthat}
@@ -29066,7 +29066,7 @@ Any variable in an outer scope can be part of the predicate.
 
 #+end_src
 
-\section{syntax syntax}
+** syntax syntax
 \label{syntax}
 #+NAME: syntax.help
 #+begin_src common-lisp :noweb yes
@@ -29093,7 +29093,7 @@ where feature is one of:
 
 #+end_src
 
-\section{syntax while}
+** syntax while
 \index{while}
 \index{syntax!while}
 \index{while!syntax}
@@ -29171,7 +29171,7 @@ even if the predicate in any while clauses are not false.
 
 #+end_src
 
-\chapter{Abstract Syntax Trees (ptrees)}
+* Abstract Syntax Trees (ptrees)
 \begin{verbatim}
 Abstract Syntax Trees
 
@@ -29298,7 +29298,7 @@ where head is either an id or (id . alist)
 
 #+end_src
 
-\chapter{Attributed Structures}
+* Attributed Structures
 For objects which are pairs where the CAR field is either just a tag
 (an identifier) or a pair which is the tag and an association list.
 
@@ -29411,7 +29411,7 @@ Get the entry for key k on x's association list
 
 #+end_src
 
-\subsection{Special Category Names}
+*** Special Category Names
 
 \defdollar{EmptyMode}
 The CONTAINED predicate is used to walk internal structures
@@ -29653,7 +29653,7 @@ ends up being CONTAINED \verb|$EmptyMode| Y.
 #+end_src
 
 
-\chapter{Function Selection}
+* Function Selection
 \begin{verbatim}
 New Selection of Modemaps
 
@@ -30553,7 +30553,7 @@ The result is a substitution list or 'failed.
 
 #+end_src
 
-\chapter{Coercions}
+* Coercions
 
 \begin{verbatim}
  main algorithms for canCoerceFrom and coerceInteractive
@@ -32374,7 +32374,7 @@ Handle some specialization retraction cases, like matrices
 
 #+end_src
 
-\chapter{System Command Handling}
+* System Command Handling
 The system commands are the top-level commands available in Axiom
 that can all be invoked by prefixing the symbol with a closed-paren. 
 Thus, to see they copyright you type:
@@ -32427,7 +32427,7 @@ See:\\
 \item The \fnref{workfiles} command
 \end{itemize}
 
-\section{Variables Used}
+** Variables Used
 \defdollar{systemCommands}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -32517,7 +32517,7 @@ all kinds of input that will not be acceptable to the interpreter.
 
 #+end_src
 
-\section{Functions}
+** Functions
 \defun{handleNoParseCommands}{handleNoParseCommands}
 The system commands given by the global variable
 \verb|$noParseCommands| require essentially no preprocessing/parsing
@@ -34264,7 +34264,7 @@ This command is used by Axiom system users to start the Axiom top level
 loop listening for browser connections.
 
 #+end_src
-\section{Overview}
+** Overview
 The Axiom book on the help browser is a complete rewrite of the 
 hyperdoc mechanism. There are several components that were needed
 to make this function. Most of the web browser components are
@@ -34299,7 +34299,7 @@ Most responses contain the fields:
 \item type - this is the type of the Axiom result
 \end{itemize}
 
-\section{Browsers, MathML, and Fonts}
+** Browsers, MathML, and Fonts
 This work has the Firefox browser as its target. Firefox has built-in
 support for MathML, javascript, and XMLHttpRequests. More details
 are available in bookvol11.pamphlet but the very basic machinery for 
@@ -34369,7 +34369,7 @@ calls ``showanswer''.
 \end{verbatim}
 See bookvol11.pamphlet for further details.
 
-\section{The axServer/multiServ loop}
+** The axServer/multiServ loop
 The basic call to start an Axiom browser listener is:
 \begin{verbatim}
   )set message autoload off
@@ -35836,7 +35836,7 @@ command. That command immediatly invokes a ``Spad2Cmd'' version.
 
 #+end_src
 
-\subsection{displaySpad2Cmd}
+*** displaySpad2Cmd
 We process the options to the command and call the appropriate
 display function. There are really only 4 display functions.
 All of the other options are just subcases.
@@ -36260,7 +36260,7 @@ o )read
 
 #+end_src
 
-\subsubsection{The SPADEDIT command}
+**** The SPADEDIT command
 Axiom execute a shell script called SPADEDIT to open a file using
 the user's chosen editor. That editor name is, by convention, in
 the EDITOR shell variable. If that variable is not set we default
@@ -36752,7 +36752,7 @@ file called histFileName()
 one older session is accessible via the file \verb|$oldHistFileName()|
 \end{itemize}
 
-\section{Initialized history variables}
+** Initialized history variables
 The following global variables are used:
 \begin{list}{}
 \item \verb|$HistList|, \verb|$HistListLen| and \verb|$HistListAct| 
@@ -39344,7 +39344,7 @@ The last line of output is a summary:
 
 #+end_src
 
-\subsection{The regress function details}
+*** The regress function details
 This is the regression test mechanism. The input files have been
 rewritten to have a standard structure. This fixed format identifies
 the tests within a file. Each test is run and any mismatch between
@@ -39845,7 +39845,7 @@ o )quit
 #+end_src
 \footnote{\fnref{quit}}
 
-\subsection{Overview}
+*** Overview
 This section contains tree of information used to initialize the {\bf )set} 
 command in the interpreter. The current list is:
 \begin{verbatim}
@@ -40142,7 +40142,7 @@ explanations see the list structure section \ref{Theliststructure}.
   (t x))) 
 
 #+end_src
-\subsection{The list structure}
+*** The list structure
 \label{Theliststructure}
 The structure of each list item consists of 7 items.  Consider this 
 example:
@@ -40255,7 +40255,7 @@ dalymode     Interpret leading open paren as lisp    off
     ))
 #+end_src
 
-\subsection{set debug lambdatype}
+*** set debug lambdatype
 \begin{verbatim}
 ---------------------- The lambdatype Option ----------------------
 
@@ -40303,7 +40303,7 @@ input        controls libraries from which to load compiled code
     ))
 #+end_src
 
-\subsection{set compiler output}
+*** set compiler output
 \begin{verbatim}
 ---------------------- The output Option ----------------------
 
@@ -40383,7 +40383,7 @@ The input-libraries and output-library are now truename based.
 
 #+end_src
 
-\subsection{set compiler input}
+*** set compiler input
 \begin{verbatim}
 ---------------------- The input Option -----------------------
 
@@ -40574,7 +40574,7 @@ interpreter as parens are used for grouping expressions.
    |htSetExpose|)
 #+end_src
 
-\subsection{functions}
+*** functions
 \begin{verbatim}
              Current Values of  functions  Variables                  
 
@@ -40599,7 +40599,7 @@ recurrence   specially compile recurrence relations     on
   ))
 
 #+end_src
-\subsection{functions cache}
+*** functions cache
 \begin{verbatim}
 ---------------------- The cache Option -----------------------
 
@@ -40827,7 +40827,7 @@ recurrence   specially compile recurrence relations     on
 
 #+end_src
 
-\subsection{functions compile}
+*** functions compile
 \begin{verbatim}
 --------------------- The compile Option ----------------------
 
@@ -40933,7 +40933,7 @@ For more information, issue )help set .
   ))
 
 #+end_src
-\subsection{set ints2floats}
+*** set ints2floats
 \begin{verbatim}
 ------------------- The ints2floats Option --------------------
 
@@ -40964,7 +40964,7 @@ For more information, issue )help set .
       (|on| |off|)
       |on|)
 #+end_src
-\subsection{set fortindent}
+*** set fortindent
 \begin{verbatim}
 -------------------- The fortindent Option --------------------
 
@@ -40990,7 +40990,7 @@ For more information, issue )help set .
       (0 NIL)
       6)
 #+end_src
-\subsection{set fortlength}
+*** set fortlength
 \begin{verbatim}
 -------------------- The fortlength Option --------------------
 
@@ -41016,7 +41016,7 @@ For more information, issue )help set .
       (1 NIL)
       72)
 #+end_src
-\subsection{set typedecs}
+*** set typedecs
 \begin{verbatim}
 --------------------- The typedecs Option ---------------------
 
@@ -41047,7 +41047,7 @@ For more information, issue )help set .
       (|on| |off|)
       |on|)
 #+end_src
-\subsection{set defaulttype}
+*** set defaulttype
 \begin{verbatim}
 ------------------- The defaulttype Option --------------------
 
@@ -41081,7 +41081,7 @@ For more information, issue )help set .
       (REAL INTEGER COMPLEX LOGICAL CHARACTER)
       REAL)
 #+end_src
-\subsection{set precision}
+*** set precision
 \begin{verbatim}
 -------------------- The precision Option ---------------------
 
@@ -41112,7 +41112,7 @@ For more information, issue )help set .
        (|single| |double|)
        |double|)
 #+end_src
-\subsection{set intrinsic}
+*** set intrinsic
 \begin{verbatim}
 -------------------- The intrinsic Option ---------------------
 
@@ -41144,7 +41144,7 @@ For more information, issue )help set .
        (|on| |off|)
        |off|)
 #+end_src
-\subsection{set explength}
+*** set explength
 \begin{verbatim}
 -------------------- The explength Option ---------------------
 
@@ -41171,7 +41171,7 @@ For more information, issue )help set .
        (0 NIL)
        1320)
 #+end_src
-\subsection{set segment}
+*** set segment
 \begin{verbatim}
 --------------------- The segment Option ----------------------
 
@@ -41201,7 +41201,7 @@ For more information, issue )help set .
        (|on| |off|)
        |on|)
 #+end_src
-\subsection{set optlevel}
+*** set optlevel
 \begin{verbatim}
 --------------------- The optlevel Option ---------------------
 
@@ -41227,7 +41227,7 @@ For more information, issue )help set .
        (0 2)
        0)
 #+end_src
-\subsection{set startindex}
+*** set startindex
 \begin{verbatim}
 -------------------- The startindex Option --------------------
 
@@ -41253,7 +41253,7 @@ For more information, issue )help set .
        (0 1)
        1)
 #+end_src
-\subsection{set calling}
+*** set calling
 \begin{verbatim}
               Current Values of  calling  Variables                   
 
@@ -41279,7 +41279,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
       )
 
 #+end_src
-\subsubsection{set tempfile}
+**** set tempfile
 \begin{verbatim}
 --------------------- The tempfile Option ---------------------
 
@@ -41383,7 +41383,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
 #+end_src
 
 
-\subsubsection{directory}
+**** directory
 \begin{verbatim}
 -------------------- The directory Option ---------------------
 
@@ -41470,7 +41470,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
   )))
 
 #+end_src
-\subsubsection{linker}
+**** linker
 \begin{verbatim}
 ---------------------- The linker Option ----------------------
 
@@ -41576,7 +41576,7 @@ mathwidth    screen width for history output            120
 <<hyperdocmathwidth>>
    ))
 #+end_src
-\subsection{fullscreen}
+*** fullscreen
 \begin{verbatim}
 -------------------- The fullscreen Option --------------------
 
@@ -41607,7 +41607,7 @@ mathwidth    screen width for history output            120
       (|on| |off|)
       |off|)
 #+end_src
-\subsection{mathwidth}
+*** mathwidth
 \begin{verbatim}
 -------------------- The mathwidth Option ---------------------
 
@@ -41655,7 +41655,7 @@ fullscreen   use fullscreen facility, if possible       on
    ))
 
 #+end_src
-\subsection{fullscreen}
+*** fullscreen
 \begin{verbatim}
 -------------------- The fullscreen Option --------------------
 
@@ -41785,7 +41785,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message any}
+*** set message any
 \begin{verbatim}
 ----------------------- The any Option ------------------------
 
@@ -41817,7 +41817,7 @@ naglink      show NAGLink messages                      on
       |on|)
 #+end_src
 
-\subsection{set message autoload}
+*** set message autoload
 \begin{verbatim}
 --------------------- The autoload Option ---------------------
 
@@ -41842,7 +41842,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message bottomup}
+*** set message bottomup
 \begin{verbatim}
 --------------------- The bottomup Option ---------------------
 
@@ -41875,7 +41875,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message coercion}
+*** set message coercion
 \begin{verbatim}
 --------------------- The coercion Option ---------------------
 
@@ -41908,7 +41908,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message dropmap}
+*** set message dropmap
 \begin{verbatim}
 --------------------- The dropmap Option ----------------------
 
@@ -41941,7 +41941,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message expose}
+*** set message expose
 \begin{verbatim}
 ---------------------- The expose Option ----------------------
 
@@ -41974,7 +41974,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message file}
+*** set message file
 \begin{verbatim}
 ----------------------- The file Option -----------------------
 
@@ -42007,7 +42007,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message frame}
+*** set message frame
 \label{setmessageframe}
 \begin{verbatim}
 ---------------------- The frame Option -----------------------
@@ -42040,7 +42040,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message highlighting}
+*** set message highlighting
 \begin{verbatim}
 ------------------- The highlighting Option -------------------
 
@@ -42073,7 +42073,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message instant}
+*** set message instant
 \begin{verbatim}
 --------------------- The instant Option ----------------------
 
@@ -42106,7 +42106,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message insteach}
+*** set message insteach
 \begin{verbatim}
 --------------------- The insteach Option ---------------------
 
@@ -42139,7 +42139,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message interponly}
+*** set message interponly
 \begin{verbatim}
 -------------------- The interponly Option --------------------
 
@@ -42172,7 +42172,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message naglink}
+*** set message naglink
 \begin{verbatim}
 --------------------- The naglink Option ----------------------
 
@@ -42205,7 +42205,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message number}
+*** set message number
 \begin{verbatim}
 ---------------------- The number Option ----------------------
 
@@ -42238,7 +42238,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message prompt}
+*** set message prompt
 \begin{verbatim}
 ---------------------- The prompt Option ----------------------
 
@@ -42273,7 +42273,7 @@ naglink      show NAGLink messages                      on
 
 #+end_src
 
-\subsection{set message selection}
+*** set message selection
 \begin{verbatim}
 -------------------- The selection Option ---------------------
 
@@ -42306,7 +42306,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
 #+end_src
 
-\subsection{set}
+*** set
 \begin{verbatim}
 ----------------------- The set Option ------------------------
 
@@ -42337,7 +42337,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
       |off|)
 
 #+end_src
-\subsection{set message startup}
+*** set message startup
 \begin{verbatim}
 --------------------- The startup Option ----------------------
 
@@ -42369,7 +42369,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
       |on|)
 
 #+end_src
-\subsection{set message summary}
+*** set message summary
 \begin{verbatim}
 --------------------- The summary Option ----------------------
 
@@ -42403,7 +42403,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
 #+end_src
 
-\subsection{set message testing}
+*** set message testing
 \begin{verbatim}
 --------------------- The testing Option ----------------------
 
@@ -42436,7 +42436,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
 #+end_src
 
-\subsection{set message time}
+*** set message time
 \begin{verbatim}
 ----------------------- The time Option -----------------------
 
@@ -42469,7 +42469,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
 #+end_src
 
-\subsection{set message type}
+*** set message type
 \begin{verbatim}
 ----------------------- The type Option -----------------------
 
@@ -42501,7 +42501,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
 #+end_src
 
-\subsection{set message void}
+*** set message void
 \begin{verbatim}
 ----------------------- The void Option -----------------------
 
@@ -42561,7 +42561,7 @@ double       enforce DOUBLE PRECISION ASPs              on
 
 #+end_src
 
-\subsection{set naglink host}
+*** set naglink host
 \begin{verbatim}
 ----------------------- The host Option -----------------------
 
@@ -42631,7 +42631,7 @@ double       enforce DOUBLE PRECISION ASPs              on
 
 #+end_src
 
-\subsection{set naglink persistence}
+*** set naglink persistence
 \begin{verbatim}
 ------------------- The persistence Option --------------------
 
@@ -42717,7 +42717,7 @@ double       enforce DOUBLE PRECISION ASPs              on
 
 #+end_src
 
-\subsection{set naglink messages}
+*** set naglink messages
 \begin{verbatim}
 --------------------- The messages Option ---------------------
 
@@ -42747,7 +42747,7 @@ TPDHERE: this is the same as )set nag mes on
        |on|)
 
 #+end_src
-\subsection{set naglink double}
+*** set naglink double
 \begin{verbatim}
 ---------------------- The double Option ----------------------
 
@@ -42825,7 +42825,7 @@ is defined within the output structure.
 
 #+end_src
 
-\subsection{set output abbreviate}
+*** set output abbreviate
 \begin{verbatim}
 -------------------- The abbreviate Option --------------------
 
@@ -42857,7 +42857,7 @@ is defined within the output structure.
 
 #+end_src
 
-\subsection{set output algebra}
+*** set output algebra
 \begin{verbatim}
 --------------------- The algebra Option ----------------------
 
@@ -43080,7 +43080,7 @@ The current setting is:  On:CONSOLE
 
 #+end_src
 
-\subsection{set output characters}
+*** set output characters
 \begin{verbatim}
 -------------------- The characters Option --------------------
 
@@ -43188,7 +43188,7 @@ The current setting is:  On:CONSOLE
 
 #+end_src
 
-\subsection{set output fortran}
+*** set output fortran
 \begin{verbatim}
 --------------------- The fortran Option ----------------------
 
@@ -43417,7 +43417,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 
-\subsection{set output fraction}
+*** set output fraction
 \begin{verbatim}
 --------------------- The fraction Option ---------------------
 
@@ -43449,7 +43449,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 
-\subsection{set output html}
+*** set output html
 \begin{verbatim}
 ----------------------- The html Option ------------------------
 
@@ -43665,7 +43665,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 
-\subsection{set output length}
+*** set output length
 \begin{verbatim}
 ---------------------- The length Option ----------------------
 
@@ -43702,7 +43702,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 
-\subsection{set output mathml}
+*** set output mathml
 \begin{verbatim}
 ----------------------- The mathml Option ------------------------
 
@@ -43918,7 +43918,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 
-\subsection{set output openmath}
+*** set output openmath
 \begin{verbatim}
 ----------------------- The openmath Option ------------------------
 
@@ -44132,7 +44132,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 
-\subsection{set output script}
+*** set output script
 \begin{verbatim}
 ---------------------- The script Option ----------------------
 
@@ -44350,7 +44350,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 
-\subsection{set output scripts}
+*** set output scripts
 \begin{verbatim}
 --------------------- The scripts Option ----------------------
 
@@ -44381,7 +44381,7 @@ The current setting is:  Off:CONSOLE
       |off|)
 
 #+end_src
-\subsection{set output showeditor}
+*** set output showeditor
 \begin{verbatim}
 -------------------- The showeditor Option --------------------
 
@@ -44413,7 +44413,7 @@ The current setting is:  Off:CONSOLE
       |off|)
 
 #+end_src
-\subsection{set output tex}
+*** set output tex
 \begin{verbatim}
 ----------------------- The tex Option ------------------------
 
@@ -44679,7 +44679,7 @@ showall      display all stream elements computed       off
 
 #+end_src
 
-\subsection{set streams calculate}
+*** set streams calculate
 \begin{verbatim}
 -------------------- The calculate Option ---------------------
 
@@ -44761,7 +44761,7 @@ showall      display all stream elements computed       off
 
 #+end_src
 
-\subsection{set streams showall}
+*** set streams showall
 \begin{verbatim}
 --------------------- The showall Option ----------------------
 
@@ -44819,7 +44819,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 
 #+end_src
 
-\subsection{set system functioncode}
+*** set system functioncode
 \begin{verbatim}
 ------------------- The functioncode Option -------------------
 
@@ -44852,7 +44852,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 
 #+end_src
 
-\subsection{set system optimization}
+*** set system optimization
 \begin{verbatim}
 ------------------- The optimization Option -------------------
 
@@ -44885,7 +44885,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 
 #+end_src
 
-\subsection{set system prettyprint}
+*** set system prettyprint
 \begin{verbatim}
 ------------------- The prettyprint Option --------------------
 
@@ -47526,7 +47526,7 @@ This displays all operation names containing these fragments.
 
 #+end_src
 
-\chapter{Handlers for Special Forms}
+* Handlers for Special Forms
 This file contains the functions which do type analysis and
 evaluation of special functions in the interpreter.
 Special functions are ones which are not defined in the algebra
@@ -47657,7 +47657,7 @@ Returns the value of form if form is a variable with a type value.
 
 #+end_src
 
-\chapter{Handling input files}
+* Handling input files
 \defun{readSpadProfileIfThere}{Handle .axiom.input file}
 \uses{readSpadProfileIfThere}{/editfile}
 #+NAME: defun readSpadProfileIfThere
@@ -47846,9 +47846,9 @@ searchCurrentEnv(x,currentEnv) ==
 
 #+end_src
 
-\chapter{Line Handling}
+* Line Handling
 
-\subsection{Line Buffer}
+*** Line Buffer
 The philosophy of lines is that
 \begin{itemize}
 \item NEXT LINE will always return a non-blank line or fail.
@@ -48059,7 +48059,7 @@ is how the depsys load surfaced it. All three now say
 
 #+end_src
 
-\chapter{File Parsing}
+* File Parsing
 \defun{addBindingInteractive}{Bind a variable in the interactive environment}
 \calls{addBindingInteractive}{assq}
 #+NAME: defun addBindingInteractive
@@ -48275,8 +48275,8 @@ The IO state manipulation routines assume that
 #+end_src
 
 
-\chapter{Handling output}
-\section{Special Character Tables}
+* Handling output
+** Special Character Tables
 
 These tables were written with {\bf int-char}, a CLtL1 function that
 ANSI Common Lisp removed (X3J13 dropped it because a character's
@@ -48507,7 +48507,7 @@ gets the index into the EBCDIC table, and returns the appropriate character.
 
 #+end_src
 
-\chapter{Stream and File Handling}
+* Stream and File Handling
 \defun{make-instream}{make-instream}
 \calls{make-instream}{makeInputFilename}
 #+NAME: defun make-instream
@@ -48676,7 +48676,7 @@ and return the directory name as the filename, per Axiom convention.
 
 #+end_src
 
-\chapter{The Spad Server Mechanism}
+* The Spad Server Mechanism
 \defun{openserver}{openserver}
 This is a cover function for the C code used for communication interface.
 #+NAME: defun openserver
@@ -48686,7 +48686,7 @@ This is a cover function for the C code used for communication interface.
 
 #+end_src
 
-\chapter{Axiom Build-time Functions}
+* Axiom Build-time Functions
 \defun{spad-save}{spad-save}
 The {\bf spad-save} function is just a cover function for more
 lisp system specific save functions. There is no standard name
@@ -48841,7 +48841,7 @@ top level that does not return, and that the save runs single-threaded
 
 #+end_src
 
-\chapter{Exposure Groups}
+* Exposure Groups
 Exposure groups are a way of controlling the namespace available
 to the user. Certain algebra files are only useful for internal
 purposes but they contain functions have common names (like 
@@ -48854,14 +48854,14 @@ Exposure group information is kept in the local frame. For more
 information ``The Frame Mechanism'' \ref{TheFrameMechanism} on
 page~\pageref{TheFrameMechanism}.
 
-\chapter{Databases}
-\section{Database structure}
+* Databases
+** Database structure
 In order to understand this program you need to understand some details
 of the structure of the databases it reads. Axiom has 5 databases,
 the interp.daase, operation.daase, category.daase, and
 browse.daase. 
 
-\subsection{kaf File Format}
+*** kaf File Format
 This documentation refers to kaf files which are random access files.
 nrlib files are kaf files (look for nrlib/index.kaf)
 The format of a random access file is
@@ -48902,7 +48902,7 @@ The fastest optimization is to fix the time stamp mechanism
 which is currently broken. Making this work requires a small
 bit of coordination at 'make' time which I forgot to implement.
 
-\subsection{Database Files}
+*** Database Files
 
 Database files are very similar to kaf files except that there
 is an optimization (currently broken) which makes the first
@@ -48920,7 +48920,7 @@ with CATEGORY (not domain) ancestor information. This later provides
 the information that goes into interp.daase This *ancestors-hash*
 does not exist at normal runtime (it can be made by a call to
 genCategoryTable). Note that the ancestor information in
-*ancestors-hash* (and hence interp.daase) involves \verb|#1|, \verb|#2|, etc
+,*ancestors-hash* (and hence interp.daase) involves \verb|#1|, \verb|#2|, etc
 instead of R, Coef, etc. The latter thingies appear in all
 .nrlib/index.kaf files. So we need to be careful when we )lib
 categories and update the ancestor info.
@@ -48940,7 +48940,7 @@ So, the design is as follows:
 \item the modemap.daase needs to be built. this is done by doing
 a )library on ALL of the nrlib files that are going into the system.
 this will bring in "modemap" information and add it to the
-*modemaps-hash* hashtable.
+,*modemaps-hash* hashtable.
 \item database build proceeds, accessing the "modemap" property
 from the hashtables. once this completes this information is never
 used again.
@@ -49111,7 +49111,7 @@ Currently these are added to the database for 2 reasons;
 there is a still-unresolved issue of user database extensions and
 this information is used during database build time
 
-\subsection{Database streams}
+*** Database streams
 This are the streams for the databases. They are always open.
 There is an optimization for speeding up system startup. If the
 database is opened and the ..-stream-stamp* variable matches the
@@ -50703,7 +50703,7 @@ database format.
 
 #+end_src
 
-\chapter{System Statistics}
+* System Statistics
 \defun{statisticsInitialization}{statisticsInitialization}
 \calls{statisticsInitialization}{gbc-time}
 #+NAME: defun statisticsInitialization
@@ -50715,7 +50715,7 @@ database format.
 
 #+end_src
 
-\section{Lisp Library Handling}
+** Lisp Library Handling
 
 \defun{loadLib}{loadLib}
 \calls{loadLib}{startTimingProcess}
@@ -50834,7 +50834,7 @@ database format.
 
 #+end_src
 
-\chapter{Special Lisp Functions}
+* Special Lisp Functions
 \defun{compiledLookup}{compiledLookup}
 \calls{compiledLookup}{isDomain}
 \calls{compiledLookup}{NRTevalDomain}
@@ -51021,7 +51021,7 @@ database format.
 
 #+end_src
 
-\section{Axiom control structure macros}
+** Axiom control structure macros
 Axiom used various control structures in the boot code which are not
 available in Common Lisp. We write some macros here to make the boot
 to lisp translations easier to read.
@@ -51053,7 +51053,7 @@ When the condition is false, return the result form's value.
 
 #+end_src
 
-\section{Filename Handling}
+** Filename Handling
 This code implements the Common Lisp pathname functions for
 Lisp/VM.  On VM, a filename is 3-list consisting of the filename,
 filetype and filemode. We also UPCASE everything.
@@ -51441,7 +51441,7 @@ found a bug related to this ambiguity so this was renamed.
  (when (and op (symbolp op)) (get op prop)))
 #+end_src
 
-\chapter{Record, Union, Mapping, and Enumeration}
+* Record, Union, Mapping, and Enumeration
 #+NAME: postvars
 #+begin_src common-lisp :noweb yes
 (eval-when (eval load)
@@ -51454,7 +51454,7 @@ found a bug related to this ambiguity so this was renamed.
 
 #+end_src
 
-\chapter{Numeric Function Support}
+* Numeric Function Support
 
 \defmacro{fracpart}
 \sig{fracpart}{or rational float}{or rational float}
@@ -52534,7 +52534,7 @@ Program transcribed from Fortran,, p. 80 \cite{Luke77}
 
 #+end_src
 
-\chapter{Common Lisp Algebra Support}
+* Common Lisp Algebra Support
 These functions are called directly from the algebra source code.
 They fall into two basic categories, one are the functions that are
 raw Comon Lisp calls and the other are Axiom specific functions or macros.
@@ -52647,7 +52647,7 @@ semantics survive.
 
 #+end_src
 
-\section{ApplicationProgramInterface}
+** ApplicationProgramInterface
 \defun{reportinstantiations}{Report what domains get instantiated}
 \usesdollar{reportinstantiations}{reportinstantiations}
 #+NAME: defun reportinstantiations
@@ -53904,7 +53904,7 @@ For example,  ``/''  ``/u/smwatt''  ``../src''
 
 #+end_src
 
-\section{IndexedString}
+** IndexedString
 
 \defun{qenum}{qenum}
 This is also used in bookvol10.3 in the CHAR domain.
@@ -53936,7 +53936,7 @@ This is also used in bookvol10.3 in the CHAR domain.
 
 #+end_src
 
-\section{InputForm}
+** InputForm
 
 \defun{mkobjFn}{called by interpret function}
 #+NAME: defun mkObjFn 0
@@ -54304,7 +54304,7 @@ an AssociationList representation.
 
 %%% U %%%
 
-\section{U8Vector}
+** U8Vector
 
 \defmacro{qvlenU8}
 #+NAME: defmacro qvlenU8
@@ -54338,7 +54338,7 @@ an AssociationList representation.
 
 #+end_src
 
-\section{U16Vector}
+** U16Vector
 
 \defmacro{qvlenU16}
 #+NAME: defmacro qvlenU16
@@ -54372,7 +54372,7 @@ an AssociationList representation.
 
 #+end_src
 
-\section{U32Vector}
+** U32Vector
 
 \defmacro{qvlenU32}
 #+NAME: defmacro qvlenU32
@@ -54406,7 +54406,7 @@ an AssociationList representation.
 
 #+end_src
 
-\section{U8Matrix}
+** U8Matrix
 
 \defmacro{aref2U8}
 #+NAME: defmacro aref2U8
@@ -54458,7 +54458,7 @@ an AssociationList representation.
 
 #+end_src
 
-\section{U16Matrix}
+** U16Matrix
 
 \defmacro{aref2U16}
 #+NAME: defmacro aref2U16
@@ -54632,7 +54632,7 @@ an AssociationList representation.
 
 %%% V %%%
 
-\section{Void}
+** Void
 \defun{voidValue}{voidValue}
 #+NAME: defun voidValue
 #+begin_src common-lisp :noweb yes
@@ -54640,8 +54640,8 @@ an AssociationList representation.
 
 #+end_src
 
-\chapter{OpenMath}
-\section{A Technical Overview}
+* OpenMath
+** A Technical Overview
 
 OpenMath\cite{Dewa} is a standard for representing mathematical data in as
 unambiguous a way as possible. It can be used to exchange mathematical
@@ -54671,7 +54671,7 @@ The formal definition of OpenMath is contained within The OpenMath
 Standard and its accompanying documents, and the reader is referred
 there for more details.  
 
-\subsection{The OpenMath Architecture}
+*** The OpenMath Architecture
 
 The OpenMath representation of a mathematical structure is referred to
 as an OpenMath object. This is an abstract structure which is
@@ -54769,7 +54769,7 @@ example:
 represents the error which might be generated when an application sees
 a symbol it doesn't recognise from a CD it thought it knew about.
 
-\subsection{OpenMath Encodings}
+*** OpenMath Encodings
 
 We have already seen some examples of the XML encoding, but it is by
 no means the only encoding. In the past there was a functional
@@ -54800,7 +54800,7 @@ linear, but neither of these is a requirement. It is a property of
 encodings that it is possible to convert between them with no loss of
 information.  
 
-\subsection{Content Dictionaries}
+*** Content Dictionaries
 
 Content Dictionaries (or CDs for short) are the most important, and
 the most interesting, aspect of OpenMath because they define the
@@ -54929,7 +54929,7 @@ welcome. There is no requirement that applications use the standard
 set of CDs and it is often very useful to design a "private" CD for a
 specific purpose.
 
-\subsection{OpenMath in Action}
+*** OpenMath in Action
 
 There is no definitive way in which OpenMath should be used, as the
 protocol has been designed to be as flexible as possible. Nevertheless
@@ -54973,7 +54973,7 @@ to use the XML encoding, to guarantee a degree of interoperability.
 This is an area where the standard is expected to evolve as more 
 OpenMath applications become available.
 
-\section{Technical Details}
+** Technical Details
 
 This chapter describes the Axiom implementation of the 
 OpenMath project\cite{Dalm97}
@@ -54981,7 +54981,7 @@ at INRIA. The code enables the exchange of OpenMath objects
 between two processes and more generally the input and output of OpenMath
 objects. First we describe the library API and then we implement the
 functions used by Axiom.
-\section{The Structure of the API}
+** The Structure of the API
 The library and its API are logically structured in four parts:
 \begin{itemize} 
 \item Functions that deal with {\sl devices}, the abstraction
@@ -54994,9 +54994,9 @@ is extensible by the user.
 \item Functions that deal with interprocess communication.
 \end{itemize} 
 
-\section{OpenMath Expressions}
+** OpenMath Expressions
 
-\subsection{Expressions}
+*** Expressions
 
 The library understands the following kinds of basic OpenMath expressions:
 \begin{itemize} 
@@ -55017,7 +55017,7 @@ and the four kinds of constructions:
 where $e_i$ are OpenMath expressions, $v_i$ are OpenMath variables and $s$ and
 $s_i$ are OpenMath symbols. 
 
-\subsection{Symbols}
+*** Symbols
 
 Symbols are constructed from a content dictionary (abbreviated as CD
 in the sequel) and a name.  A content dictionary is identified by its
@@ -55025,7 +55025,7 @@ name.  The API permits the creation of any symbol in any content
 dictionary: there is nothing that prevents creating symbols that do
 not belong to a known CD.
 
-\subsection{Encoding and Decoding OpenMath Expressions}
+*** Encoding and Decoding OpenMath Expressions
 
 An OpenMath object is encoded as a sequence of bytes that is read and
 written sequentially. The library views this sequence as a stream of
@@ -55062,7 +55062,7 @@ are OpenMath expressions) to an expression $E$ the process is:
 Decoding is done by first querying the type of the next OpenMath token and
 then invoking the right function to get this particular kind of token.
 
-\section{Big Integers}
+** Big Integers
 
 The library supports big integers that can potentially be given in
 various formats. The {\tt OMBigIntType} describes the different
@@ -55075,7 +55075,7 @@ typedef enum OMbigIntType {
 } OMbigIntType;
 \end{verbatim} 
 
-\section{Functions Dealing with OpenMath Devices}
+** Functions Dealing with OpenMath Devices
 
 OpenMath expressions are read and written through {\sl devices}.
 Basically, an OpenMath device has an associated encoding and an I/O
@@ -55123,9 +55123,9 @@ An {\tt OMdev} object is a pointer to a structure that contains a lot
 of state. Almost all functions taking an {\tt OMdev} object modify
 it. Likewise, an {\tt OMIO} object carries a lot of state.
 
-\section{Functions to Write OpenMath Expressions to Devices}
+** Functions to Write OpenMath Expressions to Devices
 
-\subsection{Beginning and Ending Objects}
+*** Beginning and Ending Objects
 
 The following two functions mark the beginning and end of an OpenMath object.
 \begin{itemize} 
@@ -55137,7 +55137,7 @@ in constructed in a device.  In particular, the \verb+OMputEndObject+
 function insures that the object has been completely written if any
 buffering was used.
 
-\subsection{Writing Basic Objects}
+*** Writing Basic Objects
 
 Basic OpenMath objects are written using these functions:
 \begin{itemize} 
@@ -55179,7 +55179,7 @@ one. For example, the following line outputs the value of $20!$ to {\tt dev}:
 OMputBigInt(dev, "265252859812191058636308480000000", 33, 1, OMBIbase10);
 \end{verbatim} 
 
-\subsection{Writing Structured Objects}
+*** Writing Structured Objects
 
 The following functions are used to mark the beginning and end of the
 structured objects. They should be called in nested pairs, correctly
@@ -55216,9 +55216,9 @@ OMputEndApp(dev);
 OMputEndObject(dev);
 \end{verbatim} 
 
-\section{Functions to Extract OpenMath Expressions from Devices}
+** Functions to Extract OpenMath Expressions from Devices
 
-\subsection{Testing the type of the current token}
+*** Testing the type of the current token
 
 The first step in decoding an expression from a device is to call the 
 {\tt OMgetType} function
@@ -55254,7 +55254,7 @@ Note that the type of the current token can be tested multiple times. Two
 successive calls to {\tt OMgetType} will always return the same result if no
 other {\tt OMget...} function was called in between. 
 
-\subsection{Extracting the current token}
+*** Extracting the current token
 
 \noindent
 The following functions are used to read the basic OpenMath objects from
@@ -55412,7 +55412,7 @@ copies the content dictionary and the name of the symbols in the {\tt cd} and
 (based on {\tt clen} or {\tt nlen}) a null character is added after the last
 character of the name ({\tt cd} or {\tt name}).
 
-\section{Comments in the SGML/XML Encodings}
+** Comments in the SGML/XML Encodings
 
 The library can also output and read comments (SGML/XML comments) with the
 following functions:
@@ -55499,7 +55499,7 @@ simply establishes an interprocess communication using {\sc IP} addresses.
 The second one provides functions that can be used to launch a server. 
 The addresses used are then generated by the library.
 
-\subsubsection{Simple Connections Functions}
+**** Simple Connections Functions
 
 The following functions allow a client OpenMath application to contact an
 OpenMath server at a specified address:
@@ -55530,7 +55530,7 @@ the {\tt select} or {\tt poll} system calls).
 \item \verb+OMdeviceFd(OMdev dev)+
 \end{itemize} 
 
-\subsubsection{Functions that Launch Servers}
+**** Functions that Launch Servers
 
 These functions provide the same functionalities for launching a
 server that were provided in the {\sc asap} library.
@@ -55570,7 +55570,7 @@ conn = OMmakeConn(2000);
 OMlaunchEnv(conn, "kama", "plot", "DISPLAY=rati:0 PATH=/users/bin");
 \end{verbatim} 
 
-\subsubsection{Termination}
+**** Termination
 
 \begin{itemize} 
 \item \verb+OMstatus OMconnClose(OMconn conn)+
@@ -56082,7 +56082,7 @@ domain in Volume 10.3.
 \item SGML
 \end{itemize}
 
-\subsection{Axiom specific functions}
+*** Axiom specific functions
 This is used in OpenMathPackage in Volume 10.4.
 \begin{verbatim}
 (read OMdev)              -> LispObject
@@ -56134,7 +56134,7 @@ Return true if Axiom supports this CD.
 
 #+end_src
 
-\subsection{Lisp conversion functions}
+*** Lisp conversion functions
 The lisp conversion functions are:
 \begin{verbatim}
  (toDev                 LispObject)                   -> OMdev
@@ -56163,7 +56163,7 @@ or from dev to enc.
 
 #+end_src
 
-\subsection{Device manipulation functions}
+*** Device manipulation functions
 \begin{verbatim}
 (openFileDev LispObject, ints, ...)              -> LispObject
 (openStrDev  LispObject, LispObject, LispObject) -> LispObject
@@ -56199,7 +56199,7 @@ This closes dev, flushing output if necessary.
 
 #+end_src
 
-\subsection{Connection manipulation functions}
+*** Connection manipulation functions
 These are covered in the OpenMathConnection domain in Volume 10.3.
 \begin{verbatim}
  (makeConn      LispObject, LispObject) -> LispObject
@@ -56240,7 +56240,7 @@ These are covered in the OpenMathConnection domain in Volume 10.3.
 
 #+end_src
 
-\subsection{Client/Server functions}
+*** Client/Server functions
 These are covered in the OpenMathConnection domain in Volume 10.3.
 See OMconn.h
 \begin{verbatim}
@@ -56264,7 +56264,7 @@ See OMconn.h
 
 #+end_src
 
-\subsection{Device input/output functions}
+*** Device input/output functions
 Most of these functions are in the OpenMathDevice domain in Volume 10.3.
 The only exception seems to be the om-stringPtrToString and 
 om-stringToStringPtr functions which are called in the domains that
@@ -56721,7 +56721,7 @@ It would appear to be a nop in lisp.
 
 #+end_src
 
-\chapter{NRLIB code.lisp support code}
+* NRLIB code.lisp support code
 
 \defun{makeByteWordVec2}{makeByteWordVec2}
 #+NAME: defun makeByteWordVec2 0
@@ -56742,7 +56742,7 @@ It would appear to be a nop in lisp.
 
 #+end_src
 
-\chapter{Monitoring execution}
+* Monitoring execution
 \begin{verbatim}
 MONITOR                                                                
                                                                        
@@ -57497,7 +57497,7 @@ for example:
 
 #+end_src
 
-\subsection{Monitoring algebra files}
+*** Monitoring algebra files
 \defun{monitor-dirname}{Monitoring algebra code.lsp files}
 \uses{monitor-dirname}{*monitor-nrlibs*}
 #+NAME: defun monitor-dirname 0
@@ -57727,7 +57727,7 @@ This needs to work off the internal exposure list, not the file.
 
 #+end_src
 
-\chapter{HyperDoc}
+* HyperDoc
 Hyperdoc works by building up a page ``description'' which consists
 of a list of items. Each item is itself a list whose first element is
 a tag. The htMakePage1 routine walks the list of items,
@@ -57750,7 +57750,7 @@ constructs a page descriptions which is passes to htMakePage,
 and then calls htShowPage 
 to display the result.
 
-\section{Hyperdoc macro handling and util.ht}
+** Hyperdoc macro handling and util.ht
 
 All of the macros used in hyperdoc are in this hash table.
 User-defined macros are read from the file {\bf doc/util.ht}
@@ -57920,7 +57920,7 @@ We populate the htMacroTable at load time.
 
 #+end_src
 
-\chapter{HyperDoc Basic Command support}
+* HyperDoc Basic Command support
 
 \begin{center}
 {\bf {\large{Basic Command}}}
@@ -57935,7 +57935,7 @@ which demonstrate using Axiom to solve problems.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% HyperDoc -> Basic Commands -> Calculus
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Calculus}
+** Calculus
 
 \begin{center}
 {\bf {\large{Calculus}}}
@@ -58282,7 +58282,7 @@ Pressing the {\bf Continue} button will call the function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% HyperDoc -> Basic Commands -> Matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Matrix}
+** Matrix
 
 %\begin{center}
 %{\bf {\large{Calculus}}}
@@ -58311,7 +58311,7 @@ Pressing the {\bf Continue} button will call the function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% HyperDoc -> Basic Commands -> Draw
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Draw}
+** Draw
 
 %\begin{center}
 %{\bf {\large{Calculus}}}
@@ -58860,7 +58860,7 @@ Pressing the {\bf Continue} button will call the function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% HyperDoc -> Basic Commands -> Series
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Series}
+** Series
 
 %\begin{center}
 %{\bf {\large{Calculus}}}
@@ -59696,10 +59696,10 @@ Pressing the {\bf Continue} button will call the function
 
 #+end_src
 
-\chapter{HyperDoc Reference}
-\section{Book}
-\section{Topics}
-\subsection{Numbers}
+* HyperDoc Reference
+** Book
+** Topics
+*** Numbers
 {\bf Numbers - Integers}
 {\bf Numbers - Fractions}
 {\bf Numbers - Machine Floats}
@@ -59734,14 +59734,14 @@ Pressing the {\bf Continue} button will call the function
 {\bf Numbers - Repeating Binary Expansions}
 {\bf Numbers - Repeating Hexadecimal Expansions}
 {\bf Numbers - Expansions in other Bases}
-\subsection{Polynomials}
+*** Polynomials
 {\bf Polynomials - Basic Functions}
 {\bf Polynomials - Substitutions}
 {\bf Polynomials - Factorization}
 {\bf Polynomials - GCDs and Friends}
 {\bf Polynomials - Roots}
 {\bf Polynomials - Specific Types}
-\subsection{Functions}
+*** Functions
 {\bf Functions - Rational Functions}
 {\bf Functions - Algebraic Equations}
 {\bf Functions - Elementary Functions}
@@ -59750,12 +59750,12 @@ Pressing the {\bf Continue} button will call the function
 {\bf Functions - Simplification}
 {\bf Functions - Pattern Matching}
 {\bf Functions - Operator Algebra}
-\subsection{Solving Equations}
+*** Solving Equations
 {\bf Solving Equations - Systems of Linear Equations}
 {\bf Solving Equations - Single Polynomial Equation}
 {\bf Solving Equations - Systems of Polynomial Equations}
 {\bf Solving Equations - Differential Equations}
-\subsection{Calculus}
+*** Calculus
 {\bf Calculus - Limits}
 {\bf Calculus - Derivatives}
 {\bf Calculus - Integrals}
@@ -59763,7 +59763,7 @@ Pressing the {\bf Continue} button will call the function
 {\bf Calculus - Laplace}
 {\bf Calculus - Series}
 {\bf Calculus - Differential Equations}
-\subsection{Linear Algebra}
+*** Linear Algebra
 {\bf Linear Algebra - Introduction}
 {\bf Linear Algebra - Creating Matrices}
 {\bf Linear Algebra - Operations on Matrices}
@@ -59775,7 +59775,7 @@ Pressing the {\bf Continue} button will call the function
 {\bf Linear Algebra - Working with One-Dimensional Arrays}
 {\bf Linear Algebra - Working with Two-Dimensional Arrays}
 {\bf Linear Algebra - Conversion (Polynomials of Matrices)}
-\subsection{Graphics}
+*** Graphics
 {\bf Graphics - Examples}
   {\bf Examples - Assorted Examples}
   {\bf Examples - Three Dimensional Graphics}
@@ -59787,7 +59787,7 @@ Pressing the {\bf Continue} button will call the function
 {\bf Graphics - 2D Graphics}
 {\bf Graphics - 3D Graphics}
 {\bf Graphics - Viewports}
-\subsection{Algebra}
+*** Algebra
 {\bf Algebra - Number Theory}
   {\bf Number Theory - Galois Groups}
   {\bf Number Theory - Number Theory Functions}
@@ -59795,22 +59795,22 @@ Pressing the {\bf Continue} button will call the function
   {\bf Group Theory - Info on Group Theory}
   {\bf Group Theory - Info on Representation Theory}
   {\bf Group Theory - Representations of A6}
-\section{Language}
-\section{Examples}
-\section{Commands}
-\section{Glossary}
-\section{Hyperdoc}
-\section{Search}
+** Language
+** Examples
+** Commands
+** Glossary
+** Hyperdoc
+** Search
 
-\chapter{HyperDoc Topics}
-\chapter{HyperDoc Browse}
-\chapter{HyperDoc Examples}
-\chapter{HyperDoc Settings}
-\chapter{HyperDoc About}
-\chapter{HyperDoc What's New}
+* HyperDoc Topics
+* HyperDoc Browse
+* HyperDoc Examples
+* HyperDoc Settings
+* HyperDoc About
+* HyperDoc What's New
 
-\chapter{HyperDoc Support Functions}
-\section{Handling page creation and deletion}
+* HyperDoc Support Functions
+** Handling page creation and deletion
 \defdollar{activePageList}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -59845,7 +59845,7 @@ Pressing the {\bf Continue} button will call the function
 
 #+end_src
 
-\section{Handling Axiom command execution}
+** Handling Axiom command execution
 
 %\begin{center}
 %{\bf {\large{Basic Command}}}
@@ -59946,7 +59946,7 @@ This calls the Axiom command line to execute the command.
 
 #+end_src
 
-\section{Functions creating pages}
+** Functions creating pages
 Most of the functions create a new page with a call to the function
 {\tt htMakePage}. This function takes an association list which has
 several possible keys.
@@ -61071,7 +61071,7 @@ Given \verb|("one" "two" "three")| generate \verb|"(one,two,three)"|
 
 #+end_src
 
-\subsection{HTPage Layout}
+*** HTPage Layout
 \label{HTPage Layout}
 This is a list with the fields
 \begin{enumerate}
@@ -64878,10 +64878,10 @@ accepts identically. Its companion \$funnyQuote needs no change:
 
 #+end_src
 
-\chapter{Browser Support Code}
-\section{Pages Initiated from HyperDoc Pages}
+* Browser Support Code
+** Pages Initiated from HyperDoc Pages
 
-\subsection{Search routines}
+*** Search routines
 
 \defun{dKind}{dKind}
 #+NAME: defun dbKind 0
@@ -65296,7 +65296,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\subsection{Page construction}
+*** Page construction
 \defun{conPage}{conPage}
 \calls{conPage}{form2HtString}
 \calls{conPage}{downcase}
@@ -65534,7 +65534,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\section{Branches of Constructor Page}
+** Branches of Constructor Page
 
 \defun{kiPage}{kiPage}
 \calls{kiPage}{htpProperty}
@@ -66580,7 +66580,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\section{Operation Page for a Domain Form from Scratch}
+** Operation Page for a Domain Form from Scratch
 
 \defun{conOpPage}{conOpPage}
 \calls{conOpPage}{dbCompositeWithMap}
@@ -66704,7 +66704,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\section{Operation Page from Main Page}
+** Operation Page from Main Page
 
 \defun{koPage}{koPage}
 \calls{koPage}{htpProperty}
@@ -66828,7 +66828,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\section{Get Constructor Documentation}
+** Get Constructor Documentation
 
 \defun{dbConstructorDoc,hn}{dbConstructorDoc,hn}
 \calls{dbConstructorDoc,hn}{length}
@@ -67125,7 +67125,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\section{Constructor Page Menu}
+** Constructor Page Menu
 
 \defun{dbShowCons}{dbShowCons}
 \calls{dbShowCons}{htpProperty}
@@ -67564,7 +67564,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\subsection{Special Code for Union, Mapping, and Record}
+*** Special Code for Union, Mapping, and Record
 
 \defun{dbSpecialDescription}{dbSpecialDescription}
 \calls{dbSpecialDescription}{getConstructorForm}
@@ -67888,7 +67888,7 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\subsection{Build Library Database (libdb.text,...)}
+*** Build Library Database (libdb.text,...)
 
 \defun{dbMkForm}{dbMkForm}
 #+NAME: defun dbMkForm
@@ -67948,8 +67948,8 @@ There are 8 parts of an htPage:
 
 #+end_src
 
-\chapter{Utility functions}
-\section{Utility functions}
+* Utility functions
+** Utility functions
 
 \defun{delasc}{Delete an alist pair given the key}
 #+NAME: defun delasc 0
@@ -67995,13 +67995,13 @@ Note that ACL2 does not support FLOATP.
 
 #+end_src
 
-\chapter{The Proofs}
+* The Proofs
 #+NAME: acl2
 #+begin_src common-lisp :noweb yes
 <<defun isWrapped 0 ACL2>>
 #+end_src
 
-\chapter{The Interpreter}
+* The Interpreter
 #+NAME: Interpreter
 #+begin_src common-lisp :noweb yes
 (setq *print-array* nil)
@@ -70184,46 +70184,46 @@ Note that ACL2 does not support FLOATP.
 <<postvars>>
 
 #+end_src
-\chapter{The Global Variables}
-\section{Star Global Variables}
+* The Global Variables
+** Star Global Variables
 \begin{tabular}{lll}
 NAME                        & SET              & USE \\
-*eof*                       & ncTopLevel       & \\
-*features*                  &                  & restart \\
-*package*                   &                  & restart \\
-*standard-input*            &                  & ncIntLoop \\
-*standard-output*           &                  & ncIntLoop \\
-*top-level-hook*            & set-restart-hook & \\
+,*eof*                       & ncTopLevel       & \\
+,*features*                  &                  & restart \\
+,*package*                   &                  & restart \\
+,*standard-input*            &                  & ncIntLoop \\
+,*standard-output*           &                  & ncIntLoop \\
+,*top-level-hook*            & set-restart-hook & \\
 \end{tabular}
-\subsection{*eof*}
+*** *eof*
 The \verb|*eof*| variable is set to NIL in ncTopLevel.
-\subsection{*features*}
+*** *features*
 The \verb|*features*| variable from common lisp is tested for the presence
 of the \verb|:unix| keyword. Apparently this controls the use of Saturn,
 a previous Axiom frontend. The Saturn frontend was never released as
 open source and so this test and the associated variables are probably
 not used.
 
-\subsection{*package*}
+*** *package*
 The \verb|*package*| variable, from common lisp, is set in restart
 to the BOOT package where the intepreter lives.
-\subsection{*standard-input*}
+*** *standard-input*
 The \verb|*standard-input*| common lisp variable is used to set the 
 curinstream variable in ncIntLoop. 
 
 This variable is an argument to serverReadLine in
 the intloopReadConsole function.
 
-\subsection{*standard-output*}
+*** *standard-output*
 The \verb|*standard-output*| common lisp variable is used to set the 
 curoutstream variable in ncIntLoop.
 
-\subsection{*top-level-hook*}
+*** *top-level-hook*
 The \verb|*top-level-hook*| common lisp variable contains the name of
 a function to invoke when an image is started. In our case it is
 called restart. This is the entry point to the Axiom interpreter.
 
-\section{Dollar Global Variables}
+** Dollar Global Variables
 \begin{tabular}{lll}
 NAME                         & SET                 & USE \\
 \$boot                       & ncTopLevel          & \\
@@ -70294,25 +70294,25 @@ top\_level                   &                     & runspad \\
                              & setHistoryCore      & setHistoryCore \\
 \end{tabular}
 
-\subsection{\$boot}
+*** \$boot
 The \verb|$boot| variable is set to NIL in ncTopLevel.
 
-\subsection{coerceFailure}
+*** coerceFailure
 The coerceFailure symbol is a catch tag used in runspad
 to catch an exit from ncTopLevel.
 
-\subsection{\$currentLine}
+*** \$currentLine
 The \verb|$currentLine| line is set to NIL in restart.
 It is used in removeUndoLines in the undo mechanism.
 
-\subsection{\$displayStartMsgs}
+*** \$displayStartMsgs
 The \verb|$displayStartMsgs| variable is used in restart but is not
 set so this is likely a bug.
 
-\subsection{\$erMsgToss}
+*** \$erMsgToss
 The \verb|$erMsgToss| variable is set to NIL in SpadInterpretStream.
 
-\subsection{\$frameRecord}
+*** \$frameRecord
 \verb|$frameRecord = [delta1, delta2,... ]| where
 delta(i) contains changes in the ``backwards'' direction.
 Each delta(i) has the form ((var . proplist)...) where
@@ -70334,16 +70334,16 @@ If no changes are found for former, no special entry is given.
 
 This is part of the undo mechanism.
 
-\subsection{\$intRestart}
+*** \$intRestart
 The \verb|$intRestart| variable is used in intloop but has no value.
 This is probably a bug. While the variable's value is unchanged the
 system will continually reenter the SpadInterpretStream function.
 
-\subsection{\$intTopLevel}
+*** \$intTopLevel
 The \verb|$intTopLevel| is a catch tag. Throwing to this tags which is
 caught in the intloop will restart the SpadInterpretStream function.
 
-\subsection{\$IOindex}
+*** \$IOindex
 The \verb|$IOindex| index variable is set to 1 in restart.
 This variable is used in the historySpad2Cmd function in the
 history mechanism. It is set in the removeUndoLines function
@@ -70353,42 +70353,42 @@ This is used in the undo mechanism in function undoCount
 to compute the number of undos. You can't undo more actions then
 have already happened.
 
-\subsection{\$lastPos}
+*** \$lastPos
 The \verb|$lastPos| variable is set in SpadInterpretStream
 to the value of the \verb|$nopos| variable.
 Since \verb|$nopos| appears to have no value
 this is likely a bug.
 
-\subsection{\$libQuiet}
+*** \$libQuiet
 The \verb|$libQuiet| variable is set to the third argument of the
 SpadInterpretStream function. This is passed from intloop
 with the value of T. This variable appears to be intended to
 control the printing of library loading messages which would need
 to be suppressed if input was coming from a file.
 
-\subsection{\$msgDatabaseName}
+*** \$msgDatabaseName
 The \verb|$msgDatabaseName| is set to NIL in reroot.
 
-\subsection{\$ncMsgList}
+*** \$ncMsgList
 The \verb|$ncMsgList| is set to NIL in SpadInterpretStream.
 
-\subsection{\$newcompErrorCount}
+*** \$newcompErrorCount
 The \verb|$newcompErrorCount| is set to 0 in SpadInterpretStream.
 
-\subsection{\$nopos}
+*** \$nopos
 The \verb|$nopos| variable is used in SpadInterpretStream but does
 not appear to have a value and is likely a bug.
 
-\subsection{\$oldHistoryFileName}
+*** \$oldHistoryFileName
 The \verb|$oldHistoryFileName| is set at load time by a call to 
 initvars to a value of ``last''. 
 It is part of the history mechanism. It is used in the function
 oldHistFileName and restoreHistory.
 
-\subsection{\$okToExecuteMachineCode}
+*** \$okToExecuteMachineCode
 The \verb|$okToExecuteMachineCode| is set to T in SpadInterpretStream.
 
-\subsection{\$options}
+*** \$options
 The \verb|$options| variable is tested by the history function.
 If it is NIL then output the message 
 \begin{verbatim}
@@ -70403,43 +70403,43 @@ off options to scan.
 
 This variable is not yet set and is probably a bug.
 
-\subsection{\$previousBindings}
+*** \$previousBindings
 The \verb|$previousBindings| is a copy of the 
 \verb|CAAR $InteractiveFrame|. This is used to
 compute the delta(i)s stored in \verb|$frameRecord|.
 This is part of the undo mechanism.
 
-\subsection{\$reportundo}
+*** \$reportundo
 The \verb|$reportundo| variable is used in diffAlist. It was not normally
 bound but has been set to T in initvars. If the variable is set
 to T then we call reportUndo.
 
 It is part of the undo mechanism.
 
-\subsection{\$spad}
+*** \$spad
 The \verb|$spad| variable is set to T in ncTopLevel.
 
-\subsection{\$SpadServer}
+*** \$SpadServer
 If an open server is not requested then this variable to T.
 It has no value before this time (and is thus a bug).
 
-\subsection{\$SpadServerName}
+*** \$SpadServerName
 The \verb|$SpadServerName| is passed to the openServer function, if the
 function exists. 
 
-\subsection{\$systemCommandFunction}
+*** \$systemCommandFunction
 The \verb|$systemCommandFunction| is set in SpadInterpretStream
 to point to the function InterpExecuteSpadSystemCommand.
 
-\subsection{top\_level}
+*** top\_level
 The top\_level symbol is a catch tag used in runspad
 to catch an exit from ncTopLevel.
 
-\subsection{\$quitTag}
+*** \$quitTag
 The \verb|$quitTag| is used as a variable in a catch block. 
 It appears that it can be thrown somewhere below ncTopLevel.
 
-\subsection{\$useInternalHistoryTable}
+*** \$useInternalHistoryTable
 The \verb|$useInternalHistoryTable| variable is set at load time by a call to
 initvars to a value of NIL. It is part of the history mechanism.
 

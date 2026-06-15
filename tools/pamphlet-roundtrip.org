@@ -27,6 +27,48 @@ edge cases (malformed markers, trailing text) are handled as we find them.
 (require 'pamphlet2org)   ; for pamphlet2org--detect-lang
 #+END_SRC
 
+* Phase 1: org-native headings (reversible prose rewrite)
+
+Only the chunk scaffolding HAD to move to org; the prose stayed raw LaTeX.
+Phase 1 makes the *headings* org-native too -- =\chapter{X}= <-> =* X=,
+=\section= <-> =**=, =\subsection= <-> =***=, =\subsubsection= <-> =****= --
+while staying byte-reversible.  Two rules keep it a true bijection:
+
+- Convert ONLY a bare =^\section{X}$= line; a heading with trailing text
+  (=\section{X}\label{..}=) stays verbatim.
+- A prose line that is zero-or-more commas then =*= would be read back as a
+  heading (or an already-escaped one), so escape it with a leading comma --
+  org's own =,*= convention.  The reverse strips exactly one comma.
+
+Applied to PROSE only: chunk code and =\begin{verbatim}= blocks are skipped.
+The C =books/untanglec.c= carries the exact same reverse so the build
+regenerates byte-identical .pamphlet (verified over all 1000 files).
+
+#+BEGIN_SRC elisp
+(defun pamphlet-roundtrip--prose-fwd (line)
+  "Prose line: pamphlet -> org-native heading, or escape a leading-* collision."
+  (cond
+   ((string-match "\\`\\\\chapter{\\([^}]*\\)}\\'" line)       (concat "* "    (match-string 1 line)))
+   ((string-match "\\`\\\\subsubsection{\\([^}]*\\)}\\'" line) (concat "**** " (match-string 1 line)))
+   ((string-match "\\`\\\\subsection{\\([^}]*\\)}\\'" line)    (concat "*** "  (match-string 1 line)))
+   ((string-match "\\`\\\\section{\\([^}]*\\)}\\'" line)       (concat "** "   (match-string 1 line)))
+   ((string-match "\\`,*\\*" line) (concat "," line))
+   (t line)))
+
+(defun pamphlet-roundtrip--prose-rev (line)
+  "Prose line: org-native heading -> pamphlet, or unescape one leading comma."
+  (if (string-match "\\`,*\\*" line)
+      (if (eq (aref line 0) ?,)
+          (substring line 1)
+        (cond
+         ((string-match "\\`\\*\\*\\*\\* \\(.*\\)\\'" line) (concat "\\subsubsection{" (match-string 1 line) "}"))
+         ((string-match "\\`\\*\\*\\* \\(.*\\)\\'" line)    (concat "\\subsection{"    (match-string 1 line) "}"))
+         ((string-match "\\`\\*\\* \\(.*\\)\\'" line)       (concat "\\section{"       (match-string 1 line) "}"))
+         ((string-match "\\`\\* \\(.*\\)\\'" line)          (concat "\\chapter{"       (match-string 1 line) "}"))
+         (t line)))
+    line))
+#+END_SRC
+
 * Forward: pamphlet -> org
 
 #+BEGIN_SRC elisp
@@ -71,8 +113,9 @@ edge cases (malformed markers, trailing text) are handled as we find them.
          ;; getchunk/<<>> are only converted INSIDE chunks (where org-babel
          ;; noweb actually expands them).  In prose, both \getchunk{x} and a
          ;; literal <<x>> stay verbatim, so a literal <<x>> (e.g. bookvol11)
-         ;; is never mistaken for a reference on the way back.
-         (t (push line out)))))
+         ;; is never mistaken for a reference on the way back.  Prose headings
+         ;; (and leading-* escapes) are handled by --prose-fwd.
+         (t (push (pamphlet-roundtrip--prose-fwd line) out)))))
     (string-join (nreverse out) "\n")))
 #+END_SRC
 
@@ -82,10 +125,17 @@ edge cases (malformed markers, trailing text) are handled as we find them.
 (defun pamphlet-roundtrip-to-pamphlet (text)
   "Reverse `pamphlet-roundtrip-to-org': org TEXT back to pamphlet."
   (let ((out '()) (lines (split-string text "\n")) (pfx pamphlet2org--src-prefix)
-        (in-src nil))
+        (in-src nil) (in-verbatim nil))
     (while lines
-      (let ((line (pop lines)))
+      (let* ((line (pop lines)) (trimmed (string-trim line)))
         (cond
+         ;; inside a prose \begin{verbatim} block leave every line raw -- the
+         ;; forward never rewrote headings there, so we must not reverse them
+         (in-verbatim
+          (push line out)
+          (when (string-suffix-p "\\end{verbatim}" trimmed) (setq in-verbatim nil)))
+         ((and (not in-src) (string= trimmed "\\begin{verbatim}"))
+          (push line out) (setq in-verbatim t))
          ((string-prefix-p (concat pfx "NAME: ") line)
           (let ((name (substring line (length (concat pfx "NAME: ")))))
             (if (and lines (string-prefix-p (concat pfx "begin_src ") (car lines)))
@@ -94,7 +144,7 @@ edge cases (malformed markers, trailing text) are handled as we find them.
                                   (match-string 1 bs) "")))
                   (push (format "\\begin{chunk}{%s}%s" name extra) out)
                   (setq in-src t))
-              (push line out))))             ; lone #+NAME in prose: keep raw
+              (push (pamphlet-roundtrip--prose-rev line) out))))   ; lone #+NAME: prose
          ((and in-src (string-prefix-p (concat pfx "end_src") line))
           (push (concat "\\end{chunk}"
                         (substring line (length (concat pfx "end_src"))))
@@ -104,7 +154,8 @@ edge cases (malformed markers, trailing text) are handled as we find them.
          ;; a literal <<x>> in prose stays as-is
          ((and in-src (string-match "\\`<<\\([^>]*\\)>>\\'" line))
           (push (format "\\getchunk{%s}" (match-string 1 line)) out))
-         (t (push line out)))))
+         ;; chunk code raw; prose gets the heading reverse / comma-unescape
+         (t (push (if in-src line (pamphlet-roundtrip--prose-rev line)) out)))))
     (string-join (nreverse out) "\n")))
 #+END_SRC
 
