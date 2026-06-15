@@ -343,10 +343,10 @@ srctangle-tools: tanglec untanglec orgtangle
 # Byte-exact gate for the org-native migration.  Regenerate every tracked
 # source pamphlet twice -- from BASE (with BASE's untanglec) and from the
 # working tree (with the current untanglec) -- and assert they are identical.
-# Allowlist-free: an intentional content edit between BASE and the tree is
-# invisible; only a prose rewrite that actually moved pamphlet bytes fails it,
-# which is exactly the invariant each org-native phase must hold.  BASE
-# defaults to HEAD (the script's own default when $(BASE) is empty).
+# It flags EVERY pamphlet-byte change in BASE..worktree -- a format rewrite that
+# moved bytes AND a deliberate content edit -- so pick BASE = the commit before
+# the phase to read a green run as "byte-transparent".  BASE defaults to HEAD
+# (the script's own default when $(BASE) is empty).
 #   make check-pamphlet-bytes BASE=<commit-before-the-phase>
 check-pamphlet-bytes:
 	@echo t05 byte-exact pamphlet gate vs $(BASE)

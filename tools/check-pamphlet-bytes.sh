@@ -7,10 +7,14 @@
 # once from a BASE ref (with BASE's own untanglec), once from the working tree
 # (with the current untanglec) -- and asserting they are byte-identical.
 #
-# This is the allowlist-free form of "test 2": it compares the BUILD OUTPUT
-# across a change, so intentional content edits living in BASE..worktree (an
-# SBCL code patch, a Makefile rewiring) are invisible to it -- only a prose
-# rewrite that accidentally altered pamphlet bytes can make it fail.
+# It compares the BUILD OUTPUT across BASE..worktree, so it flags ANY pamphlet-
+# byte change in that range: a format rewrite that accidentally moved bytes, AND
+# a deliberate content edit (an SBCL patch, a Makefile rewiring) -- both show as
+# DIFFER.  To read a green result as "the rewrite was byte-transparent", pick
+# BASE so the rewrite under test is the ONLY delta to the tree (e.g. BASE = the
+# commit just before the phase, with unrelated content edits committed outside
+# that range).  It is allowlist-free in that it judges nothing -- it just reports
+# every byte difference -- not in the sense that content edits are invisible.
 #
 # Usage:
 #   tools/check-pamphlet-bytes.sh [BASE_REF]      # default BASE_REF = HEAD
@@ -44,8 +48,12 @@ while read -r f; do
   [ -z "$f" ] && continue
   if ! git cat-file -e "$BASE:$f" 2>/dev/null; then SKIP=$((SKIP+1)); continue; fi
   git show "$BASE:$f" > "$T/base.org" 2>/dev/null
-  "$T/unt_base" "$T/base.org" > "$T/base.pam" 2>/dev/null
-  "$T/unt_cur"  "$f"          > "$T/cur.pam"  2>/dev/null
+  # A non-zero untanglec exit (segfault, OOM, abort) leaves empty output; without
+  # this guard two empty .pam files would cmp-equal and be miscounted as SAME.
+  if ! "$T/unt_base" "$T/base.org" > "$T/base.pam" 2>/dev/null \
+     || ! "$T/unt_cur" "$f"        > "$T/cur.pam"  2>/dev/null; then
+    DIFF=$((DIFF+1)); echo "$f (untanglec failed)" >> "$T/differ.txt"; continue
+  fi
   if cmp -s "$T/base.pam" "$T/cur.pam"; then SAME=$((SAME+1));
   else DIFF=$((DIFF+1)); echo "$f" >> "$T/differ.txt"; fi
 done < "$T/files.txt"
