@@ -45,6 +45,17 @@ static int vb_end(const char *s, long len) {
   while (b > 0 && (s[b - 1] == ' ' || s[b - 1] == '\t' || s[b - 1] == '\r')) b--;
   return b >= 14 && memcmp(s + b - 14, "\\end{verbatim}", 14) == 0;
 }
+/* trimmed-equal to TOK: line is <lead ws> TOK <trail ws>.  On match set *lead to
+   the leading-ws length and *trail to the offset just past TOK, so the reverse
+   can re-emit the exact surrounding whitespace.  Used for #+begin_example /
+   #+end_example, the org-native form of a clean \begin{verbatim} block. */
+static int trimmed_eq(const char *s, long len, const char *tok, long *lead, long *trail) {
+  long a = 0, b = len, tl = (long) strlen(tok);
+  while (a < b && (s[a] == ' ' || s[a] == '\t')) a++;
+  while (b > a && (s[b - 1] == ' ' || s[b - 1] == '\t' || s[b - 1] == '\r')) b--;
+  if (b - a == tl && memcmp(s + a, tok, tl) == 0) { *lead = a; *trail = b; return 1; }
+  return 0;
+}
 /* Reverse the org-native heading rewrite on a PROSE line (outside chunks and
    \begin{verbatim} blocks).  Mirrors pamphlet-roundtrip's pr--prose-rev:
    `* X' .. `**** X' -> \chapter{X} .. \subsubsection{X}; a leading-comma escape
@@ -100,13 +111,38 @@ int main(int argc, char *argv[]) {
   }
   sp[si].start = ls; sp[si].len = bufsize - ls; si++;
 
-  int in_src = 0, in_verbatim = 0, first = 1;
+  int in_src = 0, in_verbatim = 0, in_example = 0, first = 1;
+  long lead, trail;
   for (i = 0; i < nspans; i++) {
     char *s = buf + sp[i].start;
     long len = sp[i].len;
 
+    /* Inside a prose #+begin_example block (org-native form of a clean verbatim
+       block): content is raw; #+end_example closes it back to \end{verbatim}. */
+    if (in_example) {
+      if (!first) putchar('\n'); first = 0;
+      if (trimmed_eq(s, len, "#+end_example", &lead, &trail)) {
+        fwrite(s, 1, (size_t) lead, stdout);
+        fputs("\\end{verbatim}", stdout);
+        fwrite(s + trail, 1, (size_t) (len - trail), stdout);
+        in_example = 0;
+      } else {
+        fwrite(s, 1, (size_t) len, stdout);
+      }
+      continue;
+    }
+    if (!in_src && trimmed_eq(s, len, "#+begin_example", &lead, &trail)) {
+      if (!first) putchar('\n'); first = 0;
+      fwrite(s, 1, (size_t) lead, stdout);
+      fputs("\\begin{verbatim}", stdout);
+      fwrite(s + trail, 1, (size_t) (len - trail), stdout);
+      in_example = 1;
+      continue;
+    }
+
     /* Inside a prose \begin{verbatim} block every line is raw -- the forward
-       never rewrote headings there, so we must not reverse them here. */
+       never rewrote headings there, so we must not reverse them here.  (Blocks
+       whose \end carried trailing content were left raw, not org-ified.) */
     if (in_verbatim) {
       if (!first) putchar('\n'); first = 0;
       fwrite(s, 1, (size_t) len, stdout);

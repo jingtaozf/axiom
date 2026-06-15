@@ -77,6 +77,36 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
    (t line)))
 #+END_SRC
 
+* Phase 3: org-native verbatim blocks (=#+begin_example=)
+
+Phase 1/2 left =\begin{verbatim}..\end{verbatim}= prose blocks raw -- they were
+the skip zone where headings and itemize escapes did not fire.  Phase 3 makes
+the *clean* ones org-native: =\begin{verbatim}= <-> =#+begin_example=,
+=\end{verbatim}= <-> =#+end_example=, with the block's content emitted verbatim
+between them.  =org-latex-example-block= exports a =#+begin_example= as a
+=verbatim= environment, so this is the inverse of org's own LaTeX backend.
+
+Three rules keep it a byte bijection, so only *clean* blocks convert:
+
+- *Both delimiters must trim exactly.*  =\begin{verbatim}= converts only when
+  the line trims to exactly that token (leading/trailing whitespace is carried
+  by =string-replace=); the block ends at the first line whose trim *ends with*
+  =\end{verbatim}=, and converts only when that end trims to exactly the token.
+  A block whose =\end= carries trailing content (=...))\end{verbatim}=), or a
+  commented =%\begin{verbatim}=, or a =\verb|\begin{verbatim}|= mention, stays
+  raw -- =#+end_example= must stand alone on its line, so those cannot convert.
+- *No marker collision inside.*  A block whose content already holds a line
+  trimming to =#+begin_example=/=#+end_example= stays raw (none exist in the
+  corpus, but the guard keeps the reverse unambiguous).
+- *Whitespace is preserved exactly*, so an indented =  \begin{verbatim}= round
+  trips through =  #+begin_example=.
+
+The forward lives in =pamphlet-roundtrip-to-org= (a look-ahead that scans to the
+matching =\end=); the reverse in =pamphlet-roundtrip-to-pamphlet= and, for the
+build, in =books/untanglec.c='s =#+begin_example= handling.  All three carry the
+identical rule -- verified byte-exact over the corpus by =check-pamphlet-bytes=
+(2232 blocks across 98 files) and by =to-pamphlet(to-org(P)) == P=.
+
 * Forward: pamphlet -> org
 
 #+BEGIN_SRC elisp
@@ -85,7 +115,7 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
   ;; Keep ALL split fields (including the trailing "" from a final \n, and any
   ;; empty lines) and join without appending -- this preserves the exact
   ;; trailing-newline state, so a file with no final newline round-trips too.
-  (let ((out '()) (in-chunk nil) (in-verbatim nil) (lines (split-string text "\n")))
+  (let ((out '()) (in-chunk nil) (lines (split-string text "\n")))
     (while lines
       (let* ((line (pop lines)) (trimmed (string-trim line)))
         (cond
@@ -101,10 +131,29 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
            ((string-match "\\`\\\\getchunk{\\([^}]*\\)}\\'" line)
             (push (format "<<%s>>" (match-string 1 line)) out))
            (t (push line out))))
-         (in-verbatim
-          (push line out)
-          (when (string-suffix-p "\\end{verbatim}" trimmed)
-            (setq in-verbatim nil)))
+         ;; a CLEAN \begin{verbatim}..\end{verbatim} block -- both delimiters trim
+         ;; exactly, no #+begin_example/#+end_example line inside -- becomes an org
+         ;; #+begin_example block (string-replace keeps the markers' surrounding
+         ;; whitespace).  Messy blocks (\end with trailing content, etc.) stay raw,
+         ;; exactly as before.  untanglec.c carries the identical rule.
+         ((string= trimmed "\\begin{verbatim}")
+          (let ((content '()) endline)
+            (while (and lines (not (string-suffix-p "\\end{verbatim}"
+                                                    (string-trim (car lines)))))
+              (push (pop lines) content))
+            (setq endline (car lines) content (nreverse content))
+            (if (and endline
+                     (string= (string-trim endline) "\\end{verbatim}")
+                     (not (cl-some (lambda (c) (member (string-trim c)
+                                                       '("#+begin_example" "#+end_example")))
+                                   content)))
+                (progn (pop lines)
+                       (push (string-replace "\\begin{verbatim}" "#+begin_example" line) out)
+                       (dolist (c content) (push c out))
+                       (push (string-replace "\\end{verbatim}" "#+end_example" endline) out))
+              (push line out)
+              (dolist (c content) (push c out))
+              (when endline (push (pop lines) out)))))
          ;; \begin{chunk}{NAME}EXTRA at column 0 -- NAME up to the first }, EXTRA
          ;; (e.g. a stray }) appended to #+begin_src for exact reversal
          ((string-match "\\`\\\\begin{chunk}{\\([^}]*\\)}\\(.*\\)\\'" line)
@@ -115,9 +164,6 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
                           (pamphlet2org--detect-lang name filename) extra)
                   out)
             (setq in-chunk t)))
-         ((string= trimmed "\\begin{verbatim}")
-          (push line out)
-          (setq in-verbatim t))
          ;; itemize block (prose): a CANONICAL \begin{itemize}..\end{itemize}
          ;; (every inner line a single-line `\item X', no blank/\item[/nesting)
          ;; becomes org `- X' lines; anything else stays verbatim.  The dropped
@@ -151,12 +197,24 @@ regenerates byte-identical .pamphlet (verified over all 1000 files).
 (defun pamphlet-roundtrip-to-pamphlet (text)
   "Reverse `pamphlet-roundtrip-to-org': org TEXT back to pamphlet."
   (let ((out '()) (lines (split-string text "\n")) (pfx pamphlet2org--src-prefix)
-        (in-src nil) (in-verbatim nil))
+        (in-src nil) (in-verbatim nil) (in-example nil))
     (while lines
       (let* ((line (pop lines)) (trimmed (string-trim line)))
         (cond
-         ;; inside a prose \begin{verbatim} block leave every line raw -- the
-         ;; forward never rewrote headings there, so we must not reverse them
+         ;; #+begin_example (org-native form of a clean verbatim block) reverses
+         ;; to \begin{verbatim}; content is raw; #+end_example closes it.  The
+         ;; string-replace preserves the marker line's surrounding whitespace.
+         (in-example
+          (if (string= trimmed "#+end_example")
+              (progn (push (string-replace "#+end_example" "\\end{verbatim}" line) out)
+                     (setq in-example nil))
+            (push line out)))
+         ((and (not in-src) (string= trimmed "#+begin_example"))
+          (push (string-replace "#+begin_example" "\\begin{verbatim}" line) out)
+          (setq in-example t))
+         ;; inside a prose \begin{verbatim} block leave every line raw -- a block
+         ;; whose \end carried trailing content was left raw (not org-ified), so
+         ;; the forward never rewrote headings there and we must not reverse them
          (in-verbatim
           (push line out)
           (when (string-suffix-p "\\end{verbatim}" trimmed) (setq in-verbatim nil)))

@@ -124,50 +124,50 @@ for hard-to-detect bugs in this area. The other drawback of Reduce's
 scheme is that it really only applies to {\sl constant} domains. This works
 well for floating point or complex coefficients, but has its weaknesses
 when it comes to handling Taylor series. For example
-\begin{verbatim}
+#+begin_example
 1: load tps;    % truncated power series;
 
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 2: ps(cos x,x,0);
 
        1    2      1     4       1     6       7
 {1 - (---)*X   + (----)*X   - (-----)*X   + O(X )}
        2           24           720
 
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 3: ws-1;
 
       1    2      1     4       1     6       7
 { - (---)*X   + (----)*X   - (-----)*X   + O(X )}
       2           24           720
 
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 4: ps(sin x,x,0);
 
        1    3      1     5     7
 {X - (---)*X  + (-----)*X  +O(X )}
        6          120
 
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 5:ws-x;
 
               1    3      1     5     7
  - X + {X - (---)*X  + (-----)*X  +O(X )}
               6          120
 
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 6: ws 4 - ps(x,x,0);
 
      1    3      1     5     7
  - (---)*X  + (-----)*X  +O(X )}
      6          120
 
-\end{verbatim}
+#+end_example
 
 The spurious power series expansion at line 6: is necessary to avoid
 the confusion at line 5:, where the variable $x$ is separated from
@@ -206,30 +206,30 @@ that juxtaposition has a high precedence, and that {\bf sin x**2} parses as
 mathematical notation that formal grammars of any kind find hard to capture.
 
 Principle 2 can be seen in the following mini-session with Axiom:
-\begin{verbatim}
+#+begin_example
 ->a:Integer
 ->b:IntegerMod(3)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->a:=2
 
   (3)  2
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->a:=a+a
 
   (4)  4
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->b:=2
 
   (5)  2
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->b:=b+b
 
   (6) 1
-\end{verbatim}
+#+end_example
 
 The first two lines declare the domains to which the values of a and b
 may belong -- loosely speaking the types of the variables $a$ and $b$ --
@@ -248,36 +248,36 @@ far as {\tt )se m ty on}}
 In addition to the Hyperdoc help system,
 information about system commands can be found using {\tt )help}.
 
-\begin{verbatim}
+#+begin_example
 ->a:Integer
                                          Type: Void
 ->b:IntegerMod(3)
                                          Type: Void
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->a:=2
 
   (3)  2
                                          Type: Integer
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->a:=a+a
 
   (4)  4
                                          Type: Integer
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->b:=2
 
   (5)  2
                                          Type: IntegerMod 3
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->b:=b+b
 
   (6) 1
                                          Type: IntegerMod 3
-\end{verbatim}
+#+end_example
 
 Note that the declarations themselves are algebraic commands, and
 therefore their results must belong to a domain: in this case the {\tt Void}
@@ -300,11 +300,11 @@ to the last non-void object.
 Principle 2 has an apparent exception, which we can see in the example
 above if, instead of writing {\bf a:=a+a}, we had just tried {\bf a+a},
 i.e. asked for the value to calculated, but not to replace the old {\bf a}.
-\begin{verbatim}
+#+begin_example
 ->a+a
   (4)   4
                                          Type: PositiveInteger
-\end{verbatim}
+#+end_example
 
 The {\bf 4} now belongs to {\tt PositiveInteger} whereas it used to belong
 to {\tt Integer}, yet we are performing the same calculation. The answer is
@@ -342,17 +342,17 @@ functions that most other systems provide, and which correspond to
 general algebra and calculus, work through the type system
 provided. For example, the following session could be taken from any
 algebra system.
-\begin{verbatim}
+#+begin_example
 ->sin(x)
 
    (1)  sin(x)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->integrate(%,x)
 
    (2)  - cos(x)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->series (%,x=%pi/2)
 
    (3)
@@ -365,8 +365,8 @@ algebra system.
        1         %pi 9        1         %pi 11            %pi 12
      ------ (x - ---)   - -------- (x - ---)     + O((x - ---)  )
      362880       2       39916800       2                 2
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->integrate %
 
    (4)
@@ -378,7 +378,7 @@ algebra system.
         1         %pi 10        1          %pi 12           %pi 13
      ------- (x - ---)    - --------- (x - ---)    + O((x - ---)  )
      3628800       2        479001600       2                2
-\end{verbatim}
+#+end_example
 
 We note that the second use of integrate did not require, and indeed
 can not be given, a variable. Since the expression is a series in 
@@ -403,18 +403,18 @@ and braces -- {\bf \{\}} -- are used for constructing sets.}
 The difference between lists and sets is that lists can contain
 repetitions, and order matters, whereas sets, as in mathematics, are
 unordered and without repetition.
-\begin{verbatim}
+#+begin_example
 ->[2,1,2,1]
  
    (1)  [2,1,2,1]
                                        Type: List PositiveInteger
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->{2,1,2,1}
 
    (2)  {1,2}
                                        Type: Set PositiveInteger
-\end{verbatim}
+#+end_example
 
 Suppose we had a list of objects, and wished to convert it into a set,
 e.g., in the situation above, we do not want to retype the 2,1,2,1.
@@ -446,12 +446,12 @@ perform a chain of coercions when instructed to do so by the {\bf ::}
 operator in compiled code.}
 
 So we could replace command (2) above by
-\begin{verbatim}
+#+begin_example
 ->%::Set PositiveInteger
 
    (2)  {1,2}
                                           Type: Set PositiveInteger
-\end{verbatim}
+#+end_example
 
 A large number of coercions are performed automatically. Even the
 simple computation $x+1$ causes three coercions:
@@ -478,16 +478,16 @@ having to modify the domain at all.
 Computer algebra is often also called ``symbolic manipulation'', and 
 Axiom excels at manipulating symbols as such. A symbol can be as 
 simple as $x$ or as complex as
-\begin{verbatim}
+#+begin_example
 
        Omega (theta)
    (1)      x       (a,b )
            7 1,2        1
-\end{verbatim}
+#+end_example
 obtained via the following command:
-\begin{verbatim}
+#+begin_example
    script(x,[[1,2],[paren theta],[Omega],[7], [a,script(b, [[1]])]])
-\end{verbatim}
+#+end_example
 This symobl can be converted into TEX format by means of the 
 {\tt outputAsTex} function: the result is shown below.
 \[{{} \sb {7} \sp {Omega}x \sb {{1, \: 2}} \sp {{\left( theta 
@@ -497,14 +497,14 @@ This symobl can be converted into TEX format by means of the
 \right)
 \]
 It is still a single symbol, and the command
-\begin{verbatim}
+#+begin_example
 ->integrate(sin %,%)
 
               Omega (theta)
    (4)  - cos(     x       (a,b ))
                   7 1,2        1
                                          Type: Union(Expression(Integer),...)
-\end{verbatim}
+#+end_example
 is no different from {\tt integrate(sin(x),x)}.
 
 Axiom has a rich integrator, based on the developments by 
@@ -538,7 +538,7 @@ where the special token {\tt failed} is returned if the division is not exact.}
 So we are saying that Axiom's integrator can return either an expression, 
 or a list of expressions. A simple example of it doing the latter is the 
 following.
-\begin{verbatim}
+#+begin_example
 -> integrate(1/(x**2-a),x)
 
                2      +-+
@@ -549,7 +549,7 @@ following.
    (4)  [------------------------,- -------------]
                      +-+                 +---+
                    2\|a                 \|- a
-\end{verbatim}
+#+end_example
 
 Here, there are two possible answers, depending on the sign of $a$.
 Since Axiom has no way of knowing which is required, it returns
@@ -558,27 +558,27 @@ command, to supply the higher knowledge necessary to determine which
 element of the list to use (and it may not always be the same one). In
 some sense, they are equally correct, as we can check by differentiating 
 them.
-\begin{verbatim}
+#+begin_example
 -> [differentiate(f,x) for f in %]
 
             1      1
    (5)  [------,------]
           2      2
          x  - a x  - a
-\end{verbatim}
+#+end_example
 
 Note the neat way of handling the list. There are many other such list
 handling techniques, and the user can also use {\tt map}, a function
 provided on most of the library's compound data types. This is how map
 could differentiate the elements of that list.
-\begin{verbatim}
+#+begin_example
 -> map(f+->differentiate(f,x),%% 4)
 
             1      1
    (6)  [------,------]
           2      2
          x  - a x  - a
-\end{verbatim}
+#+end_example
 
 {\bf Convention 6 (Of the library authors)}. {\sl The notation}
 \[list\thinspace{} of\thinspace{} variables +-> expression\]
@@ -589,27 +589,27 @@ As we have already seen, Axiom has a powerful series capability. As
 pioneered by Norman\cite{Norm75} in Scratchpad-1, these series are {\sl lazy}:
 terms are only evaluated as required for printing, and more terms can
 always be evaluated as required.
-\begin{verbatim}
+#+begin_example
 -> series(sin(x),x=0)
 
             1  3    1   5     1   7      1    9       1     11      12
    (1)  x - - x  + --- x  - ---- x  + ------ x  - -------- x   + O(x  )
             6      120      5040      362880      39916800
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (2) -> %/x
 
         1      1  3     1   5     1    7      1     9       1      11      12
    (2)  - x - -- x  + ---- x  - ----- x  + ------- x  - --------- x   + O(x  )
         x     6x      120x      5040x      362880x      39916800x
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (3) -> %-1
 
               1      1  3     1   5     1    7      1     9      11
    (3)  - 1 + - x - -- x  + ---- x  - ----- x  + ------- x  + O(x  )
               x     6x      120x      5040x      362880x
-\end{verbatim}
+#+end_example
 
 The number of terms initally calculated (and therefore displayed) is
 controlled by the system command {\tt )set streams calculate}. The type of
@@ -624,19 +624,19 @@ $a_0x^0+a_1x^1+\cdots$. One way of generalising this is to allow
 $1/x$ (more generally $1/x^n$) variety. In order to represent these, 
 we have to allow (a finite number of) negative exponents in the series
 -- so-called Laurent series.
-\begin{verbatim}
+#+begin_example
 -> series(1/sin(x),x=0)
 
          - 1   1      7   3     31   5     127   7      73    9      10
    (4)  x    + - x + --- x  + ----- x  + ------ x  + ------- x  + O(x  )
                6     360      15120      604800      3421440
-\end{verbatim}
+#+end_example
 
 However, even these are not as general as one would like, since they are
 incapable of representing multi-valued functions like $\sqrt{x}$. 
 To do this, we have to allow fractional exponents (of bounded
 denominator), which gives us Puiseux series.
-\begin{verbatim}
+#+begin_example
 -> sqrt %
 
            1       3        7
@@ -644,8 +644,8 @@ denominator), which gives us Puiseux series.
            2    1  2    1   2      5
    (5)  x    + -- x  + --- x  + O(x )
                12      160
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 -> %**2
 
                                  9
@@ -653,15 +653,15 @@ denominator), which gives us Puiseux series.
          - 1   1      7   3      2
    (6)  x    + - x + --- x  + O(x )
                6     360
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (7) -> %%(4)-%
 
            19
            --
             2
    (7)  O(x  )
-\end{verbatim}
+#+end_example
 
 Note that Axiom, like any other algebra system, cannot prove that the
 difference of these two series is identically zero, merely that in
@@ -694,7 +694,7 @@ capitalised, as in {\tt IntegerMod} or {\tt UnivariatePuiseuxSeries}.}
 One can search (case-insensitively) for all functions whose name contains 
 a particular word by using the system command {\tt )what operations}, 
 contractible to {\tt )w o} , as in
-\begin{verbatim}
+#+begin_example
 ->)what operations series
 
 Operations whose names satisfy the above pattern(s):
@@ -703,7 +703,7 @@ series        seriesSolve
 
   To get more information about an operation, say series , issue the
   command )display op series
-\end{verbatim}
+#+end_example
 
 As it says, the command {\tt )display operations}, contractible to {\tt )d o},
 can be used to find out what the arguments of an operation should
@@ -725,57 +725,57 @@ their result, whereas ``function'' is reserved for operations whose
 value is an Axiom object} {\tt IntegerMod} to different integers, so
 one can make different matrix domains by applying the functor {\tt
 Matrix} to different domains for the coefficients.
-\begin{verbatim}
+#+begin_example
 -> [[1,2],[3,4]]::Matrix IntegerMod 3
 
         +1  2+
    (1)  |    |
         +0  1+
                                                   Type: Matrix(IntegerMod(3))
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 -> [[1,2],[3,4]]::Matrix IntegerMod 5
 
         +1  2+
    (2)  |    |
         +3  4+
                                                   Type: Matrix(IntegerMod(5))
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (3) -> [[1,2],[3,4]]::Matrix Float
 
         +1.0  2.0+
    (3)  |        |
         +3.0  4.0+
                                                           Type: Matrix(Float)
-\end{verbatim}
+#+end_example
 
 In each case, the coefficient arithmetic is done according to the correct
 rules of the coefficient domain.
-\begin{verbatim}
+#+begin_example
 (4) -> %%(1)**2
 
         +1  1+
    (4)  |    |
         +0  1+
                                                   Type: Matrix(IntegerMod(3))
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (5) -> %%(2)**2
 
         +2  0+
    (5)  |    |
         +0  2+
                                                   Type: Matrix(IntegerMod(5))
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (6) -> %%(3)**2
 
         +7.0   10.0+
    (6)  |          |
         +15.0  22.0+
                                                           Type: Matrix(Float)
-\end{verbatim}
+#+end_example
 
 But would it make sense, say, to have a matrix of hash tables? Clearly
 not: we require that the coefficients of the matrix be capable of being
@@ -784,16 +784,16 @@ requirements on the domain which is the parameter to {\tt Matrix}, just as
 we placed some requirements on the argument to {\tt IntegerMod}. The 
 {\tt )show} command tells us what these requirements are 
 (and a great deal more).
-\begin{verbatim}
+#+begin_example
 ->)show IntegerMod
   IntegerMod p: PositiveInteger is a domain constructor
   Abbreviation for IntegerMod is ZMOD
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ->)show Matrix
   Matrix R: Ring is a domain constructor
   Abbreviation for Matrix is MATRIX
-\end{verbatim}
+#+end_example
 We have stipulated that the Axiom object $p$ which is the parameter to 
 {\tt IntegerMod} must belong to the (sub-)domain {\tt PositiveInteger}, 
 and similarly we stipulate that the domain $R$ which is the
@@ -822,7 +822,7 @@ domain from the category in question.}
 
 With the help of that notation, we can ask Axiom what the definition 
 of {\tt SetCategory} is.
-\begin{verbatim}
+#+begin_example
 ->)show SetCategory
   SetCategory is a category constructor.
   Abbreviation for SetCategory is SETCAT
@@ -832,7 +832,7 @@ of {\tt SetCategory} is.
 ------------------------------- Operations --------------------------------
 
  ?=? : (%,%) -> Boolean                coerce : % -> OutputForm
-\end{verbatim}
+#+end_example
 
 This output shows that there are two operations defined on any domain, 
 denoted by \pct{} , which belongs to the category {\tt SetCategory}: 
@@ -934,21 +934,21 @@ be retrieved by the on-line help system.}
 For example, the comment following {\tt zero?} in {\tt AbelianMonoid} is
 retrieved when the operation name {\tt zero?} is searched for.
 
-\begin{verbatim}
+#+begin_example
 SetCategory(): Category == Join(Object, CoercibleTo OutputForm) with
 
    "=": (%,%) -> Boolean
 
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ++ Axioms:
 ++  associative("+":(%,%)->%) || \space{ (x+y)+z = x+(y+z) }
 ++  commutative("+":(%,%)->%) || \spad{ x+y = y+x }
 AbelianSemiGroup(): Category == SetCategory with
 
    "+": (%,%) -> %
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 ++ Axioms:
 ++  leftIdentity("+":(%,%)->%,0)  || \spad{ 0+x=x }
 ++  rightIdentity("+":(%,%)->%,0) || \spad{ x+x=x }
@@ -961,7 +961,7 @@ AbelianMonoid(): Category == AbelianSemiGroup with
  add
 
    zero? x == x = 0
-\end{verbatim}
+#+end_example
 
 The clause after add introduces a default definition of {\tt zero?} 
 in terms of $=$ and 0.
@@ -989,9 +989,9 @@ must satisfy these constraints on the functors.}
 
 To take the example of {\tt Matrix}, the definition of the functor could 
 begin as follows:
-\begin{verbatim}
+#+begin_example
   Matrix(R:Ring): MatrixCategory(R, Vector R, Vector R) ==
-\end{verbatim}
+#+end_example
 
 where {\tt MatrixCategory} is a category, itself with three parameters,
 which defines the various operations that must be satisfied by all
@@ -999,7 +999,7 @@ kinds of matrices, not just those defined by {\tt Matrix}, which defines
 dense matrices stored in a two-dimensional array with no special
 properties. We can discover what Axiom's current definition of the
 operations on a ring are.
-\begin{verbatim}
+#+begin_example
 -> )show Ring
  Ring  is a category constructor
  Abbreviation for Ring is RING 
@@ -1021,13 +1021,13 @@ operations on a ring are.
  ?~=? : (%,%) -> Boolean              
  characteristic : () -> NonNegativeInteger
  subtractIfCan : (%,%) -> Union(%,"failed")
-\end{verbatim}
+#+end_example
 
 In particular we have the operations of addition, subtraction and
 multiplication that are required to make sense of the definition of
 matrix with entries from $R$. In fact the actual definition of {\tt Matrix}
 is more complicated, and the category of the result is defined to be
-\begin{verbatim}
+#+begin_example
 Matrix(R:Ring): MatrixCategory(R,Row,Col) with
 
     diagonalMatrix : Vector R -> %
@@ -1038,7 +1038,7 @@ Matrix(R:Ring): MatrixCategory(R,Row,Col) with
 
       inverse : % -> Union(%,"failed")
 
-\end{verbatim}
+#+end_example
 
 Note the conditional definition: the coefficients $R$ need only be a 
 {\tt Ring}, but if, in addition, they are a {\tt Field}, i.e. division 
@@ -1051,16 +1051,16 @@ matrices do form a ring, and Axiom knows this.
 
 {\bf Convention 10}. {\sl The infix binary predicate {\tt has} can be used
 to test if domains belong to categories, or if they have specified attributes.}
-\begin{verbatim}
+#+begin_example
 -> SquareMatrix(2,Integer) has Ring
 
    (7)  true
                                                                 Type: Boolean
-\end{verbatim}
+#+end_example
 
 This implies that a square matrix domain would itself be an acceptble
 parameter to matrix.
-\begin{verbatim}
+#+begin_example
 -> [[ [[1,2],[3,4]],1,0],[0,[[5,6],[7,8]],1]]::Matrix SquareMatrix(2,Integer)
 
         ++1  2+  +1  0+  +0  0++
@@ -1071,8 +1071,8 @@ parameter to matrix.
         ||    |  |    |  |    ||
         ++0  0+  +7  8+  +0  1++
                                         Type: Matrix(SquareMatrix(2,Integer))
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 -> transpose %
 
         ++1  2+  +0  0++
@@ -1087,8 +1087,8 @@ parameter to matrix.
         ||    |  |    ||
         ++0  0+  +0  1++
                                         Type: Matrix(SquareMatrix(2,Integer))
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 -> %%(8)*%
 
          ++8   10+   +5  6+  +
@@ -1099,13 +1099,13 @@ parameter to matrix.
          | |    |   |       ||
          + +7  8+   +91  107++
                                         Type: Matrix(SquareMatrix(2,Integer))
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 -> square? %
 
    (11)  true
                                                                 Type: Boolean
-\end{verbatim}
+#+end_example
 
 This is not necessarily the most stunning application of Axiom, but it
 does show that the type system can be used to construct some truly
@@ -1118,13 +1118,13 @@ of a calculation, even when the final result is quite simple or
 straight-forward. Grabmeier\cite{Grab91a} gives an example from genetics,
 where one of the intermediate objects in his construction belonged to
 the domain
-\begin{verbatim}
+#+begin_example
 List PolynomialIdeals(Fraction Integer,
                       DirectProduct(4,NonNegativeInteger),
                       [x1,x2,x3,x4],
                       DistributedMultivariatePolynomial([x1,x2,x3,x4],
                                                         Fraction Integer))
-\end{verbatim}
+#+end_example
 
 {\bf Convention 11}. {\sl Every Axiom {\bf constructor}, i.e. functor or
 category, has an {\bf abbreviation}, consisting of at most eight 
@@ -1138,67 +1138,67 @@ with abbreviation {\tt CAT-}.}
 For example, the abbreviation for {\tt Integer} is {\tt INT}, and 
 the compiled library lives in the directory {\tt INT.nrlib}. 
 Grabmeier's type can therefore also be written as 
-\begin{verbatim}
+#+begin_example
 List IDEAL(FRAC INT,DIRPROD(4,NNI),[x1,x2,x3,x4],DMP([x1,x2,x3,x4],FRAC INT)
-\end{verbatim}
+#+end_example
 which is certainly shorter, even though still somewhat of a mouthful.  
 
 \subsection{Using the {\tt )display} command} 
 
 Let us begin with a very simple example of the {\tt )display} command.
-\begin{verbatim}
+#+begin_example
 -> )d op pop!
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 There are 4 exposed functions called pop! :
    [1] ArrayStack(D1) -> D1 from ArrayStack(D1) if D1 has SETCAT
    [2] Dequeue(D1) -> D1 from Dequeue(D1) if D1 has SETCAT
    [3] D -> D1 from D if D has SKAGG(D1) and D1 has TYPE
    [4] Stack(D1) -> D1 from Stack(D1) if D1 has SETCAT
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 Examples of pop! from ArrayStack
 
 a:ArrayStack INT:= arrayStack [1,2,3,4,5] 
 pop! a 
 a
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 Examples of pop! from Dequeue
 
 a:Dequeue INT:= dequeue [1,2,3,4,5] 
 pop! a 
 a
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 Examples of pop! from StackAggregate
 
 a:Stack INT:= stack [1,2,3,4,5] 
 pop! a 
 a
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 Examples of pop! from Stack
 
 a:Stack INT:= stack [1,2,3,4,5] 
 pop! a 
 a
-\end{verbatim}
+#+end_example
 There are 4 exposed functions listed, with their argument types, 
 result type and (following the word {\tt from}) the source of their
 implementation: a combination known collectively as a {\bf signature}.
 Once one knows that {\tt SKAGG} is an abbreviation for {\tt StackAggregate},
 which is easy enough to find out
-\begin{verbatim}
+#+begin_example
 ->)d abbrev SKAGG
    SKAGG abbreviates category StackAggregate
-\end{verbatim}
+#+end_example
 
 Axiom functions have a special syntax (a {\bf tagged comment}) that
 \index{tagged comment}
 provides examples of functions from the algebra source code. For example,
 the {\tt Stack} domain has the {\tt pop!} function.
-\begin{verbatim}
+#+begin_example
     pop_! : % -> S
       ++ pop! returns the top element of the stack, destructively
       ++ modifying the stack to remove that element.
@@ -1206,42 +1206,42 @@ the {\tt Stack} domain has the {\tt pop!} function.
       ++X a:Stack INT:= stack [1,2,3,4,5]
       ++X pop! a
       ++X a
-\end{verbatim}
+#+end_example
 The special form of the {\bf $++$} comment, which is {\bf ++X}
 provides an example of the use of the function. So, in the above output,
 we see
-\begin{verbatim}
+#+begin_example
 Examples of pop! from Stack
 
 a:Stack INT:= stack [1,2,3,4,5] 
 pop! a 
 a
-\end{verbatim}
+#+end_example
 which shows three commands a user can execute to demonstrate the function
-\begin{verbatim}
+#+begin_example
 -> a:Stack INT:= stack [1,2,3,4,5] 
 
    (1)  [1,2,3,4,5]
                                                          Type: Stack(Integer)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (2) -> pop! a 
 
    (2)  1
                                                         Type: PositiveInteger
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (3) -> a
 
    (3)  [2,3,4,5]
                                                          Type: Stack(Integer)
-\end{verbatim}
+#+end_example
 making it clear that the stack $a$ has been modified.
 
 A more complicated example would be given by {\tt )d op integrate}, and 
 we will only explain some of the entries. The Axiom library has 32 exposed
 integrations and 10 unexposed ones.
-\begin{verbatim}
+#+begin_example
    [29] D -> D from D
              if D has UPXSCAT(D1) and D1 has RING and D1 has ALGEBRA(
             FRAC(INT))
@@ -1252,7 +1252,7 @@ integrations and 10 unexposed ones.
             LinearlyExplicitRingOver(Integer)) and D2 has Join(
             TranscendentalFunctionCategory,PrimitiveFunctionCategory,
             AlgebraicallyClosedFunctionSpace(D4))
-\end{verbatim}
+#+end_example
 The function [29] is the one we used to integrate the Puiseux series:
 {\tt UPXSCAT} is the abbreviation for {\tt UnivariatePuiseuxSeriesCategory},
 and $D1$, the coefficients of the series, must be an algebra over the
@@ -1268,14 +1268,14 @@ already analysed the fact that the signature is of the form
 The rest of the lines are merely explaining what properties D2 must have.
 D4 plays the role of the coefficients in the function being integrated.
 We always had {\tt Integer} in there, but this is not strictly necessary.
-\begin{verbatim}
+#+begin_example
 -> 2*cos(4*x)**3::Expression RomanNumeral
 
                     3
    (1)  II cos(IV x)
                                                Type: Expression(RomanNumeral)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 (2) -> integrate(%,x)
 
                   2
@@ -1283,7 +1283,7 @@ We always had {\tt Integer} in there, but this is not strictly necessary.
    (2)  --------------------------
                     VI
        Type: Union(Expression(RomanNumeral),List(Expression(RomanNumeral)))
-\end{verbatim}
+#+end_example
 It can clearly be seen that, in {\tt Expression RomanNumeral}, the 
 coefficients are indeed members of {\tt RomanNumeral}, but the exponents
 are not.
@@ -1306,36 +1306,36 @@ interpreter has to do type inference.
 The second style corresponds to what might be called the ``programmable
 pocket calculator'' style, where simple functions are defined, or variables
 given values for later use. An example of a simple function would be
-\begin{verbatim}
+#+begin_example
 fac n == if n < 3 then n else n*fac(n-1)
-\end{verbatim}
+#+end_example
 as a definition of the factorial function. A slightly more complicated
 example (take from IBM\cite{IBMx91} and Jenks \& Sutor\cite{Jenk92}) 
 goes as follows.
-\begin{verbatim}
+#+begin_example
 mersenne i == 2**i - 1
-\end{verbatim}
+#+end_example
 This line defines a function for computing the $i$-th Mersenne number
-\begin{verbatim}
+#+begin_example
 mersenneIndex := [n for n in 1.. | prime?(mersenne(n))]
 This line, which produces the following output from Axiom,
 \begin{verbatim}
    (2)  [2,3,5,7,13,17,19,31,61,89,...]
                                          Type: Stream(PositiveInteger)
-\end{verbatim}
+#+end_example
 computes an infinite (but lazily evaluated) list of the indices of those
 Mersenne numbers which are actually prime.
-\begin{verbatim}
+#+begin_example
 mersennePrime n == mersenne mersenneIndex(n)
-\end{verbatim}
+#+end_example
 This defines a function which produces the $n$-th Mersenne prime. It can
 be used as in the following input line (and corresponding output).
-\begin{verbatim}
+#+begin_example
 mersennePrime 5
 
    (4)  8191
                                          Type: PositiveInteger
-\end{verbatim}
+#+end_example
 
 In this style, we have various ``one-liners'' which interact with each
 other, much as programmed functions on a pocket calculator.
@@ -1360,7 +1360,7 @@ and that all operations are prefix unless shown otherwise (e.g. the
 infix {\tt *} and {\tt quo}).
 \end{tabular}
 
-\begin{verbatim}
+#+begin_example
  Integer  is a domain constructor
  Abbreviation for Integer is INT 
  This constructor is exposed in this frame.
@@ -1435,7 +1435,7 @@ infix {\tt *} and {\tt quo}).
  retractIfCan : % -> Union(Integer,"failed")
  subtractIfCan : (%,%) -> Union(%,"failed")
  unitNormal : % -> Record(unit: %,canonical: %,associate: %)
-\end{verbatim}
+#+end_example
 \begin{tabular}{rp{11cm}}
 {\hskip 1.5cm} 
 & It must be stressed that the use of {\tt )show} or the browser is essential
@@ -1451,7 +1451,7 @@ example, the domain {\tt Integer} belongs to the category {\tt Ring},
 which has the following operations, again given by {\tt )show Ring} or
 the browser.
 \end{tabular}
-\begin{verbatim}
+#+begin_example
  Ring  is a category constructor
  Abbreviation for Ring is RING 
  This constructor is exposed in this frame.
@@ -1472,7 +1472,7 @@ the browser.
  ?~=? : (%,%) -> Boolean              
  characteristic : () -> NonNegativeInteger
  subtractIfCan : (%,%) -> Union(%,"failed")
-\end{verbatim}
+#+end_example
 \begin{tabular}{rp{11cm}}
 {\hskip 1.5cm} 
 & Note that 0 and 1 are {\sl nullary operations}, since their actual
@@ -1510,9 +1510,9 @@ the {\tt Ring} supplied.
 {\bf Package} & Very like a function, but does not specify a new data
 object, merely some new functions. A typical example would be
 {\tt UnivariatePolynomialFunctions2}, which defines the operation
-\begin{verbatim}
+#+begin_example
 map:(R -> S, UnivariatePolynomial(x,R)) -> UnivariatePolynomial(y,S)
-\end{verbatim}
+#+end_example
 where $x$ and $y$ are elements of {\tt Symbol}, and $R$ and $S$ belong
 to the category {\tt Ring}. In mathematical terms, this function takes
 a function $\theta$ from $R$ to $S$, and performs the corresponding
@@ -1611,7 +1611,7 @@ addition between the exponents to define the multiplication of polynomials.
 Let us see precisely how this is defined (we have deleted lines redundant
 to the expository points we wish to make)
 \end{itemize}
-\begin{verbatim}
+#+begin_example
 PolynomialRing(R:Ring,E:OrderedAbelianMonoid):
   FiniteAbelianMonoidRing(R,E) with
     if R has canonicalUnitNormal then canonicalUnitNormal
@@ -1669,7 +1669,7 @@ PolynomialRing(R:Ring,E:OrderedAbelianMonoid):
         y:= x
         for i in 2..nn repeat y:= x * y
         y
-\end{verbatim}
+#+end_example
 
 The returned domain belongs to the category 
 {\tt FiniteAbelianMonoidRing}\footnote{An ``abelian monoid ring'' bears the
@@ -1722,7 +1722,7 @@ effectively have a weight of 0.
 \end{itemize}
 
 We can now probably write the specification part of this functor.
-\begin{verbatim}
+#+begin_example
 )abbrev domain OWP OrdinaryWeightedPolynomials
 
 OrdinaryWeightedPolynomials(R:RIng,
@@ -1749,7 +1749,7 @@ OrdinaryWeightedPolynomials(R:RIng,
     changeWeightLevel : NonNegativeInteger -> Void
       ++ changeWeightLevel changes the weight level to the new value given:
       ++ NB: previously calculated terms are not affected
-\end{verbatim}
+#+end_example
 
 The {\tt )abbrev} line is necessary for the definition of any functor,
 since the abbreviation (up to eight letters, or seven for a category)
@@ -1780,17 +1780,17 @@ as well. Hence we decide that we will implement
 {\tt OrdinaryWeightedPolynomials} in terms of a more general constructor,
 which takes the polynomial type as an argument. This leads to the
 following implementation for the body of {\tt OrdinaryWeightedPolynomials}.
-\begin{verbatim}
+#+begin_example
   == WeightedPolynomials(R,Symbol,IndexedExponents(Symbol),
                          Polynomal(R),vl,wl,wtlevel)
-\end{verbatim}
+#+end_example
 This is essentially and {\tt add} form in which nothing is being added:
 the operations of\\
 {\tt OrdinaryWeightedPolynomials} will be precisely
 those of {\tt WeightedPolynomials}.
 
 The header of {\tt WeightedPolynomials} now practically writes itself.
-\begin{verbatim}
+#+begin_example
 )abbrev domain WP WeightedPolynomials
 
 WeightedPolynomials(R:RIng,VarSet: OrderedSet, E:OrderedAbelianMonoidSup,
@@ -1815,7 +1815,7 @@ WeightedPolynomials(R:RIng,VarSet: OrderedSet, E:OrderedAbelianMonoidSup,
     changeWeightLevel : NonNegativeInteger -> Void
       ++ changeWeightLevel changes the weight level to the new value given:
       ++ NB: previously calculated terms are not affected
-\end{verbatim}
+#+end_example
 
 How are we going to implement this type? There are various possibilities
 for implementing a functor in Axiom.
@@ -1845,7 +1845,7 @@ our representation. The essentials of our implementation will then
 look as follows (the details of {\tt coerce (p\pageref{coerce})}
  etc. will be discussed
 later).
-\begin{verbatim}
+#+begin_example
   Rep := PolynomialRing(P,NonNegativeInteger)
   w,x1,x2:%
 
@@ -1871,7 +1871,7 @@ later).
     while degree(w) > wtlevel repeat
       w:=reductum w
     w
-\end{verbatim}
+#+end_example
 
 One important point that crops up here is the necessity to distinguish
 the operations of the representation ({\tt PolynomialRing}) from those
@@ -1900,14 +1900,14 @@ categories. For example, the first operation we have not defined is the
 multiplication operation with signature {\tt "*":(Integer,\pct) -> \pct}.
 This is acquired by default from the category {\tt AbelianGroup}, an
 ancestor of {\tt Ring}, where the operation is defined by
-\begin{verbatim}
+#+begin_example
 AbelianGroup() : Category == SIG where
 
   SIG ==> CancellationAbelianMonoid with
 
     "*" : (Integer,%) -> %            
       ++ n*x is the product of x by the integer n.
-\end{verbatim}
+#+end_example
 
 \subsection{The {\tt PolynomialRing} implementation}
 
@@ -1917,7 +1917,7 @@ outlined earlier. Again, we have left the various definitions of
 {\tt coerce (p\pageref{coerce})} etc.
 for later consideration: we focus here on the 
 differences between this implementation and the previous one.
-\begin{verbatim}
+#+begin_example
    == PolynomialRing(P,NonNegativeIntger)
  add
    --representations
@@ -1943,7 +1943,7 @@ differences between this implementation and the previous one.
    x:% ** n:NonNegativeInteger ==
      zero? n => 1
      expt(x,n pretend PositiveInteger)
-\end{verbatim}
+#+end_example
 
 We still need a definition of equality, since the definition from
 {\tt PolynomialRing} is not adequate, as it does not take account of
@@ -2018,12 +2018,12 @@ definitions, these would be picked up instead.
 Here we give some miscellaneous definitions that should form part of
 the implementation of {\tt WeightedPolynomials}. The first three lines
 deal with the definition of {\tt changeWeightLevel}.
-\begin{verbatim}
+#+begin_example
   n:NonNegativeInteger
 
   changeWeightLevel(n) ==
     wtlevel:=n
-\end{verbatim}
+#+end_example
 
 We had earlier decide to represent the weights by a list of variables
 and a corresponding list of weights, but this is rather clumsy for
@@ -2031,7 +2031,7 @@ internal manipulation. Hence the next few lines define an internal
 data structure called {\tt lookupList}, initialize it, and provide a
 local function (i.e. one not usable outside the body of the functor)
 for looking up the weight attached to a particular variable.
-\begin{verbatim}
+#+begin_example
   lookupList: List Record(var:VarSet, weight:NonNegativeInteger)
 
   if #vl ^= #wl then error "incompatible length lists in WeightedPolynomial"
@@ -2045,7 +2045,7 @@ for looking up the weight attached to a particular variable.
       v = l.first.var => return l.first.weight
       l:=l.rest
     0
-\end{verbatim}
+#+end_example
 We now have to have some method of creating elements of the domain
 {\tt WeightedPolynomials}. The obvious way is to provide a coercion
 operator from $P$ (which in the case of\\
@@ -2055,7 +2055,7 @@ will be the usual type {\tt Polynomial} of Axiom) to\\
 {\tt coerce} itself is simple: it just calls {\tt innercoerce}, passing
 it the weight level. {\tt innercoerce} recursively deconstructs the
 input polynomial, decreasing the weight level as appropriate.
-\begin{verbatim}
+#+begin_example
   p:P
   z:Integer
 
@@ -2079,13 +2079,13 @@ input polynomial, decreasing the weight level as appropriate.
     ans
 
     coerce(p):% == innercoerce(p,wtlevel)
-\end{verbatim}
+#+end_example
 \label{coerce}
 The inverse operation is much simpler: we have merely to add up the
 coefficients.
-\begin{verbatim}
+#+begin_example
   coerce(w):P == "+"/[tm.c for tm in w]
-\end{verbatim}
+#+end_example
 The last definition is that of coercion from {\tt WeightedPolynomials}
 into {\tt OutputForm} -- Axiom's type for output (and conversion to 
 TeX etc.). This is fairly simple: the main complexity is in the 
@@ -2094,12 +2094,12 @@ will print as such, but that otherwise each group of terms of a particular
 weight will be printed parenthesised (even if there is only one term
 of that weight). Clearly, it would be possible to adapt this definition
 to almost any other desired behaviour.
-\begin{verbatim}
+#+begin_example
   coerce(p:%):OutputForm ==
     zero? p => (0$Integer)::OutputForm
     p.first.k = 0 => p.first.c::OutputForm
     reduce("+",(reverse [paren(t1.c::OutputForm) for t1 in p])::List OutputForm
-\end{verbatim}
+#+end_example
 
 ** A second problem -- FourierSeries
 
@@ -2141,7 +2141,7 @@ too strong, and we will restrict ourselves to insisting on
 {\tt Join(OrderedSet,AbelianGroup)}\footnote{An
 {\tt OrderedAbelianGroup} would also have the property that
 $a<b\Rightarrow{}a+c<b+c$, but we probably do not need this}
-\begin{verbatim}
+#+begin_example
 FourierSeries(R:Join(CommutativeRing,Algebra(Fraction Integer)),
               E:Join(OrderedSet,AbelianGroup)):
   Algebra(R) with
@@ -2159,7 +2159,7 @@ FourierSeries(R:Join(CommutativeRing,Algebra(Fraction Integer)),
 
    makeCos : (E,R) -> %
      ++ makeCos makes a cos expression with given argument and coefficent
-\end{verbatim}
+#+end_example
 The operations here (with the exception of the last 
 {\tt coerce (p\pageref{coerce2})}, will be explained in the next
 section, are pretty obvious. What about the line containing the word
@@ -2190,7 +2190,7 @@ The requirements on this data type are quite straight-forward. It should
 provide ways of making sin and cos functions, and the result should be an
 {\tt OrderedSet} so that it can be passed to {\tt FreeModule}. The header
 is then equally straight-forward.
-\begin{verbatim}
+#+begin_example
 FourierComponent(E:OrderedSet):
 
   OrderedSet with
@@ -2207,12 +2207,12 @@ FourierComponent(E:OrderedSet):
     argument : % -> E
       ++ argument returns the argument of a given sin/cos expression
  ==
-\end{verbatim}
+#+end_example
 
 Here method (3) seems an appropriate way of defining the data type -- all
 we need store is the argument and a flag indicating whether we have a
 sin or cos expression. The first part of the implementation is trivial.
-\begin{verbatim}
+#+begin_example
   add
 
     --representations
@@ -2227,28 +2227,28 @@ sin or cos expression. The first part of the implementation is trivial.
     sin? x == x.SinIfTrue
 
     argument x == x.arg
-\end{verbatim}
+#+end_example
 The harder question is the order to be imposed on {\tt FourierComponent}.
 We have chosen, for no very good reason, to use the order of the arguments,
 and break ties by sorting cos $a$ as less than sin $a$. Clearly this
 definition could be adapted to any other strategy.
-\begin{verbatim}
+#+begin_example
     x < y ==
       x.arg < y.arg => true
       y.arg < x.arg => false
       x.SinIfTrue => false
       y.SinIfTrue
-\end{verbatim}
+#+end_example
 The last task of this method of printing the results -- again this is
 achieved by means of a conversion to {\tt OutputForm}. We have used the
 constructor {\tt bracket}, which places the argument in square brackets,
 in order to distinguish these elements from the ordinary {\tt Expression}
 constructions of Axiom.
-\begin{verbatim}
+#+begin_example
     coerce(x):OutputForm ==
       hconcat((if x.SinIfTrue then "sin" else "cos")::OutputForm,
               bracket((x.arg)::OutputForm))
-\end{verbatim}
+#+end_example
 
 \subsection{The {\tt FourierSeries implementation}}
 
@@ -2256,7 +2256,7 @@ Now that we have {\tt FourierComponent}, we can define {\tt FourierSeries}.
 We chose again to use method (4), basing the definition on
 {\tt FreeModule(R,FourierComponent(E)). Hence the start of the definition
 looks as follows.
-\begin{verbatim}
+#+begin_example
  == FreeModule(R,FourierComponent(E)) add
     -- representations
     Term := Record(k:FourierComponent(E),c:R)
@@ -2269,7 +2269,7 @@ looks as follows.
     e : FourierComponent(E)
     a : E
     r : R
-\end{verbatim}
+#+end_example
 {\tt multiply (p\pageref{multiply})} is a local function, 
 to be defined later, which will 
 multiply two terms. The result may well not be a single term, due to
@@ -2280,7 +2280,7 @@ with negative arguments (the concept of ``negative'' makes sense: an
 element is negative if it is less than 0). The following definitions
 help implement this policy.
 \label{coerce2}
-\begin{verbatim}
+#+begin_example
     1 == [[cos 0,1]]
 
     coerce e ==
@@ -2298,13 +2298,13 @@ help implement this policy.
       zero? a => []
       a < 0 => [[sin(-a),-r]]
       [[sin a,r]]
-\end{verbatim}
+#+end_example
 The operations of addition and subtraction, as well as multiplication by
 elements of $R$, are all well-inherited from {\tt FreeModule}. We do 
 however have to define multiplication of two Fourier series, and this
 is done below.
 \label{multiply}
-\begin{verbatim}
+#+begin_example
     multiply(t1,t2) ==
       r:=(t1.c*t2.c)*(1/2)
       s1:=argument t1.k
@@ -2323,7 +2323,7 @@ is done below.
       null x1 => 0
       null x2 => 0
       +/[+/[multiply(t1,t2) for t2 in x2] for t1 in x1]
-\end{verbatim}
+#+end_example
 
 * Axiom and Type Theory by Albrecht Fortenbacher
 
@@ -2725,7 +2725,7 @@ is not a valid combination.
 We need the algebraic co-product, known as the tensor product.
 We end up with a domain of Complex(Polynomial(Integer)).
 
-\begin{verbatim}
+#+begin_example
 -> a:Complex(POLY(INT)):=%i+3*x
 
      3x + %i
@@ -2734,7 +2734,7 @@ We end up with a domain of Complex(Polynomial(Integer)).
 
      3x + %i
                                            Type: Polynomial(Complex(Integer))
-\end{verbatim}
+#+end_example
 
 ** Category Definition
 A category has four parts. 
@@ -2762,9 +2762,9 @@ the arrows are K-linear transformations.
 
 In Axiom the dots are Types (such as Integer or Character) and the
 arrows are functions between them with signature:
-\begin{verbatim}
+#+begin_example
    f : Integer -> Character
-\end{verbatim}
+#+end_example
 
 Relations between categories is called a {\bf functor}.
 A functor F takes things in category C into things in category D.
@@ -2781,15 +2781,15 @@ structure of C.
 When we apply functor F to C we need to preserve all of the structure
 so F has to be defined on all of these properties. If we look at two
 dots in category C and a function f which is an arrow in C 
-\begin{verbatim}
+#+begin_example
           f
       A ----> B
-\end{verbatim}
+#+end_example
 then the functor F has to operate on everything so we get:
-\begin{verbatim}
+#+begin_example
          Ff
       FA ----> FB
-\end{verbatim}
+#+end_example
 This means that if $dom$ is the domain function in C then the functor
 F commutes with $dom$. That is, applying $F(dom(f)) = dom(F(f))$.
 
@@ -2854,9 +2854,9 @@ source code elements. For the category, domain, and package sections
 the text is taken from the Description: keyword.
 
 This information is stored in a database and can be queried with
-\begin{verbatim}
+#+begin_example
   )lisp (getdatabase '|Integer| 'documentation)
-\end{verbatim}
+#+end_example
 for the Integer domain. However, this information has other uses in 
 the system so it contains tags and control information. Most tags are
 removed by the describe function since the output is intended to be
@@ -2867,7 +2867,7 @@ abbreviation command. It is freeform and the paragraph will be reflowed
 automatically to allow for about 60 characters per line, adjusted for
 spaces. The Description: section should be written after the keyword in
 the ``++'' comments as in:
-\begin{verbatim}
+#+begin_example
 )abbrev package D03AGNT d03AgentsPackage
 ++ Description:
 ++ This package does some interesting stuff. We can write multiple
@@ -2880,7 +2880,7 @@ the ``++'' comments as in:
 ++ \tab{10}Start in column 11\tab{5}and skip 5 spaces\br
 ++ \tab{10}End in column 11\tab{7}and count out the needed spaces\br
 ++ \tab{5} note that the last line will not need the br command
-\end{verbatim}
+#+end_example
 As the comment says, the Description should all be aligned under the
 ``D'' in Description. You can indent using \verb|\tab{n}| which will insert
 $n$ spaces. You can force a newline in two ways. Either include a
@@ -2891,12 +2891,12 @@ can all go wrong.
 
 There should not be any macros between the Description: section and
 the beginning of the definition. This is wrong. It will cause the
-\begin{verbatim}
+#+begin_example
    )describe package d03AgentsPackage
-\end{verbatim}
+#+end_example
 to give the wrong output because it does not find the end of the
 description section properly.
-\begin{verbatim}
+#+begin_example
 )abbrev package D03AGNT d03AgentsPackage
 ++ Description:
 ++ This description does not work
@@ -2904,24 +2904,24 @@ description section properly.
 LEDF  ==> List Expression DoubleFloat
 
 d03AgentsPackage(): E == I where
-\end{verbatim}
+#+end_example
 
 In the Description: section the \verb|\tab{nn}| function will be transformed
 into nn spaces. If you end each line with a \verb|\br| you can control
 alignment.
-\begin{verbatim}
+#+begin_example
 ++ Description:
 ++ This is an example of a table alignment\br
 ++ \tab{5}First Item\tab{5} This will line up with the following line\br
 ++ \tab{5}Second Item\tab{4} This will line up with the following line\br
 ++ \tab{5}Third Item\tab{5} This will line up with the following line
-\end{verbatim}
+#+end_example
 
 If the main body of the category, domain, or package begins with 
 properties rather than functions the Description will be incorrectly
 recorded. This is a known bug finding the end of the Description section.
 For instance, this
-\begin{verbatim}
+#+begin_example
 ++ Description:
 ++ The category of Lie Algebras.
 ++ It is used by the domains of non-commutative algebra,
@@ -2936,13 +2936,13 @@ LieAlgebra(R: CommutativeRing): Category ==  Module(R) with
     construct:  ($,$) -> $
       ++ \axiom{construct(x,y)} returns the Lie bracket of \axiom{x} 
       ++ and \axiom{y}.
-\end{verbatim}
+#+end_example
 will give the output
-\begin{verbatim}
+#+begin_example
 {JacobiIdentity} means that} [x,[y,z]]+[y,[z,x]]+[z,[x,y]] = 0 holds.
-\end{verbatim}
+#+end_example
 but reordering it to read:
-\begin{verbatim}
+#+begin_example
 ++ Description:
 ++ The category of Lie Algebras.
 ++ It is used by the domains of non-commutative algebra,
@@ -2957,12 +2957,12 @@ LieAlgebra(R: CommutativeRing): Category ==  Module(R) with
     JacobiIdentity 
       ++ \axiom{JacobiIdentity} means that 
       ++ \axiom{[x,[y,z]]+[y,[z,x]]+[z,[x,y]] = 0} holds.
-\end{verbatim}
+#+end_example
 will give the output
-\begin{verbatim}
+#+begin_example
 The category of Lie Algebras. It is used by the domains of 
 non-commutative algebra, LiePolynomial and XPBWPolynomial. 
-\end{verbatim}
+#+end_example
 which is correct.
 
 * Writing test cases

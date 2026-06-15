@@ -30023,9 +30023,9 @@ We also want these to work with a basis from non-diagonal quadratic form
 The exterior and inner products can be introduced in different ways, one
 way is to look at the exterior product as the product which generates the
 structure:
-\begin{verbatim}
+#+begin_example
 <e1, e2...en | ei/\ei=0, ei/\ej= -ej/\ei>
-\end{verbatim}
+#+end_example
 and the interior product defines the metric structure.
 
 Or we can look at exterior and inner products as duals:
@@ -46469,7 +46469,7 @@ Greg Vanuxem has added some functionality to allow the user to modify
 the printed format of floating point numbers. The format of the numbers
 follows the common lisp format specification for floats. First we include
 Greg's email to show the use of this feature:
-\begin{verbatim}
+#+begin_example
 PS: For those who use the Doublefloat domain
     there is an another (undocumented) patch that adds a
     lisp format to the DoubleFloat output routine. Copy 
@@ -46502,7 +46502,7 @@ from /home/greg/Axiom/DFLOAT.nrlib/code
         +0.4512  0.2355+
                                Type: Matrix DoubleFloat
 
-\end{verbatim}
+#+end_example
 So it is clear that he has added a new function called
 {\tt doubleFloatFormat} which takes a string argument that
 specifies the common lisp format control string (\"{}\~{},4,,F\"{}).
@@ -69526,22 +69526,22 @@ FlexibleArray(S) == CODE where
 ** domain FLOAT Float
 As reported in bug number 4733 (rounding of negative numbers)
 errors were observed in operations such as
-\begin{verbatim}
+#+begin_example
   -> round(-3.9)
   -> truncate(-3.9)
-\end{verbatim}
+#+end_example
 The problem is the unexpected behaviour of the shift
 with negative integer arguments.
-\begin{verbatim}
+#+begin_example
   -> shift(-7,-1)
-\end{verbatim}
+#+end_example
 returns -4 while the code here in float expects the
 value to be -3. shift uses the lisp function ASH
 'arithmetic shift left' but the spad code expects
 an unsigned 'logical' shift. See
-\begin{verbatim}
+#+begin_example
   http://www.lispworks.com/reference/HyperSpec/Body/f_ash.htm#ash
-\end{verbatim} 
+#+end_example 
 A new internal function shift2 is defined in terms of
 shift to compensate for the use of ASH and provide the
 required function.
@@ -88971,9 +88971,9 @@ information for writers of output formatters.
 This package allows users to cut and paste output from the Axiom
 command line to a HTML page. This output is enabled by typing:
 
-\begin{verbatim}
+#+begin_example
 )set output html on
-\end{verbatim}
+#+end_example
 
 After this the command line will output html (in addition to other formats
 that are enabled) and this html code can then be copied and pasted into a
@@ -89011,9 +89011,9 @@ information in a compact space on the page.
 We can cause the command line interpreter to output in html by typing
 the following:
 
-\begin{verbatim}
+#+begin_example
 )set output html on
-\end{verbatim}
+#+end_example
 
 After this the command line will output html (in addition to other formats
 that are enabled) and this html code can then be copied and pasted into an
@@ -89022,7 +89022,7 @@ existing HTML document.
 If you do not already have an html page to copy the output to then you can
 create one with a text editor and entering the following:
 
-\begin{verbatim}
+#+begin_example
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
  "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
@@ -89033,18 +89033,18 @@ create one with a text editor and entering the following:
   Copy and paste the output from command line here.
  </body>
 </html>
-\end{verbatim}
+#+end_example
 
 Or using any program that will export to html such as OpenOffice.org
 writer.
 
 ** Form of the output
-\begin{verbatim}
+#+begin_example
 HTMLFormat does not try to interpret syntax, for instance in an example like:
 (1) -> integral(x^x,x)
 it just takes what OutputForm provides and does not try to replace
 %A with the bound variable x.
-\end{verbatim}
+#+end_example
 
 ** Matrix Formatting
 A big requirement for me is to fit big matrices on ordinary web pages.
@@ -89055,7 +89055,7 @@ modify this for a single matrix, or a whole page or whole site by using css
 matrix by adding the following style to the top of the page after the <head>
 tag:
 
-\begin{verbatim}
+#+begin_example
 <style type="text/css">
 #matl {border-left-style:solid}
 #matr {border-right-style:solid}
@@ -89064,7 +89064,7 @@ tag:
 #matlb {border-left-style:solid;border-bottom-style:solid}
 #matrb {border-right-style:solid;border-bottom-style:solid}
 </style>
-\end{verbatim}
+#+end_example
 
 There are many other possibilities, for instance we can generate a matrix
 with bars either side to indicate a determinant. All we have to do is
@@ -89087,9 +89087,9 @@ structure.
 
 The second stage is to convert the Tree Structure to text. All text output
 is done using:
-\begin{verbatim}
+#+begin_example
 sayTeX$Lisp
-\end{verbatim}
+#+end_example
 I have not produced and output to String as I don't know a way to append
 to a long string efficiently and I don't know how to insert carriage-
 returns into a String.
@@ -119619,7 +119619,7 @@ directly into an appropriate xhtml page and then viewed in Firefox
 or some other MathML aware browser. The boiler plate code needed for
 a test page, testmathml.xml, is:
 
-\begin{verbatim}
+#+begin_example
 <?xml version="1.0" ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN"
@@ -119639,7 +119639,7 @@ a test page, testmathml.xml, is:
 
   </body>
 </html>
-\end{verbatim}
+#+end_example
 
 
 Paste the MathML string into the body element and it should display
@@ -119725,19 +119725,19 @@ replace the lisp in "setvars.boot.pamphlet" with that in the newly
 generated "setvars.clisp".
 
 The relevant code chunks appearing in "setvars.boot.pamphlet" are:
-\begin{verbatim}
+#+begin_example
     outputmathmlCode
     setOutputMathml
     describeSetOutputMathml
-\end{verbatim}
+#+end_example
 and the relevant variables are:
-\begin{verbatim}
+#+begin_example
     setOutputMathml
     $mathmlOutputStream
     $mathmlOutputFile
     $mathmlFormat
     describeSetOutputMathml
-\end{verbatim}
+#+end_example
 
 *** File setvart.boot.pamphlet
 
@@ -119747,22 +119747,22 @@ patterned after the tex section.  I changed the default file
 extension from ".stex" to ".smml".
 
 To the "section{output}" table I added the line
-\begin{verbatim}
+#+begin_example
    mathml                   created output in MathML style      Off:CONSOLE
-\end{verbatim}
+#+end_example
 Added the code chunk "outputmathml" to the code chunk "output"
 in "section{output}".
 
 Relevant code chunks:
-\begin{verbatim}
+#+begin_example
          outputmathml
-\end{verbatim}
+#+end_example
 Relevant variables:
-\begin{verbatim}
+#+begin_example
          setOutputMathml
          $mathmlFormat
          $mathmlOutputFile
-\end{verbatim}
+#+end_example
 
 Note when copying the tex stuff I changed occurrences of "tex"
 to "mathml", "Tex" to "Mathml" and "TeX" to "MathML".
@@ -119821,7 +119821,7 @@ This is where the \spadfun{coerce} and \spadfun{display} functions
 from MathMLFormat
 actually get called.  The following was added:
 
-\begin{verbatim}
+#+begin_example
 mathmlFormat expr ==
   mml := '(MathMLFormat)
   mmlrep := '(String)
@@ -119831,7 +119831,7 @@ mathmlFormat expr ==
   TERPRI $mathmlOutputStream
   FORCE_-OUTPUT $mathmlOutputStream
   NIL
-\end{verbatim}
+#+end_example
 
 Note that compared to the texFormat function there are a couple
 of differences.  Since \spadtype{MathMLFormat} is currently a package rather
@@ -119849,13 +119849,13 @@ After these changes Axiom compiled with mathml enabled under
 *** Public Declarations
 
 The declarations
-\begin{verbatim}
+#+begin_example
   E      ==> OutputForm
   I      ==> Integer
   L      ==> List
   S      ==> String
   US     ==> UniversalSegment(Integer)
-\end{verbatim}
+#+end_example
 provide abbreviations for domains used heavily in the code.
 The publicly exposed functions are:
 
@@ -147480,9 +147480,9 @@ will get to it.
 In the program the orbit is often stored in the form of:
 'orbitWithSvc', this has type :
 
-\begin{verbatim}
+#+begin_example
 REC  ==> Record ( orb : List NonNegativeInteger, svc : Vector Integer )
-\end{verbatim}
+#+end_example
 
 \begin{center}
 \includegraphics{ps/v103permgrp17.eps}
@@ -147517,7 +147517,7 @@ is held in Rep it does not have to be recomputed every time it is used
 by different functions.
 
 The representation of PermutationGroup is
-\begin{verbatim}
+#+begin_example
   Rep  := Record(gens : List Permutation SetCategory,
                  information : REC2)
 
@@ -147533,17 +147533,17 @@ Where:
   REC  ==> Record ( orb  : List NonNegativeInteger,
                     svc  : Vector Integer )
 
-\end{verbatim}
+#+end_example
 REC holds orbit with Schreier vector.
 
 So lets see how this setup works in our D3 example:
-\begin{verbatim}
+#+begin_example
 
 (1) -> g3 := [[1,2,3]::Permutation(NNI),[1,2]::Permutation(NNI)]::PermutationGroup(NNI)
 
  (1) <(1 2 3),(1 2)>
                             Type: PermutationGroup(NonNegativeInteger)
-\end{verbatim}
+#+end_example
 
 This constructions an instance of PermutationGroup with the 'gens'
 parameter set as shown. However, at this stage the 'information' data
@@ -147663,7 +147663,7 @@ Base & Strong Generators & Orbits\\
 We can see this in Axiom as follows:
 
 First we create a dihedral group and get base and strong generators for it.
-\begin{verbatim}
+#+begin_example
 
 (1) -> G3 := [[1,2,3]::Permutation(NNI),[1,2]::Permutation(NNI)]::PermutationGroup(NNI)
 
@@ -147679,14 +147679,14 @@ First we create a dihedral group and get base and strong generators for it.
 
    (3) [(2 3),(1 2)]
                        Type: List(PermutationGroup(NonNegativeInteger))
-\end{verbatim}
+#+end_example
 
 We calculate the strong generators so the stabilizer chain is
 
 $G_0=(2 3),(1 2)$\\
 $G_1 = (2 3)$ -- stabilizes 1\\
 $G_2 = Id$
-\begin{verbatim}
+#+begin_example
 (4) -> matrix [[eval(g,s) for g in sgen3] for s in [1,2,3]]
 
         +1  2  2+
@@ -147695,7 +147695,7 @@ $G_2 = Id$
         |       |
         +2  1  3+
                       Type: Matrix(Integer)
-\end{verbatim}
+#+end_example
 
 Each of the columns in this matrix represents one of the strong generators.
 
@@ -147724,7 +147724,7 @@ Base & Strong Generators & Orbits\\
 
 We can see this in Axiom as follows. First we create a symmetric group and
 get the base and strong generators for it.
-\begin{verbatim}
+#+begin_example
 (1) -> S:List(Integer) := [1,2,3,4]
 
    (1) [1,2,3,4]
@@ -147744,7 +147744,7 @@ get the base and strong generators for it.
 
    (4) [(3 4),(2 3 4),(1 2 3 4),(1 2)]
                        Type: List(Permutation(Integer))
-\end{verbatim}
+#+end_example
 
 We calcuate the strong generators so the stabilizer chain is:
 
@@ -147753,7 +147753,7 @@ $G_1 = (3 4),(2 4 3)$ -- stabilizes 1\\
 $G_2 = (3 4)$ -- stabilizes 1 and 2\\
 $G_3 = Id$
 
-\begin{verbatim}
+#+begin_example
 (5) -> matrix [[eval(g,s) for g in sgen] for s in S]
 
          +1  1  2  2+
@@ -147765,7 +147765,7 @@ $G_3 = Id$
          +3  2  1  4+
 
                       Type: Matrix(Integer)
-\end{verbatim}
+#+end_example
 
 Each of the columns in this matrix represents one of the strong
 generators. Again $G=eval(G,s)$ and no $g$ is identity, that is for
@@ -147803,7 +147803,7 @@ Base & Strong Generators & Orbits\\
 Notice in {\tt svc} there are two points that come from generator 2.
 
 Here we create a permutation group where there are no stabilizers.
-\begin{verbatim}
+#+begin_example
 (1) -> C1 := coerceImages([2,1,4,3])$Permutation(Integer)
 
    (1) (1 2)(3 4)
@@ -147818,10 +147818,10 @@ Here we create a permutation group where there are no stabilizers.
 
    (3) <(1 2)(3 4),(1 4)(2 3)>
                         Type: PermutationGroup(Integer)
-\end{verbatim}
+#+end_example
 
 So when we generate the base and strong generators there are no subgroups.
-\begin{verbatim}
+#+begin_example
 (4) -> X4 := base(G4)
 
    (4) [1]
@@ -147842,7 +147842,7 @@ So when we generate the base and strong generators there are no subgroups.
          |    |
          +3  1+
                         Type: Matrix(Integer)
-\end{verbatim}
+#+end_example
 
 Each of the columns in this matrix represents one of the strong generators.
 
@@ -147865,7 +147865,7 @@ Base & Strong Generators & Orbits\\
 \end{tabular}
 
 A permutation group with two separate orbits:
-\begin{verbatim}
+#+begin_example
 (1) -> C3 := coerceImages([2,3,1,4,5])$Permutation(Integer)
 
    (1) (1 2 3)
@@ -147880,10 +147880,10 @@ A permutation group with two separate orbits:
 
    (3) <(1 2 3),(4 5)>
                     Type: PermutationGroup(Integer)
-\end{verbatim}
+#+end_example
 
 We generate the base and strong generators
-\begin{verbatim}
+#+begin_example
 (4) -> X5 := base(G5)
 
    (4) [1,4]
@@ -147906,7 +147906,7 @@ We generate the base and strong generators
          |       |
          +4  5  4+
                      Type: Matrix(Integer)
-\end{verbatim}
+#+end_example
 
 *** Local function: orbitWithSvc
 
@@ -200696,18 +200696,18 @@ Points could be explicitly added to subspaces at any level. A path
 could be given as an argument to the addPoint() function. It is a list
 of NonNegativeIntegers and refers, in order, to the n-th child of the
  current node. For example,
-\begin{verbatim}
+#+begin_example
        addPoint(s,[2,3],p)
-\end{verbatim}
+#+end_example
 would add the point p to the subspace s by going to the second child of
 the root and then the third child of that node. If the path does extend
 to the full depth of the tree, nodes are automatically added so that 
 the tree is of constant depth down any path. By not specifying the full
 path, new components could be added - for example, for s from 
 SubSpace(3,Float)
-\begin{verbatim}
+#+begin_example
        addPoint(s,[],p)
-\end{verbatim}
+#+end_example
 would create a new child to the root (a new component in N-space) and
 extend a path to a leaf of depth 3 that points to the data held in p.
 The subspace s would now have a new component which has one child
@@ -204985,9 +204985,9 @@ TaylorSeries(Coef) : SIG == CODE where
 *** product(product(i*j,i=a..b),j=c..d) fix
 The expression prints properly in ascii text but the tex output
 is incorrect. Originally the input
-\begin{verbatim}
+#+begin_example
 product(product(i*j,i=a..b),j=c..d) 
-\end{verbatim}
+#+end_example
 prints as
 $$
 PI2 
@@ -205003,10 +205003,10 @@ but now says:
 The problem is in [[src/algebra/tex.spad.pamphlet]] in the list of
 constants.
 The code used to read
-\begin{verbatim}
+#+begin_example
     plexOps       : L S := ["SIGMA","SIGMA2","PI","INTSIGN","INDEFINTEGRAL"]$(L S)
     plexPrecs     : L I := [    700, 800,      700,            700]$(L I)
-\end{verbatim}
+#+end_example
 it now reads:
 #+NAME: product(product(i*j,i=a..b),j=c..d) fix
 #+begin_src common-lisp :noweb yes

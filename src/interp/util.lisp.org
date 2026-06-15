@@ -67,13 +67,13 @@ be significant in terms of performance.
 
 We comment out the load of collectfn because it is already preloaded
 into the image. It used to read:
-\begin{verbatim}
+#+begin_example
    ((collectfn (concatenate 'string (string lsp) "/cmpnew/collectfn")))
    (unless (probe-file (concatenate 'string collectfn ".o"))
      (compile-file collectfn))
    (load collectfn)
    (compiler::emit-fn t)
-\end{verbatim}
+#+end_example
 #+NAME: make-depsys
 #+begin_src common-lisp :noweb yes
 (defun make-depsys (lsp src int obj mnt sys)
@@ -93,7 +93,7 @@ into the image. It used to read:
 
 #+end_src
 *** Building Interpsys (build-interpsys)
-\begin{verbatim}
+#+begin_example
 ;############################################################################
 ;# autoload dependencies
 ;#
@@ -114,7 +114,7 @@ into the image. It used to read:
 ;#     build-interpsys (in util.lisp) needs an extra argument for the
 ;#     new autoload things and several functions in util.lisp need hacking.
 ;############################################################################
-\end{verbatim}
+#+end_example
 The {\bf build-interpsys} function takes a list of files to load
 into the image ({\bf load-files}). It also takes several lists of files, 
 one for each subsystem which will be autoloaded. Autoloading is explained
@@ -284,7 +284,7 @@ After this function is called the image is clean and can be saved.
 
 
 #+end_src
-\begin{verbatim}
+#+begin_example
 ;--% Top level system command
 ;-- (mapcar #'car $systemCommands)
 ;initializeSystemCommands() ==
@@ -294,7 +294,7 @@ After this function is called the image is clean and can be saved.
 ;    $SYSCOMMANDS := CONS(CAAR l, $SYSCOMMANDS)
 ;    l := CDR l
 ;  $SYSCOMMANDS := NREVERSE $SYSCOMMANDS
-\end{verbatim}
+#+end_example
 #+NAME: defun initializeSystemCommands
 #+begin_src common-lisp :noweb yes
 (DEFUN |initializeSystemCommands| ()
@@ -314,9 +314,9 @@ After this function is called the image is clean and can be saved.
 #+end_src
 **** GCL porting changes
 GCL likes to output lines of the form:
-\begin{verbatim}
+#+begin_example
 ;; Note: Tail-recursive call of |matSuperList1| was replaced by iteration.
-\end{verbatim}
+#+end_example
 which is pointless and should be removed. Bill Schelter added this while
 he was debugging tail-recursive replacement and it never was removed.
 #+NAME: compiler-notes
@@ -433,7 +433,7 @@ This function is used to find the names of the files to load.
 On solaris 9 under GCL the original implementation will fail because
 the max number of arguments is 63. We rewrite it to get around this
 problem. It originally read:
-\begin{verbatim}
+#+begin_example
 (defun get-NAG-chapter (chapter function-list)
  (apply 'append
   (mapcar
@@ -442,7 +442,7 @@ problem. It originally read:
       ((equalp chapter (subseq (string f) 0 (length chapter))) (list f ))))
    function-list)))
 
-\end{verbatim}
+#+end_example
 #+NAME: get-NAG-chapter
 #+begin_src common-lisp :noweb yes
 (defun get-NAG-chapter (chapter function-list)
@@ -927,10 +927,10 @@ Make a directory relative to the {\bf \$spadroot} variable.
 Occasionally it will be necessary to iterate over all of the nrlib
 directories and compile each of the code.lsp files in every nrlib.
 This function will do that. A correct call looks like:
-\begin{verbatim}
+#+begin_example
 (in-package "BOOT")
 (recompile-all-libs "/spad/mnt/${SYS}/algebra")
-\end{verbatim}
+#+end_example
 where the [[${SYS}]] variable is same as the one set at build time.
 #+NAME: recompile-all-libs
 #+begin_src common-lisp :noweb yes
@@ -949,20 +949,20 @@ We occasionally need to completely rebuild the algebra from the spad
 files. This function will iterate across a directory containing all
 of the spad files and attempt to recompile them. A correct call looks
 like:
-\begin{verbatim}
+#+begin_example
 (in-package "BOOT")
 (recompile-all-algebra-files "nalg")
-\end{verbatim}
+#+end_example
 Note that it will build a pathname from the current {\bf AXIOM}
 shell variable. So if the {\bf AXIOM} shell variable had the value
-\begin{verbatim}
+#+begin_example
 /spad/mnt/${SYS}
-\end{verbatim}
+#+end_example
 (where the [[${SYS}]] variable is the same one set at build time)
 then the wildcard expands to
-\begin{verbatim}
+#+begin_example
 /spad/mnt/${SYS}/nalg/*.spad
-\end{verbatim}
+#+end_example
 and all of the matching files would be recompiled.
 #+NAME: recompile-all-algebra-files
 #+begin_src common-lisp :noweb yes
@@ -1381,7 +1381,7 @@ function assumes that \\ can only appear as first character of name.
 
 #+end_src
 ** License
-\begin{verbatim}
+#+begin_example
 ;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
 ;; All rights reserved.
 ;;
@@ -1413,7 +1413,7 @@ function assumes that \\ can only appear as first character of name.
 ;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 

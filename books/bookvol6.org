@@ -15,19 +15,19 @@ command line options for the {\tt sman} process, sets some shell
 variables, and then invokes {\tt sman}. 
 
 The {\tt sman} process starts the following tree of processes:
-\begin{verbatim}
+#+begin_example
      --xterm---bash---sman-|-AXIOMsys
                            |-clef---spadclient
                            |-hypertex
                            |-session
                            |-sman
                            |-viewman
-\end{verbatim}
+#+end_example
 
 * The axiom Command
 The {\tt axiom} command starts everything for Axiom. The options
 for the {\tt axiom} command are:
-\begin{verbatim}
+#+begin_example
 axiom
   [-ht    |-noht]      whether to use HyperDoc
   [-gr    |-nogr]      whether to use Graphics
@@ -44,47 +44,47 @@ axiom
   [-sessionprog fname] use named program for session
   [-clientprog fname]  use named program for spadclient
   [-h]                 show usage
-\end{verbatim}
+#+end_example
 
 In detail, the command options are:
 *** [-ht $\vert$ -noht]
-\begin{verbatim}
+#+begin_example
   [-ht    |-noht]      whether to use HyperDoc
-\end{verbatim}
+#+end_example
 {\tt Hyperdoc} is the documentation tool for Axiom. The
 {\tt -ht} option, enabled by default, will start this tool.
 See Jenks\cite{Jenk92} Chapter 3 for further information on the 
 {\tt hyperdoc} subsystem.
 
 *** [-gr $\vert$ -nogr]
-\begin{verbatim}
+#+begin_example
   [-gr    |-nogr]      whether to use Graphics
-\end{verbatim}
+#+end_example
 The {\tt graphics} subsystem is enabled using the 
 {\tt -gr} option, enabled by default. Graphics will appear as a
 result of a draw command, such as
-\begin{verbatim}
+#+begin_example
  draw(sin(x),x=0..1)
-\end{verbatim}
+#+end_example
 Note that attempting to use draw commands when the graphics is
 disabled will simply hang the interpreter waiting for a response.
 See Jenks\cite{Jenk92} Chapter 7 for further information on the 
 {\tt graphics} subsystem.
 
 *** [-clef $\vert$ -noclef]
-\begin{verbatim}
+#+begin_example
   [-clef  |-noclef]    whether to use Clef
-\end{verbatim}
+#+end_example
 The {\tt clef} (Command Line Edit Facility) allows for command completion.
 The list of command completion strings is in the last chapter of this
 document. If {\tt clef}, enabled by default, is running then you can type:
-\begin{verbatim}
+#+begin_example
  x:Dena<tab>
-\end{verbatim}
+#+end_example
 and this will automatically be expanded to:
-\begin{verbatim}
+#+begin_example
  x:DenavitHartenbergMatrix
-\end{verbatim}
+#+end_example
 
 The {\tt clef} program also allows command line editing. The commands are
 special keyboard keys.
@@ -101,193 +101,193 @@ See Jenks\cite{Jenk92} page 21 for
 further information on the {\tt clef} command.
 
 *** [-noiw $\vert$ -iw]
-\begin{verbatim}
+#+begin_example
   [-noiw  |-iw]        start in interpreter in a separate window
-\end{verbatim}
+#+end_example
 The {\tt iw} option, disabled by default, will start a second
 interpreter in its own window with its own frame. The fact that
 the second interpreter is in its own frame can be seen using the
 {\tt )frame} command. For instance, if you type
-\begin{verbatim}
+#+begin_example
  axiom -iw
-\end{verbatim}
+#+end_example
 there will be two interpreter windows available, one in the current
 window and one in a new window. In the current window if you type:
-\begin{verbatim}
+#+begin_example
  )frame names
-\end{verbatim}
+#+end_example
 you will see:
-\begin{verbatim}
+#+begin_example
    The names of the existing frames are:
             frame0 
             frame1 
             initial 
       The current frame is the first one listed.
-\end{verbatim}
+#+end_example
 
 In the second window, if you type
-\begin{verbatim}
+#+begin_example
  )frame names
-\end{verbatim}
+#+end_example
 you will see:
-\begin{verbatim}
+#+begin_example
    The names of the existing frames are:
             frame1 
             frame0 
             initial 
       The current frame is the first one listed.
-\end{verbatim}
+#+end_example
 Setting
-\begin{verbatim}
+#+begin_example
  x:=3
-\end{verbatim}
+#+end_example
 in the second window will set the variable $x$ in the frame {\tt frame1}.
 Switching to the first window and typing:
-\begin{verbatim}
+#+begin_example
  x
-\end{verbatim}
+#+end_example
 gives:
-\begin{verbatim}
+#+begin_example
 
    (1)  x
                              Type: Variable x
-\end{verbatim}
+#+end_example
 since the first window is in {\tt frame0} and the variable $x$ is
 defined in {\tt frame1}.
 But we can switch frames in the first window using
-\begin{verbatim}
+#+begin_example
  )frame next
-\end{verbatim}
+#+end_example
 and then
-\begin{verbatim}
+#+begin_example
  x
-\end{verbatim}
+#+end_example
 gives:
-\begin{verbatim}
+#+begin_example
 
    (2)  3
                              Type: PositiveInteger
-\end{verbatim}
+#+end_example
 and now the two windows share the same frame space. 
 See Jenks\cite{Jenk92} page 579 for further 
 information on the {\tt frame} command.
 
 *** [-ihere $\vert$ -noihere]
-\begin{verbatim}
+#+begin_example
   [-ihere |-noihere]   start an interpreter in this window
-\end{verbatim}
+#+end_example
 This option determines whether Axiom will start in the current window.
 Using this option alone is not particularly useful and it is generally
 used in combination with the {\tt -iw} option:
-\begin{verbatim}
+#+begin_example
  axiom -noihere -iw &
-\end{verbatim}
+#+end_example
 
 However, used alone, as in:
-\begin{verbatim}
+#+begin_example
  axiom -noihere &
-\end{verbatim}
+#+end_example
 it will start Axiom and show the Hyperdoc window. Graphics will also
 work from the Hyperdoc pages.
 
 *** [-nox]
-\begin{verbatim}
+#+begin_example
   [-nox]               don't use X Windows
-\end{verbatim}
+#+end_example
 allows Axiom to start the interpreter without Hyperdoc or the graphics
 subsystem. This is useful for starting Axiom in an emacs buffer.
 
 *** [-go $\vert$ -nogo]
-\begin{verbatim}
+#+begin_example
   [-go  |-nogo]        whether to start system
-\end{verbatim}
+#+end_example
 uses the {\tt -go} option, enabled by default, controls whether
 the system starts from the command line. If the {\tt -nogo}
 option is chosen the system prints the command line that would
 have been issued. This is useful for finding out what the command
 line options to {\tt sman} will be. For instance:
-\begin{verbatim}
+#+begin_example
  axiom -nogo -iw
-\end{verbatim}
+#+end_example
 does not start Axiom but types out:
-\begin{verbatim}
+#+begin_example
 Would now start the processes.
 exec ~/mnt/linux/bin/sman -iw -ws ~/mnt/linux/bin/AXIOMsys
-\end{verbatim}
+#+end_example
 
 *** [-ws wsname]
-\begin{verbatim}
+#+begin_example
   [-ws wsname]         use named workspace
-\end{verbatim}
+#+end_example
 In the {\tt -nogo} command above you can see that the default
 workspace name is 
-\begin{verbatim}
+#+begin_example
 -ws ~/mnt/linux/bin/AXIOMsys
-\end{verbatim}
+#+end_example
 This option allows you to change that. This is useful for
 debugging new system builds. During build a debugging version
 of Axiom is created in the {\tt obj/linux/bin} directory. The
 {\tt debugsys} image uses interpreted lisp code rather than
 compiled code. This makes it possible to do deep debugging. To
 use this workspace you would incant:
-\begin{verbatim}
+#+begin_example
  cd youraxiombuild
  export AXIOM=`pwd`/mnt/linux
  export PATH=$AXIOM/bin:$PATH
  axiom -ws obj/linux/bin/debugsys
-\end{verbatim}
+#+end_example
 
 
 *** [-list]
-\begin{verbatim}
+#+begin_example
   [-list]              list workspaces only
-\end{verbatim}
+#+end_example
 shows you the executable workspaces. Generally in a built system
 there is only one, called\\
 {\tt \$AXIOM/bin/AXIOMsys}.
 
 *** [-grprog fname]
-\begin{verbatim}
+#+begin_example
   [-grprog fname]      use named program for Graphics
-\end{verbatim}
+#+end_example
 allows you to specify which program to use for the graphics.
 By default this is\\
 {\tt \$AXIOM/lib/viewman}.
 
 *** [-htprog fname]
-\begin{verbatim}
+#+begin_example
   [-htprog fname]      use named program for Hyperdoc
-\end{verbatim}
+#+end_example
 allows you tp specify which program to use for Hyperdoc. By
 default it is\\
 {\tt \$AXIOM/bin/hypertex -s}.
 
 *** [-clefprog fname]
-\begin{verbatim}
+#+begin_example
   [-clefprog fname]    use named program for Clef
-\end{verbatim}
+#+end_example
 allows you to specify which program to use for clef. By default
 it is\\ 
 {\tt \$AXIOM/bin/clef -f \$AXIOM/lib/command.list -e}.
 
 *** [-sessionprog fname]
-\begin{verbatim}
+#+begin_example
   [-sessionprog fname] use named program for session
-\end{verbatim}
+#+end_example
 allows you to specify the session manager program. By default it is\\
 {\tt \$AXIOM/lib/session}.
 
 *** [-clientprog fname]
-\begin{verbatim}
+#+begin_example
   [-clientprog fname]  use named program for spadclient
-\end{verbatim}
+#+end_example
 allows you to specify the spadclient program. By default it is\\
 {\tt \$AXIOM/lib/spadclient}.
 
 *** [-h]
-\begin{verbatim}
+#+begin_example
   [-h]                 show usage
-\end{verbatim}
+#+end_example
 
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes

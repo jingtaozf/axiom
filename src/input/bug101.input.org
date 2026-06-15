@@ -12,19 +12,19 @@
 \eject
 
 The call 
-\begin{verbatim}
+#+begin_example
 laplace(log(z),z,w)
-\end{verbatim}
+#+end_example
 causes an infinite loop between lfintegrate and monomialIntegrate.
 
 Waldek modified the code to fail and return unevaluated.
 
 A more reasonable return value, not supported by Axiom, would be:
-\begin{verbatim}
+#+begin_example
   -log(w)-gamma
   -------------
        w
-\end{verbatim}
+#+end_example
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes

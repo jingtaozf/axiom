@@ -97,11 +97,11 @@ A domain is an instance of an abstract datatype specified by one or
 more categories. Categories serve to group together domains with
 common properties (e.g. operations). A basic category in Axiom is {\bf
 Set} which has the definition:
-\begin{verbatim}
+#+begin_example
    Set(): Category == with
      "=" : ($,$) -> Boolean
      coerce : $  -> Expression
-\end{verbatim}
+#+end_example
 
 The syntax means the following. {\bf Set} is a category constructor
 having no parameters. Lines 2 and 3 of the definition present {\sl
@@ -118,12 +118,12 @@ associative multiplication operation. Given such a mulitplication, it
 is easy to define an exponentiation by positive integers 
 ($x**1=x$, $x**2=x*x$, $x**3=x*x**2$,\ldots). The definition of the
 {\bf SemiGroup} constructor in Axiom is
-\begin{verbatim}
+#+begin_example
    SemiGroup(): Category == Set with
      "*" : ($,$) -> $
      "**" : ($, PositiveInteger) => $
      associate("*")
-\end{verbatim}
+#+end_example
 
 The last line of this definition presents an {\sl attribute} declaring
 that multiplication is associative. Attributes declare properties of
@@ -137,25 +137,25 @@ If a category {\bf C2} extends a category {\bf C1}, any domain that
 belongs to {\bf C2} also belongs to {\bf C1}.
 
 Categories may be parameterized.
-\begin{verbatim}
+#+begin_example
    ListCategory(S: Set): Category == Set with
      first : $ -> $
      rest :  $ -> $
      null :  $ -> Boolean
      . . .
-\end{verbatim}
+#+end_example
 presumably describes the operations and attributes that any abstract
 datatype that purports to act like a linked list should have. The
 parameter {\bf S} can be any domain that belongs to {\bf Set}. If
 we defined a special version of this
-\begin{verbatim}
+#+begin_example
    SemiGroupListCategory(S: SemiGroup): Category == Set
      with
        first : $ -> $
        rest :  $ -> $
        null :  $ -> Boolean
        . . .
-\end{verbatim}
+#+end_example
 then {\bf S} must have been explicitly declared to belong to 
 {\bf SemiGroup}. Category membership is by name: a domain having the
 operations and attributes of {\bf SemiGroup} does not belong to this
@@ -163,10 +163,10 @@ category unless it has been explicitly declared to belong to
 {\bf SemiGroup} or one of its extensions.
 
 Categories allow multiple inheritance.
-\begin{verbatim}
+#+begin_example
    FiniteList(S: Set): Category ==
      Join(Finite, ListCategory(S))
-\end{verbatim}
+#+end_example
 defines a category constructor that contains all operation signatures
 and attributes from both the categories {\bf Finite} and
 {\bf ListCategory(S)}.
@@ -182,7 +182,7 @@ which the domain belongs.
 
 In the implementation of {\bf Integer}, the following category definition
 is given and specifies the behavior of the domain:
-\begin{verbatim}
+#+begin_example
    Integer(): Join(UniqueFactorizationDomain,
      EuclideanDomain, OrderedRing, DifferentialRing)
        with
@@ -191,7 +191,7 @@ is given and specifies the behavior of the domain:
          numberOfDigits : ($,$) -> $
          abs : $ -> $
          canonicalUnitNormal
-\end{verbatim}
+#+end_example
 
 The category of {\bf Integer} is not one named category but, instead,
 is composed of several pieces. The full category is that obtained by
@@ -272,9 +272,9 @@ A {\sl modemap} is a syntactic specification of an operation. It gives
 the name of the operation, source and target datatypes for its
 parameters, and the name of the datatype or package exporting the
 operation. For example, the modemap
-\begin{verbatim}
+#+begin_example
    oddp : Integer -> Boolean from Integer
-\end{verbatim}
+#+end_example
 specifies an operation from type {\sl Integer} which takes an integer
 argument and returns a boolean value. The ``from''-clause indicates
 the {\sl domain of implementation} of the operation (in this case,
@@ -284,9 +284,9 @@ When the datatype or package is parameterized, the conditions on their
 parameters appear in an ``if''-clause for the modemap. For example,
 every domain created by domain constructor {\bf Matrix} exports a
 trace operation:
-\begin{verbatim}
+#+begin_example
    trace: Matrix(R) -> $ if R has Ring from Matrix(R)
-\end{verbatim}
+#+end_example
 
 The domain constructor {\bf Matrix} takes one parameter {\bf R}
 which is required to belong to the category {\bf Ring}.
@@ -296,19 +296,19 @@ For example, domains created by {\bf Matrix} export a {\sl {\bf determinant}}
 operation only if the homogeneous multiplication ``*'' in the underlying
 domain is commutative, that is, {\bf R} has {\sl {\bf commutative("*")}}.
 The modemap for {\sl {\bf determinant}} is
-\begin{verbatim}
+#+begin_example
    determinant: Matrix(R) -> $ if R has Ring
      and R has commutative("*") from Matrix(R)
-\end{verbatim}
+#+end_example
 
 Similarly, datatypes creaated by {\bf Matrix} export an {\sl {\bf inverse}}
 operation only if their argument domain belongs to {\bf Field}. Since
 the requirement ``{\bf R} has {\bf Field}'' implies
 ``{\bf R} has {\bf Ring}'' the modemap for {\sl {\bf inverse}} is
-\begin{verbatim}
+#+begin_example
    inverse: Matrix(R) -> Union(R,"failed")
       if R has Field from Matrix(R)
-\end{verbatim}
+#+end_example
 
 The collection of modemaps from all abstract datatypes and packages
 constitutes the {\sl global modemap database} for Axiom. To standardize
@@ -316,10 +316,10 @@ the presentation of modemaps, arguments and other parameters are
 prefaced by ``pattern variables'', here called {\bf *1}, {\bf *2}, etc.
 The resulting form of the modemap for {\bf Matrix} {\sl {\bf inverse}}
 in the modemap database is, for example,
-\begin{verbatim}
+#+begin_example
    inverse: *1 -> Union(*1,"failed")
       if *1 is Matrix(*2) and *2 has Field from *1
-\end{verbatim}
+#+end_example
 
 In addition to this general modemap database, each domain or package has
 a {\sl local modemap database} for all its exported operations. Note
@@ -329,9 +329,9 @@ For a domain or package itself, all parameters to the constructor are
 known. Thus local modemaps have no patterns. Predicates reduce to
 {\sl true} or {\sl false}. All modemaps in a local modemap database 
 for a domain or package {\bf D} therefore have the general form
-\begin{verbatim}
+#+begin_example
    f: S -> T if true from D
-\end{verbatim}
+#+end_example
 
 Those having a predicate of {\tt false} simply do not exist for a
 given domain or package. For example, {\bf Matrix(RationalNumber)}
@@ -368,9 +368,9 @@ plus those types contained in any of the argument types if they are
 constructed from {\bf Record}, {\bf Union}, or {\bf Mapping}. Duplicates
 are removed from the list and domains and packages in the list are
 searched for an applicable $f$. If a modemap is found of the form
-\begin{verbatim}
+#+begin_example
    f: (A,B,...) -> T from C
-\end{verbatim}
+#+end_example
 with arity $n$, for some {\bf T} and {\bf C}, the function is gotten
 from {\bf C} and applied to $a,b,\ldots$ to yield a result {\sl t}
 and subsequent value pair $<t$,T$>$.
@@ -383,9 +383,9 @@ location of the function to be applied. If there is no applicable
 modemap to be found among the argument domains of a function, a two-stage
 search for a suitable modemap is made in the global modemap database. A
 set $M$ of candidate modemaps is constructed, each of the form:
-\begin{verbatim}
+#+begin_example
    f:(D,E,...) -> T if p from C
-\end{verbatim}
+#+end_example
 for some result type {\bf T} and domain of implementation {\bf C},
 each of arity $n$ and each generally containing pattern variables and
 predicates $p$. The set $M$ is partitioned into two subsets: those
@@ -404,9 +404,9 @@ now implemented in the {\bf List} domain. The constructor
 category {\bf Set}. The functions in this package implement operations
 that requires lists with two different element types. For example,
 the function
-\begin{verbatim}
+#+begin_example
    map: (S -> T, List(S)) -> List(T)
-\end{verbatim}
+#+end_example
 which maps a function from {\bf S} to {\bf T} across the elements
 of {\bf List(S)}, producing an object of {\bf List(T)}, is implemented
 in {\bf ListPackage2(S,T)}. Looking at the modemaps in the first
@@ -419,10 +419,10 @@ attribute {\bf associated("List")} in its category.
 
 For our purposes here, it suffices to regard the predicate of a
 modemap as a conjunction of simple predicates of two kinds:
-\begin{verbatim}
+#+begin_example
    X is Y
    X has Y
-\end{verbatim}
+#+end_example
 
 Predicates of the first kinds state that pattern $X$ matches
 only the explicit domain {\tt Y}. If a modemap only has predicates
@@ -446,9 +446,9 @@ It produces a third type {\bf T3} to which all objects of type {\bf T1}
 and {\bf T2} can be coerced. The type {\bf Any} is used for {\bf T3}
 if a less general type cannot be found. Resolving is necessary to use 
 a modemap with homogeneous arguments. For example, the modemap
-\begin{verbatim}
+#+begin_example
    "+":(*1,*1) -> *1 if *1 has AbelianMonoid from *1
-\end{verbatim}
+#+end_example
 is used for addition in most algebraic domains in Axiom. Given an
 expression $1+(2/3)$, a bottom-up analysis will first produce
 $<$1,Integer$>$ and $<$2/3,RationalNumber$>$ as the values of the
@@ -535,29 +535,29 @@ The interpreter does modemap selection for an operation named
 types. This is the easist way for a programmer to control the
 coerce facility. For example, the category {\bf Ring} provides
 a modemap
-\begin{verbatim}
+#+begin_example
    coerce: Integer -> R from R
-\end{verbatim}
+#+end_example
 where {\bf R} is the ring being defined. Thus any ring has a coercion
 from {\bf Integer} and, in fact, this operation has a default 
 categorical definition.
 
 Coercions can sometimes be defined in domains but are often defined in
 packages. A coercion of the form
-\begin{verbatim}
+#+begin_example
    coerce: Polynomial(QuotientField(R)) ->
      QuotientField(Polynomial(R))
        if R has IntegralDomain
-\end{verbatim}
+#+end_example
 would typically be defined in a package parameterized by the domain
 {\bf R}. On the other hand, it is not feasible to have so many 
 explicit coercions being written and, in fact, there are general
 methods that will perform these kinds of coercions.
 
 It is not now possible to define a coercion of the form
-\begin{verbatim}
+#+begin_example
    coerce: List(S) -> List(T)
-\end{verbatim}
+#+end_example
 in the domain constructor {\bf List}. This is because {\bf List} is
 parameterized by only one set ({\bf S} or {\bf T}) and the modemap
 cannot, therefore, be part of the category of {\bf List}. Such an
@@ -567,15 +567,15 @@ handled by the general mechanism described in the next section.
 *** Coerce by Mapping
 
 When the interpreter encounters a coercion of the form
-\begin{verbatim}
+#+begin_example
    D(T1) -> D(T2)
-\end{verbatim}
+#+end_example
 where {\bf D} is a domain constructor with a parameter (for reasons
 of exposition, we here omit the case of {\bf D} having multiple
 parameters), it looks for a function
-\begin{verbatim}
+#+begin_example
    map: (T1 -> T2, D(T1)) -> D(T2)
-\end{verbatim}
+#+end_example
 that takes a function from {\bf T1} to {\bf T2} and an object of
 {\bf D(T1)} and produces an object of {\bf D(T2)}. It then creates
 a function stub that coerces objects of {\bf T1} to those of {\bf T2}
@@ -598,10 +598,10 @@ Another case that is now handled internally involves rearrangement
 of a tower of paramterized domains. The domain constructor {\bf Gaussian}
 creates domains with objects similar to the complex numbers in that they
 contain real and imaginary parts. The coercion
-\begin{verbatim}
+#+begin_example
    Gaussian(Polynomial(RationalNumber)) ->
       QuotientField(Polynomial(Gaussian(Integer)))
-\end{verbatim}
+#+end_example
 is performed in the following steps. The type {\bf RationalNumber}
 is changed into the equivalent type {\bf QuotientField(Integer)} and
 the {\bf QuotientField} is bubbled to the top of the original type to
@@ -642,10 +642,10 @@ interpreter to try to retract {\tt p} to an element of {\bf Integer}.
 For the most part, retraction can be accomplished by functions in the
 Axiom library. The category {\bf RetractWithUnderDomain(R)} specifies
 two operations
-\begin{verbatim}
+#+begin_example
    retractable? : $ -> Boolean
    retract :      $ -> R
-\end{verbatim}
+#+end_example
 
 In our example of polynomials above, the function {\sl {\bf retractable?}}
 would be called to see if the object was a constant polynomial. If the
@@ -712,10 +712,10 @@ The interpreter has an internal database of rules which it tries to use
 to resolve two types. The rules are not complete, as they only attempt
 to take care of cases that cannot be dealt with in a more general way.
 Almost all of the rules deal with polynomials. For example, one rule is
-\begin{verbatim}
+#+begin_example
    resolve(Polynomial(T1),UnivariatePoly(x,T2))=
       resolve(Polynomial(T1),T2)
-\end{verbatim}
+#+end_example
 
 The variable of {\bf UnivariatePoly} can be absorbed into the general
 constructor {\bf Polynomial} and then the resolve facility is called
@@ -756,10 +756,10 @@ The only ones found take two arguments, each of the same datatype.
 Resolve {\bf Polynomial(Integer)} and {\bf RationalNumber} to get the
 datatype {\bf Polynomial(RationalNumber)}
 \item Do the coercions
-\begin{verbatim}
+#+begin_example
    Polynomial(Integer) -> Polynomial(RationalNumber)
    RationalNumber -> Polynomial(RationalNumber)
-\end{verbatim}
+#+end_example
 \item Apply the ``$+$'' in the datatype {\bf Polynomial(RationalNumber)}
 and return the result
 \end{itemize}
@@ -954,9 +954,9 @@ frame and see the functions correctly defined.
 The \$frameMessages variable controls when frame messages will be
 displayed. The variable is initially NIL. It can be set on (T) or off (NIL)
 using the system command:
-\begin{verbatim}
+#+begin_example
     )set message frame on | off
-\end{verbatim}
+#+end_example
 Setting frame messages on will output a line detailing the 
 current frame after every output is complete. 
 
@@ -1781,16 +1781,16 @@ Axiom messages are read from a flat file database and returned
 as one long string.  They are preceded in the database by a key and
 this is how they are referenced from code.  For example, one key is
 S2IL0001 which means:
-\begin{verbatim}
+#+begin_example
    S2          Scratchpad II designation
    I           from the interpreter
    L           originally from LISPLIB BOOT
    0001        a sequence number
-\end{verbatim}
+#+end_example
 
 Each message may contain formatting codes and and parameter codes.
 The formatting codes are:
-\begin{verbatim}
+#+begin_example
    %ceoff      turn off centering
    %ceon       turn on centering
    %d          turn off bright printing
@@ -1803,7 +1803,7 @@ The formatting codes are:
    %s          pretty-print as an S-expression
    %u          unindent 3 spaces
    %x#         insert # spaces
-\end{verbatim}
+#+end_example
 
 The parameter codes look like \%1, \%2b, \%3p, \%4m, \%5bp, \%6s where the
 digit is the parameter number and the letters following indicate
@@ -1942,9 +1942,9 @@ The \verb|$HiFiAccess| is set by initHist to T. It is a flag
 used by the history mechanism to record whether the history function
 is currently on. It can be reset by using the axiom
 command
-\begin{verbatim}
+#+begin_example
   )history off
-\end{verbatim}
+#+end_example
 It appears that the name means ``History File Access''.
 
 The \verb|$HiFiAccess| variable is used by historySpad2Cmd to check
@@ -2127,7 +2127,7 @@ compute the delta(i)s stored in \verb|$frameRecord|.
 #+end_src
 
 \defun{undoSteps}{undoSteps}
-\begin{verbatim}
+#+begin_example
 -- undoes m previous commands; if )before option, then undo one extra at end
 --Example: if $IOindex now is 6 and m = 2 then general layout of $frameRecord,
 --  after the call to recordFrame below will be:
@@ -2142,7 +2142,7 @@ compute the delta(i)s stored in \verb|$frameRecord|.
 --  up to, but not including <change for #3>.
 --  An "undo 3 )before" will additionally restore <change for #3>.
 --  Thus, the later requires one extra undo at the end.
-\end{verbatim}
+#+end_example
 \calls{undoSteps}{writeInputLines}
 \calls{undoSteps}{recordFrame}
 \calls{undoSteps}{copy}
@@ -2187,7 +2187,7 @@ compute the delta(i)s stored in \verb|$frameRecord|.
 #+end_src
 
 \defun{undoSingleStep}{undoSingleStep}
-\begin{verbatim}
+#+begin_example
 undoSingleStep(changes,env) ==
 --Each change is a name-proplist pair. For each change:
 --  (1) if there exists a proplist in env, then for each prop-value change:
@@ -2196,7 +2196,7 @@ undoSingleStep(changes,env) ==
 --  (2) add change to the front of env
 --  pp '"----Undoing 1 step--------"
 --  pp changes
-\end{verbatim}
+#+end_example
 \calls{undoSingleStep}{assq}
 \calls{undoSingleStep}{seq}
 \calls{undoSingleStep}{exit}
@@ -2410,7 +2410,7 @@ Removing undo lines from \verb|)hist )write linelist|
 \defun{reportUndo}{reportUndo}
 This function is enabled by setting \verb|$reportundo| to a non-nil value.
 An example of the output generated is:
-\begin{verbatim}
+#+begin_example
 r := binary(22/7)
  
 
@@ -2424,7 +2424,7 @@ Properties of r ::
   value was: NIL
   value is:  ((|BinaryExpansion|) WRAPPED . #(1 (1 1) NIL (0 0 1)))
 
-\end{verbatim}
+#+end_example
 
 \calls{reportUndo}{seq}
 \calls{reportUndo}{exit}
@@ -3280,9 +3280,9 @@ The trace1 function handles the options {\bf off}, {\bf stats},
 \defun{trace3}{trace3}
 The {\bf trace3} examines the options to the top level trace command
 and builds the lambda expression in the variable {\bf newdef}
-\begin{verbatim}
+#+begin_example
   (lambda (&rest g6) (monitorx g6 fn ll))
-\end{verbatim}
+#+end_example
 The {\bf fn} variable is an uninterned gensym name that is unique.
 The {\bf ll} variable is a list of 
 \begin{itemize}
@@ -3292,26 +3292,26 @@ e.g. Polynomial.univariate.21
 \item (when g4 'macro) -- most likely nil
 \item tracecode -- a string controlling what tracing will occur 
 where tracecode means
-\begin{verbatim}
+#+begin_example
   ; 0:        Caller (0,1)           print caller if 1
   ; 1:        Value (0,1)            print value if 1
   ; 2...:     Arguments (0,...,9)    stop if 0; print ith if i; all if 9
-\end{verbatim}
+#+end_example
 \item countnam -- 
 \item timernam --
 \item before -- An expression to execute before executing the function.
 It defaults to 
-\begin{verbatim}
+#+begin_example
   (eq nil nil)
-\end{verbatim}
+#+end_example
 \item after --
 \item condition --
 \item break --
 \item modemap -- The modemap for the function. For Polynomial.variables.15
 it shows up as
-\begin{verbatim}
+#+begin_example
   ((List (Symbol)) (Polynomial (Integer)))
-\end{verbatim}
+#+end_example
 \item (list 'quote t) --
 \end{itemize}
 \calls{trace3}{untrace2}
@@ -4075,17 +4075,17 @@ Truncate list L at the point marked by TL.
 
 \defun{domainToGenvar}{domainToGenvar}
 For a call to trace, such as 
-\begin{verbatim}
+#+begin_example
    )trace POLY(INT)
-\end{verbatim}
+#+end_example
 This would be called with
-\begin{verbatim}
+#+begin_example
    (POLY INT)
-\end{verbatim}
+#+end_example
 which gets unabbreviated to the full form of
-\begin{verbatim}
+#+begin_example
    (|Polynomail| (|Integer|))
-\end{verbatim}
+#+end_example
 
 Since {\bf Polynomial} is a domain we call {\bf genDomainTraceName}
 to add it to the global alist \verb|$domainTraceNameAssoc|, which
@@ -4350,7 +4350,7 @@ of \verb|$1| to the domain (a vector), returning it as the result.
 The operation alist for something like POLY(INT) is a list of
 operations. Each operation, such as '*' is a list of all possible
 signatures for '*'. For example, the operation alist looks like:
-\begin{verbatim}
+#+begin_example
    (* (($ (|PositiveInteger|) $) NIL . (T . (ELT)))
       (($ $ $) NIL . (T . (ELT)))
       (($ $ |#1|) NIL . (T . (ELT)))
@@ -4358,10 +4358,10 @@ signatures for '*'. For example, the operation alist looks like:
       (($ (|Fraction| (|Integer|))) NIL
        (|has| |#1| (|Algebra| (|Fraction| (|Integer|)))) . (ELT))
       ....)
-\end{verbatim}
+#+end_example
 This function rearranges the operations so that each signature
 is independent. Thus it becomes
-\begin{verbatim}
+#+begin_example
    (* (($ (|PositiveInteger|) $) NIL . (T . (ELT))))
    (* (($ $ $) NIL . (T . (ELT))))
    (* (($ $ |#1|) NIL . (T . (ELT))))
@@ -4369,7 +4369,7 @@ is independent. Thus it becomes
    (* (($ (|Fraction| (|Integer|))) NIL
        (|has| |#1| (|Algebra| (|Fraction| (|Integer|)))) . (ELT)))
       ....
-\end{verbatim}
+#+end_example
 \sig{flattenOperationAlist}{OperationAlist}{OperationAlist}
 #+NAME: defun flattenOperationAlist 0
 #+begin_src common-lisp :noweb yes
@@ -4990,13 +4990,13 @@ Collect all of the print names of the \verb|$traceNames|
 \defun{genDomainTraceName}{genDomainTraceName}
 This function maintains an alist whose car is the domain to trace
 and the cdr is the genvar. So for POLY(INT) it is called with
-\begin{verbatim}
+#+begin_example
    y == (|Polynomial| (|Integer|))
-\end{verbatim}
+#+end_example
 which, if it is already traced would be in the alist as
-\begin{verbatim}
+#+begin_example
    (((|Polynomial| (|Integer|)) . $1))
-\end{verbatim}
+#+end_example
 If it is not already traced it would be cons with a new genvar
 and added to the alist.
   
@@ -8389,9 +8389,9 @@ function. This variable is used to set \verb|*default-pathname-defaults*|.
 The \refto{reroot} function resets it to \verb|$spadroot|.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $current-directory = "/research/test/"
-\end{verbatim}
+#+end_example
 
 \defdollar{current-directory}
 #+NAME: initvars
@@ -8408,14 +8408,14 @@ relative paths held in the variable
 \verb|$spadroot|.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $directory-list =
   ("/research/test/mnt/ubuntu/../../src/input/" 
    "/research/test/mnt/ubuntu/doc/msgs/" 
    "/research/test/mnt/ubuntu/../../src/algebra/" 
    "/research/test/mnt/ubuntu/../../src/interp/" 
    "/research/test/mnt/ubuntu/doc/spadhelp/")
-\end{verbatim}
+#+end_example
 
 \defdollar{directory-list}
 #+NAME: initvars
@@ -8430,9 +8430,9 @@ The \verb|$InitialModemapFrame| is used as the initial value.
 See the function \fnref{makeInitialModemapFrame}.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $InitialModemapFrame = '((nil))
-\end{verbatim}
+#+end_example
 
 \defdollar{InitialModemapFrame}
 #+NAME: initvars
@@ -8448,9 +8448,9 @@ prepends the \verb|$spadroot| variable to the
 \verb|$relative-library-directory-list| variable.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $library-directory-list =  ("/research/test/mnt/ubuntu/algebra/")
-\end{verbatim}
+#+end_example
 
 \defdollar{library-directory-list}
 #+NAME: initvars
@@ -8464,9 +8464,9 @@ The \verb|$msgDatabaseName| is a locally shared variable among the
 message database routines.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 |$msgDatabaseName| = nil
-\end{verbatim}
+#+end_example
 
 \defdollar{msgDatabaseName}
 #+NAME: initvars
@@ -8484,9 +8484,9 @@ If an open server is not requested then this variable to NIL
 See the function \fnref{openserver}.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $openServerIfTrue = nil
-\end{verbatim}
+#+end_example
 
 \defdollar{openServerIfTrue}
 #+NAME: initvars
@@ -8507,14 +8507,14 @@ of paths held in the variable \verb|$directory-list|. Each entry will be
 prefixed by \verb|$spadroot|.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $relative-directory-list =
   ("/../../src/input/" 
    "/doc/msgs/" 
    "/../../src/algebra/" 
    "/../../src/interp/" 
    "/doc/spadhelp/")
-\end{verbatim}
+#+end_example
 
 \defdollar{relative-directory-list}
 #+NAME: initvars
@@ -8535,9 +8535,9 @@ path in this list with the value of the \verb|$spadroot| variable
 to construct the \verb|$library-directory-list| variable.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $relative-library-directory-list = ("/algebra/")
-\end{verbatim}
+#+end_example
 
 \defdollar{relative-library-directory-list}
 #+NAME: initvars
@@ -8555,9 +8555,9 @@ uses this variable if the AXIOM shell variable is not set.  The
 the relative filenames to make them absolute.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $spadroot = "/research/test/mnt/ubuntu"
-\end{verbatim}
+#+end_example
 
 \defdollar{spadroot}
 #+NAME: initvars
@@ -8572,9 +8572,9 @@ The \verb|$SpadServer| determines whether Axiom acts as a remote server.
 See the function \fnref{openserver}.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $SpadServer = nil
-\end{verbatim}
+#+end_example
 
 \defdollar{SpadServer}
 #+NAME: initvars
@@ -8590,9 +8590,9 @@ In unix these exist in the tmp directory as names.
 See the function \fnref{openserver}.
 
 An example of a runtime value is:
-\begin{verbatim}
+#+begin_example
 $SpadServerName = "/tmp/.d"
-\end{verbatim}
+#+end_example
 
 \defdollar{SpadServerName}
 #+NAME: initvars
@@ -8607,7 +8607,7 @@ $SpadServerName = "/tmp/.d"
 This chapter details the internal processing behind an Axiom console
 session where the user types ``1'' and gets a result.
 
-\begin{verbatim}
+#+begin_example
 axiom -nox
                         AXIOM Computer Algebra System 
                         Version: Axiom (August 2014)
@@ -8629,7 +8629,7 @@ axiom -nox
    (1)  1
                                                         Type: PositiveInteger
 (2) -> 
-\end{verbatim}
+#+end_example
 
 By working through this example we introduce, motivate, and explain
 how the interpreter works, where and why functions are called, how
@@ -8657,30 +8657,30 @@ You may not be familiar with circular notation in Common Lisp.
 If a list contains a pointer back to itself or a sublist then the 
 output would be an infinite stream. In order to prevent this
 the circular notation is used. So for a list X,
-\begin{verbatim}
+#+begin_example
  +---|---+     +---|---+     +---|---+     +---|---+
  + A |   + --> + B |   + --> + C |   + --> + D | / +
  +---|---+     +---|---+     +---|---+     +---|---+
-\end{verbatim}
+#+end_example
 which is the list (A . (B . (C . (D . ())))). The printing rule
 says that if a period is followed by a parenthesis then both
 are suppressed. So this would print as (A B C D). 
 But it could be that we execute
-\begin{verbatim}
+#+begin_example
    (rplaca (last X) (cdr X))
-\end{verbatim}
+#+end_example
 so the list now is
-\begin{verbatim}
+#+begin_example
  +---|---+     +---|---+     +---|---+     +---|---+
  + A |   + --> + B |   + --> + C |   + --> +   | / +
  +---|---+     +---|---+     +---|---+     +---|---+
                  ^                           |
                  +---------------------------+
-\end{verbatim}
+#+end_example
 and now the list X is cicular. This prints as
-\begin{verbatim}
+#+begin_example
    (A . #0=(B C #0#))
-\end{verbatim}
+#+end_example
 As you can see the \verb|#0=| introduces a unique label for the
 cons cell pointed at by (CDR A). We stored that address in the
 CAR of the last node. So the last node in the list uses the
@@ -8694,7 +8694,7 @@ place can change an apparently unrelated structure by side-effect.
 Axiom starts by invoking a function value of the lisp symbol
 \verb|*top-level-hook*| which is normally unbound. 
 The normal function invocation path is:
-\begin{verbatim}
+#+begin_example
 axiom -nox
 
 lisp
@@ -8709,7 +8709,7 @@ lisp
  ->   |intloopReadConsole|      -- the Read-Eval-Print loop function
  ->     |serverReadLine|        -- does the actual read to the console
  -> process the input and recursively call |intloopReadConsole|
-\end{verbatim}
+#+end_example
 
 \bfref{SpadInterpretStream} is called with a third arguments, {\bf
 interactive?} set to {\bf t} so it sets up an interactive loop to read
@@ -8753,7 +8753,7 @@ provide a simple overview of the interpreter operation. Further
 details can be found at the specific functions.
 
 Axiom is in \bfref{intloopReadConsole}, the Read-Eval-Print-Loop (REPL) function and the user types ``1''.
-\begin{verbatim}
+#+begin_example
   1> (|intloopReadConsole| "" 1)
        ; serverReadLine : Stream -> String
     2> (|serverReadLine| #<synonym stream to *TERMINAL-IO*>)
@@ -8779,7 +8779,7 @@ Axiom is in \bfref{intloopReadConsole}, the Read-Eval-Print-Loop (REPL) function
       3> (|read-line| #<synonym stream to *TERMINAL-IO*>)
       <3 (|read-line| "1" NIL)
     <2 (|serverReadLine| "1")
-\end{verbatim}
+#+end_example
 
 Axiom calls \bfref{serverReadLine}
 to read the integer from the console. First it calls {\bf is-console}
@@ -8796,7 +8796,7 @@ sockets and finds the interpreter socket is available, returning
 In that case it calls {\bf read-line} (see vmlisp.lisp) to read the 
 input line and returns the result, in this case, the string "1".
 
-\begin{verbatim}
+#+begin_example
     2> (|intloopPrefix?| ")fi" "1")
     <2 (|intloopPrefix?| NIL)
     2> (|intloopPrefix?| ")" "1")
@@ -8805,7 +8805,7 @@ input line and returns the result, in this case, the string "1".
     <2 (CONCAT "1")
     2> (|ncloopEscaped| "1")
     <2 (|ncloopEscaped| NIL)
-\end{verbatim}
+#+end_example
 
 \bfref{intloopReadConsole} checks for various
 possible special kinds of input. Axiom returned a non-zero length
@@ -8827,11 +8827,11 @@ Axiom calls \bfref{intloopProcessString}
 which calls \bfref{setCurrentLine} to add the
 input line to the history which is stored in {\bf \$currentLine}.
 
-\begin{verbatim}
+#+begin_example
     2> (|intloopProcessString| "1" 1)
       3> (|setCurrentLine| "1")
       <3 (|setCurrentLine| ("1"))
-\end{verbatim}
+#+end_example
 
 $\cdots$all the magic happens here$\cdots$
 
@@ -8839,7 +8839,7 @@ $\cdots$ and then {\bf intloopProcessString} will eventually
 return the new step number 2. Then Axiom puts up a prompt
 and waits for further input.
 
-\begin{verbatim}
+#+begin_example
     <2 (|intloopProcessString| 2)
     2> (MKPROMPT)
       3> (CONCAT "(" "2" ") -> ")
@@ -8853,7 +8853,7 @@ and waits for further input.
       <3 (|sockSendInt| 0)
       3> (|serverSwitch|)
 
-\end{verbatim}
+#+end_example
 Now Axiom is ready for the next input.
 
 ** Parsing the input
@@ -8867,11 +8867,11 @@ For insight, see his article on Stream Procesing Functions \cite{Burg74}.
 
 *** Creating a Delay -- incString
 The \bfref{intloopProcessString} has the nested function call
-\begin{verbatim}
+#+begin_example
  (|intloopProcess| n t
   (|next| #'|ncloopParse|
    (|next| #'|lineoftoks| (|incString| s))))
-\end{verbatim}
+#+end_example
 which according to lisp semantics is processed inside out. First we
 examine the call to \bfref{incString} which is passed the input
 string ``1''.
@@ -8880,26 +8880,26 @@ The \bfref{incString} function gets the string from Axiom's input
 line, in this case ``1'' and constructs a set of nested function calls
 to process the input line.
 
-\begin{verbatim}
+#+begin_example
       3> (|incString| "1")
-\end{verbatim}
+#+end_example
 
 The \bfref{incString} function calls \bfref{Delay} which changes the
 function call into a simple list object prefixed by the symbol tag
 {\bf nonnullstream}.
 
-\begin{verbatim}
+#+begin_example
         4> (|incLude| 0 ("1") 0 ("strings") (1))
           5> (|Delay| |incLude1|  (0 ("1") 0 ("strings") (1)))
           <5 (|Delay| (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1)))
         <4 (|incLude| (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1)))
-\end{verbatim}
+#+end_example
 That result is passed to \bfref{incRenumber}, which calls \bfref{incIgen}
 which returns a \bfref{Delay}. It then calls \bfref{incZip} to ``zips''
 together the function \bfref{incRenumberLine} and the two delays into
 a single delay. This gets put into a delay with \bfref{incZip1} as the
 function.
-\begin{verbatim}
+#+begin_example
         4> (|incRenumber| 
                (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1)))
           5> (|incIgen| 0)
@@ -8929,7 +8929,7 @@ function.
            (|nonnullstream| |incZip1| |incRenumberLine| 
              (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
              (|nonnullstream| |incIgen1| 0)))
-\end{verbatim}
+#+end_example
 
 We are building a stream of functions and arguments stored in a delay
 structure which will eventually be evaluated. We continue this process
@@ -8937,7 +8937,7 @@ with the call to \bfref{next} which builds a delay with the function
 \bfref{next1} and the current delay.
 
 *** Creating a Delay -- next
-\begin{verbatim}
+#+begin_example
       3> (|next| |lineoftoks| 
            (|nonnullstream| |incZip1| |incRenumberLine| 
              (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
@@ -8956,14 +8956,14 @@ with the call to \bfref{next} which builds a delay with the function
              (|nonnullstream| |incZip1| |incRenumberLine| 
                (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
                (|nonnullstream| |incIgen1| 0))))
-\end{verbatim}
+#+end_example
 
 *** Creating a Delay -- ncloopParse
 `We continue building a larger delay, this time with a call to
 \bfref{next} with the function argument \bfref{ncloopParse} and the
 existing delay.
 
-\begin{verbatim}
+#+begin_example
       3> (|next| |ncloopParse| 
            (|nonnullstream| |next1| |lineoftoks| 
              (|nonnullstream| |incZip1| |incRenumberLine| 
@@ -8987,7 +8987,7 @@ existing delay.
                (|nonnullstream| |incZip1| |incRenumberLine| 
                  (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
                  (|nonnullstream| |incIgen1| 0)))))
-\end{verbatim}
+#+end_example
 
 Finally we call \bfref{intloopProcess} with the step number {\bf stepno},
 whether we are talking to the console {\bf interactive} and the delay
@@ -8997,14 +8997,14 @@ we just constructed {\bf delay}
 
 At this point we have created a large delay. Now we begin to evaluate it.
 
-\begin{verbatim}
+#+begin_example
       3> (|intloopProcess| 1 T 
           (|nonnullstream| #0=|next1| |ncloopParse| 
             (|nonnullstream| #0# |lineoftoks| 
               (|nonnullstream| |incZip1| |incRenumberLine| 
                (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
                (|nonnullstream| |incIgen1| 0)))))
-\end{verbatim}
+#+end_example
 
 \bfref{intloopProcess} calls \bfref{StreamNull} which walks the 
 delay applying the second value, which is a function, to the rest
@@ -9017,19 +9017,19 @@ The car of the ParsePair is rplaca'd into the delay and
 the cdr of the ParsePair is rplacd'd into the delay. 
 So the delay is gradually reduced by each function call.
 
-\begin{verbatim}
+#+begin_example
         4> (|StreamNull| 
              (|nonnullstream| #0=|next1| |ncloopParse| 
                (|nonnullstream| #0# |lineoftoks| 
                  (|nonnullstream| |incZip1| |incRenumberLine| 
                    (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1)) 
                    (|nonnullstream| |incIgen1| 0)))))
-\end{verbatim}
+#+end_example
 
 Here we see the \bfref{next1} function being called from the delay.
 It immediately calls \bfref{StreamNull} to process the rest of the delay.
 
-\begin{verbatim}
+#+begin_example
           5> (|next1| |ncloopParse| 
                (|nonnullstream| |next1| |lineoftoks| 
                  (|nonnullstream| |incZip1| |incRenumberLine| 
@@ -9040,13 +9040,13 @@ It immediately calls \bfref{StreamNull} to process the rest of the delay.
                    (|nonnullstream| |incZip1| |incRenumberLine| 
                      (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1)) 
                      (|nonnullstream| |incIgen1| 0))))
-\end{verbatim}
+#+end_example
  
 \bfref{StreamNull}, now working on the inner portion of the delay,
 finds the function \bfref{next1} and calls it, which results in an
 immediate inner call to \bfref{StreamNull}.
 
-\begin{verbatim}
+#+begin_example
               7> (|next1| |lineoftoks| 
                    (|nonnullstream| |incZip1| |incRenumberLine| 
                      (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1)) 
@@ -9055,36 +9055,36 @@ immediate inner call to \bfref{StreamNull}.
                      (|nonnullstream| |incZip1| |incRenumberLine| 
                        (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1)) 
                        (|nonnullstream| |incIgen1| 0)))
-\end{verbatim}
+#+end_example
 
 Descending even further, the \bfref{StreamNull} finds \bfref{incZip1}, 
 which finds the function \bfref{incRenumberLine} and two delays.
-\begin{verbatim}
+#+begin_example
                   9> (|incZip1| 
                        |incRenumberLine| 
                        (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
                        (|nonnullstream| |incIgen1| 0))
-\end{verbatim}
+#+end_example
 \bfref{incZip1} invokes \bfref{StreamNull} on the first delay, which
 invokes \bfref{incLude1} on the rest of the delay.
-\begin{verbatim}
+#+begin_example
                     10> (|StreamNull| 
                           (|nonnullstream| |incLude1| 0 ("1") 0 
                                                         ("strings") (1)))
-\end{verbatim}
+#+end_example
 \bfref{incLude1} unpacks the argument list and invokes \bfref{StreamNull}
 on the second argument \verb|("1")| which is not the expected symbol
 {\bf nonnullstream} so \bfref{StreamNull} immediately returns NIL.
-\begin{verbatim}
+#+begin_example
                     11> (|incLude1| 0 ("1") 0 ("strings") (1))
                     12> (|StreamNull| ("1"))
                     <12 (|StreamNull| NIL)
-\end{verbatim}
+#+end_example
 Next, \bfref{incLude1} calls \bfref{incClassify} to which calls
 \bfref{incCommand?} which checks for a leading ``)''. Since there
 isn't one \bfref{incClassify} immediately returns a list of NIL, 0,
 and the empty string.
-\begin{verbatim}
+#+begin_example
                     12> (|incClassify| "1")
                     13> (|incCommand?| "1")
                     <13 (|incCommand?| NIL)
@@ -9117,9 +9117,9 @@ and the empty string.
                           (((((0 "1" -1 1 "strings") . 1) . "1") (NIL |none|))
                           |nonnullstream| |incLude1| 0 NIL 1 ("strings") (1)))
                     <10 (|StreamNull| NIL)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                     10> (|StreamNull| (|nonnullstream| |incIgen1| 0))
                     11> (|incIgen1| 0)
                     12> (|incIgen| 1)
@@ -9140,9 +9140,9 @@ and the empty string.
                     <11 (|incHandleMessage| 0)
                     <10 (|incRenumberLine| 
                           (((0 "1" 1 1 "strings") . 1) . "1"))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                     10> (|incZip| |incRenumberLine| 
                           (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                           (|nonnullstream| |incIgen1| 1))
@@ -9158,18 +9158,18 @@ and the empty string.
                          (|nonnullstream| |incZip1| |incRenumberLine| 
                           (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                           (|nonnullstream| |incIgen1| 1)))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                   <9 (|incZip1| 
                       ((((0 "1" 1 1 "strings") . 1) . "1") 
                         |nonnullstream| |incZip1| |incRenumberLine| 
                         (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1)) 
                         (|nonnullstream| |incIgen1| 1)))
                 <8 (|StreamNull| NIL)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                 8> (|lineoftoks| 
                     ((((0 "1" 1 1 "strings") . 1) . "1") 
                       |nonnullstream| |incZip1| |incRenumberLine| 
@@ -9262,9 +9262,9 @@ and the empty string.
                            (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                            (|nonnullstream| |incIgen1| 1)))))
                      . #2#))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                 8> (|next| |lineoftoks| 
                     (|nonnullstream| |incZip1| |incRenumberLine| 
                      (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1)) 
@@ -9284,9 +9284,9 @@ and the empty string.
                      (|nonnullstream| |incZip1| |incRenumberLine| 
                       (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                       (|nonnullstream| |incIgen1| 1))))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                 8> (|incAppend| 
                     (((#0=(((|integer| (|posn| #1=(0 "1" 1 1 "strings") . 0)) . "1")) . #0#)
                      (((#1# . 1) . "1") .
@@ -9322,9 +9322,9 @@ and the empty string.
                            (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                            (|nonnullstream| |incIgen1| 1)))))
                      (|nonnullstream| |next1| |lineoftoks| #3#)))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
               <7 (|next1| 
                   (|nonnullstream| |incAppend1| 
                    (((#1=(((|integer| (|posn| #2=(0 "1" 1 1 "strings") . 0))
@@ -9342,9 +9342,9 @@ and the empty string.
                        (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                        (|nonnullstream| |incIgen1| 1)))))
                    (|nonnullstream| |next1| |lineoftoks| #2#))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                 8> (|StreamNull| 
                     (((#0=(((|integer| (|posn| #1=(0 "1" 1 1 "strings") . 0))
                       . "1"))
@@ -9353,9 +9353,9 @@ and the empty string.
                         (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                         (|nonnullstream| |incIgen1| 1)))))
                 <8 (|StreamNull| NIL)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                 8> (|incAppend| NIL 
                     (|nonnullstream| |next1| |lineoftoks| 
                      (|nonnullstream| |incZip1| |incRenumberLine| 
@@ -9378,9 +9378,9 @@ and the empty string.
                      (|nonnullstream| |incZip1| |incRenumberLine| 
                       (|nonnullstream| |incLude1| 0 NIL 1 ("strings") (1))
                       (|nonnullstream| |incIgen1| 1)))))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
               <7 (|incAppend1| 
                   (((#0=(((|integer| (|posn| #1=(0 "1" 1 1 "strings") . 0))
                     . "1")) . #0#) (((#1# . 1) . "1")
@@ -9390,9 +9390,9 @@ and the empty string.
                    |nonnullstream| |incAppend1| NIL 
                    (|nonnullstream| |next1| |lineoftoks| #2#)))
             <6 (|StreamNull| NIL)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
             6> (|ncloopParse| 
                 (((#0=(((|integer| (|posn| #1=(0 "1" 1 1 "strings") . 0))
                   . "1")) . #0#) (((#1# . 1) . "1")
@@ -11198,9 +11198,9 @@ and the empty string.
                    ((|integer| (|posn| #0# . 0)) . "1")))
                  |nonnullstream| |incAppend1| NIL 
                  (|nonnullstream| |next1| |lineoftoks| (|nullstream|))))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
             6> (|next| |ncloopParse| 
                 (|nonnullstream| |incAppend1| NIL 
                  (|nonnullstream| |next1| |lineoftoks| (|nullstream|))))
@@ -11216,9 +11216,9 @@ and the empty string.
                 (|nonnullstream| #0=|next1| |ncloopParse| 
                  (|nonnullstream| |incAppend1| NIL 
                   (|nonnullstream| #0# |lineoftoks| (|nullstream|)))))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
             6> (|incAppend| 
                 (((((#0=(0 "1" 1 1 "strings") . 1) . "1")) 
                    ((|integer| (|posn| #0# . 0)) . "1"))) 
@@ -11252,9 +11252,9 @@ and the empty string.
                  (|nonnullstream| #3=|next1| |ncloopParse|
                   (|nonnullstream| #0# NIL
                    (|nonnullstream| #3# |lineoftoks| (|nullstream|))))))
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
           5> (|incAppend1|
               (((((#0=(0 "1" 1 1 "strings") . 1) . "1"))
                  ((|integer| (|posn| #0# . 0)) . "1")))
@@ -11292,15 +11292,15 @@ and the empty string.
                  (|nonnullstream| #1# NIL 
                   (|nonnullstream| #3# |lineoftoks| (|nullstream|))))))
         <4 (|StreamNull| NIL)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
         4> (|pfAbSynOp?|
             ((|integer| (|posn| (0 "1" 1 1 "strings") . 0)) . "1") |command|)
         <4 (|pfAbSynOp?| NIL)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
         4> (|intloopSpadProcess| 1 
             (((#0=(0 "1" 1 1 "strings") . 1) . "1")) 
              ((|integer| (|posn| #0# . 0)) . "1") T)
@@ -13055,9 +13055,9 @@ and the empty string.
                           . #<vector 0000000001723ed0>))
 
 "TPD:INT:coerce(x):OutputForm" 
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                     12> (GETDATABASE |Integer| CONSTRUCTORKIND)
                     <12 (GETDATABASE |domain|)
                     12> (GETL |OutputForm| LOADED)
@@ -13327,9 +13327,9 @@ and the empty string.
                           . #<vector 0000000001723c30>))
 
 "TPD:OUTFORM:outputForm n"
-\end{verbatim}
+#+end_example
 
-\begin{verbatim} 
+#+begin_example 
                     12> (GETL |print| |TimeTotal|)
                     <12 (GETL 0.0)
                     12> (GETL |gc| |TimeTotal|)
@@ -13369,9 +13369,9 @@ and the empty string.
                     12> (GETL EQUATNUM SUBSPAN)
                     <12 (GETL NIL)
    (1)  1
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                     12> (|putHist| % |value| ((|PositiveInteger|) . 1) ((NIL)))
                     13> (|recordNewValue| % |value| ((|PositiveInteger|) . 1))
                     14> (GETL |print| |TimeTotal|)
@@ -13497,9 +13497,9 @@ and the empty string.
                     19> (PNAME |PositiveInteger|)
                     <19 (PNAME "PositiveInteger")
 PositiveInteger     
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
                     <18 (BRIGHTPRINT NIL)
                     <17 (SAYBRIGHTLY1 NIL)
                     <16 (|sayMSG| NIL)
@@ -13692,8 +13692,8 @@ PositiveInteger
             <6 (|ncEltQ| NIL)
           <5 (|intloopSpadProcess,interp| NIL)
         <4 (|intloopSpadProcess| 2)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
         4> (|StreamNull| 
             (|nonnullstream| #0=|incAppend1| NIL 
              (|nonnullstream| #2=|next1| |ncloopParse| 
@@ -13733,7 +13733,7 @@ PositiveInteger
           <5 (|incAppend1| (|nullstream|))
         <4 (|StreamNull| T)
       <3 (|intloopProcess| 2)
-\end{verbatim}
+#+end_example
 
 * Axiom Details
 ** Variables Used
@@ -14844,18 +14844,18 @@ from scratch. Note that we have changed from the
 NAG distribution back to the original form. If you need the NAG
 version you can push {\bf :tpd} on the {\bf *features*} variable
 before compiling this file. A correct call looks like:
-\begin{verbatim}
+#+begin_example
   (in-package "BOOT")
   (reroot "/spad/mnt/${SYS}")
-\end{verbatim}
+#+end_example
 where the \verb|${SYS}| variable is the same one set at build time.
 
 For the example call:
-\begin{verbatim}
+#+begin_example
   (REROOT "/research/test/mnt/ubuntu")
-\end{verbatim}
+#+end_example
 the variables are set as:
-\begin{verbatim}
+#+begin_example
 $spadroot = "/research/test/mnt/ubuntu"
 
 $relative-directory-list =
@@ -14879,7 +14879,7 @@ $library-directory-list =  ("/research/test/mnt/ubuntu/algebra/")
 |$msgDatabaseName| = nil
 
 $current-directory = "/research/test/"
-\end{verbatim}
+#+end_example
 
 \calls{reroot}{make-absolute-filename}
 \usesdollar{reroot}{spadroot}
@@ -15735,11 +15735,11 @@ It is controlled with the {\tt )se me any} command.
 #+end_src
 
 \defun{sameUnionBranch}{sameUnionBranch}
-\begin{verbatim}
+#+begin_example
 sameUnionBranch(uArg, m) ==
   uArg is [":", ., t] => t = m
   uArg = m
-\end{verbatim}
+#+end_example
 #+NAME: defun sameUnionBranch 0
 #+begin_src common-lisp :noweb yes
 (defun |sameUnionBranch| (uArg m)
@@ -15848,14 +15848,14 @@ sameUnionBranch(uArg, m) ==
 
 \defun{intloopProcess}{intloopProcess}
 An example call looks like:
-\begin{verbatim}
+#+begin_example
       3> (|intloopProcess| 1 T 
           (|nonnullstream| #0=|next1| |ncloopParse| 
             (|nonnullstream| #0# |lineoftoks| 
               (|nonnullstream| |incZip1| |incRenumberLine| 
                (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
                (|nonnullstream| |incIgen1| 0)))))
-\end{verbatim}
+#+end_example
 which was constructed \bfref{intloopProcessString}. This call
 says we are processing the first input, in this case ``1''. 
 It is interactive. The third argument, the delay, contains the
@@ -15955,9 +15955,9 @@ information to drive the rest of the process.
 
 \defun{phParse}{phParse}
 \tpdhere{The pform function has a leading percent sign}
-\begin{verbatim}
+#+begin_example
 phParse: carrier[tokens,...] -> carrier[ptree, tokens,...]
-\end{verbatim}
+#+end_example
 \calls{phParse}{ncPutQ}
 #+NAME: defun phParse
 #+begin_src common-lisp :noweb yes
@@ -15968,9 +15968,9 @@ phParse: carrier[tokens,...] -> carrier[ptree, tokens,...]
 #+end_src
 
 \defun{phIntReportMsgs}{phIntReportMsgs}
-\begin{verbatim}
+#+begin_example
 carrier[lines,messages,..]-> carrier[lines,messages,..]
-\end{verbatim}
+#+end_example
 \calls{phIntReportMsgs}{ncEltQ}
 \calls{phIntReportMsgs}{ncPutQ}
 \calls{phIntReportMsgs}{processMsgList}
@@ -16102,11 +16102,11 @@ carrier[lines,messages,..]-> carrier[lines,messages,..]
 #+end_src
 
 \defun{ncloopPrintLines}{ncloopPrintLines}
-\begin{verbatim}
+#+begin_example
 ;ncloopPrintLines lines ==
 ;        for line in lines repeat WRITE_-LINE CDR line
 ;        WRITE_-LINE '" "
-\end{verbatim}
+#+end_example
 #+NAME: defun ncloopPrintLines 0
 #+begin_src common-lisp :noweb yes
 (defun |ncloopPrintLines| (lines)
@@ -16123,12 +16123,12 @@ carrier[lines,messages,..]-> carrier[lines,messages,..]
 #+end_src
 
 \defun{mkLineList}{mkLineList}
-\begin{verbatim}
+#+begin_example
 ;mkLineList lines ==
 ;  l := [CDR line for line in lines | nonBlank CDR line]
 ;  #l = 1 => CAR l
 ;  l
-\end{verbatim}
+#+end_example
 #+NAME: defun mkLineList
 #+begin_src common-lisp :noweb yes
 (defun |mkLineList| (lines)
@@ -16151,7 +16151,7 @@ carrier[lines,messages,..]-> carrier[lines,messages,..]
 #+end_src
 
 \defun{nonBlank}{nonBlank}
-\begin{verbatim}
+#+begin_example
 ;nonBlank str ==
 ;  value := false
 ;  for i in 0..MAXINDEX str repeat
@@ -16159,7 +16159,7 @@ carrier[lines,messages,..]-> carrier[lines,messages,..]
 ;      value := true
 ;      return value
 ;  value
-\end{verbatim}
+#+end_example
 #+NAME: defun nonBlank 0
 #+begin_src common-lisp :noweb yes
 (defun |nonBlank| (str)
@@ -17009,14 +17009,14 @@ and constructs a call to \bfref{Delay}.
 #+end_src
 
 \defun{inclmsgFileCycle}{inclmsgFileCycle}
-\begin{verbatim}
+#+begin_example
 ;inclmsgFileCycle(ufos,fn) ==
 ;    flist := [porigin n for n in reverse ufos]
 ;    f1    := porigin fn
 ;    cycle := [:[:[n,'"==>"] for n in flist], f1]
 ;    ['SCI0004, [%id cycle, %id f1] ]
 
-\end{verbatim}
+#+end_example
 \calls{inclmsgFileCycle}{porigin}
 \calls{inclmsgFileCycle}{theid}
 #+NAME: defun inclmsgFileCycle
@@ -17274,7 +17274,7 @@ where state is one of: mbody, mparam, mlambda
 
 User-defined macros are maintained in a stack of definitions. This is the
 stack sequence resulting from the command lines:
-\begin{verbatim}
+#+begin_example
 a ==> 3
 a ==> 4
 b ==> 7
@@ -17283,7 +17283,7 @@ b ==> 7
  (|a| |mbody| ((|integer| (|posn| (0 "a ==> 4" 1 1 "strings") . 6)) . "4"))
  (|a| |mbody| ((|integer| (|posn| (0 "a ==> 3" 1 1 "strings") . 6)) . "3"))
 )
-\end{verbatim}
+#+end_example
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
 (defvar |$pfMacros| nil)
@@ -17292,7 +17292,7 @@ b ==> 7
 
 
 \defun{incClassify}{incClassify}
-\begin{verbatim}
+#+begin_example
 ;incClassify(s) ==
 ;            not incCommand? s => [false,0, '""]
 ;            i := 1; n := #s
@@ -17305,7 +17305,7 @@ b ==> 7
 ;                    bad:=false
 ;                    p1 :=p
 ;            if bad then [true,0,'"other"] else [true,eb,p1]
-\end{verbatim}
+#+end_example
 \calls{incClassify}{incCommand?}
 \uses{incClassify}{incCommands}
 \label{incClassify}
@@ -17365,14 +17365,14 @@ b ==> 7
 #+end_src
 
 \defun{incPrefix?}{incPrefix?}
-\begin{verbatim}
+#+begin_example
 ;incPrefix?(prefix, start, whole) ==
 ;            #prefix > #whole-start => false
 ;            good:=true
 ;            for i in 0..#prefix-1 for j in start.. while good repeat
 ;                good:= prefix.i = whole.j
 ;            good
-\end{verbatim}
+#+end_example
 #+NAME: defun incPrefix? 0
 #+begin_src common-lisp :noweb yes
 (defun |incPrefix?| (prefix start whole)
@@ -17481,13 +17481,13 @@ Note that incRgen1 recursively calls this function.
 {\bf Delay} prepends a label {\bf nonnullstream}, returning a list
 of the label, the given function name in {\bf function}
 and {\bf arguments}. That is, given
-\begin{verbatim}
+#+begin_example
  (|Delay| |incLude1|  (0 ("1") 0 ("strings") (1)))
-\end{verbatim}
+#+end_example
 construct
-\begin{verbatim}
+#+begin_example
  (|nonnullstream| |incLude1| 0 ("1") 0 ("strings") (1))
-\end{verbatim}
+#+end_example
 Note that {\bf nonnullstream} is NOT a function so the inputs
 have been changed from a function call to a simple list.
 \label{Delay}
@@ -17691,7 +17691,7 @@ Note that incRgen recursively wraps this function in a delay list.
 \defun{lineoftoks}{lineoftoks}
 lineoftoks  bites off a token-dq from a line-stream
 returning the token-dq and the rest of the line-stream
-\begin{verbatim}
+#+begin_example
 ;lineoftoks(s)==
 ;   $f: local:=nil
 ;   $r:local :=nil
@@ -17717,7 +17717,7 @@ returning the token-dq and the rest of the line-stream
 ;      if null toks
 ;      then cons([],$r)
 ;      else cons([ [toks,s] ],$r)
-\end{verbatim}
+#+end_example
 \calls{lineoftoks}{nextline}
 \calls{lineoftoks}{scanIgnoreLine}
 \calls{lineoftoks}{incPrefix?}
@@ -18017,7 +18017,7 @@ To pair badge and badgee
 #+end_src
 
 \defun{substringMatch}{substringMatch}
-\begin{verbatim}
+#+begin_example
 ;substringMatch (l,d,i)==
 ;       h:= QENUM(l, i)
 ;       u:=ELT(d,h)
@@ -18039,7 +18039,7 @@ To pair badge and badgee
 ;                   true
 ;                 else false
 ;       s1
-\end{verbatim}
+#+end_example
 \calls{substringMatch}{size}
 #+NAME: defun substringMatch
 #+begin_src common-lisp :noweb yes
@@ -18198,7 +18198,7 @@ To pair badge and badgee
 #+end_src
 
 \defun{scanEsc}{scanEsc}
-\begin{verbatim}
+#+begin_example
 ;scanEsc()==
 ;     if $n>=$sz
 ;     then if nextline($r)
@@ -18231,7 +18231,7 @@ To pair badge and badgee
 ;                                 scanEsc()
 ;                                 false
 ;                       false
-\end{verbatim}
+#+end_example
 \calls{scanEsc}{nextline}
 \calls{scanEsc}{scanEsc}
 \calls{scanEsc}{strposl}
@@ -18439,11 +18439,11 @@ To pair badge and badgee
 #+end_src
 
 \defun{posend}{posend}
-\begin{verbatim}
+#+begin_example
 ;posend(line,n)==
 ;     while n<#line and idChar? line.n repeat n:=n+1
 ;     n
-\end{verbatim}
+#+end_example
 NOTE: do not replace ``lyne'' with ``line''
 #+NAME: defun posend
 #+begin_src common-lisp :noweb yes
@@ -18652,7 +18652,7 @@ NOTE: do not replace ``lyne'' with ``line''
 #+end_src
 
 \defun{scanCheckRadix}{scanCheckRadix}
-\begin{verbatim}
+#+begin_example
 ;scanCheckRadix(r,w)==
 ;       ns:=#w
 ;       done:=false
@@ -18661,7 +18661,7 @@ NOTE: do not replace ``lyne'' with ``line''
 ;         if null a or a>=r
 ;         then  ncSoftError(cons($linepos,lnExtraBlanks $linepos+$n-ns+i),
 ;                    "S2CN0002", [w.i])
-\end{verbatim}
+#+end_example
 \usesdollar{scanCheckRadix}{n}
 \usesdollar{scanCheckRadix}{linepos}
 #+NAME: defun scanCheckRadix
@@ -18740,13 +18740,13 @@ NOTE: do not replace ``lyne'' with ``line''
 
 \defun{scanKeyTableCons}{scanKeyTableCons}
 This function is used to build the scanKeyTable
-\begin{verbatim}
+#+begin_example
 ;scanKeyTableCons()==
 ;   KeyTable:=MAKE_-HASHTABLE("CVEC",true)
 ;   for st in scanKeyWords repeat
 ;      HPUT(KeyTable,CAR st,CADR st)
 ;   KeyTable
-\end{verbatim}
+#+end_example
 #+NAME: defun scanKeyTableCons
 #+begin_src common-lisp :noweb yes
 (defun |scanKeyTableCons| ()
@@ -18774,7 +18774,7 @@ This function is used to build the scanKeyTable
 #+end_src
 
 \defun{scanDictCons}{scanDictCons}
-\begin{verbatim}
+#+begin_example
 ;scanDictCons()==
 ;      l:= HKEYS scanKeyTable
 ;      d :=
@@ -18785,7 +18785,7 @@ This function is used to build the scanKeyTable
 ;          a
 ;      for s in l repeat scanInsert(s,d)
 ;      d
-\end{verbatim}
+#+end_example
 \calls{scanDictCons}{hkeys}
 #+NAME: defun scanDictCons
 #+begin_src common-lisp :noweb yes
@@ -18819,7 +18819,7 @@ This function is used to build the scanKeyTable
 #+end_src
 
 \defun{scanInsert}{scanInsert}
-\begin{verbatim}
+#+begin_example
 ;scanInsert(s,d) ==
 ;      l := #s
 ;      h := QENUM(s,0)
@@ -18834,7 +18834,7 @@ This function is used to build the scanKeyTable
 ;      for i in k..n-1 repeat VEC_-SETELT(v,i+1,ELT(u,i))
 ;      VEC_-SETELT(d,h,v)
 ;      s
-\end{verbatim}
+#+end_example
 #+NAME: defun scanInsert
 #+begin_src common-lisp :noweb yes
 (defun |scanInsert| (s d)
@@ -18879,7 +18879,7 @@ This function is used to build the scanKeyTable
 #+end_src
 
 \defun{scanPunCons}{scanPunCons}
-\begin{verbatim}
+#+begin_example
 ;scanPunCons()==
 ;    listing := HKEYS scanKeyTable
 ;    a:=MAKE_-BVEC 256
@@ -18888,7 +18888,7 @@ This function is used to build the scanKeyTable
 ;       if not startsId? k.0
 ;       then BVEC_-SETELT(a,QENUM(k,0),1)
 ;    a
-\end{verbatim}
+#+end_example
 \calls{scanPunCons}{hkeys}
 #+NAME: defun scanPunCons
 #+begin_src common-lisp :noweb yes
@@ -21518,7 +21518,7 @@ fn must transform the head of the stack
 #+end_src
 
 \defun{npLeftAssoc}{p o p o p o p = (((p o p) o p) o p)}
-\begin{verbatim}
+#+begin_example
 p o p o p o p = (((p o p) o p) o p)
 p o p o = (p o p) o
 ;npLeftAssoc(operations,parser)==
@@ -21531,7 +21531,7 @@ p o p o = (p o p) o
 ;             npPush pfInfApplication(npPop2(),npPop2(),npPop1())
 ;       true
 ;    else false
-\end{verbatim}
+#+end_example
 \calls{npLeftAssoc}{npInfGeneric}
 \calls{npLeftAssoc}{npPush}
 \calls{npLeftAssoc}{pfApplication}
@@ -22220,9 +22220,9 @@ These are the new structure functions.
 ** Macro handling
 \defun{phMacro}{phMacro}
 \tpdhere{The pform function has a leading percent sign}
-\begin{verbatim}
+#+begin_example
 carrier[ptree,...] -> carrier[ptree, ptreePremacro,...]
-\end{verbatim}
+#+end_example
 \calls{phMacro}{ncEltQ}
 \calls{phMacro}{ncPutQ}
 \calls{phMacro}{macroExpanded}
@@ -25535,7 +25535,7 @@ output is an old-parser-style s-expression.
 
 \defun{pfSequence2Sex0}{pfSequence2Sex0}
 \tpdhere{rewrite this using (dolist (item seqList)...)}
-\begin{verbatim}
+#+begin_example
 ;pfSequence2Sex0 seqList ==
 ;  null seqList => "noBranch"
 ;  seqTranList := []
@@ -25549,7 +25549,7 @@ output is an old-parser-style s-expression.
 ;    seqList := rest seqList
 ;  #seqTranList = 1 => first seqTranList
 ;  ["SEQ", :nreverse seqTranList]
-\end{verbatim}
+#+end_example
 \calls{pfSequence2Sex0}{pfSequence2Sex0}
 #+NAME: defun pfSequence2Sex0
 #+begin_src common-lisp :noweb yes
@@ -25594,7 +25594,7 @@ output is an old-parser-style s-expression.
 
 \defun{loopIters2Sex}{Convert a loop node to an S-expression}
 \tpdhere{rewrite using dsetq}
-\begin{verbatim}
+#+begin_example
 ;loopIters2Sex iterList ==
 ;  result := nil
 ;  for iter in iterList repeat
@@ -25607,7 +25607,7 @@ output is an old-parser-style s-expression.
 ;      result := [ ['STEP, var, i, 1, j], :result]
 ;    result := [sex, :result]
 ;  nreverse result
-\end{verbatim}
+#+end_example
 \calls{loopIters2Sex}{pf2Sex1}
 #+NAME: defun loopIters2Sex
 #+begin_src common-lisp :noweb yes
@@ -25940,7 +25940,7 @@ output is an old-parser-style s-expression.
 #+end_src
 
 \defun{rulePredicateTran}{Convert a Rule predicate to an S-expression}
-\begin{verbatim}
+#+begin_example
 ;rulePredicateTran rule ==
 ;  null $multiVarPredicateList => rule
 ;  varList := patternVarsOf [rhs for [.,.,:rhs] in $multiVarPredicateList]
@@ -25955,7 +25955,7 @@ output is an old-parser-style s-expression.
 ;    ['ADEF, '(predicateVariable),
 ;     '((Boolean) (List (Expression (Integer)))), '(() ()),
 ;      predBody]]
-\end{verbatim}
+#+end_example
 \calls{rulePredicateTran}{patternVarsOf}
 \calls{rulePredicateTran}{pvarPredTran}
 \usesdollar{rulePredicateTran}{multiVarPredicateList}
@@ -26578,7 +26578,7 @@ This is called in only one place, the incLine1 function.
 ** Messages
 
 \defun{msgCreate}{msgCreate}
-\begin{verbatim}
+#+begin_example
 msgObject
   tag -- catagory of msg
           -- attributes as a-list
@@ -26590,7 +26590,7 @@ msgObject
   argL -- arguments to be placed in the msg test
   prefix -- things like "Error: "
   text -- the actual text
-\end{verbatim}
+#+end_example
 \calls{msgCreate}{setMsgForcedAttrList}
 \calls{msgCreate}{putDatabaseStuff}
 \calls{msgCreate}{initImPr}
@@ -27519,7 +27519,7 @@ Bug in the compiler: something which shouldn't have happened did.
 #+end_src
 
 \defun{queueUpErrors}{queueUpErrors}
-\begin{verbatim}
+#+begin_example
 ;queueUpErrors(globalNumOfLine,msgList)==
 ;    thisPosMsgs  := []
 ;    notThisLineMsgs := []
@@ -27540,7 +27540,7 @@ Bug in the compiler: something which shouldn't have happened did.
 ;    if notThisPosMsgs then
 ;        $outputList := NCONC(notThisPosMsgs,$outputList)
 ;    msgList
-\end{verbatim}
+#+end_example
 \calls{queueUpErrors}{processChPosesForOneLine}
 \usesdollar{queueUpErrors}{outputList}
 #+NAME: defun queueUpErrors
@@ -27619,7 +27619,7 @@ Bug in the compiler: something which shouldn't have happened did.
 #+end_src
 
 \defun{redundant}{redundant}
-\begin{verbatim}
+#+begin_example
 redundant(msg,thisPosMsgs) ==
     found := NIL
     if msgNoRep? msg then
@@ -27627,7 +27627,7 @@ redundant(msg,thisPosMsgs) ==
             sameMsg?(msg,item) => return (found := true)
         $noRepList := [msg,$noRepList]
     found or MEMBER(msg,thisPosMsgs)
-\end{verbatim}
+#+end_example
 \calls{redundant}{msgNoRep?}
 \calls{redundant}{sameMsg?}
 \usesdollar{redundant}{noRepList}
@@ -27720,7 +27720,7 @@ redundant(msg,thisPosMsgs) ==
 #+end_src
 
 \defun{makeLeaderMsg}{makeLeaderMsg}
-\begin{verbatim}
+#+begin_example
 makeLeaderMsg chPosList ==
     st := MAKE_-FULL_-CVEC ($preLength- 3)
     oldPos := -1
@@ -27729,7 +27729,7 @@ makeLeaderMsg chPosList ==
             rep(char ".", (posNum - oldPos - 1)),posLetter)
         oldPos := posNum
     ['leader,$nopos,'nokey,NIL,NIL,[st] ]
-\end{verbatim}
+#+end_example
 \usesdollar{makeLeaderMsg}{nopos}
 \usesdollar{makeLeaderMsg}{preLength}
 #+NAME: defun makeLeaderMsg
@@ -29170,7 +29170,7 @@ even if the predicate in any while clauses are not false.
 #+end_src
 
 * Abstract Syntax Trees (ptrees)
-\begin{verbatim}
+#+begin_example
 Abstract Syntax Trees
 
 These functions create and examine abstract
@@ -29184,7 +29184,7 @@ THE PFORM DATA STRUCTURE
  Trees:  [hd, tree, tree, ...]
  hd is either an id or (id . alist)
 
-\end{verbatim}
+#+end_example
 
 \defun{tokConstruct}{Construct a leaf token}
 The tokConstruct function is a constructer and selectors for leaf tokens.
@@ -29652,7 +29652,7 @@ ends up being CONTAINED \verb|$EmptyMode| Y.
 
 
 * Function Selection
-\begin{verbatim}
+#+begin_example
 New Selection of Modemaps
 
 selection of applicable modemaps is done in two steps:
@@ -29670,7 +29670,7 @@ the following flags are used:
  $Coerce is NIL, if function selection is done which requires exact
    matches (e.g. for coercion functions)
  if $SubDom is true, then runtime checks have to be compiled
-\end{verbatim}
+#+end_example
 
 \defun{ofCategory}{ofCategory}
 \calls{ofCategory}{identp}
@@ -29709,10 +29709,10 @@ complete.
 
 \defun{hasCaty}{hasCaty}
 This calls hasCat, which looks up a hashtable and returns:
-\begin{verbatim}
+#+begin_example
  1. T, NIL or a (has x1 x2) condition, if cat is not parameterized
  2. a list of pairs (argument to cat,condition) otherwise
-\end{verbatim}
+#+end_example
 then the substitution sl is augmented, or the result is 'failed
 \calls{hasCaty}{hasAttSig}
 \calls{hasCaty}{subCopy}
@@ -30553,7 +30553,7 @@ The result is a substitution list or 'failed.
 
 * Coercions
 
-\begin{verbatim}
+#+begin_example
  main algorithms for canCoerceFrom and coerceInteractive
 
 coerceInteractive and canCoerceFrom are the two coercion functions
@@ -30591,7 +30591,7 @@ all boot coercion functions have the following result:
 3. if the coercion fails, they throw to a catch point in
      coerceByFunction
 
-\end{verbatim}
+#+end_example
 
 \defun{coerceInteractive}{coerceInteractive}
 \calls{coerceInteractive}{objMode}
@@ -31184,10 +31184,10 @@ Thus the type can be bubbled before coerceIntTableOrFunction is called.
 \defun{coerceConvertMmSelection}{coerceConvertMmSelection}
 This calls selectMms with \verb|$Coerce=NIL| and tests for required
 target type. funName is either 'coerce or 'convert.
-\begin{verbatim}
+#+begin_example
   mmS := [[sig,[targ,arg],:pred] for x in l | x is [sig,[.,arg],:pred] and
     hasCorrectTarget(m2,sig) and sig is [dc,targ,oarg] and oarg = m1]
-\end{verbatim}
+#+end_example
 \calls{coerceConvertMmSelection}{selectMms1}
 \usesdollar{coerceConvertMmSelection}{reportBottomUpFlag}
 \usesdollar{coerceConvertMmSelection}{declaredMode}
@@ -32376,9 +32376,9 @@ Handle some specialization retraction cases, like matrices
 The system commands are the top-level commands available in Axiom
 that can all be invoked by prefixing the symbol with a closed-paren. 
 Thus, to see they copyright you type:
-\begin{verbatim}
+#+begin_example
    )copyright
-\end{verbatim}
+#+end_example
 New commands need to be added to this table. The command invoked will
 be the first entry of the pair and the ``user level'' of the command
 will be the second entry. 
@@ -32847,7 +32847,7 @@ The \verb|$pfMacros| is a list of all of the user-defined macros.
 \defun{clearParserMacro}{clearParserMacro}
 Note that if a macro is defined twice this will clear the last instance.
 Thus:
-\begin{verbatim}
+#+begin_example
   a ==> 3
   a ==> 4
   )d macros
@@ -32858,7 +32858,7 @@ Thus:
   )clear prop a
   )d macros
   nil
-\end{verbatim}
+#+end_example
 \calls{clearParserMacro}{ifcdr}
 \calls{clearParserMacro}{assoc}
 \calls{clearParserMacro}{remalist}
@@ -32932,11 +32932,11 @@ Thus:
 #+end_src
 
 \defun{getWorkspaceNames}{getWorkspaceNames}
-\begin{verbatim}
+#+begin_example
 ;getWorkspaceNames() ==
 ;  NMSORT [n for [n,:.] in CAAR $InteractiveFrame |
 ;    (n ^= "--macros--" and n^= "--flags--")]
-\end{verbatim}
+#+end_example
 \calls{getWorkspaceNames}{nmsort}
 \usesdollar{getWorkspaceNames}{InteractiveFrame}
 #+NAME: defun getWorkspaceNames
@@ -32949,10 +32949,10 @@ Thus:
 
 \defun{fixObjectForPrinting}{fixObjectForPrinting}
 The \verb|$msgdbPrims| variable is set to:
-\begin{verbatim}
+#+begin_example
 (|%b| |%d| |%l| |%i| |%u| %U |%n| |%x| |%ce| |%rj| 
  "%U" "%b" "%d" "%l" "%i" "%u" "%U" "%n" "%x" "%ce" "%rj")
-\end{verbatim}
+#+end_example
 \calls{fixObjectForPrinting}{object2Identifier}
 \calls{fixObjectForPrinting}{member}
 \calls{fixObjectForPrinting}{concat}
@@ -32972,7 +32972,7 @@ The \verb|$msgdbPrims| variable is set to:
 #+end_src
 
 \defun{displayProperties,sayFunctionDeps}{displayProperties,sayFunctionDeps}
-\begin{verbatim}
+#+begin_example
 ;displayProperties(option,l) ==
 ;  $dependentAlist : local := nil
 ;  $dependeeAlist  : local := nil
@@ -33051,7 +33051,7 @@ The \verb|$msgdbPrims| variable is set to:
 ;        propsSeen:= [prop,:propsSeen]
 ;    sayKeyedMsg("S2IZ0068",[option])
 ;  terminateSystemCommand()
-\end{verbatim}
+#+end_example
 \calls{displayProperties,sayFunctionDeps}{seq}
 \calls{displayProperties,sayFunctionDeps}{getalist}
 \calls{displayProperties,sayFunctionDeps}{exit}
@@ -34295,7 +34295,7 @@ communication with the browser involves a dance between the browser
 and the multiServ function (see the axserver.spad.pamphlet). 
 
 In particular, a simple request is embedded in a web page as:
-\begin{verbatim}
+#+begin_example
 <ul>
  <li>
   <input type="submit" id="p3" class="subbut" 
@@ -34304,7 +34304,7 @@ In particular, a simple request is embedded in a web page as:
   <div id="ansp3"><div></div></div>
  </li>
 </ul>
-\end{verbatim}
+#+end_example
 which says that this is an html ``input'' field of type ``submit''.
 The CSS display class is ``subbut'' which is of a different color
 than the surrounding text to make it obvious that you can click on
@@ -34324,7 +34324,7 @@ The ``showanswer'' function will find this div and replace it with a
 div containing the mathml result.
 
 The ``makeRequest'' function is:
-\begin{verbatim}
+#+begin_example
  function makeRequest(arg) {
    http_request = new XMLHttpRequest();         
    var command = commandline(arg);
@@ -34334,7 +34334,7 @@ The ``makeRequest'' function is:
    http_request.setRequestHeader('Content-Type', 'text/plain');
    http_request.send("command="+command);
    return(false);
-\end{verbatim}
+#+end_example
 It contains a request to open a local server connection to Axiom,
 sets ``handleResponse'' as the function to call on reply, sets up
 the type of request, fills in the command field, and sends off the
@@ -34343,7 +34343,7 @@ http request.
 When a response is received, the ``handleResponse'' function checks
 for the correct reply state, strips out the important text, and
 calls ``showanswer''.
-\begin{verbatim}
+#+begin_example
  function handleResponse() {
   if (http_request.readyState == 4) {
    if (http_request.status == 200) {
@@ -34354,16 +34354,16 @@ calls ``showanswer''.
    }
   }
  }
-\end{verbatim}
+#+end_example
 See bookvol11.pamphlet for further details.
 
 ** The axServer/multiServ loop
 The basic call to start an Axiom browser listener is:
-\begin{verbatim}
+#+begin_example
   )set message autoload off
   )set output mathml on
   axServer(8085,multiServ)$AXSERV
-\end{verbatim}
+#+end_example
 
 This call sets the port, opens a socket, attaches it to a stream,
 and then calls ``multiServ'' with that stream. The ``multiServ''
@@ -34375,11 +34375,11 @@ handles the details. This code creates the command-line function for )browse
 
 The browse function does the internal equivalent of the following 3 command
 line statments:
-\begin{verbatim}
+#+begin_example
   )set message autoload off
   )set output mathml on
   axServer(8085,multiServ)$AXSERV
-\end{verbatim}
+#+end_example
 which causes Axiom to start serving web pages on port 8085
 
 For those unfamiliar with calling algebra from lisp there are a 
@@ -34399,10 +34399,10 @@ $\vert$AXSERV;axServer;IMV;2$\vert$.
 The multiServ function was mangled to $\vert$AXSERV;multiServ;SeV;3$\vert$
 Note well that if you change axserver.spad these names might change
 which will generate the error message along the lines of:
-\begin{verbatim}
+#+begin_example
     System error:
     The function $\vert$AXSERV;axServer;IMV;2$\vert$ is undefined.
-\end{verbatim}
+#+end_example
 
 To fix this you need to look at int/algebra/AXSERV.nrlib/code.lsp
 and find the new mangled function name. A better solution would
@@ -34445,9 +34445,9 @@ Axiom supplies the arguments as a list.
 Now we have to bolt it into Axiom. This involves two lookups.
 
 We create the lisp pair 
-\begin{verbatim}
+#+begin_example
   (|browse| . |development|)
-\end{verbatim} 
+#+end_example 
 and cons it into the \$systemCommands command table.  This allows the
 command to be executed in development mode.  This lookup decides if
 this command is allowed. It also has the side-effect of putting the
@@ -35578,11 +35578,11 @@ libraries. It can print strings associated with a category, domain, package,
 or by operation.
 
 This implements command line options of the form:
-\begin{verbatim}
+#+begin_example
   )describe categoryName [internal]
   )describe domainName   [internal]
   )describe packageName  [internal]
-\end{verbatim}
+#+end_example
 The describeInternal function will either call the ``dc'' function
 to describe the internal representation of the argument or it will
 print a cleaned up version of the text for the "Description" keyword
@@ -36018,30 +36018,30 @@ the name of the operation. It searches the documentation string for
 They look like ordinary \verb|++| comments and fit into the ordinary
 comment blocks. So, for example, in the plot.spad.pamphlet file we
 find the following function signature:
-\begin{verbatim}
+#+begin_example
     plot: (F -> F,R) -> %
       ++ plot(f,a..b) plots the function \spad{f(x)} 
       ++ on the interval \spad{[a,b]}.
       ++ 
       ++X fp:=(t:DFLOAT):DFLOAT +-> sin(t)
       ++X plot(fp,-1.0..1.0)$PLOT
-\end{verbatim}
+#+end_example
 This function splits out and prints the lines that begin with \verb|++X|.
 
 A minor complication of printing the examples is that the lines have
 been processed into internal compiler format. Thus the lines that read:
-\begin{verbatim}
+#+begin_example
       ++X fp:=(t:DFLOAT):DFLOAT +-> sin(t)
       ++X plot(fp,-1.0..1.0)$PLOT
-\end{verbatim}
+#+end_example
 are actually stored as one long line containing the example lines
-\begin{verbatim}
+#+begin_example
 "\\indented{1}{plot(\\spad{f},{}a..\\spad{b}) plots the function
  \\spad{f(x)}} \\indented{1}{on the interval \\spad{[a,{}b]}.}
  \\blankline
  \\spad{X} fp:=(t:DFLOAT):DFLOAT +-> sin(\\spad{t})
  \\spad{X} plot(\\spad{fp},{}\\spad{-1}.0..1.0)\\$PLOT"
-\end{verbatim}
+#+end_example
 
 So when we have an example line starting with ++X, it gets
 converted to the compiler to \verb|\spad{X}|. So each 
@@ -36077,19 +36077,19 @@ If there is only one then we clean it up and print it.
 This function expects example lines in internal format that has been
 partially processed to remove the prefix. Thus we get lines that look 
 like:
-\begin{verbatim}
+#+begin_example
  fp:=(t:DFLOAT):DFLOAT +-> sin(\\spad{t}) 
  plot(\\spad{fp},{}\\spad{-1}.0..1.0)\\$PLOT
-\end{verbatim}
+#+end_example
 
 It removes all instances of \verb|{}|, and \verb|\|, and unwraps the
 \verb|spad{}| call, leaving only the argument.
 
 We return lines that look like:
-\begin{verbatim}
+#+begin_example
  fp:=(t:DFLOAT):DFLOAT +-> sin(t)
  plot(fp,-1.0..1.0)$PLOT
-\end{verbatim}
+#+end_example
 which is hopefully exactly what the user wrote.
 
 The compiler inserts \verb|{}| as a space so we remove it.
@@ -39528,7 +39528,7 @@ so they do not count as ``real'' failures.
 \defun{split}{Split the calculated and expect results into lists}
 We have a list containing all of the lines in a test. The input is of
 the form:
-\begin{verbatim}
+#+begin_example
 ("--R                                         Type: List Integer"
  "--R   (1)  [1,4,2,- 6,0,3,5,4,2,3]" 
  "--R" 
@@ -39538,10 +39538,10 @@ the form:
  "" 
  " "
  "l := [1,4,2,-6,0,3,5,4,2,3]")
-\end{verbatim}
+#+end_example
 It removes the ``--R'' prefix from the result strings
 and generates two hopefully equal-length lists, thus:
-\begin{verbatim}
+#+begin_example
 ("                                         Type: List Integer"
  "   (1)  [1,4,2,- 6,0,3,5,4,2,3]" 
  "" 
@@ -39550,7 +39550,7 @@ and generates two hopefully equal-length lists, thus:
  "   (1)  [1,4,2,- 6,0,3,5,4,2,3]" 
  "" 
  " "))
-\end{verbatim}
+#+end_example
 Thus the first line is the start line, the second line is the Axiom 
 input line, followed by the Axiom output. Then we have the lines marked
 ``--R'' which are the expected result. We split these into two separate
@@ -39607,9 +39607,9 @@ since this should only occur on the last start line. This will detect
 If a test is failing because of random input values or we want the
 test to fail but not to count toward failing values then put the
 string ``ok'' somewhere on the ``--S'' line as in:
-\begin{verbatim}
+#+begin_example
 --S 29 of 42 fails due to random values but that is ok
-\end{verbatim}
+#+end_example
 
 \calls{startp}{lastcount}
 \uses{startp}{*ok*}
@@ -39661,14 +39661,14 @@ with a ``--I'' prefix.
 If the ``--S'' line has the format ``--S n of m'' we return true if 
 n=m, false otherwise.
 Thus,
-\begin{verbatim}
+#+begin_example
  "--S"              => nil
  "--S 1 of 4"       => nil
  "--S 10 of 40"     => nil
  "--S 4 of 4"       => t
  "--S 40 of 40"     => t
  "--S 1 of a"       => nil
-\end{verbatim}
+#+end_example
 This is used as a final end check to make sure that all of the
 tests actually ran rather than having the regression test exit
 early and quietly. This will be false on all but the last test
@@ -39743,9 +39743,9 @@ and Axiom exits. Then do
 
 \defvar{*ThisIsARunningSystem*}
 When a user does
-\begin{verbatim}
+#+begin_example
   )savesystem foo
-\end{verbatim}
+#+end_example
 we set this variable to true. This is tested in the restart function,
 which is called when the system starts, to prevent losing user
 information.
@@ -39834,7 +39834,7 @@ o )quit
 *** Overview
 This section contains tree of information used to initialize the {\bf )set} 
 command in the interpreter. The current list is:
-\begin{verbatim}
+#+begin_example
 
 Variable     Description                           Current Value
 -----------------------------------------------------------------
@@ -39860,7 +39860,7 @@ Variables with current values of ... have further sub-options.
 For example, issue )set  system to see what the options are 
 for system. For more information, issue )help set .
 
-\end{verbatim}
+#+end_example
 
 \defunsec{initializeSetVariables}{Initialize the set variables}
 The argument settree is initially the \verb|$setOption| variable.
@@ -40132,7 +40132,7 @@ explanations see the list structure section \ref{Theliststructure}.
 \label{Theliststructure}
 The structure of each list item consists of 7 items.  Consider this 
 example:
-\begin{verbatim}
+#+begin_example
   (userlevel
    "operation access level of system user"
    interpreter
@@ -40140,7 +40140,7 @@ example:
    $UserLevel
    (interpreter compiler development)
    development)
-\end{verbatim}
+#+end_example
 The list contains (the names in bold are accessor names that can be
 found in {\bf property.lisp.pamphlet}. Look for "setName".):
 \begin{list}{}
@@ -40183,7 +40183,7 @@ These commands are restricted to keep the user from causing damage.
 \end{list}
 
 \section{\enspace{}set breakmode}
-\begin{verbatim}
+#+begin_example
 -------------------- The breakmode Option ---------------------
 
  Description: execute break processing on error
@@ -40200,7 +40200,7 @@ These commands are restricted to keep the user from causing damage.
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{BreakMode}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -40219,7 +40219,7 @@ These commands are restricted to keep the user from causing damage.
 #+end_src
 
 \section{\enspace{}set debug}
-\begin{verbatim}
+#+begin_example
                   Current Values of debug Variables                   
 
 Variable     Description                           Current Value
@@ -40227,7 +40227,7 @@ Variable     Description                           Current Value
 lambdatype   Show type information for #1 syntax     off
 dalymode     Interpret leading open paren as lisp    off
 
-\end{verbatim}
+#+end_example
 #+NAME: debug
 #+begin_src common-lisp :noweb yes
    (|debug|
@@ -40242,12 +40242,12 @@ dalymode     Interpret leading open paren as lisp    off
 #+end_src
 
 *** set debug lambdatype
-\begin{verbatim}
+#+begin_example
 ---------------------- The lambdatype Option ----------------------
 
  Description: Show type information for #1 syntax
 
-\end{verbatim}
+#+end_example
 \defdollar{lambdatype}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -40267,7 +40267,7 @@ dalymode     Interpret leading open paren as lisp    off
 #+end_src
 
 \section{\enspace{}set compiler}
-\begin{verbatim}
+#+begin_example
                   Current Values of  compiler  Variables                   
 
 Variable     Description                           Current Value
@@ -40275,7 +40275,7 @@ Variable     Description                           Current Value
 output       library in which to place compiled code     
 input        controls libraries from which to load compiled code  
 
-\end{verbatim}
+#+end_example
 #+NAME: compile
 #+begin_src common-lisp :noweb yes
    (|compiler|
@@ -40290,12 +40290,12 @@ input        controls libraries from which to load compiled code
 #+end_src
 
 *** set compiler output
-\begin{verbatim}
+#+begin_example
 ---------------------- The output Option ----------------------
 
  Description: library in which to place compiled code
 
-\end{verbatim}
+#+end_example
 #+NAME: compileoutput
 #+begin_src common-lisp :noweb yes
       (|output|
@@ -40370,7 +40370,7 @@ The input-libraries and output-library are now truename based.
 #+end_src
 
 *** set compiler input
-\begin{verbatim}
+#+begin_example
 ---------------------- The input Option -----------------------
 
  Description: controls libraries from which to load compiled code
@@ -40380,7 +40380,7 @@ The input-libraries and output-library are now truename based.
   compiled code is loaded from.
  )set compile input drop library is used to tell AXIOM to remove 
   library from this path.
-\end{verbatim}
+#+end_example
 #+NAME: compileinput
 #+begin_src common-lisp :noweb yes
       (|input|
@@ -40493,12 +40493,12 @@ and error prone. This variable was created to shortcut that process.
 Clearly it breaks some semantics of the language accepted by the
 interpreter as parens are used for grouping expressions.
 
-\begin{verbatim}
+#+begin_example
 ---------------------- The dalymode Option ----------------------
 
  Description: Interpret leading open paren as lisp
 
-\end{verbatim}
+#+end_example
 
 \defvar{dalymode}
 #+NAME: initvars
@@ -40519,7 +40519,7 @@ interpreter as parens are used for grouping expressions.
 #+end_src
 
 \section{\enspace{}set expose}
-\begin{verbatim}
+#+begin_example
 ---------------------- The expose Option ----------------------
 
  Description: control interpreter constructor exposure
@@ -40547,7 +40547,7 @@ interpreter as parens are used for grouping expressions.
    from the local frame exposure data. Issue
                   )set expose add    or    )set expose drop 
    for more information.
-\end{verbatim}
+#+end_example
 
 #+NAME: expose
 #+begin_src common-lisp :noweb yes
@@ -40561,7 +40561,7 @@ interpreter as parens are used for grouping expressions.
 #+end_src
 
 *** functions
-\begin{verbatim}
+#+begin_example
              Current Values of  functions  Variables                  
 
 Variable     Description                           Current Value
@@ -40570,7 +40570,7 @@ cache        number of function results to cache        0
 compile      compile, don't just define function bodies off 
 recurrence   specially compile recurrence relations     on 
 
-\end{verbatim}
+#+end_example
 #+NAME: functions
 #+begin_src common-lisp :noweb yes
   (|functions|
@@ -40586,7 +40586,7 @@ recurrence   specially compile recurrence relations     on
 
 #+end_src
 *** functions cache
-\begin{verbatim}
+#+begin_example
 ---------------------- The cache Option -----------------------
 
  Description: number of function results to cache
@@ -40606,7 +40606,7 @@ recurrence   specially compile recurrence relations     on
              )set fun cache 10 f g Legendre
 
  In general, functions will cache no returned values.
-\end{verbatim}
+#+end_example
 #+NAME: functionscache
 #+begin_src common-lisp :noweb yes
      (|cache|
@@ -40814,7 +40814,7 @@ recurrence   specially compile recurrence relations     on
 #+end_src
 
 *** functions compile
-\begin{verbatim}
+#+begin_example
 --------------------- The compile Option ----------------------
 
  Description: compile, don't just define function bodies
@@ -40855,7 +40855,7 @@ recurrence   specially compile recurrence relations     on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{compileRecurrence}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -40873,7 +40873,7 @@ recurrence   specially compile recurrence relations     on
       |on|)
 #+end_src
 \section{\enspace{}set fortran}
-\begin{verbatim}
+#+begin_example
               Current Values of  fortran  Variables                   
 
 Variable     Description                           Current Value
@@ -40895,7 +40895,7 @@ Variables with current values of ... have further sub-options.
 For example, issue )set calling to see what the options are for 
 calling.
 For more information, issue )help set .
-\end{verbatim}
+#+end_example
 #+NAME: fortran
 #+begin_src common-lisp :noweb yes
   (|fortran|
@@ -40920,7 +40920,7 @@ For more information, issue )help set .
 
 #+end_src
 *** set ints2floats
-\begin{verbatim}
+#+begin_example
 ------------------- The ints2floats Option --------------------
 
  Description: where sensible, coerce integers to reals
@@ -40933,7 +40933,7 @@ For more information, issue )help set .
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{fortInts2Floats}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -40951,7 +40951,7 @@ For more information, issue )help set .
       |on|)
 #+end_src
 *** set fortindent
-\begin{verbatim}
+#+begin_example
 -------------------- The fortindent Option --------------------
 
  Description: the number of characters indented
@@ -40959,7 +40959,7 @@ For more information, issue )help set .
  The fortindent option may be followed by an integer in the range 
  0 to inclusive. The current setting is 6 
 
-\end{verbatim}
+#+end_example
 \defdollar{fortIndent}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -40977,7 +40977,7 @@ For more information, issue )help set .
       6)
 #+end_src
 *** set fortlength
-\begin{verbatim}
+#+begin_example
 -------------------- The fortlength Option --------------------
 
  Description: the number of characters on a line
@@ -40985,7 +40985,7 @@ For more information, issue )help set .
  The fortlength option may be followed by an integer in the range 
  1 to inclusive. The current setting is 72 
 
-\end{verbatim}
+#+end_example
 \defdollar{fortLength}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41003,7 +41003,7 @@ For more information, issue )help set .
       72)
 #+end_src
 *** set typedecs
-\begin{verbatim}
+#+begin_example
 --------------------- The typedecs Option ---------------------
 
  Description: print type and dimension lines
@@ -41016,7 +41016,7 @@ For more information, issue )help set .
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{printFortranDecs}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41034,7 +41034,7 @@ For more information, issue )help set .
       |on|)
 #+end_src
 *** set defaulttype
-\begin{verbatim}
+#+begin_example
 ------------------- The defaulttype Option --------------------
 
  Description: default generic type for FORTRAN object
@@ -41050,7 +41050,7 @@ For more information, issue )help set .
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{defaultFortranType}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41068,7 +41068,7 @@ For more information, issue )help set .
       REAL)
 #+end_src
 *** set precision
-\begin{verbatim}
+#+begin_example
 -------------------- The precision Option ---------------------
 
  Description: precision of generated FORTRAN objects
@@ -41081,7 +41081,7 @@ For more information, issue )help set .
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{fortranPrecision}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41099,7 +41099,7 @@ For more information, issue )help set .
        |double|)
 #+end_src
 *** set intrinsic
-\begin{verbatim}
+#+begin_example
 -------------------- The intrinsic Option ---------------------
 
  Description: whether to use INTRINSIC FORTRAN functions
@@ -41112,7 +41112,7 @@ For more information, issue )help set .
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{useIntrinsicFunctions}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41131,7 +41131,7 @@ For more information, issue )help set .
        |off|)
 #+end_src
 *** set explength
-\begin{verbatim}
+#+begin_example
 -------------------- The explength Option ---------------------
 
  Description: character limit for FORTRAN expressions
@@ -41139,7 +41139,7 @@ For more information, issue )help set .
  The explength option may be followed by an integer in the range 
  0 to inclusive. The current setting is 1320 
 
-\end{verbatim}
+#+end_example
 \defdollar{maximumFortranExpressionLength}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41158,7 +41158,7 @@ For more information, issue )help set .
        1320)
 #+end_src
 *** set segment
-\begin{verbatim}
+#+begin_example
 --------------------- The segment Option ----------------------
 
  Description: split long FORTRAN expressions
@@ -41170,7 +41170,7 @@ For more information, issue )help set .
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{fortranSegment}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41188,7 +41188,7 @@ For more information, issue )help set .
        |on|)
 #+end_src
 *** set optlevel
-\begin{verbatim}
+#+begin_example
 --------------------- The optlevel Option ---------------------
 
  Description: FORTRAN optimisation level
@@ -41196,7 +41196,7 @@ For more information, issue )help set .
  The optlevel option may be followed by an integer in the range 
  0 to 2 inclusive. The current setting is 0 
 
-\end{verbatim}
+#+end_example
 \defdollar{fortranOptimizationLevel}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41214,7 +41214,7 @@ For more information, issue )help set .
        0)
 #+end_src
 *** set startindex
-\begin{verbatim}
+#+begin_example
 -------------------- The startindex Option --------------------
 
  Description: starting index for FORTRAN arrays
@@ -41222,7 +41222,7 @@ For more information, issue )help set .
  The startindex option may be followed by an integer in the range 
  0 to 1 inclusive. The current setting is 1 
 
-\end{verbatim}
+#+end_example
 \defdollar{fortranArrayStartingIndex}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41240,7 +41240,7 @@ For more information, issue )help set .
        1)
 #+end_src
 *** set calling
-\begin{verbatim}
+#+begin_example
               Current Values of  calling  Variables                   
 
 Variable     Description                           Current Value
@@ -41249,7 +41249,7 @@ tempfile     set location of temporary data files       /tmp/
 directory    set location of generated FORTRAN files    ./ 
 linker       linker arguments (e.g. libraries to search) -lxlf 
 
-\end{verbatim}
+#+end_example
 #+NAME: fortrancalling
 #+begin_src common-lisp :noweb yes
       (|calling|
@@ -41266,7 +41266,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
 
 #+end_src
 **** set tempfile
-\begin{verbatim}
+#+begin_example
 --------------------- The tempfile Option ---------------------
 
  Description: set location of temporary data files
@@ -41280,7 +41280,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
    )set fortran calling tempfile DIRECTORYNAME
 
  The current setting is /tmp/ 
-\end{verbatim}
+#+end_example
 \defdollar{fortranTmpDir}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41370,7 +41370,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
 
 
 **** directory
-\begin{verbatim}
+#+begin_example
 -------------------- The directory Option ---------------------
 
  Description: set location of generated FORTRAN files
@@ -41384,7 +41384,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
    )set fortran calling directory DIRECTORYNAME
 
  The current setting is ./ 
-\end{verbatim}
+#+end_example
 \defdollar{fortranDirectory}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41457,7 +41457,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
 
 #+end_src
 **** linker
-\begin{verbatim}
+#+begin_example
 ---------------------- The linker Option ----------------------
 
  Description: linker arguments (e.g. libraries to search)
@@ -41472,7 +41472,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
  Example: )set fortran calling linker "-lxlf"
 
  The current setting is -lxlf 
-\end{verbatim}
+#+end_example
 \defdollar{fortranLibraries}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41541,7 +41541,7 @@ linker       linker arguments (e.g. libraries to search) -lxlf
 #+end_src
 
 \section{\enspace{}set hyperdoc}
-\begin{verbatim}
+#+begin_example
              Current Values of  hyperdoc  Variables                   
 
 Variable     Description                           Current Value
@@ -41549,7 +41549,7 @@ Variable     Description                           Current Value
 fullscreen   use full screen for this facility          off
 mathwidth    screen width for history output            120 
 
-\end{verbatim}
+#+end_example
 #+NAME: hyperdoc
 #+begin_src common-lisp :noweb yes
   (|hyperdoc|
@@ -41563,7 +41563,7 @@ mathwidth    screen width for history output            120
    ))
 #+end_src
 *** fullscreen
-\begin{verbatim}
+#+begin_example
 -------------------- The fullscreen Option --------------------
 
  Description: use full screen for this facility
@@ -41576,7 +41576,7 @@ mathwidth    screen width for history output            120
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{fullScreenSysVars}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41594,7 +41594,7 @@ mathwidth    screen width for history output            120
       |off|)
 #+end_src
 *** mathwidth
-\begin{verbatim}
+#+begin_example
 -------------------- The mathwidth Option ---------------------
 
  Description: screen width for history output
@@ -41602,7 +41602,7 @@ mathwidth    screen width for history output            120
  The mathwidth option may be followed by an integer in the range 
  0 to inclusive. The current setting is 120 
 
-\end{verbatim}
+#+end_example
 \defdollar{historyDisplayWidth}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41621,14 +41621,14 @@ mathwidth    screen width for history output            120
 #+end_src
 
 \section{\enspace{}set help}
-\begin{verbatim}
+#+begin_example
                Current Values of  help  Variables                     
 
 Variable     Description                           Current Value
 -----------------------------------------------------------------
 fullscreen   use fullscreen facility, if possible       on 
 
-\end{verbatim}
+#+end_example
 #+NAME: help
 #+begin_src common-lisp :noweb yes
   (|help|
@@ -41642,7 +41642,7 @@ fullscreen   use fullscreen facility, if possible       on
 
 #+end_src
 *** fullscreen
-\begin{verbatim}
+#+begin_example
 -------------------- The fullscreen Option --------------------
 
  Description: use fullscreen facility, if possible
@@ -41655,7 +41655,7 @@ fullscreen   use fullscreen facility, if possible       on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{useFullScreenHelp}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41674,7 +41674,7 @@ fullscreen   use fullscreen facility, if possible       on
 #+end_src
 
 \section{\enspace{}set history}
-\begin{verbatim}
+#+begin_example
 --------------------- The history Option ----------------------
 
  Description: save workspace values in a history file
@@ -41687,7 +41687,7 @@ fullscreen   use fullscreen facility, if possible       on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{HiFiAccess}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41706,7 +41706,7 @@ fullscreen   use fullscreen facility, if possible       on
 #+end_src
 
 \section{\enspace{}set messages}
-\begin{verbatim}
+#+begin_example
              Current Values of  messages  Variables                   
 
 Variable     Description                           Current Value
@@ -41735,7 +41735,7 @@ void         print Void value when it occurs            off
 any          print the internal type of objects of domain Any on 
 naglink      show NAGLink messages                      on 
 
-\end{verbatim}
+#+end_example
 #+NAME: messages
 #+begin_src common-lisp :noweb yes
   (|messages|
@@ -41772,7 +41772,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message any
-\begin{verbatim}
+#+begin_example
 ----------------------- The any Option ------------------------
 
  Description: print the internal type of objects of domain Any
@@ -41784,7 +41784,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{printAnyIfTrue}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41804,12 +41804,12 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message autoload
-\begin{verbatim}
+#+begin_example
 --------------------- The autoload Option ---------------------
 
  Description: print file auto-load messages
 
-\end{verbatim}
+#+end_example
 \defdollar{printLoadMsgs}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41829,7 +41829,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message bottomup
-\begin{verbatim}
+#+begin_example
 --------------------- The bottomup Option ---------------------
 
  Description: display bottom up modemap selection
@@ -41842,7 +41842,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{reportBottomUpFlag}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41862,7 +41862,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message coercion
-\begin{verbatim}
+#+begin_example
 --------------------- The coercion Option ---------------------
 
  Description: display datatype coercion messages
@@ -41875,7 +41875,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{reportCoerceIfTrue}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41895,7 +41895,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message dropmap
-\begin{verbatim}
+#+begin_example
 --------------------- The dropmap Option ----------------------
 
  Description: display old map defn when replaced
@@ -41908,7 +41908,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{displayDroppedMap}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41928,7 +41928,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message expose
-\begin{verbatim}
+#+begin_example
 ---------------------- The expose Option ----------------------
 
  Description: warning for unexposed functions
@@ -41941,7 +41941,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{giveExposureWarning}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41961,7 +41961,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message file
-\begin{verbatim}
+#+begin_example
 ----------------------- The file Option -----------------------
 
  Description: print msgs also to SPADMSG LISTING
@@ -41974,7 +41974,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{printMsgsToFile}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -41995,7 +41995,7 @@ naglink      show NAGLink messages                      on
 
 *** set message frame
 \label{setmessageframe}
-\begin{verbatim}
+#+begin_example
 ---------------------- The frame Option -----------------------
 
  Description: display messages about frames
@@ -42007,7 +42007,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{frameMessages}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42027,7 +42027,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message highlighting
-\begin{verbatim}
+#+begin_example
 ------------------- The highlighting Option -------------------
 
  Description: use highlighting in system messages
@@ -42040,7 +42040,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{highlightAllowed}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42060,7 +42060,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message instant
-\begin{verbatim}
+#+begin_example
 --------------------- The instant Option ----------------------
 
  Description: present instantiation summary
@@ -42073,7 +42073,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{reportInstantiations}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42093,7 +42093,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message insteach
-\begin{verbatim}
+#+begin_example
 --------------------- The insteach Option ---------------------
 
  Description: present instantiation info
@@ -42106,7 +42106,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{reportEachInstantiation|}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42126,7 +42126,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message interponly
-\begin{verbatim}
+#+begin_example
 -------------------- The interponly Option --------------------
 
  Description: say when function code is interpreted
@@ -42139,7 +42139,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{reportInterpOnly}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42159,7 +42159,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message naglink
-\begin{verbatim}
+#+begin_example
 --------------------- The naglink Option ----------------------
 
  Description: show NAGLink messages
@@ -42172,7 +42172,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{nagMessages}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42192,7 +42192,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message number
-\begin{verbatim}
+#+begin_example
 ---------------------- The number Option ----------------------
 
  Description: display message number with message
@@ -42205,7 +42205,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{displayMsgNumber}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42225,7 +42225,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message prompt
-\begin{verbatim}
+#+begin_example
 ---------------------- The prompt Option ----------------------
 
  Description: set type of input prompt to display
@@ -42240,7 +42240,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{inputPromptType}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42260,7 +42260,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message selection
-\begin{verbatim}
+#+begin_example
 -------------------- The selection Option ---------------------
 
  Description: display function selection msgs
@@ -42273,7 +42273,7 @@ naglink      show NAGLink messages                      on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 
 TPDHERE: This is a duplicate of )set mes bot on because both use the
 \verb|$reportBottomUpFlag| flag
@@ -42293,7 +42293,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 #+end_src
 
 *** set
-\begin{verbatim}
+#+begin_example
 ----------------------- The set Option ------------------------
 
  Description: show )set setting after assignment
@@ -42305,7 +42305,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{displaySetValue}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42324,7 +42324,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
 #+end_src
 *** set message startup
-\begin{verbatim}
+#+begin_example
 --------------------- The startup Option ----------------------
 
  Description: display messages on start-up
@@ -42337,7 +42337,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{displayStartMsgs}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42356,7 +42356,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
 #+end_src
 *** set message summary
-\begin{verbatim}
+#+begin_example
 --------------------- The summary Option ----------------------
 
  Description: print statistics after computation
@@ -42369,7 +42369,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{printStatisticsSummaryIfTrue}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42390,7 +42390,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 #+end_src
 
 *** set message testing
-\begin{verbatim}
+#+begin_example
 --------------------- The testing Option ----------------------
 
  Description: print system testing header
@@ -42403,7 +42403,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{testingSystem}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42423,7 +42423,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 #+end_src
 
 *** set message time
-\begin{verbatim}
+#+begin_example
 ----------------------- The time Option -----------------------
 
  Description: print timings after computation
@@ -42436,7 +42436,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{printTimeIfTrue}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42456,7 +42456,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 #+end_src
 
 *** set message type
-\begin{verbatim}
+#+begin_example
 ----------------------- The type Option -----------------------
 
  Description: print type after computation
@@ -42468,7 +42468,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{printTypeIfTrue}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42488,7 +42488,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 #+end_src
 
 *** set message void
-\begin{verbatim}
+#+begin_example
 ----------------------- The void Option -----------------------
 
  Description: print Void value when it occurs
@@ -42500,7 +42500,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{printVoidIfTrue}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42520,7 +42520,7 @@ TPDHERE: This is a duplicate of )set mes bot on because both use the
 #+end_src
 
 \section{\enspace{}set naglink}
-\begin{verbatim}
+#+begin_example
               Current Values of  naglink  Variables                   
 
 Variable     Description                           Current Value
@@ -42530,7 +42530,7 @@ persistence  number of (fortran) functions to remember  1
 messages     show NAGLink messages                      on 
 double       enforce DOUBLE PRECISION ASPs              on 
 
-\end{verbatim}
+#+end_example
 #+NAME: naglink
 #+begin_src common-lisp :noweb yes
   (|naglink|
@@ -42548,7 +42548,7 @@ double       enforce DOUBLE PRECISION ASPs              on
 #+end_src
 
 *** set naglink host
-\begin{verbatim}
+#+begin_example
 ----------------------- The host Option -----------------------
 
  Description: internet address of host for NAGLink
@@ -42558,7 +42558,7 @@ double       enforce DOUBLE PRECISION ASPs              on
  The host specified must be running the NAGLink daemon.
 
  The current setting is localhost 
-\end{verbatim}
+#+end_example
 \defdollar{nagHost}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42618,7 +42618,7 @@ double       enforce DOUBLE PRECISION ASPs              on
 #+end_src
 
 *** set naglink persistence
-\begin{verbatim}
+#+begin_example
 ------------------- The persistence Option --------------------
 
  Description: number of (fortran) functions to remember
@@ -42629,7 +42629,7 @@ double       enforce DOUBLE PRECISION ASPs              on
   number specified should be a non-negative integer.
 
  The current setting is 1 
-\end{verbatim}
+#+end_example
 \defdollar{fortPersistence}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42704,7 +42704,7 @@ double       enforce DOUBLE PRECISION ASPs              on
 #+end_src
 
 *** set naglink messages
-\begin{verbatim}
+#+begin_example
 --------------------- The messages Option ---------------------
 
  Description: show NAGLink messages
@@ -42717,7 +42717,7 @@ double       enforce DOUBLE PRECISION ASPs              on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 TPDHERE: this is the same as )set nag mes on
 \index{\$nagMessages}
 \index{defvar!\$nagMessages}
@@ -42734,7 +42734,7 @@ TPDHERE: this is the same as )set nag mes on
 
 #+end_src
 *** set naglink double
-\begin{verbatim}
+#+begin_example
 ---------------------- The double Option ----------------------
 
  Description: enforce DOUBLE PRECISION ASPs
@@ -42746,7 +42746,7 @@ TPDHERE: this is the same as )set nag mes on
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{nagEnforceDouble}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42767,7 +42767,7 @@ TPDHERE: this is the same as )set nag mes on
 
 \section{\enspace{}set output}
 The result of the {\bf )set output} command is:
-\begin{verbatim}
+#+begin_example
 Variable     Description                           Current Value
 -----------------------------------------------------------------
 abbreviate  abbreviate type names                    off 
@@ -42783,7 +42783,7 @@ script      display output in SCRIPT formula format  Off:CONSOLE
 scripts     show subscripts,... linearly             off 
 showeditor  view output of )show in editor           off 
 tex         create output in TeX style               Off:CONSOLE 
-\end{verbatim}
+#+end_example
 Since the output option has a bunch of sub-options each suboption 
 is defined within the output structure.
 #+NAME: output
@@ -42812,7 +42812,7 @@ is defined within the output structure.
 #+end_src
 
 *** set output abbreviate
-\begin{verbatim}
+#+begin_example
 -------------------- The abbreviate Option --------------------
 
  Description: abbreviate type names
@@ -42824,7 +42824,7 @@ is defined within the output structure.
  -> off 
 
  The current setting is indicated.
-\end{verbatim}
+#+end_example
 \defdollar{abbreviateTypes}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -42844,7 +42844,7 @@ is defined within the output structure.
 #+end_src
 
 *** set output algebra
-\begin{verbatim}
+#+begin_example
 --------------------- The algebra Option ----------------------
 
  Description: display output in algebraic form
@@ -42874,7 +42874,7 @@ issue the two commands
 The output is placed in the directory from which you invoked 
 AXIOM or the one you set with the )cd system command.
 The current setting is:  On:CONSOLE 
-\end{verbatim}
+#+end_example
 \defdollar{algebraFormat}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -43067,7 +43067,7 @@ The current setting is:  On:CONSOLE
 #+end_src
 
 *** set output characters
-\begin{verbatim}
+#+begin_example
 -------------------- The characters Option --------------------
 
  Description: choose special output character set
@@ -43092,7 +43092,7 @@ The current setting is:  On:CONSOLE
    btee is shown as +         rtee is shown as +      
    ltee is shown as +         ctee is shown as +      
    bslash is shown as \    
-\end{verbatim}
+#+end_example
 #+NAME: outputcharacters
 #+begin_src common-lisp :noweb yes
      (|characters|
@@ -43175,7 +43175,7 @@ The current setting is:  On:CONSOLE
 #+end_src
 
 *** set output fortran
-\begin{verbatim}
+#+begin_example
 --------------------- The fortran Option ----------------------
 
  Description: create output in FORTRAN format
@@ -43207,7 +43207,7 @@ For example, to send FORTRAN output to the file polymer.sfort,
 The output is placed in the directory from which you invoked
 AXIOM or the one you set with the )cd system command.
 The current setting is:  Off:CONSOLE 
-\end{verbatim}
+#+end_example
 \defdollar{fortranFormat}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -43404,7 +43404,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 *** set output fraction
-\begin{verbatim}
+#+begin_example
 --------------------- The fraction Option ---------------------
 
  Description: how fractions are formatted
@@ -43416,7 +43416,7 @@ The current setting is:  Off:CONSOLE
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{fractionDisplayType}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -43436,7 +43436,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 *** set output html
-\begin{verbatim}
+#+begin_example
 ----------------------- The html Option ------------------------
 
  Description: create output in html style
@@ -43466,7 +43466,7 @@ issue the two commands
 The output is placed in the directory from which you invoked 
 Axiom or the one you set with the )cd system command.
 The current setting is:  Off:CONSOLE 
-\end{verbatim}
+#+end_example
 \defdollar{htmlFormat}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -43652,7 +43652,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 *** set output length
-\begin{verbatim}
+#+begin_example
 ---------------------- The length Option ----------------------
 
  Description: line length of output displays
@@ -43660,7 +43660,7 @@ The current setting is:  Off:CONSOLE
  The length option may be followed by an integer in the range 
  10 to 245 inclusive. The current setting is 77 
 
-\end{verbatim}
+#+end_example
 
 \defdollar{margin}
 #+NAME: initvars
@@ -43689,7 +43689,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 *** set output mathml
-\begin{verbatim}
+#+begin_example
 ----------------------- The mathml Option ------------------------
 
  Description: create output in MathML style
@@ -43719,7 +43719,7 @@ issue the two commands
 The output is placed in the directory from which you invoked 
 AXIOM or the one you set with the )cd system command.
 The current setting is:  Off:CONSOLE 
-\end{verbatim}
+#+end_example
 \defdollar{mathmlFormat}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -43905,7 +43905,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 *** set output openmath
-\begin{verbatim}
+#+begin_example
 ----------------------- The openmath Option ------------------------
 
  Description: create output in OpenMath style
@@ -43935,7 +43935,7 @@ issue the two commands
 The output is placed in the directory from which you invoked 
 AXIOM or the one you set with the )cd system command.
 The current setting is:  Off:CONSOLE 
-\end{verbatim}
+#+end_example
 \defdollar{openMathFormat}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44119,7 +44119,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 *** set output script
-\begin{verbatim}
+#+begin_example
 ---------------------- The script Option ----------------------
 
  Description: display output in SCRIPT formula format
@@ -44151,7 +44151,7 @@ the file polymer.sform, issue the two commands
 The output is placed in the directory from which you 
 invoked AXIOM or the one you set with the )cd system command.
 The current setting is:  Off:CONSOLE 
-\end{verbatim}
+#+end_example
 \defdollar{formulaFormat}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44337,7 +44337,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 *** set output scripts
-\begin{verbatim}
+#+begin_example
 --------------------- The scripts Option ----------------------
 
  Description: show subscripts,... linearly
@@ -44349,7 +44349,7 @@ The current setting is:  Off:CONSOLE
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{linearFormatScripts}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44368,7 +44368,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 *** set output showeditor
-\begin{verbatim}
+#+begin_example
 -------------------- The showeditor Option --------------------
 
  Description: view output of )show in editor
@@ -44381,7 +44381,7 @@ The current setting is:  Off:CONSOLE
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{useEditorForShowOutput}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44400,7 +44400,7 @@ The current setting is:  Off:CONSOLE
 
 #+end_src
 *** set output tex
-\begin{verbatim}
+#+begin_example
 ----------------------- The tex Option ------------------------
 
  Description: create output in TeX style
@@ -44430,7 +44430,7 @@ issue the two commands
 The output is placed in the directory from which you invoked 
 AXIOM or the one you set with the )cd system command.
 The current setting is:  Off:CONSOLE 
-\end{verbatim}
+#+end_example
 \defdollar{texFormat}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44610,7 +44610,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 \section{\enspace{}quit}
-\begin{verbatim}
+#+begin_example
 ----------------------- The quit Option -----------------------
 
  Description: protected or unprotected quit
@@ -44622,7 +44622,7 @@ The current setting is:  Off:CONSOLE
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{quitCommandType}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44642,7 +44642,7 @@ The current setting is:  Off:CONSOLE
 #+end_src
 
 \section{\enspace{}streams}
-\begin{verbatim}
+#+begin_example
               Current Values of  streams  Variables                   
 
 Variable     Description                           Current Value
@@ -44650,7 +44650,7 @@ Variable     Description                           Current Value
 calculate    specify number of elements to calculate    10 
 showall      display all stream elements computed       off 
 
-\end{verbatim}
+#+end_example
 #+NAME: streams
 #+begin_src common-lisp :noweb yes
   (|streams|
@@ -44666,7 +44666,7 @@ showall      display all stream elements computed       off
 #+end_src
 
 *** set streams calculate
-\begin{verbatim}
+#+begin_example
 -------------------- The calculate Option ---------------------
 
  Description: specify number of elements to calculate
@@ -44677,7 +44677,7 @@ showall      display all stream elements computed       off
     or a positive integer.
 
       The current setting is 10 .
-\end{verbatim}
+#+end_example
 \defdollar{streamCount}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44748,7 +44748,7 @@ showall      display all stream elements computed       off
 #+end_src
 
 *** set streams showall
-\begin{verbatim}
+#+begin_example
 --------------------- The showall Option ----------------------
 
  Description: display all stream elements computed
@@ -44760,7 +44760,7 @@ showall      display all stream elements computed       off
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{streamsShowAll}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44780,7 +44780,7 @@ showall      display all stream elements computed       off
 #+end_src
 
 \section{\enspace{}set system}
-\begin{verbatim}
+#+begin_example
               Current Values of  system  Variables                    
 
 Variable     Description                           Current Value
@@ -44789,7 +44789,7 @@ functioncode show gen. LISP for functions when compiled off
 optimization show optimized LISP code                   off 
 prettyprint  prettyprint BOOT func's as they compile    off 
 
-\end{verbatim}
+#+end_example
 #+NAME: system
 #+begin_src common-lisp :noweb yes
   (|system|
@@ -44806,7 +44806,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 #+end_src
 
 *** set system functioncode
-\begin{verbatim}
+#+begin_example
 ------------------- The functioncode Option -------------------
 
  Description: show gen. LISP for functions when compiled
@@ -44819,7 +44819,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{reportCompilation}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44839,7 +44839,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 #+end_src
 
 *** set system optimization
-\begin{verbatim}
+#+begin_example
 ------------------- The optimization Option -------------------
 
  Description: show optimized LISP code
@@ -44852,7 +44852,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{reportOptimization}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44872,7 +44872,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 #+end_src
 
 *** set system prettyprint
-\begin{verbatim}
+#+begin_example
 ------------------- The prettyprint Option --------------------
 
  Description: prettyprint BOOT func's as they compile
@@ -44885,7 +44885,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{prettyprint}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44905,7 +44905,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 #+end_src
 
 \section{\enspace{}set userlevel}
-\begin{verbatim}
+#+begin_example
 -------------------- The userlevel Option ---------------------
 
  Description: operation access level of system user
@@ -44919,7 +44919,7 @@ prettyprint  prettyprint BOOT func's as they compile    off
 
  The current setting is indicated.
 
-\end{verbatim}
+#+end_example
 \defdollar{UserLevel}
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
@@ -44990,25 +44990,25 @@ prettyprint  prettyprint BOOT func's as they compile    off
 \defun{set1}{set1}
 This function will be called with the top level arguments to )set.
 For instance, given the command
-\begin{verbatim}
+#+begin_example
    )set break break
-\end{verbatim}
+#+end_example
 this function gets 
-\begin{verbatim}
+#+begin_example
    (set1 (|break| |break|) ....)
-\end{verbatim}
+#+end_example
 and given the command
-\begin{verbatim}
+#+begin_example
    )set mes auto off
-\end{verbatim}
+#+end_example
 this function gets 
-\begin{verbatim}
+#+begin_example
    (set1 (|mes| |auto| |off|) ....)
-\end{verbatim}
+#+end_example
 which, because ``message'' is a TREE, generates the recursive call:
-\begin{verbatim}
+#+begin_example
    (set1 (|auto| |off|) <the message subtree>)
-\end{verbatim}
+#+end_example
 The ``autoload'' subtree contains a FUNCTION called 
 printLoadMessages, which gets called with \verb|%describe%|
 
@@ -45718,21 +45718,21 @@ o )what
 
 \defun{getOplistForConstructorForm}{getOplistForConstructorForm}
 The new form is an op-Alist which has entries 
-\begin{verbatim}
+#+begin_example
   (<op> . signature-Alist)
-\end{verbatim}
+#+end_example
 where signature-Alist has entries 
-\begin{verbatim}
+#+begin_example
   (<signature> . item)
-\end{verbatim}
+#+end_example
 where item has form (<slotNumber> <condition> <kind>)
-\begin{verbatim}
+#+begin_example
   (<slotNumber> <condition> <kind>)
-\end{verbatim}
+#+end_example
 where <kind> =  ELT | CONST | Subsumed | (XLAM..) ..
-\begin{verbatim}
+#+begin_example
   <kind> =  ELT | CONST | Subsumed | (XLAM..) ..
-\end{verbatim}
+#+end_example
 #+NAME: defun getOplistForConstructorForm
 #+begin_src common-lisp :noweb yes
 (defun |getOplistForConstructorForm| (form)
@@ -46307,9 +46307,9 @@ the interactive coerce routines are in COERCE BOOT and COERCEFN BOOT.
 {\bf Conventions:}
 All spad values in the interpreter are passed around in triples.
 These are lists of three items: 
-\begin{verbatim}
+#+begin_example
    [value,mode,environment]
-\end{verbatim}
+#+end_example
 The value
 may be wrapped (this is a pair whose CAR is the atom WRAPPED and
 whose CDR is the value), which indicates that it is a real value,
@@ -46330,7 +46330,7 @@ module mltiplication which is multiplication of an element of a
 module by a member of its scalar domain.
 
 This is the signature pattern for the modemap, it is of the form:
-\begin{verbatim}
+#+begin_example
     (DomainOfComputation TargetType <ArgumentType ...>)
           |
           |                This is the predicate that needs to be
@@ -46352,7 +46352,7 @@ This is the signature pattern for the modemap, it is of the form:
       . CATDEF)
    ((*1 *1 *1 *1) ((ofCategory *1 (SemiGroup)) ) . CATDEF)
       )
-\end{verbatim}
+#+end_example
 {\bf Environments:}
 Environments associate properties with atoms.
 
@@ -46819,7 +46819,7 @@ Calls evaluateType on a signature.
 #+end_src
 
 \defun{diffAlist}{diffAlist}
-\begin{verbatim}
+#+begin_example
 diffAlist(new,old) ==
 --record only those properties which are different
   for (pair := [name,:proplist]) in new repeat
@@ -46854,7 +46854,7 @@ diffAlist(new,old) ==
   res := NREVERSE acc
   if BOUNDP '$reportundo and $reportundo then reportUndo res
   res
-\end{verbatim}
+#+end_example
 \calls{diffAlist}{assq}
 \calls{diffAlist}{tmp1}
 \calls{diffAlist}{seq}
@@ -47768,12 +47768,12 @@ in the addBinding function.
 #+end_src
 
 \defun{searchCurrentEnv}{Search for a binding in the current environment}
-\begin{verbatim}
+#+begin_example
 searchCurrentEnv(x,currentEnv) ==
   for contour in currentEnv repeat
     if u:= ASSQ(x,contour) then return (signal:= u)
   KDR signal
-\end{verbatim}
+#+end_example
 \calls{searchCurrentEnv}{assq}
 #+NAME: defun searchCurrentEnv
 #+begin_src common-lisp :noweb yes
@@ -47794,7 +47794,7 @@ searchCurrentEnv(x,currentEnv) ==
 #+end_src
 
 \defun{searchTailEnv}{searchTailEnv}
-\begin{verbatim}
+#+begin_example
 ;searchTailEnv(x,e) ==
 ;  for env in e repeat
 ;    signal:=
@@ -47802,7 +47802,7 @@ searchCurrentEnv(x,currentEnv) ==
 ;        if (u:= ASSQ(x,contour)) and ASSQ("FLUID",u) then return (signal:= u)
 ;      if signal then return signal
 ;  KDR signal
-\end{verbatim}
+#+end_example
 \calls{searchTailEnv}{assq}
 #+NAME: defun searchTailEnv
 #+begin_src common-lisp :noweb yes
@@ -48015,13 +48015,13 @@ The current input line.
 \calls{get-a-line}{read-a-line}
 \sig{get-a-line}{FileStream}{String}
 where FileStream might be
-\begin{verbatim}
+#+begin_example
    #<input stream "/research/t1/src/algebra/EQ.spad">
-\end{verbatim}
+#+end_example
 and the returned string might be
-\begin{verbatim}
+#+begin_example
    ")abbrev domain EQ Equation"
-\end{verbatim}
+#+end_example
 
 A portability note that covers three sites at once (this defun, the
 scanner's token buffer earlier in this book, and quote-if-needed in
@@ -48687,9 +48687,9 @@ are assumed to be available at compile time. The {\bf DEPSYS}
 image is created to contain the compile time environment
 and saved. We pipe compile commands into this environment
 to compile from Common Lisp to machine dependent code.
-\begin{verbatim}
+#+begin_example
 DEPSYS=${OBJ}/${SYS}/bin/depsys
-\end{verbatim}
+#+end_example
 
 \item creating savesys, an image for running axiom.
 
@@ -48698,11 +48698,11 @@ a clean lisp image called {\bf LOADSYS}, load all of the
 final executable code and save it out as {\bf SAVESYS}.
 The {\bf SAVESYS} image is copied to the \verb|${MNT}/${SYS}/bin|
 subdirectory and becomes the axiom executable image.
-\begin{verbatim}
+#+begin_example
 LOADSYS= ${OBJ}/${SYS}/bin/lisp
 SAVESYS= ${OBJ}/${SYS}/bin/interpsys
 AXIOMSYS= ${MNT}/${SYS}/bin/AXIOMsys
-\end{verbatim}
+#+end_example
 
 
 \item creating debugsys, an image with all interpreted functions loaded.
@@ -48715,9 +48715,9 @@ loader to link with lisp internals). This image is nothing more
 than a load of the file src/interp/debugsys.lisp.pamphlet. If
 you need to make test modifications you can add code to that
 file and it will show up here.
-\begin{verbatim}
+#+begin_example
 DEBUGSYS=${OBJ}/${SYS}/bin/debugsys
-\end{verbatim}
+#+end_example
 \end{itemize}
 
 \subsection*{Saving the image under SBCL}
@@ -48847,7 +48847,7 @@ browse.daase.
 This documentation refers to kaf files which are random access files.
 nrlib files are kaf files (look for nrlib/index.kaf)
 The format of a random access file is
-\begin{verbatim}
+#+begin_example
 byte-offset-of-key-table
 first-entry
 second-entry
@@ -48857,7 +48857,7 @@ last-entry
  (key2 . second-entry-byte-address)
  ...
  (keyN . last-entry-byte-address))
-\end{verbatim}
+#+end_example
 The key table is a standard lisp alist.
 
 To open a database you fetch the first number, seek to that location,
@@ -48954,7 +48954,7 @@ the index is a number and the data is a non-numeric sexpr there is
 no source of confusion about when the data needs to be read.
 
 The format of this new database is as follows:
-\begin{verbatim}
+#+begin_example
  first entry:
    an integer giving the byte offset to the constructor alist
    at the bottom of the file
@@ -48968,7 +48968,7 @@ The format of this new database is as follows:
       (NNI offset-of-operationAlist offset-of-constructorModemap)
        ....)
   This list is read at open time and hashed by the car of each item.
-\end{verbatim}
+#+end_example
 
 The system has been changed to use the property list of the
 symbols rather than hash tables. since we already hashed once
@@ -49315,7 +49315,7 @@ This is indexed by (domain . category)
 
 \defun{interpopen}{Open the interp database}
 Format of an entry in interp.daase:
-\begin{verbatim}
+#+begin_example
   (constructor-name
     operationalist
     constructormodemap
@@ -49331,7 +49331,7 @@ Format of an entry in interp.daase:
     defaultdomain        -- a short list, for %i
     ancestors            -- used to compute new category updates
   )
-\end{verbatim}
+#+end_example
 \calls{interpopen}{make-database}
 \calls{interpopen}{DaaseName}
 \usesdollar{interpopen}{spadroot}
@@ -49391,7 +49391,7 @@ library locations this will also contain system files.
 
 \defun{browseopen}{Open the browse database}
 Format of an entry in browse.daase:
-\begin{verbatim}
+#+begin_example
  ( constructorname
      sourcefile
      constructorform
@@ -49399,7 +49399,7 @@ Format of an entry in browse.daase:
      attributes
      predicates
  )
-\end{verbatim}
+#+end_example
 \usesdollar{browseopen}{spadroot}
 \uses{browseopen}{*allconstructors*}
 \uses{browseopen}{*browse-stream*}
@@ -50242,7 +50242,7 @@ constructor abbreviation to pamphlet file name.
 #+end_src
 
 \subsection{Building the interp.daase from hash tables} 
-\begin{verbatim}
+#+begin_example
  format of an entry in interp.daase:
   (constructor-name
     operationalist
@@ -50259,11 +50259,11 @@ constructor abbreviation to pamphlet file name.
     defaultdomain        -- a short list, for %i
     ancestors            -- used to compute new category updates
   )
-\end{verbatim}
+#+end_example
 
 Here I'll try to outline the interp database write procedure
 
-\begin{verbatim}
+#+begin_example
 (defun write-interpdb ()
  "build interp.daase from hash tables"
  (declare (special $spadroot *ancestors-hash*))
@@ -50442,7 +50442,7 @@ Here I'll try to outline the interp database write procedure
 ; 20 And we are done
 
   (close out)))
-\end{verbatim}
+#+end_example
 
 \defun{write-interpdb}{Write the interp database}
 \usesdollar{write-interpdb}{spadroot}
@@ -50510,7 +50510,7 @@ Here I'll try to outline the interp database write procedure
 #+end_src
 
 \subsection{Building the browse.daase from hash tables} 
-\begin{verbatim}
+#+begin_example
  format of an entry in browse.daase:
  ( constructorname
      sourcefile
@@ -50519,7 +50519,7 @@ Here I'll try to outline the interp database write procedure
      attributes
      predicates
  )
-\end{verbatim}
+#+end_example
 This is essentially the same overall process as write-interpdb.
 
 We reserve some space for the (key-table-byte-position . timestamp)
@@ -52395,10 +52395,10 @@ and Airy function.
 Debye's Formula is in 9.3.7,9.3.9,9.3.10 of A\&S
 
 AXIOM recurrence for $u_{k}$
-\begin{verbatim}
+#+begin_example
   f(0)==1::EXPR INT
   f(n)== (t^2)*(1-t^2)*D(f(n-1),t)/2 + (1/8)*integrate( (1-5*t^2)*f(n-1),t)
-\end{verbatim}
+#+end_example
 
 #+NAME: defun BesselJAsymptOrder
 #+begin_src common-lisp :noweb yes
@@ -53965,9 +53965,9 @@ Given a form, $u$, we try to recover the input line that created it.
 Note that this is defined as a SPADReplace function in Integer
 so that algebra code that uses the Integer divide function actually inlines
 a call to this code. The Integer domain contains the line:
-\begin{verbatim}
+#+begin_example
 (PUT (QUOTE |INT;divide;2$R;44|) (QUOTE |SPADreplace|) (QUOTE DIVIDE2)) 
-\end{verbatim}
+#+end_example
 #+NAME: defun divide2 0
 #+begin_src common-lisp :noweb yes
 (defun divide2 (x y)
@@ -53979,9 +53979,9 @@ a call to this code. The Integer domain contains the line:
 Note that this is defined as a SPADReplace function in Integer
 so that algebra code that uses the Integer quo function actually inlines
 a call to this code. The Integer domain contains the line:
-\begin{verbatim}
+#+begin_example
 (PUT (QUOTE |INT;rem;3$;46|) (QUOTE |SPADreplace|) (QUOTE REMAINDER2)) 
-\end{verbatim}
+#+end_example
 Because these are identical except for name we make the symbol-functions
 equivalent. This was done in the original code for efficiency.
 #+NAME: defun remainder2 0
@@ -53994,9 +53994,9 @@ equivalent. This was done in the original code for efficiency.
 Note that this is defined as a SPADReplace function in Integer
 so that algebra code that uses the Integer quo function actually inlines
 a call to this code. The Integer domain contains the line:
-\begin{verbatim}
+#+begin_example
 (PUT (QUOTE |INT;quo;3$;45|) (QUOTE |SPADreplace|) (QUOTE QUOTIENT2)) 
-\end{verbatim}
+#+end_example
 #+NAME: defun quotient2 0
 #+begin_src common-lisp :noweb yes
 (defun quotient2 (x y)
@@ -54670,29 +54670,29 @@ most interesting since they consist of a name and a reference to a
 definition in an external document called a content dictionary (or
 CD). Using XML notation where the element name OMS indicates an
 OpenMath symbol, the following: 
-\begin{verbatim}
+#+begin_example
     <OMS name="sin" cd="transc1"/>
-\end{verbatim}
+#+end_example
 represents the usual sine function, as defined in the CD "transc1". A
 basic OpenMath object is an OpenMath object, although its XML
 representation will be:
-\begin{verbatim}
+#+begin_example
   <OMOBJ>
     <OMS name="sin" cd="transc1"/>
   </OMOBJ>
-\end{verbatim}
+#+end_example
 
 OpenMath objects can be built up recursively in a number of ways. The
 simplest is function application, for example the expression sin(x)
 can be represented by the XML:
-\begin{verbatim}
+#+begin_example
   <OMOBJ>
     <OMA>
       <OMS name="sin" cd="transc1"/>
       <OMV name="x"/>
     </OMA>
   </OMOBJ>
-\end{verbatim}
+#+end_example
 where OMV introduces a variable and OMA is the application
 element. Another straightforward method is attribution which as the
 name suggests can be used to add additional information (for example
@@ -54700,16 +54700,16 @@ name suggests can be used to add additional information (for example
 altering its fundamental meaning. More interesting are binding objects
 which are used to represent an expression containing bound variables,
 for example:
-\begin{verbatim}
+#+begin_example
   <OMOBJ>
     <OMA>
       <OMS cd="calculus1" name="int"/>
       <OMS cd="transc1" name="sin"/>
     </OMA>
   </OMOBJ>
-\end{verbatim}
+#+end_example
 represents the integral of the sin function, but the encoding:
-\begin{verbatim}
+#+begin_example
   <OMOBJ>
     <OMA>
       <OMS cd="calculus1" name="int"/>
@@ -54723,27 +54723,27 @@ represents the integral of the sin function, but the encoding:
       </OMBIND>
     </OMA>
   </OMOBJ>
-\end{verbatim}
+#+end_example
 represents ∫sin(x)dx. This may appear overly complicated but it is
 useful, for example when searching in a database for expressions which
 match ∫sin(y)dy . The definition of a symbol in the CD specifies
 whether or not it may be used to bind variables, which is why 
-\begin{verbatim}
+#+begin_example
    <OMS cd="calculus1" name="int"/> 
-\end{verbatim}
+#+end_example
 cannot be used as a binding symbol.
 
 The final kind of OpenMath object is an error which is built up from a
 symbol describing the error and a sequence of OpenMath objects. For
 example:
-\begin{verbatim}
+#+begin_example
   <OMOBJ>
     <OME>
       <OMS name="unexpected_symbol" cd="error1">
       <OMS name="sine" cd="transc1">
     </OME>
   </OMOBJ>
-\end{verbatim}
+#+end_example
 represents the error which might be generated when an application sees
 a symbol it doesn't recognise from a CD it thought it knew about.
 
@@ -54790,7 +54790,7 @@ Formal definitions and properties can be very useful but
 time-consuming to produce and verbose, not to mention difficult to get
 right. A symbol definition in an OpenMath CD consists of the following
 pieces of information:
-\begin{verbatim}
+#+begin_example
     the symbol name;
     a description in plain text;
     optionally, a set of this symbol's properties in plain text 
@@ -54798,12 +54798,12 @@ pieces of information:
     optionally, a set of this symbol's properties encoded in OpenMath 
        (Formal Mathematical Properties, or FMPs);
     optionally, one or more examples of its use (encoded in OpenMath).
-\end{verbatim}
+#+end_example
 In practice the CMPs and FMPs can come as pairs, and often serve in
 the place of examples.
 
 A very simple instance of a CD definition is:
-\begin{verbatim}
+#+begin_example
 <CDDefinition>
 <Name> log </Name>
 
@@ -54857,14 +54857,14 @@ log 100 to base 10 (which is 2).
 </Example>
 
 </CDDefinition>
-\end{verbatim}
+#+end_example
 
 Another example would be to print the list
-\begin{verbatim}
+#+begin_example
    [ 1, 1/2 ]
-\end{verbatim}
+#+end_example
 as
-\begin{verbatim}
+#+begin_example
 <OMOBJ>
  <OMA>
   <OMS cd="list1" name="list"/>
@@ -54876,7 +54876,7 @@ as
   </OMA>
  </OMA>
 </OMOBJ>
-\end{verbatim}
+#+end_example
 
 This provides a symbol to represent the log function by giving a
 pointer to a standard reference book. It provides the property that:
@@ -55045,13 +55045,13 @@ then invoking the right function to get this particular kind of token.
 The library supports big integers that can potentially be given in
 various formats. The {\tt OMBigIntType} describes the different
 possible formats.
-\begin{verbatim} 
+#+begin_example 
 typedef enum OMbigIntType {
   OMBIunknown = 0,  /* this is base 10, digits in normal order */
   OMBIbase10        /* this is base 16, digits in normal order (MSB) */
   OMbigIntBase16
 } OMbigIntType;
-\end{verbatim} 
+#+end_example 
 
 ** Functions Dealing with OpenMath Devices
 
@@ -55066,13 +55066,13 @@ texts. I has an XML variant.  The second encoding is a binary one that
 can be used when compactness and speed of encoding and decoding is
 important.  The encodings are defined by the {\tt OMencodingType} type
 which is an enumerated type defined as
-\begin{verbatim} 
+#+begin_example 
 typedef enum OMencodingType 
    { OMencodingUnknown, 
      OMencodingBinary, 
      OMencodingSGML, 
      OMencodingXML} OMencodingType;
-\end{verbatim} 
+#+end_example 
 {\tt OMencodingUnknown} is to be used when creating a device that does not
 know which kind of encoding will be used. It must be used only for input
 devices.
@@ -55121,10 +55121,10 @@ Basic OpenMath objects are written using these functions:
 \begin{itemize} 
 \item \verb+OMstatus OMputInt32(OMdev dev, int n)+
 \item 
-\begin{verbatim}
+#+begin_example
 OMstatus OMputBigInt(OMdev dev, const char *data, int len, int sign, 
                      OMbigIntType format)
-\end{verbatim}
+#+end_example
 \item \verb+OMstatus OMputFloat64(OMdev dev, double *f)+
 \item \verb+OMstatus OMputByteArray(OMdev dev, const char *data, int len)+
 \item \verb+OMstatus OMputString(OMdev dev, const char *s)+
@@ -55140,10 +55140,10 @@ These are
 \item \verb+OMstatus OMputStringN(OMdev dev, const char *str, int len)+
 \item \verb+OMstatus OMputVarN(OMdev dev, const char *var, int len)+
 \item
-\begin{verbatim}
+#+begin_example
 OMstatus OMputSymbolN(OMdev dev, const char *cd, int clen, 
                       const char *name, int nlen)
-\end{verbatim}
+#+end_example
 \end{itemize} 
 
 The format for the {\tt data} argument of the {\tt OMputBigInt} function is
@@ -55153,9 +55153,9 @@ significant digit first). The sign of the big integer is given by the
 {\tt sign} argument that should be an integer greater or
 equal to zero for a positive integer and less than zero for a negative
 one. For example, the following line outputs the value of $20!$ to {\tt dev}:
-\begin{verbatim} 
+#+begin_example 
 OMputBigInt(dev, "265252859812191058636308480000000", 33, 1, OMBIbase10);
-\end{verbatim} 
+#+end_example 
 
 *** Writing Structured Objects
 
@@ -55181,7 +55181,7 @@ Here is an example showing how to use these functions to output $\sin x + y$,
 where $x$ and $y$ are represented as variables and $\sin$ is the symbol whose
 name is {\tt sin} in the {\tt Basic} content dictionary. This can be done
 using the following sequence:
-\begin{verbatim} 
+#+begin_example 
 OMputObject(dev);
 OMputApp(dev);
   OMputSymbol(dev, "Basic", "sin");
@@ -55192,7 +55192,7 @@ OMputApp(dev);
   OMputEndApp(dev);
 OMputEndApp(dev);
 OMputEndObject(dev);
-\end{verbatim} 
+#+end_example 
 
 ** Functions to Extract OpenMath Expressions from Devices
 
@@ -55208,7 +55208,7 @@ so that the correct function can be called to recover the current token.
 {\tt OMgetType} returns via its {\tt type} argument an {\tt OMtokenType}
 object indicating the type of the next object to be read from the device. 
 {\tt OMtokenType} is an enumerated type defined as 
-\begin{verbatim} 
+#+begin_example 
 typedef enum OMtokenType {
   OMtokenUnknown, /* error catching trick */
   OMtokenInt32,
@@ -55227,7 +55227,7 @@ typedef enum OMtokenType {
   OMtokenBind,   OMtokenEndBind, 
   OMtokenBVar,   OMtokenEndBVar,
 } OMtokenType;
-\end{verbatim} 
+#+end_example 
 Note that the type of the current token can be tested multiple times. Two
 successive calls to {\tt OMgetType} will always return the same result if no
 other {\tt OMget...} function was called in between. 
@@ -55241,15 +55241,15 @@ devices:
 \item \verb+OMstatus OMgetInt32(OMdev dev, int *i)+
 \item \verb+OMstatus OMgetFloat64(OMdev dev, double *d)+
 \item 
-\begin{verbatim}
+#+begin_example
 OMstatus OMgetBigInt(OMdev dev, char **data, int *len, int *sign, 
                      OMbigIntType *fmt)
-\end{verbatim}
+#+end_example
 \item 
-\begin{verbatim}
+#+begin_example
 OMstatus OMgetBigIntN(OMdev dev, char *data, int len, int *sign, 
                       OMbigIntType *fmt)
-\end{verbatim}
+#+end_example
 \item \verb+OMstatus OMgetByteArray(OMdev dev, char **data, int *len)+
 \item \verb+OMstatus OMgetByteArrayN(OMdev dev, char *data, int len)+
 \item \verb+OMstatus OMgetString(OMdev dev, char **str)+
@@ -55258,9 +55258,9 @@ OMstatus OMgetBigIntN(OMdev dev, char *data, int len, int *sign,
 \item \verb+OMstatus OMgetVarN(OMdev dev, char *var, int len)+
 \item \verb+OMstatus OMgetSymbol(OMdev dev, char **cd, char **name)+
 \item 
-\begin{verbatim}
+#+begin_example
 OMstatus OMgetSymbolN(OMdev dev,char *cd,int clen,char *name,int nlen)
-\end{verbatim}
+#+end_example
 \end{itemize} 
 The functions that return variable size data exist in two versions. A simple
 version that does the necessary memory allocation itself 
@@ -55323,7 +55323,7 @@ The sequence of calls to read an expression is thus completely similar
 (if we omit the calls to {\tt OMgetType}) to the sequence of calls to
 write the expression. For example, the previous expression ($\sin x + y$)
 can be recovered via the sequence:
-\begin{verbatim} 
+#+begin_example 
 OMgetObject(dev);
 OMgetApp(dev);
   OMgetSymbol(dev, ...);
@@ -55334,20 +55334,20 @@ OMgetApp(dev);
   OMgetEndApp(dev);
 OMgetEndApp(dev);
 OMgetEndObject(dev);
-\end{verbatim} 
+#+end_example 
 
 \verb+OMgetInt32(OMdev dev, int *i)+ returns the integer through its {\tt i}
 argument. 
 
-\begin{verbatim}
+#+begin_example
 OMgetBigInt(OMdev dev, char **data, int *len, int *sign, OMbigIntType *fmt)
-\end{verbatim}
+#+end_example
 returns the data corresponding to the big integer in {\tt data}, its length
 in {\tt len}, its sign in {\tt sign} and its format in {\tt fmt}.
 
-\begin{verbatim}
+#+begin_example
 OMgetBigIntN(OMdev dev, char *data, int len, int *sign, OMbigIntType *fmt)
-\end{verbatim}
+#+end_example
 copies the data corresponding to the big integer in {\tt data} buffer that
 should be (at least) {\tt len} characters long. The sign and format are
 returned in the {\tt sign} and {\tt fmt} arguments.
@@ -55430,9 +55430,9 @@ string.
 \end{itemize} 
 For example, the following code opens a device that reads from standard
 input: 
-\begin{verbatim} 
+#+begin_example 
 dev = OMmakeDevice(OMencodingSGML, OMmakeIOFile(stdin));
-\end{verbatim} 
+#+end_example 
 
 The {\tt OMmakeIOString} builds an input device that reads from a string
 or an output device that writes to a string. For input, {\tt s} must point to
@@ -55525,9 +55525,9 @@ same machine (without calling {\tt rsh}).
 
 \begin{itemize} 
 \item 
-\begin{verbatim}
+#+begin_example
 OMstatus OMlaunchEnv(OMconn conn, char *machine, char *command, char *env)
-\end{verbatim}
+#+end_example
 \item \verb+OMstatus OMlaunch(OMconn conn, char *machine, char *command)+
 \item \verb+OMstatus OMserveClient(OMconn conn)+
 \end{itemize} 
@@ -55541,10 +55541,10 @@ The {\tt OMlaunchEnv} function enables the command to be run with a
 particular environment (in the {\sc unix} sense). For example to run a
 {\tt plot} server on the {\tt kama} machine, we could use a piece of code
 such as 
-\begin{verbatim} 
+#+begin_example 
 conn = OMmakeConn(2000);
 OMlaunchEnv(conn, "kama", "plot", "DISPLAY=rati:0 PATH=/users/bin");
-\end{verbatim} 
+#+end_example 
 
 **** Termination
 
@@ -55592,7 +55592,7 @@ about the library.
 \end{itemize} 
 
 \section{\enspace{}The OM.h header file}
-\begin{verbatim}
+#+begin_example
 #ifndef __OM_h__
 #define __OM_h__
 
@@ -56041,7 +56041,7 @@ extern void OMfreeIOHandle(OMIO io);
 OMendPrototypes
 
 #endif /* __OM_h__ */
-\end{verbatim}
+#+end_example
 
 \section{\enspace{}Axiom OpenMath stub functions}
 These stub functions will eventually be expanded to handle OpenMath.
@@ -56058,13 +56058,13 @@ domain in Volume 10.3.
 
 *** Axiom specific functions
 This is used in OpenMathPackage in Volume 10.4.
-\begin{verbatim}
+#+begin_example
 (read OMdev)              -> LispObject
 (listCDs)                 -> List(String)
 (listSymbols)             -> List(String)
 (supportsCD cd)           -> Boolean
 (supportsSymbol cd name)  -> Boolean
-\end{verbatim}
+#+end_example
 
 \defun{om-Read}{om-Read}
 Read an OpenMath object from dev.
@@ -56110,7 +56110,7 @@ Return true if Axiom supports this CD.
 
 *** Lisp conversion functions
 The lisp conversion functions are:
-\begin{verbatim}
+#+begin_example
  (toDev                 LispObject)                   -> OMdev
  (fromDev               OMdev)                        -> LispObject
  (toStatus              LispObject)                   -> LispObject
@@ -56125,7 +56125,7 @@ The lisp conversion functions are:
  (fromCString           char **)                      -> LispObject
  (lispStringFromCString LispObject)                   -> LispObject
  (cStringFromLispString LispObject)                   -> LispObject
-\end{verbatim}
+#+end_example
 
 \defun{om-setDevEncoding}{om-setDevEncoding}
 This sets the encoding used for reading or writeing OpenMath objects to
@@ -56138,11 +56138,11 @@ or from dev to enc.
 #+end_src
 
 *** Device manipulation functions
-\begin{verbatim}
+#+begin_example
 (openFileDev LispObject, ints, ...)              -> LispObject
 (openStrDev  LispObject, LispObject, LispObject) -> LispObject
 (closeDev    LispObject, LispObject)             -> LispObject
-\end{verbatim}
+#+end_example
 
 \defun{om-openFileDev}{om-openFileDev}
 This opens file fname for reading or writing OpenMath objects.
@@ -56175,12 +56175,12 @@ This closes dev, flushing output if necessary.
 
 *** Connection manipulation functions
 These are covered in the OpenMathConnection domain in Volume 10.3.
-\begin{verbatim}
+#+begin_example
  (makeConn      LispObject, LispObject) -> LispObject
  (closeConn     LispObject, LispObject) -> LispObject
  (getConnInDev  LispObject, LispObject) -> LispObject
  (getConnOutDev LispObject, LispObject) -> LispObject
-\end{verbatim}
+#+end_example
 
 \defun{om-makeConn}{om-makeConn}
 #+NAME: defun om-makeConn
@@ -56217,10 +56217,10 @@ These are covered in the OpenMathConnection domain in Volume 10.3.
 *** Client/Server functions
 These are covered in the OpenMathConnection domain in Volume 10.3.
 See OMconn.h
-\begin{verbatim}
+#+begin_example
 (bindTCP    LispObject, LispObject, LispObject) -> LispObject
 (connectTCP LispObject, int, ...)               -> LispObject
-\end{verbatim}
+#+end_example
 
 \defun{om-bindTCP}{om-bindTCP}
 #+NAME: defun om-bindTCP
@@ -56256,7 +56256,7 @@ export primitives. Currently these are:
 - OpenMathPackage (10.4)
 
 Note that putSymbol2 is not implemented.
-\begin{verbatim}
+#+begin_example
 (getApp            LispObject, LispObject) -> LispObject
 (getAtp            LispObject, LispObject) -> LispObject
 (getAttr           LispObject, LispObject) -> LispObject
@@ -56301,7 +56301,7 @@ Note that putSymbol2 is not implemented.
 (putVar            LispObject, LispObject, LispObject) -> LispObject
 (stringPtrToString LispObject, LispObject) -> LispObject
 (stringToStringPtr LispObject, LispObject) -> LispObject
-\end{verbatim}
+#+end_example
 
 \defun{om-getApp}{om-getApp}
 Reads a begin application token from dev.
@@ -56715,7 +56715,7 @@ It would appear to be a nop in lisp.
 #+end_src
 
 * Monitoring execution
-\begin{verbatim}
+#+begin_example
 MONITOR                                                                
                                                                        
 This file contains a set of function for monitoring the execution      
@@ -57026,7 +57026,7 @@ for example:
   #S(MONITOR-DATA NAME FOO4 COUNT 0 MONITORP T SOURCEFILE
         "/u/daly/testmon.lisp"))
 
-\end{verbatim}
+#+end_example
 
 \defvar{*monitor-domains*}
 #+NAME: initvars
@@ -57712,9 +57712,9 @@ Each page is an 8 part list, of which the description is the last
 item. See HTPage Layout for more details.
 
 Pages can also be constructed by code. For example, the page found by
-\begin{verbatim}
+#+begin_example
    Basic Commands -> Matrix
-\end{verbatim}
+#+end_example
 is constructed by a call to bcReadMatrix.
 This routine sets the page title htInitPage, 
 sets up the EXIT button handler htpSetProperty, 
@@ -57834,9 +57834,9 @@ Hash primitive hyperdoc macros into {\bf htMacroTable}.
 \defun{getHtMacroItem}{Get new command name and number of args}
 This processes {\bf newcommand} lines read from {\bf doc/util.ht}
 An example newcommand looks like
-\begin{verbatim}
+#+begin_example
    \newcommand{\menulink}[2]        {\menudownlink{#1}{#2}}
-\end{verbatim}
+#+end_example
 This function returns a pair whose CAR is the new command name
 and whose CDR is the number of arguments. If there are zero arguments
 the brackets and number will not appear.
@@ -57844,9 +57844,9 @@ the brackets and number will not appear.
 However brackets can appear in the new command so we need to fix
 the original code to handle this new case. We set up a wall
 starting after the first closing brace.
-\begin{verbatim}
+#+begin_example
    \newcommand{\beginmenu}          {\beginitems[\MenuDotBitmap]}
-\end{verbatim}
+#+end_example
 
 \seebook{getHtMacroItem}{util.ht}{7.1}
 
@@ -57933,9 +57933,9 @@ which demonstrate using Axiom to solve problems.
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDifferentiateGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|htMakeDoneButton| "Continue" '|bcDifferentiateGen|)
-\end{verbatim}
+#+end_example
 
 #+NAME: defun bcDifferentiate
 #+begin_src common-lisp :noweb yes
@@ -58019,9 +58019,9 @@ Pressing the {\bf Continue} calls {\tt bcDifferentiateGen}
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcIndefiniteIntegrateGen} due to this line:
-\begin{verbatim}
+#+begin_example
   (|doneButton| "Continue" |bcIndefiniteIntegrateGen|)))
-\end{verbatim}
+#+end_example
 #+NAME: defun bcIndefiniteIntegrate
 #+begin_src common-lisp :noweb yes
 (defun |bcIndefiniteIntegrate| ()
@@ -58075,9 +58075,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDefiniteIntegrateGen} due to this line:
-\begin{verbatim}
+#+begin_example
   (|doneButton| "Continue" |bcDefiniteIntegrateGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcDefiniteIntegrate
 #+begin_src common-lisp :noweb yes
 (defun |bcDefiniteIntegrate| ()
@@ -58203,9 +58203,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcSumGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|doneButton| "Continue" |bcSumGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcSum
 #+begin_src common-lisp :noweb yes
 (defun |bcSum| ()
@@ -58344,9 +58344,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDraw2DfunGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|doneButton| "Continue" |bcDraw2DfunGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcDraw2Dfun
 #+begin_src common-lisp :noweb yes
 (defun |bcDraw2Dfun| ()
@@ -58421,9 +58421,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDraw2DparGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|doneButton| "Continue" |bcDraw2DparGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcDraw2Dpar
 #+begin_src common-lisp :noweb yes
 (defun |bcDraw2Dpar| ()
@@ -58499,9 +58499,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDraw2DSolveGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|htMakeDoneButton| "Continue" '|bcDraw2DSolveGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcDraw2DSolve
 #+begin_src common-lisp :noweb yes
 (defun |bcDraw2DSolve| ()
@@ -58580,9 +58580,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDraw3DfunGen} due to this line:
-\begin{verbatim}
+#+begin_example
     (|doneButton| "Continue" |bcDraw3DfunGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcDraw3Dfun
 #+begin_src common-lisp :noweb yes
 (defun |bcDraw3Dfun| ()
@@ -58667,9 +58667,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDraw3DparGen} due to this line:
-\begin{verbatim}
+#+begin_example
     (|doneButton| "Continue" |bcDraw3DparGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcDraw3Dpar
 #+begin_src common-lisp :noweb yes
 (defun |bcDraw3Dpar| ()
@@ -58750,9 +58750,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcDraw3Dpar1Gen} due to this line:
-\begin{verbatim}
+#+begin_example
     (|htMakeDoneButton| "Continue" '|bcDraw3Dpar1Gen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcDraw3Dpar1
 #+begin_src common-lisp :noweb yes
 (defun |bcDraw3Dpar1| ()
@@ -58891,9 +58891,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcSeriesExpansionGen} due to this line:
-\begin{verbatim}
+#+begin_example
     (|htMakeDoneButton| "Continue" '|bcSeriesExpansionGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcSeriesExpansion
 #+begin_src common-lisp :noweb yes
 (defun |bcSeriesExpansion| (a b)
@@ -59000,9 +59000,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcTaylorSeriesGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|doneButton| "Continue" |bcTaylorSeriesGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcTaylorSeries
 #+begin_src common-lisp :noweb yes
 (defun |bcTaylorSeries| (a b)
@@ -59091,9 +59091,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcLaurentSeriesGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|doneButton| "Continue" |bcLaurentSeriesGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcLaurentSeries
 #+begin_src common-lisp :noweb yes
 (defun |bcLaurentSeries| (a b)
@@ -59165,9 +59165,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcPuiseuxSeriesGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|doneButton| "Continue" |bcPuiseuxSeriesGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcPuiseuxSeries
 #+begin_src common-lisp :noweb yes
 (defun |bcPuiseuxSeries| (a b)
@@ -59321,9 +59321,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcLinearSolveEqns1} due to this line:
-\begin{verbatim}
+#+begin_example
   (|htMakeDoneButton| "Continue" '|bcLinearSolveEqns1|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcLinearSolveEqns
 #+begin_src common-lisp :noweb yes
 (defun |bcLinearSolveEqns| (htPage p)
@@ -59443,9 +59443,9 @@ in the page's association table.
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcGenExplicitMatrix} due to this line:
-\begin{verbatim}
+#+begin_example
   (|htMakeDoneButton| "Continue" '|bcGenExplicitMatrix|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcInputExplicitMatrix
 #+begin_src common-lisp :noweb yes
 (defun |bcInputExplicitMatrix| (htPage junk)
@@ -59520,9 +59520,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcInputMatrixByFormulaGen} due to this line:
-\begin{verbatim}
+#+begin_example
   (|htMakeDoneButton| "Continue" '|bcInputMatrixByFormulaGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcInputMatrixByFormula
 #+begin_src common-lisp :noweb yes
 (defun |bcInputMatrixByFormula| (htPage junk)
@@ -59577,9 +59577,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcSystemSolveEqns1} due to this line:
-\begin{verbatim}
+#+begin_example
    (|htMakeDoneButton| "Continue" '|bcSystemSolveEqns1|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcSystemSolve
 #+begin_src common-lisp :noweb yes
 (defun |bcSystemSolve| (htPage p)
@@ -59827,13 +59827,13 @@ Pressing the {\bf Continue} button will call the function
 
 The {\tt bcGen} function is called with a string which will be passed
 to the Axiom command line. For example, the path 
-\begin{verbatim}
+#+begin_example
   Calculus -> Differentiate -> -> Continue -> Do it
-\end{verbatim}
+#+end_example
 will generate the Axiom command line
-\begin{verbatim}
+#+begin_example
   differentiate(sin(x*y),[x,y],[1,2])
-\end{verbatim}
+#+end_example
 
 \defun{bcGen}{Basic Command result page}
 \calls{bcGen}{concat}
@@ -60143,9 +60143,9 @@ title and a function to call when pressed.
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcRealLimitGen} due to this line:
-\begin{verbatim}
+#+begin_example
    (|doneButton| "Continue" |bcRealLimitGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcRealLimit
 #+begin_src common-lisp :noweb yes
 (defun |bcRealLimit| (a b)
@@ -60257,9 +60257,9 @@ Pressing the {\bf Continue} button will call the function
 
 Pressing the {\bf Continue} button will call the function
 {\bf bcComplexLimitGen} due to this line:
-\begin{verbatim}
+#+begin_example
     (|doneButton| "Continue" |bcComplexLimitGen|)
-\end{verbatim}
+#+end_example
 #+NAME: defun bcComplexLimit
 #+begin_src common-lisp :noweb yes
 (defun |bcComplexLimit| (a b)
@@ -61483,9 +61483,9 @@ This is a list with the fields
 \defun{htInitPage}{htInitPage}
 This function creates a page with the given title. For example,
 a call might be:
-\begin{verbatim}
+#+begin_example
    (|htInitePage| |Differentiate Basic Command| nil)
-\end{verbatim}
+#+end_example
 which creates a blank page with the given title.
 
 \calls{htInitPage}{htInitPageNoScroll}
@@ -64929,14 +64929,14 @@ accepts identically. Its companion \$funnyQuote needs no change:
 
 \defun{dbString2Words}{String to words respecting delimiters}
 This breaks a string into words respecting delimiters, so if
-\begin{verbatim}
+#+begin_example
   $dbDelimiters = ( #\space #\( #\) )
-\end{verbatim}
+#+end_example
 then
-\begin{verbatim}
+#+begin_example
   (|dbString2Words| "now is (the) time")
   Value = ("now" "is" #\( "the" #\) "time")
-\end{verbatim}
+#+end_example
 \calls{dbString2Words}{dbWordFrom}
 #+NAME: defun dbString2Words
 #+begin_src common-lisp :noweb yes
@@ -64953,7 +64953,7 @@ then
 
 \defun{dbWordFrom}{Next word respecting delimiters}
 This returns the next word or the next delimiter. So given
-\begin{verbatim}
+#+begin_example
      $dbDelimiters = ( #\space #\( #\) )
      (|dbWordFrom| "now is (the) time")
 
@@ -64964,7 +64964,7 @@ This returns the next word or the next delimiter. So given
      (|dbWordFrom| b 11)  Value = (#\) 12)
      (|dbWordFrom| b 12)  Value = ("time" 17)
      (|dbWordFrom| b 17)  Value = NIL
-\end{verbatim}
+#+end_example
 \calls{dbWordFrom}{maxindex}
 \calls{dbWordFrom}{member}
 \calls{dbWordFrom}{concat}
@@ -64997,9 +64997,9 @@ This returns the next word or the next delimiter. So given
 #+end_src
 
 This creates a page for any cat, dom, package, default package
-\begin{verbatim}
+#+begin_example
 constructors Cname\#\E\sig \args   \abb \comments (C is C, D, P, X)
-\end{verbatim}
+#+end_example
 There are 8 parts of an htPage:
 \begin{enumerate}
 \item kind
@@ -70361,10 +70361,10 @@ The \verb|$okToExecuteMachineCode| is set to T in SpadInterpretStream.
 *** \$options
 The \verb|$options| variable is tested by the history function.
 If it is NIL then output the message 
-\begin{verbatim}
+#+begin_example
   You have not used the correct syntax for the history command.
   Issue )help history for more information.
-\end{verbatim}
+#+end_example
 
 The \verb|$options| variable is tested in the historySpad2Cmd function.
 It appears to record the options that were given to a spad command on

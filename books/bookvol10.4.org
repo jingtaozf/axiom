@@ -8779,9 +8779,9 @@ This is done in the call to replace-entitites (see http.lisp)
 #+end_src
 **** lastType
 To examine the \$internalHistoryTable use the following line
-\begin{verbatim}
+#+begin_example
   )lisp |$internalHistoryTable|
-\end{verbatim}
+#+end_example
 We need to pick out first member of internalHistoryTable and then pick out
 the element with \% as first element. Here is an example showing just
 the first element of the list, which correponds to the last command.
@@ -8789,7 +8789,7 @@ the first element of the list, which correponds to the last command.
 Note that the last command does not necessarily correspond to the last
 element of the first element of \$internalHistoryTable as it is in this
 example.
-\begin{verbatim}
+#+begin_example
    (
     (4 NIL
     (x (value (BasicOperator) WRAPPED . #<vector 09a93bd0>))
@@ -8798,7 +8798,7 @@ example.
     )
    ...
    )
-\end{verbatim}
+#+end_example
 
 We also need to check for input error in which case the \$internalHistoryTable
 is not changed and the type retrieved would be that for the last correct
@@ -13085,11 +13085,11 @@ combinatorics, is to set the binomial coefficient equal to zero for negative
 second argument. This is, partially, also the approach taken in
 combinat.spad, where we find
 
-\begin{verbatim}
+#+begin_example
    binomial(n, m) ==
       n < 0 or m < 0 or m > n => 0
       m = 0 => 1
-\end{verbatim}
+#+end_example
 
 Of course, here $n$ and $m$ are integers. This definition agrees with the
 recurrence
@@ -13166,10 +13166,10 @@ has the slight (display) problem that we would have to come up with a new index
 variable, which looks very ugly. Furthermore, it seems to me that more
 simplifications will occur with the first definition.
 
-\begin{verbatim}
+#+begin_example
   f := operator 'f
   D(product(f(i,x),i=1..m),x)
-\end{verbatim}
+#+end_example
 
 **** dvpow2
 The dvpow2 operation implements the differentiation of the power operator 
@@ -24237,12 +24237,12 @@ function inherit directly from Common Lisp \cite{Stee90}
 \begin{center}
 \includegraphics[scale=0.5]{ps/gammadoublefloat.eps}
 \vskip 0.1cm
-\begin{verbatim}
+#+begin_example
   f(x:DFLOAT):DFLOAT == Gamma(x)
   minPoints(100)
   a:=draw(f,-2.0..2.0,title=="Gamma(DoubleFloat)")
   units(a,1,"on")
-\end{verbatim}
+#+end_example
 \end{center}
 #+NAME: package DFSFUN DoubleFloatSpecialFunctions
 #+begin_src common-lisp :noweb yes
@@ -24436,7 +24436,7 @@ written by T.Haavie as the {\tt expint.c} function in the Numlibc library
 by Lars Erik Lund. Haavie approximates the E1 function by two 
 Chebyshev polynomials. For the range $-4 < x < 4$ the Chebyshev
 coefficients are:
-\begin{verbatim}
+#+begin_example
  7.8737715392882774, -8.0314874286705335,  3.8797325768522250,
 -1.6042971072992259,  0.5630905453891458, -0.1704423017433357,
  0.0452099390015415, -0.0106538986439085,  0.0022562638123478,
@@ -24445,9 +24445,9 @@ coefficients are:
 -0.0000000041611418,  0.0000000004821606, -0.0000000000528465,
  0.0000000000054945, -0.0000000000005433,  0.0000000000000512,
 -0.0000000000000046,  0.0000000000000004 
-\end{verbatim}
+#+end_example
 and for the range $x > 4$ the Chebyshev coefficients are:
-\begin{verbatim}
+#+begin_example
  0.2155283776715125,  0.1028106215227030, -0.0045526707131788,
  0.0003571613122851, -0.0000379341616932,  0.0000049143944914,
 -0.0000007355024922,  0.0000001230603606, -0.0000000225236907,
@@ -24456,7 +24456,7 @@ and for the range $x > 4$ the Chebyshev coefficients are:
  0.0000000000007691, -0.0000000000002070,  0.0000000000000573,
 -0.0000000000000163,  0.0000000000000047, -0.0000000000000014,
  0.0000000000000004, -0.0000000000000001
-\end{verbatim}
+#+end_example
 
 I've rewritten the polynomial to use precomputed coefficients
 that take into account the scaling used by Haavie. I've also
@@ -26210,11 +26210,11 @@ Axiom uses the power series at the zero point:
 \begin{center}
 \includegraphics[scale=0.5]{ps/loggammadfloat.eps}
 \vskip 0.1cm
-\begin{verbatim}
+#+begin_example
   f(x:DFLOAT):DFLOAT == logGamma(x)
   a:=draw(f,0.01..5.0,title=="logGammaDFloat(x)")
   units(a,1,"on")
-\end{verbatim}
+#+end_example
 \end{center}
 #+NAME: package DFSFUN DoubleFloatSpecialFunctions
 #+begin_src common-lisp :noweb yes
@@ -38838,30 +38838,30 @@ ElementaryIntegration(R, F) : SIG == CODE where
 #+end_src
 Bug \#100 is an infinite loop that eventually kills Axiom 
 from the input
-\begin{verbatim}
+#+begin_example
   integrate((z^a+1)^b,z)
-\end{verbatim}
+#+end_example
 
 Line 2 of this function used to read:
-\begin{verbatim}
+#+begin_example
       symbolIfCan(k := kmax(l := union(l, varselect(kernels g, x))))
-\end{verbatim}
+#+end_example
 
 The loop occurs when the call to union causes 
-\begin{verbatim}
+#+begin_example
                      a log(z)
                    %e        
-\end{verbatim}
+#+end_example
 to get added to the list every time. This gives the argument to kmax 
-\begin{verbatim}
+#+begin_example
                  a log(z)
       arg1= [z,%e        ]
-\end{verbatim}
+#+end_example
 and the result being
-\begin{verbatim}
+#+begin_example
         a log(z)
       %e
-\end{verbatim}
+#+end_example
 We keep coming back to process this term, which ends up 
 putting the same term back on the list and we loop.
 Waldek's solution is to remove the union call. 
@@ -38897,9 +38897,9 @@ the correct fix.
 
 #+end_src
 This is part of the fix for bug 100. Line 2 of this function used to read:
-\begin{verbatim}
+#+begin_example
       symbolIfCan(k := kmax(l := union(l, vark(lu, x)))) case SE =>
-\end{verbatim}
+#+end_example
 See the above discussion for why this causes an infinite loop.
 #+NAME: package INTEF ElementaryIntegration
 #+begin_src common-lisp :noweb yes
@@ -44747,28 +44747,28 @@ ExpressionFunctions2(R, S) : SIG == CODE where
 
 *** Bugs
 
-\begin{verbatim}
+#+begin_example
 seriesSolve(sin f x / cos x, f, x, [1])$EXPRSOL(INT, EXPR INT, UFPS EXPR INT, UFPS SUPEXPR EXPR INT)
-\end{verbatim}
+#+end_example
 returns 
-\begin{verbatim}
+#+begin_example
 (((0 . 1) 0 . 1) NonNullStream #<compiled-function |STREAM;generate;M$;62!0|> . UNPRINTABLE)
-\end{verbatim}
+#+end_example
 
 but
-\begin{verbatim}
+#+begin_example
 U ==> UFPS SUPEXPR EXPR INT
 seriesSolve(s +-> sin s *((cos monomial(1,1)$U)**-1)$U, f, x, [0])$EXPRSOL(INT, EXPR INT, UFPS EXPR INT, UFPS SUPEXPR EXPR INT)
-\end{verbatim}
+#+end_example
 
 works. This is probably due to missing ``/'' in UFPS.
 
-\begin{verbatim}
+#+begin_example
   I'd really like to be able to specify a function that works for all domains
   in a category. For example, x +-> y(x)^2 + sin x + x should work
   for EXPR INT as well as for UTS INT, both being domains having
   TranscendentalFunctionCategory.
-\end{verbatim}
+#+end_example
 
 #+NAME: ExpressionSolve.input
 #+begin_src axiom-input :noweb yes
@@ -44858,13 +44858,13 @@ monomial(1,1). Thus we introduce it as a second argument. In fact, maybe
 that's even cleaner. Also, we need to tell the compiler that kernels that are
 independent of the main variable should be coerced to elements of the
 coefficient ring, since it will complain otherwise.
-\begin{verbatim}
+#+begin_example
   I cannot find an example for this behaviour right now. However, if I do use
   the coerce, the following fails:
 
      seriesSolve(h x -1-x*h x *h(q*x), h, x, [1])
 
-\end{verbatim}
+#+end_example
 
 #+NAME: package EXPRSOL ExpressionSolve
 #+begin_src common-lisp :noweb yes
@@ -55950,12 +55950,12 @@ FloatSpecialFunctions() : SIG == CODE where
 \begin{center}
 \includegraphics[scale=0.5]{ps/gammafloat.eps}
 \vskip 0.1cm
-\begin{verbatim}
+#+begin_example
   f(x:DFLOAT):DFLOAT == Gamma(x::FLOAT)::DFLOAT
   minPoints(1000)
   a:=draw(f,-1.99999..1.99999,title=="Gamma(Float)")
   units(a,1,"on")
-\end{verbatim}
+#+end_example
 \end{center}
 If the real part of the argument $z < \frac{1}{2}$ 
 then the formula is \cite{WikiG}:
@@ -56020,11 +56020,11 @@ then the formula is \cite{WikiG}:
 \begin{center}
 \includegraphics[scale=0.5]{ps/loggammafloat.eps}
 \vskip 0.1cm
-\begin{verbatim}
+#+begin_example
   f(x:DFLOAT):DFLOAT == logGamma(x::FLOAT):DFLOAT
   a:=draw(f,0.01..5.0,title=="logGamma(x)")
   units(a,1,"on")
-\end{verbatim}
+#+end_example
 \end{center}
 #+NAME: package FSFUN FloatSpecialFunctions
 #+begin_src common-lisp :noweb yes
@@ -57215,7 +57215,7 @@ FractionFreeFastGaussian(D, V) : SIG == CODE where
 
 #+end_src
 
-\begin{verbatim}
+#+begin_example
   The following function could be moved to FFFGF, parallel to
   generalInterpolation.  However, the reason for moving
   generalInterpolation for fractions to a separate package was the need of
@@ -57226,7 +57226,7 @@ FractionFreeFastGaussian(D, V) : SIG == CODE where
   CoeffAction.
 
   Thus, maybe it would be better to move fffg to a separate package?
-\end{verbatim}
+#+end_example
 
 #+NAME: package FFFG FractionFreeFastGaussian
 #+begin_src common-lisp :noweb yes
@@ -58496,9 +58496,9 @@ In case we want to have more special function operators here, do not forget to
 add them to the list specop in CommonOperators.  Otherwise they will
 not have the \lq special\rq\ attribute and will not be recognised here.  One
 effect could be that
-\begin{verbatim}
+#+begin_example
 myNewSpecOp(1::Expression Integer)::Expression DoubleFloat
-\end{verbatim}
+#+end_example
 might not re-evaluate the operator.
 
 #+NAME: package FSPECF FunctionalSpecialFunction
@@ -82861,7 +82861,7 @@ InnerModularGcd(R,BP,pMod,nextMod) : SIG == CODE where
       2*min(hf,hg)
 
 #+end_src
-\begin{verbatim}
+#+begin_example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{package FOMOGCD ForModularGcd}
 -- ForModularGcd(R,BP) : C == T
@@ -82912,7 +82912,7 @@ InnerModularGcd(R,BP,pMod,nextMod) : SIG == CODE where
 --   T ==> InnerModularGcd(R,P,nextMod(monomial(1,1)$R)$ForTwoGcd(F),
 --                         nextMod$ForTwoGcd(F))
 
-\end{verbatim}
+#+end_example
 
 #+NAME: COQ INMODGCD
 #+begin_src common-lisp :noweb yes
@@ -87047,7 +87047,7 @@ the number n (possibly m times) and continue thru the list of primes.
 The factor function is many orders of magnitude slower than the results
 of other systems. A posting on sci.math.symbolic showed that NTL could
 factor the final value (t6) in about 11 seconds. Axiom takes about 8 hours.
-\begin{verbatim}
+#+begin_example
 a1:=101
 a2:=109
 t1:=a1*a2
@@ -87072,7 +87072,7 @@ factor t5
 a7:=4328240801173188438252813716944518369161
 t6:=t5*a7
 factor t6
-\end{verbatim}
+#+end_example
 #+NAME: package INTFACT IntegerFactorizationPackage
 #+begin_src common-lisp :noweb yes
 
@@ -199430,7 +199430,7 @@ o )show ParametricLinearEquations
 \cross{PLEQN}{wrregime} &
 \end{tabular}
 
-\begin{verbatim}
+#+begin_example
 -- modified to conform with new runtime system 06/04/90
 -- updated with comments for MB, 02/16/94
 -- also cleaned up some unnecessary arguments in regime routine
@@ -199455,7 +199455,7 @@ o )show ParametricLinearEquations
 -- design, since most of the time, the results are just intermediate,
 -- passed to be further processed.  On the other hand, there is probably
 -- no penalty in leaving the options as is.
-\end{verbatim}
+#+end_example
 #+NAME: package PLEQN ParametricLinearEquations
 #+begin_src common-lisp :noweb yes
 )abbrev package PLEQN ParametricLinearEquations
@@ -210779,11 +210779,11 @@ in the variable $x$, then
 {\bf end}
 
 For example, given
-\begin{verbatim}
+#+begin_example
   p1 := (x+1) * (x+6)
   p2 := (x+1) * (x-6)
   gcd(p1,p2) -> x+1
-\end{verbatim}
+#+end_example
 
 #+NAME: package PGCD PolynomialGcdPackage
 #+begin_src common-lisp :noweb yes
@@ -247547,13 +247547,13 @@ plus one which is so far undetermined. We store in st.2 the complete stream
 and in st.1 the stream starting with the first coefficient that has
 possibly not yet been computed.
 
-\begin{verbatim}
+#+begin_example
   The mathematics is not quite worked out. If coeffs is initialized as
   stream with all coefficients set to the \emph{same} transcendental value,
   and not enough initial values are given, then the missing ones are
   implicitely assumed to be all identical. It may well happen that a solution
   is produced, although it is not uniquely determined\dots
-\end{verbatim}
+#+end_example
 
 #+NAME: implementation: UTSSOL TaylorSolve
 #+begin_src common-lisp :noweb yes
@@ -247564,34 +247564,34 @@ Consider an arbitrary equation $f\big(x, y(x)\big)=0$. When setting $x=0$, we
 obtain $f\big(0, y(0)\big)=0$. It is not necessarily the case that this
 determines $y(0)$ uniquely, so we need one initial value that satisfies this
 equation.
-\begin{verbatim}
+#+begin_example
  seriesSolve should check that the given initial values satisfy $f\big(0, y(0),
   y'(0),...\big) = 0$.
-\end{verbatim}
+#+end_example
 Now consider the derivatives of $f$, where we write $y$ instead of $y(x)$ for
 better readability:
 \[
   \frac{d}{dx}f(x, y)=f_1(x, y) + f_2(x, y)y^\prime
 \]
 and
-\begin{verbatim}
+#+begin_example
   \frac{d^2}{dx^2}f(x, y)&=f_{1,1}(x, y)\\
                          &+f_{1,2}(x, y)y^\prime\\
                          &+f_{2,1}(x, y)y^\prime\\
                          &+f_{2,2}(x, y)(y^\prime)^2\\
                          &+f_2(x, y)y^{\prime\prime}.
-\end{verbatim}
+#+end_example
 In general, $\frac{d^2}{dx^2}f(x, y)$ depends only linearly on
 $y^{\prime\prime}$.
 
-\begin{verbatim}
+#+begin_example
   This points to another possibility: Since we know that we only need to solve
   linear equations, we could compute two values and then use interpolation.
   This might be a bit slower, but more importantly: can we still check that we
   have enough initial values? Furthermore, we then really need that $f$ is
   analytic, operators are not necessarily allowed anymore. However, it
   seems that composition is allowed.
-\end{verbatim}
+#+end_example
 
 #+NAME: implementation: UTSSOL TaylorSolve
 #+begin_src common-lisp :noweb yes
@@ -249269,15 +249269,15 @@ TopLevelDrawFunctionsForCompiledFunctions() : SIG == CODE where
 #+end_src
 I have had to work my way around the following bug in the compiler:
 When a local variable is given a mapping as a value, for example,
-\begin{verbatim}
+#+begin_example
    foo : SF -> SF := makeFloatFunction(f,t),
-\end{verbatim}
+#+end_example
 the compiler cannot distinguish that local variable from a local
 function defined elsewhere in the package.  Thus, when 'foo' is
 passed to a function, for example,
-\begin{verbatim}
+#+begin_example
   bird := fcn(foo),
-\end{verbatim}
+#+end_example
 foo will often be compiled as DRAW;foo rather than foo. This,
 of course, causes a run-time error.
 
@@ -252049,49 +252049,49 @@ trigonometric identities.
 The identity for $sinh(x)$ is $(exp(x) - exp(-x))/2$
 
 If we difference these we should get zero
-\begin{verbatim}
+#+begin_example
     f := sinh(x) - (exp(x) - exp(-x))/2
-\end{verbatim}
+#+end_example
 instead, by default, we get
-\begin{verbatim}
+#+begin_example
                 x     -x
    2sinh(x) - %e  + %e
    ---------------------
               2
-\end{verbatim}
+#+end_example
 The function htrigs(f) gives 0
 
 This works as follows:
-\begin{verbatim}   
+#+begin_example   
      m:=mainKernel f => sinh(x)
                    Type: Union(Kernel(Expression(Integer)),...)
-\end{verbatim}   
+#+end_example   
 which is coerced to the first part of the union:
-\begin{verbatim}   
+#+begin_example   
      k:=m::Kernel(Expression(Integer))
-\end{verbatim}   
+#+end_example   
 and the operator is extracted:
-\begin{verbatim}   
+#+begin_example   
      op:=operator(k) => sinh
                               Type: BasicOperator
-\end{verbatim}   
+#+end_example   
 The argument function extracts the variable used as arguments:
-\begin{verbatim}   
+#+begin_example   
      argument k ==> [x]
                               Type Kernel(Expression(Integer))
-\end{verbatim}   
+#+end_example   
 At this point we have picked apart the main Kernel into its
 operator and its arguments. We now process the list of arguments.
 
 The function htrigs is called on every element of the argument list, 
 which in this case, returns a list:
-\begin{verbatim}   
+#+begin_example   
      arg:=[htrigs x for x in argument k]$List(Expression(Integer))
            => [x]
                        Type: List(Expression(Integer))
-\end{verbatim}   
+#+end_example   
 We form a polynomial by replacing the kernel in the numerator with ?
-\begin{verbatim}   
+#+begin_example   
      num := univariate(numer f, k)
   
                 x      -x
@@ -252099,84 +252099,84 @@ We form a polynomial by replacing the kernel in the numerator with ?
                         Type: SparseUnivariatePolynomial(
                                 SparseMultivariatePolynomial(
                                   Integer, Kernel(Expression(Integer))))
-\end{verbatim}   
+#+end_example   
 and a polynomial of the denominator, replacing the kernel
-\begin{verbatim}   
+#+begin_example   
      den := univariate(denom f, k)
   
         2
                         Type: SparseUnivariatePolynomial(
                                 SparseMultivariatePolynomial(
                                   Integer, Kernel(Expression(Integer))))
-\end{verbatim}   
+#+end_example   
 In this case the op is not the exponential so we are doing straight
 trig substitution. We reconstruct the function call using the op
 and arg values, that is:
-\begin{verbatim}   
+#+begin_example   
      g1 := op arg ==> sinh(x)
                                 Type: Expression(Integer)
-\end{verbatim}   
+#+end_example   
 So sup2htrigs, which is a local function, is used to simplify the
 parts of the fraction. In this case, 
-\begin{verbatim}   
+#+begin_example   
     sup2htrigs(num, g1:= op arg) ==> 0
                                 Type: Expression(Integer)
 
     sup2htrigs(den, g1) ==> 2
                                 Type: Expression(Integer)
-\end{verbatim}   
+#+end_example   
 Thus, the result is 0
 
 The identity for $cosh(x)$ is $(exp(x) + exp(-x))/2$
 
 If we difference these we should get zero
-\begin{verbatim}   
+#+begin_example   
      f := cosh(x) - (%e^x + %e^-x)/2
-\end{verbatim}   
+#+end_example   
 instead, by default, we get
-\begin{verbatim}   
+#+begin_example   
          x      - x
      - %e   + %e    + 2cosh(x)
      -------------------------
                   2
-\end{verbatim}   
+#+end_example   
 and the function call $htrigs(f)$ gives 0
 
 This works as follows:
-\begin{verbatim}   
+#+begin_example   
                           x
      m:=mainKernel f => %e
                          Type: Union(Kernel(Expression(Integer)),...)
-\end{verbatim}   
+#+end_example   
 which is coerced to the first part of the union:
-\begin{verbatim}   
+#+begin_example   
                                             x
      k:=m::Kernel(Expression(Integer)) => %e
                          Type: Kernel(Expression(Integer))
-\end{verbatim}   
+#+end_example   
 and the operator is extracted:
-\begin{verbatim}   
+#+begin_example   
      op:=operator(k) => exp
                               Type: BasicOperator
-\end{verbatim}   
+#+end_example   
 The argument function extracts the variable used as arguments:
-\begin{verbatim}   
+#+begin_example   
      argument k ==> [x]
                               Type Kernel(Expression(Integer))
-\end{verbatim}   
+#+end_example   
 At this point we have picked apart the main Kernel into its
 operator and its arguments. We now process the list of arguments.
 
 The htrigs function 
 is called on every element of the argument list, which in this
 case, returns a list:
-\begin{verbatim}   
+#+begin_example   
      arg:=[htrigs x for x in argument k]$List(Expression(Integer))
            => [x]
                        Type: List(Expression(Integer))
-\end{verbatim}   
+#+end_example   
 We form polynomial by replacing the kernel in the numerator with ?
-\begin{verbatim}   
+#+begin_example   
      num := univariate(numer f, k)
   
                - x
@@ -252184,65 +252184,65 @@ We form polynomial by replacing the kernel in the numerator with ?
                         Type: SparseUnivariatePolynomial(
                                 SparseMultivariatePolynomial(
                                   Integer, Kernel(Expression(Integer))))
-\end{verbatim}   
+#+end_example   
 and a polynomial of the denominator, replacing the kernel
-\begin{verbatim}   
+#+begin_example   
      den := univariate(denom f, k)
   
         2
                         Type: SparseUnivariatePolynomial(
                                 SparseMultivariatePolynomial(
                                   Integer, Kernel(Expression(Integer))))
-\end{verbatim}   
+#+end_example   
 In this case, the expression
-\begin{verbatim}   
+#+begin_example   
      is?(op, "exp"::Symbol) => true
-\end{verbatim}   
+#+end_example   
 so we form 
-\begin{verbatim}   
+#+begin_example   
      a  := first arg => x
                          Type: Expression(Integer)
-\end{verbatim}   
+#+end_example   
 since we know that 
-\begin{verbatim}   
+#+begin_example   
                           x
      cosh(x)+sinh(x) => %e
-\end{verbatim}   
+#+end_example   
 we can form this use this expression in substitutions
-\begin{verbatim}   
+#+begin_example   
      g1 := cosh(a)+sinh(a) => sinh(x)+cosh(x)
                         Type: Expression(Integer)
-\end{verbatim}   
+#+end_example   
 since we know that 
-\begin{verbatim}   
+#+begin_example   
                             - x
      cosh(x)-sinh(x) => - %e
-\end{verbatim}   
+#+end_example   
 we can form this use this expression in substitutions
-\begin{verbatim}   
+#+begin_example   
      g2 := cosh(a)-sinh(a) => -sinh(x)+cosh(x)
                          Type: Expression(Integer)
    
      b  := (degree num)::Integer quo 2 => 0
                          Type: NonNegativeInteger
-\end{verbatim}   
+#+end_example   
 The supexp function is using the g1 and g2 identities to replace exp(x)
-\begin{verbatim}   
+#+begin_example   
      supexp(num,g1,g2,b) => sinh(x)-cosh(x)-sinh(x)+2cosh(x)-cosh(x)
                          Type: Expression(Integer)
    
      supexp(den,g1,g2,b) => 2
                          Type: Expression(Integer)
-\end{verbatim}   
+#+end_example   
 which is effectively
-\begin{verbatim}   
+#+begin_example   
      t1/t2 => (sinh(x)-cosh(x)-sinh(x)+2cosh(x)-cosh(x))/2
                          Type: Expression(Integer)
-\end{verbatim}     
+#+end_example     
 the last form of which can be rearranged as:
-\begin{verbatim}   
+#+begin_example   
      (sinh(x)-sinh(x) + 2cosh(x)-cosh(x)-cosh(x) )/2 => 0
-\end{verbatim}   
+#+end_example   
 so the result is 0
 
 #+NAME: package TRMANIP TranscendentalManipulations
@@ -254363,14 +254363,14 @@ TransSolvePackage(R) : SIG == CODE where
 
 #+end_src
 The input
-\begin{verbatim}
+#+begin_example
   solve(sinh(z)=cosh(z),z)
-\end{verbatim}
+#+end_example
 generates the error (reported as bug \# 102):
-\begin{verbatim}
+#+begin_example
  >> Error detected within library code:
     No identity element for reduce of empty list using operation append
-\end{verbatim}
+#+end_example
 #+NAME: package SOLVETRA TransSolvePackage
 #+begin_src common-lisp :noweb yes
 

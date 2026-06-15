@@ -292,9 +292,9 @@ The SPAD environment variable is normally specified.
 It is expected to be a path to the top level directory of the
 shipped system. For example, if we want to build a linux system
 the SPAD variable should look like:
-\begin{verbatim}
+#+begin_example
     `pwd`/new/mnt/{\bf linux}
-\end{verbatim}
+#+end_example
 **** SYS
 From the SPAD variable we look at the last directory name
 and create a version of Axiom for that system. The SYS
@@ -407,22 +407,22 @@ programs.
 The NOISE variable is used in the calls to the document
 command. In general, where the document command is called in
 the Makefiles it is called with the following form:
-\begin{verbatim}
+#+begin_example
    ${SPADBIN}/document ${NOISE} foo
-\end{verbatim}
+#+end_example
 with the default value of NOISE being:
-\begin{verbatim}
+#+begin_example
    NOISE="-o ${TMP}/trace"
-\end{verbatim}
+#+end_example
 
 The reason NOISE exists is that the latex command will
 generate a page of output which is uninteresting during the
 make. However if there is a latex syntax error in a pamphlet
 file the make will continue past the error due to the nonstopmode
 flag. To see the actual error message rerun the make as:
-\begin{verbatim}
+#+begin_example
   make NOISE=
-\end{verbatim}
+#+end_example
 
 **** PART and SUBPART
 Because of the size of this build we do everything possible to
@@ -433,25 +433,25 @@ is the SUBPART variable. The PART variable basically
 specifies which directory we wish to build.
 
 Setting the PART as:
-\begin{verbatim}
+#+begin_example
 PART=foo
-\end{verbatim}
+#+end_example
 will look for a stanza in the Makefile as:
-\begin{verbatim}
+#+begin_example
 \${PART}dir 
-\end{verbatim}
+#+end_example
 which expands to:
-\begin{verbatim}
+#+begin_example
 foodir
-\end{verbatim}
+#+end_example
 
 Variable PART can be specified (environment or command-line) as
 one of:
 
-\begin{verbatim}
+#+begin_example
  (all | lib | install | lisp | interp | comp | graph | hyper 
       | input | sman | boot | include | doc | algebra )
-\end{verbatim}
+#+end_example
 
 It is possible to be more specific with a directory using SUBPART.
 
@@ -459,9 +459,9 @@ It is possible to be more specific with a directory using SUBPART.
 **** DESTDIR and COMMAND
 The install directory is /usr/local/axiom by default 
 but this can be changed on the command line by typing:
-\begin{verbatim}
+#+begin_example
 make DESTDIR=/yourabsolutepath COMMAND=fullPathAndCommand install
-\end{verbatim}
+#+end_example
 
 The COMMAND string has been modified to use the DESTDIR
 variable so we can properly find the axiom command.
@@ -678,14 +678,14 @@ regen-pamphlets: untanglec
 
 *** src
 We should recompile the world with the .fn information but not here.
-\begin{verbatim}
+#+begin_example
 	( for i in `find . -name "*.lsp"` ; \
 	    do echo $$i ; touch $$i ; done )
 	( for i in `find . -name "*.lisp"` ; \
 	    do echo $$i ; touch $$i ; done )
 	@echo 15a remaking ${SRC}/interp for performance
 	@(cd src ; ${ENV} ${MAKE} )
-\end{verbatim}
+#+end_example
 
 #+NAME: src
 #+begin_src common-lisp :noweb yes
@@ -897,9 +897,9 @@ about where various libraries are located on specific platforms. On
 linux, for instance, the library libXpm.a is used by the graphics
 routines. This library is usually found in /usr/X11R6/bin/libXpm.a. 
 Thus, on the linux platform LDF is defined as
-\begin{verbatim}
+#+begin_example
 LDF=" -L/usr/X11R6/lib -L/usr/lib ${XLIB}/libXpm.a -lXpm"
-\end{verbatim}
+#+end_example
 
 **** The AWK variable 
 
@@ -1019,9 +1019,9 @@ existing platforms are not disturbed.
 
 The {\bf LISPFLAVOR} variable is that selector. It defaults to
 {\bf gcl}, which leaves every recipe exactly as it always was. Saying
-\begin{verbatim}
+#+begin_example
 make LISPFLAVOR=sbcl
-\end{verbatim}
+#+end_example
 selects the system SBCL instead. Two things change under sbcl. First,
 the compiled-object extension {\bf O} becomes {\bf fasl}: SBCL's
 compile-file emits fasl files, not the .o object modules GCL's
@@ -1055,9 +1055,9 @@ if we set the GCLOPTS to build a local BFD.
 
 We are failing during build because "directoryp is undefined" along
 with the message
-\begin{verbatim}
+#+begin_example
 Error: Cannot get relocated section contents
-\end{verbatim}
+#+end_example
 #+NAME: GCLOPTS-LOCBFD
 #+begin_src common-lisp :noweb yes
 GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"

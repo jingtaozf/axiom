@@ -819,7 +819,7 @@ subtypes and inheritance. Parametric and inclusion polymorphism are
 classified as the two major subcategories of ``universal
 polymorphism'' which is contrasted with nonuniversal or ad-hoc
 polymorphism. 
-\begin{verbatim}
+#+begin_example
                                |- parametric
                  |- universal -|
                  |             |- inclusion
@@ -827,7 +827,7 @@ polymorphism.
                  |             |- overloading
                  |- ad hoc    -|
                                |- coercion
-\end{verbatim}
+#+end_example
 
 Parametric polymorphism is so called because the uniformity of type
 structure is normally achieved by type parameters, but uniformity can
@@ -876,7 +876,7 @@ classes and the translation method they describe.
 
 It is natural to think of adding assertions to the class declaration,
 specifying properties that each instance must satisfy:
-\begin{verbatim}
+#+begin_example
    class EQ a where
      (==) :: a -> a -> Bool
      % (==) is an equivalence relation
@@ -887,7 +887,7 @@ specifying properties that each instance must satisfy:
      negate :: a -> a
      % (zero, one, (+), (*), negate) form a ring
 
-\end{verbatim}
+#+end_example
 
 It is valid for any proof to rely on these properties, so long as one
 proves that they hold for each instance declaration. Here the
@@ -896,14 +896,14 @@ system could perhaps verify or use such assertions.
 
 It is reasonable to allow a class to apply to more than one type
 variable. For instance, we might have 
-\begin{verbatim}
+#+begin_example
    class Coerce a b where
      coerce :: a -> b
 
    instance Coerce Int Float where
      coerce - convertIntToFloat
 
-\end{verbatim}
+#+end_example
 
 In this case, the assertion {\tt Coerce a b} might be taken as
 equivalent to the assertion that {\tt a} is a subtype of {\tt b}. This
@@ -972,9 +972,9 @@ solving the problem of subtyping does not directly solve the problem
 of coercion. Coercion extends the type and doesn't narrow it. 
 
 Dolan and Mycroft \cite{Dola17} note that, given
-\begin{verbatim}
+#+begin_example
    select p v d = if (p v) then v else d
-\end{verbatim}
+#+end_example
 only by ignoring the
 orientation of the data flows could we conclude that $d$'s type flows
 to the argument of $p$, even though $p$ never mentions $d$. ML's type
@@ -1130,7 +1130,7 @@ $\gcd(a,b) = \max{D(a,b)}$
 NonNegativeInteger inherits {\tt gcd} from {\tt Integer} up the ``add chain''
 since it is a subtype of {\tt Integer}. {\tt Integer} has {\tt EuclideanDomain}
 as an ancestor \cite{Book103}:
-\begin{verbatim}
+#+begin_example
 (1) -> getAncestors "Integer"
 
    (1)
@@ -1146,11 +1146,11 @@ as an ancestor \cite{Book103}:
     RetractableTo, RightModule, Ring, Rng, SemiGroup, SetCategory, StepThrough,
     UniqueFactorizationDomain}
                                                             Type: Set(Symbol)
-\end{verbatim}
+#+end_example
 
 From category {\tt EuclideanDomain} (EUCDOM) we find the implementation of 
 the Euclidean GCD algorithm \cite{Book102}:
-\begin{verbatim}
+#+begin_example
       gcd(x,y) ==                --Euclidean Algorithm
          x:=unitCanonical x
          y:=unitCanonical y
@@ -1163,10 +1163,10 @@ the Euclidean GCD algorithm \cite{Book102}:
                                  -- b) ensures gcd(x,y)=gcd(y,x)
                                  --    if canonicalUnitNormal
          x
-\end{verbatim}
+#+end_example
 The {\tt unitCanonical} function comes from the category 
 {\tt IntegralDomain} (INTDOM) where we find:
-\begin{verbatim}
+#+begin_example
     unitNormal: % -> Record(unit:%,canonical:%,associate:%)
         ++ unitNormal(x) tries to choose a canonical element
         ++ from the associate class of x.
@@ -1176,9 +1176,9 @@ The {\tt unitCanonical} function comes from the category
         ++ \spad{u*c = x}, \spad{a*u = 1}.
     unitCanonical: % -> %
         ++ \spad{unitCanonical(x)} returns \spad{unitNormal(x).canonical}.
-\end{verbatim}
+#+end_example
 implemented as
-\begin{verbatim}
+#+begin_example
       UCA ==> Record(unit:%,canonical:%,associate:%)
       if not (% has Field) then
         unitNormal(x) == [1$%,x,1$%]$UCA -- the non-canonical definition
@@ -1195,25 +1195,25 @@ implemented as
            x exquo y case "failed" => false
            y exquo x case "failed" => false
            true
-\end{verbatim}
+#+end_example
 
 Coq proves the following GCD function:
-\begin{verbatim}
+#+begin_example
   Fixpoint gcd a b :=
     match a with
       | 0 => b
       | S a' => gcd (b mod (S a')) (S a')
     end.
-\end{verbatim}
+#+end_example
 
 This can be translated directly to working Spad code:
-\begin{verbatim}
+#+begin_example
   GCD(x:NNI,y:NNI):NNI ==
     zero? x => y
     GCD(y rem x,x)
-\end{verbatim}
+#+end_example
 with the test case results of:
-\begin{verbatim}
+#+begin_example
 (1) -> GCD(2415,945)
    Compiling function mygcd2 with type (NonNegativeInteger,
       NonNegativeInteger) -> NonNegativeInteger 
@@ -1232,7 +1232,7 @@ with the test case results of:
 
    (4)  1
                                                         Type: PositiveInteger
-\end{verbatim}
+#+end_example
 
 ** Mathematics
 
@@ -1346,9 +1346,9 @@ to execute test vectors at reasonable speed.
 \end{quote}
 
 Note that you can see the intermediate form from clang with
-\begin{verbatim}
+#+begin_example
 clang -O4 -S -emit-llvm foo.c
-\end{verbatim}
+#+end_example
 
 Both Coq and the Hardin translator use OCAML \cite{OCAM14} so we will have to
 learn that language.
@@ -1537,14 +1537,14 @@ for Program Verification}
 
 In Broda, et al. \cite[p. 55]{Brod94} they consider the greatest
 common divisor, {\tt gcd}, of two natural numbers:
-\begin{verbatim}
+#+begin_example
    gcd :: num -> num -> num
    ||pre:   nat(x) & nat(y)
    ||post:  nat(z) & z|x & z|y (ie z is a common divisor)
    ||       &(A)n:nat(n|x & n|y -> n|z) 
    ||            (ie any other common divisor divides it)
    ||       where z = (gcd x y)
-\end{verbatim}
+#+end_example
 
 We have introduced some notation in the pre and post-conditions:
 \begin{itemize}
@@ -1579,9 +1579,9 @@ $z$, rather than dividing it: in other words that $z$ is indeed the
 makes a difference, namely when $x$ and $y$ are both 0. All numbers
 divide 0, so amongst the common divisors of $x$ and $y$ there is no
 greatest one. The specification as given has the effect of specifying
-\begin{verbatim}
+#+begin_example
    gcd 0 0 = 0
-\end{verbatim}
+#+end_example
 
 {\bf Proposition 1}: For any two natural numbers $x$ and $y$, there is
 at most one $z$ satifying the specification for $(gcd x y)$.
@@ -1668,9 +1668,9 @@ work correctly. What might be the smallest bad $y$ for which
 $gcd x y$ may go wrong (for some $x$)? Not 0 -- gcd x 0 always works
 correctly. Suppose $Y$ is the smallest bad $y$, and $gcd X Y$ goes
 wrong. Then $Y > 0$, so
-\begin{verbatim}
+#+begin_example
    gcd X Y = gcd Y (X mod Y)
-\end{verbatim}
+#+end_example
 But $X{\rm\ mod\ }Y$ is good (since $X{\rm\ mod\ }Y < Y$), so the
 recursive call works correctly, so (we have already reasoned) 
 $gcd X Y$ does also -- a contradiction.
@@ -1680,11 +1680,11 @@ definition of {\tt gcd}. It is a rough measure of the depth of
 recursion needed, and always decreases in the recursive calls. 
 
 Let us now state this as a reasoning principle:
-\begin{verbatim}
+#+begin_example
    In proving that a recursive function satisfies its specificaiton,
    you are allowed to assume that the recursive calls work correclty
    -- provided that you can define a recursion variant for the function. 
-\end{verbatim}
+#+end_example
  
 A recursion variant for a function must obey the following rules:
 \begin{itemize}
@@ -1700,7 +1700,7 @@ is less than $y$, the variant for $gcd x y$.
 
 * GCD in COQ
 
-\begin{verbatim}
+#+begin_example
 Fixpoint Pgcdn (n: nat) (a b : positive) : positive :=
   match n with
     | O => 1
@@ -1732,7 +1732,7 @@ Definition Zgcd (a b : Z) : Z :=
 
 Lemma Zgcd_is_gcd : forall a b, Zis_gcd a b (Zgcd a b).
 
-\end{verbatim}
+#+end_example
 
 * GCD in Nuprl by Anne Trostle
 
@@ -1822,19 +1822,19 @@ induction on a single variable.
 * Software Details
 ** Installed Software
 Install CLANG, LLVM
-\begin{verbatim}
+#+begin_example
 http://llvm.org/releases/download.html
-\end{verbatim}
+#+end_example
 Install OCAML
-\begin{verbatim}
+#+begin_example
 sudo apt-get install ocaml
-\end{verbatim}
+#+end_example
 
 An OCAML version of gcd would be written 
-\begin{verbatim}
+#+begin_example
 let rec gcd a b = if b = 0 then a else gcd b (a mod b)
 val gcd : int -> int -> int = <fun>
-\end{verbatim}
+#+end_example
 
 * Temporal Logic of Actions (TLA)
 \begin{quote}
@@ -1870,7 +1870,7 @@ checking the proof, TLAPS verifies the truth of the theorem.
 
 The well-known Euclidean algorithm can be written in the PlusCal 
 language as follows:
-\begin{verbatim}
+#+begin_example
 --algorithm Euclid {
   variables x \in 1..M, y \in 1..N, x0 = x, y0 = y;
   {
@@ -1880,7 +1880,7 @@ language as follows:
     };
     assert x = GCD(x0, y0) /\ y = GCD(x0, y0)
   }
-\end{verbatim}
+#+end_example
 
 The PlusCal translator translates this algorithm into a TLA+ specification
 that we could prove correct. However, in this tutorial, we shall write a
@@ -1892,10 +1892,10 @@ In order to get the definitions of arithmetic operators ($+$, $-$, etc.),
 we shall make this specification {\sl extend} the {\tt Integers} 
 standard module.
 
-\begin{verbatim}
+#+begin_example
 --------------------- Module Euclid ----------------------
 EXTENDS Integers
-\end{verbatim}
+#+end_example
 
 *** Definitions
 
@@ -1904,47 +1904,47 @@ define the predicate ``p divides q'' as follows: p divides q iff there
 exists some integer d in the interval 1..q such that q is equal to p
 times d.
 
-\begin{verbatim}
+#+begin_example
 p | q == \E d \in 1..q : q = p * d
-\end{verbatim}
+#+end_example
 
 We then define the set of divisors of an integer q as the sets of integers
 which both belong to the interval 1..q and divide q:
-\begin{verbatim}
+#+begin_example
 Divisors(q) == {d \in 1..q : d | q}
-\end{verbatim}
+#+end_example
 
 We define the maximum of a set S as one of the elements of this set which
 is greater than or equal to all the other elements:
-\begin{verbatim}
+#+begin_example
 Maximum(S) == CHOOSE x \in S : \A y \in S : x >= y
-\end{verbatim}
+#+end_example
 
 And finally, we define the GCD of two integers p and q to be the maximum
 of the intersection of Divisors(p) and Divisors(a):
-\begin{verbatim}
+#+begin_example
 GCD(p,q) == Maximum(Divisors(p) \cap Divisors(q))
-\end{verbatim}
+#+end_example
 
 For convenience, we shall also define the set of all positive integers as:
-\begin{verbatim}
+#+begin_example
 Number = Nat \ {0}
-\end{verbatim}
+#+end_example
 
 *** Constants and variables
 We then define the two constants and two variables needed to describe
 the Euclidean algorithm, where M and N are the values whose GCD is to
 be computed:
-\begin{verbatim}
+#+begin_example
 CONSTANTS M, N
 VARIABLES x, y
-\end{verbatim}
+#+end_example
 
 *** The specification
 We define the initial state of the Euclidean algorithm as follows:
-\begin{verbatim}
+#+begin_example
 Init == (x = M) /\ (y = N)
-\end{verbatim}
+#+end_example
 
 In the Euclidean algorithm, two actions can be performed:
 - set the value of y to y - x if x $<$ y
@@ -1953,21 +1953,21 @@ In the Euclidean algorithm, two actions can be performed:
 These actions are again written as a definition of {\tt Next}, which
 specifies the next-state relation. In TLA+, a primed variable refers
 to its value at the next state of the algorithm.
-\begin{verbatim}
+#+begin_example
 Next == \/ /\ x < y
            /\ y' = y - x
            /\ x' = x
         \/ /\ y < x
            /\ x' = x-y
            /\ y' = y
-\end{verbatim}
+#+end_example
 
 The specification of the algorithm asserts that the variables have the
 correct initial values and, in each execution step, either a {\tt Next}
 action is performed or x and y keep the same values:
-\begin{verbatim}
+#+begin_example
 Spec == Init /\ [][Next]_<<x,y>>
-\end{verbatim}
+#+end_example
 
 (For reasons that are irrelevant to this algorithm, TLA specifications
 always allow {\sl stuttering steps} that leave all the variables
@@ -1975,18 +1975,18 @@ unchanged.)
 
 We want to prove that the algorithm always satisfies the following
 property:
-\begin{verbatim}
+#+begin_example
 ResultCorrect == (x = y) => x = GCD(M, N)
-\end{verbatim}
+#+end_example
 
 Hence we want to prove the following theorem named Correctness:
-\begin{verbatim}
+#+begin_example
 THEOREM Correctness == Spec => []ResultCorrect
-\end{verbatim}
+#+end_example
 
 *** Summary
 
-\begin{verbatim}
+#+begin_example
 --------------------- Module Euclid ----------------------
 EXTENDS Integers
 
@@ -2013,18 +2013,18 @@ Spec == Init /\ [][Next]_<<x,y>>
 ResultCorrect == (x = y) => x = GCD(M,N)
 
 THEOREM Correctness == Spec => []ResultCorrect
-\end{verbatim}
+#+end_example
 
 ** A simple proof
 *** The invariant
 
 Intuitively, the theorem Correctness holds because the implementation
 guarantees the following {\sl invariant}
-\begin{verbatim}
+#+begin_example
 InductiveInvariant == /\ x \in Number
                       /\ y \in Number
                       /\ GCD(x, y) = GCD(M, N)
-\end{verbatim}
+#+end_example
 
 That is, {\tt InductiveInvariant} holds for the initial state (i.e.,
 the state specified by {\tt Init}) and is preserved by the 
@@ -2033,21 +2033,21 @@ next-state relation {\tt [Next]\_}$<<x,y>>$
 *** Checking proofs
 
 First we need to assume that constants M and N are not equal to zero
-\begin{verbatim}
+#+begin_example
 ASSUME NumberAssumption == M \in Number /\ N \in Number
-\end{verbatim}
+#+end_example
 
 Let us then prove that {\tt InductiveInvariant} holds for the initial state.
-\begin{verbatim}
+#+begin_example
 THEOREM InitProperty == Init => InductiveInvariant
-\end{verbatim}
+#+end_example
 
 To check whether TLAPS can prove that theorem by itself, we declare
 its proof obvious.
-\begin{verbatim}
+#+begin_example
 THEOREM InitProperty == Init => InductiveInvariant
   OBVIOUS
-\end{verbatim}
+#+end_example
 
 We now ask TLAPS to prove that theorem. But TLAPS does not know how to
 prove the proof obligation corresponding to that proof. It prints
@@ -2075,10 +2075,10 @@ Unfortunately, none of the back-ends could prove that obligation. As with
 {\tt definitions}, we have to specify which facts are {\sl usable}. In this
 case, we have to make the fact {\tt NumberAssumption} usable by changing
 the proof to
-\begin{verbatim}
+#+begin_example
 THEOREM InitProperty == Init => InductiveInvariant
   BY NumberAssumption DEF Init, InductiveInvariant
-\end{verbatim}
+#+end_example
 
 The general form of a {\tt BY} proof is:
 \[ {\tt BY\ } e_1,\ldots,e_m {\tt \ DEF\ } d_1,\ldots,d_n\]
@@ -2088,7 +2088,7 @@ to then check this claim, and also to check that the cited facts
 $e_1,\ldots,e_m$ are indeed true. 
 
 Finally, SMT succeeds in proving that obligation.
-\begin{verbatim}
+#+begin_example
 --------------------- Module Euclid ----------------------
 EXTENDS Integers
 
@@ -2124,7 +2124,7 @@ THEOREM InitProperty == Init => InductiveInvariant
   BY NumberAssumption DEF Init, InductiveInvariant
 
 THEOREM Correctness == Spec => []ResultCorrect
-\end{verbatim}
+#+end_example
 
 
 ** Divisibility Definition
@@ -2354,7 +2354,7 @@ tell which is the correct one, the user has to tell it what he wants.
 
 ** Source code of COQ GCD Proof
 This is the proof of GCD \cite{Coqu16a} in the COQ \cite{Coqu16} sources:
-\begin{verbatim}
+#+begin_example
 Library Coq.ZArith.Znumtheory
 
 Require Import ZArith_base.
@@ -2709,11 +2709,11 @@ Definition prime_dec: forall p, { prime p }+{ ~ prime p }.
 Theorem not_prime_divide:
  forall p, 1 < p -> ~ prime p -> exists n, 1 < n < p /\ (n | p).
  
-\end{verbatim}
+#+end_example
 
 * LEAN proof of GCD
 This is the proof of GCD \cite{Avig14} in the LEAN \cite{Avig16} sources:
-\begin{verbatim}
+#+begin_example
 /-
 Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
@@ -3086,14 +3086,14 @@ or.elim (eq_zero_or_pos (gcd k m))
 
 end nat
 
-\end{verbatim}
+#+end_example
 
 * Formal Pre- and Post-conditions
 In Boldo \cite{Bold11} we find an effort to verify floating point software
 using preconditions, postconditions, and assertions. Quoting:
 
 ``These conjectures can be described formally by annotations as follows.
-\begin{verbatim}
+#+begin_example
 /*@ requires \abs(x) <= 0x1p-5;
   @ ensures \abs(\result - \cos(x)) <= 0x1p-23;
   @*/
@@ -3101,7 +3101,7 @@ float my_cosine(float x) {
   //@ assert \abs(1.0 - x*x*0.5 - \cos(x)) < 0x1p-24;
   return 1.0f - x * x * 0.5f;
 }
-\end{verbatim}
+#+end_example
 The {\sl precondition}, introduced by {\bf requires}, states that we expect
 argument {\sl x} in the interval [-1/32; 1/32]. The {\sl postcondition},
 introduced by {\bf ensures}, states that the distance between the value
@@ -3121,7 +3121,7 @@ is thanks to the choice of having exact operations in the annotations that
 we are able to state a property of the method error.''
 
 In Boldo \cite{Bold07,Bold07a} we find 'search in an array' annotated:
-\begin{verbatim}
+#+begin_example
 /*@ requires \valid_range(t,0,n-1)
   @ ensures
   @  (0 <= \result < n => t[\result] == v) &&
@@ -3138,7 +3138,7 @@ int index(int t[], int n, int v) {
   }
   return i;
 }
-\end{verbatim}
+#+end_example
 
 * Types and Signatures
 
@@ -3154,7 +3154,7 @@ Axiom adds these types:
 - Command = String
 
 From Carette, et al. \cite{Care11a} we find:
-\begin{verbatim}
+#+begin_example
 LeftNearSemiRing := Theory {
   U : type;
   * : (U, U) -> U;
@@ -3169,7 +3169,7 @@ LeftNearSemiRing := Theory {
     forall x,y,z : U. (x + y) + z = x + (y + z);
   axiom associative_* :=
     forall x,y,z : U. (x * y) * z = x * (y * z);
-\end{verbatim}
+#+end_example
 
 * COQ nat vs Axiom NNI
 
@@ -3187,32 +3187,32 @@ COQ's nat domain \cite{COQnat} is
 
 *** Library Coq.Init.Nat
 
-\begin{verbatim}
+#+begin_example
 Require Import Notations Logic Datatypes.
 
 Local Open Scope nat_scope.
-\end{verbatim}
+#+end_example
 
 {\bf Peano natural numbers, definitions of operations}
 
 This file is meant to be used as a whole module, without importing it,
 leading to qualified definitions (e.g. Nat.pred)
 
-\begin{verbatim}
+#+begin_example
 Definition t := nat.
-\end{verbatim}
+#+end_example
 
 {\bf Constants}
 
-\begin{verbatim}
+#+begin_example
 Definition zero := 0.
 Definition one := 1.
 Definition two := 2.
-\end{verbatim}
+#+end_example
 
 {\bf Basic operations}
 
-\begin{verbatim}
+#+begin_example
 Definition succ := S.
 
 Definition pred n :=
@@ -3239,12 +3239,12 @@ Fixpoint mul n m :=
 
 where "n * m" := (mul n m) : nat_scope.
 
-\end{verbatim}
+#+end_example
 
 Note that Axiom's NNI domain will be automatically promoted to Integer
 when the subtraction result is negative. Coq returns O when this occurs.
 
-\begin{verbatim}
+#+begin_example
 Truncated subtraction: n-m is 0 if n<=m
 
 Fixpoint sub n m :=
@@ -3255,9 +3255,9 @@ Fixpoint sub n m :=
 
 where "n - m" := (sub n m) : nat_scope.
 
-\end{verbatim}
+#+end_example
 {\bf Comparisons}
-\begin{verbatim}
+#+begin_example
 
 Fixpoint eqb n m : bool :=
   match n, m with
@@ -3290,9 +3290,9 @@ Fixpoint compare n m : comparison :=
 
 Infix "?=" := compare (at level 70) : nat_scope.
 
-\end{verbatim}
+#+end_example
 {\bf Minimum, maximum}
-\begin{verbatim}
+#+begin_example
 
 Fixpoint max n m :=
   match n, m with
@@ -3308,9 +3308,9 @@ Fixpoint min n m :=
     | S n', S m' => S (min n' m')
   end.
 
-\end{verbatim}
+#+end_example
 {\bf Parity tests}
-\begin{verbatim}
+#+begin_example
 
 Fixpoint even n : bool :=
   match n with
@@ -3321,9 +3321,9 @@ Fixpoint even n : bool :=
 
 Definition odd n := negb (even n).
 
-\end{verbatim}
+#+end_example
 {\bf Power}
-\begin{verbatim}
+#+begin_example
 
 Fixpoint pow n m :=
   match m with
@@ -3333,9 +3333,9 @@ Fixpoint pow n m :=
 
 where "n ^ m" := (pow n m) : nat_scope.
 
-\end{verbatim}
+#+end_example
 {\bf Euclidean division}
-\begin{verbatim}
+#+begin_example
 This division is linear and tail-recursive. In divmod, y is the 
 predecessor of the actual divisor, and u is y minus the real remainder
 
@@ -3363,9 +3363,9 @@ Definition modulo x y :=
 Infix "/" := div : nat_scope.
 Infix "mod" := modulo (at level 40, no associativity) : nat_scope.
 
-\end{verbatim}
+#+end_example
 {\bf Greatest common divisor} 
-\begin{verbatim}
+#+begin_example
 We use Euclid algorithm, which is normally not structural, but Coq is 
 now clever enough to accept this (behind modulo there is a subtraction, 
 which now preserves being a subterm)
@@ -3376,15 +3376,15 @@ Fixpoint gcd a b :=
    | S a' => gcd (b mod (S a')) (S a')
   end.
 
-\end{verbatim}
+#+end_example
 {\bf Square}
-\begin{verbatim}
+#+begin_example
 
 Definition square n := n * n.
 
-\end{verbatim}
+#+end_example
 {\bf Square root}
-\begin{verbatim} 
+#+begin_example 
 
 The following square root function is linear (and tail-recursive). 
 With Peano representation, we can't do better. For faster algorithm, 
@@ -3407,9 +3407,9 @@ Fixpoint sqrt_iter k p q r :=
 
 Definition sqrt n := sqrt_iter n 0 0 0.
 
-\end{verbatim}
+#+end_example
 {\bf Log2} 
-\begin{verbatim}
+#+begin_example
 This base-2 logarithm is linear and tail-recursive.  In
 log2_iter, we maintain the logarithm p of the counter q, while r is
 the distance between q and the next power of 2, more precisely q + S r
@@ -3484,13 +3484,13 @@ Definition land a b := bitwise andb a a b.
 Definition lor a b := bitwise orb (max a b) a b.
 Definition ldiff a b := bitwise (fun b b' => andb b (negb b')) a a b.
 Definition lxor a b := bitwise xorb (max a b) a b.
-\end{verbatim}
+#+end_example
 
 * Binary Power in COQ by Casteran and Sozeau
 
 From Casteran and Sozeau \cite{Cast16}:
 
-\begin{verbatim}
+#+begin_example
 (* About integer powers (monomorphic version) *)
 
 Set Implicit Arguments.
@@ -3498,13 +3498,13 @@ Require Import ZArith.
 Require Import Div2.
 Require Import Program.
 Open Scope Z_scope.
-\end{verbatim}
+#+end_example
 
 Let us consider a simple arithmetic operation: raising some integer $x$
 to the $n$-th power, where $n$ is a natural number. The following
 function definition is a direct translation of the mathematical
 concept:
-\begin{verbatim}
+#+begin_example
 Fixpoint power (a:Z)(n:nat) :=
   match n with 0%nat => 1
              | S p =>  a * power a p
@@ -3512,7 +3512,7 @@ Fixpoint power (a:Z)(n:nat) :=
 
 Eval vm_compute in power 2 40.
  = 1099511627776 : Z
-\end{verbatim}
+#+end_example
 
 This definition can be considered as a very naive way of programming,
 since computing $x^n$ requires $n$ multiplications. Nevertheless, this
@@ -3524,7 +3524,7 @@ by proving in Coq their equivalence with the naive power function.
 
 The following function allows one to compute $x^n$, with a number of
 multiplications proportional to $\log_2(n)$:
-\begin{verbatim}
+#+begin_example
 Program
 Fixpoint binary_power_mult (acc x:Z) (n:nat) {measure (fun i=>i) n} : Z
   (* acc * (power x n) *) :=
@@ -3545,7 +3545,7 @@ Eval vm_compute in binary_power 2 40.
 Goal binary_power 2 234 = power 2 234.
 reflexivity.
 Qed.
-\end{verbatim}
+#+end_example
 
 We want now to {\sl prove} {\tt binary\_power's} correctness, i.e. that
 this function and the naive {\tt power} function are pointwise equivalent.
@@ -3572,19 +3572,19 @@ Such a mathematical structure can be defined in Coq as a type class.
 (implicit), a binary operation {\tt dot} and a neutral element {\tt unit},
 three fields describe the properties that {\tt dot} and {\tt unit} must
 satisfy.
-\begin{verbatim}
+#+begin_example
 Class Monoid {A:Type}(dot : A -> A -> A)(one : A) : Prop := {
   dot_assoc : forall x y z:A, dot x (dot y z) = dot (dot x y) z;
   unit_left : forall x, dot one x = x;
   unit_right : forall x, dot x one = x }.
-\end{verbatim}
+#+end_example
 
 Note that other definitions could have been given for representing this
 mathematical structure. 
 
 From an implementational point of view, such a type class is just a record
 type, i.e. an inductive type with a single constructor {\tt Build\_Monoid}
-\begin{verbatim}
+#+begin_example
 Print Monoid.
 
 Record Monoid (A:Type)(dot : A -> A -> A)(one : A) : Prop := Build_Monoid
@@ -3596,7 +3596,7 @@ For Monoid: Argument A is implicit and maximally inserted
 For Build_Monoid: Argument A is implicit
 For Monoid: Argument scopes are [type_scope _ _]
 For Build_Monoid: Argument scopes are [type_scope _ _ _ _ _]
-\end{verbatim}
+#+end_example
 
 Nevertheless, implementation of type classes by M. Sozeau provides several
 specific tools --- dedicated tactics for instance --, and we advise the
@@ -3605,7 +3605,7 @@ reader not to replace the {\tt Class} keyword with {\tt Record} or
 
 With the command {\tt About}, we can see the polymorphic type of the 
 fields of the class {\tt Monoid}:
-\begin{verbatim}
+#+begin_example
 About one_left
 
 one_left:
@@ -3615,7 +3615,7 @@ Monoid dot one -> forall x : A, dot one x = x
 Arguments A, dot, one, Monoid are implicit and maximally inserted
 Argument scopes are [type_scope _ _ _ _]
 one_left is transparent
-\end{verbatim}
+#+end_example
 
 *** Classes and Instances
 
@@ -3625,15 +3625,15 @@ keyword. Our first example is a definition of the monoid structure
 on the set $\mathbb{Z}$ of integers, provided with integer multiplication,
 with 1 as the neutral element. Thus we give these parameters to the
 {\tt Monoid} class (note that $\mathbb{Z}$ is implicitly given).
-\begin{verbatim}
+#+begin_example
 Instance ZMult : Monoid Zmult 1
-\end{verbatim}
+#+end_example
 
 For this instance to be created, we need to prove that the binary
 operation {\tt Zmult} is associative and admits 1 as the neutral
 element. Applying the constructor {\tt Build\_Monoid} -- for instance
 with the tactic {\tt split} -- generates three subgoals.
-\begin{verbatim}
+#+begin_example
 split.
 3 subgoals
  =================================================
@@ -3643,7 +3643,7 @@ subgoal 2 is:
   forall x : Z, 1 * x = x
 subgoal 3 is:
   forall x : Z, x * 1 = x
-\end{verbatim}
+#+end_example
 
 Each subgoal is easily solved by {\tt intros; ring}.
 
@@ -3652,10 +3652,10 @@ Note that we used {\tt Qed} because we consider a class of sort {\tt Prop}.
 In some cases where instances must store some information constants,
 ending an instance construction with {\tt Defined} may be necessary.
 
-\begin{verbatim}
+#+begin_example
 Check Zmult.
 ZMult : Monoid Zmult 1
-\end{verbatim}
+#+end_example
 
 We explained on the preceding page why it is better to use the {\tt Class}
 keyword than {\tt Record} or {\tt Inductive}. For the same reason, the 
@@ -3669,7 +3669,7 @@ We are now able to give a definition of the function {\tt power} than can
 be applied with any instance of class {\tt Monoid}:
 
 A first definition could be
-\begin{verbatim}
+#+begin_example
 Fixpoint power {A:Type}{dot:A->A->A}{one:A}{M: Monoid dot one}
                (a:A)(n:nat) :=
   match n with 0:nat => one
@@ -3678,11 +3678,11 @@ Fixpoint power {A:Type}{dot:A->A->A}{one:A}{M: Monoid dot one}
 
 Compute power 2 10.
  = 1024 : Z
-\end{verbatim}
+#+end_example
 
 Happily, we can make the declaration of the three first arguments
 implicit, by using the {\tt Generalizable Variables} command:
-\begin{verbatim}
+#+begin_example
 Reset power.
 
 Generalizable Variables A dot one.
@@ -3694,7 +3694,7 @@ Fixpoint power `{M: Monoid A dot one}(a:A)(n:nat) :=
 
 Compute power 2 10.
  = 1024 : Z
-\end{verbatim}
+#+end_example
 
 The variables {\tt A dot one} appearing in the binder for {\tt M} are
 implicitly bound before the binder for {\tt M} and their types are
@@ -3712,7 +3712,7 @@ all the arguments needed by the {\tt power} function to be applied is called
 
 In order to understand how it operates, let's have a look at {\tt power}'s
 type:
-\begin{verbatim}
+#+begin_example
 About power.
 power :
 forall (A : Type) (dot : A -> A -> A) (one : A),
@@ -3727,7 +3727,7 @@ Set Printing Implicit.
 Check power 2 100.
 @power Z Zmult 1 Zmult 2 100 : Z
 Unset Printing Implicit.
-\end{verbatim}
+#+end_example
 
 We see that the {\sl instance} {\tt ZMult} has been inferred from the
 type of 2. We are in the simple case where only one monoid of carrier {\tt Z}
@@ -3746,7 +3746,7 @@ restrict our study to $2\times 2$ matrices over some ring.
 
 We first load the {\tt Ring} library, then open a section with some useful
 declarations and notations. 
-\begin{verbatim}
+#+begin_example
 Require Import Ring.
 
 Section matrices.
@@ -3762,11 +3762,11 @@ Section matrices.
   Variable rt : ring_theory zero one plus mult minus sym (@eq A).
 
   Add Ring Aring : rt.
-\end{verbatim}
+#+end_example
 
 We can now define a carrier type for $2\times 2$-matrices, as well as
 matrix multiplication and the identity matrix.
-\begin{verbatim}
+#+begin_example
 Structure M2 : Type := {c00 : A; c01 : A; c10 : A; c11 : A}.
 
 Definition Id2 : M2 := Build_M2 1 0 0 1.
@@ -3776,11 +3776,11 @@ Definition M2_mult (m m':M2) : M2 :=
            (c00 m * c01 m' + c01 m * c11 m')
            (c10 m * c00 m' + c11 m * c10 m')
            (c10 m * c01 m' + c11 m * c11 m').
-\end{verbatim}
+#+end_example
 
 As for multiplication of integers, we can now define an instance of
 {\tt Monoid} for the type {\tt M2}.
-\begin{verbatim}
+#+begin_example
 Global Instance M2_Monoid : Monoid (M2_mult plus mult) (Id2 0 1).
 split.
 destruct x; destruct y; destruct z; simpl.
@@ -3792,12 +3792,12 @@ unfold M2_mult; apply M2_eq_intros; simpl; ring.
 Qed.
 
 End matrices.
-\end{verbatim}
+#+end_example
 
 We want now to play with $2\times 2$ matrices over $\mathbb{Z}$.
 We declare an instance {\bf M2Z} for this purpose, and can use directly
 the function {\tt power}.
-\begin{verbatim}
+#+begin_example
 Instance M2Z : Monoid _ _ := M2_Monoid Zth.
 
 Compute power (Build_M2 1 1 1 0) 40.
@@ -3814,7 +3814,7 @@ Definition fibonacci (n:nat) :=
 Compute fibonacci 20.
  = 10946
  :Z
-\end{verbatim}
+#+end_example
 
 ** Reasoning within a Type Class
 
@@ -3825,7 +3825,7 @@ First, we define an auxiliary function. We use the {\tt Program}
 extension to define an efficient version of exponentiation using an
 accumulator. The function is defined by well-founded recursion on 
 the exponent $n$.
-\begin{verbatim}
+#+begin_example
 Function binary_power_mult (A:Type) (dot:A->A->A) (one:A)
      (M: @Monoid A dot one) (acc x:A)(n:nat){measure (fun i=>i) n} : A
   (* acc * (x ** n) *) :=
@@ -3843,7 +3843,7 @@ Definition binary_power `{M:Monoid} x n := binary_power_mult M one x n.
 
 Compute binary_power 2 100.
  = 1267650600228229401496703205376 : Z
-\end{verbatim}
+#+end_example
 
 *** The Equivalence Proof
 
@@ -3853,17 +3853,17 @@ to open a section, in which we fix some arbitrary monoid M. Such a
 declaration is made with the {\tt Context} command, which can be 
 considered as a version of {\tt Variables} for declaring arbitrary
 instances of a given class.
-\begin{verbatim}
+#+begin_example
 
 Section About_power.
 
 Require Import Arith.
  Context `(M:Monoid A dot one ).
-\end{verbatim}
+#+end_example
 
 It is good practice to define locally some specialized notations and 
 tactics.
-\begin{verbatim}
+#+begin_example
 
 Ltac monoid_rw :=
     rewrite (@one_left A dot one M) || 
@@ -3875,14 +3875,14 @@ Ltac monoid_simpl := repeat monoid_rw.
 
 Local Infix "*" := dot.
 Local Infix "**" := power (at level 30, no associativity).
-\end{verbatim}
+#+end_example
 
 \subsection{Some Useful Lemmas About {\tt power}}
 
 We start by proving some well-known equalities about powers in a monoid.
 Some of these equalities are integrated later in simplification tactics.
 
-\begin{verbatim}
+#+begin_example
 Lemma power_x_plus : forall x n p, x ** (n + p) =  x ** n *  x ** p.
 Proof.
  induction n as [| p IHp];simpl.
@@ -3930,7 +3930,7 @@ Lemma power_of_square : forall x n, (x * x) ** n = x ** n * x ** n.
   repeat rewrite dot_assoc;rewrite IHn; repeat rewrite dot_assoc.
  factorize; simpl;trivial.
 Qed.
-\end{verbatim}
+#+end_example
 
 *** Final Steps
 
@@ -3939,7 +3939,7 @@ We are now able to prove that the auxiliary function
 The proof uses well-founded induction and the lemmas proven in the
 previous section.
 
-\begin{verbatim}
+#+begin_example
 Lemma binary_power_mult_ok :
   forall n a x,  binary_power_mult a x n = a * x ** n.
 Proof.
@@ -3960,16 +3960,16 @@ Proof.
   generalize (odd_double _ o);intro H;auto.
   apply lt_div2;auto with arith.
 Qed.
-\end{verbatim}
+#+end_example
 
 Then the main theorem follows immediately:
-\begin{verbatim}
+#+begin_example
 Lemma binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n.
 Proof.
   intros n x;unfold binary_power;rewrite binary_power_mult_ok;
   monoid_simpl;auto.
 Qed.
-\end{verbatim}
+#+end_example
 
 *** Discharging the Context
 
@@ -3977,7 +3977,7 @@ It is time to close the section we opened for writing our proof of
 equivalence. The theorem {\tt binary\_power\_ok} is now provided
 with a universal quantification over all the parameters of any monoid.
 
-\begin{verbatim}
+#+begin_example
 End About_power.
 
 About binary_power_ok.
@@ -4000,7 +4000,7 @@ Check  binary_power_ok Mfib 56.
 binary_power_ok Mfib 56
   : binary_power Mfib 56 = power Mfib 56
 
-\end{verbatim}
+#+end_example
 
 *** Subclasses
 
@@ -4020,14 +4020,14 @@ the commutativity of {\tt dot}. Please keep in mind that we declared
 {\tt A}, {\tt dot}, and {\tt one} as {\sl generalizable variables},
 hence we can use the backquote symbol here.
 
-\begin{verbatim}
+#+begin_example
 Class Abelian_Monoid `(M:Monoid A dot one) := {
   dot_comm : forall x y, dot x y = dot y x}.
-\end{verbatim}
+#+end_example
 
 A quick look at the representation of {\sl Abelian\_Monoid} as a record
 type helps us understand how this class is implemented.
-\begin{verbatim}
+#+begin_example
 Print Abelian_Monoid.
 Record Abelian_Monoid (A : Type) (dot : A -> A -> A)
   (one : A) (M : Monoid dot one) : Prop := Build_Abelian_Monoid
@@ -4037,24 +4037,24 @@ For Abelian_Monoid: Arguments A, dot, one are implicit and maximally inserted
 For Build_Abelian_Monoid: Arguments A, dot, one are implicit
 For Abelian_Monoid: Arguemnt scopes are [type_scope _ _ _]
 For Build_Abelian_Monoid: Argument scopes are [type_scope _ _ _ _]
-\end{verbatim}
+#+end_example
 
 For building an instance of {\tt Abelian\_Monoid} we can start from
 {\tt ZMult}, the monoid on {\tt Z}, adding a proof that integer
 multiplication is commutative.
-\begin{verbatim}
+#+begin_example
 Instance ZMult_Abelian : Abelian_Monoid ZMult.
 split. 
  exact Zmult_comm.
 Qed.
-\end{verbatim}
+#+end_example
 
 We can now prove our equality by building an appropriate context. Note
 that we can specify just the parameters of the monoid here in the binder
 of the Abelian monoid, an instance of monoid on those same parameters is
 automatically generalized. Superclass parameters are automatically
 generalized inside quote binders. Again, this is simply syntactic sugar.
-\begin{verbatim}
+#+begin_example
 Section Power_of_dot.
  Context `{M: Monoid A} {AM:Abelian_Monoid M}.
  
@@ -4073,7 +4073,7 @@ End Power_of_dot.
 Check power_of_mult 3 4 5.
 power_of_mult 3 4 5
      : power (4 * 5) 3 = power 4 3 * power 5 3
-\end{verbatim}
+#+end_example
 
 * Proof Tower Layer: C11 using CH$_2$O
 
@@ -4824,7 +4824,7 @@ positive element of the ideal. The number $c\in (a_1,a_2)$ dividing
 $a_1$ and $a_2$ is the greatest common divisor since any common
 divisor of $a_1$ and $a_2$ must also be a divisor of $c$.
 
-\begin{verbatim}
+#+begin_example
 (lambda (a1)
  (lambda (a2)
    ((((((nat-rec-at '(arrow nat (arrow nat (start nat nat))))
@@ -4843,7 +4843,7 @@ divisor of $a_1$ and $a_2$ must also be a divisor of $c$.
            ((plus-nat a2) 1))
          0)
        1)))
-\end{verbatim}
+#+end_example
 
 Here we have manually introduced r1,r2,L11,L12,L21,L22 for somewhat
 lengthy terms corresponding to our abbreviations $r_1$,
@@ -4859,9 +4859,9 @@ one might as well pick the constant 0 (as we did in the text).
 Cardelli states that {\bf coercions} are a 
 form of ad-hoc polymorphism.
 Axiom allows ML-style type inference in the interpreter. Declaring a function
-\begin{verbatim}
+#+begin_example
    f(n) == n + 1
-\end{verbatim}
+#+end_example
 without specifying types is possible. The function types are inferred
 when used and a type-specialized version of the function is
 compiled. If called with different argument types it will compile a
@@ -5264,12 +5264,12 @@ Some people think that every computable function, total or partial,
 can be computed by a Turing machine. This is not so, and here are some
 counter-examples. Consider Euclid's algorithm for computing the
 greatest common divisor $d=gcd(a,b)$ of two natural numbers $a,b$.
-\begin{verbatim}
+#+begin_example
    let M = max(a,b), m = min(a,b)
    while M > m do
      M,m := max(M-m,m, min(M-m,m)
    d := M
-\end{verbatim}
+#+end_example
 
 The gcd function on natural numbers is of course Turing computable,
 but the algorithm was also applied -- in theory and in practice -- to
@@ -5359,7 +5359,7 @@ Let us suppose first that they agree to confine attention to positive
 whole numbers (exclusing zero). The required relationship between the
 parameters ($x$,$y$) and the result ($z$) may be formalized as
 follows: 
-\begin{verbatim}
+#+begin_example
   D1.1  z divides x
   D1.2  z divides y
   D1.3  z is the greatest of the set of numbers satisfying both conditions
@@ -5367,12 +5367,12 @@ follows:
         such that pw=q"
   D1.5  "p is the greatest member of the set S" means "p is in S, and no
         member of S is strictly greater than p"
-\end{verbatim}
+#+end_example
 
 We need to check that for every pair of positive numbers $x$ and $y$
 there exists a number $z$ with the properties specified in D1.3. A
 proof of this has three steps.
-\begin{verbatim}
+#+begin_example
   P1.1 The number one is a divisor of every number. So it is a common
        divisor of every pair of numbers. This shows that the set of
        common divisors of two numbers is non-empty.
@@ -5383,7 +5383,7 @@ proof of this has three steps.
   P1.3 Every finite non-empty set of integers has a greatest member.
        So the maximum used to define the greatest common divisor
        always exists.
-\end{verbatim}
+#+end_example
 
 Here is an idealized logic program to compute the greatest common
 divisor of two positive integers. To help in checking its correctness,
@@ -5392,7 +5392,7 @@ clarity of the original requirements. We assume that ``isproduct'' and
 ``differsfrom'' are available as built-in predicates on positive
 integers.
 
-\begin{verbatim}
+#+begin_example
   L2.1 isdivisor(x,z) if there exists a w not greater than x such that
        isproduct(z,w,x) 
   L2.2 iscommutative(x,y,z) if isdivisor(x,z) and isdivisor(y,z)
@@ -5401,7 +5401,7 @@ integers.
   L2.4 isnotcommondiv(x,y,z) if isnotdiv(x,z) or isnotdiv(y,z)
   L2.5 isnotdiv(x,z) if for all w from 1 to x isnotproduct(z,w,x)
   L2.6 isnotproduct(z,w,x) if isproduct(z,w,y) and differsfrom(y,x)
-\end{verbatim}
+#+end_example
 
 This program is a great deal more complicated than the requirements
 specification in the preious section. The obvious reason is that the
@@ -5416,7 +5416,7 @@ number.
 When restricted from using disjunction and negation the algebraic
 equations have to be derived as needed by mathematical reasoning from
 the whole of the original specification. For gcd we see
-\begin{verbatim}
+#+begin_example
   L3.1 The greatest divisor of x is x. So the greatest common divisor
        of x and x is also x.
           x = gcd(x,x) for all x
@@ -5429,7 +5429,7 @@ the whole of the original specification. For gcd we see
   L3.3 Every common divisor of x and y is also a common divisor of
        y and x.
           gcd(x,y) = gcd(y,x) for all x,y
-\end{verbatim}
+#+end_example
 
 But are the laws a {\sl complete} specification, in the sense that
 there is aonly one function satisfying them? Or do we need to look for
@@ -5662,23 +5662,23 @@ recurssive program for subset. For the Euclidean algorithm, however,
 the program is significantly more efficient than the
 specification. Here we use functional notation for the sake of
 clarity.
-\begin{verbatim}
+#+begin_example
 (a) gcd(x y) = z if z divides x
                  and z divides y
                  and For all u [u <= z if u divides x
                                        and u divides y]
-\end{verbatim}
+#+end_example
 
 Notice that, like the definition of subset, this definition is
 expressed in the extended Horn clause subset of logic. However, the
 Euclidean algorithm for gcd can be expressed in Horn cluase form:
-\begin{verbatim}
+#+begin_example
 (a) gcd(x y) = z if x divides y
     gcd(x y) = z if x <= y
                  and x divides y with remainder r
                  and r != 0
                  and gcd(r x) = z
-\end{verbatim}
+#+end_example
 
 It can be shown that the specification  (in iff form together with
 auxiliary properties of `divides', '<=', and the axioms of equality)
@@ -5692,15 +5692,15 @@ Note:
 relational notation as Gcd(x y z)
 \item By exploiting functional notation, the second clause of the
 program can be written more compactly as
-\begin{verbatim}
+#+begin_example
    gcd(x y) = gcd(r x) if x <= y
                        and x divides y with remainder r
                        and r != 0
-\end{verbatim}
+#+end_example
 \item For the sake of completeness we need to add a third clause
-\begin{verbatim}
+#+begin_example
    gcd(x y) = gcd(y x) if y <= x
-\end{verbatim}
+#+end_example
 \end{enumerate}
 
 (from the questions): In this gcd example Kowalski seemed to
@@ -5924,7 +5924,7 @@ So division is easy, just ``push it'' over the field, like division in
 base, or multi precision division. Algorithm, Knuth ``The Art of
 Computer Programming Vol 4'' and the others.
 
-\begin{verbatim}
+#+begin_example
 # input: coefficients of polynomials as a lists u, v != 0
 # in order u[0] = free coefficient of u(x), ....
 # returns polynomials q, r such that u = vq + r(rest)
@@ -5939,24 +5939,24 @@ def poly_divide(u, v)
     for j in range(n + k - 1, k - 1, -1):
       u[j] = u[j] - q[k] * v[j - k]
   return q, u[:n]
-\end{verbatim}
+#+end_example
 
 Having division, we can compute the Great Common Divisor, showing that
 Euclidean Domain is larger than expected.
 
-\begin{verbatim}
+#+begin_example
 def poly_gcd(u, v):
   if not any(v): return u
   else: return poly_gcd(v,poly_mod(u,v))
-\end{verbatim}
+#+end_example
 
 $poly\_mod$ it's just a rest returned from division algorithm.
 
-\begin{verbatim}
+#+begin_example
 # a polynomial u modulo v
 def poly_mod(u, v):
   return poly_divide(u,v)[1]
-\end{verbatim}
+#+end_example
 
 \subsection{Makkai \cite{Makk07}}
 
@@ -5978,7 +5978,7 @@ greatest integer that divides both $x$ and $y$, that is
 \[gcd(x,y) = max\{u:u~\vert~x and u~\vert~y\}\]
 
 For instance, $gcd(9,12)=3$ and $gcd(12,25)=1$. The program is
-\begin{verbatim}
+#+begin_example
        input(x,y)
 start:
 more:  if x = y
@@ -5990,7 +5990,7 @@ more:  if x = y
                      then y <- y - x
                           goto reducey
             goto more
-\end{verbatim}
+#+end_example
 
 This program is motivated by the following properties of the $gcd$: 
 \[\begin{array}{l}
@@ -6274,9 +6274,9 @@ will present {\sl dependent types} which achieve this, while keeping
 the proof-as-program correspondence. For instance the euclidean
 division, which computes the quotient and remainder of two integers is
 usually given the type
-\begin{verbatim}
+#+begin_example
    int -> int -> int * int
-\end{verbatim}
+#+end_example
 stating that it takes two integers as argument and returns a pair of
 integer. This typing is very weak, in the sense that there are many
 different functions which also have this type. With dependent types,
@@ -6412,15 +6412,15 @@ correctness logics for reasoning about function definitions.
 
 Consider Euclid's Algorithm, which is defined by recursion, for
 computing the Greatest Common Divisor (GCD) of two natural numbers:
-\begin{verbatim}
+#+begin_example
    gcd(0,n) = n
    gcd(m,n) = gcd(n mod m,m)       for m > 0
-\end{verbatim}
+#+end_example
 
 Here it is in Standard ML as a functional program:
-\begin{verbatim}
+#+begin_example
    fun gcd(m,n) = if m=0 then n else gcd(n mod m,m);
-\end{verbatim}
+#+end_example
 
 \subsection{Sanuki, Inaba, and Sasaki \cite{Sanu15}}
 
@@ -6482,7 +6482,7 @@ with polymorphically order-sorted data types.
 Chapter 5
 
 *** Strub, Pierre Yves
-\begin{verbatim}
+#+begin_example
 Formal Proofs and Decision Procedures  (Strub, Pierre Yves)
 htps://www.youtube.com/watch?v=YgOoDNIT8A8
 year = "2016"
@@ -6595,7 +6595,7 @@ Calculus of Presburger Constructions
 	   
 
 
-\end{verbatim}
+#+end_example
 
 \subsection{Sutor \cite{Suto87}} 
 

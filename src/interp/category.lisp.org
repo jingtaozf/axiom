@@ -1589,17 +1589,17 @@ element of the vector returned by [[|Algebra|]].  The point of this
 overwrite is at the following form of [[|JoinInner|]] from
 [[(int/interp/category.clisp)]]
 
-\begin{verbatim}
+#+begin_example
  (SETELT |$NewCatVec| 4 (CONS |c| (CONS |FundamentalAncestors| (CONS
  (CADDR (ELT |$NewCatVec| 4)) NIL))))
-\end{verbatim}
+#+end_example
 
 called from [[|Algebra;|]] [[(int/algebra/ALGEBRA.nrlib/code.lsp)]] through 
 
-\begin{verbatim}
+#+begin_example
 (|Join| (|Ring|) (|Module| (QUOTE |t#1|)) (|mkCategory| (QUOTE
 |domain|) (QUOTE (((|coerce| ($ |t#1|)) T))) NIL (QUOTE NIL) NIL))
-\end{verbatim}
+#+end_example
 
 I haven't parsed [[|JoinInner|]] yet, but my guess is that there is a
 copy-seq in there which is not getting executed in the assignment of
@@ -1609,11 +1609,11 @@ The original code failed to copy the NewCatVec before updating
 it. This code from macros.lisp\cite{1} checks whether the array is
 adjustable.
 
-\begin{verbatim}
+#+begin_example
 (defun lengthenvec (v n)
   (if (adjustable-array-p v) (adjust-array v n)
     (replace (make-array n) v)))
-\end{verbatim}
+#+end_example
 At least in GCL, the code for lengthenvec need not copy the vec to a
 new location. In this case the FundamentalAncesters array is adjustable
 and in GCL the adjust-array need not, and in this case, does not do a 
