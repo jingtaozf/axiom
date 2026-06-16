@@ -190,22 +190,6 @@ def convert_crossrefs(line):
     line = re.sub(r'\\pageref\{([^{}]+)\}', r'[[#\1][\1]]', line)
     return line
 
-def convert_labels_refs_footnotes(line, footnote_counter):
-    """Convert label, ref, footnote to org equivalents."""
-    # \label{X} → org comment # label: X
-    line = re.sub(r'\\label\{([^{}]+)\}', r'# label: \1', line)
-    # \ref{X} → [[#X][X]]
-    line = re.sub(r'\\ref\{([^{}]+)\}', r'[[#\1][\1]]', line)
-    # \pageref{X} → [[#X][X]] (already in Phase 5, but belt-and-suspenders)
-    line = re.sub(r'\\pageref\{([^{}]+)\}', r'[[#\1][\1]]', line)
-    # \footnote{X} → [fn:N]
-    m = re.search(r'\\footnote\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}', line)
-    if m:
-        footnote_counter[0] += 1
-        fn_num = footnote_counter[0]
-        line = line[:m.start()] + f'[fn:{fn_num}]' + line[m.end():]
-    return line
-
 def cleanup_layout(line):
     """Remove inline layout commands that have no content."""
     # \hfill at end of line (but keep \\ line break marker)
@@ -227,15 +211,42 @@ def cleanup_layout(line):
     line = line.replace('\\allowbreak', '')
     return line
 
+def convert_list_envs(lines):
+    """Convert itemize/enumerate blocks to org lists."""
+    NL = chr(10)
+    result = []
+    list_type = None
+    for idx, line, region in lines:
+        stripped = line.strip()
+        if region != 'prose':
+            result.append((idx, line, region))
+            continue
+        if r'\begin{itemize}' in stripped:
+            list_type = 'itemize'
+            continue
+        if r'\begin{enumerate}' in stripped:
+            list_type = 'enumerate'
+            continue
+        if r'\end{itemize}' in stripped or r'\end{enumerate}' in stripped:
+            list_type = None
+            result.append((idx, NL, 'prose'))
+            continue
+        if list_type and stripped.startswith(r'\item'):
+            content = stripped[5:].strip()
+            prefix = '- ' if list_type == 'itemize' else '1. '
+            result.append((idx, prefix + content + NL, 'prose'))
+            continue
+        result.append((idx, line, region))
+    return result
+
 def process_file(filepath, dry_run=False, phases=None):
     """Process a single .org file through cleanup phases."""
     if phases is None:
-        phases = {1, 2, 3, 4, 5, 6, 7}
+        phases = {1, 2, 3, 4, 5, 6}
     with open(filepath, 'r', errors='replace') as f:
         original_lines = f.readlines()
     lines = list(original_lines)
     changes = {'total': 0, 'by_phase': {}}
-    footnote_counter = [0]  # mutable counter for footnotes
 
     # Phase 1: Preamble (only at file start, before any block)
     if 1 in phases:
@@ -257,10 +268,13 @@ def process_file(filepath, dry_run=False, phases=None):
         changes['total'] += phase_changes
 
     # Phases 2-6: Apply to prose lines only
-    if any(p in phases for p in [2, 3, 4, 5, 6, 7]):
+    if any(p in phases for p in [2, 3, 4, 5, 6, 7, 8]):
         classified = list(classify_lines(lines))
+        # Phase 8: List environments (pre-process before line-by-line)
+        if 8 in phases:
+            classified = convert_list_envs(classified)
         new_lines = []
-        phase_counts = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0}
+        phase_counts = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
         for i, line, region in classified:
             if region != 'prose':
                 new_lines.append(line)
@@ -294,11 +308,6 @@ def process_file(filepath, dry_run=False, phases=None):
             if 5 in phases:
                 r = convert_crossrefs(result)
                 if r != result: phase_counts[5] += 1
-                result = r
-            # Phase 7: Labels, refs, footnotes
-            if 7 in phases:
-                r = convert_labels_refs_footnotes(result, footnote_counter)
-                if r != result: phase_counts[7] += 1
                 result = r
             new_lines.append(result)
         lines = new_lines

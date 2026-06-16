@@ -17,14 +17,13 @@ working with a strongly typed language and a library containing over
 1100 Categories, Domains, and Packages.
 
 The Axiom interpreter is unusual because 
-\begin{itemize}
-\item Axiom has an infinite number of datatypes and packages
-\item each generic operation generally has an infinite number of
+- Axiom has an infinite number of datatypes and packages
+- each generic operation generally has an infinite number of
 interpretations
-\item datatypes and packages are instantiated dynamically in response
+- datatypes and packages are instantiated dynamically in response
 to user input, and
-\item operation interpretation is done by pattern matching on modemaps.
-\end{itemize}
+- operation interpretation is done by pattern matching on modemaps.
+
 
 The design philosophy is that the interpreter language equals the
 compiler language minus the constraints. 
@@ -736,31 +735,30 @@ in determining that the expression $x+1/2$ evaluates to an object of the
 datatype *Polynomial(RationalNumber)*. We assume $x$ has not 
 previously been given a value.
 
-\begin{itemize}
-\item Choose a default datatype of *Symbol* for $x$
-\item Choose the datatype of *Integer* for 1 and 2
-\item Look for an operation ``$/$'' in *Integer* that has two
+- Choose a default datatype of *Symbol* for $x$
+- Choose the datatype of *Integer* for 1 and 2
+- Look for an operation ``$/$'' in *Integer* that has two
 arguments, each an integer. It is not found.
-\item Start a general search in the library for an operation ``$/$''
+- Start a general search in the library for an operation ``$/$''
 with two *Integer* arguments. One is found in 
 *RationalNumber* and applied
-\item Look for a ``$+$'' that takes a *Symbol* and a 
+- Look for a ``$+$'' that takes a *Symbol* and a
 *RationalNumber*. None is found.
-\item Force $x$ to an object of type *Polynomial(Integer)*
-\item Look for a ``$+$'' that takes a *Polynomial(Integer)* and
+- Force $x$ to an object of type *Polynomial(Integer)*
+- Look for a ``$+$'' that takes a *Polynomial(Integer)* and
 a *RationalNumber*. None is found.
-\item Start a general search in the library for ``$+$'' operations.
+- Start a general search in the library for ``$+$'' operations.
 The only ones found take two arguments, each of the same datatype.
 Resolve *Polynomial(Integer)* and *RationalNumber* to get the
 datatype *Polynomial(RationalNumber)*
-\item Do the coercions
+- Do the coercions
 #+begin_example
    Polynomial(Integer) -> Polynomial(RationalNumber)
    RationalNumber -> Polynomial(RationalNumber)
 #+end_example
-\item Apply the ``$+$'' in the datatype *Polynomial(RationalNumber)*
+- Apply the ``$+$'' in the datatype *Polynomial(RationalNumber)*
 and return the result
-\end{itemize}
+
 
 ** Acknowledgement
 
@@ -973,61 +971,59 @@ requests changing to a different frame.
 The interpreter information is kept in a frame which is a 10 part data
 structure of the form (see [[#emptyInterpreterFrame][emptyInterpreterFrame]]).
 The parts of a frame and their initial, default values are:
-\begin{enumerate}
-\item *\$interpreterFrameName*\refto{interpreterFrameName}, 
+1. *\$interpreterFrameName*\refto{interpreterFrameName},
 a string, is the name of the current frame. 
-\item *\$InteractiveFrame*\refto{InteractiveFrame}
+1. *\$InteractiveFrame*\refto{InteractiveFrame}
 which defaults to ((nil))
-\item *\$IOindex*\refto{IOindex}
+1. *\$IOindex*\refto{IOindex}
 also known as the step number, which defaults to 1
-\item *\$HiFiAccess*\refto{HiFiAccess}
-\item *\$HistList*\refto{HistList}
-\item *\$HistListLen*\refto{HistListLen}
-\item *\$HistListAct*\refto{HistListAct}
-\item *\$HistRecord*\refto{HistRecord}
-\item *\$internalHistoryTable*\refto{internalHistoryTable} 
+1. *\$HiFiAccess*\refto{HiFiAccess}
+1. *\$HistList*\refto{HistList}
+1. *\$HistListLen*\refto{HistListLen}
+1. *\$HistListAct*\refto{HistListAct}
+1. *\$HistRecord*\refto{HistRecord}
+1. *\$internalHistoryTable*\refto{internalHistoryTable}
 which defaults to nil 
-\item {\bfref{localExposureDataDefault}} is a copy of the current 
+1. {\bfref{localExposureDataDefault}} is a copy of the current
 local exposure data
-\end{enumerate}
+
 
 There are a set of functions to manipulate frames.
 The internal set of frame functions are
-\begin{itemize}
-\item {\bfref{initializeInterpreterFrameRing}} creates the original
+- {\bfref{initializeInterpreterFrameRing}} creates the original
 frame ring, inserts an initial frame, and updates all the global
 variables from the initial frame.
-\item {\bfref{emptyInterpreterFrame}} creates a new, empty frame.
-\item {\bfref{createCurrentInterpreterFrame}} collects the environment
+- {\bfref{emptyInterpreterFrame}} creates a new, empty frame.
+- {\bfref{createCurrentInterpreterFrame}} collects the environment
 into a frame.
-\item {\bfref{updateFromCurrentInterpreterFrame}} sets all of the
+- {\bfref{updateFromCurrentInterpreterFrame}} sets all of the
 global variables from the current frame.
-\item {\bfref{frameEnvironment}} returns the frameInteractive
+- {\bfref{frameEnvironment}} returns the frameInteractive
 component of a named frame or a new, empty environment.
-\item {\bfref{findFrameInRing}} given the name, find the named frame
-\item {\bfref{updateCurrentInterpreterFrame}} collects the normal 
+- {\bfref{findFrameInRing}} given the name, find the named frame
+- {\bfref{updateCurrentInterpreterFrame}} collects the normal
 contents of the world into a frame object, places it first on the frame 
 list, and then sets the current values of the world from the frame object. 
-\item {\bfref{nextInterpreterFrame}} updates the current frame to make 
+- {\bfref{nextInterpreterFrame}} updates the current frame to make
 sure all of the current information is recorded. If there are more frame 
 elements in the list then this will destructively move the current frame
 to the end of the list, that is, assume the frame list reads (1 2 3)
 this function will destructively change it to (2 3 1).
-\item {\bfref{previousInterpreterFrame}} moves to the previous 
+- {\bfref{previousInterpreterFrame}} moves to the previous
 frame in the ring.
-\item {\bfref{changeToNamedInterpreterFrame}} change to the named
+- {\bfref{changeToNamedInterpreterFrame}} change to the named
 frame.
-\item {\bfref{addNewInterpreterFrame}} update the current frame,
+- {\bfref{addNewInterpreterFrame}} update the current frame,
 initialize the history, make a new empty frame, and initialize all of the
 global variables from the empty frame.
-\item {\bfref{closeInterpreterFrame}} when there is more than one
+- {\bfref{closeInterpreterFrame}} when there is more than one
 frame, delete the current frame and initialize all the global variables
 from the next frame in the ring.
-\item {\bfref{displayFrameNames}} print all the frame names and
+- {\bfref{displayFrameNames}} print all the frame names and
 indicate which one is the current frame.
-\item {\bfref{importFromFrame}} imports items from a different
+- {\bfref{importFromFrame}} imports items from a different
 frame into the current frame
-\end{itemize}
+
 
 ** Frame Access Macros
 
@@ -1807,17 +1803,16 @@ The parameter codes look like \%1, \%2b, \%3p, \%4m, \%5bp, \%6s where the
 digit is the parameter number and the letters following indicate
 additional formatting. You can indicate as many additional formatting
 qualifiers as you like, to the degree they make sense. 
-\begin{itemize}
-\item The ``p'' code means to call prefix2String on the parameter, 
+- The ``p'' code means to call prefix2String on the parameter,
 a standard way of printing abbreviated types.  
-\item The ``P'' operator maps prefix2String over its arguments.  
-\item The ``o'' operation formats the argument as an operation name.  
-\item The ``b'' means to print that parameter in a bold (bright) font. 
-\item The ``c'' means to center that parameter on a new line.
-\item The ``r'' means to right justify (ragged left) the argument.
-\item The ``f'' means that the parameter is a list [fn, :args]
+- The ``P'' operator maps prefix2String over its arguments.
+- The ``o'' operation formats the argument as an operation name.
+- The ``b'' means to print that parameter in a bold (bright) font.
+- The ``c'' means to center that parameter on a new line.
+- The ``r'' means to right justify (ragged left) the argument.
+- The ``f'' means that the parameter is a list [fn, :args]
 and that ``fn'' is to be called on ``args'' to get the text. 
-\end{itemize}
+
 
 \defdollar{msgAlist}
 #+NAME: initvars
@@ -3283,35 +3278,34 @@ and builds the lambda expression in the variable *newdef*
 #+end_example
 The *fn* variable is an uninterned gensym name that is unique.
 The *ll* variable is a list of 
-\begin{itemize}
-\item tracename -- The spad internal name for a function from a
+- tracename -- The spad internal name for a function from a
 domain which can be found in the compiler output files. 
 e.g. Polynomial.univariate.21
-\item (when g4 'macro) -- most likely nil
-\item tracecode -- a string controlling what tracing will occur 
+- (when g4 'macro) -- most likely nil
+- tracecode -- a string controlling what tracing will occur
 where tracecode means
 #+begin_example
   ; 0:        Caller (0,1)           print caller if 1
   ; 1:        Value (0,1)            print value if 1
   ; 2...:     Arguments (0,...,9)    stop if 0; print ith if i; all if 9
 #+end_example
-\item countnam -- 
-\item timernam --
-\item before -- An expression to execute before executing the function.
+- countnam --
+- timernam --
+- before -- An expression to execute before executing the function.
 It defaults to 
 #+begin_example
   (eq nil nil)
 #+end_example
-\item after --
-\item condition --
-\item break --
-\item modemap -- The modemap for the function. For Polynomial.variables.15
+- after --
+- condition --
+- break --
+- modemap -- The modemap for the function. For Polynomial.variables.15
 it shows up as
 #+begin_example
   ((List (Symbol)) (Polynomial (Integer)))
 #+end_example
-\item (list 'quote t) --
-\end{itemize}
+- (list 'quote t) --
+
 # calls: trace3 -> untrace2
 # calls: trace3 -> options2uc
 # calls: trace3 -> isFunctor
@@ -8727,11 +8721,10 @@ itself and never exits. It is the primary Read-Eval-Print-Loop (REPL).
 
 \bfref{intloopReadConsole}
 reads the next line and calls one of three kinds of processors
-\begin{enumerate}
-\item \bfref{intnplisp} to handle )lisp input
-\item \bfref{ncloopCommand} to handle )command input
-\item \bfref{intloopProcessString} to handle everything else
-\end{enumerate}
+1. \bfref{intnplisp} to handle )lisp input
+1. \bfref{ncloopCommand} to handle )command input
+1. \bfref{intloopProcessString} to handle everything else
+
 
 There are only two ways out of the REPL, either using the command
 "*)fin*" which drops into lisp or closing the *standard-input* stream.
@@ -14346,25 +14339,24 @@ communication with the session manager code, which is a separate process
 running in parallel. 
 
 We read a line from standard input.
-\begin{itemize}
-\item If it is a null line then we exit Axiom.
-\item If it is a zero length line we prompt and recurse
-\item If \$dalymode and open-paren we execute lisp code, prompt and recurse
+- If it is a null line then we exit Axiom.
+- If it is a zero length line we prompt and recurse
+- If \$dalymode and open-paren we execute lisp code, prompt and recurse
 The \$dalymode will interpret any input that begins with an open-paren
 as a lisp expression rather than Axiom input. This is useful for debugging
 purposes when most of the input lines will be lisp. Setting \$dalymode
 non-nil will certainly break user expectations and is to be used with 
 caution.
-\item If it is ``)fi'' or ``)fin'' we drop into lisp. Use the (restart)
+- If it is ``)fi'' or ``)fin'' we drop into lisp. Use the (restart)
       function to return to the interpreter loop.
-\item If it starts with ``)'' we process the command, prompt, and recurse
-\item If it is a command then we remember the current line, process the
+- If it starts with ``)'' we process the command, prompt, and recurse
+- If it is a command then we remember the current line, process the
       command, prompt, and recurse.
-\item If the input has a trailing underscore (Axiom line-continuation)
+- If the input has a trailing underscore (Axiom line-continuation)
       then we cut off the continuation character and pass the truncated
       string to ourselves, prompt, and recurse
-\item otherwise we process the input, prompt, and recurse.
-\end{itemize}
+- otherwise we process the input, prompt, and recurse.
+
 Notice that all but two paths (a null input or a ``)fi'' or a ``)fin'')
 will end up as a recursive call to ourselves.
 
@@ -14910,14 +14902,13 @@ $current-directory = "/research/test/"
 
 \defun{setCurrentLine}{setCurrentLine}
 Remember the current line. The cases are:
-\begin{itemize}
-\item If there is no \$currentLine set it to the input
-\item Is the current line a string and the input a string?
+- If there is no \$currentLine set it to the input
+- Is the current line a string and the input a string?
       Make them into a list
-\item Is \$currentLine not a cons cell? Make it one.
-\item Is the input a string? Cons it on the end of the list.
-\item Otherwise stick it on the end of the list
-\end{itemize}
+- Is \$currentLine not a cons cell? Make it one.
+- Is the input a string? Cons it on the end of the list.
+- Otherwise stick it on the end of the list
+
 # usesdollar: setCurrentLine -> currentLine
 # label: setCurrentLine
 \sig{setCurrentLine}{String}{List(String)}
@@ -16385,13 +16376,12 @@ Axiom ``zips'' a function together with two delays into a delay.
 
 \defun{incLude}{incLude}
 This function takes
-\begin{enumerate}
-\item *eb* -- in Integer
-\item *ss* -- a list of strings
-\item *ln* -- an Integer
-\item *ufos* -- a list of strings
-\item *states* -- a list of integers
-\end{enumerate}
+1. *eb* -- in Integer
+1. *ss* -- a list of strings
+1. *ln* -- an Integer
+1. *ufos* -- a list of strings
+1. *states* -- a list of integers
+
 and constructs a call to \bfref{Delay}.
 
 # calls: incLude -> Delay
@@ -22791,16 +22781,15 @@ The expression nodes:
 
 Special cases of expression nodes are:
 
-\begin{itemize}
-\item Application. The Op parameter is one of
+- Application. The Op parameter is one of
  =and, or, Y, |, {}, [], {||}, [||]=
-\item DeclPart. The comment is attached to all signatutres in 
+- DeclPart. The comment is attached to all signatutres in
  Typing, Import, Definition, Sequence, DWhere, Macro nodes
-\item EnSequence. This is either a Tuple or Sequence depending on the
+- EnSequence. This is either a Tuple or Sequence depending on the
 argument
-\item Literal. One of integer symbol expression one zero char string float
+- Literal. One of integer symbol expression one zero char string float
 of the form ('expression expr position)
-\end{itemize}
+
 
 ** Structure handlers
 
@@ -36715,13 +36704,12 @@ o )undo
 \fnref{undo}}
 
 History recording is done in two different ways:
-\begin{itemize}
-\item all changes in variable bindings (i.e. previous values) are
+- all changes in variable bindings (i.e. previous values) are
 written to =$HistList=, which is a circular list
-\item all new bindings (including the binding to =%=) are written to a
+- all new bindings (including the binding to =%=) are written to a
 file called histFileName()
 one older session is accessible via the file =$oldHistFileName()=
-\end{itemize}
+
 
 ** Initialized history variables
 The following global variables are used:
@@ -46321,43 +46309,41 @@ This is the signature pattern for the modemap, it is of the form:
 Environments associate properties with atoms.
 
 Some common properties are:
-\begin{itemize}
-\item *modeSet:*
+- *modeSet:*
 During interpretation we build a modeSet property for each node in
 the expression.  This is (in theory) a list of all the types
 possible for the node.  In the current implementation these
 modeSets always contain a single type.
-\item *value:*
+- *value:*
 Value properties are always triples.  This is where the values of
 variables are stored.  We also build value properties for internal
 nodes during the bottom up phase.
-\item *mode:*
+- *mode:*
 This is the declared type of an identifier.
-\end{itemize}
+
 
 Frequently used global variables:
-\begin{itemize}
-\item *=$genValue=*: if true then evaluate generated code,
+- *=$genValue=*: if true then evaluate generated code,
 otherwise leave code unevaluated.  If =$genValue= is false then
 we are compiling.
-\item *=$op=*: name of the top level operator 
+- *=$op=*: name of the top level operator
 (unused except in map printing)
-\item *=$mapList=*: list of maps being type analyzed, used in
+- *=$mapList=*: list of maps being type analyzed, used in
 recursive map type anlysis.
-\item *=$compilingLoop=*: true when compiling a loop body,
+- *=$compilingLoop=*: true when compiling a loop body,
 used to control nesting level of interp-only loop CATCH points
-\item *=$interpOnly=*: true when in interpret only mode, used
+- *=$interpOnly=*: true when in interpret only mode, used
 to call alternate forms of COLLECT and REPEAT.
-\item *=$inCOLLECT=*: true when compiling a COLLECT, used
+- *=$inCOLLECT=*: true when compiling a COLLECT, used
 only for hacked stream compiler.
-\item *=$StreamFrame=*: used in printing streams, it is the
+- *=$StreamFrame=*: used in printing streams, it is the
 environment where local stream variables are stored
-\item *=$declaredMode=*: Weak type propagation for symbols,
+- *=$declaredMode=*: Weak type propagation for symbols,
 set in upCOERCE and upLET.  This variable is used to determine the
 alternate polynomial types of Symbols.
-\item *=$localVars=*: list of local variables in a map body
-\item *=$MapArgumentTypeList=*: hack for stream compilation
-\end{itemize}
+- *=$localVars=*: list of local variables in a map body
+- *=$MapArgumentTypeList=*: hack for stream compilation
+
 
 \defun{evalDomain}{evalDomain}
 # calls: evalDomain -> sayMSG
@@ -47504,24 +47490,22 @@ generated.
 what is generated in these functions.)
 
 These functions are required to do two things:
-\begin{enumerate}
-\item do a putValue on the operator vector with the computed value
+1. do a putValue on the operator vector with the computed value
      of the node, which is a triple.  This is usually done in the
      eval functions.
-\item do a putModeSet on the operator vector with a list of the
+1. do a putModeSet on the operator vector with a list of the
      computed type of the node.  This is usually done in the
      up functions.
-\end{enumerate}
+
 
 There are several special modes used in these functions:
-\begin{enumerate}
-\item Void is the mode that should be used for all statements
+1. Void is the mode that should be used for all statements
      that do not otherwise return values, such as declarations,
      loops, IF-THEN's without ELSE's, etc..
-\item =$NoValueMode= and =$ThrowAwayMode= used to be used 
+1. =$NoValueMode= and =$ThrowAwayMode= used to be used
       in situations where Void is now used, and are being phased out 
       completely.
-\end{enumerate}
+
 
 \defun{getAndEvalConstructorArgument}{getAndEvalConstructorArgument}
 # calls: getAndEvalConstructorArgument -> getValue
@@ -48641,8 +48625,7 @@ This function is passed the name of an image that will be saved.
 The saved image contains all of the loaded functions.
 
 This is used in the src/interp/Makefile.pamphlet in three places:
-\begin{itemize}
-\item creating depsys, an image for compiling axiom.
+- creating depsys, an image for compiling axiom.
 
 Some of the Common Lisp code we compile uses macros which
 are assumed to be available at compile time. The *DEPSYS*
@@ -48653,7 +48636,7 @@ to compile from Common Lisp to machine dependent code.
 DEPSYS=${OBJ}/${SYS}/bin/depsys
 #+end_example
 
-\item creating savesys, an image for running axiom.
+- creating savesys, an image for running axiom.
 
 Once we've compile all of the Common Lisp files we fire up
 a clean lisp image called *LOADSYS*, load all of the
@@ -48667,7 +48650,7 @@ AXIOMSYS= ${MNT}/${SYS}/bin/AXIOMsys
 #+end_example
 
 
-\item creating debugsys, an image with all interpreted functions loaded.
+- creating debugsys, an image with all interpreted functions loaded.
 
 Occasionally we need to really get into the system internals.
 The best way to do this is to run almost all of the lisp code
@@ -48680,7 +48663,7 @@ file and it will show up here.
 #+begin_example
 DEBUGSYS=${OBJ}/${SYS}/bin/debugsys
 #+end_example
-\end{itemize}
+
 
 \subsection*{Saving the image under SBCL}
 
@@ -48880,20 +48863,19 @@ properties like "modemaps" but the interpreter will never ask for
 this information.
 
 So, the design is as follows:
-\begin{itemize}
-\item the modemap.daase needs to be built. this is done by doing
+- the modemap.daase needs to be built. this is done by doing
 a )library on ALL of the nrlib files that are going into the system.
 this will bring in "modemap" information and add it to the
 ,*modemaps-hash* hashtable.
-\item database build proceeds, accessing the "modemap" property
+- database build proceeds, accessing the "modemap" property
 from the hashtables. once this completes this information is never
 used again.
-\item the interp.daase database is built. this contains only the
+- the interp.daase database is built. this contains only the
 information necessary to run the interpreter. note that during the
 running of the interpreter users can extend the system by do a
 )library on a new nrlib file. this will cause fields such as "modemap"
 to be read and hashed.
-\end{itemize}
+
 
 Each constructor (e.g. LIST) had one library directory (e.g. LIST.nrlib). 
 This directory contained a random access file called the index.kaf file. 
@@ -48939,19 +48921,18 @@ list. this also has the advantage that eq hash tables no longer
 need to be moved during garbage collection.
 
 There are 3 potential speedups that could be done. 
-\begin{itemize}
-\item the best would be to use the value cell of the symbol rather than the
+- the best would be to use the value cell of the symbol rather than the
 property list but i'm unable to determine all uses of the
 value cell at the present time.
-\item a second speedup is to guarantee that the property list is
+- a second speedup is to guarantee that the property list is
 a single item, namely the database structure. this removes
 an assoc but leaves one open to breaking the system if someone
 adds something to the property list. this was not done because
 of the danger mentioned.
-\item a third speedup is to make the getdatabase call go away, either
+- a third speedup is to make the getdatabase call go away, either
 by making it a macro or eliding it entirely. this was not done
 because we want to keep the flexibility of changing the database forms.
-\end{itemize}
+
 
 The new design does not use hash tables. the database structure
 contains an entry for each item that used to be in a hash table.
@@ -49950,15 +49931,14 @@ For now in NRUNTIME do database update only if forced
 
 \defun{make-databases}{Make new databases}
 Making new databases consists of:
-\begin{enumerate}
-\item reset all of the system hash tables
-\item set up Union, Record and Mapping
-\item map )library across all of the system files (fills the databases)
-\item loading some normally autoloaded files
-\item making some database entries that are computed (like ancestors)
-\item writing out the databases
-\item write out 'warm' data to be loaded into the image at build time
-\end{enumerate}
+1. reset all of the system hash tables
+1. set up Union, Record and Mapping
+1. map )library across all of the system files (fills the databases)
+1. loading some normally autoloaded files
+1. making some database entries that are computed (like ancestors)
+1. writing out the databases
+1. write out 'warm' data to be loaded into the image at build time
+
 
 Note that this process should be done in a clean image
 followed by a rebuild of the system image to include
@@ -54923,37 +54903,34 @@ objects. First we describe the library API and then we implement the
 functions used by Axiom.
 ** The Structure of the API
 The library and its API are logically structured in four parts:
-\begin{itemize} 
-\item Functions that deal with /devices/, the abstraction
+- Functions that deal with /devices/, the abstraction
 from which OpenMath objects are read and written to.
-\item Functions that read from and write to OpenMath devices. These functions 
+- Functions that read from and write to OpenMath devices. These functions
 use a simple model that read and write tokens.
-\item Functions that create I/O  structures to be used by devices, so that,
+- Functions that create I/O  structures to be used by devices, so that,
 for example, an OpenMath object can be read from a file or a socket. This part
 is extensible by the user. 
-\item Functions that deal with interprocess communication.
-\end{itemize} 
+- Functions that deal with interprocess communication.
+
 
 ** OpenMath Expressions
 
 *** Expressions
 
 The library understands the following kinds of basic OpenMath expressions:
-\begin{itemize} 
-\item integers
-\item double precision  floating-point numbers (64 bits, following IEEE 754)
-\item byte arrays
-\item character strings
-\item symbols
-\item variables
-\end{itemize} 
+- integers
+- double precision  floating-point numbers (64 bits, following IEEE 754)
+- byte arrays
+- character strings
+- symbols
+- variables
+
 and the four kinds of constructions: 
-\begin{itemize} 
-\item applications $e_0(e_1, ... e_n)$
-\item errors $s(e_1, ... e_n)$
-\item binders $e_1, (v_1, ... v_n), e_2 $
-\item attributed expressions $[s_1 e_1, ... s_n e_n] e$
-\end{itemize} 
+- applications $e_0(e_1, ... e_n)$
+- errors $s(e_1, ... e_n)$
+- binders $e_1, (v_1, ... v_n), e_2 $
+- attributed expressions $[s_1 e_1, ... s_n e_n] e$
+
 where $e_i$ are OpenMath expressions, $v_i$ are OpenMath variables and $s$ and
 $s_i$ are OpenMath symbols. 
 
@@ -54972,13 +54949,12 @@ written sequentially. The library views this sequence as a stream of
 tokens.  Expressions are linearized in a way that looks like Lisp with
 typed parenthesis. For example, the linearization of the application
 of $S$ to $E_1... E_n$ is:
-\begin{itemize} 
-\item indicating that this is an application (a ``begin application'' token)
-\item linearizing $S$
-\item linearizing $E_1$,... $E_n$
-\item indicating that all arguments have been given (an ``end application''
+- indicating that this is an application (a ``begin application'' token)
+- linearizing $S$
+- linearizing $E_1$,... $E_n$
+- indicating that all arguments have been given (an ``end application''
 token) 
-\end{itemize} 
+
 
 The other constructions are linearized the same way (each one with its
 own begin and end tokens).  Note that there is no explicit arity
@@ -54989,15 +54965,14 @@ To give attributes to an expression, the attributes and their
 associated values are put before the expression. To give the
 attributes $a_i$ with values $v_i$ (where $a_i$ are symbols and $v_i$
 are OpenMath expressions) to an expression $E$ the process is:
-\begin{itemize} 
-\item put a ``begin attributed expression'' token
-\item put a ``begin attribute pairs'' token
-\item put the symbol $a_1$ followed by the linearization of $v_1$ /etc/
-\item put an ``end attribute pairs'' token
-\item linearize $E$
-\item put an ``end attributed expression'' token
+- put a ``begin attributed expression'' token
+- put a ``begin attribute pairs'' token
+- put the symbol $a_1$ followed by the linearization of $v_1$ /etc/
+- put an ``end attribute pairs'' token
+- linearize $E$
+- put an ``end attributed expression'' token
 
-\end{itemize} 
+
 
 Decoding is done by first querying the type of the next OpenMath token and
 then invoking the right function to get this particular kind of token.
@@ -55041,13 +55016,11 @@ devices.
 
 A device is created with the following function, given an encoding and
 an appropriate I/O method:
-\begin{itemize} 
-\item =OMdev OMmakeDevice(OMencodingType encoding, OMIO IO)=
-\end{itemize} 
+- =OMdev OMmakeDevice(OMencodingType encoding, OMIO IO)=
+
 Devices are closed with the following function
-\begin{itemize} 
-\item =void OMcloseDevice(OMdev dev)=
-\end{itemize} 
+- =void OMcloseDevice(OMdev dev)=
+
 
 Whether a device could be used both for reading and writing is entirely
 dependent on its I/O method. 
@@ -55068,10 +55041,9 @@ it. Likewise, an =OMIO= object carries a lot of state.
 *** Beginning and Ending Objects
 
 The following two functions mark the beginning and end of an OpenMath object.
-\begin{itemize} 
-\item =OMstatus OMputObject(OMdev dev)=
-\item =OMstatus OMputEndObject(OMdev dev)=
-\end{itemize} 
+- =OMstatus OMputObject(OMdev dev)=
+- =OMstatus OMputEndObject(OMdev dev)=
+
 These functions should be called before and after an OpenMath object
 in constructed in a device.  In particular, the =OMputEndObject=
 function insures that the object has been completely written if any
@@ -55080,33 +55052,31 @@ buffering was used.
 *** Writing Basic Objects
 
 Basic OpenMath objects are written using these functions:
-\begin{itemize} 
-\item =OMstatus OMputInt32(OMdev dev, int n)=
-\item 
+- =OMstatus OMputInt32(OMdev dev, int n)=
+- 
 #+begin_example
 OMstatus OMputBigInt(OMdev dev, const char *data, int len, int sign, 
                      OMbigIntType format)
 #+end_example
-\item =OMstatus OMputFloat64(OMdev dev, double *f)=
-\item =OMstatus OMputByteArray(OMdev dev, const char *data, int len)=
-\item =OMstatus OMputString(OMdev dev, const char *s)=
-\item =OMstatus OMputVar(OMdev dev, const char *name)=
-\item =OMstatus OMputSymbol(OMdev dev, const char *cd, const char *name)=
-\end{itemize} 
+- =OMstatus OMputFloat64(OMdev dev, double *f)=
+- =OMstatus OMputByteArray(OMdev dev, const char *data, int len)=
+- =OMstatus OMputString(OMdev dev, const char *s)=
+- =OMstatus OMputVar(OMdev dev, const char *name)=
+- =OMstatus OMputSymbol(OMdev dev, const char *cd, const char *name)=
+
 
 The =char *= arguments of =OMputString=, =OMputVar= and {\tt
 OMputSymbol} are null-terminated strings. There are other functions that
 accept non null-terminated arrays of characters with their length.
 These are 
-\begin{itemize} 
-\item =OMstatus OMputStringN(OMdev dev, const char *str, int len)=
-\item =OMstatus OMputVarN(OMdev dev, const char *var, int len)=
-\item
+- =OMstatus OMputStringN(OMdev dev, const char *str, int len)=
+- =OMstatus OMputVarN(OMdev dev, const char *var, int len)=
+- 
 #+begin_example
 OMstatus OMputSymbolN(OMdev dev, const char *cd, int clen, 
                       const char *name, int nlen)
 #+end_example
-\end{itemize} 
+
 
 The format for the =data= argument of the =OMputBigInt= function is
 given by =format=. When =format= is =OMBIbase10=, it is the
@@ -55124,20 +55094,19 @@ OMputBigInt(dev, "265252859812191058636308480000000", 33, 1, OMBIbase10);
 The following functions are used to mark the beginning and end of the
 structured objects. They should be called in nested pairs, correctly
 bracketed:  
-\begin{itemize} 
-\item =OMstatus OMputApp(OMdev dev)=
-\item =OMstatus OMputEndApp(OMdev dev)=
-\item =OMstatus OMputAttr(OMdev dev)=
-\item =OMstatus OMputEndAttr(OMdev dev)=
-\item =OMstatus OMputBind(OMdev dev)=
-\item =OMstatus OMputEndBind(OMdev dev)=
-\item =OMstatus OMputBVar(OMdev dev)=
-\item =OMstatus OMputEndBVar(OMdev dev)=
-\item =OMstatus OMputAtp(OMdev dev)=
-\item =OMstatus OMputEndAtp(OMdev dev)=
-\item =OMstatus OMputError(OMdev dev)=
-\item =OMstatus OMputEndError(OMdev dev)=
-\end{itemize} 
+- =OMstatus OMputApp(OMdev dev)=
+- =OMstatus OMputEndApp(OMdev dev)=
+- =OMstatus OMputAttr(OMdev dev)=
+- =OMstatus OMputEndAttr(OMdev dev)=
+- =OMstatus OMputBind(OMdev dev)=
+- =OMstatus OMputEndBind(OMdev dev)=
+- =OMstatus OMputBVar(OMdev dev)=
+- =OMstatus OMputEndBVar(OMdev dev)=
+- =OMstatus OMputAtp(OMdev dev)=
+- =OMstatus OMputEndAtp(OMdev dev)=
+- =OMstatus OMputError(OMdev dev)=
+- =OMstatus OMputEndError(OMdev dev)=
+
 
 Here is an example showing how to use these functions to output $\sin x + y$,
 where $x$ and $y$ are represented as variables and $\sin$ is the symbol whose
@@ -55162,9 +55131,8 @@ OMputEndObject(dev);
 
 The first step in decoding an expression from a device is to call the 
 =OMgetType= function
-\begin{itemize} 
-\item =OMstatus OMgetType(OMdev dev, OMtokenType *type)=
-\end{itemize} 
+- =OMstatus OMgetType(OMdev dev, OMtokenType *type)=
+
 so that the correct function can be called to recover the current token.
 
 =OMgetType= returns via its =type= argument an =OMtokenType=
@@ -55198,46 +55166,43 @@ other =OMget...= function was called in between.
 
 The following functions are used to read the basic OpenMath objects from
 devices: 
-\begin{itemize} 
-\item =OMstatus OMgetInt32(OMdev dev, int *i)=
-\item =OMstatus OMgetFloat64(OMdev dev, double *d)=
-\item 
+- =OMstatus OMgetInt32(OMdev dev, int *i)=
+- =OMstatus OMgetFloat64(OMdev dev, double *d)=
+- 
 #+begin_example
 OMstatus OMgetBigInt(OMdev dev, char **data, int *len, int *sign, 
                      OMbigIntType *fmt)
 #+end_example
-\item 
+- 
 #+begin_example
 OMstatus OMgetBigIntN(OMdev dev, char *data, int len, int *sign, 
                       OMbigIntType *fmt)
 #+end_example
-\item =OMstatus OMgetByteArray(OMdev dev, char **data, int *len)=
-\item =OMstatus OMgetByteArrayN(OMdev dev, char *data, int len)=
-\item =OMstatus OMgetString(OMdev dev, char **str)=
-\item =OMstatus OMgetStringN(OMdev dev, char *str, int len)=
-\item =OMstatus OMgetVar(OMdev dev, char **var)=
-\item =OMstatus OMgetVarN(OMdev dev, char *var, int len)=
-\item =OMstatus OMgetSymbol(OMdev dev, char **cd, char **name)=
-\item 
+- =OMstatus OMgetByteArray(OMdev dev, char **data, int *len)=
+- =OMstatus OMgetByteArrayN(OMdev dev, char *data, int len)=
+- =OMstatus OMgetString(OMdev dev, char **str)=
+- =OMstatus OMgetStringN(OMdev dev, char *str, int len)=
+- =OMstatus OMgetVar(OMdev dev, char **var)=
+- =OMstatus OMgetVarN(OMdev dev, char *var, int len)=
+- =OMstatus OMgetSymbol(OMdev dev, char **cd, char **name)=
+- 
 #+begin_example
 OMstatus OMgetSymbolN(OMdev dev,char *cd,int clen,char *name,int nlen)
 #+end_example
-\end{itemize} 
+
 The functions that return variable size data exist in two versions. A simple
 version that does the necessary memory allocation itself 
 (using =OMmalloc=) and a
 version (suffixed with =N=) that lets the user do the allocation itself.
 The size of the needed area can be determined with the following function:
-\begin{itemize} 
-\item =int OMgetLength(OMdev dev)= returns the length of the next
+- =int OMgetLength(OMdev dev)= returns the length of the next
 object. 
-\end{itemize} 
+
 that works for big integers, byte arrays, strings and variables. For symbols,
 the following function returns both the length of the content dictionary name
 and the length of the symbol name:
-\begin{itemize} 
-\item =OMstatus OMgetSymbolLength(OMdev dev, int *clen, int *nlen)=
-\end{itemize} 
+- =OMstatus OMgetSymbolLength(OMdev dev, int *clen, int *nlen)=
+
 
 When the current token does not carry any data i.e. when 
 =OMgetType= returns a marker, i.e. one of:
@@ -55258,22 +55223,21 @@ When the current token does not carry any data i.e. when
 it is necessary to call the correct function to remove the marker. The
 available functions are
 
-\begin{itemize} 
-\item =OMstatus OMgetObject(OMdev dev)=
-\item =OMstatus OMgetEndObject(OMdev dev)=
-\item =OMstatus OMgetApp(OMdev dev)=
-\item =OMstatus OMgetEndApp(OMdev dev)=
-\item =OMstatus OMgetAttr(OMdev dev)=
-\item =OMstatus OMgetEndAttr(OMdev dev)=
-\item =OMstatus OMgetAtp(OMdev dev)=
-\item =OMstatus OMgetEndAtp(OMdev dev)=
-\item =OMstatus OMgetBind(OMdev dev)=
-\item =OMstatus OMgetEndBind(OMdev dev)=
-\item =OMstatus OMgetBVar(OMdev dev)=
-\item =OMstatus OMgetEndBVar(OMdev dev)=
-\item =OMstatus OMgetError(OMdev dev)=
-\item =OMstatus OMgetEndError(OMdev dev)=
-\end{itemize} 
+- =OMstatus OMgetObject(OMdev dev)=
+- =OMstatus OMgetEndObject(OMdev dev)=
+- =OMstatus OMgetApp(OMdev dev)=
+- =OMstatus OMgetEndApp(OMdev dev)=
+- =OMstatus OMgetAttr(OMdev dev)=
+- =OMstatus OMgetEndAttr(OMdev dev)=
+- =OMstatus OMgetAtp(OMdev dev)=
+- =OMstatus OMgetEndAtp(OMdev dev)=
+- =OMstatus OMgetBind(OMdev dev)=
+- =OMstatus OMgetEndBind(OMdev dev)=
+- =OMstatus OMgetBVar(OMdev dev)=
+- =OMstatus OMgetEndBVar(OMdev dev)=
+- =OMstatus OMgetError(OMdev dev)=
+- =OMstatus OMgetEndError(OMdev dev)=
+
 
 All the previous functions return =OMsuccess= when they succeed. When
 they return something else, there has been a problem such as calling the
@@ -55353,19 +55317,17 @@ character of the name (=cd= or =name=).
 
 The library can also output and read comments (SGML/XML comments) with the
 following functions:
-\begin{itemize} 
-\item =OMstatus OMputComment(OMdev dev, char *comment)=
-\item =OMstatus OMputCommentN(OMdev dev, char *comment, int len)=
-\item =OMstatus OMgetComment(OMdev dev, char **comment)=
-\item =OMstatus OMgetCommentN(OMdev dev, char *comment, int len)=
-\end{itemize} 
+- =OMstatus OMputComment(OMdev dev, char *comment)=
+- =OMstatus OMputCommentN(OMdev dev, char *comment, int len)=
+- =OMstatus OMgetComment(OMdev dev, char **comment)=
+- =OMstatus OMgetCommentN(OMdev dev, char *comment, int len)=
+
 
 By default, comments are silently ignored by the library when reading
 OpenMath objects (and writing them using the binary encoding).
 The function 
-\begin{itemize} 
-\item =OMbool OMignoreComment(OMdev dev, OMbool set)=
-\end{itemize} 
+- =OMbool OMignoreComment(OMdev dev, OMbool set)=
+
 changes this behaviour. When called with =OMfalse=, comments are passed
 to the application: the =OMgetType= function will return
 =OMtokenComment= when the current token is a comment and the 
@@ -55379,16 +55341,15 @@ We provide four functions that produce =OMIO= objects for
 devices. These functions provide I/O through the =stdio= library
 (on =FILE= object), file descriptors and character strings.
 
-\begin{itemize} 
-\item =OMIO OMmakeIOFile(FILE *f)= associates the device with the
+- =OMIO OMmakeIOFile(FILE *f)= associates the device with the
 file pointer =f=.
-\item =OMIO OMmakeIOfd(int fd)= associates the device with the file
+- =OMIO OMmakeIOfd(int fd)= associates the device with the file
 descriptor =fd=.
-\item =OMIO OMmakeIOHandle(HANDLE handle)= associates the device with a 
+- =OMIO OMmakeIOHandle(HANDLE handle)= associates the device with a
 file handle *Windows specific version of =OMmakeIOfd()=.=fd=.
-\item =OMIO OMmakeIOString(char **s)=  associates the device with a 
+- =OMIO OMmakeIOString(char **s)=  associates the device with a
 string.
-\end{itemize} 
+
 For example, the following code opens a device that reads from standard
 input: 
 #+begin_example 
@@ -55416,18 +55377,16 @@ device to be used for input. =out= is pointer to a device to be used for
 output. These devices use the binary encoding.
 
 An =OMconn= object is made with the following function:
-\begin{itemize} 
-\item =OMconn OMmakeConn(int timeout)=
-\end{itemize} 
+- =OMconn OMmakeConn(int timeout)=
+
 where =timeout= is a timeout for the connection, expressed in
 milliseconds. 
 
-\begin{itemize} 
-\item =OMdev OMconnIn(OMconn conn)= returns the input device
+- =OMdev OMconnIn(OMconn conn)= returns the input device
 associated with the connection.
-\item =OMdev OMconnOut(OMconn conn)= returns the output device
+- =OMdev OMconnOut(OMconn conn)= returns the output device
 associated with the connection.
-\end{itemize} 
+
 
 \subsection{Functions to Initiate an =OMconn=}
 
@@ -55440,10 +55399,9 @@ The addresses used are then generated by the library.
 
 The following functions allow a client OpenMath application to contact an
 OpenMath server at a specified address:
-\begin{itemize} 
-\item =OMstatus OMconnTCP(OMconn conn, char *machine, int port)=
-\item =OMstatus OMconnUnix(OMconn conn, char *file)=
-\end{itemize} 
+- =OMstatus OMconnTCP(OMconn conn, char *machine, int port)=
+- =OMstatus OMconnUnix(OMconn conn, char *file)=
+
 These functions first physically establish the connection. Then, they enter
 negotiation with the server (they send the first message). When they return,
 the negotiation is finished and the devices in the =conn= argument are
@@ -55451,10 +55409,9 @@ ready.
 
 On the server side, the following functions provide bindings at specified
 addresses and take care of the negotiation:
-\begin{itemize} 
-\item =OMstatus OMbindTCP(OMconn conn, int port)=
-\item =OMstatus OMbindUnix(OMconn conn, char *file)=
-\end{itemize} 
+- =OMstatus OMbindTCP(OMconn conn, int port)=
+- =OMstatus OMbindUnix(OMconn conn, char *file)=
+
 
 All four the previous  functions block until the connection is established
 (and negotiation is over) or the timeout of the =conn= argument is
@@ -55463,9 +55420,8 @@ reached.
 The following function returns the file descriptor associated with a device.
 This is intended to be used when there is a need to poll the device (through
 the =select= or =poll= system calls).
-\begin{itemize}
-\item =OMdeviceFd(OMdev dev)=
-\end{itemize} 
+- =OMdeviceFd(OMdev dev)=
+
 
 **** Functions that Launch Servers
 
@@ -55484,14 +55440,13 @@ function.
 If the machine name is =localhost=, the command is started on the
 same machine (without calling =rsh=).
 
-\begin{itemize} 
-\item 
+- 
 #+begin_example
 OMstatus OMlaunchEnv(OMconn conn, char *machine, char *command, char *env)
 #+end_example
-\item =OMstatus OMlaunch(OMconn conn, char *machine, char *command)=
-\item =OMstatus OMserveClient(OMconn conn)=
-\end{itemize} 
+- =OMstatus OMlaunch(OMconn conn, char *machine, char *command)=
+- =OMstatus OMserveClient(OMconn conn)=
+
 
 The environment variables sent to the server (launched program) are
 {=OM_CALLER_UNIX_SOCKET=} (when a local connection is required) and 
@@ -55509,29 +55464,26 @@ OMlaunchEnv(conn, "kama", "plot", "DISPLAY=rati:0 PATH=/users/bin");
 
 **** Termination
 
-\begin{itemize} 
-\item =OMstatus OMconnClose(OMconn conn)=
-\end{itemize} 
+- =OMstatus OMconnClose(OMconn conn)=
+
 
 \section{\enspace{}Parameters}
 
 The library internally uses three functions that can be supplied by the user.
-\begin{itemize} 
-\item =extern void *(*OMmalloc) (size_t size)=
-\item =extern void *(*OMrealloc) (void *ptr, size_t size)=
-\item =extern void (*OMfree) (void *ptr)=
-\end{itemize} 
+- =extern void *(*OMmalloc) (size_t size)=
+- =extern void *(*OMrealloc) (void *ptr, size_t size)=
+- =extern void (*OMfree) (void *ptr)=
 
-\begin{itemize} 
-\item =OMmalloc= is used for all memory allocations in the library. 
+
+- =OMmalloc= is used for all memory allocations in the library.
 The default value is the =malloc= function.
-\item =OMfree= is used for deallocations. The default value is the 
+- =OMfree= is used for deallocations. The default value is the
 =free= function. 
-\item =OMfatal= is invoked when a fatal error is detected in the library
+- =OMfatal= is invoked when a fatal error is detected in the library
 (for example when memory allocation failed or when an inconsistency is
 detected in the library code data structures). The default value just does an
 =exit=.
-\end{itemize}
+
 =OMfatal= is declared as 
 ==extern void (*OMfatal)(OMstatus status)==. 
 All memory allocations and deallocations in the library are done through the
@@ -55539,18 +55491,17 @@ All memory allocations and deallocations in the library are done through the
 
 \section{\enspace{}Miscellaneous Functions and Variables}
 
-\begin{itemize} 
-\item =char *OMstatusToString(OMstatus status)= make a status into a
+- =char *OMstatusToString(OMstatus status)= make a status into a
 human readable string.
-\item =char *OMtokenTypeToString(OMtokenType ttype)= makes a
+- =char *OMtokenTypeToString(OMtokenType ttype)= makes a
 =tokenType= into a human readable string.
-\item =OMencodingType OMgetDeviceEncoding(OMdev dev)= returns the
+- =OMencodingType OMgetDeviceEncoding(OMdev dev)= returns the
 encoding actually used by the device.
-\item =char *OMlibDynamicInfo(void)=
-\item =extern const char *OMlibVersion= is the version of the library.
-\item =extern const char *OMlibInfo= contains some textual information
+- =char *OMlibDynamicInfo(void)=
+- =extern const char *OMlibVersion= is the version of the library.
+- =extern const char *OMlibInfo= contains some textual information
 about the library.
-\end{itemize} 
+
 
 \section{\enspace{}The OM.h header file}
 #+begin_example
@@ -59855,12 +59806,10 @@ This calls the Axiom command line to execute the command.
 Most of the functions create a new page with a call to the function
 =htMakePage=. This function takes an association list which has
 several possible keys.
-\begin{itemize}
-\item *domainConditions* with tests such as (isDomain S (String))
+- *domainConditions* with tests such as (isDomain S (String))
 constraining the domains. The possible tests are
-\begin{itemize}
-\item *isDomain*
-\end{itemize}
+- *isDomain*
+
 \item *text* which takes a string argument which may contain latex-like
 format strings.
 - a plain string
@@ -59891,7 +59840,7 @@ that page.
 creating a new radio button
 \item *inputStrings*
 \item *bcHt*
-\end{itemize}
+
 
 The =htMakeDoneButton= will put a button on the page with the given
 title and a function to call when pressed.
@@ -60972,16 +60921,15 @@ Given =("one" "two" "three")= generate ="(one,two,three)"=
 *** HTPage Layout
 # label: HTPage Layout
 This is a list with the fields
-\begin{enumerate}
-\item name
-\item Domain Conditions
-\item Domain Variable Alist
-\item Domain Pvar Subst List
-\item Radio Button Alist
-\item Input Area Alist
-\item Property List 
-\item Description
-\end{enumerate}
+1. name
+1. Domain Conditions
+1. Domain Variable Alist
+1. Domain Pvar Subst List
+1. Radio Button Alist
+1. Input Area Alist
+1. Property List
+1. Description
+
 
 \defun{htpName}{htpName}
 #+NAME: defun htpName
@@ -64929,16 +64877,15 @@ This creates a page for any cat, dom, package, default package
 constructors Cname\#\E\sig \args   \abb \comments (C is C, D, P, X)
 #+end_example
 There are 8 parts of an htPage:
-\begin{enumerate}
-\item kind
-\item name
-\item nargs
-\item xflag
-\item sig
-\item args
-\item abbrev
-\item comments
-\end{enumerate}
+1. kind
+1. name
+1. nargs
+1. xflag
+1. sig
+1. args
+1. abbrev
+1. comments
+
 
 # calls: kPage -> dbXParts
 # calls: kPage -> mkConform

@@ -287,6 +287,41 @@ def cleanup_layout(line):
     return line
 #+end_src
 
+* Phase 8 — List Environments
+
+Convert =\begin{itemize}= / =\begin{enumerate}= blocks to org lists.
+
+#+begin_src python :tangle org-cleanup.py
+def convert_list_envs(lines):
+    """Convert itemize/enumerate blocks to org lists."""
+    NL = chr(10)
+    result = []
+    list_type = None
+    for idx, line, region in lines:
+        stripped = line.strip()
+        if region != 'prose':
+            result.append((idx, line, region))
+            continue
+        if r'\begin{itemize}' in stripped:
+            list_type = 'itemize'
+            continue
+        if r'\begin{enumerate}' in stripped:
+            list_type = 'enumerate'
+            continue
+        if r'\end{itemize}' in stripped or r'\end{enumerate}' in stripped:
+            list_type = None
+            result.append((idx, NL, 'prose'))
+            continue
+        if list_type and stripped.startswith(r'\item'):
+            content = stripped[5:].strip()
+            prefix = '- ' if list_type == 'itemize' else '1. '
+            result.append((idx, prefix + content + NL, 'prose'))
+            continue
+        result.append((idx, line, region))
+    return result
+
+#+end_src
+
 * File Processing
 
 #+begin_src python :tangle org-cleanup.py
@@ -319,8 +354,11 @@ def process_file(filepath, dry_run=False, phases=None):
         changes['total'] += phase_changes
 
     # Phases 2-6: Apply to prose lines only
-    if any(p in phases for p in [2, 3, 4, 5, 6]):
+    if any(p in phases for p in [2, 3, 4, 5, 6, 7, 8]):
         classified = list(classify_lines(lines))
+        # Phase 8: List environments (pre-process before line-by-line)
+        if 8 in phases:
+            classified = convert_list_envs(classified)
         new_lines = []
         phase_counts = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
         for i, line, region in classified:
