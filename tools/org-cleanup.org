@@ -73,18 +73,24 @@ org keywords. Every Axiom pamphlet starts with this ~12-line block:
 #+end_example
 
 #+begin_src python :tangle org-cleanup.py
-PREAMBLE_DELETE = [
+# Lines to convert to #+LATEX: (preserve as raw LaTeX for export)
+PREAMBLE_TO_LATEX = [
     r'^\\documentclass', r'^\\usepackage', r'^\\input\{bookheader',
     r'^\\begin\{document\}', r'^\\end\{document\}',
-    r'^\\maketitle',
-    r'^\\eject', r'^\\tableofcontents', r'^\\mainmatter',
-    r'^\\setcounter', r'^\\pagenumbering',
     r'^\\newcommand', r'^\\renewcommand', r'^\\providecommand',
-    r'^\\appendix', r'^\\frontmatter', r'^\\VolumeName', r'^\\input\{',
-    r'^\\addcontentsline', r'^\\phantomsection', r'^\\cleardoublepage',
-    r'^\\printindex', r'^\\makeindex',
+    r'^\\setcounter', r'^\\setlength',
+    r'^\\addcontentsline', r'^\\phantomsection',
     r'^\\bibliographystyle', r'^\\bibliography',
     r'^\\frenchspacing', r'^\\sloppy',
+    r'^\\printindex', r'^\\makeindex',
+    r'^\\appendix', r'^\\frontmatter', r'^\\VolumeName',
+    r'^\\input\{',
+]
+
+# Lines to delete (pure formatting, no content)
+PREAMBLE_DELETE = [
+    r'^\\maketitle', r'^\\eject', r'^\\tableofcontents',
+    r'^\\mainmatter', r'^\\pagenumbering', r'^\\cleardoublepage',
 ]
 
 def convert_preamble_line(line):
@@ -112,7 +118,11 @@ def convert_preamble_line(line):
     # \end{abstract} → #+END_abstract
     if re.match(r'^\\end\{abstract\}\s*$', stripped):
         return '#+END_abstract\n', True
-    # Delete known preamble lines
+    # Convert to #+LATEX: (preserve as raw LaTeX for export)
+    for pat in PREAMBLE_TO_LATEX:
+        if re.match(pat, stripped):
+            return '#+LATEX: ' + stripped + '\n', True
+    # Delete pure formatting lines
     for pat in PREAMBLE_DELETE:
         if re.match(pat, stripped):
             return None, True

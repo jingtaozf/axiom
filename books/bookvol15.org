@@ -1,10 +1,14 @@
+#+LATEX: \documentclass{book}
 
 % We have a name on every volume, specificed here
+#+LATEX: \newcommand{\VolumeName}{Volume 15: The Sane Compiler}
 
 % Latex open file limits exceeded. Allocate more
+#+LATEX: \usepackage{etex}    % fix No room for a new \dimen
 \reserveinserts{30}  % fix No room for a new \dimen
 
 % We want an index by type of information
+#+LATEX: \usepackage{imakeidx}
 
 % We make a new index for figures 'fig'.
 % This gives index references to all of the figures.
@@ -12,6 +16,7 @@
 % We want letters before each alphabet change so we
 % dynamically make an '.mst' file. Note that this
 % will NOT overwrite an existing file.
+#+LATEX: \makeindex[name=fig,intoc=false] % figures
 \begin{filecontents*}{fig.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -20,6 +25,7 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for documentation 'doc'
 % This gives index references to terms mentioned in the text.
+#+LATEX: \makeindex[name=doc,intoc=false] % documentation
 \begin{filecontents*}{doc.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -28,6 +34,7 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for error messages 'err'
 % This gives index references to error message in code
+\makeindex[name=err,intoc=false] % error messages
 \begin{filecontents*}{err.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -37,6 +44,7 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 % We make a new index for code definitions 'code'
 % This gives index references to function definitions,
 % macros, etc.
+\makeindex[name=code,intoc=false] % source code
 \begin{filecontents*}{code.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -45,6 +53,7 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for categories 'cat'
 % This gives index references to each category.
+\makeindex[name=cat,intoc=false] % categories
 \begin{filecontents*}{cat.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -53,6 +62,7 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for categories 'dom'
 % This gives index references to each domain.
+\makeindex[name=dom,intoc=false] % domains
 \begin{filecontents*}{dom.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -61,6 +71,7 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for categories 'pkg'
 % This gives index references to each package..
+\makeindex[name=pkg,intoc=false] % packages
 \begin{filecontents*}{pkg.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -69,29 +80,41 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We want hyperlinks to everything so we can move
 % around the document and reference web citations
+\usepackage{hyperref} % for hyperlinks
 \hypersetup{colorlinks=true,linkcolor=blue,pdfborderstyle={/S/U/W 1},citecolor=red}
 
 % We need to adjust chapter numbers for the appendix
+\usepackage[toc,page]{appendix} 
 
 % Figures float so sometimes we force figure placement
+\usepackage{float} % force figure placement
 
+\usepackage{mathtools}
 
 % We need some standard math symbols
+\usepackage{amssymb} 
 
 % We define the 'chunk' environment
 % This wraps source code and provides a name.
 % It also provides 'getchunk' to gather code.
+\usepackage{axiom} % for chunk macros
 
 % Long itemizations use too much space. This compresses them
+\usepackage{enumitem} % for noitemsep in itemize
 
 % We need the ability to write proofs using the 'prooftree' environment
+\usepackage{bussproofs} 
 
 % Set how wide the page margins are
+\usepackage[margin=1in]{geometry}
 
+\usepackage{catmac} % for Weber chapter in vol 10.1
 
 % We want brackets to grow large in mathmode using llbracket
+\usepackage{stmaryrd} 
 
 % We want diagrams!
+\usepackage{tikz}     
 
 % We want to draw finite state diagrams
 \usetikzlibrary{automata, positioning, arrows}
@@ -129,6 +152,7 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 \tikzset{terminal/.append style={text height=1.5ex,text depth=.25ex}}
 \tikzset{nonterminal/.append style={text height=1.5ex,text depth=.25ex}}
 }
+\renewcommand\familydefault{\sfdefault}
 
 % We want to highlight various proof terms and include them
 % in the table of contents.
@@ -143,15 +167,19 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 \newtheorem{DoyeAlgorithm}[subsection]{Algorithm}
 
 % We want the black square tombstone on proof endings.
+\newcommand*{\QED}{ \ensuremath{\blacksquare}} % for qed
 
 % We want to use a little longer line
 \setlength{\textwidth}{400pt}
 
 % We want to include images
+\usepackage{graphicx}
 
 % We want the adjustwidth environment
+\usepackage{changepage} 
 
 % We want commutative diagrams
+\usepackage{pst-node} 
 
 % We create a signature index file
 \newwrite\sigfile % for signature index
@@ -160,12 +188,15 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 %\usepackage{breakurl}
 %\def\UrlBreaks{\do\/\do\-}
 
+\begin{document}
 
 % open the signature file.
 \immediate\openout\sigfile=signatures.tex
 
+\frontmatter
 
 % say now many levels of subsection we want in TOC.
+\setcounter{secnumdepth}{2}
 
 
 \begin{titlepage}
@@ -189,6 +220,7 @@ $$
 \end{titlepage}
 
 % Use traditional roman numerals in header text
+\pagenumbering{roman}
 
 #+begin_example
 Portions Copyright (c) 2005 Timothy Daly
