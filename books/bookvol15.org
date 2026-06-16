@@ -1064,7 +1064,7 @@ programming language
 
 *** An example
 
-See the example code in the appendix \ref{Coq Example Code}.
+See the example code in the appendix [[#Coq Example Code][Coq Example Code]].
 
 Given a program
 #+begin_example
@@ -1170,7 +1170,7 @@ Lemma test_execution :
 #+end_example
 
 An execution trace is constructed by the reflexive-transitive closure
-of the *step\_p* relation (see \ref{Coq Example Code}.), computed
+of the *step\_p* relation (see [[#Coq Example Code][Coq Example Code]].), computed
 by Coq's inductively defined proposition 
 *clos\_refl\_trans\_1n*. Note that the program in the final state
 is the command *skip*, requiring that the program be fully
@@ -1187,7 +1187,7 @@ of program verification by coinduction [cite:@Moor18],
 we define a program property
 as a reachability claim on program states of the form 
 *(Pgm~*~Env)*. In particular, using the coinductive proof machinery
-(see \ref{Coq Example Code}), the main correctness property of 
+(see [[#Coq Example Code][Coq Example Code]]), the main correctness property of 
 *sum* can be defined as the following inductive proposition
 (recall that the quoted strings ``n'' and ``sum'' are the program
 variables, while *n* is a universally quantified logical name
@@ -1242,7 +1242,7 @@ using simple co-inductive reasoning on circular behaviors emanating
 from recursive and iterative constructs in the language (such as
 loops). The machinery specified in Coq allowing the reachability logic
 proof strategy can be found in the appendix (see 
-\ref{Coq Example Code}).
+[[#Coq Example Code][Coq Example Code]]).
 
 To prove correctness we need to specify and show the loop
 invariant. For that, we introduce another constructor of the type 
@@ -1353,15 +1353,15 @@ extensions to Aldor, including adding pre- and post-conditions to
 function specifications, axiomatisations to categories of mathematical
 objects as well as the ability to reason about the objects in Axiom.
 
-The structure of the paper is as follows. Section \ref{poll2}
+The structure of the paper is as follows. Section [[#poll2][poll2]]
 introduces Aldor, and more details of Aldor dependent types appear in
-Section \ref{poll3}. We show how a logic can be defined in (a variant
-of) the Aldor system in Section \ref{poll4} and Section \ref{poll5}
+Section [[#poll3][poll3]]. We show how a logic can be defined in (a variant
+of) the Aldor system in Section [[#poll4][poll4]] and Section [[#poll5][poll5]]
 gives some example applications. We conclude with a discussion of
 related and future work.
 
 ** An introduction to Aldor
-\label{poll2}
+# label: poll2
 
 The Axiom Library Compiler, Aldor [cite:@Watt94a] (previously known as
 AXIOM-XL or $A^{#}$), provides the user with a powerful,
@@ -1373,7 +1373,7 @@ languages like Standard ML [cite:@Miln90] and Haskell [cite:@Huda92],
 as well as being strongly typed.
 
 *** The type system of Aldor
-\label{poll2.1}
+# label: poll2.1
 
 Unusually among languages for computer algebra, but in keeping with
 the functional school, Aldor is strongly typed, and each declaration
@@ -1419,7 +1419,7 @@ id (ty : Type, x : ty) : ty == x;                            (2)
 This resembles the quantification in System F in which functions can
 depend on type parameters, and in $=F=^\omega$ where functions can
 be defined from types to types. This is investigated further in
-Section \ref{poll3.1}
+Section [[#poll3.1][poll3.1]]
 
 *Dependent types* Aldor permits functions to have dependent types,
 in which the type of a function result depends upon the value of a
@@ -1437,7 +1437,7 @@ definition (2) is applied, its result type is determined by the type
 which is passed as its first argument.
 
 We discuss this aspect of the language in more detail in Section
-\ref{poll3}.
+[[#poll3][poll3]].
 
 *Variables* The system is not fully functional, containing as it
 does variables which denote storage locations. The presence of
@@ -1449,16 +1449,16 @@ variables in equations and the like, and the role that they play in
 the type system of Axiom.
 
 *Categories and domains* These features which provide a form of
-data abstraction are addressed in more detail in Section \ref{poll2.2}
+data abstraction are addressed in more detail in Section [[#poll2.2][poll2.2]]
 
 The Aldor type system can thus be seen to be highly complex and we
 shall indeed see that other features such as macros (see Section
-\ref{poll2.2}) complicate the picture further; one of the aspects of
+[[#poll2.2][poll2.2]]) complicate the picture further; one of the aspects of
 our work is to try to reach a more formal description of (substantial
 parts of) the typing mechanism of Aldor.
 
 *** Categories and domains
-\label{poll2.2}
+# label: poll2.2
 
 Axiom is designed to be a system in which to represent and manipulate
 mathematical objects of various kinds, and support for this is given
@@ -1487,7 +1487,7 @@ BasicType : Category == with {
 
 We should observe that this *Monoid* category does not impose any
 constraints on bindings to '*' and '1': we shall revisit this example
-in Section \ref{poll5.2} below.
+in Section [[#poll5.2][poll5.2]] below.
 
 Implementations of a category are abstract data types which are known
 in Axiom as domains, and are defined as was the value *a* above
@@ -1541,13 +1541,13 @@ extension. Details of this and other features can be found in
 [cite:@Watt94a]
 
 Categories can also be parametric, and depend upon value or type
-parameters. we shall see an example of this in Section \ref{poll3}1
+parameters. we shall see an example of this in Section [[#poll3][poll3]]1
 below. We continue to explore the Aldor type system in the following
 section where we look in more detail at the dependent types of the
 system. 
 
 ** Dependent types
-\label{poll3}
+# label: poll3
 
 The Aldor language contains dependent types, so that one can define
 functions such as *vectorSum* which defines a sum function for
@@ -1575,13 +1575,13 @@ but this will fail to type check, since the argument is of type
 *Vector(5)*. This is because no evaluation takes place in type
 expressions in Aldor (nor indeed in the earlier version of Axiom).
 
-In Section \ref{poll3.2} we discuss how the Aldor type mechanism can
+In Section [[#poll3.2][poll3.2]] we discuss how the Aldor type mechanism can
 be modified to acommodate a more liberal evaluation strategy within
 the type checker. Before doing that we look at another example of the
 problems caused by the failure of Aldor to evaluate type expressions.
 
 *** Types as values
-\label{poll3.1}
+# label: poll3.1
 
 Another example is provided by trying to formalise the notion from
 (mathematical) category theory [cite:@Macl91], namely that of a
@@ -1617,7 +1617,7 @@ listFunctor : Functor(List) == add {                         (6)
 which is the standard definition of *map* over lists.
 
 In a similar vein we can try to make *idType* (as defined in
-Section \ref{poll2.1} above) into an instance of *Functor*,
+Section [[#poll2.1][poll2.1]] above) into an instance of *Functor*,
 #+begin_example
 Ident : Functor(idType) == add {                             (7)
   map (a:Type)(b:Type)(f:a->b)(x:idType(a)) : idType(b)
@@ -1637,7 +1637,7 @@ In the next section we examine possible modifications to the Aldor
 type mechanism to accommodate evaluation within type expressions.
 
 *** Investigating the Aldor dependent type mechanism
-\label{poll3.2}
+# label: poll3.2
 
 We are currently investigating ways in which the Aldor dependent type
 mechanism can be modified to allow evaluation within type contexts as
@@ -1688,7 +1688,7 @@ types of expression chosen for evaluation (as heuristics at least) to
 guide the form of evaluation that is supported. 
 
 ** Logic within Aldor
-\label{poll4}
+# label: poll4
 
 In this section we discuss the Curry-Howard isomorphism between
 propositions and types, and show that it allows us to embed a logic
@@ -1696,7 +1696,7 @@ within the Aldor type system, if dependent types are implemented to
 allow evaluation within type contexts.
 
 *** The Curry-Howard correspondence
-\label{poll4.1}
+# label: poll4.1
 
 Under the Curry-Howard correspondence, logical propostions can be seen
 as types, and proofs can be seen as members of these types. Accounts
@@ -1764,9 +1764,9 @@ used extensively in the type theory community, see, for instance
 [cite:@Paul93].
 
 *** A logic within Aldor
-\label{poll4.2}
+# label: poll4.2
 
-We need to examine whether the outline given in Section \ref{poll4.1}
+We need to examine whether the outline given in Section [[#poll4.1][poll4.1]]
 amounts to a proper embedding of a logic within Aldor. We shall see
 that it places certain requirements on the definition and the system.
 
@@ -1774,7 +1774,7 @@ Most importantly for a definition of the form (9) to work properly as
 a definition of a predicate we need an application like
 *lessThan(9,3)* to be reduced to *Exit*, hence we need to have
 evaluation of type expressions. This is a modification of Aldor which
-we are currently investigating, as outlined in Section \ref{poll3}. In
+we are currently investigating, as outlined in Section [[#poll3][poll3]]. In
 the case of (9) the evaluation can be limited, since the scheme used
 is recognisable as terminating by, for instance, the algorithm of
 [cite:@Mcal96].
@@ -1794,7 +1794,7 @@ sufficiently powerful type system will be inconsistent as shown by
 Girard's paradox [cite:@Gira72].
 
 ** Applications of an integrated logic
-\label{poll5}
+# label: poll5
 
 If we identify a logic within Aldor, how can it be used? There are
 various applications possible; we outline some here and for others one
@@ -1802,7 +1802,7 @@ can refer to the number of implementations of type theories which
 already exist, including Nuprl [cite:@Cons85] and Coq [cite:@COQR16].
 
 *** Pre- and Post-conditions
-\label{poll5.1}
+# label: poll5.1
 
 A more expressive type system allows programmers to give more accurate
 types to common functions, such as the function which indexes the
@@ -1828,9 +1828,9 @@ and so return a sorted list together with a proof that the list is
 Sorted. 
 
 *** Adding axioms to the categories of Axiom
-\label{poll5.2}
+# label: poll5.2
 
-In definition (3) Section \ref{poll2.2} we give the category of
+In definition (3) Section [[#poll2.2][poll2.2]] we give the category of
 monoids, *Monoid*, which introduces two operation symbols,
 *** and *1*. A monoid consists not only of two operations, but
 of operations with properties. We can ensure these properties hold by
@@ -1855,10 +1855,10 @@ operations of extension and join over the extended `logical'
 categories such as (10).
 
 *** Different degrees of rigour
-\label{poll5.3}
+# label: poll5.3
 
-One can interpret the obligations given in Sections \ref{poll5.1} and
-\ref{poll5.2} with differing degrees of rigour. Using the 
+One can interpret the obligations given in Sections [[#poll5.1][poll5.1]] and
+[[#poll5.2][poll5.2]] with differing degrees of rigour. Using the 
 *pretend* function we can conjure up proofs of the logical requirements
 of (10); even in this case they appear as important documentation of
 requirements, and they are related to the lightweight formal methods
@@ -1870,7 +1870,7 @@ can indeed adopt an intermediate position of proving properties seen
 as `crucial' while asserting the validity of others.
 
 ** Conclusion
-\label{poll6}
+# label: poll6
 
 We have proposed a new way to combine -- or rather, to integrate --
 computer algebra and theorem proving. Our proposal is similar to 
@@ -3715,7 +3715,7 @@ This means that we have a 'round trip' test of the parser. Every
 defclass prints its source representation. The parser must recreate
 the defclass from the printed source.
 
-Refer to the AxiomClass \ref{AxiomClass}
+Refer to the AxiomClass [[#AxiomClass][AxiomClass]]
 section for more detailed information.
 
 ** Categories
@@ -3904,7 +3904,7 @@ John Hughes [cite:@Hugh19] identifies several types of specification tests:
 \index[fig]{specification defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:specification}
+# label: tab:specification
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* & *accessor*\\
@@ -4106,7 +4106,7 @@ the exported signatures
 \index[fig]{hasclause defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:hasclause}
+# label: tab:hasclause
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* & *accessor*\\
@@ -4162,7 +4162,7 @@ siglist   & :siglist   & nil & hasclause-siglist\\
 \index[fig]{haslist defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:haslist}
+# label: tab:haslist
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* & *accessor*\\
@@ -4199,7 +4199,7 @@ clauses & :clauses & nil & haslist-clauses\\
 \index[fig]{AxiomClass defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:AxiomClass}
+# label: tab:AxiomClass
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -4224,7 +4224,7 @@ parents  & :parents & nil       & parents  &              && Tnulllist\\
 \end{table}
 
 The *AxiomClass* is a place to hang Axiom-specific methods.
-\label{AxiomClass}
+# label: AxiomClass
 \index[code]{defclass!AxiomClass}
 \index[code]{AxiomClass!defclass}
 #+NAME: defclass AxiomClass
@@ -4339,7 +4339,7 @@ variables.
 \index[fig]{WithClass defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:WithClass}
+# label: tab:WithClass
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* & *accessor*\\
@@ -4363,7 +4363,7 @@ variables.
 \index[fig]{AddClass defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:AddClass}
+# label: tab:AddClass
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* & *accessor*\\
@@ -4570,7 +4570,7 @@ they are combined into one operation but with different signatures.
 \index[fig]{signature defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:signature}
+# label: tab:signature
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* & *accessor*\\
@@ -4748,7 +4748,7 @@ infix?    & :infix     & nil & signature-infix\\
 \index[fig]{amacro defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:amacro}
+# label: tab:amacro
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -4785,7 +4785,7 @@ body & :body & nil & amacro-body &\\
 \index[fig]{operation defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:operation}
+# label: tab:operation
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -5050,7 +5050,7 @@ are concatenated before the spad filenames.
 \index[fig]{ParserClass defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:ParserClass}
+# label: tab:ParserClass
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -5217,7 +5217,7 @@ calls to nreverse could be removed.
 \sig{make-Sourcecode}{filename}{sourcecode}
 \index[code]{defun!make-Sourcecode}
 \index[code]{make-Sourcecode!defun}
-\label{lst:make-Sourcecode}
+# label: lst:make-Sourcecode
 #+NAME: defun make-Sourcecode
 #+begin_src common-lisp :noweb yes
 
@@ -5306,7 +5306,7 @@ The *sourcecode* type contains 4 fields:
 \index[fig]{sourcecode defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:sourcecode}
+# label: tab:sourcecode
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -5324,7 +5324,7 @@ tree    & :tree    & nil & sourcecode-tree\\
 
 \index[code]{defclass!sourcecode}
 \index[code]{sourcecode!defclass}
-\label{lst:sourcecode}
+# label: lst:sourcecode
 #+NAME: defclass sourcecode
 #+begin_src common-lisp :noweb yes
 (defclass sourcecode ()
@@ -5384,7 +5384,7 @@ function parses an )abbrev line.
 \index[fig]{abbreviation defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:abbreviation}
+# label: tab:abbreviation
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -5491,7 +5491,7 @@ UABBREV ::= UCHAR
           | UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR
 #+end_example
 \caption{UABBREV syntax}
-\label{UABBREVsyntax}
+# label: UABBREVsyntax
 \end{figure}
 
 \index[fig]{syntax!ABBREV}
@@ -5538,7 +5538,7 @@ UABBREV ::= UCHAR
 ABBREV ::= ')abbrev' ['category' | 'domain' | 'package'] UABBREV CONSTRUCT
 #+end_example
 \caption{ABBREV syntax}
-\label{ABBREVsyntax}
+# label: ABBREVsyntax
 \end{figure}
 
 \sig{FSM-abbrev}{linelist}{(linelist,abbreviation)}
@@ -5689,7 +5689,7 @@ returns a list of those names.
 \index[fig]{CDPSigClass defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:CDPSigClass}
+# label: tab:CDPSigClass
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -5855,7 +5855,7 @@ variables could be macros in the body which we have not yet seen.
 VAR ::= SYMBOL [ [WSPACE]* ':' [WSPACE]* TYPESPEC ]
 #+end_example
 \caption{VAR syntax}
-\label{VARsyntax}
+# label: VARsyntax
 \end{figure}
 
 \sig{FSM-VAR}{linelist}{(linelist,var)}
@@ -5963,7 +5963,7 @@ TYPESPEC ::= CDPNAME [ '(' [ TYPESPEC [ ',' TYPESPEC ]* ] ')']
            | JOIN '(' TYPESPEC [ ',' TYPESPEC ] ')'
 #+end_example
 \caption{TYPESPEC syntax}
-\label{TYPESPECsyntax}
+# label: TYPESPECsyntax
 \end{figure}
 
 *** The FSM-VAR class
@@ -5972,7 +5972,7 @@ TYPESPEC ::= CDPNAME [ '(' [ TYPESPEC [ ',' TYPESPEC ]* ] ')']
 \index[fig]{FSM-VAR defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:FSM-VAR}
+# label: tab:FSM-VAR
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *accessor*\\
@@ -6139,7 +6139,7 @@ turns a string into characters.
 SYMBOL := letter [ letter | digit ]*
 #+end_example
 \caption{SYMBOL syntax}
-\label{SYMBOLsyntax}
+# label: SYMBOLsyntax
 \end{figure}
 
 \index[fig]{syntax!UNSIGNED}
@@ -6172,7 +6172,7 @@ SYMBOL := letter [ letter | digit ]*
 UNSIGNED := digit [ digit ]*
 #+end_example
 \caption{UNSIGNED syntax}
-\label{UNSIGNEDsyntax}
+# label: UNSIGNEDsyntax
 \end{figure}
 
 \index[fig]{syntax!FLOAT}
@@ -6241,7 +6241,7 @@ UNSIGNED := digit [ digit ]*
 FLOAT ::= 
 #+end_example
 \caption{FLOAT syntax}
-\label{FLOATsyntax}
+# label: FLOATsyntax
 \end{figure}
 
 \index[fig]{syntax!IF}
@@ -6284,7 +6284,7 @@ FLOAT ::=
 IF ::= if TEST then BLOCK [else BLOCK]
 #+end_example
 \caption{IF syntax}
-\label{IFsyntax}
+# label: IFsyntax
 \end{figure}
 
 \index[fig]{syntax!FOR}
@@ -6321,7 +6321,7 @@ IF ::= if TEST then BLOCK [else BLOCK]
 FOR ::= for VARIABLE in EXPRESSION repeat BLOCK
 #+end_example
 \caption{FOR syntax}
-\label{FORsyntax}
+# label: FORsyntax
 \end{figure}
 
 ** The Compiler Function
@@ -6488,7 +6488,7 @@ tests succeed.
 \index[fig]{gather defclass}
 \begin{table}[H]
 \begin{center}
-\label{tab:gather}
+# label: tab:gather
 \begin{tabular}{|l|l|l|l|}
 \hline
 *Fieldname* & *initarg* & *initform* &
@@ -7199,7 +7199,7 @@ FSMSIG      ::= INDENT SIGNAME [':' SIGINTYPE '->' SIGOUTTYPE] [SIGIFSEC]
 FSMSIG ::=
 #+end_example
 \caption{FSMSIG syntax}
-\label{FSMSIGsyntax}
+# label: FSMSIGsyntax
 \end{figure}
 
 \index[fig]{syntax!LEAVE}
@@ -7210,7 +7210,7 @@ TODO
 #+begin_example
 LEAVE
 #+end_example
-\label{LEAVEsyntax}
+# label: LEAVEsyntax
 \end{figure}
 
 #+begin_example
@@ -7237,7 +7237,7 @@ LEAVE
 
 \end{tikzpicture}
 \caption{SIGNATURE}
-\label{SIGNATURE}
+# label: SIGNATURE
 \end{figure}
 #+begin_example
   SIGNATURE ::= NAME EOF
@@ -32514,7 +32514,7 @@ Value = NIL
 \index[pkg]{DoubleFloatSpecialFunctions!Domain}
 \index[pkg]{Domain!DoubleFloatSpecialFunctions}
 \index[pkg]{DFSFUN}
-\label{package DFSFUN DoubleFloatSpecialFunctions}
+# label: package DFSFUN DoubleFloatSpecialFunctions
 #+NAME: defclass DoubleFloatSpecialFunctionsType
 #+begin_src common-lisp :noweb yes
 (defclass |DoubleFloatSpecialFunctionsType| (|AxiomClass|)
@@ -49085,7 +49085,7 @@ mentioned here.}\\
 \phantomsection
 {\huge Coq Example Code}
 \addcontentsline{toc}{chapter}{Coq Example Code}
-\label{Coq Example Code}
+# label: Coq Example Code
 
 \url{https://github.com/k-vs-coq-language-frameworks/coq/imp.v}
 

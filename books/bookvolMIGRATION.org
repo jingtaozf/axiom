@@ -79,7 +79,7 @@ the port: without an SBCL arm here, the system cannot produce its
 executable image at all. The ANSI-era replacement is
 =sb-ext:save-lisp-and-die=, which both writes a standalone
 executable and folds in the entry point. See the oracle reference in
-Section~\ref{sec:oracle}.
+Section~[[#sec:oracle][sec:oracle]].
 
 \subsection{The VMLISP portability layer}
 
@@ -105,7 +105,7 @@ filesystem predicates (=directoryp=, =writeablep=). SBCL
 expresses the same bindings through =sb-alien= (or CFFI). For a
 /core/ computer-algebra system, only the hash, float, and
 filesystem entries are essential; the socket group belongs to HyperDoc
-and may be stubbed initially (Section~\ref{sec:plan}).
+and may be stubbed initially (Section~[[#sec:plan][sec:plan]]).
 
 \subsection{GCL internal packages}
 
@@ -149,7 +149,7 @@ the host Lisp are entangled at bootstrap. Mapping each hop onto SBCL is
 the substance of Stage~5 in the plan below.
 
 \section{The OpenAxiom oracle}
-\label{sec:oracle}
+# label: sec:oracle
 
 OpenAxiom already carried this code base onto SBCL, CLISP, ECL and
 Clozure. We use it strictly as a reference. The decisive artefact is its
@@ -185,7 +185,7 @@ gives us a behavioural oracle to compare Axiom's ported output against,
 domain by domain.
 
 \section{The migration plan}
-\label{sec:plan}
+# label: sec:plan
 
 The guiding principle is /graft, do not rewrite/. The SPAD algebra
 and BOOT interpreter layers are shared ancestry with OpenAxiom and are
@@ -195,7 +195,7 @@ layer and the build.
 \begin{itemize}
 \item *Stage 0 --- Build the oracle.* Build OpenAxiom on the
   target platform to obtain a working reference system. /Done/;
-  evidence in Section~\ref{sec:oracle} and Section~\ref{sec:gotchas}.
+  evidence in Section~[[#sec:oracle][sec:oracle]] and Section~[[#sec:gotchas][sec:gotchas]].
 \item *Stage 1 --- Map the bootstrap.* Document the
   =bootsys=/=interpsys=/=AXIOMsys= chain and every
   host-Lisp touch point. This chapter (Section~4) is that map.
@@ -241,13 +241,13 @@ layer and the build.
   rule the files now record: reimplement trivial C in Lisp; reserve
   =sb-alien= for the irreducibly foreign.
 \item *Stage 4 --- Drop bundled GCL.* \emph{Analysed; see
-  Section~\ref{sec:stage4}.} Point =bin/lisp= at system SBCL and
+  Section~[[#sec:stage4][sec:stage4]].} Point =bin/lisp= at system SBCL and
   delete the =lspdir= GCL build. The investigation showed this
   cannot be completed independently of Stage 5: the depsys recipe that
   selects the host also calls GCL-only =compiler::= internals, so
   the two stages are one combined effort.
 \item *Stage 5 --- Bootstrap on SBCL.* \emph{Path found; see
-  Section~\ref{sec:stage5}.} Make the BOOT translator and the residual
+  Section~[[#sec:stage5][sec:stage5]].} Make the BOOT translator and the residual
   =si::=/=compiler::= calls work under SBCL until
   =AXIOMsys= dumps. The depsys recipe is a /reversion/ to its
   documented simple load-then-save form rather than an invention --- the
@@ -261,7 +261,7 @@ layer and the build.
 \end{itemize}
 
 \section{Stage 4 in detail: replacing the GCL host}
-\label{sec:stage4}
+# label: sec:stage4
 
 Stage 4 is where the port stops being local edits to cover functions and
 becomes surgery on the build itself. Investigating the literate
@@ -321,7 +321,7 @@ SBCL, compare the failure to how OpenAxiom's corresponding Makefile and
 the whole project, and it is the next body of work.
 
 \section{Stage 5: rewriting the depsys bootstrap for SBCL}
-\label{sec:stage5}
+# label: sec:stage5
 
 Reading the =save depsys image= recipe in
 =src/interp/Makefile.pamphlet= turned the combined Stage~4/5
@@ -414,7 +414,7 @@ depsys/BOOT chain itself, which the next iteration drives by running
 =make LISPFLAVOR=sbcl= onward into =src/interp=.
 
 \section{Build gotchas observed on macOS}
-\label{sec:gotchas}
+# label: sec:gotchas
 
 Building the oracle on Apple Silicon surfaced three traps that will
 recur when Axiom itself is built on this platform. They are recorded

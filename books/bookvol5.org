@@ -687,7 +687,7 @@ declaration, function definition, =if= statements without =else=
 clauses and =repeat= loops. Several functions also return the object
 of type *Void*, including those that display things in two dimensional
 algebaic, 
-TeX\footnote{TeX is a trademark of the American Mathematical Society} 
+TeX[fn:1] 
 and FORTRAN forms. Like *Any*, =resolve(*Void*,*T*)=
 $=$ *Void* for all *T*. Type *Exit* is used for =return=
 statements and error statements. Its rule is 
@@ -815,7 +815,7 @@ FormalMapVariableList.
 #+end_src
 
 ** Frames and the Interpreter Frame Ring
-\label{TheFrameMechanism}
+# label: TheFrameMechanism
 
 Axiom has the notion of ``frames''. A frame is a data structure which
 holds all the vital data from an Axiom session. 
@@ -971,7 +971,7 @@ requests changing to a different frame.
 ** Data Structures
 
 The interpreter information is kept in a frame which is a 10 part data
-structure of the form (see \ref{emptyInterpreterFrame}).
+structure of the form (see [[#emptyInterpreterFrame][emptyInterpreterFrame]]).
 The parts of a frame and their initial, default values are:
 \begin{enumerate}
 \item *\$interpreterFrameName*\refto{interpreterFrameName}, 
@@ -1765,7 +1765,7 @@ Every successful expression evaluated increments this number until a
 
 ** Interpreter Functions using Frames
 
-The {\bf \ref{restart}} function
+The {\bf [[#restart][restart]]} function
 
 The {\bfref undoSteps} function, part of the undo mechanism can
 reset the =$InteractiveFrame=.
@@ -3024,7 +3024,7 @@ This decides when to give trace and untrace messages.
 #+end_src
 
 \defdollar{traceSize}
-This is the size limit of output during tracing. See \ref{smallEnough}
+This is the size limit of output during tracing. See [[#smallEnough][smallEnough]]
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
 (defvar |$traceSize| nil "size limit of output during tracing")
@@ -13796,7 +13796,7 @@ Axiom has multiple frames that contain independent information about a
 computation. There can be several frames at any one time and you can 
 shift back and forth between the frames. By default, the system starts
 in ``frame0'' (try the =)frame names= command). See the Frame
-Mechanism chapter (\ref{TheFrameMechanism} page~[[#TheFrameMechanism][TheFrameMechanism]]).
+Mechanism chapter ([[#TheFrameMechanism][TheFrameMechanism]] page~[[#TheFrameMechanism][TheFrameMechanism]]).
 
 The \varref{printLoadMsgs} variable controls whether load messages will
 be output as library routines are loaded. We disnable this by default.
@@ -14308,7 +14308,7 @@ with this hack and will try to convince the GCL crowd to fix this.
 # usesdollar: SpadInterpretStream -> libQuiet
 # usesdollar: SpadInterpretStream -> fn
 # usesdollar: SpadInterpretStream -> nopos
-\label{SpadInterpretStream}
+# label: SpadInterpretStream
 #+NAME: defun SpadInterpretStream
 #+begin_src common-lisp :noweb yes
 (defun |SpadInterpretStream| (str source interactive?) 
@@ -14381,7 +14381,7 @@ will end up as a recursive call to ourselves.
 # calls: intloopReadConsole -> ncloopEscaped
 # calls: intloopReadConsole -> intloopProcessString
 # usesdollar: intloopReadConsole -> dalymode
-\label{intloopReadConsole}
+# label: intloopReadConsole
 \sig{intloopReadConsole}{(String Integer)}{Throw}
 #+NAME: defun intloopReadConsole
 #+begin_src common-lisp :noweb yes
@@ -14625,7 +14625,7 @@ of the *AXIOM* shell variable at build time) if we can't.
 If the prefix string is the same as the whole string initial characters
 --R(ignoring spaces in the whole string) then we return the whole string
 minus any leading spaces.
-\label{intloopPrefix?}
+# label: intloopPrefix?
 \sig{intloopPrefix?}{String}{Union(String,NIL)}
 #+NAME: defun intloopPrefix? 0
 #+begin_src common-lisp :noweb yes
@@ -14643,7 +14643,7 @@ minus any leading spaces.
 This is used to hande =)lisp= top level commands
 # calls: intnplisp -> nplisp
 # usesdollar: intnplisp -> currentLine
-\label{intnplisp}
+# label: intnplisp
 #+NAME: defun intnplisp
 #+begin_src common-lisp :noweb yes
 (defun |intnplisp| (s)
@@ -14706,7 +14706,7 @@ character. Otherwise, it returns nil.
 # calls: intloopProcessString -> intloopProcess
 # calls: intloopProcessString -> next
 # calls: intloopProcessString -> incString
-\label{intloopProcessString}
+# label: intloopProcessString
 \sig{intloopProcessString}{(String,StepNo)}{StepNo}
 #+NAME: defun intloopProcessString
 #+begin_src common-lisp :noweb yes
@@ -14739,7 +14739,7 @@ character. Otherwise, it returns nil.
 \defun{next}{next}
 # calls: next -> Delay
 # calls: next -> next1
-\label{next}
+# label: next
 \sig{next}{(Function,Delay)}{Delay}
 #+NAME: defun next
 #+begin_src common-lisp :noweb yes
@@ -14752,7 +14752,7 @@ character. Otherwise, it returns nil.
 # calls: next1 -> StreamNull
 # calls: next1 -> incAppend
 # calls: next1 -> next
-\label{next1}
+# label: next1
 \sig{next1}{Delay}{ParsePair}
 #+NAME: defun next1
 #+begin_src common-lisp :noweb yes
@@ -14774,7 +14774,7 @@ and constructs a set of nested function calls to process the input line.
 # calls: incString -> incRenumber
 # calls: incString -> incLude
 # uses: incString -> Top
-\label{incString}
+# label: incString
 \sig{incString}{String}{Function}
 #+NAME: defun incString
 #+begin_src common-lisp :noweb yes
@@ -14919,7 +14919,7 @@ Remember the current line. The cases are:
 \item Otherwise stick it on the end of the list
 \end{itemize}
 # usesdollar: setCurrentLine -> currentLine
-\label{setCurrentLine}
+# label: setCurrentLine
 \sig{setCurrentLine}{String}{List(String)}
 #+NAME: defun setCurrentLine 0
 #+begin_src common-lisp :noweb yes
@@ -14943,7 +14943,7 @@ Remember the current line. The cases are:
 # usesdollar: mkprompt -> inputPromptType
 # usesdollar: mkprompt -> IOindex
 # usesdollar: mkprompt -> interpreterFrameName
-\label{mkprompt}
+# label: mkprompt
 \sig{mkprompt}{Void}{String}
 #+NAME: defun mkprompt
 #+begin_src common-lisp :noweb yes
@@ -15045,7 +15045,7 @@ Remember the current line. The cases are:
 # usesdollar: serverReadLine -> SpadServer
 # uses: serverReadLine -> *eof*
 # uses: serverReadLine -> in-stream
-\label{serverReadLine}
+# label: serverReadLine
 \sig{serverReadLine}{Stream}{String}
 #+NAME: defun serverReadLine
 #+begin_src common-lisp :noweb yes
@@ -15866,7 +15866,7 @@ information to drive the rest of the process.
 # calls: intloopProcess -> intloopSpadProcess
 # callsdollar: intloopProcess -> systemCommandFunction
 # usesdollar: intloopProcess -> systemCommandFunction
-\label{intloopProcess}
+# label: intloopProcess
 \sig{intloopProcess}{(StepNo,Boolean,Delay)}{StepNo}
 #+NAME: defun intloopProcess
 #+begin_src common-lisp :noweb yes
@@ -16269,7 +16269,7 @@ contiguous comment spanning enough lines to overflow the stack.
 \defun{incRenumber}{incRenumber}
 # calls: incRenumber -> incZip
 # calls: incRenumber -> incIgen
-\label{incRenumber}
+# label: incRenumber
 \sig{incRenumber}{Delay}{Delay}
 #+NAME: defun incRenumber
 #+begin_src common-lisp :noweb yes
@@ -16283,7 +16283,7 @@ Axiom ``zips'' a function together with two delays into a delay.
 
 # calls: incZip -> Delay
 # calls: incZip -> incZip1
-\label{incZip}
+# label: incZip
 \sig{incZip}{(Function,Delay,Delay)}{Delay}
 #+NAME: defun incZip
 #+begin_src common-lisp :noweb yes
@@ -16295,7 +16295,7 @@ Axiom ``zips'' a function together with two delays into a delay.
 \defun{incZip1}{incZip1}
 # calls: incZip1 -> StreamNull
 # calls: incZip1 -> incZip
-\label{incZip1}
+# label: incZip1
 \sig{incZip1}{Delay}{ParsePair}
 #+NAME: defun incZip1
 #+begin_src common-lisp :noweb yes
@@ -16317,7 +16317,7 @@ Axiom ``zips'' a function together with two delays into a delay.
 \defun{incIgen}{incIgen}
 # calls: incIgen -> Delay
 # calls: incIgen -> incIgen1
-\label{incIgen}
+# label: incIgen
 \sig{incIgen}{Integer}{Delay}
 #+NAME: defun incIgen
 #+begin_src common-lisp :noweb yes
@@ -16341,7 +16341,7 @@ Axiom ``zips'' a function together with two delays into a delay.
 \defun{incRenumberLine}{incRenumberLine}
 # calls: incRenumberLine -> incRenumberItem
 # calls: incRenumberLine -> incHandleMessage
-\label{incRenumberLine}
+# label: incRenumberLine
 #+NAME: defun incRenumberLine
 #+begin_src common-lisp :noweb yes
 (defun |incRenumberLine| (xl gno)
@@ -16396,7 +16396,7 @@ and constructs a call to \bfref{Delay}.
 
 # calls: incLude -> Delay
 # calls: include -> incLude1
-\label{incLude}
+# label: incLude
 \sig{incLude}{(Int,List(String),Int,List(String),List(Int))}{Delay}
 #+NAME: defun incLude
 #+begin_src common-lisp :noweb yes
@@ -17306,7 +17306,7 @@ b ==> 7
 #+end_example
 # calls: incClassify -> incCommand?
 # uses: incClassify -> incCommands
-\label{incClassify}
+# label: incClassify
 #+NAME: defun incClassify
 #+begin_src common-lisp :noweb yes
 (defun |incClassify| (s)
@@ -17488,7 +17488,7 @@ construct
 #+end_example
 Note that *nonnullstream* is NOT a function so the inputs
 have been changed from a function call to a simple list.
-\label{Delay}
+# label: Delay
 \sig{Delay}{(Function,List(Any))}{Delay}
 #+NAME: defun Delay 0
 #+begin_src common-lisp :noweb yes
@@ -17729,7 +17729,7 @@ returning the token-dq and the rest of the line-stream
 # usesdollar: lineoftoks -> r
 # usesdollar: lineoftoks -> n
 # usesdollar: lineoftoks -> ln
-\label{lineoftoks}
+# label: lineoftoks
 #+NAME: defun lineoftoks
 #+begin_src common-lisp :noweb yes
 (defun |lineoftoks| (s)
@@ -26138,7 +26138,7 @@ explains the strange parsing technique).
 
 \defun{StreamNull}{StreamNull}
 # calls: StreamNull -> eqcar
-\label{StreamNull}
+# label: StreamNull
 \sig{StreamNull}{Delay}{Union(T,NIL)}
 #+NAME: defun StreamNull 0
 #+begin_src common-lisp :noweb yes
@@ -27885,7 +27885,7 @@ This is called from parameter list of nc message functions
 
 * The Interpreter Syntax
 ** syntax assignment
-\label{assignment}
+# label: assignment
 \index{assignment}
 \index{syntax!assignment}
 \index{assignment!syntax}
@@ -28046,7 +28046,7 @@ There is no syntactic form for multiple delayed assignments.
 #+end_src
 
 ** syntax blocks
-\label{blocks}
+# label: blocks
 \index{blocks}
 \index{syntax!blocks}
 \index{blocks!syntax}
@@ -28147,7 +28147,7 @@ o )help lists
 \fnref{lists}}
 
 ** system clef
-\label{clef}
+# label: clef
 \index{clef}
 \index{syntax!clef}
 \index{clef!syntax}
@@ -28201,7 +28201,7 @@ DOS and ANSI terminal arrow key sequences are recognized, and act like:
 #+end_src 
 
 ** syntax collection
-\label{collection}
+# label: collection
 \index{collection}
 \index{syntax!collection}
 \index{collection!syntax}
@@ -28277,7 +28277,7 @@ ten terms.
 #+end_src
 
 ** syntax for
-\label{for}
+# label: for
 \index{for}
 \index{syntax!for}
 \index{for!syntax}
@@ -28487,7 +28487,7 @@ This displays each of the factors of 2400000:
 #+end_src
 
 ** syntax if
-\label{if}
+# label: if
 \index{if}
 \index{syntax!if}
 \index{if!syntax}
@@ -28593,7 +28593,7 @@ These are both equivalent to the following:
 #+end_src
 
 ** syntax iterate
-\label{iterate}
+# label: iterate
 \index{iterate}
 \index{syntax!iterate}
 \index{iterate!syntax}
@@ -28625,7 +28625,7 @@ Display the even integers from 2 to 5:
 #+end_src
 
 ** syntax leave
-\label{leave}
+# label: leave
 \index{leave}
 \index{syntax!leave}
 \index{leave!syntax}
@@ -28705,7 +28705,7 @@ lets you simulate the action of leave.
 #+end_src
 
 ** syntax parallel
-\label{parallel}
+# label: parallel
 \index{parallel}
 \index{syntax!parallel}
 \index{parallel!syntax}
@@ -28816,7 +28816,7 @@ Here are useful rules for composing loop expressions:
 #+end_src
 
 ** syntax repeat
-\label{repeat}
+# label: repeat
 \index{repeat}
 \index{syntax!repeat}
 \index{repeat!syntax}
@@ -29016,7 +29016,7 @@ o )help lists
 \fnref{lists}}
 
 ** syntax suchthat
-\label{suchthat}
+# label: suchthat
 \index{suchthat}
 \index{syntax!suchthat}
 \index{suchthat!syntax}
@@ -29063,7 +29063,7 @@ Any variable in an outer scope can be part of the predicate.
 #+end_src
 
 ** syntax syntax
-\label{syntax}
+# label: syntax
 #+NAME: syntax.help
 #+begin_src common-lisp :noweb yes
 
@@ -33930,7 +33930,7 @@ for processing =)read= of input files.
 # calls: ncloopCommand -> ncloopInclude1
 # callsdollar: ncloopCommand -> systemCommandFunction
 # usesdollar: ncloopCommand -> systemCommandFunction
-\label{ncloopCommand}
+# label: ncloopCommand
 #+NAME: defun ncloopCommand
 #+begin_src common-lisp :noweb yes
 (defun |ncloopCommand| (line n)
@@ -34229,9 +34229,9 @@ o )system
 \fnref{system}}
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{browse}
@@ -35480,9 +35480,9 @@ Portions Copyright (c) 2001-2010 Timothy Daly
 #+end_src
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{credits}
@@ -35499,9 +35499,9 @@ verbatim. This will eventually result in a call to the function
 #+end_src
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{describe}
@@ -36341,9 +36341,9 @@ o )quit
 #+end_src
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{help}
@@ -38736,9 +38736,9 @@ o )fin
 \fnref{fin}}
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{ltrace}
@@ -38858,9 +38858,9 @@ o )system
 #+end_src
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{quit}
@@ -38978,9 +38978,9 @@ bridge, so the two do not collide.
 #+end_src
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{read}
@@ -39801,7 +39801,7 @@ Also See:
 o )quit
 
 #+end_src
-\footnote{\fnref{quit}}
+[fn:2]
 
 *** Overview
 This section contains tree of information used to initialize the *)set* 
@@ -39840,7 +39840,7 @@ The fourth element is a union-style switch symbol.
 The fifth element is usually a variable to set.
 The sixth element is a subtree to recurse for the TREE switch.
 The seventh element is usually the default value. For more detailed
-explanations see the list structure section \ref{Theliststructure}.
+explanations see the list structure section [[#Theliststructure][Theliststructure]].
 # calls: initializeSetVariables -> sayMSG
 # calls: initializeSetVariables -> literals
 # calls: initializeSetVariables -> translateYesNo2TrueFalse
@@ -40101,7 +40101,7 @@ explanations see the list structure section \ref{Theliststructure}.
 
 #+end_src
 *** The list structure
-\label{Theliststructure}
+# label: Theliststructure
 The structure of each list item consists of 7 items.  Consider this 
 example:
 #+begin_example
@@ -41966,7 +41966,7 @@ naglink      show NAGLink messages                      on
 #+end_src
 
 *** set message frame
-\label{setmessageframe}
+# label: setmessageframe
 #+begin_example
 ---------------------- The frame Option -----------------------
 
@@ -45823,7 +45823,7 @@ Also See:
 o )cd
  
 #+end_src 
-\footnote{\fnref{cd}}
+[fn:3]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{summary}
@@ -46056,9 +46056,9 @@ synonyms at the current user level.
 #+end_src
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{system}
@@ -46108,9 +46108,9 @@ o )quit
 \fnref{quit}}
 
 This command is in the list of =$noParseCommands=
-\ref{noParseCommands} which means that its arguments are passed
+[[#noParseCommands][noParseCommands]] which means that its arguments are passed
 verbatim. This will eventually result in a call to the function
-=handleNoParseCommands= \ref{handleNoParseCommands}
+=handleNoParseCommands= [[#handleNoParseCommands][handleNoParseCommands]]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cmdhead{tangle}
@@ -46254,7 +46254,7 @@ Also See:
 o )history
  
 #+end_src 
-\footnote{\fnref{history}}
+[fn:4]
 
 \section{\enspace{}Evaluation}
 Some Antique Comments About the Interpreter
@@ -48795,7 +48795,7 @@ from the internal functions the algebra files are collected into
 the variable =$globalExposureGroupAlist=.
 
 Exposure group information is kept in the local frame. For more
-information ``The Frame Mechanism'' \ref{TheFrameMechanism} on
+information ``The Frame Mechanism'' [[#TheFrameMechanism][TheFrameMechanism]] on
 page~[[#TheFrameMechanism][TheFrameMechanism]].
 
 * Databases
@@ -60970,7 +60970,7 @@ Given =("one" "two" "three")= generate ="(one,two,three)"=
 #+end_src
 
 *** HTPage Layout
-\label{HTPage Layout}
+# label: HTPage Layout
 This is a list with the fields
 \begin{enumerate}
 \item name
