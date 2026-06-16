@@ -1,18 +1,11 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input hyperbolicrules.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: hyperbolicrules.input
+#+AUTHOR: Timothy Daly
+#+BEGIN_abstract
+#+END_abstract
 ** Definition of Hyperbolic Functions
 *** 8.1 Hyperbolic sine of x
-\[{\rm sinh}(x) == \frac{e^x-e^{-x}}{2}\]
+\[sinh(x) == \frac{e^x-e^{-x}}{2}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -50,7 +43,7 @@ t2:=sinhdef t1
 
 #+end_src
 *** 8.2 Hyperbolic cosine of x
-\[{\rm cosh}(x) == \frac{e^x+e^{-x}}{2}\]
+\[cosh(x) == \frac{e^x+e^{-x}}{2}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -84,7 +77,7 @@ t2:=coshdef t1
 
 #+end_src
 *** 8.3 Hyperbolic tangent of x
-\[{\rm tanh}(x) == \frac{e^x-e^{-x}}{e^x+e^{-x}}\]
+\[tanh(x) == \frac{e^x-e^{-x}}{e^x+e^{-x}}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -120,7 +113,7 @@ t2:=tanhdef t1
 
 #+end_src
 *** 8.4 Hyperbolic cotangent of x
-\[{\rm coth}(x) == \frac{e^x+e^{-x}}{e^x-e^{-x}}\]
+\[coth(x) == \frac{e^x+e^{-x}}{e^x-e^{-x}}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -156,7 +149,7 @@ t2:=cothdef t1
 
 #+end_src
 *** 8.5 Hyperbolic secant of x
-\[{\rm sech}(x) == \frac{2}{e^x+e^{-x}}\]
+\[sech(x) == \frac{2}{e^x+e^{-x}}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -191,7 +184,7 @@ t2:=sechdef t1
 
 #+end_src
 *** 8.6 Hyperbolic cosecant of x
-\[{\rm csch}(x) == \frac{2}{e^x-e^{-x}}\]
+\[csch(x) == \frac{2}{e^x-e^{-x}}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -226,8 +219,8 @@ t2:=cschdef t1
 
 #+end_src
 ** Relationship among Hyperbolic Functions
-\subsection{8.7 ${\rm tanh}(x)$}
-\[{\rm tanh}(x) == \frac{{\rm sinh}(x)}{{\rm cosh}(x)}\]
+\subsection{8.7 $tanh(x)$}
+\[tanh(x) == \frac{sinh(x)}{cosh(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -258,9 +251,9 @@ t2:=tanhrule t1
 --E 21
 
 #+end_src
-\subsection{8.8 ${\rm coth}(x)$}
-\[{\rm coth}(x) == \frac{1}{{\rm tanh}(x)}\]
-\[== \frac{{\rm cosh}(x)}{{\rm sinh}(x)}\]
+\subsection{8.8 $coth(x)$}
+\[coth(x) == \frac{1}{tanh(x)}\]
+\[== \frac{cosh(x)}{sinh(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -316,8 +309,8 @@ t4:=cothrule2 t3
 --E 27
 
 #+end_src
-\subsection{8.9 ${\rm sech}(x)$}
-\[{\rm sech}(x) == \frac{1}{{\rm cosh}(x)}\]
+\subsection{8.9 $sech(x)$}
+\[sech(x) == \frac{1}{cosh(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -348,8 +341,8 @@ t2:=sechrule t1
 --E 30
 
 #+end_src
-\subsection{8.10 ${\rm csch}(x)$}
-\[{\rm csch}(x) == \frac{1}{{\rm sinh}(x)}\]
+\subsection{8.10 $csch(x)$}
+\[csch(x) == \frac{1}{sinh(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -380,8 +373,8 @@ t2:=cschrule t1
 --E 33
 
 #+end_src
-\subsection{8.11 ${\rm cosh}^2(x)-~{\rm sinh}^2(x)$}
-\[{\rm cosh}^2(x)-~{\rm sinh}^2(x) == 1\]
+\subsection{8.11 $cosh^2(x)-~sinh^2(x)$}
+\[cosh^2(x)-~sinh^2(x) == 1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -410,8 +403,8 @@ t2:=coshsinh t1
 --E 36
 
 #+end_src
-\subsection{8.12 ${\rm sech}^2(x)+~{\rm tanh}^2(x)$}
-\[{\rm sech}^2(x)+~{\rm tanh}^2(x) == 1\]
+\subsection{8.12 $sech^2(x)+~tanh^2(x)$}
+\[sech^2(x)+~tanh^2(x) == 1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -440,8 +433,8 @@ t2:=sechtanh t1
 --E 39
 
 #+end_src
-\subsection{8.13 ${\rm coth}^2(x)-~{\rm csch}^2(x)$}
-\[{\rm coth}^2(x)-~{\rm csch}^2(x) == 1\]
+\subsection{8.13 $coth^2(x)-~csch^2(x)$}
+\[coth^2(x)-~csch^2(x) == 1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -472,8 +465,8 @@ t2:=cothcsch t1
 #+end_src
 ** Functions of Negative Arguments
 Axiom already knows these simplifications
-\subsection{8.14 ${\rm sinh}(-x)$}
-\[{\rm sinh}(-x) == -~{\rm sinh}(x)\]
+\subsection{8.14 $sinh(-x)$}
+\[sinh(-x) == -~sinh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -487,8 +480,8 @@ sinh(-x)
 
 
 #+end_src
-\subsection{8.15 ${\rm cosh}(-x)$}
-\[{\rm cosh}(-x) == {\rm cosh}(x)\]
+\subsection{8.15 $cosh(-x)$}
+\[cosh(-x) == cosh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -501,8 +494,8 @@ cosh(-x)
 --E 44
 
 #+end_src
-\subsection{8.16 ${\rm tanh}(-x)$}
-\[{\rm tanh}(-x) == -~{\rm tanh}(x)\]
+\subsection{8.16 $tanh(-x)$}
+\[tanh(-x) == -~tanh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -515,8 +508,8 @@ tanh(-x)
 --E 45
 
 #+end_src
-\subsection{8.17 ${\rm csch}(-x)$}
-\[{\rm csch}(-x) == -~{\rm csch(x)}\]
+\subsection{8.17 $csch(-x)$}
+\[csch(-x) == -~csch(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -529,8 +522,8 @@ csch(-x)
 --E 46
 
 #+end_src
-\subsection{8.18 ${\rm sech}(-x)$}
-\[{\rm sech}(-x) == {\rm sech}(x)\]
+\subsection{8.18 $sech(-x)$}
+\[sech(-x) == sech(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -543,8 +536,8 @@ sech(-x)
 --E 47
 
 #+end_src
-\subsection{8.19 ${\rm coth}(-x)$}
-\[{\rm coth}(-x) == -~{\rm coth}(x)\]
+\subsection{8.19 $coth(-x)$}
+\[coth(-x) == -~coth(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -558,8 +551,8 @@ coth(-x)
 
 #+end_src
 ** Addition Formulas
-\subsection{8.20 ${\rm sinh}(x \pm y)$}
-\[{\rm sinh}(x \pm y) == {\rm sinh}(x)~{\rm cosh}(y)\pm~{\rm cosh}(x)~{\rm sinh}(y)\]
+\subsection{8.20 $sinh(x \pm y)$}
+\[sinh(x \pm y) == sinh(x)~cosh(y)\pm~cosh(x)~sinh(y)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -607,8 +600,8 @@ t4:=sinhsub t3
 --E 54 
 
 #+end_src
-\subsection{8.21 ${\rm cosh}(x \pm y)$}
-\[{\rm cosh}(x \pm y) == {\rm cosh}(x)~{\rm cosh}(y)\pm~{\rm sinh}(x)~{\rm sinh}(y)\]
+\subsection{8.21 $cosh(x \pm y)$}
+\[cosh(x \pm y) == cosh(x)~cosh(y)\pm~sinh(x)~sinh(y)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -656,8 +649,8 @@ t4:=coshsub t3
 --E 60
 
 #+end_src
-\subsection{8.22 ${\rm tanh}(x \pm y)$}
-\[{\rm tanh}(x \pm y) == \frac{{\rm tanh}(x)\pm~{\rm tanh}(y)}{1\pm~{\rm tanh}(x)~{\rm tanh}(y)}\]
+\subsection{8.22 $tanh(x \pm y)$}
+\[tanh(x \pm y) == \frac{tanh(x)\pm~tanh(y)}{1\pm~tanh(x)~tanh(y)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -714,8 +707,8 @@ This loops forever.
 --E 66
 
 #+end_src
-\subsection{8.23 ${\rm coth}(x \pm y)$}
-\[{\rm coth}(x \pm y) == \frac{{\rm coth}(x)~{\rm coth}(y)\pm 1}{{\rm coth}(y)\pm~{\rm coth}(x)}\]
+\subsection{8.23 $coth(x \pm y)$}
+\[coth(x \pm y) == \frac{coth(x)~coth(y)\pm 1}{coth(y)\pm~coth(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -773,8 +766,8 @@ This loops forever
 
 #+end_src
 ** Double Angle Formulas
-\subsection{8.24 ${\rm sinh}(2x)$}
-\[{\rm sinh}(2x) == 2~{\rm sinh}(x)~{\rm cosh}(x)\]
+\subsection{8.24 $sinh(2x)$}
+\[sinh(2x) == 2~sinh(x)~cosh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -801,10 +794,10 @@ t2:=sinh2x t1
 --E 75
 
 #+end_src
-\subsection{8.25 ${\rm cosh}(2x)$}
-\[{\rm cosh}(2x) == {\rm cosh}^2(x)+~{\rm sinh}^2(x)\]
-\[==2~{\rm cosh}^2(x)-1\]
-\[==1+2~{\rm sinh}^2(x)\]
+\subsection{8.25 $cosh(2x)$}
+\[cosh(2x) == cosh^2(x)+~sinh^2(x)\]
+\[==2~cosh^2(x)-1\]
+\[==1+2~sinh^2(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -879,8 +872,8 @@ t6:=cosh2x3 t5
 --E 84
 
 #+end_src
-\subsection{8.26 ${\rm tanh}(2x)$}
-\[{\rm tanh}(2x) == \frac{2~{\rm tanh}(x)}{1+~{\rm tanh}^2(x)}\]
+\subsection{8.26 $tanh(2x)$}
+\[tanh(2x) == \frac{2~tanh(x)}{1+~tanh^2(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -915,8 +908,8 @@ t2:=tanh2x t1
 
 #+end_src
 ** Half Angle Formulas
-\subsection{8.27 ${\rm sinh}\left(\frac{x}{2}\right)$}
-\[{\rm sinh}\left(\frac{x}{2}\right) == \pm\sqrt{\frac{{\rm cosh}(x) - 1}{2}}\quad [+~{\rm if\ \ }x > 0, -{\rm if\ \ }x < 0]\]
+\subsection{8.27 $sinh\left(\frac{x}{2}\right)$}
+\[sinh\left(\frac{x}{2}\right) == \pm\sqrt{\frac{cosh(x) - 1}{2}} [+~if\ \x > 0, -if\ \x < 0]\]
 
 if $x > 0$ then
 #+NAME: *
@@ -990,8 +983,8 @@ t2:=sinhhalfneg t1
 --E 93
 
 #+end_src
-\subsection{8.28 ${\rm cosh}\left(\frac{x}{2}\right)$}
-\[{\rm cosh}\left(\frac{x}{2}\right) == \sqrt{\frac{{\rm cosh}(x) + 1}{2}}\]
+\subsection{8.28 $cosh\left(\frac{x}{2}\right)$}
+\[cosh\left(\frac{x}{2}\right) == \sqrt{\frac{cosh(x) + 1}{2}}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1027,10 +1020,10 @@ t2:=coshhalf t1
 --E 96
 
 #+end_src
-\subsection{8.29 ${\rm tanh}\left(\frac{x}{2}\right)$}
-\[{\rm tanh}\left(\frac{x}{2}\right) == \pm\sqrt{\frac{{\rm cosh}(x) - 1}{{\rm cosh}(x) + 1}}\quad [+~{\rm if\ \ }x > 0, -{\rm if\ \ }x < 0]\]
-\[== \frac{{\rm sinh}(x)}{{\rm cosh}(x)+1}\]
-\[== \frac{{\rm cosh}(x)-1}{{\rm sinh}(x)}\]
+\subsection{8.29 $tanh\left(\frac{x}{2}\right)$}
+\[tanh\left(\frac{x}{2}\right) == \pm\sqrt{\frac{cosh(x) - 1}{cosh(x) + 1}} [+~if\ \x > 0, -if\ \x < 0]\]
+\[== \frac{sinh(x)}{cosh(x)+1}\]
+\[== \frac{cosh(x)-1}{sinh(x)}\]
 
 if $x > 0$
 #+NAME: *
@@ -1158,8 +1151,8 @@ t2:=tanhhalf3 t1
 #+end_src
 
 ** Multiple Angle Formulas
-\subsection{8.30 ${\rm sinh}(3x)$}
-\[{\rm sinh}(3x) == 3~{\rm sinh}(x)+4~{\rm sinh}^3(x)\]
+\subsection{8.30 $sinh(3x)$}
+\[sinh(3x) == 3~sinh(x)+4~sinh^3(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1188,8 +1181,8 @@ t2:=sinh3x t1
 --E 111
 
 #+end_src
-\subsection{8.31 ${\rm cosh}(3x)$}
-\[{\rm cosh}(3x) == 4~{\rm cosh}^3(x)-3~{\rm cosh}(x)\]
+\subsection{8.31 $cosh(3x)$}
+\[cosh(3x) == 4~cosh^3(x)-3~cosh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1218,8 +1211,8 @@ t2:=cosh3x t1
 --E 114
 
 #+end_src
-\subsection{8.32 ${\rm tanh}(3x)$}
-\[{\rm tanh}(3x) == \frac{3~{\rm tanh}(x)+{\rm tanh}^3(x)}{1+3~{\rm tanh}^2(x)}\]
+\subsection{8.32 $tanh(3x)$}
+\[tanh(3x) == \frac{3~tanh(x)+tanh^3(x)}{1+3~tanh^2(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1254,8 +1247,8 @@ t2:=tanh3x t1
 --E 117
 
 #+end_src
-\subsection{8.33 ${\rm sinh}(4x)$}
-\[{\rm sinh}(4x) == 8~{\rm sinh}^3(x)~{\rm cosh}(x)+4~{\rm sinh}(x)~{\rm cosh}(x)\]
+\subsection{8.33 $sinh(4x)$}
+\[sinh(4x) == 8~sinh^3(x)~cosh(x)+4~sinh(x)~cosh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1284,8 +1277,8 @@ t2:=sinh4x t1
 --E 120
 
 #+end_src
-\subsection{8.34 ${\rm cosh}(4x)$}
-\[{\rm cosh}(4x) == 8~{\rm cosh}^4(x)-8~{\rm cosh}^2(x)+1\]
+\subsection{8.34 $cosh(4x)$}
+\[cosh(4x) == 8~cosh^4(x)-8~cosh^2(x)+1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1314,8 +1307,8 @@ t2:=cosh4x t1
 --E 123
 
 #+end_src
-\subsection{8.35 ${\rm tanh}(4x)$}
-\[{\rm tanh}(4x) == \frac{4~{\rm tanh}(x)+4~{\rm tanh}^3(x)}{1+6~{\rm tanh}^2(x)+{\rm tanh}^4(x)}\]
+\subsection{8.35 $tanh(4x)$}
+\[tanh(4x) == \frac{4~tanh(x)+4~tanh^3(x)}{1+6~tanh^2(x)+tanh^4(x)}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1352,8 +1345,8 @@ t2:=tanh4x t1
 #+end_src
 
 ** Powers of Hyperbolic Functions
-\subsection{8.36 ${\rm sinh}^2(x)$}
-\[{\rm sinh}^2(x) == \frac{1}{2}~{\rm cosh}(2x)-\frac{1}{2}\]
+\subsection{8.36 $sinh^2(x)$}
+\[sinh^2(x) == \frac{1}{2}~cosh(2x)-\frac{1}{2}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1385,8 +1378,8 @@ t2:=sinhsquared t1
 --E 129
 
 #+end_src
-\subsection{8.37 ${\rm cosh}^2(x)$}
-\[{\rm cosh}^2(x) == \frac{1}{2}~{\rm cosh}(2x)+\frac{1}{2}\]
+\subsection{8.37 $cosh^2(x)$}
+\[cosh^2(x) == \frac{1}{2}~cosh(2x)+\frac{1}{2}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1404,8 +1397,8 @@ t2:=coshsquared t1
 --E 132
 
 #+end_src
-\subsection{8.38 ${\rm sinh}^3(x)$}
-\[{\rm sinh}^3(x) == \frac{1}{4}~{\rm sinh}(3x)-\frac{3}{4}~{\rm sinh}(x)\]
+\subsection{8.38 $sinh^3(x)$}
+\[sinh^3(x) == \frac{1}{4}~sinh(3x)-\frac{3}{4}~sinh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1437,8 +1430,8 @@ t2:=sinhcubed t1
 --E 135
 
 #+end_src
-\subsection{8.39 ${\rm cosh}^3(x)$}
-\[{\rm cosh}^3(x) == \frac{1}{4}~{\rm cosh}(3x)+\frac{3}{4}~{\rm cosh}(x)\]
+\subsection{8.39 $cosh^3(x)$}
+\[cosh^3(x) == \frac{1}{4}~cosh(3x)+\frac{3}{4}~cosh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1470,8 +1463,8 @@ t2:=coshcubed t1
 --E 138
 
 #+end_src
-\subsection{8.40 ${\rm sinh}^4(x)$}
-\[{\rm sinh}^4(x) == \frac{3}{8}-\frac{1}{2}~{\rm cosh}(2x)+\frac{1}{8}~{\rm cosh}(4x)\]
+\subsection{8.40 $sinh^4(x)$}
+\[sinh^4(x) == \frac{3}{8}-\frac{1}{2}~cosh(2x)+\frac{1}{8}~cosh(4x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1503,8 +1496,8 @@ t2:=sinhfourth t1
 --E 141
 
 #+end_src
-\subsection{8.41 ${\rm cosh}^4(x)$}
-\[{\rm cosh}^4(x) == \frac{3}{8}+\frac{1}{2}~{\rm cosh}(2x)+\frac{1}{8}~{\rm cosh}(4x)\]
+\subsection{8.41 $cosh^4(x)$}
+\[cosh^4(x) == \frac{3}{8}+\frac{1}{2}~cosh(2x)+\frac{1}{8}~cosh(4x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1537,8 +1530,8 @@ t2:=coshfourth t1
 
 #+end_src
 ** Sum, Difference, and Product of Hyperbolic Products
-\subsection{8.42 ${\rm sinh}(x)+{\rm sinh}(y)$}
-\[{\rm sinh}(x)+{\rm sinh}(y) == 2~{\rm sinh}(\frac{1}{2}(x+y))~{\rm cosh}(\frac{1}{2}(x-y))\]
+\subsection{8.42 $sinh(x)+sinh(y)$}
+\[sinh(x)+sinh(y) == 2~sinh(\frac{1}{2}(x+y))~cosh(\frac{1}{2}(x-y))\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1569,8 +1562,8 @@ t2:=sinhplussinh t1
 --E 147
 
 #+end_src
-\subsection{8.43 ${\rm sinh}(x)-{\rm sinh}(y)$}
-\[{\rm sinh}(x)-{\rm sinh}(y) == 2~{\rm cosh}(\frac{1}{2}(x+y))~{\rm sinh}(\frac{1}{2}(x-y))\]
+\subsection{8.43 $sinh(x)-sinh(y)$}
+\[sinh(x)-sinh(y) == 2~cosh(\frac{1}{2}(x+y))~sinh(\frac{1}{2}(x-y))\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1601,8 +1594,8 @@ t2:=sinhminussinh t1
 --E 150
 
 #+end_src
-\subsection{8.44 ${\rm cosh}(x)+{\rm cosh}(y)$}
-\[{\rm cosh}(x)+{\rm cosh}(y) == 2~{\rm cosh}(\frac{1}{2}(x+y))~{\rm cosh}(\frac{1}{2}(x-y))\]
+\subsection{8.44 $cosh(x)+cosh(y)$}
+\[cosh(x)+cosh(y) == 2~cosh(\frac{1}{2}(x+y))~cosh(\frac{1}{2}(x-y))\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1633,8 +1626,8 @@ t2:=coshpluscosh t1
 --E 153
 
 #+end_src
-\subsection{8.45 ${\rm cosh}(x)-{\rm cosh}(y)$}
-\[{\rm cosh}(x)-{\rm cosh}(y) == 2~{\rm sinh}(\frac{1}{2}(x+y))~{\rm sinh}(\frac{1}{2}(x-y))\]
+\subsection{8.45 $cosh(x)-cosh(y)$}
+\[cosh(x)-cosh(y) == 2~sinh(\frac{1}{2}(x+y))~sinh(\frac{1}{2}(x-y))\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1665,8 +1658,8 @@ t2:=coshminuscosh t1
 --E 156
 
 #+end_src
-\subsection{8.46 ${\rm sinh}(x){\rm sinh}(y)$}
-\[{\rm sinh}(x){\rm sinh}(y) == \frac{1}{2}(~{\rm cosh}(x+y)-{\rm cosh}(x-y))\]
+\subsection{8.46 $sinh(x)sinh(y)$}
+\[sinh(x)sinh(y) == \frac{1}{2}(~cosh(x+y)-cosh(x-y))\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1697,8 +1690,8 @@ t2:=sinhtimessinh t1
 --E 159
 
 #+end_src
-\subsection{8.47 ${\rm cosh}(x){\rm cosh}(y)$}
-\[{\rm cosh}(x){\rm cosh}(y) == \frac{1}{2}(~{\rm cosh}(x+y)+{\rm cosh}(x-y))\]
+\subsection{8.47 $cosh(x)cosh(y)$}
+\[cosh(x)cosh(y) == \frac{1}{2}(~cosh(x+y)+cosh(x-y))\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1729,8 +1722,8 @@ t2:=coshtimescosh t1
 --E 162
 
 #+end_src
-\subsection{8.48 ${\rm sinh}(x){\rm cosh}(y)$}
-\[{\rm sinh}(x){\rm cosh}(y) == \frac{1}{2}(~{\rm sinh}(x+y)+{\rm sinh}(x-y))\]
+\subsection{8.48 $sinh(x)cosh(y)$}
+\[sinh(x)cosh(y) == \frac{1}{2}(~sinh(x+y)+sinh(x-y))\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1762,8 +1755,8 @@ t2:=sinhtimescosh t1
 
 #+end_src
 ** Inverse Hyperbolic Functions
-\subsection{8.55 ${\rm sinh}^{-1}(x)$}
-\[{\rm asinh}(x) == \log(x+\sqrt{x^2+1}) \quad {\rm if\ \ } -\infty < x < \infty\]
+\subsection{8.55 $sinh^{-1}(x)$}
+\[asinh(x) == \log(x+\sqrt{x^2+1}) if\ \ -\infty < x < \infty\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1794,8 +1787,8 @@ t2:=asinhrule t1
 --E 168
 
 #+end_src
-\subsection{8.56 ${\rm cosh}^{-1}(x)$}
-\[{\rm acosh}(x) == \log(x+\sqrt{x^2-1}) \quad {\rm if\ \ } x \ge 1\]
+\subsection{8.56 $cosh^{-1}(x)$}
+\[acosh(x) == \log(x+\sqrt{x^2-1}) if\ \ x \ge 1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1827,8 +1820,8 @@ t2:=acoshrule t1
 
 #+end_src
 
-\subsection{8.57 ${\rm tanh}^{-1}(x)$}
-\[{\rm atanh}(x) == \frac{1}{2}\log(\frac{1+x}{1-x}) \quad {\rm if\ \ } -1 < x < 1\]
+\subsection{8.57 $tanh^{-1}(x)$}
+\[atanh(x) == \frac{1}{2}\log(\frac{1+x}{1-x}) if\ \ -1 < x < 1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1864,8 +1857,8 @@ t2:=atanhrule t1
 
 #+end_src
 
-\subsection{8.58 ${\rm coth}^{-1}(x)$}
-\[{\rm acoth}(x) == \frac{1}{2}\log(\frac{x+1}{x-1}) \quad {\rm if\ \ } x>1 or x<-1\]
+\subsection{8.58 $coth^{-1}(x)$}
+\[acoth(x) == \frac{1}{2}\log(\frac{x+1}{x-1}) if\ \ x>1 or x<-1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1901,8 +1894,8 @@ t2:=acothrule t1
 
 #+end_src
 
-\subsection{8.59 ${\rm sech}^{-1}(x)$}
-\[{\rm asech}(x) == \log(\frac{1}{x}+\sqrt{\frac{1}{x^2}-1}) \quad {\rm if\ \ } 0 < x \le 1\]
+\subsection{8.59 $sech^{-1}(x)$}
+\[asech(x) == \log(\frac{1}{x}+\sqrt{\frac{1}{x^2}-1}) if\ \ 0 < x \le 1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1943,8 +1936,8 @@ t2:=asechrule t1
 --E 180
 
 #+end_src
-\subsection{8.60 ${\rm csch}^{-1}(x)$}
-\[{\rm acsch}(x) == \log(\frac{1}{x}+\sqrt{\frac{1}{x^2}+1}) \quad {\rm if\ \ } x \ne 0\]
+\subsection{8.60 $csch^{-1}(x)$}
+\[acsch(x) == \log(\frac{1}{x}+\sqrt{\frac{1}{x^2}+1}) if\ \ x \ne 0\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -1986,8 +1979,8 @@ t2:=acschrule t1
 
 #+end_src
 ** Relations between Inverse Hyperbolic Functions
-\subsection{8.61 ${\rm csch}^{-1}(x)$}
-\[{\rm csch}^{-1}(x) == {\rm sinh}^{-1}\left(\frac{1}{x}\right)\]
+\subsection{8.61 $csch^{-1}(x)$}
+\[csch^{-1}(x) == sinh^{-1}\left(\frac{1}{x}\right)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2030,8 +2023,8 @@ t2:=cschinv t1
 --E 186
 
 #+end_src
-\subsection{8.62 ${\rm sech}^{-1}(x)$}
-\[{\rm sech}^{-1}(x) == {\rm cosh}^{-1}\left(\frac{1}{x}\right)\]
+\subsection{8.62 $sech^{-1}(x)$}
+\[sech^{-1}(x) == cosh^{-1}\left(\frac{1}{x}\right)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2074,8 +2067,8 @@ t2:=sechinv t1
 --E 189
 
 #+end_src
-\subsection{8.63 ${\rm coth}^{-1}(x)$}
-\[{\rm coth}^{-1}(x) == {\rm tanh}^{-1}\left(\frac{1}{x}\right)\]
+\subsection{8.63 $coth^{-1}(x)$}
+\[coth^{-1}(x) == tanh^{-1}\left(\frac{1}{x}\right)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2118,8 +2111,8 @@ t2:=cothinv t1
 --E 192
 
 #+end_src
-\subsection{8.64 ${\rm sinh}^{-1}(x)$}
-\[{\rm sinh}^{-1}(x) == -~{\rm sinh}^{-1}(x)\]
+\subsection{8.64 $sinh^{-1}(x)$}
+\[sinh^{-1}(x) == -~sinh^{-1}(x)\]
 These identities are already known to Axiom
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2133,8 +2126,8 @@ t1:=sinh(-x)^(-1) - -sinh(x)^(-1)
 --E 193
 
 #+end_src
-\subsection{8.65 ${\rm tanh}^{-1}(x)$}
-\[{\rm tanh}^{-1}(x) == -~{\rm tanh}^{-1}(x)\]
+\subsection{8.65 $tanh^{-1}(x)$}
+\[tanh^{-1}(x) == -~tanh^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2147,8 +2140,8 @@ t1:=tanh(-x)^(-1) - -tanh(x)^(-1)
 --E 194
 
 #+end_src
-\subsection{8.66 ${\rm coth}^{-1}(x)$}
-\[{\rm coth}^{-1}(x) == -~{\rm coth}^{-1}(x)\]
+\subsection{8.66 $coth^{-1}(x)$}
+\[coth^{-1}(x) == -~coth^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2161,8 +2154,8 @@ t1:=coth(-x)^(-1) - -coth(x)^(-1)
 --E 195
 
 #+end_src
-\subsection{8.67 ${\rm csch}^{-1}(x)$}
-\[{\rm csch}^{-1}(x) == -~{\rm csch}^{-1}(x)\]
+\subsection{8.67 $csch^{-1}(x)$}
+\[csch^{-1}(x) == -~csch^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2177,7 +2170,7 @@ t1:=csch(-x)^(-1) - -csch(x)^(-1)
 #+end_src
 ** Relationship between Hyperbolic and Trigonometric Functions
 *** 8.74 $\sin(ix)$
-\[\sin(ix) == i~{\rm sinh}(x)\]
+\[\sin(ix) == i~sinh(x)\]
 This match does not work.
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2206,7 +2199,7 @@ t2:=sininv t1
 
 #+end_src
 *** 8.75 $\cos(ix)$
-\[\cos(ix) == {\rm cosh}(x)\]
+\[\cos(ix) == cosh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2234,7 +2227,7 @@ t2:=cosinv t1
 
 #+end_src
 *** 8.76 $\tan(ix)$
-\[\tan(ix) == i~{\rm tanh}(x)\]
+\[\tan(ix) == i~tanh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2262,7 +2255,7 @@ t2:=taninv t1
 
 #+end_src
 *** 8.77 $\csc(ix)$
-\[\csc(ix) == -i~{\rm csch}(x)\]
+\[\csc(ix) == -i~csch(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2290,7 +2283,7 @@ t2:=cscinv t1
 
 #+end_src
 *** 8.78 $\sec(ix)$
-\[\sec(ix) == {\rm sech}(x)\]
+\[\sec(ix) == sech(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2318,7 +2311,7 @@ t2:=secinv t1
 
 #+end_src
 *** 8.79 $\cot(ix)$
-\[\cot(ix) == -i~{\rm coth}(x)\]
+\[\cot(ix) == -i~coth(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2345,7 +2338,7 @@ t2:=cotinv t1
 --E 214 
 
 #+end_src
-\subsection{8.80 ${\rm sinh}(ix)$}
+\subsection{8.80 $sinh(ix)$}
 \[\sinh(ix) == i~\sin(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2373,7 +2366,7 @@ t2:=sinhinv t1
 --E 217
 
 #+end_src
-\subsection{8.81 ${\rm cosh}(ix)$}
+\subsection{8.81 $cosh(ix)$}
 \[\cosh(ix) == \cos(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2401,7 +2394,7 @@ t2:=coshinv t1
 --E 220
 
 #+end_src
-p\subsection{8.82 ${\rm tanh}(ix)$}
+p\subsection{8.82 $tanh(ix)$}
 \[\tanh(ix) == i\tan(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2429,8 +2422,8 @@ t2:=tanhinv t1
 --E 223
 
 #+end_src
-\subsection{8.83 ${\rm csch}(ix)$}
-\[{\rm csch}(ix) == -i \csc(x)\]
+\subsection{8.83 $csch(ix)$}
+\[csch(ix) == -i \csc(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2457,8 +2450,8 @@ t2:=cschinv t1
 --E 226
 
 #+end_src
-\subsection{8.84 ${\rm sech}(ix)$}
-\[{\rm sech}(ix) == \sec(x)\]
+\subsection{8.84 $sech(ix)$}
+\[sech(ix) == \sec(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2485,8 +2478,8 @@ t2:=sechinv t1
 --E 229
 
 #+end_src
-\subsection{8.85 ${\rm coth}(ix)$}
-\[{\rm coth}(ix) == -i \cot(x)\]
+\subsection{8.85 $coth(ix)$}
+\[coth(ix) == -i \cot(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2515,8 +2508,8 @@ t2:=cothinv t1
 #+end_src
 
 ** Periodicity of Hyperbolic Functions
-\subsection{8.86 ${\rm sinh}(x+2k\pi i)$}
-\[{\rm sinh}(x+2k\pi i) == {\rm sinh}(x)\]
+\subsection{8.86 $sinh(x+2k\pi i)$}
+\[sinh(x+2k\pi i) == sinh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2543,8 +2536,8 @@ t2:=sinhperiod t1
 --E 235
 
 #+end_src
-\subsection{8.87 ${\rm cosh}(x+2k\pi i)$} 
-\[{\rm cosh}(x+2k\pi i) == {\rm cosh}(x)\]
+\subsection{8.87 $cosh(x+2k\pi i)$} 
+\[cosh(x+2k\pi i) == cosh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2571,8 +2564,8 @@ t2:=coshperiod t1
 --E 238
 
 #+end_src
-\subsection{8.88 ${\rm tanh}(x+2k\pi i)$} 
-\[{\rm tanh}(x+k\pi i) == {\rm tanh}(x)\]
+\subsection{8.88 $tanh(x+2k\pi i)$} 
+\[tanh(x+k\pi i) == tanh(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2599,8 +2592,8 @@ t2:=tanhperiod t1
 --E 241
 
 #+end_src
-\subsection{8.89 ${\rm csch}(x+2k\pi i)$} 
-\[{\rm csch}(x+2k\pi i) == {\rm csch}(x)\]
+\subsection{8.89 $csch(x+2k\pi i)$} 
+\[csch(x+2k\pi i) == csch(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2627,8 +2620,8 @@ t2:=cschperiod t1
 --E 244
 
 #+end_src
-\subsection{8.90 ${\rm sech}(x+2k\pi i)$} 
-\[{\rm sech}(x+2k\pi i) == {\rm sech}(x)\]
+\subsection{8.90 $sech(x+2k\pi i)$} 
+\[sech(x+2k\pi i) == sech(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2655,8 +2648,8 @@ t2:=sechperiod t1
 --E 247
 
 #+end_src
-\subsection{8.91 ${\rm coth}(x+2k\pi i)$} 
-\[{\rm coth}(x+k\pi i) == {\rm coth}(x)\]
+\subsection{8.91 $coth(x+2k\pi i)$} 
+\[coth(x+k\pi i) == coth(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2687,7 +2680,7 @@ t2:=cothperiod t1
 ** Inverse Hyperbolic and Inverse Trig Functions
 These patterns do not match in Axiom.
 \subsection{8.92 $\sin^{-1}(ix)$}
-\[\sin^{-1}(ix) == i~{\rm sinh}^{-1}(x)\]
+\[\sin^{-1}(ix) == i~sinh^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2720,8 +2713,8 @@ t2:=sinsinh t1
 --E 253
 
 #+end_src
-\subsection{8.93 ${\rm \sinh}^{-1}(ix)$}
-\[{\rm \sinh}^{-1}(ix) == i~\sin^{-1}(x)\]
+\subsection{8.93 $\sinh^{-1}(ix)$}
+\[\sinh^{-1}(ix) == i~\sin^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2755,7 +2748,7 @@ t2:=sinhsin t1
 
 #+end_src
 \subsection{8.94 $\cos^{-1}(x)$}
-\[\cos^{-1}(x) == \pm ~{\rm cosh}^{-1}(x)\]
+\[\cos^{-1}(x) == \pm ~cosh^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2817,8 +2810,8 @@ t2:=coscosh2 t1
 --E 262
 
 #+end_src
-\subsection{8.95 ${\rm \cosh}^{-1}(x)$}
-\[{\rm \cosh}^{-1}(x) == \pm i~\cos^{-1}(x)\]
+\subsection{8.95 $\cosh^{-1}(x)$}
+\[\cosh^{-1}(x) == \pm i~\cos^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2881,7 +2874,7 @@ t2:=coshcos2 t1
 
 #+end_src
 \subsection{8.96 $\tan^{-1}(ix)$}
-\[\tan^{-1}(ix) == i~{\rm tanh}^{-1}(x)\]
+\[\tan^{-1}(ix) == i~tanh^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2914,8 +2907,8 @@ t2:=tantanh t1
 --E 271
 
 #+end_src
-\subsection{8.97 ${\rm tanh}^{-1}(ix)$}
-\[{\rm tanh}^{-1}(ix) == i~\tan^{-1}(x)\]
+\subsection{8.97 $tanh^{-1}(ix)$}
+\[tanh^{-1}(ix) == i~\tan^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2949,7 +2942,7 @@ t2:=tanhtan t1
 
 #+end_src
 \subsection{8.98 $\cot^{-1}(ix)$}
-\[\cot^{-1}(ix) == -i~{\rm cosh}^{-1}(x)\]
+\[\cot^{-1}(ix) == -i~cosh^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2982,8 +2975,8 @@ t2:=cotcoth t1
 --E 277
 
 #+end_src
-\subsection{8.99 ${\rm coth}^{-1}(ix)$}
-\[{\rm coth}^{-1}(ix) == -i~\cot^{-1}(x)\]
+\subsection{8.99 $coth^{-1}(ix)$}
+\[coth^{-1}(ix) == -i~\cot^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -3017,7 +3010,7 @@ t2:=cothcot t1
 
 #+end_src
 \subsection{8.100 $\sec^{-1}(x)$}
-\[\sec^{-1}(x) == \pm i~{\rm sech}(x)\]
+\[\sec^{-1}(x) == \pm i~sech(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -3079,8 +3072,8 @@ t2:=secsech2 t1
 --E 286
 
 #+end_src
-\subsection{8.101 ${\rm sech}^{-1}(x)$}
-\[{\rm sech}^{-1}(x) == \pm i~\sec^{-1}(x)\]
+\subsection{8.101 $sech^{-1}(x)$}
+\[sech^{-1}(x) == \pm i~\sec^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -3143,7 +3136,7 @@ t2:=sechsec t1
 
 #+end_src
 \subsection{8.102 $\csc^{-1}(ix)$}
-\[\csc^{-1}(ix) == -i~{\rm csch}^{-1}(x)\]
+\[\csc^{-1}(ix) == -i~csch^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -3176,8 +3169,8 @@ t2:=csccsch t1
 --E 295
 
 #+end_src
-\subsection{8.103 ${\rm csch}^{-1}(ix)$}
-\[{\rm csch}^{-1}(ix) ==-i~\csc^{-1}(x)\]
+\subsection{8.103 $csch^{-1}(ix)$}
+\[csch^{-1}(ix) ==-i~\csc^{-1}(x)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -3223,7 +3216,6 @@ tanrule2:RewriteRule(INT,COMPLEX(INT),EXPR(COMPLEX(INT))):=
 )spool 
 )lisp (bye)
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

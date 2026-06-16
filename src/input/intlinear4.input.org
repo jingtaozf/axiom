@@ -1,16 +1,9 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input intlinear4.input}
-\author{Albert Rich and Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: intlinear4.input
+#+AUTHOR: Albert Rich and Timothy Daly
+#+BEGIN_abstract
 This is a decision tree form of the Rich pattern matching integrator.
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+END_abstract
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -46,7 +39,7 @@ eql?(m:ET, n:ET):Boolean == zero?(m-n)
 
 ** Outline of rules for integrands of the form
 \[\int{(a+bx)^m}\]
-See \verb|2.1.1 (a+b x)^m.pdf|
+See =2.1.1 (a+b x)^m.pdf=
 
 \[\begin{array}{rcl}
 m=0, b=0 &=& x\\
@@ -82,7 +75,7 @@ intlinear4(a:ET, b:ET, m:ET, x:Symbol):ET ==
 #+end_src
 
 ** Test cases with Axiom results
-{\bf Case 1a}: $m=0, b=0 => x$
+*Case 1a*: $m=0, b=0 => x$
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 5 of 10
@@ -100,7 +93,7 @@ intlinear4(A::ET, 0::ET, 0::ET,    x::SYMBOL)
 
 #+end_src
 
-\noindent{\bf Case 1b}: $m=0, b\ne 0 => x$
+\noindent*Case 1b*: $m=0, b\ne 0 => x$
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 6 of 10
@@ -113,7 +106,7 @@ intlinear4(A::ET, B::ET, 0::ET,    x::SYMBOL)
 
 #+end_src
 
-\noindent{\bf Case 1c}: $m\ne 0, b=0 => a^m x$
+\noindent*Case 1c*: $m\ne 0, b=0 => a^m x$
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 7 of 10
@@ -127,7 +120,7 @@ intlinear4(A::ET, 0::ET, M::ET,    x::SYMBOL)
 
 #+end_src
 
-\noindent{\bf Case 2}: $m=1 => \displaystyle ax+\frac{1}{2}bx^2$
+\noindent*Case 2*: $m=1 => \displaystyle ax+\frac{1}{2}bx^2$
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 8 of 10
@@ -143,7 +136,7 @@ intlinear4(A::ET, B::ET, 1::ET,    x::SYMBOL)
 
 #+end_src
 
-\noindent{\bf Case 3}: $m=-1  => \displaystyle\frac{log(a+bx)}{b}$
+\noindent*Case 3*: $m=-1  => \displaystyle\frac{log(a+bx)}{b}$
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 9 of 10
@@ -158,7 +151,7 @@ intlinear4(A::ET, B::ET, (-1)::ET, x::SYMBOL)
 
 #+end_src
 
-\noindent{\bf Case4}: 
+\noindent*Case4*: 
 ${\textrm general} => \displaystyle\frac{(a+bx)^{m+1}}{b(m+1)}$
 #+NAME: *
 #+begin_src common-lisp :noweb yes

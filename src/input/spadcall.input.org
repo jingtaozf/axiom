@@ -1,21 +1,14 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input spadcall.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: spadcall.input
+#+AUTHOR: Timothy Daly
+#+BEGIN_abstract
 Axiom's Spad language is a domain specific language 
 implemented on top of Lisp. It is possible to write
 algebra programs directly in Lisp. Here we demonstrate
 the use of the SPADCALL macro. We look up functions from
 the domain LIST(FRAC(INT)), construct the lisp representation
 of elements, and then apply the function to the element.
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+END_abstract
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -28,8 +21,8 @@ of elements, and then apply the function to the element.
 #+end_src
 First we look at the functions available in LIST(FRAC(INT)).
 
-We will look at several examples, {\tt third}, {\tt sort}, 
-and {\tt size?}
+We will look at several examples, =third=, =sort=, 
+and =size?=
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -197,17 +190,17 @@ third b
 
 #+end_src
 To do the same at the Lisp level we first have to get the function from the
-domain using {\tt getFunctionFromDomain}. Note that the case is important so
+domain using =getFunctionFromDomain=. Note that the case is important so
 we use vertical bars to preserve case. 
 
-The {\tt getFunctionFromDomain} function wants the name of the function,
+The =getFunctionFromDomain= function wants the name of the function,
 the domain to examine, and a list of the type of the arguments since there 
 can be several functions with the same name but different arguments.
 
-The function we want is {\tt third}. The domain is 
-\verb?(|List| (|Fraction| (|Integer|)))?.
-The {\tt third} function takes one argument, an element of the domain. We construct
-a list of one argument which is \verb?(|List| (|Fraction| (|Integer|)))?.
+The function we want is =third=. The domain is 
+=(|List| (|Fraction| (|Integer|)))=.
+The =third= function takes one argument, an element of the domain. We construct
+a list of one argument which is =(|List| (|Fraction| (|Integer|)))=.
 
 The call looks like:
 #+begin_example
@@ -226,17 +219,17 @@ The call looks like:
 
 #+end_src
 Now we have a cons cell containing the function in the car and the domain
-vector in the cdr, stored in the variable {\tt f}. 
+vector in the cdr, stored in the variable =f=. 
 
-The {\tt spadcall} macro expands to
+The =spadcall= macro expands to
 #+begin_example
    )lisp (macroexpand '(spadcall a f))
 
    (LET ((#:G1587 F)) (THE (VALUES T) (FUNCALL (CAR #:G1587) A (CDR #:G1587))))
 #+end_example
 Notice that this will call the function (from the car of the cons) with the
-arguments {\tt a} which is our list and the domain vector (from the cdr of
-the cons). So {\tt spadcall} is just a convenience macro.
+arguments =a= which is our list and the domain vector (from the cdr of
+the cons). So =spadcall= is just a convenience macro.
 
 This call will be the exact same result as Axiom's 
 #+begin_example
@@ -253,7 +246,7 @@ Fraction(Integer) domain, as expected.
 --E 6
 
 #+end_src
-We do the same thing with the {\tt sort} function at the Axiom level
+We do the same thing with the =sort= function at the Axiom level
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 7 of 14
@@ -267,7 +260,7 @@ sort b
 --E 7
 
 #+end_src
-Now we look up {\tt sort} by hand
+Now we look up =sort= by hand
 The call looks like:
 #+begin_example
 (setq f (|getFunctionFromDomain| '|sort| 
@@ -292,7 +285,7 @@ list of cons cells.
 --E 9
 
 #+end_src
-Functions might require more than one argument such as the {\tt size?} function.
+Functions might require more than one argument such as the =size?= function.
 Here is the Axiom version.
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -305,11 +298,11 @@ size?(b,2)
 --E 10
 
 #+end_src
-In order to look up the {\tt size?} function we need to specify the types of
-each argument. The {\tt size?} function requires the first argument to be an element
+In order to look up the =size?= function we need to specify the types of
+each argument. The =size?= function requires the first argument to be an element
 of the domain List(Fraction(Integer)) and the second argument to be an element
 of the domain NonNegativeInteger. Remember that the 3th argument to the 
-{\tt getFunctionFromDomain} lookup requires a list of argument types, in this case
+=getFunctionFromDomain= lookup requires a list of argument types, in this case
 there are two, so we make a list of two of them:
 #+begin_example
 '( (|List| (|Fraction| (|Integer|))) 
@@ -368,7 +361,6 @@ As in the Axiom call above the result is 'true' represented in Lisp as T.
 )lisp (bye)
 
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

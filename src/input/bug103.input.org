@@ -1,15 +1,8 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input bug103.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: bug103.input
+#+AUTHOR: Timothy Daly
+#+BEGIN_abstract
+#+END_abstract
 
 The call
 #+begin_example
@@ -21,8 +14,8 @@ fails with:
    (1 . failed) cannot be coerced to mode (Polynomial (Integer))
 #+end_example
 
-The bug fix, proposed by William, changes {\tt exquo} in EuclideanDomain
-to add the {\tt zero? x} test.
+The bug fix, proposed by William, changes =exquo= in EuclideanDomain
+to add the =zero? x= test.
 #+begin_example
       x exquo y ==
          zero? x => 0
@@ -33,8 +26,8 @@ to add the {\tt zero? x} test.
 #+end_example
 This change was made but does not affect the behavior of the bug.
 
-This fix, proposed by Martin, changes {\tt primitePart} in 
-{\tt PolynomialCategory} to add the {\tt zero?} test.
+This fix, proposed by Martin, changes =primitePart= in 
+=PolynomialCategory= to add the =zero?= test.
 #+begin_example
       primitivePart p ==
         zero? p => p
@@ -79,7 +72,6 @@ which is the original input integral.
 )lisp (bye)
  
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

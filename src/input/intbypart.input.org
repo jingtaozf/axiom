@@ -1,16 +1,9 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input intbypart.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: intbypart.input
+#+AUTHOR: Timothy Daly
+#+BEGIN_abstract
 This are functions which are usually solved using integration by parts.
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+END_abstract
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -25,18 +18,15 @@ $$D_x(uv) = uv^{'} + vu^{'}$$
 which can be rewritten in terms of the antiderivatives as follows:
 $$uv=\int{uv^{'} dx} + \int{vu^{'} dx}$$
 
-\noindent
 We can rewrite the terms of the sum:
 $$\int{uv^{'} dx} ==> \int{u dv}$$
 $$\int{vu^{'} dx} ==> \int{v du}$$
 so the sum now becomes:
 $$uv = \int{u dv} + \int{v du}$$
 
-\noindent
 We can now rearrange the terms into
 $$\int{u dv} = uv - \int{v du}$$
 
-\noindent
 The purpose of this rewrite is to solve the ``hard'' integral
 $$\int{u dv}$$
  by an ``easy'' integral
@@ -110,7 +100,6 @@ $$v = sin(x)$$
 thus
 $$\int{e^x cos(x) dx}=e^x sin(x) - \int{e^x sin(x) dx}\eqno{(1)}$$
 
-\noindent
 and then we substitute again to solve the integral
 $$\int{e^x sin(x) dx}$$
 so that 
@@ -123,7 +112,6 @@ $$\int{e^x sin(x)dx}$$
 $$= -e^x cos(x) - \int{-e^x cos(x)dx}$$
 $$= -e^x cos(x) + \int{e^x cos(x)dx}$$
 
-\noindent
 and then we substitute equation (1)
 $$\int{e^x cos(x) dx}$$
 $$=e^x sin(x) - \left( -e^x cos(x)+\int{e^x cos(x)dx}\right)$$
@@ -520,7 +508,6 @@ integrate(x^3*exp(2*x),x)
 )lisp (bye)
 #+end_src
 
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} Ayres, Frank Jr. and Mendelson, Elliott
 ``Calculus'' Schaum's Outlines 4th edition 1999

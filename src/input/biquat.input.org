@@ -1,14 +1,8 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input biquat.input}
-\author{D. Cyganski}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
+#+TITLE: biquat.input
+#+AUTHOR: D. Cyganski
+#+BEGIN_abstract
+#+END_abstract
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -288,9 +282,9 @@ components of the biquaternion are called the imaginary components while
 the scalar or $\sigma_0$ component are called real. This introduces vast
 confusion when dealing with biquaternions in which there is a ``true''
 imaginary unit, \%i being used. We will adopt a variation on the language
-used by Gsponer and others. A biquat $[{\bf a}, {\bf b}, {\bf c}, {\bf d}]$
-has scalar component ${\bf a}$ which may have itself an imaginary component.
-The component $[{\bf 0}, {\bf b}, {\bf c}, {\bf d}]$ is its vector 
+used by Gsponer and others. A biquat $[*a*, *b*, *c*, *d*]$
+has scalar component $*a*$ which may have itself an imaginary component.
+The component $[*0*, *b*, *c*, *d*]$ is its vector 
 component which again may be complex:
 #+begin_example
  [0,b,c,d]=[0,Re(b),Re(c),Re(d)]+[0,Im(b),Im(c),Im(d)]=Re(Vec(q))+Im(Vec(q))
@@ -755,8 +749,8 @@ map(x+->posxRule x, testqeq)
 #+end_src
 ** Algebraic Domain of Computation
 
-Recall that Axiom does things in a fundamentally {\sl algebraic} rather
-than {\sl symbolic} way. So although the pattern matching approach
+Recall that Axiom does things in a fundamentally /algebraic/ rather
+than /symbolic/ way. So although the pattern matching approach
 works, it goes somewhat against the overall philosophy of Axiom. It is
 possible to do almost anything by using rewrite rules including things
 that are mathematically incorrect. In this case the rule is simple and
@@ -811,7 +805,6 @@ eval(eval(testqeq,theta=sqrt(beta)),sqrt(beta)=theta)
 )lisp (bye)
  
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

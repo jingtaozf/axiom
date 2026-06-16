@@ -1,15 +1,8 @@
-\documentclass{article}
 \setlength{\textwidth}{400pt}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src/input dbtest.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: dbtest.input
+#+AUTHOR: Timothy Daly
+#+BEGIN_abstract
+#+END_abstract
 \begin{verbatim}
 Building A Query Facility
 
@@ -80,7 +73,7 @@ end{verbatim}
 
 As usual, the arguments of elt associate to the left.
 The first elt produces the set of all operations with
-name {\tt map}.
+name =map=.
 The second elt produces the set of all map operations
 with three arguments.
 The third elt produces the set of all three-argument map
@@ -96,17 +89,17 @@ elt(elt(elt(elt(ops,name="determinant"),origin),sort),unique)
 
 
 The first elt produces the set of all index cards with
-name {\tt determinant}.
-The second elt extracts the {\tt origin} component from
+name =determinant=.
+The second elt extracts the =origin= component from
 each index card. Each origin component
 is the name of a constructor which directly
 exports the operation represented by the index card.
 Extracting a component from each index card produces what we call
-a {\it datalist}.
-The third elt, {\tt sort}, causes the datalist of
+a /datalist/.
+The third elt, =sort=, causes the datalist of
 origins to be sorted in alphabetic
 order.
-The fourth, {\tt unique}, causes duplicates to be removed.
+The fourth, =unique=, causes duplicates to be removed.
 
 Before giving you a more extensive demo of this facility,
 we now build the necessary domains and packages to implement it.
@@ -199,25 +192,24 @@ domain.
 
 \beginImportant
   
-\noindent
-{\tt 1.\ \ \ PI\ ==>\ PositiveInteger}\newline
-{\tt 2.\ \ \ Database(S):\ Exports\ ==\ Implementation\ where}\newline
-{\tt 3.\ \ \ \ \ S:\ Object\ with\ }\newline
-{\tt 4.\ \ \ \ \ \ \ elt:\ (\$,\ Symbol)\ ->\ String}\newline
-{\tt 5.\ \ \ \ \ \ \ display:\ \$\ ->\ Void}\newline
-{\tt 6.\ \ \ \ \ \ \ fullDisplay:\ \$\ ->\ Void}\newline
-{\tt 7.\ \ \ }\newline
-{\tt 8.\ \ \ \ \ Exports\ ==\ with}\newline
-{\tt 9.\ \ \ \ \ \ \ elt:\ (\$,QueryEquation)\ ->\ \$}\newline
-{\tt 10.\ \ \ \ \ \ elt:\ (\$,\ Symbol)\ ->\ DataList\ String}\newline
-{\tt 11.\ \ \ \ \ \ "+":\ (\$,\$)\ ->\ \$}\newline
-{\tt 12.\ \ \ \ \ \ "-":\ (\$,\$)\ ->\ \$}\newline
-{\tt 13.\ \ \ \ \ \ display:\ \$\ ->\ Void}\newline
-{\tt 14.\ \ \ \ \ \ fullDisplay:\ \$\ ->\ Void}\newline
-{\tt 15.\ \ \ \ \ \ fullDisplay:\ (\$,PI,PI)\ ->\ Void}\newline
-{\tt 16.\ \ \ \ \ \ coerce:\ \$\ ->\ OutputForm}\newline
-{\tt 17.\ \ \ \ Implementation\ ==\ add}\newline
-{\tt 18.\ \ \ \ \ \ \ \ ...}\newline
+=1.\ \ \ PI\ ==>\ PositiveInteger=\newline
+=2.\ \ \ Database(S):\ Exports\ ==\ Implementation\ where=\newline
+=3.\ \ \ \ \ S:\ Object\ with\=\newline
+=4.\ \ \ \ \ \ \ elt:\ (\$,\ Symbol)\ ->\ String=\newline
+=5.\ \ \ \ \ \ \ display:\ \$\ ->\ Void=\newline
+=6.\ \ \ \ \ \ \ fullDisplay:\ \$\ ->\ Void=\newline
+=7.\ \ \=\newline
+=8.\ \ \ \ \ Exports\ ==\ with=\newline
+=9.\ \ \ \ \ \ \ elt:\ (\$,QueryEquation)\ ->\ \$=\newline
+=10.\ \ \ \ \ \ elt:\ (\$,\ Symbol)\ ->\ DataList\ String=\newline
+=11.\ \ \ \ \ \ "+":\ (\$,\$)\ ->\ \$=\newline
+=12.\ \ \ \ \ \ "-":\ (\$,\$)\ ->\ \$=\newline
+=13.\ \ \ \ \ \ display:\ \$\ ->\ Void=\newline
+=14.\ \ \ \ \ \ fullDisplay:\ \$\ ->\ Void=\newline
+=15.\ \ \ \ \ \ fullDisplay:\ (\$,PI,PI)\ ->\ Void=\newline
+=16.\ \ \ \ \ \ coerce:\ \$\ ->\ OutputForm=\newline
+=17.\ \ \ \ Implementation\ ==\ add=\newline
+=18.\ \ \ \ \ \ \ \ ...=\newline
 \endImportant
 
 The domain constructor takes a parameter S, which
@@ -229,7 +221,7 @@ the eight fields mentioned above.
 First, we tell Axiom what operations we are going to require
 from index cards.
 We need an elt to extract the contents of a field
-(such as {\tt name} and {\tt type}) as a string.
+(such as =name= and =type=) as a string.
 For example, c.name returns a string that is the content of the
 name field on the index card c.
 We need to display an index card in two ways:
@@ -245,9 +237,9 @@ This part defines our little query language.
 The most important operation is
 {\frenchspacing\tt db . field = pattern} which
 returns a new database, consisting of all index
-cards of {\tt db} such that the field part of the index
+cards of =db= such that the field part of the index
 card is matched by the string pattern called pattern.
-The expression {\tt field = pattern} is an object of type
+The expression =field = pattern= is an object of type
 QueryEquation (defined in the next section).
 
 Another elt is needed to produce a DataList object.
@@ -260,14 +252,13 @@ that prints all the records, the other that prints only a fixed
 number of records.
 A coerce to OutputForm creates a display object.
 
-The {\tt Implementation} part of Database is straightforward.
+The =Implementation= part of Database is straightforward.
 \beginImportant
   
-\noindent
-{\tt 1.\ \ \ \ \ Implementation\ ==\ add}\newline
-{\tt 2.\ \ \ \ \ \ \ s:\ Symbol}\newline
-{\tt 3.\ \ \ \ \ \ \ Rep\ :=\ List\ S}\newline
-{\tt 4.\ \ \ \ \ \ \ elt(db,equation)\ ==\ ...}\newline
+=1.\ \ \ \ \ Implementation\ ==\ add=\newline
+=2.\ \ \ \ \ \ \ s:\ Symbol=\newline
+=3.\ \ \ \ \ \ \ Rep\ :=\ List\ S=\newline
+=4.\ \ \ \ \ \ \ elt(db,equation)\ ==\ ...=\newline
 {\tt 5.\ \ \ \ \ \ \ 
 elt(db,key)\ ==\ [x.key\ for\ x\ in\ db]::DataList(String)}\newline
 {\tt 6.\ \ \ \ \ \ \ 
@@ -276,14 +267,13 @@ display(db)\ ==\ \ for\ x\ in\ db\ repeat\ display\ x}\newline
 fullDisplay(db)\ ==\ for\ x\ in\ db\ repeat\ fullDisplay\ x}\newline
 {\tt 8.\ \ \ \ \ \ \ 
 fullDisplay(db,\ n,\ m)\ ==\ for\ x\ in\ db\ for\ i\ in\ 1..m}\newline
-{\tt 9.\ \ \ \ \ \ \ \ \ repeat}\newline
-{\tt 10.\ \ \ \ \ \ \ \ \ \ if\ i\ >=\ n\ then\ fullDisplay\ x}\newline
-{\tt 11.\ \ \ \ \ \ x+y\ ==\ removeDuplicates!\ merge(x,y)}\newline
-{\tt 12.\ \ \ \ \ \ x-y\ ==\ mergeDifference(copy(x::Rep),}\newline
+=9.\ \ \ \ \ \ \ \ \ repeat=\newline
+=10.\ \ \ \ \ \ \ \ \ \ if\ i\ >=\ n\ then\ fullDisplay\ x=\newline
+=11.\ \ \ \ \ \ x+y\ ==\ removeDuplicates!\ merge(x,y)=\newline
+=12.\ \ \ \ \ \ x-y\ ==\ mergeDifference(copy(x::Rep),=\newline
 {\tt 13.\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
 y::Rep)\$MergeThing(S)}\newline
-{\tt 14.\ \ \ \ \ \ coerce(db):\ OutputForm\ ==\ (\#db)::\ OutputForm}
-\newline
+=14.\ \ \ \ \ \ coerce(db):\ OutputForm\ ==\ (#db)::\ OutputForm=
 \endImportant
 
 The database is represented by a list of elements of S 
@@ -291,7 +281,7 @@ The database is represented by a list of elements of S
 We leave the definition of the first elt operation
 (on line 4) until the next section.
 The second elt collects all the strings with field name
-{\it key} into a list.
+/key/ into a list.
 The display function and first fullDisplay function
 simply call the corresponding functions from S.
 The second fullDisplay function provides an efficient way of
@@ -328,29 +318,28 @@ have to invent it.
 
 \beginImportant
   
-\noindent
-{\tt 1.\ \ \ QueryEquation():\ Exports\ ==\ Implementation\ where}\newline
-{\tt 2.\ \ \ \ \ Exports\ ==\ with}\newline
-{\tt 3.\ \ \ \ \ \ \ equation:\ (Symbol,\ String)\ ->\ \$}\newline
-{\tt 4.\ \ \ \ \ \ \ variable:\ \$\ ->\ Symbol}\newline
-{\tt 5.\ \ \ \ \ \ \ value:\\ \\ \\ \\ \$\ ->\ String}\newline
-{\tt 6.\ \ \ }\newline
-{\tt 7.\ \ \ \ \ Implementation\ ==\ add}\newline
-{\tt 8.\ \ \ \ \ \ \ Rep\ :=\ Record(var:Symbol,\ val:String)}\newline
-{\tt 9.\ \ \ \ \ \ \ equation(x,\ s)\ ==\ [x,\ s]}\newline
-{\tt 10.\ \ \ \ \ \ variable\ q\ ==\ q.var}\newline
-{\tt 11.\ \ \ \ \ \ value\\ \\ \\ \\ q\ ==\ q.val}\newline
+=1.\ \ \ QueryEquation():\ Exports\ ==\ Implementation\ where=\newline
+=2.\ \ \ \ \ Exports\ ==\ with=\newline
+=3.\ \ \ \ \ \ \ equation:\ (Symbol,\ String)\ ->\ \$=\newline
+=4.\ \ \ \ \ \ \ variable:\ \$\ ->\ Symbol=\newline
+=5.\ \ \ \ \ \ \ value:\\ \\ \\ \\ \$\ ->\ String=\newline
+=6.\ \ \=\newline
+=7.\ \ \ \ \ Implementation\ ==\ add=\newline
+=8.\ \ \ \ \ \ \ Rep\ :=\ Record(var:Symbol,\ val:String)=\newline
+=9.\ \ \ \ \ \ \ equation(x,\ s)\ ==\ [x,\ s]=\newline
+=10.\ \ \ \ \ \ variable\ q\ ==\ q.var=\newline
+=11.\ \ \ \ \ \ value\\ \\ \\ \\ q\ ==\ q.val=\newline
 \endImportant
 
 Axiom converts an input expression of the form
-{\it a} = {\it b} to equation({\it a, b}}.
+/a/ = /b/ to equation(/a, b/}.
 Our equations always have a symbol on the left and a string
 on the right.
-The {\tt Exports} part thus specifies an operation
+The =Exports= part thus specifies an operation
 equation to create a query equation, and
 \pspadfun{variable} and \pspadfun{value} to select the left- and
 right-hand sides.
-The {\tt Implementation} part uses \pspadtype{Record} for a
+The =Implementation= part uses \pspadtype{Record} for a
 space-efficient representation of an equation.
 
 Here is the missing definition for the elt function of
@@ -358,10 +347,9 @@ Here is the missing definition for the elt function of
 
 \beginImportant
   
-\noindent
-{\tt 1.\ \ \ \ \ \ \ elt(db,eq)\ ==}\newline
-{\tt 2.\ \ \ \ \ \ \ \ \ field\\ \ :=\ variable\ eq}\newline
-{\tt 3.\ \ \ \ \ \ \ \ \ value\ :=\ value\ eq}\newline
+=1.\ \ \ \ \ \ \ elt(db,eq)\ ===\newline
+=2.\ \ \ \ \ \ \ \ \ field\\ \ :=\ variable\ eq=\newline
+=3.\ \ \ \ \ \ \ \ \ value\ :=\ value\ eq=\newline
 {\tt 4.\ \ \ \ \ \ \ \ \ 
 [x\ for\ x\ in\ db\ |\ matches?(value,x.field)]}\newline
 \endImportant
@@ -389,24 +377,23 @@ sorting and removing duplicates.
 
 \beginImportant
   
-\noindent
 {\tt 1.\ \ \ DataList(S:OrderedSet)\ :\ Exports\ ==\ 
 Implementation\ where}\newline
-{\tt 2.\ \ \ \ \ Exports\ ==\ ListAggregate(S)\ with}\newline
-{\tt 3.\ \ \ \ \ \ \ elt:\ (\$,"unique")\ ->\ \$}\newline
-{\tt 4.\ \ \ \ \ \ \ elt:\ (\$,"sort")\ ->\ \$}\newline
-{\tt 5.\ \ \ \ \ \ \ elt:\ (\$,"count")\ ->\ NonNegativeInteger}\newline
-{\tt 6.\ \ \ \ \ \ \ coerce:\ List\ S\ ->\ \$}\newline
-{\tt 7.\ \ \ }\newline
-{\tt 8.\ \ \ \ \ Implementation\ ==\ \ List(S)\ add}\newline
-{\tt 9.\ \ \ \ \ \ \ Rep\ :=\ List\ S}\newline
-{\tt 10.\ \ \ \ \ \ elt(x,"unique")\ ==\ removeDuplicates(x)}\newline
-{\tt 11.\ \ \ \ \ \ elt(x,"sort")\ ==\ sort(x)}\newline
-{\tt 12.\ \ \ \ \ \ elt(x,"count")\ ==\ \#x}\newline
-{\tt 13.\ \ \ \ \ \ coerce(x:List\ S)\ ==\ x\ ::\ \$}\newline
+=2.\ \ \ \ \ Exports\ ==\ ListAggregate(S)\ with=\newline
+=3.\ \ \ \ \ \ \ elt:\ (\$,"unique")\ ->\ \$=\newline
+=4.\ \ \ \ \ \ \ elt:\ (\$,"sort")\ ->\ \$=\newline
+=5.\ \ \ \ \ \ \ elt:\ (\$,"count")\ ->\ NonNegativeInteger=\newline
+=6.\ \ \ \ \ \ \ coerce:\ List\ S\ ->\ \$=\newline
+=7.\ \ \=\newline
+=8.\ \ \ \ \ Implementation\ ==\ \ List(S)\ add=\newline
+=9.\ \ \ \ \ \ \ Rep\ :=\ List\ S=\newline
+=10.\ \ \ \ \ \ elt(x,"unique")\ ==\ removeDuplicates(x)=\newline
+=11.\ \ \ \ \ \ elt(x,"sort")\ ==\ sort(x)=\newline
+=12.\ \ \ \ \ \ elt(x,"count")\ ==\ #x=\newline
+=13.\ \ \ \ \ \ coerce(x:List\ S)\ ==\ x\ ::\ \$=\newline
 \endImportant
 
-The {\tt Exports} part asserts that datalists belong to the
+The =Exports= part asserts that datalists belong to the
 category ListAggregate.
 Therefore, you can use all the usual list operations on datalists,
 such as \spadfunFrom{first}{List}, \spadfunFrom{rest}{List}, and
@@ -415,7 +402,7 @@ In addition, datalists have four explicit operations.
 Besides the three elt operations, there is a
 coerce operation that creates datalists from lists.
 
-The {\tt Implementation} part needs only to define four functions.
+The =Implementation= part needs only to define four functions.
 All the rest are obtained from List(S).
 
 \endscroll
@@ -434,17 +421,16 @@ has a name that is passed as a second argument to elt.
 
 \beginImportant
   
-\noindent
-{\tt 1.\ \ \ IndexCard()\ ==\ Implementation\ where}\newline
-{\tt 2.\ \ \ \ \ Exports\ ==\ with}\newline
-{\tt 3.\ \ \ \ \ \ \ elt:\ (\$,\ Symbol)\ ->\ String}\newline
-{\tt 4.\ \ \ \ \ \ \ display:\ \$\ ->\ Void}\newline
-{\tt 5.\ \ \ \ \ \ \ fullDisplay:\ \$\ ->\ Void}\newline
-{\tt 6.\ \ \ \ \ \ \ coerce:\ String\ ->\ \$}\newline
-{\tt 7.\ \ \ \ \ Implementation\ ==\ String\ add\ ...}\newline
+=1.\ \ \ IndexCard()\ ==\ Implementation\ where=\newline
+=2.\ \ \ \ \ Exports\ ==\ with=\newline
+=3.\ \ \ \ \ \ \ elt:\ (\$,\ Symbol)\ ->\ String=\newline
+=4.\ \ \ \ \ \ \ display:\ \$\ ->\ Void=\newline
+=5.\ \ \ \ \ \ \ fullDisplay:\ \$\ ->\ Void=\newline
+=6.\ \ \ \ \ \ \ coerce:\ String\ ->\ \$=\newline
+=7.\ \ \ \ \ Implementation\ ==\ String\ add\ ...=\newline
 \endImportant
 
-We leave the {\tt Implementation} part to the reader.
+We leave the =Implementation= part to the reader.
 All operations involve straightforward string manipulations.
 
 \endscroll
@@ -469,16 +455,12 @@ domain and package lines respectively.
 
 \beginImportant
   
-\noindent
-{\tt 1.\ \ \ OperationsQuery():\ Exports\ ==\ Implementation\ where}
-\newline
-{\tt 2.\ \ \ \ \ Exports\ ==\ with}\newline
-{\tt 3.\ \ \ \ \ \ \ getDatabase:\ String\ ->\ Database(IndexCard)}
-\newline
-{\tt 4.\ \ \ }\newline
-{\tt 5.\ \ \ \ \ Implementation\ ==\ add}\newline
-{\tt 6.\ \ \ \ \ \ \ getDatabase(s)\ ==\ getBrowseDatabase(s)\$Lisp}
-\newline
+=1.\ \ \ OperationsQuery():\ Exports\ ==\ Implementation\ where=
+=2.\ \ \ \ \ Exports\ ==\ with=\newline
+=3.\ \ \ \ \ \ \ getDatabase:\ String\ ->\ Database(IndexCard)=
+=4.\ \ \=\newline
+=5.\ \ \ \ \ Implementation\ ==\ add=\newline
+=6.\ \ \ \ \ \ \ getDatabase(s)\ ==\ getBrowseDatabase(s)\$Lisp=
 \endImportant
 
 We do not bother creating a special name for databases of index
@@ -507,16 +489,15 @@ constructor abbreviations you created.
 
 \beginImportant
   
-\noindent
-{\tt 1.\ \ \ )abbrev\ domain\ \ ICARD\ \ \ IndexCard}\newline
-{\tt 2.\ \ \ )abbrev\ domain\ \ QEQUAT\ \ QueryEquation}\newline
-{\tt 3.\ \ \ )abbrev\ domain\ \ MTHING\ \ MergeThing}\newline
-{\tt 4.\ \ \ )abbrev\ domain\ \ DLIST\ \ \ DataList}\newline
-{\tt 5.\ \ \ )abbrev\ domain\ \ DBASE\ \ \ Database}\newline
-{\tt 6.\ \ \ )abbrev\ package\ OPQUERY\ OperationsQuery}\newline
+=1.\ \ \ )abbrev\ domain\ \ ICARD\ \ \ IndexCard=\newline
+=2.\ \ \ )abbrev\ domain\ \ QEQUAT\ \ QueryEquation=\newline
+=3.\ \ \ )abbrev\ domain\ \ MTHING\ \ MergeThing=\newline
+=4.\ \ \ )abbrev\ domain\ \ DLIST\ \ \ DataList=\newline
+=5.\ \ \ )abbrev\ domain\ \ DBASE\ \ \ Database=\newline
+=6.\ \ \ )abbrev\ package\ OPQUERY\ OperationsQuery=\newline
 \endImportant
 
-With all this in {\bf alql.spad}, for example, compile it using
+With all this in *alql.spad*, for example, compile it using
 begin{verbatim}
 )compile alql
 end{verbatim}
@@ -601,7 +582,7 @@ The operations + and - are useful for
 constructing small databases and combining them.
 However, remember that the only matching you can do is string
 matching.
-Thus a pattern such as {\tt "*Matrix*"} on the type field
+Thus a pattern such as ="*Matrix*"= on the type field
 matches
 any type containing Matrix, MatrixCategory, SquareMatrix, and so on.
 

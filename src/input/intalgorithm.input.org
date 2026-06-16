@@ -1,16 +1,9 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input intalgorithm.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
-Overview of integration from Maxima's tutorial\cite{Maxi16a}, adapted to Axiom.
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: intalgorithm.input
+#+AUTHOR: Timothy Daly
+#+BEGIN_abstract
+Overview of integration from Maxima's tutorial[cite:@Maxi16a], adapted to Axiom.
+#+END_abstract
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -27,16 +20,16 @@ test determines whether the integrand is of the form:
 \[\int c^{*}\thinspace{}op(u(x))*u^{\prime}(x)\thinspace{}dx\]
 where
 \begin{itemize}
-\item {\bf $c$} is a constant
-\item {\bf $u(x)$} is some function of {\bf $x$}
+\item *$c$* is a constant
+\item *$u(x)$* is some function of *$x$*
 \item {\bf $u^{\prime}(x)$} is its derivative
-\item {\bf $op$} is an elementary function, namely one of sin, cos
+\item *$op$* is an elementary function, namely one of sin, cos
 tan, cot, sec, csc, asin, atan, asec, log
 \end{itemize}
 In addition, $op(u(x))$ can have the forms
-- {\bf $u(x)$} (op being the identity
-- {\bf $1/u(x)$} (op being the reciprical)
-- {\bf $u(x)^d$} where $d /ne -1$
+- *$u(x)$* (op being the identity
+- *$1/u(x)$* (op being the reciprical)
+- *$u(x)^d$* where $d /ne -1$
 - {\bf $d^{u(x)}$} where $d$ is a constant
 
 For integrands of this form, a table lookup and a substitution are 
@@ -118,7 +111,7 @@ a given problem.
 
 *** Method 1: Exponentials
 A substitution
-\[y=c^x,\quad {\rm\ c\ constant}\]
+\[y=c^x, {\rm\ c\ constant}\]
 transforms the integrand into a rational function.
 
 #+NAME: *
@@ -508,7 +501,6 @@ integrate((x+exp(x))/exp(x),x)
 )lisp (bye)
  
 #+end_src
-\eject
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
 \addcontentsline{toc}{chapter}{Bibliography}

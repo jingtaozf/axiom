@@ -1,17 +1,10 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input tpiezas001.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: tpiezas001.input
+#+AUTHOR: Timothy Daly
+#+BEGIN_abstract
 This is from ``A Collection of Algebraic Identities'' 
-by Titus. Piezas III\cite{1}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+by Titus. Piezas III[cite:@1]
+#+END_abstract
 ** Part 1. Assorted Identities
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -60,7 +53,7 @@ t1a-t1b
 (a+b)^k+(a+c)^k+(a+d)^k+(b+c)^k+(b+d)^k+(c+d)^k+\\
 (a-b)^k+(a-c)^k+(a-d)^k+(b-c)^k+(b-d)^k+(c-d)^k
 \end{array}\]
-\[=6(a^2+b^2+c^2+d^2)^{k/2}\quad {\rm\ for\ }k=2,4\]
+\[=6(a^2+b^2+c^2+d^2)^{k/2} {\rm\ for\ }k=2,4\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes 
 --S 4 of 91
@@ -162,7 +155,7 @@ t2a(4)-t2b(4)
 #+end_src
 
 *** Boutin's Identity
-\[S\pm(x_1\pm x_2\pm \ldots \pm x_k)^k = k!\: 2^{k-1} x_1 x_2 \ldots x_k\]
+\[S\pm(x_1\pm x_2\pm ... \pm x_k)^k = k!\: 2^{k-1} x_1 x_2 ... x_k\]
 where the exterior sign is the product of the interior signs so
 the term is negative if there is an odd number of negative interior signs,
 otherwise positive
@@ -342,7 +335,7 @@ symgen('a,4)
 
 This is a function to generate the terms for Boutin's Identity.
 Each term is of the form:
-\[sign * (x_n\pm x_{n-1}\\pm \ldots \pm x_1)^n\]
+\[sign * (x_n\pm x_{n-1}\\pm ... \pm x_1)^n\]
 where the sign is negative if the number of minus signs in the term is odd
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -672,7 +665,7 @@ lhs(4)-rhs(4)
 We need two symbol generation functions. First, we need to generate
 the units for the term
 \[\left(\sum a_k b_k\right)^2\]
-so that \verb|symgen2('a,'b,4)| results in
+so that =symgen2('a,'b,4)= results in
 #+begin_example
  [a b ,a b ,a b ,a b ]
    4 4  3 3  2 2  1 1
@@ -702,7 +695,7 @@ symgen2('a,'b,4)
 #+end_src
 Next we need to generate the units for the term
 \[\sum \left(a_k b_j - a_j b_k\right)^2\]
-so that \verb|symgen3('a,'b,4)| results in
+so that =symgen3('a,'b,4)= results in
 #+begin_example
    [0, a b  - a b , a b  - a b , a b  - a b , 0, a b  - a b , a b  - a b , 0,
         3 4    4 3   2 4    4 2   1 4    4 1      2 3    3 2   1 3    3 1
@@ -840,7 +833,7 @@ lagrange(3)
 
 #+end_src{*}
 ** Form: $x^3+y^3+z^3=m$
-{\bf Theorem}: For any constant $m$, there is a rational solution to
+*Theorem*: For any constant $m$, there is a rational solution to
 $x^3+y^3+z^3=m$ (S. Ryley)
 \[(p^3+qr)^3 + (-p^3+pr)^3 + (-qr)^3 = m(6mnp^2)^3\]
 where $\{p,q,r\} = \{m^2+3n^3, m^2-3n^3, 36m^2n^3\}$ with $n$ arbitrary.
@@ -911,7 +904,7 @@ lhs-rhs
 
 #+end_src
 ** Form: $x^4+y^4-z^4-t^4=a$
-{\bf Theorem}: For any constant $a$, there is a rational solution to
+*Theorem*: For any constant $a$, there is a rational solution to
 $x^4+y^4-z^4-t^4=a$ (R. Norrie)
 \[((2a+b)c^3d)^4+(2ac^4-bd^4)^4-(2ac^4+bd^4)^4-((2a-b)c^3d)^4 = a(2bcd)^4\]
 where $b=c^8-d^8$, for arbitrary $c,d$.
@@ -1141,10 +1134,9 @@ u^2*x+x^2*y+y^2*z+z^2*u
 )lisp (bye)
  
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} Titus Piezas, ``A Collection of Algebraic Identities''\\
-{\bf http://sites.google.com/site/tpiezas/001}
+*http://sites.google.com/site/tpiezas/001*
 \end{thebibliography}
 \end{document}
 

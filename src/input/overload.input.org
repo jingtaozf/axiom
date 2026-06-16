@@ -1,16 +1,9 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input overload.input}
-\author{David Cyganski}
-\maketitle
-\begin{abstract}
+#+TITLE: overload.input
+#+AUTHOR: David Cyganski
+#+BEGIN_abstract
 Type conversion and overload problems
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+END_abstract
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -204,7 +197,7 @@ we are stuck and unable to evaluate it as a float later, unlike the core
 basic functions that can be used either way. This forces us to choose the
 Float type throughout at a loss of comprehensibility and analyzability,
 unless we seek to more than double our development type by supplying an
-overloaded integer base and Float base version of {\bf every} step of a
+overloaded integer base and Float base version of *every* step of a
 sequential development of a formula.
 
 Bizarrely, the draw function seems to have the power to override the
@@ -221,10 +214,10 @@ Why can't we grant this deep coercion power to some new form of floating
 point conversion operation which can be applied at will? If draw has
 this power, why not put it in the hands of the user?
 
-Alternatively, it would be best to have a {\bf mixed} type -- mixed 
+Alternatively, it would be best to have a *mixed* type -- mixed 
 = Integer/Float. Like Maple expressions it would leave integers as
 integers and floats as floats, unmolested and treated as generic
-constant quantities with distinguishable parts until an {\bf evalf}
+constant quantities with distinguishable parts until an *evalf*
 like function that would force them entirely into the Float type. For
 example, in Maple ``cos(2/3)+1.2323'' remains as is, while in Axiom
 we get
@@ -668,7 +661,7 @@ introduction of operator overloading.
 --E 50
 
 #+end_src
-{\sl Not safe at any speed}. Most oddly, the ordinary cos() function which
+/Not safe at any speed/. Most oddly, the ordinary cos() function which
 exposes no ``/'' division Now fails to work with draw despite the fact
 that we just saw it above still working with Integer and Float arguments
 applied directly.
@@ -683,7 +676,6 @@ applied directly.
 )lisp (bye)
  
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

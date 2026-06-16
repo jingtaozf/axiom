@@ -1,15 +1,8 @@
-\documentclass{article}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input kernel.input}
-\author{Timothy Daly, Waldek Hebisch}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: kernel.input
+#+AUTHOR: Timothy Daly, Waldek Hebisch
+#+BEGIN_abstract
+#+END_abstract
 ** License
 #+NAME: license
 #+begin_src common-lisp :noweb yes
@@ -193,7 +186,7 @@ ks := retract(sin(a*x+b))@Kernel(Expression(Integer))
 
 #+end_src
 
-{\tt argument} gives you a list of arguments of the kernel
+=argument= gives you a list of arguments of the kernel
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -206,7 +199,7 @@ argument(ks)
 
 #+end_src
 
-{\tt operator} gives the operator
+=operator= gives the operator
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -277,7 +270,7 @@ coefficient(nu,1)
 
 #+end_src
 
-There is also {\tt tower}, which gives all the kernels, both top 
+There is also =tower=, which gives all the kernels, both top 
 level and nested.
 
 #+NAME: *
@@ -292,10 +285,10 @@ tower(t1)
 
 #+end_src
 
-Compared to {\tt kernels}, we also get 'x'
+Compared to =kernels=, we also get 'x'
 
-Pattern matching is implemented on top of {\tt numer}, {\tt denom},
-{\tt isPlus}, {\tt isTimes}, {\tt isExpt}, and kernels handling.
+Pattern matching is implemented on top of =numer=, =denom=,
+=isPlus=, =isTimes=, =isExpt=, and kernels handling.
 For example
 
 #+NAME: *
@@ -333,8 +326,8 @@ isTimes(isPlus(t2).1)
 
 #+end_src
 As you can see the structure seen by the pattern matcher is somewhat
-different from the printed form. Not that {\tt isPlus} essentially 
-gives you a list of monomials. {\tt isTimes} gives factors of a
+different from the printed form. Not that =isPlus= essentially 
+gives you a list of monomials. =isTimes= gives factors of a
 single monomial.
 
 \begin{chunk}
@@ -342,7 +335,6 @@ single monomial.
 )lisp (bye)
  
 \end{chunk}
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

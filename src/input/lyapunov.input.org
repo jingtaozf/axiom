@@ -1,24 +1,16 @@
-\documentclass{article}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{axiom}
 \setlength{\textwidth}{400pt}
-\begin{document}
-\title{\$SPAD/src/input lyapunov.input}
-\author{Maya Ramakrishnan and Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: lyapunov.input
+#+AUTHOR: Maya Ramakrishnan and Timothy Daly
+#+BEGIN_abstract
 Maya Ramakrishnan
 ``A Gentle Introduction to Lyapunov Functions''
 ORSUM August 2003\\
-\verb|www.or.ms.unimelb.edu.au/handouts/lyaptalk.1.pdf|
+=www.or.ms.unimelb.edu.au/handouts/lyaptalk.1.pdf=
 
 Zoran Gaji\'c and Muhammad Tahir Javed Qureshi
 ``Lyapunov Matrix Equation in System Stability and Control''
 ISBN 0-486-46668-X Dover 2008
-\end{abstract}
-\eject
-\tableofcontents
+#+END_abstract
 ** Motivation
 Often systems can be represented or modelled using systems of
 differential equations. Given a system, questions which naturally
@@ -35,8 +27,7 @@ instability
 \item designing control laws that guarantee global asymptotic stability
 \end{itemize}
 
-\noindent
-Rate control for communications networks {\sl Kelly et al} (1998)
+Rate control for communications networks /Kelly et al/ (1998)
 \begin{itemize}
 \item Proposed optimization framework
 \begin{itemize}
@@ -78,7 +69,7 @@ Lyapunov equations have been used to determine the stability of a:
 The general differential Lyapunov matrix equation corresponding to
 time varying continuous systems is given by 
 \begin{equation}
-A^T(t)P(t) + P(t)A(t) + Q(t) = \dot{P}(t), \quad P(t_0) = P_0
+A^T(t)P(t) + P(t)A(t) + Q(t) = \dot{P}(t), P(t_0) = P_0
 \end{equation}
 where 
 $P(t)$ is an $n \times n$ solution matrix of unknown entries,
@@ -93,7 +84,7 @@ A^T P + P A + Q = 0
 The necessary and sufficient condition for the existence of a
 unique solution is that no two eigenvalues of $A$ add up to 0.
 \[
-\lambda_i + \lambda_j \ne 0, \quad i,j = 1,2,\ldots,n
+\lambda_i + \lambda_j \ne 0, i,j = 1,2,...,n
 \]
 This condition is satisfied if $A$ is an asymptotically stable matrix
 in the continuous-time domain (all eigenvalues of $A$ are located
@@ -102,18 +93,16 @@ in the closed left half-plane).
 **** Continuous, time-invariant linear systems
 Assuming a continous, time-invariant linear system of the form
 \[
-\dot{x}(t) = Ax(t), \quad x(t_0) = x_0
+\dot{x}(t) = Ax(t), x(t_0) = x_0
 \]
 where $x(t) \in \mathbb{R}^n$ is the system state vector and
 $A \in \mathbb{R}^{n \times x}$ is the system matrix.
-\noindent
-{\bf Definition 2.1.1:}
+*Definition 2.1.1:*
 The linear system is stable if all eigenvalues of the matrix $A$
 are in the closed left half of the complex plane and those on the
 imaginary axis are distinct roots of the minimal polynomial of $A$.
 
-\noindent
-{\bf Definition 2.1.2:}
+*Definition 2.1.2:*
 The linear system is asymptotically stable if all eigenvalues of $A$
 are in the open left half of the complex plane.
 
@@ -122,7 +111,7 @@ are in the open left half of the complex plane.
 The corresponding Lyapunov matrix difference equation for discrete-time
 varying systems is given by
 \[
-A^T(k)P(k)A(k) + Q(k) = P(k+1), \quad P(k_0) = P_0
+A^T(k)P(k)A(k) + Q(k) = P(k+1), P(k_0) = P_0
 \]
 and for time invariant discrete systems at the steady state,
 $(P(k+1) = P(k) = P)$, we have the discrete version of the
@@ -133,7 +122,7 @@ A^T P A + Q = P
 The condition for the existence of a unique solution is that
 no two eigenvalues have a product equal to 1.
 \[
-\lambda_i\lambda_j \ne 1,\quad i,j = 1,2,\ldots,n
+\lambda_i\lambda_j \ne 1, i,j = 1,2,...,n
 \]
 This conditions is satisfied if $A$ is asymptotically stable in the
 discrete-time domain (all eigenvalues of $A$ are strictly inside of
@@ -144,28 +133,25 @@ Consider the system
 \[ \dot{x} = f(x) \]
 where $f$ is not necessarily a linear function of $x$.
 
-\noindent
-{\bf Definition 2.3.1:} 
+*Definition 2.3.1:* 
 If $\overline{x}$ is an equilibrium point of the system,
 then $f(\overline{x}) = 0$.
 
 A system is stable at an equilibrium point if it responds to small changes
 from the equilibrium with only small changes in its subsequent states.
 
-\noindent
-{\bf Definition 2.3.2:} 
+*Definition 2.3.2:* 
 An equilibrium point, $\overline{x}$, is said to be
 stable if for all $\epsilon > 0$, there exists a $\delta = \delta(\epsilon)$,
 such that
 \[
 \vert x(t_0) - \overline{x}\vert < \delta \implies
-\vert x(t) - \overline{x}\vert < \epsilon, \quad\forall t > t_0
+\vert x(t) - \overline{x}\vert < \epsilon, \forall t > t_0
 \]
 
 Note that a system can be locally stable.
 
-\noindent
-{\bf Definition 2.3.3:} 
+*Definition 2.3.3:* 
 We say that $\overline{x}$ is asymptotically stable if it
 is stable and
 \[ 
@@ -173,13 +159,11 @@ is stable and
  {\rm\ as\ } t \rightarrow \infty
 \]
 
-\noindent
-{\bf Definition 2.3.4:} 
+*Definition 2.3.4:* 
 A system is neutrally stable at $\overline{x}$
 if it is stable at $\overline{x}$, but not asymptotically stable.
 
-\noindent
-{\bf Definition 2.3.5:} 
+*Definition 2.3.5:* 
 A system that is not stable at $\overline{x}$ is
 said to be unstable.
 ** Methods of determining stability
@@ -234,8 +218,7 @@ functions on region $R$ with $k$th derivatives also continuous on $R$; and
 \item $x(t^0) = x^0$, $x^0 \in R$
 \end{itemize}
 
-\noindent
-{\bf Definition 2.3.6:} 
+*Definition 2.3.6:* 
 Let $V(x)$ be a real valued scalar function
 belonging to $C^0(S)$ for some region $S$ of $R^n$. Suppose
 $V(\overline{x}) = 0$. Then,
@@ -246,8 +229,7 @@ $V(\overline{x}) = 0$. Then,
 negative semi-definite respectively.
 \end{enumerate}
 
-\noindent
-{\bf Definition 2.3.7:} 
+*Definition 2.3.7:* 
 Let $V(x)$ be a real valued scalar function belonging to
 $C^1(R)$. The total derivative along the solution curves of 
 $\dot{x} = f(x)$, i.e. with respect to the orbits
@@ -261,8 +243,7 @@ $x = x(t,x^0)$ is
 \end{array}
 \]
 
-\noindent
-{\bf Theorem 1:} Suppose there exists a function $V(x)$ with the following
+*Theorem 1:* Suppose there exists a function $V(x)$ with the following
 properties:
 \begin{enumerate}
 \item $V(\overline{x}) = 0$
@@ -274,8 +255,7 @@ Then $V(x)$ is known as a Lyapunov function and $\overline{x}$ is stable.
 Note that if $\dot{V}(x)$ is negative definite, then $\overline{x}$ is
 asymptotically stable.
 
-\noindent
-{\bf Proof:} This proof will assume that the equilibrium point
+*Proof:* This proof will assume that the equilibrium point
 $\overline{x} = 0$ for simplicity. It is easily extendable to the
 situation where this is not the case.
 
@@ -292,7 +272,7 @@ Since $V(x)$ is continuous and positive on the closed, bounded surface
 $S_\epsilon$, by the Minimum Value Theorem for continuous functions,
 $V(x)$ has a minimum on $S_\epsilon$. Suppose this minimum is $L$. Then:
 \[
-0 < L \le V(x),\quad\forall x \in S_\epsilon
+0 < L \le V(x), \forall x \in S_\epsilon
 \]
 Since $V(x)$ is continous and has value 0 at $x=0$, there exists an
 open ball $J_delta$ centered at 0, which lies entirely inside
@@ -417,7 +397,6 @@ in particular the method can be used
 
 The drawback is that to find a Lyapunov function is often more of an 
 art than a science.
-\eject
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -431,7 +410,6 @@ art than a science.
 )lisp (bye)
  
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

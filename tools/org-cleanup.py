@@ -33,7 +33,7 @@ def classify_lines(lines):
 PREAMBLE_DELETE = [
     r'^\\documentclass', r'^\\usepackage', r'^\\input\{bookheader',
     r'^\\begin\{document\}', r'^\\end\{document\}',
-    r'^\\maketitle', r'^\\begin\{abstract\}', r'^\\end\{abstract\}',
+    r'^\\maketitle',
     r'^\\eject', r'^\\tableofcontents', r'^\\mainmatter',
     r'^\\setcounter', r'^\\pagenumbering',
     r'^\\newcommand', r'^\\renewcommand', r'^\\providecommand',
@@ -63,6 +63,12 @@ def convert_preamble_line(line):
     m = re.match(r'^\\author\{(.+)\}\s*$', stripped)
     if m:
         return '#+AUTHOR: ' + m.group(1) + '\n', True
+    # \begin{abstract} → #+BEGIN_abstract
+    if re.match(r'^\\begin\{abstract\}\s*$', stripped):
+        return '#+BEGIN_abstract\n', True
+    # \end{abstract} → #+END_abstract
+    if re.match(r'^\\end\{abstract\}\s*$', stripped):
+        return '#+END_abstract\n', True
     # Delete known preamble lines
     for pat in PREAMBLE_DELETE:
         if re.match(pat, stripped):
