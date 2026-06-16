@@ -369,28 +369,95 @@ def convert_tables(lines):
 
 #+end_src
 
-* Phase 10 — Algebra Structure Macros
+* Phase 10 — Axiom Macros
 
-Convert =\pagehead=, =\pagepic=, =\pageto=, =\pagefrom= to org equivalents.
+Convert Axiom-specific macros to org equivalents.
 
 #+begin_src python :tangle org-cleanup.py
 def convert_algebra_macros(line):
-    """Convert pagehead/pagepic/pageto/pagefrom to org equivalents."""
-    m = re.match(r'\\pagehead\{([^}]+)\}\{([^}]+)\}', line.strip())
+    """Convert Axiom macros to org equivalents."""
+    NL = chr(10)
+    stripped = line.strip()
+
+    # \pagehead{Name}{ABBREV} → ** Name
+    m = re.match(r'\\pagehead\{([^}]+)\}\{([^}]+)\}', stripped)
     if m:
-        name, abbrev = m.group(1), m.group(2)
-        return '** ' + name + chr(10)
-    m = re.match(r'\\pagepic\{([^}]+)\}\{([^}]+)\}\{([^}]+)\}', line.strip())
+        return '** ' + m.group(1) + NL
+
+    # \pagepic{file}{ABBREV}{scale} → removed (PDF-only image ref)
+    m = re.match(r'\\pagepic\{([^}]+)\}\{([^}]+)\}\{([^}]+)\}', stripped)
     if m:
         return ''
+
+    # \defun{Name}{Display} → #+BEGIN_LATEX block
+    m = re.match(r'\\defun\{([^}]+)\}\{([^}]+)\}', stripped)
+    if m:
+        return '#+BEGIN_LATEX' + NL + line.rstrip() + NL + '#+END_LATEX' + NL
+
+    # \pageto{Name}{ABBREV} → [[#ABBREV][Name]]
     m = re.search(r'\\pageto\{([^}]+)\}\{([^}]+)\}', line)
     if m:
         name, abbrev = m.group(1), m.group(2)
-        line = line[:m.start()] + '[[#' + abbrev + '][' + name + ']]' + line[m.end():]
+        line = line[:m.start()] + '[[' + abbrev + '][' + name + ']]' + line[m.end():]
+
+    # \pagefrom{Name}{ABBREV} → ([[#ABBREV][Name]])
     m = re.search(r'\\pagefrom\{([^}]+)\}\{([^}]+)\}', line)
     if m:
         name, abbrev = m.group(1), m.group(2)
-        line = line[:m.start()] + '([[#' + abbrev + '][' + name + ']])' + line[m.end():]
+        line = line[:m.start()] + '([[' + abbrev + '][' + name + ']])' + line[m.end():]
+
+    # \cross{Name}{ABBREV} → [[#ABBREV][Name]]
+    m = re.search(r'\\cross\{([^}]+)\}\{([^}]+)\}', line)
+    if m:
+        name, abbrev = m.group(1), m.group(2)
+        line = line[:m.start()] + '[[' + abbrev + '][' + name + ']]' + line[m.end():]
+
+    # \smath{expr} → $expr$
+    m = re.search(r'\\smath\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + '$' + m.group(1) + '$' + line[m.end():]
+
+    # \opLeftPren/\opRightPren/\opdata → #+LATEX:
+    if re.match(r'\\def\\(opLeftPren|opRightPren)', stripped):
+        return '#+LATEX: ' + stripped + NL
+    if re.match(r'\\opdata\{', stripped):
+        return '#+LATEX: ' + stripped + NL
+
+    # \bfref{Name} → *Name*
+    m = re.search(r'\\bfref\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + '*' + m.group(1) + '*' + line[m.end():]
+
+    # \fnref{Name} → =Name=
+    m = re.search(r'\\fnref\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + '=' + m.group(1) + '=' + line[m.end():]
+
+    # \ourGloss{Name} → =Name=
+    m = re.search(r'\\ourGloss\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + '=' + m.group(1) + '=' + line[m.end():]
+
+    # \glossaryTerm{Name} → *Name*
+    m = re.search(r'\\glossaryTerm\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + '*' + m.group(1) + '*' + line[m.end():]
+
+    # \seeType{Name} → see =Name=
+    m = re.search(r'\\seeType\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + 'see =' + m.group(1) + '=' + line[m.end():]
+
+    # \seeAlso{Name} → see =Name=
+    m = re.search(r'\\seeAlso\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + 'see =' + m.group(1) + '=' + line[m.end():]
+
+    # \sig{fn}{type} → # sig: fn -> type
+    m = re.search(r'\\sig\{([^}]+)\}\{([^}]+)\}', line)
+    if m:
+        line = line[:m.start()] + '# sig: ' + m.group(1) + ' -> ' + m.group(2) + line[m.end():]
+
     return line
 
 #+end_src

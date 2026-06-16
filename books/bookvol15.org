@@ -4129,7 +4129,7 @@ the exported signatures
 
 \index[code]{make-hasclause!defun}
 \index[code]{defun!make-hasclause}
-\sig{make-hasclause}{(type,condition,siglist)}{hasclause}
+# sig: make-hasclause -> (type,condition,siglist){hasclause}
 #+NAME: defun make-hasclause
 #+begin_src common-lisp :noweb yes
 (defun make-hasclause (type condition siglist)
@@ -4180,7 +4180,7 @@ the exported signatures
 
 \index[code]{make-haslist!defun}
 \index[code]{defun!make-haslist}
-\sig{make-haslist}{clauses}{hasclause}
+# sig: make-haslist -> clauses{hasclause}
 #+NAME: defun make-haslist
 #+begin_src common-lisp :noweb yes
 (defun make-haslist (clauses)
@@ -4453,7 +4453,7 @@ Here we create the Axiom *getAncestors* function. It walks the
 tree of ancestors to collect the union of the set. 
 
 This accepts the symbol for the class or the instance.
-\sig{getAncestors}{symbol}{list(ancestors)}
+# sig: getAncestors -> symbol{list(ancestors)}
 \index[code]{defun!getAncestors}
 \index[code]{getAncestors!defun}
 #+NAME: defun getAncestors
@@ -4484,7 +4484,7 @@ The *leaves*
 \index[doc]{leaves}
 needs to compute the most immediate ancestors (the leaves) of the 
 type tree. We walk the tree collecting ancestors and remove duplicates.
-\sig{leaves}{survive}{survive}
+# sig: leaves -> survive{survive}
 \index[code]{defun!leaves}
 \index[code]{leaves!defun}
 #+NAME: defun leaves
@@ -4592,7 +4592,7 @@ they are combined into one operation but with different signatures.
 
 #+end_src
 
-\sig{make-signature}{(funcname return arglist comment examples infix?}{signature}
+# sig: make-signature -> (funcname return arglist comment examples infix?{signature}
 \index[code]{defun!make-signature}
 \index[code]{make-signature!defun}
 #+NAME: defun make-signature
@@ -4850,7 +4850,7 @@ they are combined into one operation but with different signatures.
 
 #+end_src
 
-\sig{make-operation}{name}{operation}
+# sig: make-operation -> name{operation}
 \index[code]{defun!make-operation}
 \index[code]{make-operation!defun}
 #+NAME: defun make-operation
@@ -4906,7 +4906,7 @@ From OperationAlist to Signatures
                                         -> subtractIfCan : (%,%) -> Union(%,"failed")
 #+end_example
 
-\sig{operationToSignature}{alistEntry}{signature}
+# sig: operationToSignature -> alistEntry{signature}
 \index[code]{defun!operationToSignature}
 \index[code]{operationToSignature!defun}
 #+NAME: defun operationToSignature
@@ -4947,7 +4947,7 @@ create the *padTo38* function to add pad characters to signatures.
 
 #+end_src
 
-\sig{operations-show}{operationAlist}{values}
+# sig: operations-show -> operationAlist{values}
 \index[code]{defun!operations-show}
 \index[code]{operations-show!defun}
 #+NAME: defun operations-show
@@ -5118,7 +5118,7 @@ The *Parse 1*
 error occurs when the *)abbrev* line is missing.
 The *)abbrev* line must occur before the code.
 
-\sig{Parse}{filename}{(theparse,pile)}
+# sig: Parse -> filename{(theparse,pile)}
 \index[code]{defun!Parse}
 \index[code]{Parse!defun}
 #+NAME: defun Parse
@@ -5202,7 +5202,7 @@ A bit of clever optimization is possible if the *oneline*
 function processed the list of strings in reverse so the two
 calls to nreverse could be removed. 
 
-\sig{make-Sourcecode}{filename}{sourcecode}
+# sig: make-Sourcecode -> filename{sourcecode}
 \index[code]{defun!make-Sourcecode}
 \index[code]{make-Sourcecode!defun}
 # label: lst:make-Sourcecode
@@ -5398,7 +5398,7 @@ function parses an )abbrev line.
 
 #+end_src
 
-\sig{make-instance}{(class,abbrev,string)}{abbreviation}
+# sig: make-instance -> (class,abbrev,string){abbreviation}
 \index[code]{defun!make-abbreviation}
 \index[code]{make-abbreviation!defun}
 #+NAME: defun make-abbreviation
@@ -5527,7 +5527,7 @@ ABBREV ::= ')abbrev' ['category' | 'domain' | 'package'] UABBREV CONSTRUCT
 # label: ABBREVsyntax
 \end{figure}
 
-\sig{FSM-abbrev}{linelist}{(linelist,abbreviation)}
+# sig: FSM-abbrev -> linelist{(linelist,abbreviation)}
 \index[code]{defun!FSM-abbrev}
 \index[code]{FSM-abbrev!defun}
 #+NAME: defun FSM-abbrev
@@ -5549,7 +5549,7 @@ ABBREV ::= ')abbrev' ['category' | 'domain' | 'package'] UABBREV CONSTRUCT
 
 #+end_src
 
-\sig{FSM-symbol}{linelist}{(linelist,symboliation)}
+# sig: FSM-symbol -> linelist{(linelist,symboliation)}
 \index[code]{defun!FSM-symbol}
 \index[code]{FSM-symbol!defun}
 #+NAME: defun FSM-symbol
@@ -5576,7 +5576,7 @@ gathering them together. It returns 2 values, the first is a new
 linelist without the comments. The second is a gather object
 containing the comment lines.
 
-\sig{FSM-comment}{linelist}{linelist,list(comments)}
+# sig: FSM-comment -> linelist{linelist,list(comments)}
 \index[code]{defun!FSM-comment}
 \index[code]{FSM-comment!defun}
 #+NAME: defun FSM-comment
@@ -5616,7 +5616,7 @@ created looks like
   (SIG . "  BitAggregate() with")
 #+end_example
 
-\sig{FSM-macros}{linelist}{(linelist,macroAlist)}
+# sig: FSM-macros -> linelist{(linelist,macroAlist)}
 \index[code]{defun!FSM-macros}
 \index[code]{FSM-macros!defun}
 #+NAME: defun FSM-macros
@@ -5657,7 +5657,7 @@ name of a macro. The *FSM-macroNames* function
 \index[doc]{FSM-macroNames} 
 returns a list of those names.
 
-\sig{FSM-macroNames}{theparse}{list(macronames)}
+# sig: FSM-macroNames -> theparse{list(macronames)}
 \index[code]{defun!FSM-macroNames}
 \index[code]{FSM-macroNames!defun}
 #+NAME: defun FSM-macroNames
@@ -5726,7 +5726,7 @@ and ending at the matching closed parenthesis. Further processing
 will parse the contents of this list. This is necessary since the
 variables could be macros in the body which we have not yet seen.
 
-\sig{FSM-cdpsig}{(linelist,theparse)}{(linelist,CDPSigClass)}
+# sig: FSM-cdpsig -> (linelist,theparse){(linelist,CDPSigClass)}
 \index[code]{defun!FSM-cdpsig}
 \index[code]{FSM-cdpsig!defun}
 #+NAME: defun FSM-cdpsig
@@ -5747,7 +5747,7 @@ variables could be macros in the body which we have not yet seen.
 
 ** FSM-isCategory?
 
-\sig{FSM-isCategory?}{(linelist,theparse)}{(linelist,boolean)}
+# sig: FSM-isCategory? -> (linelist,theparse){(linelist,boolean)}
 \index[code]{defun!FSM-isCategory?}
 \index[code]{FSM-isCategory?!defun}
 #+NAME: defun FSM-isCategory?
@@ -5769,7 +5769,7 @@ variables could be macros in the body which we have not yet seen.
 
 ** FSM-catBody
 
-\sig{FSM-catBody}{(linelist,theparse)}{list(tokens)}
+# sig: FSM-catBody -> (linelist,theparse){list(tokens)}
 \index[code]{defun!FSM-catBody}
 \index[code]{FSM-catBody!defun}
 #+NAME: defun FSM-catBody
@@ -5783,7 +5783,7 @@ variables could be macros in the body which we have not yet seen.
 
 ** FSM-dpBody
 
-\sig{FSM-dpBody}{(linelist,theparse)}{nil}
+# sig: FSM-dpBody -> (linelist,theparse){nil}
 \index[code]{defun!FSM-dpBody}
 \index[code]{FSM-dpBody!defun}
 #+NAME: defun FSM-dpBody
@@ -5843,7 +5843,7 @@ VAR ::= SYMBOL [ [WSPACE]* ':' [WSPACE]* TYPESPEC ]
 # label: VARsyntax
 \end{figure}
 
-\sig{FSM-VAR}{linelist}{(linelist,var)}
+# sig: FSM-VAR -> linelist{(linelist,var)}
 \index[code]{defun!FSM-VAR}
 \index[code]{FSM-VAR!defun}
 #+NAME: defun FSM-VAR
@@ -5999,7 +5999,7 @@ Either they are in the argument list where the variable name
 is followed by a colon or they are in the body where the 
 variable name is followed by a colon.
 
-\sig{FSM-variables}{(linelist,theparse)}{nil}
+# sig: FSM-variables -> (linelist,theparse){nil}
 \index[code]{defun!FSM-variables}
 \index[code]{FSM!defun-variables}
 #+NAME: defun FSM-variables
@@ -6028,7 +6028,7 @@ The *splitchar*
 function will take a *string* and
 break the string apart every place it sees the *char*.
 
-\sig{splitchar}{(string,char)}{list(token)}
+# sig: splitchar -> (string,char){list(token)}
 \index[code]{defun!splitchar}
 \index[code]{splitchar!defun}
 #+NAME: defun splitchar
@@ -6051,7 +6051,7 @@ list by
     (joinsplit somestring #\,)
 #+end_example
 
-\sig{joinsplit}{(list(token),char)}{string}
+# sig: joinsplit -> (list(token),char){string}
 \index[code]{defun!joinsplit}
 \index[code]{joinsplit!defun}
 #+NAME: defun joinsplit
@@ -6069,7 +6069,7 @@ list by
 The *explode*
 \index[doc]{explode}
 turns a string into characters.
-\sig{explode}{string}{list char}
+# sig: explode -> string{list char}
 \index[code]{defun!explode}
 \index[code]{explode!defun}
 #+NAME: defun explode
@@ -6338,7 +6338,7 @@ The *compileSpad*
 \index[doc]{compileSpad}
 function takes the parser structure and compiles it
 to executable code.
-\sig{compileSpad}{theparse}{values}
+# sig: compileSpad -> theparse{values}
 \index[code]{defun!compileSpad}
 \index[code]{compileSpad!defun}
 #+NAME: defun compileSpad
@@ -6761,7 +6761,7 @@ the balance. This error usually means that the category, domain,
 or package name needs an explicit argument list even it it takes
 no arguments.
 
-\sig{FSM-gatherList}{linelist}{(linelist,list(args)}
+# sig: FSM-gatherList -> linelist{(linelist,list(args)}
 \index[code]{defun!FSM-gatherList}
 \index[code]{FSM-gatherList!defun}
 #+NAME: defun FSM-gatherList
@@ -6831,7 +6831,7 @@ the list based on the top-level commas, ignoring commas in strings and
 in embedded arguments that are not top-level. It returns a list of 
 strings, one per top level argument.
 
-\sig{FSM-gatherVars}{argslist}{list(vars)}
+# sig: FSM-gatherVars -> argslist{list(vars)}
 \index[code]{defun!FSM-gatherVars}
 \index[code]{FSM-gatherVars!defun}
 #+NAME: defun FSM-gatherVars
@@ -6912,7 +6912,7 @@ The *indent*
 function tells us how many spaces, aka the indentation, we have
 at the beginning of the line.
 
-\sig{indent}{line}{depth}
+# sig: indent -> line{depth}
 \index[code]{defun!indent}
 \index[code]{indent!defun}
 #+NAME: defun indent
@@ -6992,7 +6992,7 @@ like the depth of nesting.
    PILEFORM -> SPAWNFORM
 #+end_example
 
-\sig{spawn}{tree}{list(indentedLines)}
+# sig: spawn -> tree{list(indentedLines)}
 \index[code]{defun!spawn}
 \index[code]{spawn!defun}
 #+NAME: defun spawn
@@ -7043,7 +7043,7 @@ sorted list of the indentations. We use this to walk the
 spawn tree ``inside-out'', handling the most deeply nested
 nodes first.
 
-\sig{pile2tree}{pileform}{treeform}
+# sig: pile2tree -> pileform{treeform}
 \index[code]{defun!pile2tree}
 \index[code]{pile2tree!defun}
 #+NAME: defun pile2tree
@@ -7108,7 +7108,7 @@ The *pretty*
 function takes a sourcecode-tree, or a sublist thereof, 
 and prints it in a form we prefer.
 
-\sig{pretty}{treeform}{values}
+# sig: pretty -> treeform{values}
 \index[code]{defun!pretty}
 \index[code]{pretty!defun}
 #+NAME: defun pretty
@@ -7250,7 +7250,7 @@ The *next* function updates the *nextstate* variable.
 
 The *here* function outputs debugging information.
 
-\sig{FSMSIG}{debug}{values}
+# sig: FSMSIG -> debug{values}
 \index[code]{defun!FSMSIG}
 \index[code]{FSMSIG!defun}
 #+NAME: defun FSMSIG
@@ -7350,7 +7350,7 @@ the start of the macro. Ultimately, we return a new linelist
 without the macro lines and a gather structure containing
 the macro lines.
 
-\sig{FSM-extract1Macro}{linelist}{(linelist,gather)}
+# sig: FSM-extract1Macro -> linelist{(linelist,gather)}
 \index[code]{defun!FSM-extract1Macro}
 \index[code]{FSM-extract1Macro!defun}
 #+NAME: defun FSM-extract1Macro
@@ -7373,7 +7373,7 @@ the macro lines.
 
 *** parseSignature
 
-\sig{parseSignature}{linelist}{values}
+# sig: parseSignature -> linelist{values}
 \index[code]{parseSignature!parser}
 \index[code]{parser!parseSignature}
 #+NAME: defun parseSignature
@@ -7580,7 +7580,7 @@ returns the gensym. If that gensym is seen the Sane interpreter makes
 the *bye* unbound and exits. Note that we save any existing
 definition of *bye* and restore it when the interpreter exits.
 
-\sig{sane}{nil}{nil}
+# sig: sane -> nil{nil}
 \index[code]{defun!sane}
 \index[code]{sane!defun}
 #+NAME: defun sane
