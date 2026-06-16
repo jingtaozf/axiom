@@ -369,6 +369,47 @@ def convert_tables(lines):
 
 #+end_src
 
+* Phase 10 — Algebra Structure Macros
+
+Convert =\pagehead=, =\pagepic=, =\pageto=, =\pagefrom= to org equivalents.
+
+#+begin_src python :tangle org-cleanup.py
+def convert_algebra_macros(line):
+    """Convert pagehead/pagepic/pageto/pagefrom to org equivalents."""
+    m = re.match(r'\\pagehead\{([^}]+)\}\{([^}]+)\}', line.strip())
+    if m:
+        name, abbrev = m.group(1), m.group(2)
+        return '** ' + name + chr(10)
+    m = re.match(r'\\pagepic\{([^}]+)\}\{([^}]+)\}\{([^}]+)\}', line.strip())
+    if m:
+        return ''
+    m = re.search(r'\\pageto\{([^}]+)\}\{([^}]+)\}', line)
+    if m:
+        name, abbrev = m.group(1), m.group(2)
+        line = line[:m.start()] + '[[#' + abbrev + '][' + name + ']]' + line[m.end():]
+    m = re.search(r'\\pagefrom\{([^}]+)\}\{([^}]+)\}', line)
+    if m:
+        name, abbrev = m.group(1), m.group(2)
+        line = line[:m.start()] + '([[#' + abbrev + '][' + name + ']])' + line[m.end():]
+    return line
+
+#+end_src
+
+* Phase 11 — Index Entries
+
+Convert =\index{X}= to =#+INDEX: X=.
+
+#+begin_src python :tangle org-cleanup.py
+def convert_index(line):
+    """Convert index to org."""
+    m = re.match(r'^\s*\\index\{([^}]+)\}\s*$', line.strip())
+    if m:
+        return '#+INDEX: ' + m.group(1) + chr(10)
+    line = re.sub(r'\\index\{[^}]+\}', '', line)
+    return line
+
+#+end_src
+
 * File Processing
 
 #+begin_src python :tangle org-cleanup.py
@@ -401,7 +442,7 @@ def process_file(filepath, dry_run=False, phases=None):
         changes['total'] += phase_changes
 
     # Phases 2-6: Apply to prose lines only
-    if any(p in phases for p in [2, 3, 4, 5, 6, 7, 8, 9]):
+    if any(p in phases for p in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]):
         classified = list(classify_lines(lines))
         # Phase 8: List environments (pre-process before line-by-line)
         if 8 in phases:
@@ -410,7 +451,7 @@ def process_file(filepath, dry_run=False, phases=None):
         if 9 in phases:
             classified = convert_tables(classified)
         new_lines = []
-        phase_counts = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+        phase_counts = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0, 11: 0}
         for i, line, region in classified:
             if region != 'prose':
                 new_lines.append(line)
@@ -445,6 +486,14 @@ def process_file(filepath, dry_run=False, phases=None):
                 r = convert_crossrefs(result)
                 if r != result: phase_counts[5] += 1
                 result = r
+            if 10 in phases:
+                r = convert_algebra_macros(result)
+                if r != result: phase_counts[10] += 1
+                result = r
+            if 11 in phases:
+                r = convert_index(result)
+                if r != result: phase_counts[11] += 1
+                result = r
             new_lines.append(result)
         lines = new_lines
         for p, c in phase_counts.items():
@@ -476,7 +525,7 @@ def main():
     parser.add_argument('--phase', type=int, help='Run only this phase (1-6)')
     parser.add_argument('files', nargs='*', help='Specific files (default: all)')
     args = parser.parse_args()
-    phases = {args.phase} if args.phase else {1, 2, 3, 4, 5, 6}
+    phases = set(args.phase) if isinstance(args.phase, list) else {args.phase} if args.phase else {1, 2, 3, 4, 5, 6}
     files = args.files if args.files else sorted(find_org_files('.'))
     total_changes = 0
     total_files_changed = 0
