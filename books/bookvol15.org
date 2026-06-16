@@ -1,14 +1,10 @@
-\documentclass{book}
 
 % We have a name on every volume, specificed here
-\newcommand{\VolumeName}{Volume 15: The Sane Compiler}
 
 % Latex open file limits exceeded. Allocate more
-\usepackage{etex}    % fix No room for a new \dimen
 \reserveinserts{30}  % fix No room for a new \dimen
 
 % We want an index by type of information
-\usepackage{imakeidx} 
 
 % We make a new index for figures 'fig'.
 % This gives index references to all of the figures.
@@ -16,7 +12,6 @@
 % We want letters before each alphabet change so we
 % dynamically make an '.mst' file. Note that this
 % will NOT overwrite an existing file.
-\makeindex[name=fig,intoc=false] % figures
 \begin{filecontents*}{fig.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -25,7 +20,6 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for documentation 'doc'
 % This gives index references to terms mentioned in the text.
-\makeindex[name=doc,intoc=false] % documentation
 \begin{filecontents*}{doc.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -34,7 +28,6 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for error messages 'err'
 % This gives index references to error message in code
-\makeindex[name=err,intoc=false] % error messages
 \begin{filecontents*}{err.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -44,7 +37,6 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 % We make a new index for code definitions 'code'
 % This gives index references to function definitions,
 % macros, etc.
-\makeindex[name=code,intoc=false] % source code
 \begin{filecontents*}{code.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -53,7 +45,6 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for categories 'cat'
 % This gives index references to each category.
-\makeindex[name=cat,intoc=false] % categories
 \begin{filecontents*}{cat.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -62,7 +53,6 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for categories 'dom'
 % This gives index references to each domain.
-\makeindex[name=dom,intoc=false] % domains
 \begin{filecontents*}{dom.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -71,7 +61,6 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We make a new index for categories 'pkg'
 % This gives index references to each package..
-\makeindex[name=pkg,intoc=false] % packages
 \begin{filecontents*}{pkg.mst}
 headings_flag 1
 heading_prefix "{==== \\textbf{"
@@ -80,41 +69,29 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 
 % We want hyperlinks to everything so we can move
 % around the document and reference web citations
-\usepackage{hyperref} % for hyperlinks
 \hypersetup{colorlinks=true,linkcolor=blue,pdfborderstyle={/S/U/W 1},citecolor=red}
 
 % We need to adjust chapter numbers for the appendix
-\usepackage[toc,page]{appendix} 
 
 % Figures float so sometimes we force figure placement
-\usepackage{float} % force figure placement
 
-\usepackage{mathtools}
 
 % We need some standard math symbols
-\usepackage{amssymb} 
 
 % We define the 'chunk' environment
 % This wraps source code and provides a name.
 % It also provides 'getchunk' to gather code.
-\usepackage{axiom} % for chunk macros
 
 % Long itemizations use too much space. This compresses them
-\usepackage{enumitem} % for noitemsep in itemize
 
 % We need the ability to write proofs using the 'prooftree' environment
-\usepackage{bussproofs} 
 
 % Set how wide the page margins are
-\usepackage[margin=1in]{geometry}
 
-\usepackage{catmac} % for Weber chapter in vol 10.1
 
 % We want brackets to grow large in mathmode using llbracket
-\usepackage{stmaryrd} 
 
 % We want diagrams!
-\usepackage{tikz}     
 
 % We want to draw finite state diagrams
 \usetikzlibrary{automata, positioning, arrows}
@@ -152,7 +129,6 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 \tikzset{terminal/.append style={text height=1.5ex,text depth=.25ex}}
 \tikzset{nonterminal/.append style={text height=1.5ex,text depth=.25ex}}
 }
-\renewcommand\familydefault{\sfdefault}
 
 % We want to highlight various proof terms and include them
 % in the table of contents.
@@ -167,19 +143,15 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 \newtheorem{DoyeAlgorithm}[subsection]{Algorithm}
 
 % We want the black square tombstone on proof endings.
-\newcommand*{\QED}{\hfill\ensuremath{\blacksquare}} % for qed
 
 % We want to use a little longer line
 \setlength{\textwidth}{400pt}
 
 % We want to include images
-\usepackage{graphicx}
 
 % We want the adjustwidth environment
-\usepackage{changepage} 
 
 % We want commutative diagrams
-\usepackage{pst-node} 
 
 % We create a signature index file
 \newwrite\sigfile % for signature index
@@ -188,24 +160,18 @@ heading_suffix " ====\\newline}}\\nopagebreak\n"
 %\usepackage{breakurl}
 %\def\UrlBreaks{\do\/\do\-}
 
-\begin{document}
 
 % open the signature file.
 \immediate\openout\sigfile=signatures.tex
 
-\frontmatter
 
 % say now many levels of subsection we want in TOC.
-\setcounter{secnumdepth}{2}
 
 
 \begin{titlepage}
 \center{\includegraphics{ps/axiomfront.ps}}
-\vskip 0.1in
 \includegraphics{ps/bluebayou.ps}\\
-\vskip 0.1in
 {\Huge{The 30 Year Horizon}}
-\vskip 0.1in
 $$
 \begin{array}{lll}
 Manuel\ Bronstein      & William\ Burge   & Timothy\ Daly \\
@@ -218,14 +184,11 @@ Stephen\ Watt          & Jim\ Wen         & Clifton\ Williamson
 \end{array}
 $$
 \center{\large{\VolumeName}}
-\vskip 0.1in
 \center{\today}
-\vskip 0.1in
 \center{\input{master}}
 \end{titlepage}
 
 % Use traditional roman numerals in header text
-\pagenumbering{roman}
 
 #+begin_example
 Portions Copyright (c) 2005 Timothy Daly
@@ -280,7 +243,6 @@ SUCH DAMAGE.
 #+end_example
 
 \vfill
-\newpage
 Inclusion of names in the list of credits is based on historical
 information and is as accurate as possible. Inclusion of names
 does not in any way imply an endorsement but represents historical
@@ -346,7 +308,6 @@ Wilfrid Kendall        & Tony Kennedy           & David Kincaid\\
 Keshav Kini            & Knut Korsvold          & Ted Kosan\\
 \end{tabular}
 \vfill
-\newpage
 \begin{tabular}{lll}
 Paul Kosinski          & Igor Kozachenko        & Fred Krogh\\
 Klaus Kusche           & Bernhard Kutzler       & Tim Lahey\\
@@ -406,16 +367,13 @@ Liu Xiaojun            & Clifford Yapp          & David Yun\\
 Qian Yun               & Vadim Zhytnikov        & Richard Zippel\\
 Evelyn Zoernack        & Bruno Zuercher         & Dan Zwillinger\\
 \end{tabular}
-\newpage
 
 \tableofcontents
 \vfill
-\eject
 
 \setlength{\parindent}{0em}
 \setlength{\parskip}{1ex}
-{\Large{\bf New Foreword}}
-\vskip .25in
+{\Large*New Foreword*}
 
 On October 1, 2001 Axiom was withdrawn from the market and ended life
 as a commercial product.  On September 3, 2002 Axiom was released
@@ -457,13 +415,11 @@ the next generation to be effective Computational Mathematicians?
 
 The ``30 year horizon'' is much nearer than it appears.
 
-\vskip .25in
 %\noindent
 Tim Daly\\
 CAISS, City College of New York\\
 November 10, 2003 ((iHy))
 \vfill
-\eject
 
 % Now we want arabic numerals, not roman numerals from above
 \pagenumbering{arabic}
@@ -504,7 +460,7 @@ present quotes from the literature.
 \begin{quote}
 {\bf What is the most important problem in your field and why aren't
 you working on it?}\\
--- Richard Hamming \cite{Hamm95}
+-- Richard Hamming [cite:@Hamm95]
 \end{quote}
 
 \begin{quote}
@@ -512,7 +468,7 @@ you working on it?}\\
 programs. Instead of imagining that our main task is to instruct a
 computer what to do, let us concentrate rather on explaining to 
 human beings what we want a computer to do.}\\
--- Donald Knuth \cite{Knut92}
+-- Donald Knuth [cite:@Knut92]
 \end{quote}
 
 This literate program contains the actual source code for the new Sane
@@ -531,7 +487,7 @@ computation and mathematical logic will be as fruitful in the next
 century as that between analysis and physics in the last. The
 development of this relationship demands a concern for both
 applications and for mathematical elegance.}\\
--- John McCarthy \cite{Mcca63}
+-- John McCarthy [cite:@Mcca63]
 \end{quote}
 
 Axiom has developed in the Computer Algebra branch and, until now, has
@@ -551,7 +507,7 @@ formal proofs and program semantics.
 but as long as programming is done by people that don't master them,
 the software crisis will remain with us and will be considered an
 incurable disease.}\\
--- Edsgar Dijkstra \cite{Dijk00}
+-- Edsgar Dijkstra [cite:@Dijk00]
 \end{quote}
 
 The missive of creating a world where formal proofs of programs is the
@@ -561,7 +517,7 @@ norm was given by Dijkstra.
 {\bf The programmer should not ask how applicable the techniques of
 sound programming are, he should create a world in which they are
 applicable. It is his only way of delivering a high-quality design.}\\
--- Edsgar Dijkstra \cite{Dijk00}
+-- Edsgar Dijkstra [cite:@Dijk00]
 \end{quote}
 
 The challenge we face, and the problem we attack, is constructing this
@@ -573,7 +529,7 @@ implementations are high-quality, proven code.
 a conjecture is the functional specification the program is supposed
 to satisfy. The programmer's task is to present such complete
 conjectures as proven theorems.}\\
--- Edsgar Dijkstra \cite{Dijk88a}
+-- Edsgar Dijkstra [cite:@Dijk88a]
 \end{quote}
 
 There are, of course, "political problems" in the sense that
@@ -586,7 +542,7 @@ arguments is that their design is much better teachable than the
 design of verbal/pictorial arguments. Large-scale introduction of
 courses on such calculational methodology, however, would encounter
 unsurmountable political problems.}\\
--- Edsgar Dijkstra \cite{Dijk00}
+-- Edsgar Dijkstra [cite:@Dijk00]
 \end{quote}
 
 The anti-proof arguments abound and are not novel. Dijkstra provides
@@ -598,14 +554,14 @@ killing of the myth that formal proofs are of necessity long, tedious,
 laborious, error-prone, and what-have-you. On the contrary, our proofs
 turned out to be short and simple to check, carried out -- as they are
 -- in straightforward manipulations from a modest repertoire.}\\
--- Dijkstra and Scholten \cite{Dijk90}
+-- Dijkstra and Scholten [cite:@Dijk90]
 \end{quote}
 
 There is a growing movement to formalize mathematics using computer
-aided proofs. The Xena Project \cite{Xena19} argues that we need to
+aided proofs. The Xena Project [cite:@Xena19] argues that we need to
 teach the next generation to develop verified algorithms. The thrust
-is toward {\sl rigorous mathematics}, that is, mathematics 
-{\sl that is guaranteed to be correct}.
+is toward /rigorous mathematics/, that is, mathematics 
+/that is guaranteed to be correct/.
 
 \begin{quote}
 {\bf The classical engineering disciplines all have their standard
@@ -620,7 +576,7 @@ standard, whereby programmers convince themselves that their systems
 are safe, secure, and correct? The concepts and tools may not quite be
 ready yet for broad adoption, but they have been under development for
 decades. }\\
--- Adam Chlipala \cite{Chli17}
+-- Adam Chlipala [cite:@Chli17]
 \end{quote}
 
 Axiom has many algorithms that have mathematical specifications, such
@@ -633,7 +589,7 @@ the reliability of mathematical claims, just as laboratory
 verification provides a check in the other sciences. Second, the act
 of finding a proof often yields, as a byproduct, new insights and
 unexpected new data, just as does work in the laboratory.}\\
--- Jaffe and Quinn \cite{Jaff93} 
+-- Jaffe and Quinn [cite:@Jaff93] 
 \end{quote}
 
 There is the fundamental question of which logic to choose. It turns
@@ -654,7 +610,7 @@ the kernel (aka the nucleus) from the judgements that define the logic.
 - support common proof-development techniques
 }
 
--- Andrej Bauer \cite{Baue19a}
+-- Andrej Bauer [cite:@Baue19a]
 \end{quote}
 
 We plan to develop the judgements, axioms, and other logic machinery
@@ -679,7 +635,7 @@ An important function of the proof assistant is therefore to keep our
 tower of theories properly organized, allowing us [...] to work in
 any existing theory (not only those at the top of the tower) by
 proving new theorems in them.}\\
--- Robin Milner \cite{Miln84}
+-- Robin Milner [cite:@Miln84]
 \end{quote}
 
 Axiom supports ``First Class Dynamic Types''. This allows code to
@@ -715,7 +671,7 @@ refer to these axioms.
 
 Axiom needs to be extended to include a specification language so that
 the algorithms have exact specifications. We will be examining several
-specification languages, starting with Z \cite{Wood20}.
+specification languages, starting with Z [cite:@Wood20].
 
 Axiom also needs to be extended with a proof language so algorithms
 can have associated proofs.
@@ -729,15 +685,15 @@ use the Common Lisp Object System (CLOS). CLOS classes define new
 types at the Lisp level, providing a base case for type inference.
 
 Type analysis will require both compile-time typing 
-and gradual typing \cite{Bake84}.
+and gradual typing [cite:@Bake84].
 
-Hoare \cite{Hoar03} provided a call for a {\sl Grand Challenge} to
-create a {\sl Verifying Compiler}. This effort falls along the lines
+Hoare [cite:@Hoar03] provided a call for a /Grand Challenge/ to
+create a /Verifying Compiler/. This effort falls along the lines
 suggested but is only an instance in a small domain. On the other
 hand, Axiom's focus on mathematical algorithms provides the best
 chance for a successful instance of his challenge.
 
-Homotopy Type Theory (HoTT)\cite{Acze13}\cite{Lica16}
+Homotopy Type Theory (HoTT)[cite:@Acze13][cite:@Lica16]
 applies to Axiom, defining paths between the
 various categories.This is likely to instill discipline on
 coercions. In the original Axiom systems, coercions were ad hoc
@@ -745,12 +701,12 @@ constructions. But such coercions in a Homotopy Type Theory fall
 under the Univalence principle, defining coercions and their
 inverses. There is, for example, a ``curry'' path between
 $A\times B\rightarrow C$ and 
-$A\rightarrow B\rightarrow C$. \cite{Lica16a}
+$A\rightarrow B\rightarrow C$. [cite:@Lica16a]
 This might be usefully applied
 using generic code to perform the conversion. Exactly how to
 incorporate this the Sane effort is still to be thought through.
 
-Weber \cite{Webe05} gives a simple example of a family of types
+Weber [cite:@Webe05] gives a simple example of a family of types
 arising in computer algebra whose coercion relations cannot be
 captured by a finite set of first-order rewrite rules. If arbitrary
 (first-order) terms are allowed in the rewrite rules, the general type
@@ -795,7 +751,7 @@ algebra.
 
 ** The weakness of program verification
 
-DeMillo, Lipton, and Perlis \cite{Demi79} identify what they believe
+DeMillo, Lipton, and Perlis [cite:@Demi79] identify what they believe
 is the key weakness of program verification, that, to increase
 confidence in the correctness of a program
 \begin{quote}
@@ -807,10 +763,10 @@ end, it is a social process that determines whether mathematicians
 feel confident about a theorem -- and we believe that, because no
 comparable social process can take place among program verifiers,
 program verification is bound to fail''}\\
--- from Donald Mackenzie \cite{Mack01}
+-- from Donald Mackenzie [cite:@Mack01]
 \end{quote}
 
-Dijkstra \cite{Dijk78} wrote a reply to their paper.
+Dijkstra [cite:@Dijk78] wrote a reply to their paper.
 
 There is a confusion here, I believe. DeMillo et al. think that the
 effort to verify software ``is not what a mathematician does''. We can
@@ -827,14 +783,14 @@ objection on its own ground of formalistic rigor. Since the
 requirement for a program is informal and the program is formal, there
 must be a translation, and the translation itself must necessarily be
 informal.}\\
--- DeMillo, Lipton, and Perlis \cite{Demi79}
+-- DeMillo, Lipton, and Perlis [cite:@Demi79]
 \end{quote}
 
 And Cnatwell said
 \begin{quote}
 {\bf Just because a program is ``proven correct'', you cannot be sure
 that it will do what you intend.}\\
--- Brian Cantwell Smith \cite{Smit60}
+-- Brian Cantwell Smith [cite:@Smit60]
 \end{quote}
 
 Smith  points out that correctness is with respect to a model, which
@@ -850,7 +806,7 @@ DeMillo et al. also write
 {\bf The formal demonstration that a program is consistent with its
 specifications has value only if the specifications and the program
 are independently derived.}\\
--- DeMillo, Lipton, and Perlis \cite{Demi79}
+-- DeMillo, Lipton, and Perlis [cite:@Demi79]
 \end{quote}
 
 While we could take issue with this statement in general, it is clear
@@ -872,7 +828,7 @@ subjects for deductive verification. Programs, as causal models of
 those structures, are not. The success of program verification as a
 generally applicable and completely reliable method for guaranteeing
 program performance is not even a theoretical possibility.}\\
--- James H. Fetzer \cite{Fetz88}
+-- James H. Fetzer [cite:@Fetz88]
 \end{quote}
 
 Hoare (quoted in Fetzer' paper writes)
@@ -882,13 +838,13 @@ a mathematical activity like the solution of differential equations,
 that programs can be derived from their specifications through
 mathematical insight, calculation, and proof, using algebraic laws as
 simple and elegant as those of elementary arithmetic.}\\
--- C.A.R. Hoare \cite{Fetz88}
+-- C.A.R. Hoare [cite:@Fetz88]
 \end{quote}
 
 Fetzer makes an interesting distinction between absolute verification
 and relative verification.
 \begin{quote}
-{\bf With respect to deductions, the term {\sl verification} can be
+{\bf With respect to deductions, the term /verification/ can be
 used in two rather different senses. One of these occurs in pure
 mathematics and in pure logic, in which theorems of mathematics and of
 logic are subject to demonstration. These theorems characterize claims
@@ -898,18 +854,18 @@ and theorems in this sense are subject to verification by deriving
 them from no presmises at all (within systems of natural deduction) or
 from primitive axioms (within axiomatic formal systems). The other
 occurs in ordinary reasoning and in scientific contexts in general,
-whenever {\sl conclusions} are shown to follow from specific sets of 
-{\sl premises}, where there is no presumption that these conclusions
+whenever /conclusions/ are shown to follow from specific sets of 
+/premises/, where there is no presumption that these conclusions
 might be derived from no premises at all or that those premises should
 be true as a function of their meaning. Thus, within a system of
 natural deduction or an axiomatic formal system, the members of the
 class of consequences that can be derived from no premises at all or
 that follow from primitive axioms alone may be said to be
-{\sl absolutely} verifiable. By contrast those members of the class of
+/absolutely/ verifiable. By contrast those members of the class of
 consequences that can only be derived relative to specific sets of
 premises whose truth is not absolutely verifiable, may be said to be
-{\sl relatively} verifiable.}\\
--- James H. Fetzer \cite{Fetz88}
+/relatively/ verifiable.}\\
+-- James H. Fetzer [cite:@Fetz88]
 \end{quote}
 
 Fetzer claims that programs are subject to relative rather than
@@ -928,7 +884,7 @@ verification, making some excellent points. He postulates a theorem:
 \begin{quote}
 {\bf There does not exist a generally useful programming language
 where every program is feasibly verifiable.}\\
--- Ron Pressler \cite{Pres19}
+-- Ron Pressler [cite:@Pres19]
 \end{quote}
 
 On the other hand, Doron Zeilberger writes:
@@ -936,7 +892,7 @@ On the other hand, Doron Zeilberger writes:
 {\bf In this process, computer algebra, that great implementer of
 high-school algebra, will play a central role. The king (abstract
 math) is dead. Long live the King (Concrete Mathematics).}\\
--- Doron Zeilberger \cite{Zeil02}
+-- Doron Zeilberger [cite:@Zeil02]
 \end{quote}
 
 Maurer, in a letter to ACM in response to the DeMillo article,
@@ -953,7 +909,7 @@ produces overly long proofs.) Nobody is ever going to read the object
 code produced by a compiler, either; one simply trusts the compiler
 and goes about one's business. What we hope for in verifiers is that
 we will at least be able to trust them to show program correctness.}\\
--- as quoted in \cite{Mack01}
+-- as quoted in [cite:@Mack01]
 \end{quote}
 
 So there is a ``storm of misunderstanding'' between these various
@@ -977,7 +933,7 @@ theory is used? How can it be factored into categories? How can we
 show that all inherited paths form sound and complete types?
 
 It requires a deep understanding of the Calculus of Construction with
-induction. Coq and Lean \cite{Carn19a} implement this form of
+induction. Coq and Lean [cite:@Carn19a] implement this form of
 logic. They are both at the leading edge of the field and still under
 active development and debate.
 
@@ -1003,7 +959,7 @@ which itself might sit on a trusted nucleus that can adapt to a range
 of logics. This must be verified and validated ``to the metal''.
 
 The question of what constitutes ``real proof'' is not quite as
-settled as most would believe. MacKensie \cite{Mack01} published a
+settled as most would believe. MacKensie [cite:@Mack01] published a
 sociology study of the question and points out that there are 
 various cohorts within the mathematics community that do not agree
 that machine-based proofs are ``proofs''.
@@ -1018,7 +974,7 @@ he thought he might be able to borrow or swipe something from
 it. Nothing could force him to read someone else's verification once
 he had grasped the point that no verification bears any necessary
 connection to any other verification.}\\
--- DeMillo, Lipton, and Perlis \cite{Demi79}
+-- DeMillo, Lipton, and Perlis [cite:@Demi79]
 \end{quote}
 
 But since ``verification'' is the ``assembly language'' of the system
@@ -1027,7 +983,7 @@ just like CPUs ``read the assembly language''.
 
 The key ``transition paper'' from these arguments seems to be 
 Martin-L\"of's ``Constructive Mathematics and Computer Programming''
-paper \cite{Mart79}. To quote the abstract
+paper [cite:@Mart79]. To quote the abstract
 \begin{quote}
 {\bf If programming is understood not as the writing of instructions for
 this or that computing machine but as the design of methods of
@@ -1045,11 +1001,11 @@ perform. Moreover, the inference rules of the theory of types, which
 are again completely formal, appear as rules of correct program
 synthesis. Thus the correctness of a program written in the theory of
 types is proved formally at the same time as it is being synthesized.}\\
--- Per Martin-L\"of \cite{Mart79}
+-- Per Martin-L\"of [cite:@Mart79]
 \end{quote}
 
 Robert Harper uses it as the basis for his Computational Type Theory
-Course \cite{Harp18}.
+Course [cite:@Harp18].
 
 ** Intellectual Complexity
 
@@ -1062,16 +1018,16 @@ There is a very slow convergence of syntax in languages like ML and
 Haskell but their emphasis is on type theory as a "checking" bit of
 machinery rather than on type theory as a "proof" bit of machinery.
 
-\subsection{Alturki and Moore \cite{Altu19}}
+\subsection{Alturki and Moore [cite:@Altu19]}
 
 Consider a simple example of a Coq program proof.
 
 We need to specify three things:
 \begin{itemize}
-\item {\bf L}, a formal model of the syntax and semantics of the
+\item *L*, a formal model of the syntax and semantics of the
 programming language
-\item {\bf P}, a formal representation in model {\bf L}
-\item {\bf S}, a specification of the property to be verified
+\item *P*, a formal representation in model *L*
+\item *S*, a specification of the property to be verified
 \end{itemize}
 
 *** An example
@@ -1103,10 +1059,10 @@ Inductive AExp :=
   | con  : Z -> Aexp
   | plus : Aexp -> AExp -> AExp
 #+end_example
-where variables use constructor {\bf var} applied to a string,
-constants use constructor {\bf con} applied to an integer (Z
-is the set of integers), and the {\bf plus} constructor takes
-2 {\bf AExp} arguments and returns a {\bf AExp} result. 
+where variables use constructor *var* applied to a string,
+constants use constructor *con* applied to an integer (Z
+is the set of integers), and the *plus* constructor takes
+2 *AExp* arguments and returns a *AExp* result. 
 
 Programs are defined as
 #+begin_example
@@ -1132,12 +1088,12 @@ Note that we are using operational semantics here.
 
 The semantics of arithmetic expressions is captured by a binary
 transition relation on states, where a state is a pair
-{\bf (AExp, Env)} consisting of an arithmetic expression
-{\bf AExp} and the environment {\bf Env} in which {\bf AExp} is to be
+*(AExp, Env)* consisting of an arithmetic expression
+*AExp* and the environment *Env* in which *AExp* is to be
 evaluated. 
 
 This binary transition relation can be defined in Coq as an
-inductively defined proposition (of type Prop), {\bf step\_e}, that
+inductively defined proposition (of type Prop), *step\_e*, that
 tells us whether a given pair of states belongs to the relation.
 #+begin_example
 Inductive step_e : (AExp * Env) -> (AExp * Env) -> Prop :=
@@ -1153,13 +1109,13 @@ Inductive step_e : (AExp * Env) -> (AExp * Env) -> Prop :=
       step_e (plus e1 e2, env) (plus e1' e2, env')
 #+end_example
 
-The {\bf step\_var} states that the program variable {\bf var~v}
-evaluates in one step to its value {\bf con~x} in the environment 
-{\bf env} ({\bf x} is the integer value obtained from the function
-application {\bf get~v~env}, the value to which {\bf v} is mapped in
-the {\bf env}, and this holds for all program variables and
-environments (recall that {\bf con} is the constructor for integer
-constants). Another example is the {\bf step\_plus} case, which states
+The *step\_var* states that the program variable *var~v*
+evaluates in one step to its value *con~x* in the environment 
+*env* (*x* is the integer value obtained from the function
+application *get~v~env*, the value to which *v* is mapped in
+the *env*, and this holds for all program variables and
+environments (recall that *con* is the constructor for integer
+constants). Another example is the *step\_plus* case, which states
 that any arithmetic expression of the form 
 #+begin_example
    plus (con x) (con y)
@@ -1182,10 +1138,10 @@ Lemma test_execution :
 #+end_example
 
 An execution trace is constructed by the reflexive-transitive closure
-of the {\bf step\_p} relation (see \ref{Coq Example Code}.), computed
+of the *step\_p* relation (see \ref{Coq Example Code}.), computed
 by Coq's inductively defined proposition 
-{\bf clos\_refl\_trans\_1n}. Note that the program in the final state
-is the command {\bf skip}, requiring that the program be fully
+*clos\_refl\_trans\_1n*. Note that the program in the final state
+is the command *skip*, requiring that the program be fully
 executed. 
 
 Completing the proof requires picking the right clause of the step
@@ -1195,14 +1151,14 @@ relation for each step of execution.
 
 We need to formalize the statement of the property we wish to verify as
 a reachability property. Following the language independent approach
-of program verification by coinduction \cite{Moor18}, 
+of program verification by coinduction [cite:@Moor18], 
 we define a program property
 as a reachability claim on program states of the form 
-{\bf (Pgm~*~Env)}. In particular, using the coinductive proof machinery
+*(Pgm~*~Env)*. In particular, using the coinductive proof machinery
 (see \ref{Coq Example Code}), the main correctness property of 
-{\bf sum} can be defined as the following inductive proposition
+*sum* can be defined as the following inductive proposition
 (recall that the quoted strings ``n'' and ``sum'' are the program
-variables, while {\bf n} is a universally quantified logical name
+variables, while *n* is a universally quantified logical name
 denoting a symbolic value)
 #+begin_example
 Inductive sum_spec : Spec (Pgm * Env) :=
@@ -1218,19 +1174,19 @@ Inductive sum_spec : Spec (Pgm * Env) :=
      (fun cfg' => cfg' = (pgm [] skip, [("sum",((n + 1) * n)/2);("n",0)]))
 #+end_example
 
-{\bf Spec} is the general type of (language independent) program
+*Spec* is the general type of (language independent) program
 specifications (reachability claims), instantiated here with states
-{\bf Spec~(Pgm~*~Env)}. The specification states that for all
-non-negative values {\bf n}, the initial pair consisting of the
-program {\bf sum} and the empty environment {\bf []} reaches a state
-having the empty program {\bf skip} as its first component and an
+*Spec~(Pgm~*~Env)*. The specification states that for all
+non-negative values *n*, the initial pair consisting of the
+program *sum* and the empty environment *[]* reaches a state
+having the empty program *skip* as its first component and an
 environment in its second component that maps the program variables
 ``n'' to zero and ``sum'' to the value of the expression
-{\bf ((n~+~1)~*~n)/2}.
+*((n~+~1)~*~n)/2*.
 
-Other properties, e.g. the loop invariant for {\bf sum}, may also need
+Other properties, e.g. the loop invariant for *sum*, may also need
 to be defined in addition to the main correctness property. In Coq,
-these properties on program states, or instantiated {\bf Spec}
+these properties on program states, or instantiated *Spec*
 propositions in the case when the coinductive program verification
 approach described here is used. Coq tends to be more verbose
 requiring having other, smaller, properties specified and proved
@@ -1240,14 +1196,14 @@ operations.
 *** Verifying correctness
 
 In a language verification framework, deductive program verification
-entails showing that a property {\bf S}, like the main correctness
-property of {\bf sum}, follows logically from a given model {\bf L} of
-the language and a model {\bf P} of the program, along with other
+entails showing that a property *S*, like the main correctness
+property of *sum*, follows logically from a given model *L* of
+the language and a model *P* of the program, along with other
 smaller intermediate properties that have already been show to hold in 
-{\bf L} and {\bf P}.
+*L* and *P*.
 
 Following the language-independent coinductive verification approach 
-(see \cite{Moor18}, a program is shown to meet its specification by
+(see [cite:@Moor18], a program is shown to meet its specification by
 (1) using the step relation defining the semantics of the language in
 which the program is written as a symbolic execution engine, and (2)
 using simple co-inductive reasoning on circular behaviors emanating
@@ -1258,7 +1214,7 @@ proof strategy can be found in the appendix (see
 
 To prove correctness we need to specify and show the loop
 invariant. For that, we introduce another constructor of the type 
-{\bf sum\_spec}
+*sum\_spec*
 #+begin_example
  | sum_loop_claim : forall env n, get "n" env = Some n -> 0 <= n ->
                     forall s, get "sum" env = Some s ->
@@ -1272,31 +1228,31 @@ invariant. For that, we introduce another constructor of the type
          snd cfg' = set "n" 0 (set "sum" (s + ((n + 1) * n)/2) env)).
 #+end_example
 
-Note that {\bf get $\times$ env} evaluates to the value to which $x$
-is mapped in {\bf env} (if defined), while {\bf fst} and {\bf snd}
+Note that *get $\times$ env* evaluates to the value to which $x$
+is mapped in *env* (if defined), while *fst* and *snd*
 return respectively the first and second components of a state pair.
 
-To verify that {\bf sum} meets its specification given by 
-{\bf sum\_spec}, which is that the initial state of {\bf sum} either
-diverges or terminates with the correct value for {\bf sum}, we
+To verify that *sum* meets its specification given by 
+*sum\_spec*, which is that the initial state of *sum* either
+diverges or terminates with the correct value for *sum*, we
 instantiate the general coinductive soundness theorem with the step
-relation {\bf step\_p} defining the semantics, and show the following
+relation *step\_p* defining the semantics, and show the following
 statement: 
 #+begin_example
 Lemma sum_ok : sound step_p sum_spec.
 #+end_example
 
-{\bf sound} is a generic proposition on reachability claims. The proof
+*sound* is a generic proposition on reachability claims. The proof
 of this instantiation is based on a generalized co-induction theorem
 that mechanizes the verification approach.
 
 * Adding the axioms to Axiom
 
-This is work by Erik Poll and Simon Thompson \cite{Poll98} published
+This is work by Erik Poll and Simon Thompson [cite:@Poll98] published
 in 1998, providing one of the motivations behind the current effort.
-There is another, later version \cite{Poll00} with significant
+There is another, later version [cite:@Poll00] with significant
 overlap. Also of interest in a paper on ``The Type System of Aldor''
-\cite{Poll99a}.
+[cite:@Poll99a].
 
 ** Abstract
 
@@ -1311,7 +1267,7 @@ give a number of example applications of the logic we construct.
 ** Introduction
 
 Symbolic mathematical -- or computer algebra -- systems, such as Axiom 
-\cite{Book00}, Maple and Mathematica, are in everyday use by
+[cite:@Book00], Maple and Mathematica, are in everyday use by
 scientists, engineers and indeed mathematicians, because they provide
 a user with techniques of, say, integration which far exceed those of
 the person themselves, and make routine many calculations which would
@@ -1322,14 +1278,14 @@ research.
 
 There are, however, drawbacks to the widespread use of automated
 support of complex mathematical tasks, which has been widely noted:
-Fateman \cite{Fate96a} gives the graphic example of systems which will
+Fateman [cite:@Fate96a] gives the graphic example of systems which will
 assume that $a\ne 0$ on the basis that $a=0$ has not been
 established. This can have potentially disastrous consequences for the
 naive user of the system or indeed, if it occurs within a
-sufficiently complicated context, {\sl any} user.
+sufficiently complicated context, /any/ user.
 
 Symbolic mathematics systems are also limited by their reliance on
-algebraic techniques. As Martin \cite{Mart99} remarks, in performing
+algebraic techniques. As Martin [cite:@Mart99] remarks, in performing
 operations of analysis it might be a precondition that a function be
 continuous; such a property cannot be guaranteed by a computer algebra
 system alone.
@@ -1342,15 +1298,15 @@ of those assumptions.
 
 The literature contains a number of different strategies proposed for
 combining computer algebra and theorem proving; see, for instance, 
-\cite{Buch96}, \cite{Calm96}, \cite{Baue98}. This paper examines
+[cite:@Buch96], [cite:@Calm96], [cite:@Baue98]. This paper examines
 another proposal: that of using the type system of the Axiom
-\cite{Book00} computer algebra system to represent a logic, and thus
+[cite:@Book00] computer algebra system to represent a logic, and thus
 to use the constructions of Axiom to handle the logic and represent
 proofs and propositions, in the same way as is done in theorem provers
-based on type theory such as Nuprl \cite{Cons85} or Coq \cite{COQR16}.
+based on type theory such as Nuprl [cite:@Cons85] or Coq [cite:@COQR16].
 
 This paper particularly explores the recent Axiom Library Compiler,
-Aldor \cite{Watt94a}, which is unusual among computer algebra systems
+Aldor [cite:@Watt94a], which is unusual among computer algebra systems
 in being strongly typed, and moreover in having a very powerful type
 system, including dependent types.
 
@@ -1375,13 +1331,13 @@ related and future work.
 ** An introduction to Aldor
 \label{poll2}
 
-The Axiom Library Compiler, Aldor \cite{Watt94a} (previously known as
-AXIOM-XL or $A^{\#}$), provides the user with a powerful,
+The Axiom Library Compiler, Aldor [cite:@Watt94a] (previously known as
+AXIOM-XL or $A^{#}$), provides the user with a powerful,
 general-purpose programming language in which to model the structures
 of mathematics. This language is functionally based and provides
 higher order-functions, generators (which bear a strong relationship
 to list comprehensions) and other features of modern functional
-languages like Standard ML \cite{Miln90} and Haskell \cite{Huda92}, 
+languages like Standard ML [cite:@Miln90] and Haskell [cite:@Huda92], 
 as well as being strongly typed.
 
 *** The type system of Aldor
@@ -1404,21 +1360,21 @@ crucial documentation}. In Aldor types have to be declared explicitly
 since the type system has a variety of complex features including the
 following.
 
-{\bf Overloading} A single identifier can be used to denote values of
-different type, such as {\bf Int {\tt ->} Int} and {\bf Int {\tt ->}
-Bool {\tt ->} Int}\footnote{Note that this is a much more powerful
+*Overloading* A single identifier can be used to denote values of
+different type, such as *Int =->= Int* and {\bf Int =->=
+Bool =->= Int}\footnote{Note that this is a much more powerful
 overloading facility than that provided by Haskell type classes
-\cite{Huda92} in which overloaded functions have to be of the same
+[cite:@Huda92] in which overloaded functions have to be of the same
 arity.} Some support is provided for users to resolve overloading when
 that proves to be necessary.
 
-{\bf Coercions} Some `courtesy' coercions are provided by the system
+*Coercions* Some `courtesy' coercions are provided by the system
 automatically: these convert between multiple values 
-({\sl \'a la} LISP), cross products and tuples. It is also possible to
-make explicit conversions -- by means of the {\bf coerce} function --
+(/\'a la/ LISP), cross products and tuples. It is also possible to
+make explicit conversions -- by means of the *coerce* function --
 from integers to floating point numbers and so forth.
 
-{\bf Types as values} The type {\bf Type} is itself a type; it is by
+*Types as values* The type *Type* is itself a type; it is by
 this means that the system supports functions over types, such as
 #+begin_example
 idType (ty : Type) : Type == ty;                             (1)
@@ -1429,11 +1385,11 @@ id (ty : Type, x : ty) : ty == x;                            (2)
 #+end_example
 
 This resembles the quantification in System F in which functions can
-depend on type parameters, and in ${\tt F}^\omega$ where functions can
+depend on type parameters, and in $=F=^\omega$ where functions can
 be defined from types to types. This is investigated further in
 Section \ref{poll3.1}
 
-{\bf Dependent types} Aldor permits functions to have dependent types,
+*Dependent types* Aldor permits functions to have dependent types,
 in which the type of a function result depends upon the value of a
 parameter. An example is the function
 #+begin_example
@@ -1443,15 +1399,15 @@ in which the result of a function application, say
 #+begin_example
 vectorSum(34)
 #+end_example
-has the type {\bf Vector(34) {\tt ->} Double} because its argument has
-the value 34. In a similar way, when the {\bf id} function of
+has the type *Vector(34) =->= Double* because its argument has
+the value 34. In a similar way, when the *id* function of
 definition (2) is applied, its result type is determined by the type
 which is passed as its first argument.
 
 We discuss this aspect of the language in more detail in Section
 \ref{poll3}.
 
-{\bf Variables} The system is not fully functional, containing as it
+*Variables* The system is not fully functional, containing as it
 does variables which denote storage locations. The presence of
 updatable variables inside expressions can cause side-effects which
 make the elucidation of types considerably more difficult.
@@ -1460,7 +1416,7 @@ There is a separate question about the role of `mathematical'
 variables in equations and the like, and the role that they play in
 the type system of Axiom.
 
-{\bf Categories and domains} These features which provide a form of
+*Categories and domains* These features which provide a form of
 data abstraction are addressed in more detail in Section \ref{poll2.2}
 
 The Aldor type system can thus be seen to be highly complex and we
@@ -1477,7 +1433,7 @@ mathematical objects of various kinds, and support for this is given
 by the Aldor type system. One can specify what it is to be a monoid,
 say, by defining the Category\footnote{There is no relation between
 Axiom's notion of category and the notion from category theory!}
-called {\bf Monoid}, thus
+called *Monoid*, thus
 #+begin_example
 Monoid: Category == BasicType with {                         (3)
   * : (%,%) -> %;
@@ -1485,24 +1441,24 @@ Monoid: Category == BasicType with {                         (3)
 #+end_example
 
 This states that for a structure of a type '\%' to be a monoid it has
-to supply two bindings; in other words a {\bf Category} describes a
+to supply two bindings; in other words a *Category* describes a
 signature. The first name in the signature is '*' and is a binary
 operation over the type '\%'; the second is an element of '\%'.
 
-In fact we have stated slightly more than this, as {\bf Monoid}
-extends the category {\bf BasicType} which requires that the
+In fact we have stated slightly more than this, as *Monoid*
+extends the category *BasicType* which requires that the
 underlying type carries an equality operation.
 #+begin_example
 BasicType : Category == with {
   = : (%,%) -> Boolean; }
 #+end_example
 
-We should observe that this {\bf Monoid} category does not impose any
+We should observe that this *Monoid* category does not impose any
 constraints on bindings to '*' and '1': we shall revisit this example
 in Section \ref{poll5.2} below.
 
 Implementations of a category are abstract data types which are known
-in Axiom as domains, and are defined as was the value {\bf a} above
+in Axiom as domains, and are defined as was the value *a* above
 #+begin_example
 IntegerAdditiveMonoid : Monoid == add {                      (4)
   Rep == Integer;
@@ -1512,15 +1468,15 @@ IntegerAdditiveMonoid : Monoid == add {                      (4)
   1 : %             == per 0; }
 #+end_example
 
-The category of the object being defined -- {\bf Monoid} -- is the
-type of the domain we are defining, {\bf IntegerAdditiveMonoid}. The
-definition identifies a representation type, {\bf Rep}, and also uses
-the conversion functions {\bf rep} and {\bf per} which have the types
+The category of the object being defined -- *Monoid* -- is the
+type of the domain we are defining, *IntegerAdditiveMonoid*. The
+definition identifies a representation type, *Rep*, and also uses
+the conversion functions *rep* and *per* which have the types
 #+begin_example
 rep : % -> Rep                 per : Rep -> %
 #+end_example
 
-In fact, {\bf Rep}, {\bf rep} and {\bf per} are implemented using the
+In fact, *Rep*, *rep* and *per* are implemented using the
 macro mechanism of Aldor, and so are eliminated before type
 checking. Another aspect of Aldor which we intend to explore are ways
 in which the macro system can be eliminated in favour of a properly
@@ -1529,7 +1485,7 @@ abstraction machinery introduced here.
 
 We have seen already that one category can extend another; this can be
 seen as a form of inheritance. Other operations are available on
-categories, including a {\bf Join} operation which joins two
+categories, including a *Join* operation which joins two
 categories, thus allowing a form of multiple inheritance.
 
 Categories provide a powerful abstraction mechanism which allows
@@ -1537,20 +1493,20 @@ functions to be written which depend on the bindings in a category,
 and which can therefore be used over any domain which implements the
 category; that is any abstract data type which implements the
 signature in question. Categories resemble existential types 
-\cite{Mitc88}\cite{Sant95}
+[cite:@Mitc88][cite:@Sant95]
 but are implemented in a similar way to Haskell classes in that the
 type of the operands in an application determine which implementation
 of the operation is used.
 
 One of the advantages of the Haskell type class mechanism is that it
-is possible to declare a type as an {\bf instance} of different
+is possible to declare a type as an *instance* of different
 classes at different points in a program. In the first version of
 Axiom this was not allowed, so that an Axiom domain would have a
 signature (this is category) fixed at the point of definition and
 could not be extended to become an instance of a newly-defined
-category; this is possible in Aldor, using a {\sl post-facto}
+category; this is possible in Aldor, using a /post-facto/
 extension. Details of this and other features can be found in 
-\cite{Watt94a}
+[cite:@Watt94a]
 
 Categories can also be parametric, and depend upon value or type
 parameters. we shall see an example of this in Section \ref{poll3}1
@@ -1562,29 +1518,29 @@ system.
 \label{poll3}
 
 The Aldor language contains dependent types, so that one can define
-functions such as {\bf vectorSum} which defines a sum function for
+functions such as *vectorSum* which defines a sum function for
 vectors of arbitrary length, of type
 #+begin_example
 vectorSum : (n:Integer) -> Vector(n) -> Double
 #+end_example
-and a function {\bf append} to join two vectors together
+and a function *append* to join two vectors together
 #+begin_example
 append : (n:Integer,m:Integer,Vector(n),Vector(m)) -> Vector(n+m)
 #+end_example
 
-Given vectors of length two and three, {\bf vec2} and {\bf vec3}, we
+Given vectors of length two and three, *vec2* and *vec3*, we
 can join them thus
 #+begin_example
 append(2,3,vec2,vec3) : Vector(2+3)
 #+end_example
 and we would expect to be able to find the sum of this vector by
-applying {\bf vectorSum 5}, thus
+applying *vectorSum 5*, thus
 #+begin_example
 (vectorSum 5) append(2,3,vec2,vec3)
 #+end_example
 but this will fail to type check, since the argument is of type
-{\bf Vector(2+3)}, which is not equal to the expected type, namely
-{\bf Vector(5)}. This is because no evaluation takes place in type
+*Vector(2+3)*, which is not equal to the expected type, namely
+*Vector(5)*. This is because no evaluation takes place in type
 expressions in Aldor (nor indeed in the earlier version of Axiom).
 
 In Section \ref{poll3.2} we discuss how the Aldor type mechanism can
@@ -1596,16 +1552,16 @@ problems caused by the failure of Aldor to evaluate type expressions.
 \label{poll3.1}
 
 Another example is provided by trying to formalise the notion from
-(mathematical) category theory \cite{Macl91}, namely that of a
+(mathematical) category theory [cite:@Macl91], namely that of a
 functor. Specifically we are thinking of the types of the language as
 forming a category, whose objects are the types themselves, and an
-arrow from {\bf A} to {\bf B} is a function of type {\bf A{\tt ->}B}. What
+arrow from *A* to *B* is a function of type *A=->=B*. What
 is a functor from type to itself? It has two components
 \begin{itemize}
-\item a mapping {\bf F}, say, from {\bf Type} to {\bf Type}; that is
+\item a mapping *F*, say, from *Type* to *Type*; that is
 the object part of the functor; and
 \item a mapping on functions which respects their types, so that the
-image of an arrow {\bf a{\tt ->}a} is an arrow {\bf (F a){\tt ->}(F b)}.
+image of an arrow *a=->=a* is an arrow *(F a)=->=(F b)*.
 \end{itemize}
 
 (There are also some logical constraints on the behaviour of these
@@ -1615,8 +1571,8 @@ formalised in Aldor? We say
 Functor (F ; Type -> Type) : Category == with {              (5)
   map : (a:Type) -> (b:Type) -> (a->b) -> (F a) -> (F b) };  
 #+end_example
-and we can show that the {\bf List} functor, which builds the type
-{\bf List(a)} from the type {\bf a}, is an instance of {\bf Functor}
+and we can show that the *List* functor, which builds the type
+*List(a)* from the type *a*, is an instance of *Functor*
 thus: 
 #+begin_example
 listFunctor : Functor(List) == add {                         (6)
@@ -1626,24 +1582,24 @@ listFunctor : Functor(List) == add {                         (6)
                           (((map a) b) f) rest(x))
 };
 #+end_example
-which is the standard definition of {\bf map} over lists.
+which is the standard definition of *map* over lists.
 
-In a similar vein we can try to make {\bf idType} (as defined in
-Section \ref{poll2.1} above) into an instance of {\bf Functor},
+In a similar vein we can try to make *idType* (as defined in
+Section \ref{poll2.1} above) into an instance of *Functor*,
 #+begin_example
 Ident : Functor(idType) == add {                             (7)
   map (a:Type)(b:Type)(f:a->b)(x:idType(a)) : idType(b)
     == f x
 };
 #+end_example
-but this will fail to be type correct since the types {\bf idType(a)}
-and {\bf a} will not be identified as would be required for the
-application of {\bf f} to {\bf x} to be well-typed.
+but this will fail to be type correct since the types *idType(a)*
+and *a* will not be identified as would be required for the
+application of *f* to *x* to be well-typed.
 
-Observe, however, that (6) does type check. This is because {\bf List}
-is a constructor of types, that is the application of {\bf List(a)} is
+Observe, however, that (6) does type check. This is because *List*
+is a constructor of types, that is the application of *List(a)* is
 already fully evaluated, and so there is no problem in identifying it
-with other {\bf Type} expressions.
+with other *Type* expressions.
 
 In the next section we examine possible modifications to the Aldor
 type mechanism to accommodate evaluation within type expressions.
@@ -1656,10 +1612,10 @@ mechanism can be modified to allow evaluation within type contexts as
 well as within value contexts. A number of possibilities suggest
 themselves. 
 \begin{itemize}
-\item The type system provides the {\bf pretend} conversion routine
+\item The type system provides the *pretend* conversion routine
 which converts or (type) casts any type to any other type\footnote{
-The {\bf pretend} function is used in the definition of
-{\bf rep} and {\bf per} in the current version of Aldor; a more secure
+The *pretend* function is used in the definition of
+*rep* and *per* in the current version of Aldor; a more secure
 mechanism would be preferable.}, so that one can rewrite (7) as follows
 #+begin_example
 Ident : Functor(idType) == add {                             (8)
@@ -1673,11 +1629,11 @@ some degree of evaluation, that has to be shadowed by a type cast;
 these casts are also potentially completely unsafe.
 \item Another possibility is to suggest that the system is modified to
 include coercion functions which would provide conversion between type
-pairs such as {\bf idType(a)} and {\bf a}. This suggestion could be
+pairs such as *idType(a)* and *a*. This suggestion could be
 implemented but we envisage two difficulties with it.
 \begin{itemize}
 \item In all but the simplest of situations we will need to supply
-uniformly-defined {\sl families} of coercions rather than single
+uniformly-defined /families/ of coercions rather than single
 coercions. This will substantially complicate an already complex
 mechanism.
 \item Coercions are currently not applied transitively: the effect of
@@ -1693,9 +1649,9 @@ Instead of pursuing either of these solutions we are currently
 investigating the possibility of performing some evaluation during
 type checking. Clearly this can cause the type checker to diverge in
 general, since in, for instance, an application of the form 
-{\bf vectorSum(e)} an arbitrary expression {\bf e:Nat} will have to be
+*vectorSum(e)* an arbitrary expression *e:Nat* will have to be
 evaluated. We therefore intend to use current work on terminating
-systems of recursion \cite{Mcal96} as well as restrictions on the
+systems of recursion [cite:@Mcal96] as well as restrictions on the
 types of expression chosen for evaluation (as heuristics at least) to
 guide the form of evaluation that is supported. 
 
@@ -1713,33 +1669,33 @@ allow evaluation within type contexts.
 Under the Curry-Howard correspondence, logical propostions can be seen
 as types, and proofs can be seen as members of these types. Accounts
 of constructive type theories can be found in notes by Martin-Lof
-\cite{Mart80} amongst others \cite{Nord90}\cite{Thom91}. Central to
+[cite:@Mart80] amongst others [cite:@Nord90][cite:@Thom91]. Central to
 this correspondence are dependent types, which allow the
 representation of predicates and quantification. We can summarise the
 correspondence in a table
 
 \[
 \begin{array}{ccc}
-{\tt {\bf Programming}}         &                     & 
-{\tt {\bf Logic}}\\
-{\tt Type}                      &                     & 
-{\tt Formula}\\
-{\tt Program}                   &                     & 
-{\tt Proof}\\
-{\tt Product/record type}       & (...,...)           & 
-{\tt Conjunction}\\
-{\tt Sum/union\ type}           & \backslash/         & 
-{\tt Disjunction}\\
-{\tt Function\ Type}            & {\tt ->}            & 
-{\tt Implication}\\
-{\tt Dependent\ function\ type} & (x:A) {\tt ->} B(x) & 
-{\tt Universal\ quantifier}\\
-{\tt Dependent\ product\ type}  & (x:A,B(x))          & 
-{\tt Existential\ quantifier}\\
-{\tt Empty\ type}               & {\tt Exit}          & 
-{\tt Contradictory\ proposition}\\
-{\tt One\ element\ type}        & {\tt Triv}          & 
-{\tt True\ proposition}\\
+=*Programming*=         &                     & 
+=*Logic*=\\
+=Type=                      &                     & 
+=Formula=\\
+=Program=                   &                     & 
+=Proof=\\
+=Product/record type=       & (...,...)           & 
+=Conjunction=\\
+=Sum/union\ type=           & \backslash/         & 
+=Disjunction=\\
+=Function\ Type=            & =->=            & 
+=Implication=\\
+=Dependent\ function\ type= & (x:A) =->= B(x) & 
+=Universal\ quantifier=\\
+=Dependent\ product\ type=  & (x:A,B(x))          & 
+=Existential\ quantifier=\\
+=Empty\ type=               & =Exit=          & 
+=Contradictory\ proposition=\\
+=One\ element\ type=        & =Triv=          & 
+=True\ proposition=\\
 ...                     &               & ...
 \end{array}
 \]
@@ -1758,8 +1714,8 @@ lessThan(n:Nat,m:Nat) : Type ==                              (9)
 #+end_example
 \item A second approach introduces them inductively as a
 generalisation of the algebraic types which appear in Haskell and
-SML. We might define the less than predicate `{\tt <}' of type 
-{\bf Nat {\tt ->} Nat {\tt ->} Type} by saying that there are two constructors for
+SML. We might define the less than predicate `=<=' of type 
+*Nat =->= Nat =->= Type* by saying that there are two constructors for
 the type of the following signature
 #+begin_example
 ZeroLess : (n:Nat)(0 < S n)
@@ -1769,11 +1725,11 @@ SuccLess : (m:Nat)(n:Nat)((m < n) -> (S m < S n))
 
 This approach leads to a powerful style of proof in which inductions
 are performed over the form of proof objects, that is the elements of
-types like {\bf (m {\tt <} n)}, rather than over (say) the natural numbers,
+types like *(m =<= n)*, rather than over (say) the natural numbers,
 and such a method makes much more manageable a proof of the
-transitivity of `{\tt <}' over {\bf Nat}, say. Inductive types have been
+transitivity of `=<=' over *Nat*, say. Inductive types have been
 used extensively in the type theory community, see, for instance
-\cite{Paul93}.
+[cite:@Paul93].
 
 *** A logic within Aldor
 \label{poll4.2}
@@ -1784,12 +1740,12 @@ that it places certain requirements on the definition and the system.
 
 Most importantly for a definition of the form (9) to work properly as
 a definition of a predicate we need an application like
-{\bf lessThan(9,3)} to be reduced to {\bf Exit}, hence we need to have
+*lessThan(9,3)* to be reduced to *Exit*, hence we need to have
 evaluation of type expressions. This is a modification of Aldor which
 we are currently investigating, as outlined in Section \ref{poll3}. In
 the case of (9) the evaluation can be limited, since the scheme used
 is recognisable as terminating by, for instance, the algorithm of
-\cite{Mcal96}.
+[cite:@Mcal96].
 
 This restriction to terminating (well-founded) recursions is also
 necessary for consistency of the logic. For the logic to be
@@ -1803,7 +1759,7 @@ totally undefined proofs are not permitted.
 
 Consistency also depends on the strength of the type system itself; a
 sufficiently powerful type system will be inconsistent as shown by
-Girard's paradox \cite{Gira72}.
+Girard's paradox [cite:@Gira72].
 
 ** Applications of an integrated logic
 \label{poll5}
@@ -1811,7 +1767,7 @@ Girard's paradox \cite{Gira72}.
 If we identify a logic within Aldor, how can it be used? There are
 various applications possible; we outline some here and for others one
 can refer to the number of implementations of type theories which
-already exist, including Nuprl \cite{Cons85} and Coq \cite{COQR16}.
+already exist, including Nuprl [cite:@Cons85] and Coq [cite:@COQR16].
 
 *** Pre- and Post-conditions
 \label{poll5.1}
@@ -1823,13 +1779,13 @@ elements of a list
 index : (l:List(t))(n:Nat)((n < length l) -> t)
 #+end_example
 
-An application of {\bf index} has {\sl three} arguments: a list
-{\bf l} and a natural number {\bf n} -- as for the standard index
+An application of *index* has /three/ arguments: a list
+*l* and a natural number *n* -- as for the standard index
 function -- and a third argument which is of type 
-{\bf (n {\tt <} length l)}, that is a {\sl proof} that {\bf n} is a
+*(n =<= length l)*, that is a /proof/ that *n* is a
 legitimate index for the list in question. This extra argument becomes
-a {\bf proof obligation} which must be discharged when the function is
-applied to elements {\bf l} and {\bf n}.
+a *proof obligation* which must be discharged when the function is
+applied to elements *l* and *n*.
 
 In a similar vein, it is possible to incorporate post-conditions into
 types so that a sorting algorithm over lists might have the type
@@ -1843,23 +1799,23 @@ Sorted.
 \label{poll5.2}
 
 In definition (3) Section \ref{poll2.2} we give the category of
-monoids, {\bf Monoid}, which introduces two operation symbols,
-{\bf *} and {\bf 1}. A monoid consists not only of two operations, but
+monoids, *Monoid*, which introduces two operation symbols,
+*** and *1*. A monoid consists not only of two operations, but
 of operations with properties. We can ensure these properties hold by
 extending the definition of the category to include three extra
-components which are proofs that {\bf 1} is a left and right unit for
-{\bf *} and that {\bf *} is associative, where we assume that 
+components which are proofs that *1* is a left and right unit for
+*** and that *** is associative, where we assume that 
 `$\equiv$' is the identity predicate:
 
 
-Monoid: Category == BasicType with \{\hspace{3.0cm} (10)\\
-\hspace*{0.2cm}* : (\%,\%) {\tt ->} \%;\\
+Monoid: Category == BasicType with \{ (10)\\
+\hspace*{0.2cm}* : (\%,\%) =->= \%;\\
 \hspace*{0.2cm}1 : \%;\\
 
-\hspace*{0.2cm}leftUnit  : (g:\%) {\tt ->} (1*g $\equiv$ g);\\
-\hspace*{0.2cm}rightUnit : (g:\%) {\tt ->} (g*1 $\equiv$ g);\\
+\hspace*{0.2cm}leftUnit  : (g:\%) =->= (1*g $\equiv$ g);\\
+\hspace*{0.2cm}rightUnit : (g:\%) =->= (g*1 $\equiv$ g);\\
 \hspace*{0.2cm}assoc     : 
-(g:\%,h:\%,j:\%) {\tt ->} ( g*(h*j) $\equiv$ (g*h)*j);\\
+(g:\%,h:\%,j:\%) =->= ( g*(h*j) $\equiv$ (g*h)*j);\\
 \}
 
 The extension and join operations over categories will lift to become
@@ -1871,10 +1827,10 @@ categories such as (10).
 
 One can interpret the obligations given in Sections \ref{poll5.1} and
 \ref{poll5.2} with differing degrees of rigour. Using the 
-{\bf pretend} function we can conjure up proofs of the logical requirements
+*pretend* function we can conjure up proofs of the logical requirements
 of (10); even in this case they appear as important documentation of
 requirements, and they are related to the lightweight formal methods
-of \cite{Duns98}.
+of [cite:@Duns98].
 
 Alternatively we can build fully-fledged proofs as in the numerous
 implementations of constructive type theories mentioned above, or we
@@ -1886,15 +1842,15 @@ as `crucial' while asserting the validity of others.
 
 We have proposed a new way to combine -- or rather, to integrate --
 computer algebra and theorem proving. Our proposal is similar to 
-\cite{Baue98} and \cite{Buch96} in that theorem proving capabilities
+[cite:@Baue98] and [cite:@Buch96] in that theorem proving capabilities
 are incorporated in a computer algebra system. (In the classification
 of possible combinations of computer algebra and theorem proving of
-\cite{Calm96}, all these are instances of the ``subpackage'' approach.)
+[cite:@Calm96], all these are instances of the ``subpackage'' approach.)
 But the way in which we propose to do this is completely different; we
 propose to exploit the expressiveness of the type system of Axiom,
 using the Curry-Howard isomorphism that also provides the basis of
-theorem provers based on type theory such as Nuprl \cite{Cons85} 
-or Coq \cite{COQR16}. This provides a logic as part of the computer
+theorem provers based on type theory such as Nuprl [cite:@Cons85] 
+or Coq [cite:@COQR16]. This provides a logic as part of the computer
 algebra system. Also, having the same basis as existing provers such
 as the ones mentioned above should make it easier to interface with
 them. 
@@ -1906,46 +1862,46 @@ from a number of points of view, namely
 - functional programming
 
 For instance, there seem to be many similarities between structuring
-mechanisms used in these different fields: \cite{Buch97a} argues for
+mechanisms used in these different fields: [cite:@Buch97a] argues for
 functors in the sense of the programming language ML as the right tool
 for structuring mathematical theories in Mathematica, and
-\cite{Sant95} notes similarities between the type system of Axiom,
-existential types \cite{Mitc88}, and Haskell classes
-\cite{Wadl88}. More closely related to our proposal here it is
+[cite:@Sant95] notes similarities between the type system of Axiom,
+existential types [cite:@Mitc88], and Haskell classes
+[cite:@Wadl88]. More closely related to our proposal here it is
 interesting to note that constructive type theorists have added
-inductive types \cite{Paul93}, giving their systems a more functional
+inductive types [cite:@Paul93], giving their systems a more functional
 flavour, while functional programmers are showing an interest in
-dependent types \cite{Augu98} and languages without non-termination
-\cite{Turn95}. We see our work as part of the convergence, bringing
+dependent types [cite:@Augu98] and languages without non-termination
+[cite:@Turn95]. We see our work as part of the convergence, bringing
 type-theoretic ideas together with computer algebra systems, and thus
 providing a bridge between symbolic mathematics and theorem proving.
 
 Our future work will involve investigating the type system of Aldor,
 and integrating a logical approach to Aldor types; this is
 complementary to recent work on formalising the Aldor system within
-Coq \cite{Guil98}. We also expect to apply our work in a case study
+Coq [cite:@Guil98]. We also expect to apply our work in a case study
 with mathematical colleagues.
 
 * Related Work
 
 This is a ``wide'' project that touches on many areas. Here we try to
 collect and mention papers that we've read. A good overview of the
-historical development is given in MacKenzi \cite{Mack01}.
+historical development is given in MacKenzi [cite:@Mack01].
 
 Adams, et al ``Computer Algebra Meets Automated Theorem Proving''
-\cite{Adam01}
+[cite:@Adam01]
 
 Adams, et al. ``Automated Theorem Proving in Support of Computer
-Algebra'' \cite{Adam99}
+Algebra'' [cite:@Adam99]
 
 Muhammad Taimoor Khan ``Formal Specification and Verification of
-Computer Algebra Software'' \cite{Khan14}
+Computer Algebra Software'' [cite:@Khan14]
 
-Paule, Peter ``Mathematics, Computer Science and Logic'' \cite{Paul13} 
+Paule, Peter ``Mathematics, Computer Science and Logic'' [cite:@Paul13] 
 
 ** Type Theory
 
-\subsection{Harper \cite{Harp18}\cite{Harp18a}}
+\subsection{Harper [cite:@Harp18][cite:@Harp18a]}
 
 Types are Specifications of Behavior.
 
@@ -1965,7 +1921,7 @@ $f \in n:Nat \rightarrow Seq(n)$ is the same as
 $(\Pi n : Nat.Seq(n))$
 
 Critical Idea: Functionality. Families of types and families of
-elements must respect {\sl equality} of indicies. The key question is,
+elements must respect /equality/ of indicies. The key question is,
 ``What is equality''.(eq Seq(2+2) is the ``same as'' Seq(4)). Also
 
 Seq(if(17;18)(M)) is the ``same as'' if(Seq(17);Seq(18))(M)
@@ -2002,11 +1958,11 @@ $N[M/a]\doteq N^\prime[M^\prime/a]\in B[M/a]$
 There are other ongoing efforts to create compilers along with an
 association to proofs. 
 
-\subsection{Hoare \cite{Hoar03}}
+\subsection{Hoare [cite:@Hoar03]}
 Tony Hoare makes a call for verifying compilers which is, as he calls
 it, a ``Grand Challenge''.
 
-\subsection{Pearce and Groves \cite{Pear15}}
+\subsection{Pearce and Groves [cite:@Pear15]}
 Pearce and Groves created a language, called
 Whiley, specifically designed to be easier to prove. 
 
@@ -2020,7 +1976,7 @@ They have a list of design decisions.
 \end{enumerate}
 
 They introduce
-keywords like {\tt requires} and {\tt ensures}. For example,
+keywords like =requires= and =ensures=. For example,
 \index[doc]{requires!keyword}
 \index[doc]{keyword!requires}
 \index[doc]{ensures!keyword}
@@ -2038,7 +1994,7 @@ The associated verification conditions is
 \[\forall x \in int.(x > 0 \Rightarrow x-1 \ge 0\]
 
 Whiley supports loop invariants by decorating loops with a 
-{\tt where} clause.
+=where= clause.
 \index[doc]{where!keyword}
 \index[doc]{keyword!where}
 #+begin_example
@@ -2055,7 +2011,7 @@ ensures r >= 0:
   return r
 #+end_example
 
-Whiley has an {\tt assert} and {\tt forall}
+Whiley has an =assert= and =forall=
 \index[doc]{assert!keyword}
 \index[doc]{keyword!assert}
 \index[doc]{forall!keyword}
@@ -2070,37 +2026,37 @@ assert:
       x1 >= 0
 #+end_example
 
-Whiley distinguishes pure code using the keyword {\tt function}
-from impure code using the keyword {\tt method}.
+Whiley distinguishes pure code using the keyword =function=
+from impure code using the keyword =method=.
 
 * The Problem
 ** A Brief History
 
-Axiom\cite{Daly17} is a computer algebra system. It was originally
+Axiom[cite:@Daly17] is a computer algebra system. It was originally
 developed at IBM Research based on a proposal by James
-Griesmer\cite{Blai70a} in 1965, led to fruition by Richard
-Jenks\cite{Dave84}. The project was called Scratchpad. A more complete
+Griesmer[cite:@Blai70a] in 1965, led to fruition by Richard
+Jenks[cite:@Dave84]. The project was called Scratchpad. A more complete
 history is available in the online documentation.
 
 Around this time the ideas of computational mathematics (CM) were ``in
 the air''. There was the beginning of a branch of computer algebra
-(CA) with developments, as descibed by Joel Moses \cite{Mose71}, like
-SAINT and SIN. Anthony Hearn \cite{HEAR80} created REDUCE.
+(CA) with developments, as descibed by Joel Moses [cite:@Mose71], like
+SAINT and SIN. Anthony Hearn [cite:@HEAR80] created REDUCE.
 
 A second branch of computational mathematics was the development of
 automated proof systems (PS). Early work in the area included the
-idea, by Robinson \cite{Robi65}, ``resolution'', leading to
-resolusion-based theorem proving. De Bruijn \cite{Brui68a} started
+idea, by Robinson [cite:@Robi65], ``resolution'', leading to
+resolusion-based theorem proving. De Bruijn [cite:@Brui68a] started
 work on AUTOMATH.
 
 Scratchpad grew out of the computer algebra branch of computational
 mathematics. 
 
 Though they are both areas of computational mathematics, issues such
-as equality are treated differently. Davenport \cite{Dave02} addresses
+as equality are treated differently. Davenport [cite:@Dave02] addresses
 the issue of equality and its several ambiguities.
 
-Homotopy Type Theory \cite{Acze13} has the univalence axiom which
+Homotopy Type Theory [cite:@Acze13] has the univalence axiom which
 defines a form of equality based on paths. 
 
 ** Parallel Development
@@ -2108,7 +2064,7 @@ defines a form of equality based on paths.
 ** Project Goals
 
 Computational mathematics has had intense development efforts on both
-branches. But the two branches had very little overlap. \cite{Daly18}.
+branches. But the two branches had very little overlap. [cite:@Daly18].
 
 Axiom was released as a free and open source project. One of the
 obvious goals, based on the observation that Computer Algebra is a
@@ -2133,14 +2089,14 @@ were published in paywalled journals. A 4 page paper costs 40
 dollars. I needed access to hundreds of papers. This made it nearly
 impossible to do research without a University connection.
 
-In 2015 I read a paper by Jeremy Avigad \cite{Avig12a}. Since he was
+In 2015 I read a paper by Jeremy Avigad [cite:@Avig12a]. Since he was
 at Carnegie Mellon, where I had previously worked, I called him to
 discuss his paper. It was clear we had the same mathematical ideas but
 no common ground for reducing them to practice. We were from different
 branches of computational mathematics.
 
 Jeremy invited me to audit a class he was developing around the proof
-system LEAN \cite{8}. While probably a frustrating experience for
+system LEAN [cite:@8]. While probably a frustrating experience for
 Jeremy, I found the class enlightening. I finally had a glimpse of the
 notation and thought process behind proof systems.
 
@@ -2150,7 +2106,7 @@ the Computer Science department several days a week. I had hoped to
 use the local network to access research papers but I needed to be an
 active member of the University.
 
-By chance, Frank Pfenning \cite{9} walked by my table on a way to a
+By chance, Frank Pfenning [cite:@9] walked by my table on a way to a
 meeting. He didn't have time to talk but said I should make an
 appointment with this secretary.
 
@@ -2158,13 +2114,13 @@ I developed a ``beg cycle'' presentation about the parallel
 development of computational algebra and proof systems, ending with a
 request to have library access by any possible means. Frank arranged
 for me to be a ``visiting scholar'', sponsored by Klaus Sutner
-\cite{10}. 
+[cite:@10]. 
 
 Now, as a University person, I could access and read leading edge
 research papers. It made all the difference.
 
 Several professors at CMU allowed me to audit courses, including Karl
-Crary \cite{11}, Frank Pfenning, Andre Platzer \cite{12}, and others. 
+Crary [cite:@11], Frank Pfenning, Andre Platzer [cite:@12], and others. 
 
 ** Refining the Project Goals
 
@@ -2187,7 +2143,7 @@ proof system researchers.
 ``Proving Axiom Sane'', the crossover project goal of uniting computer
 algebra and proof systems, was the theme originally presented to Frank
 Pfenning. It was now refined into a talk given at the International
-Conference on Mathematics Software \cite{10} in August of 2018.
+Conference on Mathematics Software [cite:@10] in August of 2018.
 
 ** Reduction to Practice
 
@@ -2218,10 +2174,10 @@ There was much to be done.
 
 Axiom is a large (about 1.2 million line) system implemented in Common
 Lisp. The code base grew ``by accretion'', originally from a MacLisp
-\cite{11} base, ported to Lisp/VM \cite{Dave85}, and then ported to Common
-Lisp \cite{Stee90}. Since it was born as a research project there was no
+[cite:@11] base, ported to Lisp/VM [cite:@Dave85], and then ported to Common
+Lisp [cite:@Stee90]. Since it was born as a research project there was no
 real effort to make it into a ``product'' until it was sold to The
-Numerical Algorithms Group (NAG) \cite{IBMx91}.
+Numerical Algorithms Group (NAG) [cite:@IBMx91].
 
 The net result is that the original code base was not really a good
 foundation for full computational mathematics. But Axiom has several
@@ -2233,7 +2189,7 @@ the compiler and interpreter ``from the ground up'' with the
 requirement that it could execute the existing algorithms.
 
 After much pondering, the design decision would be to use the Common
-Lisp Object System (CLOS) \cite{15} as the new basis for Axiom.
+Lisp Object System (CLOS) [cite:@15] as the new basis for Axiom.
 
 One reason for this choice is that the base is still Common Lisp so it
 would be possible to reuse existing pieces of code.
@@ -2247,7 +2203,7 @@ reasoning about dependent types.
 * An Inside-Out Approach
 
 The traditional approach to compiler development starts with a BNF
-\cite{16} definition of the language syntax, followed by an
+[cite:@16] definition of the language syntax, followed by an
 intermediate representation, and then one of several ``back end''
 implementations of the runtime.
 
@@ -2279,7 +2235,7 @@ This is a large project. In order to limit the scope of the initial
 problem we will focus on the GCD algorithm in NonNegativeInteger.
 
 This implies that several other categories have to be handled. In
-particular these are given by the {\tt getAncestors} function.
+particular these are given by the =getAncestors= function.
 #+begin_example
 getAncestors 'NonNegativeInteger
 
@@ -2291,7 +2247,7 @@ getAncestors 'NonNegativeInteger
                                                             Type: Set(Symbol)
 #+end_example
 
-If we call {\tt getAncestors} on each of the items in the list we can
+If we call =getAncestors= on each of the items in the list we can
 find the inheritance order, which is
 #+begin_example
 BasicType <- {}
@@ -2322,21 +2278,21 @@ The sorted order above is not the actual order needed. Let us look at
 each category in more detail.
 
 \begin{itemize}
-\item BasicType {\tt <-} \{\}
-\item CoercibleTo {\tt <-} \{\}
-\item SetCategory {\tt <-} BasicType, CoercibleTo
-\item OrderedSet {\tt <-} SetCategory
-\item SemiGroup {\tt <-} SetCategory
-\item Monoid {\tt <-} SemiGroup
-\item AbelianSemiGroup {\tt <-} SetCategory
-\item AbelianMonoid {\tt <-} AbelianSemiGroup
-\item CancellationAbelianMonoid {\tt <-} AbelianMonoid
-\item OrderedAbelianSemiGroup {\tt <-} AbelianSemiGroup, OrderedSet
-\item OrderedAbelianMonoid {\tt <-} AbelianMonoid, OrderedAbelianSemiGroup
-\item OrderedCancellationAbelianMonoid {\tt <-} CancellationAbelianMonoid,
+\item BasicType =<-= \{\}
+\item CoercibleTo =<-= \{\}
+\item SetCategory =<-= BasicType, CoercibleTo
+\item OrderedSet =<-= SetCategory
+\item SemiGroup =<-= SetCategory
+\item Monoid =<-= SemiGroup
+\item AbelianSemiGroup =<-= SetCategory
+\item AbelianMonoid =<-= AbelianSemiGroup
+\item CancellationAbelianMonoid =<-= AbelianMonoid
+\item OrderedAbelianSemiGroup =<-= AbelianSemiGroup, OrderedSet
+\item OrderedAbelianMonoid =<-= AbelianMonoid, OrderedAbelianSemiGroup
+\item OrderedCancellationAbelianMonoid =<-= CancellationAbelianMonoid,
 OrderedAbelianMonoid
-\item OrderedAbelianMonoidSup {\tt <-} OrderedCancellationAbelianMonoid
-\item NonNegativeInteger {\tt <-} Monoid, OrderedAbelianMonoidSup
+\item OrderedAbelianMonoidSup =<-= OrderedCancellationAbelianMonoid
+\item NonNegativeInteger =<-= Monoid, OrderedAbelianMonoidSup
 \end{itemize}
 
 \begin{center}
@@ -3607,14 +3563,14 @@ those that reference spad categories.
 The CLOS types have generic functions to handle many operations.
 There are, in general, two generic functions for each CLOS type.
 
-One is the {\bf print-object}
+One is the *print-object*
 \index[doc]{print-object}
 generic method. It outputs the CLOS object as top-level SPAD
 syntax. The idea is that the output of the parser should mirror
 the input to the parser but derived from the internal structures.
 That provides a ``round-trip'' check on the parser correctness.
 
-Each {\bf print-object} has calls to the {\bf format} function.
+Each *print-object* has calls to the *format* function.
 The command string for each format call references a global
 variable. This allows any print-object to be modified at run time
 to change the output syntax.
@@ -3622,15 +3578,15 @@ to change the output syntax.
 Each CLOS type has a make-closname function that creates an
 instance with required and actual parameters.
 
-A second generic function {\bf intern-object} 
+A second generic function *intern-object* 
 \index[doc]{intern-object}
 is available for all CLOS classes. It outputs an intermediate 
 representation of the CLOS object for further processing. Like 
-print-object generics, each {\bf format} function command string
+print-object generics, each *format* function command string
 references a global variable which can be modified at run time.
 This allows the intern-object to be adjusted easily.
 
-Extensive use is made of the common lisp {\bf labels}
+Extensive use is made of the common lisp *labels*
 \index[doc]{labels}
 form to define single-use functions locally. This reduces the
 namespace pollution and makes local function definitions able to
@@ -3659,32 +3615,32 @@ One of the challenges of building a SPAD library in CLOS is that
 CLOS checks the inheritance hierarchy. This has the advantage of
 a consistancy check but it is at times painful to get right.
 
-Spad types, called {\bf Union}, are logical 'sum types'.  
+Spad types, called *Union*, are logical 'sum types'.  
 \index[doc]{Union}
 \index[doc]{Sum Types}
 \begin{quote}
 The values of a sum type are typically grouped into several classes,
-called {\sl variants}. A value of a variant type is usually created
-with a quasi-functional entity called a {\sl constructor}. Each
+called /variants/. A value of a variant type is usually created
+with a quasi-functional entity called a /constructor/. Each
 variant has its own constructor, which takes a specified number or
 arguments with specified types. The set of all possible values of a sum
-type is the set-theoretic sum, i.e. the {\sl disjoint union}, of the
-sets of all possible values of its variants. {\sl Enumerated types}
+type is the set-theoretic sum, i.e. the /disjoint union/, of the
+sets of all possible values of its variants. /Enumerated types/
 are a special case of sum types in which the constructors take no
 arguments, as exactly one value is defined for each constructor.\\
--- Wikipedia \cite{Wiki19}
+-- Wikipedia [cite:@Wiki19]
 \end{quote}
 
-Spad types, called {\bf Record}, are logical 'product types'.
+Spad types, called *Record*, are logical 'product types'.
 \index[doc]{Record}
 \index[doc]{Product Types}
 \begin{quote}
 The values of a product type typically contain several values, called
-{\sl fields}, All values of that type have the same combination of
+/fields/, All values of that type have the same combination of
 field types. The set of all possible values of a product type is the
-set-theoretic product, i.e. the {\sl Cartesian product}, of the sets
+set-theoretic product, i.e. the /Cartesian product/, of the sets
 of all possible values of its field types.\\
--- Wikipedia \cite{Wiki19}
+-- Wikipedia [cite:@Wiki19]
 \end{quote}
 
 ** AxiomClass
@@ -3696,18 +3652,18 @@ Axiom has Categories, not the same as the categories of category
 theory. The Categories are essentially types from type theory.
 
 In Common Lisp the type hierarchy has a most general type 't'.
-In CLOS we define a new type {\bf AxiomClass} to be the most general
+In CLOS we define a new type *AxiomClass* to be the most general
 \index[code]{AxiomClass!Category}
 \index[code]{Category!AxiomClass}
 type of our hierarchy. AxiomClass inherits methods from 't', such as
-{\bf print-object}.
+*print-object*.
 
 AxiomClass provides the base definition for slots that every Category,
 Domain, and Package will have. Not all of them are in use for every
 case but this provides a place to add new features that work for every
 class.
 
-AxiomClass provides {\bf print-object} for the classes. The general
+AxiomClass provides *print-object* for the classes. The general
 case print-object will construct and print the source code that
 corresponds to the defclass definition. So, as if by magic, we can
 build the source code from the intermediate CLOS defclass.
@@ -3760,7 +3716,7 @@ getAncestors 'PolynomialCategory
 
 PolynomialCategory is quite high up in the type hierarchy (15 levels up,
 actually) so most of these are already inherited. We provide a program
-(called {\bf leaves}), that given the above list will compute the
+(called *leaves*), that given the above list will compute the
 types that are not inherited. For example, given the above Axiom
 output,
 #+begin_example
@@ -3800,14 +3756,14 @@ proof.
 * A Specification Language
 
 \begin{quote}
-{\bf If it compiles, it works {\sl as specified}.}\\
--- Vladislav Zavialov \cite{Zavi}
+*If it compiles, it works /as specified/.*\\
+-- Vladislav Zavialov [cite:@Zavi]
 \end{quote}
 
 \begin{quote}
 {\bf Much of the essence of building a program is in fact the
 debugging of the specification.}
--- Fred Brooks \cite{Warn16}
+-- Fred Brooks [cite:@Warn16]
 \end{quote}
 
 \begin{quote}
@@ -3820,20 +3776,20 @@ development in abstract terms. Our EML experience suggests that, at
 least at the present time, tackling the problems of specification
 and formal development in a real programming language at a fully
 formal level is just too difficult}\\
--- Donald Sannella and Andrzej Tarlecki \cite{Sann99}
+-- Donald Sannella and Andrzej Tarlecki [cite:@Sann99]
 \end{quote}
 
 We must distinguish the language used for specification (the 
-{\sl what} from the language for implementation the {\sl how}.
+/what/ from the language for implementation the /how/.
 
-Hoare \cite{Hoar04} creates a ``Unified Theories of Programming''
+Hoare [cite:@Hoar04] creates a ``Unified Theories of Programming''
 in which he shows that there are 3 kinds of specification, namely
 \begin{enumerate}
-\item {\bf Denotational}, relating a program to a specification of its
+\item *Denotational*, relating a program to a specification of its
 observable properties and behaviour
-\item {\bf Algebraic}, providing equations and inequalities for
+\item *Algebraic*, providing equations and inequalities for
 comparison, transformation and optimisation of designs and programs
-\item {\bf Operational}, describing individual steps of a possible
+\item *Operational*, describing individual steps of a possible
 mechanical implementation
 \end{enumerate}
 
@@ -3842,10 +3798,10 @@ programming in each of these three styles; by deriving each
 presentation from its predecessor in a cyclic fashion, mutual
 consistency is assured.
 
-Sannella, et al. \cite{Sann91,Sann99} develop a specification language
-for Standard ML (SML) \cite{Miln90,Miln91}
+Sannella, et al. [cite:@Sann91,Sann99] develop a specification language
+for Standard ML (SML) [cite:@Miln90,Miln91]
 
-Kahrs and Sannella \cite{Kahr98} designed EML to provde a
+Kahrs and Sannella [cite:@Kahr98] designed EML to provde a
 specification language for ML. They point out that they want a
 formal connection between the language (P) and the specifications (S).
 They write:
@@ -3874,7 +3830,7 @@ language construct used to implement a function, all one has to
 show is that the language construct ``covers'' the use case in
 the particular function.
 
-They raise a series of question about a specification \cite{Sann99}
+They raise a series of question about a specification [cite:@Sann99]
 \begin{enumerate}
 \item What is a specifiation?
 \item What does a specification mean?
@@ -3893,7 +3849,7 @@ specification?
 \end{enumerate}
 
 The specification language is related to what we wish to prove. 
-\cite{Kahr98}. Is it a
+[cite:@Kahr98]. Is it a
 \begin{enumerate}
 \item proof that a given program satisfies a given specification?
 \item proof that one specification is a refinement of another?
@@ -3901,7 +3857,7 @@ The specification language is related to what we wish to prove.
 satisfy a given property?
 \end{enumerate}
 
-John Hughes \cite{Hugh19} identifies several types of specification tests:
+John Hughes [cite:@Hugh19] identifies several types of specification tests:
 \begin{enumerate}
 \item invariant properties
 \item postconditions
@@ -3919,13 +3875,13 @@ John Hughes \cite{Hugh19} identifies several types of specification tests:
 \label{tab:specification}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} & \textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* & *accessor*\\
 \hline
 precondition & :precondition & nil & spec-precondition\\
 postcondition & :postcondition & nil & spec-postcondition\\
 \hline
 \end{tabular}
-\caption{{\bf defclass specification}}
+\caption{*defclass specification*}
 \end{center}
 \end{table}
 
@@ -3942,7 +3898,7 @@ postcondition & :postcondition & nil & spec-postcondition\\
 * GCD -- A Case Study
 
 The main activities of formal methods,
-according to Hall \cite{Hall90}, are
+according to Hall [cite:@Hall90], are
 \begin{itemize}
 \item writing a formal specification
 \item proving properties about the specification
@@ -3953,13 +3909,13 @@ specification
 
 ** Writing a formal specification
 
-Davenport \cite{Dave17a} says:
+Davenport [cite:@Dave17a] says:
 
 ``$g$ is the greatest common divisor of $f_1$, $f_2$ [and more]'' is
 actually two assertions:
 \begin{itemize}
 \item $g$ divides $f_1$, $f_2$ (implicitly over
-$\mathbb{Z}[x_1,\ldots,x_n]$);
+$\mathbb{Z}[x_1,...,x_n]$);
 \item Any $h$ that also divides them divides $g$
 \end{itemize}
 
@@ -3976,14 +3932,13 @@ going to be a tricky communication over the meaning of ``leading''.
 
 * Primitive Support tools
 
-\noindent
 Due to type checking, these functions have to appear early in the file
 but we do it by using the literate reference.
 
 * Overview
 
 \begin{quote}
-{\bf Data are just dumb programs}\\
+*Data are just dumb programs*\\
 -- Dan Friedman
 \end{quote}
 
@@ -4021,8 +3976,7 @@ criticism of your code.}\\
 -- John Carmack
 \end{quote}
 
-\noindent
-The {\bf *Categories*} variable contains a list of all defined Categories.
+The **Categories** variable contains a list of all defined Categories.
 \index[code]{*Category*}
 \index[code]{defvar!*Categories*}
 \index[code]{*Categories*!defvar}
@@ -4032,8 +3986,7 @@ The {\bf *Categories*} variable contains a list of all defined Categories.
 
 #+end_src
 
-\noindent
-The {\bf *Domains*} variable contains a list of all defined Domains.
+The **Domains** variable contains a list of all defined Domains.
 \index[code]{defvar!*Domains*}
 \index[code]{*Domains*!defvar}
 #+NAME: defvar domains
@@ -4042,8 +3995,7 @@ The {\bf *Domains*} variable contains a list of all defined Domains.
 
 #+end_src
 
-\noindent
-The {\bf *Packages*} variable contains a list of all defined Packages.
+The **Packages** variable contains a list of all defined Packages.
 \index[code]{defvar!*Packages*}
 \index[code]{*Packages*!defvar}
 #+NAME: defvar packages
@@ -4061,7 +4013,7 @@ The {\bf *Packages*} variable contains a list of all defined Packages.
 #+end_src
 
 There are times we need to know what the compiler phases
-are doing. The {\tt *comptrace*} variable is a number that
+are doing. The =*comptrace*= variable is a number that
 specifies the amount and detail of output, zero being no
 output; 100 being everything.
 \index[code]{defvar!*comptrace*}
@@ -4075,44 +4027,44 @@ output; 100 being everything.
 ** Deconstructing the Compiler
 
 We have to know where to look for the input file.
-This involves setting the {\tt *place*} variable.
+This involves setting the =*place*= variable.
 \index[code]{*place*}
 By default this is the current directory.
 
-Call {\tt P} with the simple filename.
+Call =P= with the simple filename.
 \index[code]{P}
 
-Call {\tt make-sourcecode}
+Call =make-sourcecode=
 \index[code]{make-sourcecode}
 
-Call {\tt sourcecode-tree}
+Call =sourcecode-tree=
 \index[code]{sourcecode-tree}
 
-Call {\tt pretty}
+Call =pretty=
 \index[code]{pretty}
 
 ** The Category Class
 
 \cite[p4]{Dosr11}
-\cite{Daly17}
+[cite:@Daly17]
 
 \begin{itemize}
-\item {\bf marker} is a constant to know if something is a category,
+\item *marker* is a constant to know if something is a category,
 a domain, or a package.
-\item {\bf parents} is a list of the direct parents of this 
+\item *parents* is a list of the direct parents of this 
 category.
-\item {\bf CategoryForm} holds the canonical category form of the expression
+\item *CategoryForm* holds the canonical category form of the expression
 whose evaluation produces the category object under consideration
-\item {\bf ExportInfoList} holds a list of function signatures exported by the
+\item *ExportInfoList* holds a list of function signatures exported by the
 category
-\item {\bf AttributeList} holds a list of attributes and the conditions under
+\item *AttributeList* holds a list of attributes and the conditions under
 which they hold
-\item {\bf CategoryMark} always contains the form (Category). It serves as a
+\item *CategoryMark* always contains the form (Category). It serves as a
 runtime type checking tag
-\item {\bf PrincipalAncestorList} is a list of principal ancestor category forms
-\item {\bf ExtendedCategoryList} is a list of directly extended category forms
-\item {\bf DomainInfoList} is a list of domains explicitly used in that category
-\item {\bf UsedDomainList} holds the list of all domain forms mentioned in
+\item *PrincipalAncestorList* is a list of principal ancestor category forms
+\item *ExtendedCategoryList* is a list of directly extended category forms
+\item *DomainInfoList* is a list of domains explicitly used in that category
+\item *UsedDomainList* holds the list of all domain forms mentioned in
 the exported signatures
 \end{itemize}
 
@@ -4125,14 +4077,14 @@ the exported signatures
 \label{tab:hasclause}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} & \textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* & *accessor*\\
 \hline
 whichtype & :whichtype & nil & hasclause-whichtype\\
 condition & :condition & nil & hasclause-condition\\
 siglist   & :siglist   & nil & hasclause-siglist\\
 \hline
 \end{tabular}
-\caption{{\bf defclass hasclause}}
+\caption{*defclass hasclause*}
 \end{center}
 \end{table}
 
@@ -4181,12 +4133,12 @@ siglist   & :siglist   & nil & hasclause-siglist\\
 \label{tab:haslist}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} & \textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* & *accessor*\\
 \hline
 clauses & :clauses & nil & haslist-clauses\\
 \hline
 \end{tabular}
-\caption{{\bf defclass haslist}}
+\caption{*defclass haslist*}
 \end{center}
 \end{table}
 
@@ -4218,9 +4170,9 @@ clauses & :clauses & nil & haslist-clauses\\
 \label{tab:AxiomClass}
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}  & \textbf{reader} & \textbf{allocation} &
-\textbf{type}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*  & *reader* & *allocation* &
+*type*\\
 \hline
 marker   & :marker  & 'category & marker   &        &&\\
 macros   & :macros  & nil       & macros   &        &&\\
@@ -4235,11 +4187,11 @@ name     &          & "AxiomClass" &       & name         & :class&\\
 parents  & :parents & nil       & parents  &              && Tnulllist\\
 \hline
 \end{tabular}
-\caption{{\bf defclass AxiomClass}}
+\caption{*defclass AxiomClass*}
 \end{center}
 \end{table}
 
-The {\bf AxiomClass} is a place to hang Axiom-specific methods.
+The *AxiomClass* is a place to hang Axiom-specific methods.
 \label{AxiomClass}
 \index[code]{defclass!AxiomClass}
 \index[code]{AxiomClass!defclass}
@@ -4358,10 +4310,10 @@ variables.
 \label{tab:WithClass}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} & \textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* & *accessor*\\
 \hline
 \end{tabular}
-\caption{{\bf defclass WithClass}}
+\caption{*defclass WithClass*}
 \end{center}
 \end{table}
 
@@ -4382,10 +4334,10 @@ variables.
 \label{tab:AddClass}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} & \textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* & *accessor*\\
 \hline
 \end{tabular}
-\caption{{\bf defclass AddClass}}
+\caption{*defclass AddClass*}
 \end{center}
 \end{table}
 
@@ -4398,7 +4350,7 @@ variables.
 #+end_src
 
 \index[doc]{showSig}
-The {\bf showSig} method will show a signature of a CategoryClass
+The *showSig* method will show a signature of a CategoryClass
 object in abbreviated forms. So, for example,
 #+begin_example
    (showSig |PAdicIntegerCategory|) ==> PADICCT(EUCDOM,CHARZ)
@@ -4424,7 +4376,7 @@ object in abbreviated forms. So, for example,
 
 ** Helper Functions
 
-The {\bf defunt} macro allows specifying the type {\tt INT} in
+The *defunt* macro allows specifying the type =INT= in
 an argument list. For example, these are all valid:
 #+begin_example
    (defunt one (p1 p2) ....)
@@ -4473,7 +4425,7 @@ common lisp idiom for this is very wordy so we make a macro.
 
 #+end_src
 
-Here we create the Axiom {\bf getAncestors} function. It walks the
+Here we create the Axiom *getAncestors* function. It walks the
 tree of ancestors to collect the union of the set. 
 
 This accepts the symbol for the class or the instance.
@@ -4504,7 +4456,7 @@ This accepts the symbol for the class or the instance.
   
 #+end_src
 
-The {\bf leaves}
+The *leaves*
 \index[doc]{leaves}
 needs to compute the most immediate ancestors (the leaves) of the 
 type tree. We walk the tree collecting ancestors and remove duplicates.
@@ -4520,16 +4472,16 @@ type tree. We walk the tree collecting ancestors and remove duplicates.
 
 #+end_src
 
-We introduce the concept of a {\bf level}
+We introduce the concept of a *level*
 \index[doc]{level}
 to order classes based on how deep they are in the inheritance
-hierarchy. Level 1 Categories only depend on {\bf CategoryClass}.
+hierarchy. Level 1 Categories only depend on *CategoryClass*.
 Level 2 Categories only depend on Level 1, etc.
 
 We order the class inheritance list based on level.
 
 Here we need to be able to know what level to assign to a Category.
-Each level defines a variable, e.g. {\bf level1}, {\bf level2}, etc
+Each level defines a variable, e.g. *level1*, *level2*, etc
 that contains all of the Category instance symbols defined at that
 level.
 
@@ -4562,7 +4514,7 @@ level.
 
 #+end_src
 
-Here we create the Axiom {\bf getDomains} function. It finds all of the
+Here we create the Axiom *getDomains* function. It finds all of the
 domains that inherit this class. Given a domain it return an empty set.
 \index[code]{defun!getDomains}
 \index[code]{getDomains!defun}
@@ -4576,7 +4528,7 @@ domains that inherit this class. Given a domain it return an empty set.
 \index[doc]{Signatures}
 \index[doc]{OperationAlist}
 
-The {\bf OperationAlist} is a list of all of the operations that are available
+The *OperationAlist* is a list of all of the operations that are available
 for the domain. Note that if there are two operations with the same name then
 they are combined into one operation but with different signatures.
 
@@ -4589,7 +4541,7 @@ they are combined into one operation but with different signatures.
 \label{tab:signature}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} & \textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* & *accessor*\\
 \hline
 name      & :name      & ""  & signature-name\\
 returns   & :returns   & nil & signature-returns\\
@@ -4599,7 +4551,7 @@ examples  & :examples  & nil & signature-examples\\
 infix?    & :infix     & nil & signature-infix\\
 \hline
 \end{tabular}
-\caption{{\bf defclass signature}}
+\caption{*defclass signature*}
 \end{center}
 \end{table}
 
@@ -4767,14 +4719,14 @@ infix?    & :infix     & nil & signature-infix\\
 \label{tab:amacro}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}  & \textbf{type}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*  & *type*\\
 \hline
 name & :name & "" & amacro-name & symbol\\
 body & :body & nil & amacro-body &\\
 \hline
 \end{tabular}
-\caption{{\bf defclass amacro}}
+\caption{*defclass amacro*}
 \end{center}
 \end{table}
 
@@ -4804,14 +4756,14 @@ body & :body & nil & amacro-body &\\
 \label{tab:operation}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}  & \textbf{type}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*  & *type*\\
 \hline
 name & :name & ""  & operation-name       & string\\
 body & :body & nil & operation-signatures & list\\
 \hline
 \end{tabular}
-\caption{{\bf defclass operation}}
+\caption{*defclass operation*}
 \end{center}
 \end{table}
 
@@ -4951,20 +4903,20 @@ From OperationAlist to Signatures
 #+end_src
 
 As painful as it is, this code strives to reproduce the exact output
-of the {\bf )show} command in Axiom.
+of the *)show* command in Axiom.
 
-Functions with the same name but multiple signatures, such as {\bf *},
+Functions with the same name but multiple signatures, such as ***,
 are stored in a single operation instance. We have to break up the
 multiple signatures into single signatures. We do this with the {\bf
   split} function.
 
 Some signatures are in tabular format. Longer signatures are output
 after the table.  There are special cases and we keep a list of these
-in the {\bf *forceLongs* variable}. Sigh.
+in the **forceLongs* variable*. Sigh.
 
 The tabular format has two columns, the second column is at character
 position 40. The SBCL tabular output in format is broken so we had to
-create the {\bf padTo38} function to add pad characters to signatures.
+create the *padTo38* function to add pad characters to signatures.
 
 \index[code]{defvar!forcelongs}
 \index[code]{forcelongs!defvar}
@@ -5033,8 +4985,8 @@ The parser operates on the input stream step by step.
 
 There are three possible approaches to the parser and these are left
 ``unchosen'' for the moment. There is the traditional Chomsky BNF
-style, the Parsing Expression Grammar (PEG) \cite{Ford04}, and the
-Pratt parser \cite{Prat73}.
+style, the Parsing Expression Grammar (PEG) [cite:@Ford04], and the
+Pratt parser [cite:@Prat73].
 
 PEG parsers reduce the ambiguity of choice, making parsing more
 efficient. 
@@ -5046,7 +4998,7 @@ probably be more important.
 
 ** ParserClass
 
-The {\bf *place*} 
+The **place** 
 \index[doc]{*place*} 
 is the search path for the .spad files. These paths
 are concatenated before the spad filenames.
@@ -5069,8 +5021,8 @@ are concatenated before the spad filenames.
 \label{tab:ParserClass}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*\\
 \hline
 abbrev     & :abbrev     & nil & parser-abbrev\\
 topcomment & :topcomment & nil & parser-topcomment\\
@@ -5080,7 +5032,7 @@ with       & :with       & nil & parser-with\\
 add        & :add        & nil & parser-add\\
 \hline
 \end{tabular}
-\caption{{\bf defclass ParserClass}}
+\caption{*defclass ParserClass*}
 \end{center}
 \end{table}
 
@@ -5115,10 +5067,10 @@ add        & :add        & nil & parser-add\\
 
 #+end_src
 
-The {\bf theparse}
+The *theparse*
 \index[doc]{theparse}
 is a global variable holding the result of the parse.
-It holds a {\bf ParserClass}
+It holds a *ParserClass*
 \index[doc]{ParserClass} 
 object.
 
@@ -5130,21 +5082,21 @@ object.
 
 #+end_src
 
-The {\bf make-Sourcecode} [p\pageref{lst:make-Sourcecode}]
+The *make-Sourcecode* [p[[#lst:make-Sourcecode][lst:make-Sourcecode]]]
 \index[doc]{make-sourcecode!caller}
 \index[all]{caller!make-sourcecode}
 reads the file and constructs a 
-{\bf sourcecode} [p\pageref{lst:sourcecode}] object.
+*sourcecode* [p[[#lst:sourcecode][lst:sourcecode]]] object.
 
-The {bf make-Sourcecode} function constructs a {\bf sourcecode-pile}
+The {bf make-Sourcecode} function constructs a *sourcecode-pile*
 field containing a ``useful'' version of the original source,
 (e.g. the source stripped of $--$ comments and joining contiued lines)
 so we can easily parse the result.
 
-The {\bf Parse 1} 
+The *Parse 1* 
 \index[err]{Parse 1}
-error occurs when the {\bf )abbrev} line is missing.
-The {\bf )abbrev} line must occur before the code.
+error occurs when the *)abbrev* line is missing.
+The *)abbrev* line must occur before the code.
 
 \sig{Parse}{filename}{(theparse,pile)}
 \index[code]{defun!Parse}
@@ -5201,32 +5153,32 @@ The {\bf )abbrev} line must occur before the code.
 
 ** make-Sourcecode
 
-The {bf make-Sourcecode} function constructs a {\bf sourcecode}
+The {bf make-Sourcecode} function constructs a *sourcecode*
 instance containing the original source, the source stripped
 of $--$ comments, joining contiued lines, and finally 
 converted from pile form to tree form. 
 
-The {\bf make-Sourcecode} function
+The *make-Sourcecode* function
 \index[doc]{make-Sourcecode}
 reads a spad file in as a list of strings. All minus comments
-are deleted, using {\bf noComments}, from the initial $--$ to 
+are deleted, using *noComments*, from the initial $--$ to 
 the end of the line.
 
-The result is a {\bf sourcecode} instance contains the raw
+The result is a *sourcecode* instance contains the raw
 contents of the file, the cleaned up version called a pile,
 and a tree version, containing parens indicating depth.
 
-Then, using {\bf oneline}, any line that has a trailing escape 
+Then, using *oneline*, any line that has a trailing escape 
 character (the underscore) gets merged with the following line.
 
-The {\bf escaped?} predicate checks for the trailing underscore.
-The {\bf oneline} process, when it finds a trailing underscore,
+The *escaped?* predicate checks for the trailing underscore.
+The *oneline* process, when it finds a trailing underscore,
 will join the lines(s) until a non-escaped line occurs.
 
-The {\bf blankline?} predicate checks for a blank line. 
-These are elimiated as part of the {\bf oneline} process.
+The *blankline?* predicate checks for a blank line. 
+These are elimiated as part of the *oneline* process.
 
-A bit of clever optimization is possible if the {\bf oneline}
+A bit of clever optimization is possible if the *oneline*
 function processed the list of strings in reverse so the two
 calls to nreverse could be removed. 
 
@@ -5307,7 +5259,7 @@ calls to nreverse could be removed.
 
 ** sourcecode-pile
 
-The {\bf sourcecode} type contains 4 fields:
+The *sourcecode* type contains 4 fields:
 %\index[code]{sourcecode}
 \begin{enumerate}
 \item name -- the filename of the source file
@@ -5325,8 +5277,8 @@ The {\bf sourcecode} type contains 4 fields:
 \label{tab:sourcecode}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*\\
 \hline
 name    & :name    & nil & sourcecode-name\\
 rawcode & :rawcode & nil & sourcecode-rawcode\\
@@ -5334,7 +5286,7 @@ pile    & :pile    & nil & sourcecode-pile\\
 tree    & :tree    & nil & sourcecode-tree\\
 \hline
 \end{tabular}
-\caption{{\bf defclass sourcecode}}
+\caption{*defclass sourcecode*}
 \end{center}
 \end{table}
 
@@ -5375,7 +5327,7 @@ on the indentation.
 
 *** Recognize abbreviation command line
 
-An {\bf )abbrev} line consists of 4 tokens, for example,
+An *)abbrev* line consists of 4 tokens, for example,
 #+begin_example
    )abbrev domain BITS Bits
 #+end_example
@@ -5386,12 +5338,12 @@ valid constructor name.
 
 *** The abbreviation class
 
-The {\bf abbreviation}
+The *abbreviation*
 \index[code]{abbreviation!defclass}
 \index[code]{defclass!abbreviation}
 holds the result of parsing an )abbrev line.
 
-The {\bf FSM-abbrev} 
+The *FSM-abbrev* 
 \index[code]{FSM-abbrev!function}
 \index[code]{function!FSM-abbrev}
 function parses an )abbrev line.
@@ -5403,8 +5355,8 @@ function parses an )abbrev line.
 \label{tab:abbreviation}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*\\
 \hline
 class  & :class  & nil & abbreviation-class\\
 abbrev & :abbrev & nil & abbreviation-abbrev\\
@@ -5412,7 +5364,7 @@ string & :string & ""  & abbreviation-string\\
 name   & :name   & nil & abbreviation-name\\
 \hline
 \end{tabular}
-\caption{{\bf defclass abbreviation}}
+\caption{*defclass abbreviation*}
 \end{center}
 \end{table}
 
@@ -5454,7 +5406,7 @@ name   & :name   & nil & abbreviation-name\\
 
 #+end_src
 
-The {\bf FSM-abbrev}
+The *FSM-abbrev*
 \index[doc]{FSM-abbrev}
 function handles the abbrev line which contains 4 symbols.
 
@@ -5465,7 +5417,6 @@ a number.
 \index[fig]{syntax!UABBREV}
 \index[fig]{UABBREV syntax}
 \begin{figure}[ht]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -5475,14 +5426,14 @@ a number.
     ]
     \matrix[column sep=4mm] {
         \node           (p1) [point]    {}; &
-        \node[blue!100] (c1) [terminal] {{\sl uchar}};&
-        \node[blue!100] (c2) [terminal] {{\sl uchar}};&
-        \node[blue!100] (c3) [terminal] {{\sl uchar}};&
-        \node[blue!100] (c4) [terminal] {{\sl uchar}};&
-        \node[blue!100] (c5) [terminal] {{\sl uchar}};&
-        \node[blue!100] (c6) [terminal] {{\sl uchar}};&
-        \node[blue!100] (c7) [terminal] {{\sl uchar}};&
-        \node[blue!100] (c8) [terminal] {{\sl uchar}};\\
+        \node[blue!100] (c1) [terminal] {/uchar/};&
+        \node[blue!100] (c2) [terminal] {/uchar/};&
+        \node[blue!100] (c3) [terminal] {/uchar/};&
+        \node[blue!100] (c4) [terminal] {/uchar/};&
+        \node[blue!100] (c5) [terminal] {/uchar/};&
+        \node[blue!100] (c6) [terminal] {/uchar/};&
+        \node[blue!100] (c7) [terminal] {/uchar/};&
+        \node[blue!100] (c8) [terminal] {/uchar/};\\
     };
 
     { [start chain]
@@ -5514,7 +5465,6 @@ UABBREV ::= UCHAR
 \index[fig]{syntax!ABBREV}
 \index[fig]{ABBREV syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -5530,8 +5480,8 @@ UABBREV ::= UCHAR
         \node[below of=p2] (pak)  [terminal]    {package};
         \node              (dom)  [terminal]    {domain};&
         \node              (p9)   [point]       {}; &
-        \node              (abb1) [nonterminal] {{\sl uabbrev}};&
-        \node[blue!100]    (cdp)  [nonterminal] {{\sl cdpname}};\\
+        \node              (abb1) [nonterminal] {/uabbrev/};&
+        \node[blue!100]    (cdp)  [nonterminal] {/cdpname/};\\
     };
 
     { [start chain]
@@ -5603,7 +5553,7 @@ ABBREV ::= ')abbrev' ['category' | 'domain' | 'package'] UABBREV CONSTRUCT
 
 *** Parse Comments
 
-The {\bf FSM-comment} function strips off the comments from linelist,
+The *FSM-comment* function strips off the comments from linelist,
 gathering them together. It returns 2 values, the first is a new
 linelist without the comments. The second is a gather object
 containing the comment lines.
@@ -5624,7 +5574,7 @@ containing the comment lines.
 
 ** FSM-macros
 
-The {\bf FSM-macros} 
+The *FSM-macros* 
 \index[doc]{FSM-macros}
 function scans the source code for macros. If one is found the
 function creates a pair (name . definition) and puts it on 
@@ -5685,7 +5635,7 @@ created looks like
 #+end_src
 
 Sometimes we just want to know what symbols are actually the
-name of a macro. The {\bf FSM-macroNames} function 
+name of a macro. The *FSM-macroNames* function 
 \index[doc]{FSM-macroNames} 
 returns a list of those names.
 
@@ -5710,15 +5660,15 @@ returns a list of those names.
 \label{tab:CDPSigClass}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*\\
 \hline
 cdpname  & :classname & nil & CDPSigClass-cdpname\\
 argslist & :argslist  & nil & CDPSigClass-argslist\\
 cdptag   & :cdptag    & nil & CDPSigClass-cdptag\\
 \hline
 \end{tabular}
-\caption{{\bf defclass CDPSigClass}}
+\caption{*defclass CDPSigClass*}
 \end{center}
 \end{table}
 
@@ -5748,11 +5698,11 @@ cdptag   & :cdptag    & nil & CDPSigClass-cdptag\\
 
 #+end_src
 
-The {\bf FSM-cdpsig} 
+The *FSM-cdpsig* 
 \index[doc]{FSM-cdpsig} 
 function expects to be called to handle the
 definition of a category, domain, or package. It constructs a
-{\bf CDPSigClass} object to hold the name and argument list.
+*CDPSigClass* object to hold the name and argument list.
 At this point, the argument list is essentially unparsed,
 consisting of the top level string starting at the open parenthesis
 and ending at the matching closed parenthesis. Further processing
@@ -5832,7 +5782,6 @@ variables could be macros in the body which we have not yet seen.
 \index[fig]{syntax!VAR}
 \index[fig]{VAR syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -5842,7 +5791,7 @@ variables could be macros in the body which we have not yet seen.
     ]
     \matrix[column sep=4mm] {
         \node           (p1)      [point]       {};               &
-        \node           (abb)     [nonterminal] {{\sl symbol}};   &
+        \node           (abb)     [nonterminal] {/symbol/};   &
         \node           (p2)      [point]       {};               &
         \node           (wspace1) [nonterminal] {' '};            &
         \node           (p3)      [point]       {};               &
@@ -5850,9 +5799,9 @@ variables could be macros in the body which we have not yet seen.
         \node           (p4)      [point]       {};               &
         \node           (wspace2) [nonterminal] {' '};            &
         \node           (p5)      [point]       {};               &
-        \node           (tspec)   [nonterminal] {{\sl typespec}}; &
+        \node           (tspec)   [nonterminal] {/typespec/}; &
         \node           (p6)      [point]       {};               &
-        \node[blue!100] (end)     [terminal]    {{\sl accept}};   \\
+        \node[blue!100] (end)     [terminal]    {/accept/};   \\
     };
 
     { [start chain]
@@ -5901,7 +5850,6 @@ VAR ::= SYMBOL [ [WSPACE]* ':' [WSPACE]* TYPESPEC ]
 \index[fig]{syntax!TYPESPEC}
 \index[fig]{TYPESPEC syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -5911,14 +5859,14 @@ VAR ::= SYMBOL [ [WSPACE]* ':' [WSPACE]* TYPESPEC ]
     ]
     \matrix[column sep=4mm] {
       \node (p1)   [point]       {}; &
-      \node (cdp)  [nonterminal] {{\sl cpdname}}; &
+      \node (cdp)  [nonterminal] {/cpdname/}; &
       \node (cdp7) [point]       {}; &
       \node (cdp1) [terminal]    {'('}; &
       \node (cdpa) [point]       {}; &
-      \node (cdp2) [nonterminal] {{\sl typespec}}; &
+      \node (cdp2) [nonterminal] {/typespec/}; &
       \node (cdp8) [point]       {}; &
       \node (cdp3) [terminal]    {','}; &
-      \node (cdp4) [nonterminal] {{\sl typespec}}; &
+      \node (cdp4) [nonterminal] {/typespec/}; &
       \node (cdp9) [point]       {}; &
       \node (cdp5) [terminal]    {')'}; &
       \node (cdp6) [point]       {}; \\
@@ -5926,17 +5874,17 @@ VAR ::= SYMBOL [ [WSPACE]* ':' [WSPACE]* TYPESPEC ]
       \node (mid0) [point] {}; 
       \node (mid1) [point] {}; 
       & & & & & & & & & & &
-      \node[blue!100] (mid2) [terminal] {{\sl accept}}; \\
+      \node[blue!100] (mid2) [terminal] {/accept/}; \\
 
       \node (ap1)   [point]       {}; &
-      \node (acdp)  [nonterminal] {{\sl join}}; &
+      \node (acdp)  [nonterminal] {/join/}; &
       \node (acdpa) [point]       {}; &
       \node (acdp1) [terminal]    {'('}; &
       \node (acdpb) [point]       {}; &
-      \node (acdp2) [nonterminal] {{\sl typespec}}; &
+      \node (acdp2) [nonterminal] {/typespec/}; &
       \node (acdp8) [point]       {}; &
       \node (acdp3) [terminal]    {','}; &
-      \node (acdp4) [nonterminal] {{\sl typespec}}; &
+      \node (acdp4) [nonterminal] {/typespec/}; &
       \node (acdp9) [point]       {}; &
       \node (acdp5) [terminal]    {')'}; &
       \node (acdp6) [point]       {}; \\
@@ -5995,13 +5943,13 @@ TYPESPEC ::= CDPNAME [ '(' [ TYPESPEC [ ',' TYPESPEC ]* ] ')']
 \label{tab:FSM-VAR}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{accessor}\\
+*Fieldname* & *initarg* & *accessor*\\
 \hline
 variable  & :variable  & FSM-VAR-variable\\
 paramtype & :paramtype & FSM-VAR-paramtype\\
 \hline
 \end{tabular}
-\caption{{\bf defclass FSM-VAR}}
+\caption{*defclass FSM-VAR*}
 \end{center}
 \end{table}
 
@@ -6027,7 +5975,7 @@ paramtype & :paramtype & FSM-VAR-paramtype\\
 
 #+end_src
 
-The {\bf FSM-variables} 
+The *FSM-variables* 
 \index[doc]{FSM-variables}
 function is called to ``clean up'' the
 variables of a type definition. These are found in two places.
@@ -6048,9 +5996,9 @@ variable name is followed by a colon.
 
 ** Parser support functions
 
-These two functions, {\bf splitchar}
+These two functions, *splitchar*
 \index[doc]{splitchar}
-and {\bf joinsplit}
+and *joinsplit*
 \index[doc]{joinsplit}
 are essentiall inverses of each other. So
 #+begin_example
@@ -6059,10 +6007,10 @@ are essentiall inverses of each other. So
 should return the original string, without leading or
 trailing spaces.
 
-The {\bf splitchar} 
+The *splitchar* 
 \index[doc]{splitchar}
-function will take a {\bf string} and
-break the string apart every place it sees the {\bf char}.
+function will take a *string* and
+break the string apart every place it sees the *char*.
 
 \sig{splitchar}{(string,char)}{list(token)}
 \index[code]{defun!splitchar}
@@ -6077,9 +6025,9 @@ break the string apart every place it sees the {\bf char}.
 
 #+end_src
 
-The {\bf joinsplit} function will that a list of strings,
-called the {\bf split} and concatenate them, inserting the
-{\bf char} character between the strings.
+The *joinsplit* function will that a list of strings,
+called the *split* and concatenate them, inserting the
+*char* character between the strings.
 
 Note that this can be used to construct a comma-separated
 list by
@@ -6102,7 +6050,7 @@ list by
 
 #+end_src
 
-The {\bf explode}
+The *explode*
 \index[doc]{explode}
 turns a string into characters.
 \sig{explode}{string}{list char}
@@ -6118,7 +6066,6 @@ turns a string into characters.
 \index[fig]{syntax!SYMBOL}
 \index[fig]{SYMBOL syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -6166,7 +6113,6 @@ SYMBOL := letter [ letter | digit ]*
 \index[fig]{syntax!UNSIGNED}
 \index[fig]{UNSIGNED syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -6200,7 +6146,6 @@ UNSIGNED := digit [ digit ]*
 \index[fig]{syntax!FLOAT}
 \index[fig]{FLOAT syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -6270,7 +6215,6 @@ FLOAT ::=
 \index[fig]{syntax!IF}
 \index[fig]{IF syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -6314,7 +6258,6 @@ IF ::= if TEST then BLOCK [else BLOCK]
 \index[fig]{syntax!FOR}
 \index[fig]{FOR syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}[
         point/.style={coordinate},>=stealth',thick,draw=black!50,
         tip/.style={->,shorten >=0.007pt},every join/.style={rounded corners},
@@ -6351,7 +6294,7 @@ FOR ::= for VARIABLE in EXPRESSION repeat BLOCK
 
 ** The Compiler Function
 
-Given a {\bf theparse} structure, construct the corresponding
+Given a *theparse* structure, construct the corresponding
 defclass.
 
 #+begin_example
@@ -6375,7 +6318,7 @@ defclass.
 
 #+end_example
 
-The {\bf compileSpad} 
+The *compileSpad* 
 \index[doc]{compileSpad}
 function takes the parser structure and compiles it
 to executable code.
@@ -6447,7 +6390,6 @@ line. The line looks like:
    )abbrev domain TIM Tim
 #+end_example
 
-\noindent
 The Finite State Machine code to recognize this and construct an
 abbreviation instance would be:
 #+begin_example
@@ -6468,19 +6410,17 @@ abbreviation instance would be:
 
 #+end_example
 
-\noindent
-Things to note about this code are that the variables {\bf split}
+Things to note about this code are that the variables *split*
 \index[code]{split!variable}
 \index[code]{variable!split}
-and {\bf result}
+and *result*
 \index[code]{result!variable}
 \index[code]{variable!result}
 are expected to be in the environment of the macros. When this code
 successfully recognizes the input line it constructs a class object to
 hold the result.
 
-\noindent
-The {\bf FSM-OR} 
+The *FSM-OR* 
 \index[code]{FSM-OR!defmacro}
 \index[code]{defmacro!FSM-OR}
 macro mimics the action of the choice vertical bar in
@@ -6495,8 +6435,7 @@ tests succeeds.
 
 #+end_src
 
-\noindent
-The {\bf FSM-AND} 
+The *FSM-AND* 
 \index[code]{FSM-AND!defmacro}
 \index[code]{defmacro!FSM-AND}
 macro mimics the action of a sequence of matches in the grammar. 
@@ -6520,21 +6459,20 @@ tests succeed.
 \label{tab:gather}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{Fieldname} & \textbf{initarg} & \textbf{initform} &
-\textbf{accessor}\\
+*Fieldname* & *initarg* & *initform* &
+*accessor*\\
 \hline
 lines & :lines & nil & gather-lines\\
 \hline
 \end{tabular}
-\caption{{\bf defclass gather}}
+\caption{*defclass gather*}
 \end{center}
 \end{table}
 
-\noindent
-The {\bf gather} class holds the result of collecting several
+The *gather* class holds the result of collecting several
 \index[code]{defclass!gather}
 \index[code]{gather!defclass}
-associated lines.  It is filled by side-effect by {\bf FSM-gather}.
+associated lines.  It is filled by side-effect by *FSM-gather*.
 \index[code]{defclass!gather}
 \index[code]{gather!defclass}
 #+NAME: defclass gather
@@ -6556,17 +6494,16 @@ associated lines.  It is filled by side-effect by {\bf FSM-gather}.
 
 #+end_src
 
-\noindent
-The {\bf FSM-gather} macro rips lines that pass the test
+The *FSM-gather* macro rips lines that pass the test
 \index[code]{defmacro!FSM-gather}
 \index[code]{FSM-gather!defmacro}
 from the list of input strings.It expects 3 arguments
 \begin{enumerate}
-\item {\bf linelist} is a list of input strings from the raw
+\item *linelist* is a list of input strings from the raw
 field of the sourcecode class object.
-\item {\bf test} is a test to decide whether this line should
+\item *test* is a test to decide whether this line should
 be gathered from the linelist. 
-\item {\bf into} is an instance of the {\bf gather} class 
+\item *into* is an instance of the *gather* class 
 that will hold the lines that pass the test.
 \end{enumerate}
 Given a linelist that looks like:
@@ -6594,8 +6531,8 @@ when invoked with:
 #+begin_example
    (multiple-value-setq (t3 t4) (fsm-comment t2))
 #+end_example
-we end up with t4 as a {\bf gather} instance containing the
-lines that passed the {\bf FSM-match} test. For example,
+we end up with t4 as a *gather* instance containing the
+lines that passed the *FSM-match* test. For example,
 #+begin_example
 The object is a STANDARD-OBJECT of type GATHER.
 0. LINES:
@@ -6627,21 +6564,19 @@ The t3 variable contains the new linelist without the matching lines:
 
 #+end_src
 
-\noindent
-NOTE: {\bf These macros assume two variables in the environment.}
+NOTE: *These macros assume two variables in the environment.*
 \index[code]{split!variable}
 \index[code]{variable!split}
 \index[code]{result!variable}
 \index[code]{variable!result}
 \begin{enumerate}
-\item {\bf split} that is a tokenized list of the input,
-usually by calling the {\bf splitchar} function. Each element of the
+\item *split* that is a tokenized list of the input,
+usually by calling the *splitchar* function. Each element of the
 list is a string.
-\item {\bf result} is a variable used to collect matches in a list.
+\item *result* is a variable used to collect matches in a list.
 \end{enumerate}
 
-\noindent
-The {\bf FSM-startsWith}
+The *FSM-startsWith*
 \index[code]{defmacro!FSM-startsWith}
 \index[code]{FSM-startsWith!defmacro}
 occurs in cases where we want to check whether the prefix is a
@@ -6665,8 +6600,7 @@ word we expect, such as looking for the category name, for example,
 
 #+end_src
 
-\noindent
-The {\bf FSM-match}
+The *FSM-match*
 \index[code]{FSM-match!defmacro}
 \index[code]{defmacro!FSM-match}
 matches a string with any case and, when successful, it adds the
@@ -6683,8 +6617,7 @@ matched word to the result and pops it off the split.
 
 #+end_src
 
-\noindent
-The {\bf FSM-dword}
+The *FSM-dword*
 \index[code]{FSM-dword!defmacro}
 \index[code]{defmacro!FSM-dword}
 matches the lowercased word, then match. When successful, it adds the
@@ -6701,8 +6634,7 @@ matched word to the result and pops it off the split.
 
 #+end_src
 
-\noindent
-The {\bf FSM-uword}
+The *FSM-uword*
 \index[code]{FSM-uword!defmacro}
 \index[code]{defmacro!FSM-uword}
 matches the uppercased word, then match. When successful, it adds the
@@ -6719,8 +6651,7 @@ matched word to the result and pops it off the split.
 
 #+end_src
 
-\noindent
-The {\bf FSM-word}
+The *FSM-word*
 \index[code]{FSM-word!defmacro}
 \index[code]{defmacro!FSM-word}
 simply return the next word. It always succeeds. It adds the word to
@@ -6737,8 +6668,7 @@ the result and pops it off the split.
 
 #+end_src
 
-\noindent
-The {\bf FSM-cdpname}
+The *FSM-cdpname*
 \index[doc]{FSM-cdpname}
 checks to see if the next word in the split is a known class. 
 For example,
@@ -6760,12 +6690,10 @@ It adds the word to the result and pops it off the split.
 
 #+end_src
 
-\noindent
 Abbreviations of categories, domains, and packages must be 8 or less
 characters and all uppercase.
 
-\noindent
-The {\bf FSM-abbname}
+The *FSM-abbname*
 \index[code]{FSM-abbname!defmacro}
 \index[code]{defmacro!FSM-abbname}
 performs this check. When successful,
@@ -6793,23 +6721,23 @@ function is called when an open-paren is detected as the next
 character in the first line of the linelist. It will walk across the
 linelist gathering all of the text between the open-paren and the
 balancing closed-paren, even if there are newlines or other parens.
-It works character by character. The {\bf result} variable is the
+It works character by character. The *result* variable is the
 parenthesized object, including the delimiting parens. 
 
-The {\bf depth} variable is used to handle embedded parens. Only a
-closed paren at depth 0 is considered a match. The {\bf more} variable
-causes the loop to exit when it becomes false. The {\bf instring}
-variable is used to ignore parens embedded in strings. The {\bf str}
+The *depth* variable is used to handle embedded parens. Only a
+closed paren at depth 0 is considered a match. The *more* variable
+causes the loop to exit when it becomes false. The *instring*
+variable is used to ignore parens embedded in strings. The *str*
 variable is the current string we are walking. The complication is
 that there could be newlines between balancing parens so we have to
-move to the next string in the linelist. The {\bf c} character is the
+move to the next string in the linelist. The *c* character is the
 current character we are considering. There are several cases with
-associated comments. The {\bf listlen} variable is a counter which
+associated comments. The *listlen* variable is a counter which
 counts how much of the string we need to remove before returning. The
 complication is that when we have multiple lines we have to also
 consider the leading spaces in indents.
 
-The {\bf FSM-gatherList 1} 
+The *FSM-gatherList 1* 
 \index[err]{FSM-gatherList 1}
 error occurs because the next character
 whould have been an open parenthsis. The function expects to find
@@ -6964,7 +6892,7 @@ a list of strings.
 Next we convert the pile form into tree form using the indentation.
 Elements at the same level of identation are grouped togehter.
 
-The {\bf indent}
+The *indent*
 \index[doc]{indent}
 function tells us how many spaces, aka the indentation, we have
 at the beginning of the line.
@@ -6989,7 +6917,7 @@ accessor functions. All we are really doing is creating
 pairs, the car of which is the indentation and the cdr
 is anything.
 
-The {\bf birth} function 
+The *birth* function 
 \index[doc]{birth}
 expects the indentation count and anything, and just conses
 them together.
@@ -7007,7 +6935,7 @@ them together.
 #+end_src
 
 Naturally, if we have a cons, we need to disassemble it.
-The {\bf depthof} function returns the indentation.
+The *depthof* function returns the indentation.
 \index[doc]{depthof}
 #+begin_example
    BIRTHFORM -> DEPTH
@@ -7022,7 +6950,7 @@ The {\bf depthof} function returns the indentation.
 
 #+end_src
 
-And the {\bf nameof}
+And the *nameof*
 \index[doc]{nameof}
 returns the thing we put in the cdr.
 #+begin_example
@@ -7041,7 +6969,7 @@ returns the thing we put in the cdr.
 Given a list of strings, each of which has a variable
 number of leading blanks, we construct pairs where the
 car is the indentation and the cdr is anything, usually
-the source string. We call this rewrite the {\bf spawn}
+the source string. We call this rewrite the *spawn*
 \index[doc]{spawn}
 of the tree. From this information we can compute things
 like the depth of nesting.
@@ -7060,9 +6988,9 @@ like the depth of nesting.
 
 #+end_src
 
-The {\bf pile2tree} 
+The *pile2tree* 
 \index[code]{pile2tree}
-function takes a {\bf sourcecode pile} which looks like:
+function takes a *sourcecode pile* which looks like:
 #+begin_example
 (")abbrev domain BITS Bits"
  "++ Author: Stephen M. Watt" "++ Description:"
@@ -7077,7 +7005,7 @@ function takes a {\bf sourcecode pile} which looks like:
 #+end_example
 
 and inserts parentheses that group the code into a tree form,
-called a {\bf sourcecode tree} looks like:
+called a *sourcecode tree* looks like:
 #+begin_example
 (")abbrev domain BITS Bits"
  "++ Author: Stephen M. Watt" "++ Description:"
@@ -7093,7 +7021,7 @@ called a {\bf sourcecode tree} looks like:
 
 #+end_example
 
-The {\bf deep}
+The *deep*
 \index[doc]{deep}
 function will walk a spawn-ed tree and return a reverse
 sorted list of the indentations. We use this to walk the
@@ -7160,7 +7088,7 @@ nodes first.
 
 #+end_src
 
-The {\bf pretty} 
+The *pretty* 
 \index[doc]{pretty}
 function takes a sourcecode-tree, or a sublist thereof, 
 and prints it in a form we prefer.
@@ -7205,7 +7133,6 @@ FSMSIG      ::= INDENT SIGNAME [':' SIGINTYPE '->' SIGOUTTYPE] [SIGIFSEC]
 \index[fig]{syntax!FSMSIG}
 \index[fig]{FSMSIG syntax}
 \begin{figure}[H]
-\centering
 \begin{tikzpicture}
 
 \node[state, initial]                 (q01) {$s_1$};
@@ -7227,11 +7154,11 @@ FSMSIG      ::= INDENT SIGNAME [':' SIGINTYPE '->' SIGOUTTYPE] [SIGIFSEC]
 (q01) edge[above] node{intype}   (q02)
 
 (q03) edge[above] node{intype}   (q04)
-(q04) edge[above] node{{\tt ->}} (q05)
+(q04) edge[above] node{=->=} (q05)
 (q05) edge[above] node{outtype}  (q06)
 
 (q07) edge[above] node{intype}   (q08)
-(q08) edge[above] node{{\tt ->}} (q09)
+(q08) edge[above] node{=->=} (q09)
 (q09) edge[above] node{outtype}  (q10)
 (q10) edge[above] node{ifspec}   (q11);
 
@@ -7246,7 +7173,6 @@ FSMSIG ::=
 \index[fig]{syntax!LEAVE}
 \index[fig]{LEAVE syntax}
 \begin{figure}[ht]
-\centering
 TODO
 \caption{LEAVE syntax}
 #+begin_example
@@ -7262,7 +7188,6 @@ LEAVE
 #+end_example
 
 \begin{figure}[ht]
-\centering
 \begin{tikzpicture}
 
 \node[state, initial] (q1) {$s_1$};
@@ -7291,24 +7216,24 @@ The Finite State Machine (FSM) walks across a spad signature
 character by character. It constructs the syntactic pieces.
 
 The inner loop drives forward character by character, calling
-the {\bf classify} function to determine the next state. The
+the *classify* function to determine the next state. The
 inner loop is a large case statement handling each classified
-state. The inner loop is {\bf :accept} at the end of the file.
+state. The inner loop is *:accept* at the end of the file.
 
-Both {\bf inttype}, the input type specification 
-and {\bf outtype}, the output type specification may both be very
+Both *inttype*, the input type specification 
+and *outtype*, the output type specification may both be very
 complex type specifications. They are recognized by a separate
 finite state machine.
 
 A signature may also have a conditional specification that
 is handled by its own finite state machine.
 
-The {\bf look} function just peeks at the next character.
-The {\bf eat} function consumes it.
+The *look* function just peeks at the next character.
+The *eat* function consumes it.
 
-The {\bf next} function updates the {\bf nextstate} variable.
+The *next* function updates the *nextstate* variable.
 
-The {\bf here} function outputs debugging information.
+The *here* function outputs debugging information.
 
 \sig{FSMSIG}{debug}{values}
 \index[code]{defun!FSMSIG}
@@ -7398,14 +7323,14 @@ The {\bf here} function outputs debugging information.
             
 *** Gather Macros
 
-The {\bf FSM-extract1Macro} 
+The *FSM-extract1Macro* 
 \index[doc]{FSM-extract1Macro} 
 walks the linelist until it
 finds a line containing the string ``$==>$'' which marks
 the start of a macro. All lines (including the first) are
-removed from the linelist and collected into a {\bf gather} 
+removed from the linelist and collected into a *gather* 
 \index[doc]{gather}
-structure. The {\bf pre} variable contains the lines up to
+structure. The *pre* variable contains the lines up to
 the start of the macro. Ultimately, we return a new linelist
 without the macro lines and a gather structure containing
 the macro lines.
@@ -7634,11 +7559,11 @@ INFIX    ':' TWOLIST '->' UNIONSPEC
 
 This is the top loop of the Sane interpreter.
 
-It defines a function {\bf bye} which only exists for the lifetime of
-the interpreter. When called from the Sane command line, {\bf bye}
+It defines a function *bye* which only exists for the lifetime of
+the interpreter. When called from the Sane command line, *bye*
 returns the gensym. If that gensym is seen the Sane interpreter makes
-the {\bf bye} unbound and exits. Note that we save any existing
-definition of {\bf bye} and restore it when the interpreter exits.
+the *bye* unbound and exits. Note that we save any existing
+definition of *bye* and restore it when the interpreter exits.
 
 \sig{sane}{nil}{nil}
 \index[code]{defun!sane}
@@ -7689,18 +7614,18 @@ definition of {\bf bye} and restore it when the interpreter exits.
 \begin{quote}
 {\bf Dieudonn\'e suggests that casual reasoning is a childhood disease
 of mathematical areas.}\\
--- Arthur Jaffe and Frank Quinn \cite{Jaff93}
+-- Arthur Jaffe and Frank Quinn [cite:@Jaff93]
 \end{quote}
 
 \begin{quote}
 {\bf What mathematicians are accomplishing is to advance human
 understanding of mathematics.}\\
--- William P. Thurston \cite{Thur94}
+-- William P. Thurston [cite:@Thur94]
 \end{quote}
 
 \begin{quote}
-{\bf If you make the tools, you make the rules}\\
--- Andrew Dana Hudson \cite{Huds19}
+*If you make the tools, you make the rules*\\
+-- Andrew Dana Hudson [cite:@Huds19]
 \end{quote}
 
 Collected here are some axioms that need to be distributed among the
@@ -7740,21 +7665,21 @@ proofs since the invariants would be partially constructed already.
 The design merges the computer algebra inheritance structure with the
 proof of algorithms structure, all under the same mechanism.
 
-{\bf Reflexivity}
+*Reflexivity*
 
 \begin{prooftree}
 \AxiomC{}
 \UnaryInfC{$e=e$}
 \end{prooftree}
 
-{\bf Symmetry}
+*Symmetry*
 
 \begin{prooftree}
 \AxiomC{$e_2=e_1$}
 \UnaryInfC{$e_1=e_2$}
 \end{prooftree}
 
-{\bf Transitivity}
+*Transitivity*
 
 \begin{prooftree}
 \AxiomC{$e_1=e_3$}
@@ -7762,14 +7687,14 @@ proof of algorithms structure, all under the same mechanism.
 \BinaryInfC{$e_1=e_2$}
 \end{prooftree}
 
-{\bf Congruence}
+*Congruence*
 
 \begin{prooftree}
 \AxiomC{$f=f^\prime$}
 \AxiomC{$e_1=e_1^\prime$}
-\AxiomC{$\ldots$}
+\AxiomC{$...$}
 \AxiomC{$e_n=e_n^\prime$}
-\QuaternaryInfC{$f(e_1,\ldots,e_n)=f^\prime(e_1^\prime,\ldots,e_n^\prime)$}
+\QuaternaryInfC{$f(e_1,...,e_n)=f^\prime(e_1^\prime,...,e_n^\prime)$}
 \end{prooftree}
 
 For SemiRings we know that
@@ -7797,44 +7722,44 @@ An rng is a set $R$ with two binary operations $(+,-)$ such that
 - $f(x*y) = f(x)*f(y)$
 An rng does not have an identity element.
 
-{\bf Variable}
+*Variable*
 
 \begin{prooftree}
 \AxiomC{$\langle x^{\tau},\sigma,\Gamma\rangle \to 
 \langle \sigma (x^{\tau}),\sigma,\Gamma\rangle$}
 \end{prooftree}
 
-{\bf Call-Arguments}
+*Call-Arguments*
 
 \begin{prooftree}
 \AxiomC{$\langle e_i,\sigma,\Gamma\rangle \to 
 \langle e_i^\prime, \sigma^\prime, \Gamma\rangle$}
-\UnaryInfC{$e_0 (v_1,\ldots,e_i,\ldots,e_n),\sigma,\Gamma\rangle\to
-\langle e_0 (v_1,\ldots,e_i^\prime,\ldots,e_n),\sigma^\prime,\Gamma\rangle$}
+\UnaryInfC{$e_0 (v_1,...,e_i,...,e_n),\sigma,\Gamma\rangle\to
+\langle e_0 (v_1,...,e_i^\prime,...,e_n),\sigma^\prime,\Gamma\rangle$}
 \end{prooftree}
 where the $x_i$ are parameters of $v_0$
 
-{\bf Call-Operator}
+*Call-Operator*
 
 \begin{prooftree}
 \AxiomC{$\langle e_0,\sigma,\Gamma\rangle \to
 \langle e_0,\sigma^\prime,\Gamma\rangle$}
-\UnaryInfC{$\langle e_0 (v_1,\ldots,v_n),\sigma,\Gamma\rangle \to
-\langle e_0^\prime (v_1,\ldots,v_n),\sigma^\prime,\Gamma\rangle$}
+\UnaryInfC{$\langle e_0 (v_1,...,v_n),\sigma,\Gamma\rangle \to
+\langle e_0^\prime (v_1,...,v_n),\sigma^\prime,\Gamma\rangle$}
 \end{prooftree}
 where the $x_i$ are the parameters of $v_0$
 
-{\bf Call}
+*Call*
 
 \begin{prooftree}
-\AxiomC{$\langle v_0^{\tau_0}(v_1^{\tau_1},\ldots,v_n^{\tau_n}),
+\AxiomC{$\langle v_0^{\tau_0}(v_1^{\tau_1},...,v_n^{\tau_n}),
 \sigma,\Gamma\rangle
-\to \langle v_0^{\tau_0}[v_1^{\tau_1}/x_1,\ldots,
+\to \langle v_0^{\tau_0}[v_1^{\tau_1}/x_1,...,
 v_n^{\tau_n}/x_n],\sigma,\Gamma\rangle$}
 \end{prooftree}
 where the $x_i$ are parameters of $v_0$
 
-{\bf Qualified Expression}
+*Qualified Expression*
 
 \begin{prooftree}
 \AxiomC{$\begin{array}{ccc}
@@ -7852,7 +7777,7 @@ where the $x_i$ are parameters of $v_0$
 \rangle \to \langle e^\prime,\sigma^\prime,\Gamma_{n+2}\rangle$}
 \end{prooftree}
 
-{\bf Sequence-Head}
+*Sequence-Head*
 
 \begin{prooftree}
 \AxiomC{$\langle s_1,\sigma_1,\Gamma_1\rangle\to
@@ -7861,14 +7786,14 @@ where the $x_i$ are parameters of $v_0$
 \langle s_1^\prime;s_2,\sigma_2,\Gamma_2\rangle$}
 \end{prooftree}
 
-{\bf Sequence-Tail}
+*Sequence-Tail*
 
 \begin{prooftree}
 \AxiomC{$\langle v_1;s_2,\sigma,\Gamma\rangle\to
 \langle s_2,\sigma,\Gamma\rangle$}
 \end{prooftree}
 
-{\bf If-True}
+*If-True*
 
 \begin{prooftree}
 \AxiomC{$\langle s_1,\sigma,\Gamma\rangle\to
@@ -7877,7 +7802,7 @@ where the $x_i$ are parameters of $v_0$
 \langle s_1^\prime,\sigma^\prime,\Gamma^\prime\rangle$}
 \end{prooftree}
 
-{\bf If-False}
+*If-False*
 
 \begin{prooftree}
 \AxiomC{$\langle s_2,\sigma,\Gamma\rangle\to
@@ -7886,7 +7811,7 @@ where the $x_i$ are parameters of $v_0$
 \langle s_2^\prime,\sigma^\prime,\Gamma^\prime\rangle$}
 \end{prooftree}
 
-{\bf Assignment-Left}
+*Assignment-Left*
 
 \begin{prooftree}
 \AxiomC{$\langle e_1,\sigma_0,\Gamma\rangle \to
@@ -7895,7 +7820,7 @@ where the $x_i$ are parameters of $v_0$
 \langle e_1^\prime:=e_2,\sigma_1,\Gamma\rangle$}
 \end{prooftree}
 
-{\bf Assignment-Right}
+*Assignment-Right*
 
 \begin{prooftree}
 \AxiomC{$\langle e_2,\sigma,\Gamma\rangle \to
@@ -7904,7 +7829,7 @@ where the $x_i$ are parameters of $v_0$
 \langle l:=e_2^\prime,\sigma^\prime,\Gamma\rangle$}
 \end{prooftree}
 
-{\bf Assignment}
+*Assignment*
 
 \begin{prooftree}
 \AxiomC{}
@@ -7912,7 +7837,7 @@ where the $x_i$ are parameters of $v_0$
 \langle v^{\tau},\sigma[v^{\tau}/l],\Gamma\rangle$}
 \end{prooftree}
 
-{\bf Immediate Definition}
+*Immediate Definition*
 
 \begin{prooftree}
 \AxiomC{$\langle e,\sigma,\Gamma\rangle\to
@@ -7921,7 +7846,7 @@ where the $x_i$ are parameters of $v_0$
 \langle x:\tau:=e^\prime,\sigma_1,\Gamma\rangle$}
 \end{prooftree}
 
-{\bf Immediate Definition}
+*Immediate Definition*
 
 \begin{prooftree}
 \AxiomC{$\langle x:\tau:=v^{\tau},\sigma,\Gamma\rangle\to
@@ -7930,12 +7855,12 @@ where the $x_i$ are parameters of $v_0$
 
 * The Categories
 
-One of the primary concerns is {\bf Coherence} \cite{Bott19} of these
+One of the primary concerns is *Coherence* [cite:@Bott19] of these
 type definitions. Because we are using CLOS the system automatically
 computes the coherence between types.
 
-Axiom computes type resolution based on {\sl modemaps} but the
-talk by Bottu and Mardirosian \cite{Bott19} does type resolution
+Axiom computes type resolution based on /modemaps/ but the
+talk by Bottu and Mardirosian [cite:@Bott19] does type resolution
 by creating unique names instead. 
 
 There are patterns in the following code. Violating these patterns
@@ -7957,10 +7882,10 @@ will generate obscure bugs so be careful. Lets assume a given class.
 
 Notice the following properties:
 
-The classname {\bf GcdDomainType} is escaped so that it will 
+The classname *GcdDomainType* is escaped so that it will 
 retain its case no matter which lisp is used.
 
-The classname {\bf GcdDomainType} ends with ``Type''.
+The classname *GcdDomainType* ends with ``Type''.
 
 The classes it depends on all end with ``Type''.
 
@@ -7977,7 +7902,7 @@ as it is used in printing the object.
 
 The level attribute is read-only.
 
-The {\bf GcdDomain} variable adds its name to the global
+The *GcdDomain* variable adds its name to the global
 variable *Categories* so we maintain a current list.
 
 We need to call make-instance at compile time in order
@@ -12916,11 +12841,11 @@ Value = NIL
 \index[cat]{Group!Category}
 \index[cat]{Category!Group}
 \index[cat]{GROUP}
-Voevodsky's \cite{Gray18a} definition of a group:
+Voevodsky's [cite:@Gray18a] definition of a group:
 
-Let $U$ be a {\sl universe}
+Let $U$ be a /universe/
 
-A {\sl group} in $U$ is a sequence
+A /group/ in $U$ is a sequence
 ${(G,e,i,m,\lambda,\rho,\lambda^\prime,\rho^\prime,\alpha,\iota)}$,
 where
 \begin{itemize}
@@ -17495,7 +17420,7 @@ with CATEGORY (not domain) ancestor information. This later provides
 the information that goes into interp.daase This *ancestors-hash*
 does not exist at normal runtime (it can be made by a call to
 genCategoryTable). Note that the ancestor information in
-,*ancestors-hash* (and hence interp.daase) involves \verb|#1|, \verb|#2|, etc
+,*ancestors-hash* (and hence interp.daase) involves =#1=, =#2=, etc
 instead of R, Coef, etc. The latter thingies appear in all
 .nrlib/index.kaf files. So we need to be careful when we )lib
 categories and update the ancestor info.
@@ -45682,19 +45607,19 @@ Value = NIL
 
 * Support code
 
-The {\bf SigSort} function is called {\bf during build} 
+The *SigSort* function is called *during build* 
 \index[doc]{SigSort}
 from the Makefile to sort the
-{\bf signature.tex} file. The {\bf signatures.tex} file contains
+*signature.tex* file. The *signatures.tex* file contains
 lines like:
 #+begin_example
   \hyperpage {46}\hskip 1em\relax pretty : treeform $\rightarrow $ values
 #+end_example
 which is the tex code to generate the signature for the function
-{\bf pretty}
+*pretty*
 \[pretty : treeform \rightarrow values\]
 
-The {\bf SigSort} function is called to sort these lines. The sort 
+The *SigSort* function is called to sort these lines. The sort 
 is by name so we select out the name, using it as a hash key to
 remember the whole line. Finally we sort the hash keys and then
 walk the sorted keys to output the sorted lines.
@@ -47047,26 +46972,26 @@ part of the document, but rather a collection of notes for later.
 
 ** Parsing and Printing Logic
 
-Harrison's book \cite{Harr09} has an appendix.
+Harrison's book [cite:@Harr09] has an appendix.
 
 ** Partial Types
 
-Robert Constable \cite{Cons12}
+Robert Constable [cite:@Cons12]
 
 Partial Types as a type return value for functions that do not complete.
 
 ** Abstractions -- Hickey
 
-Rick Hickey \cite{Hick12a}
+Rick Hickey [cite:@Hick12a]
 
 Make categories for data abstractions from clojure
 Sorted, indexed, reversible, sequence 
 
 ** SELECT -- Hickey Spec
 
-Rich Hickey \cite{Hick18}
+Rich Hickey [cite:@Hick18]
 
-Given a tree, the {\bf select} function can extract anything from 
+Given a tree, the *select* function can extract anything from 
 anywhere in the tree, root, inner nodes, or leaves to require that
 those things are available to the type required by a function.
 
@@ -47106,12 +47031,12 @@ Here we need street, city, state, and zip from the address subtree
 
 ** A GCD proof
 
-Mao \cite{Maox20} gives the following proof.
+Mao [cite:@Maox20] gives the following proof.
 
 Let $a=bq+r$, where $a$, $b$, $q$, and $r$ are integers. Then 
 $gcd(a,b)=gcd(b,r)$.
 
-{\bf Proof}
+*Proof*
 
 Supposed $d\vert a$ and $d\vert b$, then we have
 \[\begin{array}{rcl}
@@ -47143,11 +47068,11 @@ Because $gcd(a,b)\le gcd(b,r)$ and
 $gcd(b,r)\le gcd(a,b)$, we must have
 $gcd(a,b)=gcd(b,r)$.
 
-{\bf QED}
+*QED*
 
 ** Specification, partial correctness, and completeness
 
-In Kowalski \cite{Kowa84} we find:
+In Kowalski [cite:@Kowa84] we find:
 
 We have shown that the program is partially correct by showing that it
 is logically implied by its specification. This may be
@@ -47164,12 +47089,12 @@ input-output relation.) This means that
 Where $X \vdash Y$ means that conclusion $Y$ can be proved from
 assumptions $X$. Thus not only does $S$ imply $P(x y)$, it also
 'computes' it, in the sense that its instances can be derived by means
-of a mechanical theorem-proving procedure. Suppose {\bf Spec} and 
-{\bf Prog} are a complete specification and a program, respecitvely,
+of a mechanical theorem-proving procedure. Suppose *Spec* and 
+*Prog* are a complete specification and a program, respecitvely,
 defining a relation $P(x y)$. Then to say that the program is
-{\sl partially correct} relative to the specification is to say that
-every instance of $P$ that is a consequence of {\bf Prog} is also a
-consequence of {\bf Spec}, i.e.
+/partially correct/ relative to the specification is to say that
+every instance of $P$ that is a consequence of *Prog* is also a
+consequence of *Spec*, i.e.
 #+begin_example
    if Prog |- P(x y) then Spec |- P(x y)
 #+end_example
@@ -47183,7 +47108,7 @@ i.e.
 #+begin_example
    if Spec |- P(x y) then Prog |- P(x y)
 #+end_example
-then the program is {\sl complete} in the sense that the program
+then the program is /complete/ in the sense that the program
 derives every instance of $P$ that is defined by the
 specification. This holds if
 #+begin_example
@@ -47191,15 +47116,15 @@ specification. This holds if
 #+end_example
 
 Notice that to prove correctness or completeness we can replace either 
-{\bf Spec} or {\bf Prog} by any stronger set of sentences that implies
+*Spec* or *Prog* by any stronger set of sentences that implies
 the same atomic relations. This justifies the use of the iff form of
 definitions and induction in such proofs. Thus it is closely related
-to Hoare's identification of a program with the {\sl strongest}
+to Hoare's identification of a program with the /strongest/
 predicate that describes its behavior.
 
 Notice also that to prove a specification implies a program, we need
 to show that the specification logically implies each clause in the
-program. Thus the {\sl complexity} of proving partial correctness is
+program. Thus the /complexity/ of proving partial correctness is
 linear in the number of clauses of the program, and the complexity of
 proving completeness is linear in the number of clause in the
 specification.
@@ -47208,11 +47133,11 @@ specification.
 
 Assuming loop structure where
 \begin{itemize}
-\item {\bf header} processing before the loop and newly declared
+\item *header* processing before the loop and newly declared
 variables 
-\item {\bf condition} when to stop the loop
-\item {\bf loopbody} changes variables and pararmeters passed in
-\item {\bf tail} what happens after the loop and return result
+\item *condition* when to stop the loop
+\item *loopbody* changes variables and pararmeters passed in
+\item *tail* what happens after the loop and return result
 \end{itemize}
 
 #+begin_example
@@ -47241,29 +47166,29 @@ RecurInner(params, header_vars) {
 
 Common lisp type system is a ``complemented lattice''
 
-{\bf Common types} : integer, number, string, keyword, array, cons, list,
+*Common types* : integer, number, string, keyword, array, cons, list,
 vector, macro, function, atom
 
-{\bf Top} t has everything as an element
+*Top* t has everything as an element
 
-{\bf Unit} null has one element named nil
+*Unit* null has one element named nil
 
-{\bf Bottom} nil has no elements at all
+*Bottom* nil has no elements at all
 
-{\bf Union} (or $\tau_1\ldots \tau_n$) has elements any element in any
+*Union* (or $\tau_1... \tau_n$) has elements any element in any
 type $\tau$
 
-{\bf Intersection} (and $\tau_1\ldots \tau_n$) has elements that are
+*Intersection* (and $\tau_1... \tau_n$) has elements that are
 in all the types $\tau$
 
-{\bf Complement} (not $\tau$) has elements that are not of type $\tau$ 
+*Complement* (not $\tau$) has elements that are not of type $\tau$ 
 
-{\bf Enumeration} (member $x_1\ldots x_n$) is the type consisting
+*Enumeration* (member $x_1... x_n$) is the type consisting
 of only the elements $x$
 
-{\bf Singleton} (eql $x$) is the type with only the element $x$
+*Singleton* (eql $x$) is the type with only the element $x$
 
-{\bf Comprehension} (satisfies $p$) is the type of values that satisfy
+*Comprehension* (satisfies $p$) is the type of values that satisfy
 predicate $p$
 
 The universal type ``t'' has everything as its value
@@ -47289,7 +47214,7 @@ The type ``null'' contains the one value ``nil''
 (typep 4 '(eql 3)) ;; -> false
 #+end_example
 
-``(member $x_0\ldots x_n$)'' denotes the enumerated type consisting of
+``(member $x_0... x_n$)'' denotes the enumerated type consisting of
 only the $x_i$
 #+begin_example
 (typep 3  '(member 3 x "c")) ;; -> true
@@ -47309,7 +47234,7 @@ only the $x_i$
 (booleanp nil) ;; -> true
 #+end_example
 
-The {\tt check-type} will return nil if the type passes, otherwise it
+The =check-type= will return nil if the type passes, otherwise it
 throws an error
 #+begin_example
 (setq x 12)
@@ -47354,7 +47279,7 @@ also
 
 ** Polymorphism
 
-\subsection{Polymorphism \cite{Lisk12}}
+\subsection{Polymorphism [cite:@Lisk12]}
 
 We don't just want a set, we want polymorphism or
 generics, as they are called today. We wanted to
@@ -47410,7 +47335,7 @@ beyond the capabilities of the compiler.
 
 ** Hardware Proof Checking
 
-\subsection{Mealy/Moore equivalence \cite{Fade17}}
+\subsection{Mealy/Moore equivalence [cite:@Fade17]}
 
 Prove that if a Mealy machine is strongly connected and completely
 specified, the corresponding Moore machine will also be strongly
@@ -47443,19 +47368,19 @@ transition and its corresponding output will be defined, and the
 states resulting due to such states will also have completely
 specified transitions.
 
-{\sl Strongly Connected Machine:} If for any two states $S_i$, $S_j$
+/Strongly Connected Machine:/ If for any two states $S_i$, $S_j$
 of the machine, there exists a finite sequence of input characters
 that can make the machine transition from $S_i$ to $S_j$, the machine
 is strongly connected.
 
-{\sl Completely Specified Machine:} Consider $M=(I,O,S,F,Z)$
-- {\bf I} : Input Symbols
-- {\bf O} : Output Symbols
-- {\bf S} : Set of States
-- {\bf F} : Transition function $F : S \times I\rightarrow S$
-- {\bf Z} : Output function
-- {\bf Z} : $S\rightarrow O$ (Moore)
-- {\bf Z} : $S\times I\rightarrow O$ (Mealy)
+/Completely Specified Machine:/ Consider $M=(I,O,S,F,Z)$
+- *I* : Input Symbols
+- *O* : Output Symbols
+- *S* : Set of States
+- *F* : Transition function $F : S \times I\rightarrow S$
+- *Z* : Output function
+- *Z* : $S\rightarrow O$ (Moore)
+- *Z* : $S\times I\rightarrow O$ (Mealy)
 
 Now, if for every $(p,x)$ such that $(p\in S, x\in I)$ there exist
 some $q\in S$ and $y\in O$ such that $F(p,x)=q$ and $Z(p,x)=y$
@@ -47489,7 +47414,7 @@ $\delta(q_i,a)=(q_j,b_2)$, which shows it is completely specified.
 
 ** Specification
 
-\subsection{Binary Search \cite{Guen19}}
+\subsection{Binary Search [cite:@Guen19]}
 
 A Binary Search in OCaml
 #+NAME: BS
@@ -47508,20 +47433,20 @@ let rec bsearch a v i j =
 
 #+end_src
 
-There is an informal specification in the comments. The {\tt bsearch}
+There is an informal specification in the comments. The =bsearch=
 program takes as input an array of integers $a$ (which is assumed to be
 sorted), a value $v$ which is the target of the search, and lower and
 upper bounds $i$ and $j$. If $v$ can be found between indices $i$
-(included) and $j$ (excluded), the {\tt bsearch} returns its index in
+(included) and $j$ (excluded), the =bsearch= returns its index in
 the array; otherwise it returns $-1$.
 
-The Separation Logic specification for {\tt bsearch} is 
+The Separation Logic specification for =bsearch= is 
 
 $\forall a~xs~v~i~j$\\
-$0\le i\le |xs| \land 0 \le j \le |xs| \land {\tt sorted\ }xs\Rightarrow\\
-\{a \leadsto {\tt Array\ } xs\} {\tt\ bsearch\ } a~v~i~j~
-\{\lambda k.~a\leadsto {\tt Array\ }xs *
-[{\tt bsearch\_correct\ }xs~v~i~j~k]\}$
+$0\le i\le |xs| \land 0 \le j \le |xs| \land =sorted\=xs\Rightarrow\\
+\{a \leadsto =Array\= xs\} {\tt\ bsearch\ } a~v~i~j~
+\{\lambda k.~a\leadsto =Array\=xs *
+[=bsearch\_correct\=xs~v~i~j~k]\}$
 
 This statement consists of a Hoare triple $(\{H\}~t~\{Q\})$, after
 quantification (in the logic) over suitable arguments (the array
@@ -47532,8 +47457,8 @@ abuse of notation but a feature of CFML, which reflects pure OCaml
 values directly as corresponding values in Coq. We require the indices
 $i$ and $j$ to be in bounds, and the contents of the array $xs$ to be
 sorted. The Hoare triple which forms the conclusion of the statement
-relates an OCaml expression (here, a call to {\tt bsearch},
-"{\tt bsearch\ }$a~v~i~j$") with a pre-condition and post-condition
+relates an OCaml expression (here, a call to =bsearch=,
+"=bsearch\=$a~v~i~j$") with a pre-condition and post-condition
 describing the state of the heap before and after the execution,
 respectively. Both pre- and post-conditions are expressed using
 Separation Logic assertions; the post-condition is additionally
@@ -47541,32 +47466,32 @@ parameterized by the value returned by the function (here, named $k$).
 
 Generally speaking, Separation Logic assertions can be read in terms
 of ownership. For instance, the Separation Logic formula
-"$a\leadsto {\tt Array\ }xs$" asserts the unique ownership of an
+"$a\leadsto =Array\=xs$" asserts the unique ownership of an
 heap-allocated array, starting at local $a$, whose contents are
 described by the list $xs$. The operator $*$ should be read as a
 conjunction; and $[\cdot]$ lifts an ordinary Coq proposition as a
 Separation Logic assertion. To express the fact that the value
-returned by {\tt bsearch} is indeed correct, we rely on an auxiliary
-definition {\tt bsearch\_correct}, which expresses the functional
-correctness property of {\tt bsearch}. Thereafter, we write "$xs[i]$",
+returned by =bsearch= is indeed correct, we rely on an auxiliary
+definition =bsearch\_correct=, which expresses the functional
+correctness property of =bsearch=. Thereafter, we write "$xs[i]$",
 where $xs$ is a Coq list and $i$ an integer, to denote the $i$-th
 element of the list $xs$ (or a dummy value if $i$ is not a valid index).
 
-{\bf Functional Correctness of {\tt bsearch}}
+*Functional Correctness of =bsearch=*
 
-${\tt bsearch\_correct\ }xs~v~i~j~k \overset{\Delta}{=}\\
+$=bsearch\_correct\=xs~v~i~j~k \overset{\Delta}{=}\\
 (k=-1 \land \forall~p.~i\le p < j \Rightarrow xs[p]\ne v)\\
 \land (i\le k< j \land xs[k]=v)$
 
 Assuming the preconditions, we have the following facts.
 \begin{itemize}
-\item {\tt bsearch} will run and terminate without crashing (a
+\item =bsearch= will run and terminate without crashing (a
 consequence of the definition of Hoare triples)
-\item {\tt bsearch} will not modify the contents of the input array 
-("$a\leadsto {\tt Array\ }xs$" appears in both the pre- and
+\item =bsearch= will not modify the contents of the input array 
+("$a\leadsto =Array\=xs$" appears in both the pre- and
 post-conditions, with the same $xs$)
-\item {\tt bsearch} will return a correct result, according to the 
-{\tt bsearch\_correct} predicate
+\item =bsearch= will return a correct result, according to the 
+=bsearch\_correct= predicate
 \end{itemize}
 
 A technical remark: one might wonder why the ``pure'' assumptions on
@@ -47574,19 +47499,19 @@ $i$, $j$ and $xs$ are not part of the triple precondition, and instead
 are lifted as an implication at the meta-level (in the logic of
 Coq). Formally speaking, these two options are equivalent. That is,
 one could equivalently prove the following specification for
-{\tt bsearch}
+=bsearch=
 
 $\forall a~xs~v~i~j\\
-\{a\leadsto {\tt Array\ }xs * [0\le i\le |xs| \land 
-0\le j\le |xs| \land {\tt sorted\ }xs]\}\\
-{\tt bsearch\ }a~v~i~j\\
-\{\lambda k.~a\leadsto {\tt Array\ }xs * 
-[{\tt bsearch\_correct\ }xs~v~i~j~k]\}$
+\{a\leadsto =Array\=xs * [0\le i\le |xs| \land 
+0\le j\le |xs| \land =sorted\=xs]\}\\
+=bsearch\=a~v~i~j\\
+\{\lambda k.~a\leadsto =Array\=xs * 
+[=bsearch\_correct\=xs~v~i~j~k]\}$
 
 
 ** Parsing
 
-\subsection{Top Down Operator Precedence \cite{Prat73}\cite{Bend20}}
+\subsection{Top Down Operator Precedence [cite:@Prat73][cite:@Bend20]}
 
 #+NAME: TDOP
 #+begin_src common-lisp :noweb yes
@@ -47651,22 +47576,22 @@ def parse(program):
 
 #+end_src
 
-The {\bf lbp} is the left binding power. For an infix operator, it
+The *lbp* is the left binding power. For an infix operator, it
 tells us how strongly the operator binds to the argument on its left.
 
-The {\bf rbp} is the right binding power. 
+The *rbp* is the right binding power. 
 
-The {\bf nud} (null denotation) is the prefix handler.
+The *nud* (null denotation) is the prefix handler.
 
-The {\bf led} (left denotation) is the left handler, used to handle
+The *led* (left denotation) is the left handler, used to handle
 infix operators.
 
-The {\bf expression} handler function does the work. Operator handlers
-call it and pass in an {\bf rbp}. It consumes tokens until it meets a
+The *expression* handler function does the work. Operator handlers
+call it and pass in an *rbp*. It consumes tokens until it meets a
 token whose left binding power is equal or lower than the right
-binding power, that is until {\bf lbp <= rbp}.
+binding power, that is until *lbp <= rbp*.
 
-Handlers of operators call {\bf expression} to process their
+Handlers of operators call *expression* to process their
 arguments, providing it with their binding power to make user it gets
 just the right tokens from the input. 
 
@@ -47707,10 +47632,10 @@ level that is active at the moment. This instance awaits the results
 of the higher precedence instance and keeps going, until it has to
 stop itself and return to its caller.
 
-{\bf Handling Unary Operators}
+*Handling Unary Operators*
 
 TDOP makes an explicit distinction between unary and binary operators,
-encoding the difference between the {\bf nud} and {\bf let} methods.
+encoding the difference between the *nud* and *let* methods.
 For example, the subtraction operator becomes
 #+NAME: TDOP
 #+begin_src common-lisp :noweb yes
@@ -47723,23 +47648,23 @@ class operator_sub_token(object):
 
 #+end_src
 
-The {\bf nud} handles the unary (prefix) form of minus. It has no left
+The *nud* handles the unary (prefix) form of minus. It has no left
 argument (since it is a prefix), and it negates its right argument,
-The binding power passed into {\bf expression} is high since infix
-minus has a high precedence, higher than multiplication. The {\bf led}
+The binding power passed into *expression* is high since infix
+minus has a high precedence, higher than multiplication. The *led*
 handles the infix case similarly to the handlers of $+$ and $*$.
 
-{\bf Right Associative Operators}
+*Right Associative Operators*
 
 
 
 ** Program proof
 
-See Altenkirch et al. ``Why Dependent Types Matter'' \cite{Alte05}
+See Altenkirch et al. ``Why Dependent Types Matter'' [cite:@Alte05]
 
 ** Notation
 
-From Altenkirch \cite{Alte18}
+From Altenkirch [cite:@Alte18]
 
 \[A\rightarrow B \equiv \Pi n:N.A^n \equiv \forall(x:A),B\]
 \[A\rightarrow B \equiv \Pi~-~:~A.B\]
@@ -47749,7 +47674,7 @@ From Altenkirch \cite{Alte18}
 
 ** Data Description Language
 
-Jenkins \cite{Jenk18} proposes  combination of sum and product 
+Jenkins [cite:@Jenk18] proposes  combination of sum and product 
 types, e.g.
 #+begin_example
 data OrderResponse
@@ -47766,9 +47691,9 @@ data OrderResponse
 
 ** Interactive Proof Semantics
 
-\subsection{Lean Semantics \cite{Carn19b}}
+\subsection{Lean Semantics [cite:@Carn19b]}
 
-{\bf The Untyped Lambda Calculus}
+*The Untyped Lambda Calculus*
 
 \[e:=x~|~ e~e~|~\lambda~x.~e\]
 
@@ -47787,7 +47712,7 @@ data OrderResponse
 \UnaryInfC{$(\lambda x.~e^\prime)~e \leadsto e^\prime[e/x]$}
 \end{prooftree}
 
-{\bf Simple Type Theory}
+*Simple Type Theory*
 
 \[\tau ::= \iota~|~\tau \rightarrow \tau\]
 
@@ -47808,7 +47733,7 @@ data OrderResponse
 \alpha\rightarrow\beta$} 
 \end{prooftree}
 
-{\bf Dependent Type Theory}
+*Dependent Type Theory*
 
 \[\tau ::= \iota~|~\tau \rightarrow \tau\]
 
@@ -47892,7 +47817,7 @@ introducing universes:
 
 ** Small Step Operational Semantics
 
-\subsection{Sylvan Clebsch \cite{Cleb19}}
+\subsection{Sylvan Clebsch [cite:@Cleb19]}
 
 \[\begin{array}{lclcl}
 x,y,z & \in & LocalID & &\\
@@ -47956,7 +47881,7 @@ then we evaluate to $e_1$ and drop $e_2$:
 \begin{prooftree}
 \AxiomC{$x\in dom(\rho)$}
 \AxiomC{$\rho(x)\ne 0$}
-\BinaryInfC{$\rho,{\tt if\ }(x)\ \{e_1\}{\tt\ else\ }\{e_2\}
+\BinaryInfC{$\rho,=if\=(x)\ \{e_1\}{\tt\ else\ }\{e_2\}
 \leadsto \rho,e_1$}
 \end{prooftree}
 
@@ -47966,20 +47891,20 @@ then we evaluate to $e_1$ and drop $e_2$:
 \begin{prooftree}
 \AxiomC{$x\in dom(\rho)$}
 \AxiomC{$\rho(x) = 0$}
-\BinaryInfC{$\rho,{\tt if\ }(x)\ \{e_1\}{\tt\ else\ }\{e_2\}
+\BinaryInfC{$\rho,=if\=(x)\ \{e_1\}{\tt\ else\ }\{e_2\}
 \leadsto \rho,e_2$}
 \end{prooftree}
 
 These rules account for speculative execution.
 \begin{prooftree}
 \AxiomC{}
-\UnaryInfC{$\rho,{\tt if\ }(*)\ \{e_1\}{\tt\ else\ }\{e_2\}
+\UnaryInfC{$\rho,=if\=(*)\ \{e_1\}{\tt\ else\ }\{e_2\}
 \leadsto \rho,e_1$}
 \end{prooftree}
 
 \begin{prooftree}
 \AxiomC{}
-\UnaryInfC{$\rho,{\tt if\ }(*)\ \{e_1\}{\tt\ else\ }\{e_2\}
+\UnaryInfC{$\rho,=if\=(*)\ \{e_1\}{\tt\ else\ }\{e_2\}
 \leadsto \rho,e_2$}
 \end{prooftree}
 
@@ -47987,7 +47912,7 @@ Loops
 \begin{prooftree}
 \AxiomC{$x\in dom(\rho)$}
 \AxiomC{$\rho(x)\ne 0$}
-\BinaryInfC{$\rho,{\tt while}(x)\{e\} \leadsto
+\BinaryInfC{$\rho,=while=(x)\{e\} \leadsto
 \rho,e;{\tt\ while}(x)\{e\}$}
 \end{prooftree}
 
@@ -47995,7 +47920,7 @@ Loop termination
 \begin{prooftree}
 \AxiomC{$x\in dom(\rho)$}
 \AxiomC{$\rho(x)= 0$}
-\BinaryInfC{$\rho,{\tt while}(x)\{e\} \leadsto \rho,0$}
+\BinaryInfC{$\rho,=while=(x)\{e\} \leadsto \rho,0$}
 \end{prooftree}
 
 Heaps and Threads
@@ -48042,7 +47967,7 @@ We select a thread to execute, which may terminate.
 
 ** Univalence and Homotopy Type Theory
 
-\subsection{Vladimir Voevodsky \cite{Gray18}}
+\subsection{Vladimir Voevodsky [cite:@Gray18]}
 
 The Univalence Axiom
 \[(X = Y) \overset{\cong}{=} (X \cong Y)\]
@@ -48051,7 +47976,7 @@ The Univalence Axiom
 an equivalence between X and Y then you can promote that to an
 equality.
 
-A function $f:X\rightarrow Y$ is an {\sl equivalence} if, for each $y$
+A function $f:X\rightarrow Y$ is an /equivalence/ if, for each $y$
 in $Y$, there is just one $x$ in $X$ with $f(x) = y$.
 
 The notation for a function being an equivalence is 
@@ -48060,7 +47985,7 @@ $f : X \overset{\overset{\cong}{=}}{\longrightarrow} Y$
 The notation for the type of all equivalences between $X$ and $Y$ is
 $X \overset{\cong}{=} Y$
 
-In Coq (by Voevodsky \cite{Gray18a})
+In Coq (by Voevodsky [cite:@Gray18a])
 
 #+begin_example
 Definition eqweqmap {T1 T2 : UU} (e: paths T1 T2) : weq T1 T2.
@@ -48068,13 +47993,13 @@ Proof. intros, destruct e, apply idweq, Defined.
 
 Axiom univalenceaxiom : forall T1 T2 : UU, isweq (@eqweqmap T1 T2).
 #+end_example
-where {\tt isweq} is the $\overset{\cong}{=}$ relation
+where =isweq= is the $\overset{\cong}{=}$ relation
 
 Voevodsky's definition of a group:
 
-Let $U$ be a {\sl universe}
+Let $U$ be a /universe/
 
-A {\sl group} in $U$ is a sequence
+A /group/ in $U$ is a sequence
 ${(G,e,i,m,\lambda,\rho,\lambda^\prime,\rho^\prime,\alpha,\iota)}$,
 where
 \begin{itemize}
@@ -48109,7 +48034,7 @@ proved yesterday because they also formalized it in the computer.
 What is needed is some sort of way to promote equivalences to
 something that can be used in the logic of the language to transport
 theorems between equivalent situations.
--- Dan Grayon \cite{Gray18}
+-- Dan Grayon [cite:@Gray18]
 \end{quote}
 
 ** Various Logics
@@ -48121,7 +48046,7 @@ theorems between equivalent situations.
              text height=1.5ex, text depth=0.25ex]
   { & \lambda\omega & & \lambda P\omega \\
     \lambda 2 & & \lambda P 2 \\
-    & \lambda\underline{\omega} & & \lambda P\underline{\omega} \\
+    & \lambda_\omega_ & & \lambda P_\omega_ \\
     \lambda{\to} & & \lambda P\\
   };
 \path[]
@@ -48142,16 +48067,16 @@ theorems between equivalent situations.
 where
 \[\begin{array}{|l|l|} 
 \hline
-{\tt System} & {\tt Logic} \\
+=System= & =Logic= \\
 \hline
-\lambda{\to} & {\tt (First\ Order)\ Propositional\ Calculus}\\
-\lambda 2    & {\tt Second\ Order\ Propositional\ Calculus}\\
-\lambda\underline{\omega} & {\tt Weakly\ Higher\ Order\ Propositional\ Calculus}\\
-\lambda\omega & {\tt Higher\ Order\ Predicate\ Calculus}\\
-\lambda P & {\tt (First\ Order)\ Predicate\ Logic}\\
-\lambda P2 & {\tt Second\ Order\ Predicate\ Calculus}\\
-\lambda P\underline{\omega} & {\tt Weak\ Higher\ Order\ Predicate\ Calculus}\\
-\lambda P\omega & {\tt Calculus\ of\ Constructions}\\
+\lambda{\to} & =(First\ Order)\ Propositional\ Calculus=\\
+\lambda 2    & =Second\ Order\ Propositional\ Calculus=\\
+\lambda_\omega_ & =Weakly\ Higher\ Order\ Propositional\ Calculus=\\
+\lambda\omega & =Higher\ Order\ Predicate\ Calculus=\\
+\lambda P & =(First\ Order)\ Predicate\ Logic=\\
+\lambda P2 & =Second\ Order\ Predicate\ Calculus=\\
+\lambda P_\omega_ & =Weak\ Higher\ Order\ Predicate\ Calculus=\\
+\lambda P\omega & =Calculus\ of\ Constructions=\\
 \hline
 \end{array}\]
 
@@ -48161,7 +48086,7 @@ Moving along the Z axis (back) $\rightarrow$ types depend on types
 
 ** Lean and Theorem Proving
 
-\subsection{Jason Rute \cite{Rute20}}
+\subsection{Jason Rute [cite:@Rute20]}
 
 A trivial program to add a goal to the list of goals
 from a command line input.
@@ -48233,14 +48158,13 @@ meta def main : io unit :=
 
 #+end_example
   
-\subsection{Robert Y. Lewis \cite{Lewi20}}
+\subsection{Robert Y. Lewis [cite:@Lewi20]}
 
-This is an example from Lean 3. Note the use of the {\tt carrier}
+This is an example from Lean 3. Note the use of the =carrier=
 which mirrors the Axiom Rep.
 
-\noindent
 structure submodule (R : Type u) (M : Type v) [semiring R]\\
-\hspace*{0.2cm}\verb|[add_comm_monoid M] [module R M]| :=\\
+\hspace*{0.2cm}=[add_comm_monoid M] [module R M]= :=\\
 (carrier : set M)\\
 (zero : (0:M) $\in$ carrier)\\
 (add : $\forall$ \{x,y\}, x $\in$ carrier $\rightarrow$
@@ -48349,9 +48273,8 @@ The Axiom NNI operations are:
 #+end_example
 
 So casting this in Lean might look like:\\
-\noindent
 structure NonNegativeInteger (R : Type u) (M : Type v) [semiring R]\\
-\hspace*{0.2cm}\verb|[add_comm_monoid M] [module R M]| :=\\
+\hspace*{0.2cm}=[add_comm_monoid M] [module R M]= :=\\
 (carrier : set M)\\
 (zero : (0:M) $\in$ carrier)\\
 (add : $\forall$ \{x,y\}, x $\in$ carrier $\rightarrow$
@@ -48360,9 +48283,9 @@ y $\in$ carrier $\rightarrow$ x + y $\in$ carrier)\\
 c : x $\in$ carrier)
 
 
-\subsection{Andrej Bauer \cite{Baue07}}
+\subsection{Andrej Bauer [cite:@Baue07]}
 
-Given General Indeuctive Types, the theory {\tt Branching}
+Given General Indeuctive Types, the theory =Branching=
 describes that a branching type consists of a set $s$ and a set $t$
 depending on $s$. The theory $W$ is parameterized by a branching type
 $B$. It specifies a set $w$ of well-founded trees and a tree-forming
@@ -48372,9 +48295,9 @@ Given a branching type $x$ and a map
 $f~:~B.t(x) \rightarrow w$, $tree~x~f$ is the tree whose root has
 branching type $x$ and whose successor labeled by $l\in~B.t(x)$ is the
 tree $f(l)$. The inductive nature of $w$ is expressed with the axiom 
-{\tt induction}, which states that for every property $M.p$, if $M.p$
+=induction=, which states that for every property $M.p$, if $M.p$
 is an inductive property then every tree satisfies it. A property is
-said to be {\sl inductive} if a tree $tree~x~f$ satisfies it whenever
+said to be /inductive/ if a tree $tree~x~f$ satisfies it whenever
 all its successors satisfy it.
 
 Parameter W : [B : Branching] $\rightarrow$\\
@@ -48471,7 +48394,7 @@ sig
 end
 #+end_example
 
-From Bauer \cite{Baue19}
+From Bauer [cite:@Baue19]
 
 - Type : Type ... a paradoxical universe of types
 - $\Pi (x : T_1), T_2$ ... dependent products
@@ -48483,19 +48406,19 @@ From Bauer \cite{Baue19}
 - Axiom x : T. ... assume a constant
 - Check e. ... check the type of an expression
 - Eval e. ... evaluate an expression
-- Load "{\tt <file>}". ... load a file
+- Load "=<file>=". ... load a file
 
-From Bauer \cite{Baue19a}
+From Bauer [cite:@Baue19a]
 
 \begin{itemize}
-\item $\Gamma \vdash A {\tt type}$ is a type
+\item $\Gamma \vdash A =type=$ is a type
 \item $\Gamma \vdash t : A$ is a term of type $A$
 \item $\Gamma \vdash A \equiv B$ types $A$ and $B$ are equal
 \item $\Gamma \vdash t \equiv u : A$ terms $t$ and $u$ of type $A$ are
 equal 
 \end{itemize}
 
-From Bauer \cite{Baue19a}, Rules for dependent products
+From Bauer [cite:@Baue19a], Rules for dependent products
 \begin{itemize}
 \item rule $\Pi$ (A type) (\{x:A\} B type) type
 \item rule $\lambda$ (A type) (\{x:A\} B type) 
@@ -48512,17 +48435,17 @@ From Bauer \cite{Baue19a}, Rules for dependent products
 
 ** Verbx Regular Expressions
 
-- \verb,.,    \verb,.  A.C,   match any character
-- \verb,[],   \verb,[ABab][A-Ca-c], match any character in list
-- \verb,[^],  \verb,[^Z][^a], match all except characters in list
-- \verb,^,    \verb,^C,       next token must be the first part of string
-- \verb,$,    \verb,[Ca]t$,   prev token must be the last part of string
-- \verb,*,    \verb,[ab]*,    match 0 or more copies
-- \verb,+,    \verb,[ab]+,    match 1 or more copies
-- \verb,\|,   \verb,c\|a,     match either the 1st token or the second
-- \verb,\(\), \verb,\(CA\)+,  combine multiple tokens into one
+- =.=    =.  A.C=   match any character
+- =[]=   =[ABab][A-Ca-c]= match any character in list
+- =[^]=  =[^Z][^a]= match all except characters in list
+- =^=    =^C=       next token must be the first part of string
+- =$=    =[Ca]t$=   prev token must be the last part of string
+- =*=    =[ab]*=    match 0 or more copies
+- =+=    =[ab]+=    match 1 or more copies
+- =\|=   =c\|a=     match either the 1st token or the second
+- =\(\)= =\(CA\)+=  combine multiple tokens into one
 
-\subsection{methods \cite{verb20}}
+\subsection{methods [cite:@verb20]}
 
 #+NAME: verbx
 #+begin_src common-lisp :noweb yes
@@ -48531,18 +48454,18 @@ From Bauer \cite{Baue19a}, Rules for dependent products
 
 #+end_src
 
-{\bf add} -- Append a transformed value to internal expression that
+*add* -- Append a transformed value to internal expression that
 will compiled. This method should be private.
 
-{\bf startOfLine} -- append \verb,^, at start of expression
+*startOfLine* -- append =^= at start of expression
 
-{\bf find} -- \verb,"(?:" + value + ")",
+*find* -- ="(?:" + value + ")"=
 
-{\bf then} -- shorthand for {\bf find}
+*then* -- shorthand for *find*
 
-{\bf maybe} -- 0 or 1 times \verb,"(?:" + value + ")?",
+*maybe* -- 0 or 1 times ="(?:" + value + ")?"=
 
-{\bf anything} -- matches everything \verb,(?:.*),
+*anything* -- matches everything =(?:.*)=
 
 #+NAME: verbx
 #+begin_src common-lisp :noweb yes
@@ -48551,9 +48474,9 @@ will compiled. This method should be private.
 
 #+end_src
 
-{\bf anythingBut} -- \verb,"(?:[^" + value + "]*)",
+*anythingBut* -- ="(?:[^" + value + "]*)"=
 
-{\bf something} -- matches at least one char \verb,(?:.+),
+*something* -- matches at least one char =(?:.+)=
 
 #+NAME: verbx
 #+begin_src common-lisp :noweb yes
@@ -48562,12 +48485,12 @@ will compiled. This method should be private.
 
 #+end_src
 
-{\bf somethingBut} -- matches at least one char not in value
-\verb,"(?:[^"+value+"]+)",
+*somethingBut* -- matches at least one char not in value
+="(?:[^"+value+"]+)"=
 
-{\bf replace} -- return replaced string
+*replace* -- return replaced string
 
-{\bf lineBreak} -- mathes linebreak \verb,"(?:(?:\n)|(?:\r\n))",
+*lineBreak* -- mathes linebreak ="(?:(?:\n)|(?:\r\n))"=
 
 #+NAME: verbx
 #+begin_src common-lisp :noweb yes
@@ -48576,7 +48499,7 @@ will compiled. This method should be private.
 
 #+end_src
 
-{\bf br} -- shorthand for {\bf linebreak}
+*br* -- shorthand for *linebreak*
 
 #+NAME: axiom.bib
 #+begin_src common-lisp :noweb yes
@@ -48585,13 +48508,13 @@ will compiled. This method should be private.
 
 #+end_src
 
-{\bf tab} -- match tab character \verb,"\t",
+*tab* -- match tab character ="\t"=
 
-{\bf word} -- atches at least one word \verb,"\w+",
+*word* -- atches at least one word ="\w+"=
 
-{\bf anyOf} -- matches any char in value \verb,"(?:["+value+"])",
+*anyOf* -- matches any char in value ="(?:["+value+"])"=
 
-{\bf any} -- shorthand for {\bf anyOf}
+*any* -- shorthand for *anyOf*
 
 #+NAME: axiom.bib
 #+begin_src common-lisp :noweb yes
@@ -48600,26 +48523,26 @@ will compiled. This method should be private.
 
 #+end_src
 
-{\bf range}
+*range*
 
-{\bf withAnyCase} -- append modifier \verb,"i",
+*withAnyCase* -- append modifier ="i"=
 
-{\bf stopAtFirst} -- remove modifier \verb,"g", if \verb,"true",,
-else append modifier \verb,"g",
+*stopAtFirst* -- remove modifier ="g"= if ="true"=,
+else append modifier ="g"=
 
-{\bf searchOneLine} -- if true, remove modifier \verb,"m",
+*searchOneLine* -- if true, remove modifier ="m"=
 
-{\bf multiple}
+*multiple*
 
-{\bf or} -- split expression with \verb,|,
+*or* -- split expression with =|=
 
-{\bf beginCapture} -- initiate capture
+*beginCapture* -- initiate capture
 
-{\bf endCapture} -- stop capturing elements
+*endCapture* -- stop capturing elements
 
-{\bf whitespace} -- \verb,\\s,
+*whitespace* -- =\\s=
 
-{\bf oneOrMore} -- repeats the previous at least once.
+*oneOrMore* -- repeats the previous at least once.
 
 
 
@@ -48643,7 +48566,7 @@ and wish for it}\\
 \end{quote}
 
 \begin{quote}
-{\bf Literate programs are a form of conversation, not docuentation}\\
+*Literate programs are a form of conversation, not docuentation*\\
 -- Tim Daly
 \end{quote}
 
@@ -48663,20 +48586,20 @@ not tried it.}\\
 {\bf No loop should be written down without providing proof of 
 termination nor without stating the invariaant that will not be 
 destroyed by the execution of the repeatable statement}\\
--- Edsger Dijkstra \cite{Dijk72}
+-- Edsger Dijkstra [cite:@Dijk72]
 \end{quote}
 
 \begin{quote}
 {\bf The only effective way to raise the confidence level of a program
 significantly is to give a convincing proof of its correctness.}\\
--- Edsger Dijkstra \cite{Dijk72}
+-- Edsger Dijkstra [cite:@Dijk72]
 \end{quote}
 
 \begin{quote}
 {\bf The competent programmer is fully aware of the strictly limited
 size of his own skull, therefore he approaches the programming task in
 full humility.}\\
--- Edsger Dijkstra \cite{Dijk72}
+-- Edsger Dijkstra [cite:@Dijk72]
 \end{quote}
 
 \begin{quote}
@@ -48694,7 +48617,7 @@ only be surprising}\\
 {\bf A proof assistant is what happens if you spend all your time
 developing a type checker for your language and forget that programs
 also need to be run.}\\
--- Vladislav Zavialov \cite{Zavi}
+-- Vladislav Zavialov [cite:@Zavi]
 \end{quote}
 
 \begin{quote}
@@ -48710,7 +48633,7 @@ time to read them; but one usually confuses the purchase of books with
 the acquisition of their contents. To desire that a man should retain
 everything he has ever read, is the same as wishing him to retain in
 his stomach all that he has ever eaten.}\\
--- Arthur Schopenhauer \cite{Scho16}
+-- Arthur Schopenhauer [cite:@Scho16]
 \end{quote}
 
 \begin{quote}
@@ -48719,39 +48642,39 @@ even approaching the intellectual scope of a good mathematical paper,
 and how much greater time and effort have to be put into it to make it
 ``almost'' formally correct, it is preposterous to claim that
 mathematics as we practice it is anywhere near formally correct.}\\
--- William P. Thurston \cite{Thur94}
+-- William P. Thurston [cite:@Thur94]
 \end{quote}
 
 \begin{quote}
-{\bf Given the concepts 0, {\sl number}, and {\sl successor} 
+{\bf Given the concepts 0, /number/, and /successor/ 
 and the rules
 \begin{enumerate}
-\item 0 is a {\sl number}
-\item the {\sl successor} of any {\sl number} is a {\sl number}
-\item no two {\sl numbers} have the same {\sl successor}
-\item 0 is not the {\sl successor} of any {\sl number}
-\item any property which belongs to 0 and also to the {\sl succesor}
-of every {\sl number} which has the property, belongs to all the
-{\sl numbers}
+\item 0 is a /number/
+\item the /successor/ of any /number/ is a /number/
+\item no two /numbers/ have the same /successor/
+\item 0 is not the /successor/ of any /number/
+\item any property which belongs to 0 and also to the /succesor/
+of every /number/ which has the property, belongs to all the
+/numbers/
 \end{enumerate}}
 
--- Giuseppe Peano \cite{Russ1920}
+-- Giuseppe Peano [cite:@Russ1920]
 \end{quote}
 
 \begin{quote}
 {\bf I WANT a type theory with this strange property.\\
 Well, then you deserve it.}\\
--- Andrej Bauer \cite{Baue19a}
+-- Andrej Bauer [cite:@Baue19a]
 \end{quote}
 
 \begin{quote}
 {\bf The Axiom Sane effort is, to quote Alan Kay, ``the simplest thing that
 is qualitatively different from where we are''.}\\
--- Tim Daly \cite{Kayx19}
+-- Tim Daly [cite:@Kayx19]
 \end{quote}
 
 \begin{quote}
-{\bf I am a biological copying machine.}\\
+*I am a biological copying machine.*\\
 -- Tim Daly
 \end{quote}
 
@@ -48765,20 +48688,20 @@ machine.}\\
 {\bf From a certain point of view, having a convenient representation
 of one's behavior available for modification is what is meant by
 consciousness.}\\
--- John McCarthy \cite{Mcca63}
+-- John McCarthy [cite:@Mcca63]
 \end{quote}
 
 \begin{quote}
 {\bf Even when I write a one-shot program I write it in a literate way
 because I get it right faster that way.}\\
--- Donald Knuth \cite{Knut19}
+-- Donald Knuth [cite:@Knut19]
 \end{quote}
 
 \begin{quote}
 {\bf ... the realization came over me with full force that a good part
 of theremainder of my life was going to be spent in finding errors in
 my own programs.}\\
--- Maurice Wilkes \cite{Mack01}
+-- Maurice Wilkes [cite:@Mack01]
 \end{quote}
 
 \begin{quote}
@@ -48790,79 +48713,79 @@ reasoning involves the application of valid rules of inference to sets
 of valid axioms. It is therefore desirable and interesting to
 elucidate the axioms and rules of inference which underlie our
 reasoning about computer programs.}\\
--- C. A. R. Hoare \cite{Hoar69}
+-- C. A. R. Hoare [cite:@Hoar69]
 \end{quote}
 
 \begin{quote}
 {\bf Let us avoid wasting those funds on pseudo mathematicians with
 computers and use them to support a few real live mathematicians.}\\
---Frank Bonsall \cite{Mack01}
+--Frank Bonsall [cite:@Mack01]
 \end{quote}
 
 \begin{quote}
 {\bf Dependent types realize a continuum of precision up to a complete
 specification of the program's behaviour. Dependently typed programs
 are, by their nature, proof carrying code.}\\
--- Thorston AltenKirch, Conor McBride, James McKenna \cite{Alte05}
+-- Thorston AltenKirch, Conor McBride, James McKenna [cite:@Alte05]
 \end{quote}
 
 \begin{quote}
 {\bf Anything you can learn by a complete set of rules isn't worth
 knowing.}\\
--- Danial I.A. Cohen \cite{Mack01}
+-- Danial I.A. Cohen [cite:@Mack01]
 \end{quote}
 
 \begin{quote}
 {\bf Bought a mechanical keyboard with more resistance so my code will
 be strongly typed.}
--- Jason Karns \cite{Warn19}
+-- Jason Karns [cite:@Warn19]
 \end{quote}
 
 \begin{quote}
 {\bf DSL -- A domain specific language, where code is written in one
 language and errors are given in another.}\\
--- Unknown \cite{Unkn20}
+-- Unknown [cite:@Unkn20]
 \end{quote}
 
 \begin{quote}
 {\bf Computers have enabled people to make more mistakes faster than
 almost any invention in history ... with the possible exception of
 tequila and hand guns.}\\
--- Ratcliffe \cite{Brad20}
+-- Ratcliffe [cite:@Brad20]
 \end{quote}
 
 \begin{quote}
 {\bf Me: There are a lot of 'Axiom' things around.\\
 Simon: Of course. That's why we have the Axiom of Choice}\\
--- Simon Cruanes \cite{Crua20}
+-- Simon Cruanes [cite:@Crua20]
 \end{quote}
 
 \begin{quote}
 {\bf Never trust a type theorist who has not changed their 
 mind about equality at least once}\\
--- Conor McBride \cite{Baze14}
+-- Conor McBride [cite:@Baze14]
 \end{quote} 
 
 \begin{quote}
 {\bf A tecnnical argument by a trusted author, which is hard to check
 and looks similar to arguments known to be correct, is hardly ever
 checked in detail.}\\
--- Vladimir Voevodsky \cite{Gray18}
+-- Vladimir Voevodsky [cite:@Gray18]
 \end{quote}
 
 \begin{quote}
 {\bf We're all on earth to help others -- what I can't figure out is
 what the others are here for}\\
--- Marvin Minsky \cite{Mcco79}
+-- Marvin Minsky [cite:@Mcco79]
 \end{quote}
 
 \begin{quote}
 {\bf If I ask a student whether her design is as good as Chartres, she
 often smiles tolerantly at me as if to say ``Of course not, that isn't
 what I am trying to do... I could never do that.'' Then, I express my
-disagreement, and tell her: ``That standard {\sl must} be ur
+disagreement, and tell her: ``That standard /must/ be ur
 standard.''}\\
--- Christopher Alexander \cite{Gabr96}
+-- Christopher Alexander [cite:@Gabr96]
 \end{quote}
 
 \begin{quote}
@@ -48876,33 +48799,33 @@ that can, and ten thousand that cannot, be recounted. Perhaps no
 extensive and multifarious performance was ever effected within the
 term originally fixed in the undertaker's mind. He that runs against
 Time has an antagonist not subject to casualties.}\\
--- Samuel Johnson \cite{Gabr85}
+-- Samuel Johnson [cite:@Gabr85]
 \end{quote}
 
 \begin{quote}
 {\bf I cannot claim to offer anything other than the notions of myself
 that I have formed over the space of roughly forty years, and their
 only singularity, it semms to me, is that they are not flattering.}\\
--- Peter Hogarth \cite{Lemx68}
+-- Peter Hogarth [cite:@Lemx68]
 \end{quote}
 
 \begin{quote}
 {\bf The shame of a genius may be his intellectual futility, the
 knowledge of how uncertain is all that he has accomplished.}\\
--- Peter Hogarth \cite{Lemx68}
+-- Peter Hogarth [cite:@Lemx68]
 \end{quote}
 
 \begin{quote}
 {\bf Ants that encounter in their path a dead philosopher may make
 good use of him}\\
--- Peter Hogarth \cite{Lemx68}
+-- Peter Hogarth [cite:@Lemx68]
 \end{quote}
 
 \begin{quote}
 {\bf Something must be done.\\
 I am doing something.\\
 Therefore something was done.}\\
--- Cory Doctorow \cite{Doct11}
+-- Cory Doctorow [cite:@Doct11]
 \end{quote}
 
 \begin{quote}
@@ -48918,12 +48841,12 @@ attributable to inadequate analysis of requirements or inadequate
 management control. It has turned out that the world just does not
 suffer significantly from the kind of problem that our research was
 originally intended to solve.}\\
--- Tony Hoare \cite{Hoar95}
+-- Tony Hoare [cite:@Hoar95]
 \end{quote}
 
 \begin{quote}
-{\bf There is no such thing as just-in-time research.}\\
--- Tony Hoare \cite{Hoar95}
+*There is no such thing as just-in-time research.*\\
+-- Tony Hoare [cite:@Hoar95]
 \end{quote}
 
 \begin{quote}
@@ -48940,13 +48863,13 @@ reduced'' by looking at the pieces.}\\
 publication quality. It is infinitely more demanding to design a
 publishable program than one that ``runs''. Programs should be written
 for human readers as well as for computers.}\\
--- Niklaus Wirth \cite{Wirt95}
+-- Niklaus Wirth [cite:@Wirt95]
 \end{quote}
 
 \begin{quote}
 {\bf I have regarded it as the highest goal of programming language
 design to enable good ideas to be elegantly expressed}\\
--- Charles Antony Richard Hoare \cite{Hoar81}
+-- Charles Antony Richard Hoare [cite:@Hoar81]
 \end{quote}
 
 \begin{quote}
@@ -48954,7 +48877,7 @@ design to enable good ideas to be elegantly expressed}\\
 think up such good arguments for convincing ourselves and each other
 of the utterly absurd. Especially don't believe us when we promise to
 repeat an earlier success, only bigger and better next time.}\\
--- Charles Antony Richard Hoare \cite{Hoar81}
+-- Charles Antony Richard Hoare [cite:@Hoar81]
 \end{quote}
 
 \begin{quote}
@@ -48963,7 +48886,7 @@ that it's right? In order that the man who checks may not have too
 difficult a task, the programmer should make a number of definite
 assertions which can be checked individually, and from which the
 correctness of the whole program easily follows.}\\
--- Alan Turing \cite{Turi49}
+-- Alan Turing [cite:@Turi49]
 \end{quote}
 
 \begin{quote}
@@ -48976,7 +48899,7 @@ proof of the compatibility or consistency between two formal objects
 of an extremely similar sort: program and specification. As a
 community, we computer scientists should call this relative
 consistency, and drop the word 'correctness' completely.}\\
--- Brian Cantwell Smith \cite{Smit60}
+-- Brian Cantwell Smith [cite:@Smit60]
 \end{quote}
 
 \begin{quote}
@@ -48988,25 +48911,25 @@ or what's a computer for?}\\
 \begin{quote}
 {\bf The problem is that we are attempting to build systems that are
 beyond our ability to intellectually manage.}\\
--- Nancy Leveson \cite{Leve11}
+-- Nancy Leveson [cite:@Leve11]
 \end{quote}
 
 \begin{quote}
 {\bf Ideas that require people to unlearn what they've learned and
 think in new ways, there is often an enormous amount of resistance.}\\
--- Bret Victor \cite{Vict13}
+-- Bret Victor [cite:@Vict13]
 \end{quote}
 
 \begin{quote}
 {\bf The most dangerous thought you can have as a creative person is
 to think you know what you're doing.}\\
--- Bret Victor \cite{Vict13}
+-- Bret Victor [cite:@Vict13]
 \end{quote}
 
 \begin{quote}
 {\bf It is a Hungarian hobby to get deeply into the proof without 
 stating the theorem.}\\
--- Mario Szegedy \cite{Szed14}
+-- Mario Szegedy [cite:@Szed14]
 \end{quote}
 
 \begin{quote}
@@ -49024,16 +48947,16 @@ nor bounded by Turing restrictions.}\\
 \end{quote}
 
 \begin{quote}
-- {\bf Writing a program is difficult}
-- {\bf Writing a correct program is even more so}
-- {\bf Writing a publishable program is exacting}
--- Niklaus Wirth \cite{Wirt20}
+- *Writing a program is difficult*
+- *Writing a correct program is even more so*
+- *Writing a publishable program is exacting*
+-- Niklaus Wirth [cite:@Wirt20]
 \end{quote}
 
 \begin{quote}
 {\bf ...books should be written presenting actually operational
 systems rather than half-baked, abstract principles.}\\
--- C.A.R.Hoare \cite{Wirt13}
+-- C.A.R.Hoare [cite:@Wirt13]
 \end{quote}
 
 \begin{quote}
@@ -49043,53 +48966,53 @@ to completely different conclusions than those that are obtained from
 theorems which have been deduced from the accepted axioms. The longer
 and fancier is the chain of deductions (``proofs''), the less reliable
 is the final result.}\\
--- V. I. Arnold \cite{Arno98}
+-- V. I. Arnold [cite:@Arno98]
 \end{quote}
 
 \begin{quote}
 {\bf Worse-is-better, even in its straw-man form, has better survivial
 characteristics thatn the-right-thing.}\\
--- Richard Gabriel \cite{Gabr91}
+-- Richard Gabriel [cite:@Gabr91]
 \end{quote}
 
 \begin{quote}
 {\bf Don't you think it's ironic that type theorists, who want to talk
 about strongly typed language in a rigorous manner, talk to
 themselves with an untyped language that has no rigorous specification?}\\
--- Guy Steele \cite{Stee17}
+-- Guy Steele [cite:@Stee17]
 \end{quote}
 
 \begin{quote}
 {\bf Mathematics may be defined as the subject in which we never know
 what we are talking about, nor whether what we are saying is true.}\\
--- Bertrand Russell \cite{Hick17}
+-- Bertrand Russell [cite:@Hick17]
 \end{quote}
 
 \begin{quote}
-{\bf Complexity is a bug lamp for smart people}\\
--- Maciej Ceglowski \cite{Cegl19}
+*Complexity is a bug lamp for smart people*\\
+-- Maciej Ceglowski [cite:@Cegl19]
 \end{quote}
 
 \begin{quote}
 {\bf The programmer does not differ from any other craftsman: unless he
 loves his tools it is highly improbable that he will ever create
 something of superior quality.}\\
--- Edsgar Dijkstra \cite{Dijk12}
+-- Edsgar Dijkstra [cite:@Dijk12]
 \end{quote}
 
 \begin{quote}
-{\bf What does it all mean? It means nothing but itself}\\
--- Edward Morgan Forster \cite{Fors11}
+*What does it all mean? It means nothing but itself*\\
+-- Edward Morgan Forster [cite:@Fors11]
 \end{quote}
 
 \begin{quote}
-{\bf Time is only linear for Engineers and Referees}\\
--- Craig Ferguson \cite{Ferg06}
+*Time is only linear for Engineers and Referees*\\
+-- Craig Ferguson [cite:@Ferg06]
 \end{quote}
 
 \begin{quote}
-{\bf How slowly grinds the whetstone that sharpens the human mind.}\\
--- Hope Jahren \cite{Jahr20}
+*How slowly grinds the whetstone that sharpens the human mind.*\\
+-- Hope Jahren [cite:@Jahr20]
 \end{quote}
 
 \begin{quote}
@@ -49102,13 +49025,13 @@ program remains. Sooner or later computer proof assistants will become
 the norm, but the longer this process takes the more misery associated
 with mistakes and with unnecessary self-verification the practitioners
 of the field will have to endure.}\\
--- Vladimir Voevodsky \cite{Voev14}
+-- Vladimir Voevodsky [cite:@Voev14]
 \end{quote}
 
 \begin{quote}
 {\bf You don't know what you are taling about until you understand it
 all three ways (type theory, proof theory, category theory)}\\
--- Robert Harper \cite{Harp12}
+-- Robert Harper [cite:@Harp12]
 \end{quote}
 
 \begin{quote}
@@ -49117,17 +49040,16 @@ useful, but not panaceas in the realm of algebraic manipulation
 systems. It appears that we are neither sufficiently sophisticated in
 algebra, nor in programming languages to solve all the problems
 mentioned here.}\\
--- Richard Fateman \cite{Fate94}
+-- Richard Fateman [cite:@Fate94]
 \end{quote}
 
 \includegraphics[scale=0.5]{ps/PreciseSpec.eps}\\
-\cite{Comm16}
+[cite:@Comm16]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 
-\newpage
 \phantomsection
 {\huge Coq Example Code}
 \addcontentsline{toc}{chapter}{Coq Example Code}
@@ -49597,55 +49519,46 @@ End relations.
 
 * Bibliography
 We have made every effort to consult and reference primary
-sources. (See \cite{Rekd14}).
+sources. (See [cite:@Rekd14]).
 \bibliographystyle{axiom}
 \bibliography{axiom}
 
-\newpage
 \phantomsection
 {\huge Signatures Index}
 \addcontentsline{toc}{chapter}{Signatures Index}
 \immediate\closeout\sigfile
-\vskip 1cm
 \input{signatures.sort}
 
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Figure Index}
 \renewcommand{\indexname}{Figure Index}
 \printindex[fig]
 
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Documentation Index}
 \renewcommand{\indexname}{Documentation Index}
 \printindex[doc]
 
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Code Index}
 \renewcommand{\indexname}{Code Index}
 \printindex[code]
 
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Error Index}
 \renewcommand{\indexname}{Error Index}
 \printindex[err]
 
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Category Index}
 \renewcommand{\indexname}{Category Index}
 \printindex[cat]
 
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Domain Index}
 \renewcommand{\indexname}{Domain Index}
 \printindex[dom]
 
-\newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Package Index}
 \renewcommand{\indexname}{Package Index}

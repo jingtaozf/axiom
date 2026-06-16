@@ -1,14 +1,5 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{The Top Level Makefile}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\newpage
+#+TITLE: The Top Level Makefile
+#+AUTHOR: Timothy Daly
 ** The overall build process
 
 Makefiles are responsible for building all of their subdirectories
@@ -70,7 +61,6 @@ The clean stanza has been modified to be more effective. Previously
 it walked the Makefile hierarchy trying to clean subdirectories. This
 method often fails for various reasons (e.g. permissions, incomplete
 builds, etc). Now we simply remove the created files directly.
-\newpage
 
 *** The Top Level Makefile
 We have added a stanza to separate the build of documents from the build
@@ -278,13 +268,13 @@ reference bug reports to versions.
 
 The VERSION variable is used in the src/interp/Makefile
 to set a lisp variable boot::*build-version*. This variable
-is used by the {\tt yearweek} function to construct the banner.
+is used by the =yearweek= function to construct the banner.
 
 The banner also contains a build timestamp so we can determine
 when the image is compiled. We touch the file 
-called \verb|${MNT}/${SYS}/timestamp| and using a formatted form
+called =${MNT}/${SYS}/timestamp= and using a formatted form
 of its file information. See the YEARWEEK variable in the
-src/interp/Makefile.pamphlet and the {\tt yearweek} function in 
+src/interp/Makefile.pamphlet and the =yearweek= function in 
 src/interp/util.lisp.pamphlet.
 
 **** SPAD
@@ -332,10 +322,10 @@ functions, allowing fast-function calling behavior.
 
 When defining the environment, the SPD variable is defined as the
 current directory. SYS is taken as the last non-directory part of
-the environment variable \verb|$AXIOM| (e.g. if 
-\verb|$AXIOM=/(a-path)/mnt/linux|
-then SYS=linux). It is {\bf mandatory} that \verb|$AXIOM| does
-{\bf not} contain any trailing slash, because the {\tt notdir} function
+the environment variable =$AXIOM= (e.g. if 
+=$AXIOM=/(a-path)/mnt/linux=
+then SYS=linux). It is *mandatory* that =$AXIOM= does
+*not* contain any trailing slash, because the =notdir= function
 will return the string following the final slash and would thus return
 the empty string.
 
@@ -369,7 +359,7 @@ time by compilers for each specific system.
 The MNT subdirectory is a complete, working copy of Axiom.
 This directory contains everything that is needed to run Axiom and
 can be copied anywhere. Everything in this directory takes its required
-information from the \verb|$AXIOM| shell variable. Once this directory is
+information from the =$AXIOM= shell variable. Once this directory is
 copied the SRC, INT, and OBJ subdirectories can be erased.
 
 **** ZIPS
@@ -386,7 +376,7 @@ avoid writing outside of our build tree.
 Note that TMP is a workspace in the OBJ directory. It is
 working space for temporary files since we cannot assume that
 we can write outside our own tree. Output from commands like
-the {\tt document} command will generally be written to the
+the =document= command will generally be written to the
 TMP/trace file. If the build seems to hang while making a
 document file then check this file. It will contain the output
 of the latex command and the likely error in the tex file.
@@ -394,8 +384,8 @@ of the latex command and the likely error in the tex file.
 **** SPADBIN
 The SPADBIN directory is the path to the executable 
 binary directory of the shipped system. The directory contains
-all of the executable commands, such as the {\tt document}
-command. The {\tt document} command lives in the SRC/SCRIPTS
+all of the executable commands, such as the =document=
+command. The =document= command lives in the SRC/SCRIPTS
 subdirectory and will be copied to SPADBIN before we start
 walking the build subtree.
 
@@ -726,7 +716,7 @@ called gcldir. This file has the same name as the stanza to create
 GCL and thus will prevent GCL from rebuilding. We need to do this
 since we have no control over the GCL makefiles.
 
-The \verb|${OBJ}/${SYS}/bin| directory is where the lisps get built.
+The =${OBJ}/${SYS}/bin= directory is where the lisps get built.
 **** LSPMakefile
 We need to specialize the Makefile stanza based on the version
 of Lisp we plan to use. At the moment there are 3 GCL versions
@@ -748,8 +738,8 @@ ${LSP}/Makefile: ${LSP}/Makefile.org
 	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 
 #+end_src
-Here we add mkdir -p \verb|${OBJ}/${SYS}/lsp| because we need to rename the
-\verb|gcl_collectfn.lsp| back to collectfn.lsp. We also start adding support
+Here we add mkdir -p =${OBJ}/${SYS}/lsp= because we need to rename the
+=gcl_collectfn.lsp= back to collectfn.lsp. We also start adding support
 for sys-proclaim.lsp and other dynamically collected proclaim information.
 
 The obj/sys/bin dir is necessary to keep the compiled lisp image.
@@ -762,10 +752,10 @@ is available at compile time then the resulting function calls are much
 more efficient. The sys-proclaims file contains type information
 about standard common lisp function calls.
 
-Under {\bf LISPFLAVOR=sbcl} this target changes meaning. There is no
+Under *LISPFLAVOR=sbcl* this target changes meaning. There is no
 GCL to compile: the host Lisp is the system SBCL, and all this target
 must do is provide it where the rest of the build expects to find the
-host, namely \verb|${OBJ}/${SYS}/bin/lisp| (the {\bf LISPSYS} of
+host, namely =${OBJ}/${SYS}/bin/lisp= (the *LISPSYS* of
 src/interp/Makefile.pamphlet, which pipes the depsys save form into
 it). We write a two-line wrapper script there. The flags matter:
 {\bf -{}-no-userinit -{}-no-sysinit} keep the user's sbclrc out of the
@@ -781,7 +771,7 @@ a watched failure. First, the GCL bin/lisp was never a bare Lisp:
 lsp/Makefile.pamphlet loads books/tangle.lisp before its
 save-system, so the host image carries the literate tangler, and
 every recipe downstream pipes forms like
-\verb|(tangle "foo.pamphlet" "*" "foo.lisp")| into it. A bare SBCL
+=(tangle "foo.pamphlet" "*" "foo.lisp")= into it. A bare SBCL
 answered ``The function TANGLE is undefined''; the wrapper therefore
 loads books/tangle.lisp, which is plain portable Common Lisp and
 loads under SBCL unchanged. Second,
@@ -940,13 +930,13 @@ the algebra files are compiled. The bootstrap versions of these
 databases live in the src/share subdirectory. Axiom will
 use the value of the shell variable DAASE to find its 
 databases. If this variable is unbound it uses the standard
-\verb|${MNT}/${SYS}| path. Note that Axiom will append the string
+=${MNT}/${SYS}= path. Note that Axiom will append the string
 /algebra to the value of DAASE. The default value setting
 given here is:
 
-\verb|DAASE=${SRC}/share|
+=DAASE=${SRC}/share=
 
-so \verb|${SRC}/share/algebra/*.daase| will be the
+so =${SRC}/share/algebra/*.daase= will be the
 Axiom bootstrap database files.
 
 **** The XLIB variable
@@ -1017,19 +1007,19 @@ changes that: the same literate build must be able to host on either
 Lisp while the port proceeds, with GCL remaining the default so that
 existing platforms are not disturbed.
 
-The {\bf LISPFLAVOR} variable is that selector. It defaults to
-{\bf gcl}, which leaves every recipe exactly as it always was. Saying
+The *LISPFLAVOR* variable is that selector. It defaults to
+*gcl*, which leaves every recipe exactly as it always was. Saying
 #+begin_example
 make LISPFLAVOR=sbcl
 #+end_example
 selects the system SBCL instead. Two things change under sbcl. First,
-the compiled-object extension {\bf O} becomes {\bf fasl}: SBCL's
+the compiled-object extension *O* becomes *fasl*: SBCL's
 compile-file emits fasl files, not the .o object modules GCL's
 C-backed compiler produces, and every dependency pattern keyed on
-\verb|${O}| follows automatically. Second, the {\bf lspdir} target
+=${O}= follows automatically. Second, the *lspdir* target
 stops building the bundled GCL and instead provides the system SBCL
 as the build's host Lisp (see the lsp section). Source file
-extensions are untouched: {\bf LISP} stays {\bf lsp} because the
+extensions are untouched: *LISP* stays *lsp* because the
 written sources do not change dialect, only their compiled form does.
 
 #+NAME: LISPFLAVOR
@@ -1803,14 +1793,14 @@ all: srcsetup srcdir
 *** Makefile.MACOSX
 On the MAC OSX someone decided (probably a BSDism) to rename the
 SIGCLD signal to SIGCHLD. In order to handle this in the 
-low level C socket code (in particular, in \verb|src/lib/fnct_key.c|)
+low level C socket code (in particular, in =src/lib/fnct_key.c=)
 we change the platform variable to be MACOSXplatform and create
 this new stanza.
 
 It appears that the MAC OSX does not include gawk or nawk by 
 default so we change the AWK variable to use awk.
 
-We need to add -I/usr/include/sys because {\tt malloc.h} has been
+We need to add -I/usr/include/sys because =malloc.h= has been
 moved on this platform. 
 
 We need to search includes (``-I'') in /usr/include before 
@@ -1865,14 +1855,14 @@ all: srcsetup srcdir
 *** Makefile.BSD
 On the MAC OSX someone decided (probably a BSDism) to rename the
 SIGCLD signal to SIGCHLD. In order to handle this in the 
-low level C socket code (in particular, in \verb|src/lib/fnct_key.c|)
+low level C socket code (in particular, in =src/lib/fnct_key.c=)
 we change the platform variable to be MACOSXplatform and create
 this new stanza.
 
 It appears that the MAC OSX does not include gawk or nawk by 
 default so we change the AWK variable to use awk.
 
-We need to add -I/usr/include/sys because {\tt malloc.h} has been
+We need to add -I/usr/include/sys because =malloc.h= has been
 moved on this platform. 
 
 We need to search includes (``-I'') in /usr/include before 
@@ -1915,13 +1905,12 @@ all: srcsetup srcdir
 <<clean>>
 
 #+end_src
-\newpage
 \begin{thebibliography}{99}
-\bibitem{1} CMUCL {\bf http://www.cons.org/cmucl}
-\bibitem{2} GCL {\bf http://savannah.gnu.org/projects/gcl}
+\bibitem{1} CMUCL *http://www.cons.org/cmucl*
+\bibitem{2} GCL *http://savannah.gnu.org/projects/gcl*
 \bibitem{3} Codemist Ltd, ``Alta'', Horsecombe Vale Combs Down
 Bath BA2 5QR UK Tel. +44-1225-837430 
-{\bf http://www.codemist.co.uk}
+*http://www.codemist.co.uk*
 \bibitem{5} \$SPAD/zips/advi-1.2.0.tar.gz, the advi source tree
 \end{thebibliography}
 \end{document}

@@ -1,9 +1,3 @@
-\documentclass[dvipdfm]{book}
-\newcommand{\VolumeName}{Volume 4: Axiom Developers Guide}
-\input{bookheader.tex}
-\pagenumbering{arabic}
-\mainmatter
-\setcounter{chapter}{0} % Chapter 1
 \begin{quote}
 Confronting every new programmer learning a new language are
 - The Cave of Artifacts
@@ -14,7 +8,7 @@ Confronting every new programmer learning a new language are
 \end{quote}
 
 ** MODLISP by James Davenport
-This is based on a paper by Davenport and Jenks \cite{Dave80a}.
+This is based on a paper by Davenport and Jenks [cite:@Dave80a].
 
 It provides historical details of the original SCRATCHPAD II design.
 Some of these details have changed over time but it is important to
@@ -32,8 +26,8 @@ Real, or even Polynomial arguments) and the system will apply the
 correct function for the types of the arguments.
 
 The MODLISP language differs from other abstract data type languages
-such as CLU\cite{Lisk77,Lisk77a,Lisk79} and Russell
-\cite{Dona77} in that it allows dynamic construction of new
+such as CLU[cite:@Lisk77,Lisk77a,Lisk79] and Russell
+[cite:@Dona77] in that it allows dynamic construction of new
 parameterised data types and possesses a unified semantics covering
 interpreted and compiled code, which can call one another at will. In
 short, it is LISP-like.
@@ -42,7 +36,7 @@ short, it is LISP-like.
 
 MODLISP is a system developed from LISP with the primary aim of
 supporting research in computer algebra. It has been realised for some
-years (\cite{Loos74,Jenk77}) that progress in computer algera
+years ([cite:@Loos74,Jenk77]) that progress in computer algera
 required the development of systems  which were able to deal with
 formal ``modes'' such as ``polynomial'' or ``matrix''.
 
@@ -97,7 +91,7 @@ on the modes of the operands, rather than one specific function.
 
 Rather than associate an EXPR property with an atom, therefore,
 MODLISP associates a MODEMAP property with it, whose corresponding
-value is a {\sl modemap list}\footnote{We imply here that a modemap
+value is a /modemap list/\footnote{We imply here that a modemap
 list is a list of (map, function) pairs. The actual structure is not
 significantly more complicated (as mentioned in the Appendix A) and is
 a list of (map, cond-part) pairs, where a cond-part is a list of
@@ -106,7 +100,7 @@ predicate evaluates to T. While this additional level is not required
 in the system as described so far, several of the features of MODLISP
 described later in the paper require it. It is mentioned here to avoid
 giving a false impression.} These modemap lists are to MODLISP what
-{\sl subrs} (i.e. BPIs) are to conventional LISPs: they are the
+/subrs/ (i.e. BPIs) are to conventional LISPs: they are the
 applicable objects, as defined by the evaluator. The evaluator looks
 through the modemap list, which is a list of maps and associated
 functions, until it finds a map which matches the arguments. This
@@ -145,7 +139,7 @@ definition which was asserted to be valid for the case of multiplying
 two Rationals) RationalTimes is applied.
 
 The modemap for TIMES quoted above looks as if it is the solution to
-the problem of {\sl polymorphic operators}, i.e. those which
+the problem of /polymorphic operators/, i.e. those which
 correspond to different functions for different data types, but in a
 computer algebra setting it is not a complete answer. One way of
 seeing this is to ask ``How many definitions of TIMES are there?'',
@@ -159,7 +153,7 @@ is by no means the worst of the problem -- how are we to know that we
 have placed enough definitions on the modemap. It should now be
 obvious that a modemap which lists simple domains and the associated
 functions is insufficient for our purposes -- and that is why we need
-the concept of a {\sl mode}.
+the concept of a /mode/.
 
 *** What is a MODE?
 
@@ -188,9 +182,9 @@ which MODLISP provides two: Union and Struct. Familiar examples of
 these are Sexpr, defined as Union(Pair,Atom) and Pair, defined as
 Struct(Car:Sexpr, Cdr:Sexpr).
 
-We can move up from this to {\sl parameterised data types} or just
-{\sl types}, also known as 'type generators', as defined by ADJ
-\cite{Ehri80a}.
+We can move up from this to /parameterised data types/ or just
+/types/, also known as 'type generators', as defined by ADJ
+[cite:@Ehri80a].
 The basic MODLISP system provides two parameterised data types for
 efficiency (List and Vector), but there are facilities for defining
 one's own, and it is expected that a large amount of MODLISP
@@ -206,7 +200,7 @@ two. An exmple of this is ``3-dimensional vectors over the rational
 numbers'', which is parameterised both by the number 3 and by the type
 ``rational number''.
 
-The previous definitions allow us to define a {\sl domain}
+The previous definitions allow us to define a /domain/
 (recursively) as being either a basic type, or the result of supplying
 actual values and domains for all the parameters of a (parameterised
 data) type. Hence ``Vectors of Integers, of length 3'', is a domain,
@@ -217,7 +211,7 @@ not a domain, for we have not specified the length.
 
 We can now answer the question posed by the heading of this section:
 ``What is a mode?''. The answer is deceptively simple: a mode is
-{\sl any} class of domains. While the MODLISP system places no
+/any/ class of domains. While the MODLISP system places no
 limitation on the definition of this class, some classes are more
 useful than others. We shall see below (under the heading 'Compilation
 for Arbitrary Domains') that it is possible to define a mode
@@ -279,11 +273,11 @@ the compiler and the evaluator (i.e. interpreter) would perform
 modemap analysis, and it would be possible for these two to get out of
 step, thus giving compiled code a different semantics from interpreted
 code. This difficulty is met by adopting the technique of {\sl partial
-compilation} \cite{Ersh77}, in which the evaluator also acts as the
+compilation} [cite:@Ersh77], in which the evaluator also acts as the
 compiler, producing values where it can, and compiled code where it
 cannot\footnote{Note that we are not considering delayed (or lazy)
-evaluation \cite{Hend76} here. The 'rule' feature of
-MODLISP \cite{Jenk79} is based on such a concept, but, as it is
+evaluation [cite:@Hend76] here. The 'rule' feature of
+MODLISP [cite:@Jenk79] is based on such a concept, but, as it is
 independent of the ideas considered in this paper, we shall not
 discuss it further.} As an example of this, let us consider the
 compilation of (PLUS X Y) in three cases:
@@ -297,7 +291,7 @@ function. In this case, we can still select a function from the
 modemap for PLUS, since we do know the modes of X and Y. We cannot
 apply the function IntegerPlus that is produced, but we can compile
 code to produce it, so the compiled code\footnote{The current MODLISP
-implementation compiles into LISP370\cite{IBMx78}, which is compiled
+implementation compiles into LISP370[cite:@IBMx78], which is compiled
 into machine code by the LISP370 compiler.} is (IntegerPlus X Y).
 \item Nothing is known about X and Y. In this case, we have no idea
 how to apply the modemap for PLUS, and we must compile a call to eval.
@@ -324,10 +318,10 @@ evaluator) for parameterised data types, so that, for example, the
 code for Polynomial can be compiled, and can then be used for
 Polynomials of Integers, Polynomials of Matrices, Polynomials of
 Polynomials etc. or so that we can write (and compile)
-{\sl polymorphic functions}, such as a sort function that will sort
+/polymorphic functions/, such as a sort function that will sort
 any set on which a comparison predicate has been defined. Note that
 this is a problem not addressed by, say, the Mode Reduce system
-\cite{Hear74}, where a separate version of the module is compiled for
+[cite:@Hear74], where a separate version of the module is compiled for
 each underlying domain. Some of the mechanism required for this exists
 already -- as we saw above we can declare a modemap for the
 scalar-product of two vectors which is independent of the dimension of
@@ -341,15 +335,15 @@ Field, i.e. a type on which certain operators are valid.
 
 We require a theoretical basis for ``declaring some properties of the
 parameterising types'', and this is provided in the work of ADJ.
-\cite{Gogu76, Ehri80a}
+[cite:@Gogu76, Ehri80a]
 We do not intend to discuss the whole of their approach
 here, and the reader is referred to the papers quoted for further
 details, but it is sufficient for present purposes to say that they
-consider a {\sl data type} (which corresponds to our {\sl domain}) to
-be a (many-sorted) {\sl algebra} and a list of operations between the
-carriers. This agrees with Morris\cite{Morr73} in interpreting a type as a
+consider a /data type/ (which corresponds to our /domain/) to
+be a (many-sorted) /algebra/ and a list of operations between the
+carriers. This agrees with Morris[cite:@Morr73] in interpreting a type as a
 set (or sets) with operations. These operations must not only exist
-but are also required to satisfy certain {\sl axioms}.
+but are also required to satisfy certain /axioms/.
 
 We might wish to define a stack of integers this way (this example is
 based on a rigorous discussion by ADJ \cite[p.~11]{Ehri80a})
@@ -361,27 +355,27 @@ in the Booleans (i.e. True or False). Computationally, however, the
 Booleans are a constant, and we do not need to declare them specially.},
 and operations:
 \[\begin{array}{ll}
-{\tt Create}: & () \rightarrow S ({\tt no arguments}),\\
-{\tt Push}:   & (I,S) \rightarrow S,\\
-{\tt Pop}:    & (S) \rightarrow S\footnote{Here we avoid detailed discussions
+=Create=: & () \rightarrow S (=no arguments=),\\
+=Push=:   & (I,S) \rightarrow S,\\
+=Pop=:    & (S) \rightarrow S\footnote{Here we avoid detailed discussions
 of problems such as ``What is Top of an empty stack?''. The literature
 mentions at least two basic techniques for dealing with such
 'exceptional states' -- the simplistic 'hard stop' and the return of a
-Union mode \cite{Blac80}. Both solutions are possible in MODLISP, and
+Union mode [cite:@Blac80]. Both solutions are possible in MODLISP, and
 indeed both are used in the algebra system being implemented in MODLISP.}\\
-{\tt Top}:    & (S) \rightarrow I,\\
-{\tt Empty}:  & (S) \rightarrow Boolean
+=Top=:    & (S) \rightarrow I,\\
+=Empty=:  & (S) \rightarrow Boolean
 \end{array}\]
 Of course, what we want to do is to define stack as an abstract idea,
 implemented by one program, rather than just to define
 stack-of-integers, and later define stack-of-rationals, etc. by
 separate programs.
 
-We now define a {\sl category} of algebras (i.e. types) to be the
+We now define a /category/ of algebras (i.e. types) to be the
 class of all algebras with carriers indexed by the same sets, and with
 equivalent operators which satisfy a certain list of axioms (this
 definition is deliberately vague and intuitive -- precise definitions
-are given by ADJ\cite{Ehri80a}). As an example we can define the category of
+are given by ADJ[cite:@Ehri80a]). As an example we can define the category of
 all stacks to be the class of all algebras with two carriers (indexed
 by I and S)\footnote{As remarked in a previous footnote, there is a
 technical requirement for a third carrier Boolean. Since this is
@@ -391,11 +385,11 @@ constant carriers were always fully defined, and with suitable extra
 axioms to ensure that all instances of the constant Boolean were
 isomorphic.} with operators
 \[\begin{array}{ll}
-{\tt Create}: & () \rightarrow C_S ({\tt no arguments}),\\
-{\tt Push}:   & (C_I,C_S) \rightarrow C_S,\\
-{\tt Pop}:    & (C_S) \rightarrow C_S\\
-{\tt Top}:    & (C_S) \rightarrow C_I,\\
-{\tt Empty}:  & (C_S) \rightarrow Boolean
+=Create=: & () \rightarrow C_S (=no arguments=),\\
+=Push=:   & (C_I,C_S) \rightarrow C_S,\\
+=Pop=:    & (C_S) \rightarrow C_S\\
+=Top=:    & (C_S) \rightarrow C_I,\\
+=Empty=:  & (C_S) \rightarrow Boolean
 \end{array}\]
 Here $C_S$ is the carrier indexed by S and $C_i$ is the carrier
 indexed by I. These operations must satify certain axioms, such as
@@ -500,7 +494,7 @@ the particular polynomial domain.
 
 *** Status of the Project
 
-The MODLISP system is currently implemented above LISP/370\cite{IBMx78},
+The MODLISP system is currently implemented above LISP/370[cite:@IBMx78],
 and is being used to develop an experimental computer algebra system
 which is based on abstract data types, in
 the sense that it is possible to define ``Polynomial'' as an operation
@@ -531,7 +525,7 @@ The following summarizes the dialect of LISP used below to describe
 the evaluator. (QUOTE X) is abbreviated by "X. (LET X .) is used to
 introduce a local variable X. The notation \textless X M E\textgreater
 is used for an
-atomic datatype called {\sl triple} consisting of an expression X, a
+atomic datatype called /triple/ consisting of an expression X, a
 mode M, and an environment E. An argument of the form (: A B) to a
 $\lambda$ expression means ``A has the form of B'', and has the
 side-effect of binding symbols appearing in B to the indicated parts
@@ -674,37 +668,23 @@ that extended environment.
 
 The following auxillary functions are used:
 
-\vskip 2mm
-\noindent
 (BIND S E PL) adds a property list PL as a binding for symbol S in the
 current local environment of E and returns the updated E.
 
-\vskip 2mm
-\noindent
 (COERCE T M) converts triple T to one with mode M, or else returns NIL
 if that conversion is not possible.
 
-\vskip 2mm
-\noindent
 (EXTEND E) extends E to contain a new empty local environment.
 
-\vskip 2mm
-\noindent
 (GET S P E) returns value stored under property P for symbol S in
 environment E.
 
-\vskip 2mm
-\noindent
 (GETEVALFUN M) returns the evaluator function for mode M.
 
-\vskip 2mm
-\noindent
 (MATCH E P) returns a list of substitution pairs ((A . B) ..) if
 pattern P (containing ``free variables'' A,..) matches expression E
 (that is, P=E when all A's in P are replaced by corresponding B's)
 
-\vskip 2mm
-\noindent
 (LISPAPPLY FN L) applies MODLISP function FN to a list L of evaluated
 arguments by a LISP evaluation of (CONS (CAR FN) (APPEND L (LIST (CDR
 FN)))). In MODLISP, all functions are represented as pairs whose CAR
@@ -712,36 +692,20 @@ is a code pointer and whose CDR is a run-time environment (as defined
 by the modemap) which will be supplied to FN as its last argument when
 FN is called.
 
-\vskip 2mm
-\noindent
 (MODE X) returns the mode of X, assumed to be a built-in type
 
-\vskip 2mm
-\noindent
 (S:EXPR T) returns the expression part of triple T.
 
-\vskip 2mm
-\noindent
 (S:MODE T) returns the mode part of triple T.
 
-\vskip 2mm
-\noindent
 (S:ENV T) returns the environment part of triple T.
 
-\vskip 2mm
-\noindent
 (SYMBOLP X) tests that X is a symbol.
 
-\vskip 2mm
-\noindent
 (TRIPLEP X) tests that X is a triple.
 
-\vskip 2mm
-\noindent
 (COMPILE FN ARGS) compiles a call to the function FN, with argumets ARGS.
 
-\vskip 2mm
-\noindent
 (COMPILEDP X) test if X represents a piece of compiled code, rather
 than a value.
 
@@ -770,7 +734,7 @@ compilation.
 
 *** On Extensions for Partial Declarations
 
-In the general case where partial declarations are allowed \cite{Cohe80},
+In the general case where partial declarations are allowed [cite:@Cohe80],
 the definition of EVCONVERT must be replaced by:
 #+begin_example
 (EVCONVERT (LAMBDA ((: T <X M E>) MP)
@@ -805,11 +769,11 @@ following alternative code replacing the loop in lines 5-8 of EVFORM:
 This is described as follows. First, a list LT of triples is
 produced. The first argument A of ARGL is evaluated in the initial
 environment with a target mode obtained by SUBLISting LS (initially
-NIL\footnote{This initial setting determines a {\sl bottom-up}
+NIL\footnote{This initial setting determines a /bottom-up/
 evaluation strategy, where the mode of a result is determined purely
 by the modes of its arguments. This clearly creates difficulties for
 functions without arguments. The strategy actually used in MODLISP is
-first to try a {\sl top-down} evaluation, and then to use a bottom-up
+first to try a /top-down/ evaluation, and then to use a bottom-up
 strategy if the top-down one fails. The top-down strategy is
 implemented by setting the initial value of LS to be the result of
 MATCHing the mode-pattern of the result (CAR SIG) with the target mode
@@ -934,14 +898,14 @@ embedding in the source code.
 
 HACKPI is a hack provided for the benefit of the axiom interpreter.
 As a mathematical type, it is the simple transcendental extension
-\verb|Q(\pi)| of the rational numbers. This type allows interactive
-users to use the name \verb|'%pi'| without a type both where a numerical
-value is expected [ as in \verb|draw(sin x,x=-%pi..%pi)| ] or when the
+=Q(\pi)= of the rational numbers. This type allows interactive
+users to use the name ='%pi'= without a type both where a numerical
+value is expected [ as in =draw(sin x,x=-%pi..%pi)= ] or when the
 exact symbolic value is meant.  The interpreter defaults a typeless
-\verb|%pi| to HACKPI and then uses the various conversions to cast it
+=%pi= to HACKPI and then uses the various conversions to cast it
 further as required by the context.
 
-One could argue that it is unfair to single \verb|%pi| out from other
+One could argue that it is unfair to single =%pi= out from other
 constants, but it occurs frequently enough in school examples
 (specially for graphs) so it was worth a special hack. In a
 non-interactive environment (library), HACKPI would not exist.
@@ -961,7 +925,7 @@ These can be changed on the command line at the time of the top level
 variable. This variable controls whether we see the full output or just
 the echo of each individual step. Sometimes a build fails at a step and
 we would like to know the details. By default they are written to 
-\verb|$TMP/trace| but we can watch every detail with the command line:
+=$TMP/trace= but we can watch every detail with the command line:
 #+begin_example
   make NOISE=
 #+end_example
@@ -1028,7 +992,7 @@ ZIPS=/research/test/zips
 ** The runtime structure of Axiom
 \begin{center}
 \includegraphics[scale=0.5]{ps/v4architecture.eps}\\
-{\bf Runtime Structure \cite{Bake14}}
+*Runtime Structure [cite:@Bake14]*
 \end{center}
 
 *** The build step
@@ -2837,7 +2801,6 @@ and a directory for CVS (call this GOLD)
 
 When I want to export a set of changes I do the following steps:
 
-\noindent
 0) MAKE SURE THE ~/.ssh/config FILE IS CORRECT:
 #+begin_example
     (you should only need to do this once. 
@@ -2853,7 +2816,6 @@ Host *.gnu.org
   NumberOfPasswordPrompts=2
 #+end_example
 
-\noindent
 1) MAKE SURE THE SHELL VARIABLES ARE OK: 
 #+begin_example
     (normally set in .bashrc)
@@ -2864,7 +2826,6 @@ export CVSROOT=:pserver:axiom@subversions.gnu.org:/cvsroot/axiom
                         change this to your id
 #+end_example
 
-\noindent
 2) MAKE SURE YOU'RE LOGGED IN:
 #+begin_example
  (I keep a session open all the time but it doesn't seem to care
@@ -2873,7 +2834,6 @@ export CVSROOT=:pserver:axiom@subversions.gnu.org:/cvsroot/axiom
 cvs login
 #+end_example
 
-\noindent
 3) GET A FRESH COPY FOR THE FIRST TIME OR AT ANY TIME:
 #+begin_example
  (you only need to do this the first time but you can erase
@@ -2887,7 +2847,6 @@ cd /
 cvs co axiom
 #+end_example
 
-\noindent
 4) MAKE SURE THAT GOLD,	MY LOCAL CVS COPY, IS UP TO DATE:
 #+begin_example
  (I maintain an exact copy of the CVS repository and only make
@@ -2904,7 +2863,6 @@ cd /axiom
 cvs update
 #+end_example
 
-\noindent
 5) COPY CHANGED FILES FROM WORK TO THE GOLD TREE:
 #+begin_example
  (This is an example for updating the *.daase files.
@@ -2915,7 +2873,6 @@ cd /home/axiomgnu/new
 cp src/share/algebra/*.daase /axiom/src/share/algebra
 #+end_example
 
-\noindent
 6) IF A FILE IS NEW (e.g. src/interp/foo.lisp.pamphlet) THEN:
 #+begin_example
  (If you create a file you need to "put it under CVS control"
@@ -2934,7 +2891,6 @@ cvs add -m"some pithy comment" foo.lisp.pamphlet
 cd /axiom
 #+end_example
 
-\noindent
 7) IF A FILE IS DELETED (e.g. src/interp/foo.lisp.pamphlet) THEN:
 #+begin_example
  (you have to delete the file from the GOLD directory BEFORE you
@@ -2950,7 +2906,6 @@ cvs remove foo.lisp.pamphlet
 cd /axiom
 #+end_example
 
-\noindent
 8) IF A DIRECTORY IS NEW (e.g. foodir) THEN:
 #+begin_example
  (this will put "foodir" under CVS control. It will also create
@@ -2968,7 +2923,6 @@ cvs add -m "pithy comment" foodir
 cd /axiom
 #+end_example
 
-\noindent
 9) EDIT CHANGELOG:
 #+begin_example
   changelog is already under CVS control so it will get uploaded
@@ -2979,7 +2933,6 @@ emacs -nw changelog
  (add a date, initials, and pithy comment, save it, and exit)
 #+end_example
 
-\noindent
 10) CHECK IN THE CHANGES
 #+begin_example
  (This will actually change the savannah CVS repository.
@@ -3031,7 +2984,7 @@ Axiom has a socket library because at the time it was developed under
 AKCL there was no socket code in Lisp. There is still not a standard
 common lisp socket library but I believe all common lisps have a way
 to manipulate sockets. This code should be rewritten in lisp
-and \verb|#+| for each common lisp.
+and =#+= for each common lisp.
 
 The collectfn file is a major optimization under GCL. When collectfn 
 is loaded and the lisp compiler is run then collectfn will output
@@ -3132,7 +3085,7 @@ necessary to introduce a new version are
 \item change the Makefile to match Makefile.pamphlet
 \end{enumerate}
 
-We assume in the following that \verb|$AXHOME| is the home directory and that
+We assume in the following that =$AXHOME= is the home directory and that
 Axiom lives in the silver subdirectory.
 
 In more detail these steps are:
@@ -3222,9 +3175,9 @@ In more detail these steps are:
 \item update lsp/Makefile.pamphlet to apply the patch at build
 \begin{enumerate}
 \item edit lsp/Makefile.pamphlet
-\item search for chunk \verb|gcl-2.6.8pre7.h.linux.defs.patch|
+\item search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
 \item copy the chunk and name the new chunk 
-\verb|gcl-2.6.10.h.linux.defs.patch|
+=gcl-2.6.10.h.linux.defs.patch=
 \end{enumerate}
 \item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
 \begin{enumerate}
@@ -3239,12 +3192,12 @@ In more detail these steps are:
 \end{enumerate}
 \item Change the GCLVERSION to point at the new sources
 \begin{enumerate}
-\item emacs \verb|$AXHOME/silver/Makefile.pamphlet|
-\item search for \verb|#GCLVERSION|, a Makefile comment line
+\item emacs =$AXHOME/silver/Makefile.pamphlet=
+\item search for =#GCLVERSION=, a Makefile comment line
 \item the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
       gcl-2.6.8pre7 was is the name of the current version we are
       replacing. We will use this name in the next step
-\item put a \# in front of the GCLVERSION variable to comment it out\\
+\item put a # in front of the GCLVERSION variable to comment it out\\
       We maintain the list of old, working patches. We also remember the
       names of the prior GCLVERSIONS in case we have to back up
 \item Add a new line reading:
@@ -3367,7 +3320,7 @@ function which can be invoked from inside Axiom.
 
 One feature of the latex chunk style is that latex commands
 work within the chunk. To get typeset mathematics use 
-\verb|\(| and \verb|\)|
+=\(= and =\)=
 
 #+begin_example
 -- This will typeset in a chunk \( x^2+\epsilon \)
@@ -3655,16 +3608,16 @@ The code for sign in ORDRING-.nrlib/code.lsp has the signature:
 
 We can "decode" the meaning of the function name as
 \begin{itemize}
-\item {\bf ORDRING-} the implementing file
-\item {\bf sign} the function name
-\item {\bf SI} returns SingleInteger (an old domain name)
-\item {\bf 3} the third function in the file
+\item *ORDRING-* the implementing file
+\item *sign* the function name
+\item *SI* returns SingleInteger (an old domain name)
+\item *3* the third function in the file
 (unique, to distinguish multiple functions with the same name)
 \end{itemize}
 
 It takes 2 arguments, 
-- {\bf \verb?|x|?} which should be a SingleInteger
-- {\bf \verb?$?} which is the current domain (ORDRING-)
+- *=|x|=* which should be a SingleInteger
+- *=$=* which is the current domain (ORDRING-)
 
 So it looks like I have the following structure
 #+begin_example
@@ -3726,9 +3679,9 @@ Now, back to the 'sign' function. You saw this:
 #+begin_example
    (sign (((Integer) $) 59 T ELT))  (sample (($) () T CONST))
 #+end_example
-which is asking you to look up element 59 from the domain (\verb|$|)
+which is asking you to look up element 59 from the domain (=$=)
 
-Note that \verb|$| {\sl actually} means the infovec. So we are asking:
+Note that =$= /actually/ means the infovec. So we are asking:
 
 #+begin_example
    (elt (elt (getf (symbol-plist '|Permutation|) '|infovec|) 0) 59)
@@ -3746,7 +3699,7 @@ runtime data structures we see
 #+begin_example
    (symbol-plist '|Permutation|)
 #+end_example
-returns the property list on the symbol {\bf Permutation} which is where
+returns the property list on the symbol *Permutation* which is where
 Axiom caches domain information. Almost everything of interest about a
 domain resides on the property list, shown here in all its glory.
 
@@ -3975,7 +3928,7 @@ In the PERM case we see
    ....)
 #+end_example
 
-We can get the \verb?|infovec|? off the property list with the call
+We can get the =|infovec|= off the property list with the call
 
   (getf (symbol-plist '|Permutation|) '|infovec|)
 
@@ -3993,7 +3946,7 @@ which uses SETF to put the infovec on the property list of PERM.
 This information vector contains information for function lookup.
 This vector gets created when we "instantiate" PERM.
 
-The {\bf infovec} is a list with the structure
+The *infovec* is a list with the structure
 #+begin_example
   (#<vector 08ea516c> 
    #<vector 08ea5150>
@@ -4040,19 +3993,19 @@ The lisp form (see PERM.nrlib/code.lsp) reads:
   ('t -1)))
 #+end_example
 
-We call the \verb?|PERM;sign;$I;17|? which takes 2 arguments
+We call the =|PERM;sign;$I;17|= which takes 2 arguments
 
 The first of which is the permutation and the second is the infovec
 for the PERM domain.
 
-The \verb|(qrefelt $ 58)| uses the above dance to look up a function
+The =(qrefelt $ 58)= uses the above dance to look up a function
 in the infovec at the 58th position... which returns
 
 #+begin_example
   |PERM;even?;$B;18|
 #+end_example
 
-The spadcall calls \verb'|PERM;even?;$B;18|' with the value of \verb?|p|?.
+The spadcall calls =|PERM;even?;$B;18|= with the value of =|p|=.
 
 If we look in the domain Permutation for the implementation of even?
 
@@ -4197,7 +4150,7 @@ This is part of a Makefile that structure within the algebra Makefile.
 This Makefile gets extracted by the Makefile in the input subdirectory.
 Thus there is a connection between the two Makefiles (algebra and input).
 This algebra regression Makefile goes by the chunk name 
-{\bf algebra.regress}. It contains a list of regression files and a 
+*algebra.regress*. It contains a list of regression files and a 
 single stanza:
 #+begin_example
 %.regress: %.input
@@ -4207,7 +4160,7 @@ single stanza:
 	@ echo ')lisp (regress "$*.output")' | ${TESTSYS} \
                 | egrep -v '(Timestamp|Version)' | tee $*.regress
 #+end_example
-The input Makefile extracts {\bf algebra.regress} and then calls 
+The input Makefile extracts *algebra.regress* and then calls 
 make to process this file.
 
 This keeps the regression test list in the algebra Makefile.
@@ -4895,8 +4848,6 @@ at /spad and was build to run on linux. These directories
 may not yet be in the CVS tree but are documented here so they
 make sense when the show up.
 
-\vskip .25in
-\noindent
 The AXIOM variable
 
 The usual setting of the AXIOM variable is /spad/mnt/linux. The
@@ -4904,16 +4855,12 @@ name is composed of three parts, the rooted path, in this case
 /spad, ``mnt'', and the system you are running, in this case
 linux. Builds for other systems will have other system names.
 
-\vskip .25in
-\noindent
 /spad
 
 This is the usual root directory of the Axiom system. The name is
 historical, a contraction of Scratchpad. This name can be anything
 provided the shell variable AXIOM contains the new prefix. 
 
-\vskip .25in
-\noindent
 /spad/mnt
 
 This is a directory which contains files which are specific to a
@@ -4921,8 +4868,6 @@ given platform. At a site that contains multiple platforms this
 directory will contain a subdirectory for each type of platform
 (e.g. linux, rios, ps2, rt, sun, etc).
 
-\vskip .25in
-\noindent
 /spad/mnt/linux
 
 This directory contains the complete copy of the Axiom system for
@@ -4943,16 +4888,12 @@ There are several directories explained below. They are:
 #+end_example
 
 *** The mnt/linux/bin directory
-\vskip .25in
-\noindent
 ./bin
 
 This is a directory of user executable commands, either at the top
 level or thru certain Axiom system calls. Support executables live
 in ./lib
 
-\vskip .25in
-\noindent
 ./bin/htadd
 
 This adds pages to the Hyperdoc database (ht.db, which lives
@@ -4960,8 +4901,6 @@ in ./doc/hypertex/pages; hypertex, since we have a penchant for these
 things, is an historical name for Hyperdoc. The single word 'lawyers'
 will probably explain away a lot of name changes.)
 
-\vskip .25in
-\noindent
 ./bin/spadsys
 
 This is the Axiom interpreter. It is one of the functions started when
@@ -4973,8 +4912,6 @@ talk to Hyperdoc or graphics. Users who rlogin or use an ascii-only
 terminal (for historical reasons, no doubt) can profit by invoking
 spadsys directly rather than using ./bin/axiom
 
-\vskip .25in
-\noindent
 ./bin/axiom
 
 This is a shell script that spins the world. It kicks off a whole tree
@@ -4982,15 +4919,11 @@ of processes necessary to perform the X-related magic we do. It expects
 the shell variable AXIOM to be set to the 'mount point' (usually to
 /spad/mnt/linux).
 
-\vskip .25in
-\noindent
 ./bin/clef
 
 This is the wonderous command-line editor used by Axiom. It can be used
 in a stand-alone fashion if you wish.
 
-\vskip .25in
-\noindent
 ./bin/SPADEDFN
 
 This script is invoked by the spad )fe command. It can be changed to 
@@ -4998,8 +4931,6 @@ invoke your favorite editor. While you may invoke your editor, it may
 not run (as in, yes, I can invoke the devil but will he come when I 
 call?)
 
-\vskip .25in
-\noindent
 ./bin/viewalone
 
 This is a function to run the graphics in a stand-alone fashion. The
@@ -5008,8 +4939,6 @@ people, most notably Jim Wen and Jon Steinbach) is a C program that
 communicates with Axiom thru sockets. It will, however, perform its
 miracles unaided if invoked by the sufficiently chaste...
 
-\vskip .25in
-\noindent
 ./bin/hypertex
 
 This is a function to run Hyperdoc (remember the penchant!) stand-alone.
@@ -5021,8 +4950,6 @@ knew that). It is possible for creative plagerists to figure out how
 to write their own pages and add them to the database (see htadd above),
 thus gaining fame far and wide...
 
-\vskip .25in
-\noindent
 ./bin/sys-init.lsp
 
 This is a file of lisp code that gets loaded
@@ -5031,8 +4958,6 @@ before Axiom starts. Thus, we distribute patches by adding lisp
 have a field day with this one. (All others should worship the
 sufficiently clever and send them money, eh?)
 
-\vskip .25in
-\noindent
 ./bin/init.lsp
 
 This is a file of lisp code loaded if and only if
@@ -5042,22 +4967,16 @@ the probable effect of injecting luser errors into the running system.
 sigh.
 
 *** The mnt/linux/doc directory
-\vskip .25in
-\noindent
 ./doc
 
 The doc subdirectory contains system documentation.
 
-\vskip .25in
-\noindent
 ./doc/command.list
 
 This is a file of command completions used by clef when you hit the
 tab key. This is a little known feature that will surprise someone
 someday (hopefully pleasantly).
 
-\vskip .25in
-\noindent
 ./doc/book
 
 This is an attempt at a book describing Axiom. It represents a 
@@ -5065,24 +4984,18 @@ combination of fantasy, describing what never will be and history
 (remember the penchant?) describing what was. Any description matching
 what is may be regarded as failure of the imagination and ignored.
 
-\vskip .25in
-\noindent
 ./doc/compguide
 
 This is an attempt to describe a compiler that doesn't exist, never
 did exist, and never will exist. It makes for entertaining reading
 so we included it.
 
-\vskip .25in
-\noindent
 ./doc/hypertex
 
 This is the fabled Hyperdoc subdirectory where all of the pages and
 the database live, along with several other obscure files needed to
 make the wizards look good.
 
-\vskip .25in
-\noindent
 ./doc/hypertex/pages
 
 This is where the 'pages' live. Each file ending in .ht contains
@@ -5093,8 +5006,6 @@ passing along historical facts by word of mouth) and will probably
 continue to propagate by the same method. Ye may become th' local
 scribe and soothsayer if ye study the writings here below....
 
-\vskip .25in
-\noindent
 ./doc/hypertex/pages/rootpage.ht
 
 This file is the magic 'first page' that gets displayed when
@@ -5103,39 +5014,29 @@ called /localinfo which is intended to allow the luser to add
 her own pages without modifying the system copies. How this is
 done was lost when the campfire got rained out.
 
-\vskip .25in
-\noindent
 ./doc/hypertex/pages/util.ht
 
 This file contains the macros used to extend the system commands.
 The syntax is hard to learn (it was hard to write, it ought to 
 be hard to learn, eh?).
 
-\vskip .25in
-\noindent
 ./doc/hypertex/pages/ht.db
 
 This is the Hyperdoc database. It is updated using ./bin/htadd
 which must be run whenever a page in this directory gets changed.
 The necessary arguments to htadd are obvious to those in the know.
 
-\vskip .25in
-\noindent
 ./doc/hypertex/bitmaps
 
 There are several pretty bitmaps used as cursors, buttons and
 general decorations that hide in this directory. 
 
-\vskip .25in
-\noindent
 ./doc/hypertex/ht.files
 
 This is a list of some Hyperdoc files. It seems to have no
 purpose in life but it is useful as a koan, as in, What is
 the length of half a list?
 
-\vskip .25in
-\noindent
 ./doc/hypertex/ht.db
 
 Another copy of the Hyperdoc database. It isn't clear which
@@ -5143,15 +5044,11 @@ one is the real one so I guess we keep both. Maybe we'll
 figure it out at the friday night campfire provided we don't
 get too lit.
 
-\vskip .25in
-\noindent
 ./doc/hypertex/gloss.text
 
 The text used in the glossary. Many magic words lie herein.
 Some are spoken only by campfire gurus.
 
-\vskip .25in
-\noindent
 ./doc/library
 
 This is a directory of Hyperdoc pages that can be freely smashed,
@@ -5162,24 +5059,18 @@ HTPATH=/spad/mnt/linux/doc/library:\\
        /spad/mnt/linux/doc/hypertex/pages\\
 and then start Hyperdoc. See the file ./doc/library/macros.ht
 
-\vskip .25in
-\noindent
 ./doc/msgs
 
 This directory contains several 'message databases'; the only one
 of which we seem to care about being s2-us.msgs but I can't swear
 to it.
 
-\vskip .25in
-\noindent
 ./doc/spadhelp
 
 This is a directory containing help information for a copy of the
 system that once ran long ago and far away. It is kept for 
 historical reasons (programmers NEVER throw anything away).
 
-\vskip .25in
-\noindent
 ./doc/viewports
 
 There are several dozen truly fine pictures in Axiom. We have 
@@ -5189,21 +5080,15 @@ and you can click on them there. They get snarfed from here.
 It is possible to view them with stand-alone graphics but don't
 ask me how. I missed that campfire due to poisoned marshmellows.
 
-\vskip .25in
-\noindent
 ./doc/complang
 
 This directory contains fantasy from the past as opposed to facts 
 from the future. Ignore it.
 
-\vskip .25in
-\noindent
 ./doc/ug
 
 This directory left intentionally blank :-) (an old IBM joke).
 
-\vskip .25in
-\noindent
 ./doc/tex
 
 These are the files necessary to create the famous goertler document.
@@ -5211,8 +5096,6 @@ If you figure out how to use these please send us the instructions
 and we will add a log to the campfire with your name on it (a rare
 honor indeed as luser's names rarely reach the inner circle).
 
-\vskip .25in
-\noindent
 ./doc/htex
 
 This directory contains the original tex-like source for the luser's
@@ -5222,30 +5105,22 @@ algebra perchance you might document it like this. Figuring out the
 syntax will also get your name into the inner circle (probably 
 connnected with a smirk :-) )
 
-\vskip .25in
-\noindent
 ./doc/newug
 
 Please don't ask me. I couldn't begin to guess. You wouldn't believe
 how many 'new' things there are that really aren't. We have more NEW
 things than Madison Avenue has NEW laundry soap.
 
-\vskip .25in
-\noindent
 ./doc/gloss.text
 
 This one is here because it is here. Existentially speaking, of course.
 
-\vskip .25in
-\noindent
 ./doc/submitted
 
 This was what the htex files said before history was rewritten...
 (and renamed?)
 
 *** The mnt/linux/algebra directory
-\vskip .25in
-\noindent
 ./algebra
 
 This is where all of the interesting action lives.
@@ -5256,8 +5131,6 @@ like signatures, source paths, properties and dried bat droppings.
 The documentation for each of these can be reached by using the
 BROWSE feature of Hyperdoc. 
 
-\vskip .25in
-\noindent
 ./algebra/MODEMAP.daase
 
 This is an inverted database that contains information gleaned from
@@ -5265,8 +5138,6 @@ the index.kaf* files. Without this there is no way to figure out
 which .NRLIB file to load. This database is opened on startup
 and kept open. 
 
-\vskip .25in
-\noindent
 ./algebra/interp.exposed
 
 This is a control file for the interpeter that limits the number
@@ -5275,16 +5146,12 @@ of places to search for function names.
 ,*********************************************
 
 *** The mnt/linux/etc directory
-\vskip .25in
-\noindent
 ./lib
 
 This directory contains functions that get loaded by the system.
 Nothing in here is executable by the user but the system needs
 these functions to run.
 
-\vskip .25in
-\noindent
 ./lib/htrefs\\
 ./lib/htsearch\\
 ./lib/hthits
@@ -5294,14 +5161,10 @@ There is no way in the current system to request a search of
 those pages so these files are fascinating examples of history
 in the making...
 
-\vskip .25in
-\noindent
 ./lib/hypertex
 
 This is Hyperdoc. What is in a name?
 
-\vskip .25in
-\noindent
 ./lib/sman
 
 This is sman, which comes before all. Methinks the name originated
@@ -5309,8 +5172,6 @@ as a contraction of superman, the name of a stack frame in a system
 long ago and far away (VMLisp) chosen because a certain programmer had a
 penchant for comic books when he was young.
 
-\vskip .25in
-\noindent
 ./lib/session\\
 ./lib/spadclient
 
@@ -5318,22 +5179,16 @@ These two files are processes started by sman for some reason or other.
 I can never remember what they do or why. However, the campfire fails
 to smoke if they don't work.
 
-\vskip .25in
-\noindent
 ./lib/viewman
 
 This is the controlling function for the graphics. 
 
-\vskip .25in
-\noindent
 ./lib/view2d
 
 This is invoked when a 2 dimensional window is requested.
 This is provided mostly for those math majors who never got over
 the insights from flatland.
 
-\vskip .25in
-\noindent
 ./lib/view3d
 
 This is invoked when a 3 dimensional window is requested.
@@ -5342,8 +5197,6 @@ screen to 3 dimensions for realistic viewing. A mathematically
 accurate, if somewhat more achievable, rendering can be had
 on a color or monochrome crt without this upgrade.
 
-\vskip .25in
-\noindent
 ./lib/gloss.text\\
 ./lib/glosskey.text\\
 ./lib/glossdef.text
@@ -5354,8 +5207,6 @@ of terms and pointers into glossdef.text. The third (glossdef.text for
 those math majors who can't count) is a list of definitions and pointers
 back into the second (guess). These files are used by Hyperdoc.
 
-\vskip .25in
-\noindent
 ./lib/browsedb.lisp
 
 This is the original file that creates an in-memory hash table used by
@@ -5365,8 +5216,6 @@ allowing us to compute the spin vectors of the individual magnetic domains.
 This allows us to give Heisenburg a sense of direction (at least over the
 long run).
 
-\vskip .25in
-\noindent
 ./lib/comdb.text\\
 ./lib/libdb.text
 
@@ -5376,8 +5225,6 @@ the second file. The second file (libdb.text) contains flags
 (constructor, operation, attribute) and pointers into the first file. 
 These files are used by browse in Hyperdoc.
 
-\vskip .25in
-\noindent
 ./lib/loadmprotect\\
 ./lib/mprotect
 
@@ -5386,8 +5233,6 @@ They will, if used and despite the meaning behind the name, cause
 random system reboots (yeah, HARDWARE reboots. don't ask me how, I'm
 just the historian).
 
-\vskip .25in
-\noindent
 ./lib/SPADEDIT\\
 ./lib/fc\\
 ./lib/spadbuf\\
@@ -5398,8 +5243,6 @@ just the historian).
 I've drawn a blank; intentionally.
 
 *** The mnt/linux/lib directory
-\vskip .25in
-\noindent
 ./etc
 
 This directory intentionally left blank.
@@ -5407,7 +5250,7 @@ We just can't figure out WHY we intended to leave it blank.
 Historical reasons, no doubt.
 
 ** The )set command
-The {\bf )set} command contains many possible options such as:
+The *)set* command contains many possible options such as:
 #+begin_example
                      Current Values of )set Variables                      
 
@@ -5460,7 +5303,7 @@ given to the )set command.
 
 ** Hand creating the hyperdoc binary
 
-First we need {\bf tanglec} which is used to extract the required chunks.
+First we need *tanglec* which is used to extract the required chunks.
 
 We extract the source code we need from the books and compile them.
 Then we copy the executable to the correct point in Axiom's execution
@@ -5517,13 +5360,13 @@ inner call to the differentiate function:
                differentiate(#1, x), monomial(eta', 2) + eta'::UP),
 #+end_example
 
-We see that differentiate is called with \verb|#1|, which is Axiom's
+We see that differentiate is called with =#1=, which is Axiom's
 notation for an anonymous function. How can we determine the signature?
 
 Axiom has a second notation for anonymous functions using the 
-\verb|+->| notation. This notation allows you to explicitly specify
+=+->= notation. This notation allows you to explicitly specify
 type information. In the above code, we would like to replace the
-\verb|#1| variable with the \verb|+->| and explicit type information.
+=#1= variable with the =+->= and explicit type information.
 
 The first step is to look at the output of the Spad compiler. 
 The abbreviation for ElementaryIntegration can be found from the 
@@ -5536,7 +5379,7 @@ interpreter by:
 So the compiler output is in the int/algebra/INTEF.nrlib/code.lsp file.
 
 There we see the definition of the lisp tanint function. Notice that the
-\verb|$| is a hidden, internal fourth argument to an Axiom three argument
+=$= is a hidden, internal fourth argument to an Axiom three argument
 function. This is the vector of the current domain containing slots where
 we can look up information, called the domain vector.
 
@@ -5573,7 +5416,7 @@ we can look up information, called the domain vector.
       (QREFELT $ 59))))))) 
 #+end_example
 
-The assignment line for \verb|eta'| is:
+The assignment line for =eta'= is:
 #+begin_example
        eta' := differentiate(eta := first argument k, x)
 #+end_example
@@ -5593,10 +5436,10 @@ from which we see that the inner differentiate is slot 19 in
 the domain vector. Every domain has an associated domain vector
 which contains references to other functions from other domains,
 among other things. The QREFELT function takes the domain vector
-\verb|$| and slot number and does a ``quick array reference''. The
+=$= and slot number and does a ``quick array reference''. The
 return value is a pair, the car of which is a function to call. 
 The SPADCALL macro uses the last argument, in this case the result 
-of \verb|(QREFELT $ 19)| to find the function to call.
+of =(QREFELT $ 19)= to find the function to call.
 
 The function from slot 19 can be found with:
 #+begin_example
@@ -5608,11 +5451,11 @@ The function from slot 19 can be found with:
 Value = (#<compiled-function |FS-;differentiate;SSS;99|> . #<vector 090cbccc>)
 #+end_example
 
-The call of \verb|(setq $dalymode t)| changes the Axiom top level
+The call of =(setq $dalymode t)= changes the Axiom top level
 loop to interpret any input that begins with an open parenthesis to
 be interpreted as a lisp s-expression rather than Axiom input. This
-saves typing \verb|)lisp| in front of every lisp expression. Be sure
-to do a \verb|(setq $dalymode nil)| when you are finished.
+saves typing =)lisp= in front of every lisp expression. Be sure
+to do a =(setq $dalymode nil)= when you are finished.
 
 The *print-circle* needs to be true because the domain vector contains
 circular references to itself and we need to make sure that we check for
@@ -5621,7 +5464,7 @@ this during printing so the print is not infinite.
 The *print-array* needs to be nil so that the arrays just print some
 identifying information rather than the detailed array contents.
 
-The \verb|(setf dv ...| uses the Lisp internal names for the domains.
+The =(setf dv ...= uses the Lisp internal names for the domains.
 In Axiom, the names of types are case-sensitive symbols. These are
 represented in lisp surrounded by vertical bars because lisp is not
 case sensitive. The dv variable is essentially being set to the Axiom
@@ -5646,8 +5489,8 @@ Value =
   (LET ((#0=#:G1417 (QUOTE (C . D))))
    (THE (VALUES T) (FUNCALL (CAR #0#) A B (CDR #0#))))
 #+end_example
-Note that \verb|#0| is a ``pointer'', in this case to the list '(c)
-and \verb|#0#| is a use of that pointer. This is done to make sure that
+Note that =#0= is a ``pointer'', in this case to the list '(c)
+and =#0#= is a use of that pointer. This is done to make sure that
 you reference the exact cons cell of the argument.
 
 In Axiom compiler output
@@ -5666,14 +5509,14 @@ Thus, the full expansion becomes
     eta k #<vector 090cbccc>)
 #+end_example
 
-From this we can see a reference to \verb|FS-;differentiate;SSS;99|
+From this we can see a reference to =FS-;differentiate;SSS;99=
 which is the internal name of the differentiate function from the 
-\verb|FS-| category.
+=FS-= category.
 
 Note that FunctionSpace is a category. When categories contain
 implementation code the compiler generates 2 nrlibs. The Axiom convention for
 categorical implementation of code using a trailing ``-'' so the actual
-code for \verb|FS-;differentiate;SSS;99| lives in 
+code for =FS-;differentiate;SSS;99= lives in 
 int/algebra/FS-.nrlib/code.lsp
 
 We can see that the differentiate function is coming from the category
@@ -5791,7 +5634,7 @@ $$
 \leqno(1)
 $$
 #+end_example
-So we need to figure out where the \#  prefixes are being generated.
+So we need to figure out where the #  prefixes are being generated.
 In the above code we can see various domains being loaded. These domains
 are lisp code. Each domain lives in a subdirectory of its own. For example,
 the ANY domain lives in ANY.NRLIB. The ANY.NRLIB directory contains a
@@ -6310,7 +6153,7 @@ Notice the call that reads:
     <2 (|RADIX;intToExpr| #\A)
 #+end_example
 This means that calling |RADIX;intToExpr| with the number 10
-and ``the domain vector'' generates the character \#\\A which fails.
+and ``the domain vector'' generates the character #\\A which fails.
 If we had the domain vector in a variable we could hand-execute this
 algebra function directly and watch it fail. So we go to the file
 RADIX.NRLIB/code.lsp which contains the definition of RADIX;intToExpr.
@@ -6563,7 +6406,7 @@ Value = (#<compiled-function
 
 
 
-The \#\\A value appears from a call to 
+The #\\A value appears from a call to 
 CHAR;coerce;\$Of;12. We can look in CHAR.NRLIB/code.lsp
 for this function and continue our descent into the code. The 
 function looks like:
@@ -6910,9 +6753,9 @@ description section be simple text with a single character between the
 section and change the names. In any case, your new section will need
 \item Create a dividiing line consisting of all \% signs. 
 Note that this character is the comment character for TeX.
-\item Create the \verb|\section| tag. This tag should contain the exact text of
+\item Create the =\section= tag. This tag should contain the exact text of
 the )abbrev line from your algebra code. It reads:
-\verb|)section{package INTERGB InterfaceGroebnerPackage}|
+=)section{package INTERGB InterfaceGroebnerPackage}=
 \item Create a regression test chunk. This chunk derives its name from the
 algebra name as in ``InterfaceGroebnerPackage.input''. This chunk will
 be automatically extracted and run during regression testing. For the
@@ -7142,7 +6985,7 @@ PFECAT which lives in layer 10.
 
 Now we have all of the information needed to add the algebra to the book.
 We create a new section that contains the following parts:
-- the \verb|\section{...}| header
+- the =\section{...}= header
 - the input file
 - the help file
 - the page head markup
@@ -7179,10 +7022,10 @@ code that looks like:
 #+end_example
 
 This tells us the name of the node, the background color where
-- \#4488FF is a category
-- \#88FF44 is a domain
-- \#FF4488 is a package
-- \#FF8844 is a numeric
+- #4488FF is a category
+- #88FF44 is a domain
+- #FF4488 is a package
+- #FF8844 is a numeric
 (note the rotation of bytes) and the html link from the graph to 
 the position in the document so the user can click on the picture
 and go to the source code. It names the book and the offset.
@@ -7207,13 +7050,13 @@ digraph pic {
 }
 #+end_example
 
-Save this file into \verb|$AXIOM/books/pic|. Then run:
+Save this file into =$AXIOM/books/pic=. Then run:
 #+begin_example
 dot -Tps <pic >ps/v104interfacegroebnerpackage.ps
 #+end_example
 
 This will generate a postscript file
-\verb|$AXIOM/books/ps/v104interfacegroebnerpackage.ps|
+=$AXIOM/books/ps/v104interfacegroebnerpackage.ps=
 
 Note that the pagepic name should be lower case as this is the name of
 a file in the file system. Axiom uses only lower case names as files
@@ -7225,7 +7068,7 @@ the name of the algebra in lowercase, and the extension of ps.
 
 Now we modify the pagepic tag in book volume 10.4 to read:
 
-\verb|\pagepic{ps/v104interfacegroebnerpackage.ps}{INTERGB}{1.00}|
+=\pagepic{ps/v104interfacegroebnerpackage.ps}{INTERGB}{1.00}=
 
 This tells us where to find the file, what the abbreviation for the
 file will be, and the scale factor to use to display the file (1.00).
@@ -7411,7 +7254,7 @@ to the list of exposed algebra. To do this, add the line:
 #+begin_example
    (|InterfaceGroebnerPackage| . INTERGB)
 #+end_example
-to the variable \verb|$globalExposureGroupAlist| under the ``basic''
+to the variable =$globalExposureGroupAlist= under the ``basic''
 sublist. 
 
 Now the algebra should build and have the new algebra available.
@@ -7452,7 +7295,7 @@ The explanation for the steps follow. The steps are:
 \end{enumerate}
 
 ** Makefile
-This book is actually a literate program\cite{Knut92} and can contain 
+This book is actually a literate program[cite:@Knut92] and can contain 
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,20 +1,14 @@
-\documentclass[dvipdfm]{book}
-\newcommand{\VolumeName}{Volume 6: Axiom Command}
-\input{bookheader.tex}
-\pagenumbering{arabic}
-\mainmatter
-\setcounter{chapter}{0} % Chapter 1
 * Overview
 The axiom system consists of a set of processes managed by the
 superman process.  The superman process, called sman, is normally
 invoked from the axiom shell script in order to start a tree of
 subprocesses.
 
-The {\tt axiom} command is a shell script that collects the 
-command line options for the {\tt sman} process, sets some shell
-variables, and then invokes {\tt sman}. 
+The =axiom= command is a shell script that collects the 
+command line options for the =sman= process, sets some shell
+variables, and then invokes =sman=. 
 
-The {\tt sman} process starts the following tree of processes:
+The =sman= process starts the following tree of processes:
 #+begin_example
      --xterm---bash---sman-|-AXIOMsys
                            |-clef---spadclient
@@ -25,8 +19,8 @@ The {\tt sman} process starts the following tree of processes:
 #+end_example
 
 * The axiom Command
-The {\tt axiom} command starts everything for Axiom. The options
-for the {\tt axiom} command are:
+The =axiom= command starts everything for Axiom. The options
+for the =axiom= command are:
 #+begin_example
 axiom
   [-ht    |-noht]      whether to use HyperDoc
@@ -51,33 +45,33 @@ In detail, the command options are:
 #+begin_example
   [-ht    |-noht]      whether to use HyperDoc
 #+end_example
-{\tt Hyperdoc} is the documentation tool for Axiom. The
-{\tt -ht} option, enabled by default, will start this tool.
-See Jenks\cite{Jenk92} Chapter 3 for further information on the 
-{\tt hyperdoc} subsystem.
+=Hyperdoc= is the documentation tool for Axiom. The
+=-ht= option, enabled by default, will start this tool.
+See Jenks[cite:@Jenk92] Chapter 3 for further information on the 
+=hyperdoc= subsystem.
 
 *** [-gr $\vert$ -nogr]
 #+begin_example
   [-gr    |-nogr]      whether to use Graphics
 #+end_example
-The {\tt graphics} subsystem is enabled using the 
-{\tt -gr} option, enabled by default. Graphics will appear as a
+The =graphics= subsystem is enabled using the 
+=-gr= option, enabled by default. Graphics will appear as a
 result of a draw command, such as
 #+begin_example
  draw(sin(x),x=0..1)
 #+end_example
 Note that attempting to use draw commands when the graphics is
 disabled will simply hang the interpreter waiting for a response.
-See Jenks\cite{Jenk92} Chapter 7 for further information on the 
-{\tt graphics} subsystem.
+See Jenks[cite:@Jenk92] Chapter 7 for further information on the 
+=graphics= subsystem.
 
 *** [-clef $\vert$ -noclef]
 #+begin_example
   [-clef  |-noclef]    whether to use Clef
 #+end_example
-The {\tt clef} (Command Line Edit Facility) allows for command completion.
+The =clef= (Command Line Edit Facility) allows for command completion.
 The list of command completion strings is in the last chapter of this
-document. If {\tt clef}, enabled by default, is running then you can type:
+document. If =clef=, enabled by default, is running then you can type:
 #+begin_example
  x:Dena<tab>
 #+end_example
@@ -86,7 +80,7 @@ and this will automatically be expanded to:
  x:DenavitHartenbergMatrix
 #+end_example
 
-The {\tt clef} program also allows command line editing. The commands are
+The =clef= program also allows command line editing. The commands are
 special keyboard keys.
 - HOME move to beginning of the line
 - END move to the end of the line
@@ -97,17 +91,17 @@ special keyboard keys.
 - LEFTARROW move left on the line
 - RIGHTARROW move right on the line
 - INSERT toggle insert/overstrike
-See Jenks\cite{Jenk92} page 21 for 
-further information on the {\tt clef} command.
+See Jenks[cite:@Jenk92] page 21 for 
+further information on the =clef= command.
 
 *** [-noiw $\vert$ -iw]
 #+begin_example
   [-noiw  |-iw]        start in interpreter in a separate window
 #+end_example
-The {\tt iw} option, disabled by default, will start a second
+The =iw= option, disabled by default, will start a second
 interpreter in its own window with its own frame. The fact that
 the second interpreter is in its own frame can be seen using the
-{\tt )frame} command. For instance, if you type
+=)frame= command. For instance, if you type
 #+begin_example
  axiom -iw
 #+end_example
@@ -141,7 +135,7 @@ Setting
 #+begin_example
  x:=3
 #+end_example
-in the second window will set the variable $x$ in the frame {\tt frame1}.
+in the second window will set the variable $x$ in the frame =frame1=.
 Switching to the first window and typing:
 #+begin_example
  x
@@ -152,8 +146,8 @@ gives:
    (1)  x
                              Type: Variable x
 #+end_example
-since the first window is in {\tt frame0} and the variable $x$ is
-defined in {\tt frame1}.
+since the first window is in =frame0= and the variable $x$ is
+defined in =frame1=.
 But we can switch frames in the first window using
 #+begin_example
  )frame next
@@ -169,8 +163,8 @@ gives:
                              Type: PositiveInteger
 #+end_example
 and now the two windows share the same frame space. 
-See Jenks\cite{Jenk92} page 579 for further 
-information on the {\tt frame} command.
+See Jenks[cite:@Jenk92] page 579 for further 
+information on the =frame= command.
 
 *** [-ihere $\vert$ -noihere]
 #+begin_example
@@ -178,7 +172,7 @@ information on the {\tt frame} command.
 #+end_example
 This option determines whether Axiom will start in the current window.
 Using this option alone is not particularly useful and it is generally
-used in combination with the {\tt -iw} option:
+used in combination with the =-iw= option:
 #+begin_example
  axiom -noihere -iw &
 #+end_example
@@ -201,11 +195,11 @@ subsystem. This is useful for starting Axiom in an emacs buffer.
 #+begin_example
   [-go  |-nogo]        whether to start system
 #+end_example
-uses the {\tt -go} option, enabled by default, controls whether
-the system starts from the command line. If the {\tt -nogo}
+uses the =-go= option, enabled by default, controls whether
+the system starts from the command line. If the =-nogo=
 option is chosen the system prints the command line that would
 have been issued. This is useful for finding out what the command
-line options to {\tt sman} will be. For instance:
+line options to =sman= will be. For instance:
 #+begin_example
  axiom -nogo -iw
 #+end_example
@@ -219,15 +213,15 @@ exec ~/mnt/linux/bin/sman -iw -ws ~/mnt/linux/bin/AXIOMsys
 #+begin_example
   [-ws wsname]         use named workspace
 #+end_example
-In the {\tt -nogo} command above you can see that the default
+In the =-nogo= command above you can see that the default
 workspace name is 
 #+begin_example
 -ws ~/mnt/linux/bin/AXIOMsys
 #+end_example
 This option allows you to change that. This is useful for
 debugging new system builds. During build a debugging version
-of Axiom is created in the {\tt obj/linux/bin} directory. The
-{\tt debugsys} image uses interpreted lisp code rather than
+of Axiom is created in the =obj/linux/bin= directory. The
+=debugsys= image uses interpreted lisp code rather than
 compiled code. This makes it possible to do deep debugging. To
 use this workspace you would incant:
 #+begin_example
@@ -244,7 +238,7 @@ use this workspace you would incant:
 #+end_example
 shows you the executable workspaces. Generally in a built system
 there is only one, called\\
-{\tt \$AXIOM/bin/AXIOMsys}.
+=\$AXIOM/bin/AXIOMsys=.
 
 *** [-grprog fname]
 #+begin_example
@@ -252,7 +246,7 @@ there is only one, called\\
 #+end_example
 allows you to specify which program to use for the graphics.
 By default this is\\
-{\tt \$AXIOM/lib/viewman}.
+=\$AXIOM/lib/viewman=.
 
 *** [-htprog fname]
 #+begin_example
@@ -260,7 +254,7 @@ By default this is\\
 #+end_example
 allows you tp specify which program to use for Hyperdoc. By
 default it is\\
-{\tt \$AXIOM/bin/hypertex -s}.
+=\$AXIOM/bin/hypertex -s=.
 
 *** [-clefprog fname]
 #+begin_example
@@ -268,21 +262,21 @@ default it is\\
 #+end_example
 allows you to specify which program to use for clef. By default
 it is\\ 
-{\tt \$AXIOM/bin/clef -f \$AXIOM/lib/command.list -e}.
+=\$AXIOM/bin/clef -f \$AXIOM/lib/command.list -e=.
 
 *** [-sessionprog fname]
 #+begin_example
   [-sessionprog fname] use named program for session
 #+end_example
 allows you to specify the session manager program. By default it is\\
-{\tt \$AXIOM/lib/session}.
+=\$AXIOM/lib/session=.
 
 *** [-clientprog fname]
 #+begin_example
   [-clientprog fname]  use named program for spadclient
 #+end_example
 allows you to specify the spadclient program. By default it is\\
-{\tt \$AXIOM/lib/spadclient}.
+=\$AXIOM/lib/spadclient=.
 
 *** [-h]
 #+begin_example
@@ -294,13 +288,13 @@ allows you to specify the spadclient program. By default it is\\
 #!/bin/sh
 
 #+end_src
-The {\tt MALLOCTYPE} shell variable is an {\tt IBM} {\tt AIX}
+The =MALLOCTYPE= shell variable is an =IBM= =AIX=
 shell variable that controls buckets based extensions in the default
 memory allocator which may enhance performance. AIX uses a new
-memory management routine that does not zero {\tt malloc} memory
+memory management routine that does not zero =malloc= memory
 and does not round up to the nearest power of 2, unlike most non-AIX
 systems. This can cause failures so we protect against that here.
-See the AIX Performance Tuning Guide\cite{Haya05} for details.
+See the AIX Performance Tuning Guide[cite:@Haya05] for details.
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 
@@ -316,7 +310,7 @@ export HOST
 
 #+end_src
 There are 4 basic utilities used by this script.
-The {\tt ciao} script for immediate exit:
+The =ciao= script for immediate exit:
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 ciao() {
@@ -325,7 +319,7 @@ ciao() {
 }
 
 #+end_src
-The {\tt needsubopt} script which is used to issue an error message
+The =needsubopt= script which is used to issue an error message
 when one of the command line options requires an option:
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
@@ -334,7 +328,7 @@ needsubopt () {
 	ciao
 }
 #+end_src
-The {\tt showuse} script which gives basic command line help:
+The =showuse= script which gives basic command line help:
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 showuse() {
@@ -382,16 +376,16 @@ fi
 
 We assume that Axiom is installed in the standard place on
 a linux system. We will modify this assumption as we process
-the environment and command line. The term {\tt spad} is an
-historical shortened version of the name {\tt scratchpad},
-the original name of the {\tt Axiom} system.
+the environment and command line. The term =spad= is an
+historical shortened version of the name =scratchpad=,
+the original name of the =Axiom= system.
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 SPADDEFAULT=/usr/local/axiom/mnt/linux
 
 #+end_src
-If the {\tt \$AXIOM} shell variable is set then we use it.\\
-If not, then if the {\tt \$SPAD} shell variable is set then we use it.\\
+If the =\$AXIOM= shell variable is set then we use it.\\
+If not, then if the =\$SPAD= shell variable is set then we use it.\\
 If not, then we try to use the default value above.\\
 If not, we simply fail.
 #+NAME: axiomcmd
@@ -455,7 +449,7 @@ We default to actually executing the workspace.
 go=yes
 
 #+end_src
-We default to the {\tt AXIOMsys} workspace.
+We default to the =AXIOMsys= workspace.
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 wsname=AXIOMsys
@@ -485,7 +479,7 @@ and exit.
         -list)  list=yes
                 go=no;;
 #+end_src
-If the user specified {\tt go} or {\tt nogo} we handle that case
+If the user specified =go= or =nogo= we handle that case
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 	-go)	go=yes ;;
@@ -521,7 +515,7 @@ These options were not explained earlier and are only for developer use.
 		shift
 		;;
 #+end_src
-We handle the various [{\tt -option} $\vert$ {\tt -nooption}] cases
+We handle the various [=-option= $\vert$ =-nooption=] cases
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 	-clef|-noclef|-gr|-nogr|-ht|-noht|-iw|-noiw)
@@ -594,14 +588,14 @@ if [ $go = no ] ; then
 	exit 0
 fi
 #+end_src
-All of the options have been processed so we start {\tt sman}
+All of the options have been processed so we start =sman=
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
 exec $SPAD/bin/sman $otheropts -ws $serverws
 
 #+end_src
 
-\chapter{The {\tt sman} program}
+\chapter{The =sman= program}
 ** include files
 #+NAME: include/sockio-c.h1
 #+begin_src common-lisp :noweb yes
@@ -1338,7 +1332,7 @@ fork_you(int death_action)
 
 #+end_src
 *** exec\_command\_env
-Note that the next-to-last argument of {\tt execle} must be an
+Note that the next-to-last argument of =execle= must be an
 explicit NULL pointer. The previous naked 0 value was not correct.
 #+NAME: sman.execcommandenv
 #+begin_src common-lisp :noweb yes
@@ -1897,23 +1891,23 @@ main(int argc, char *argv[],char *envp[])
 ** Command Completion
 Hyperdoc has the ability to do command completion. The known commands
 are listed, one entry per line, in a file called command.list. 
-\chapter{The {\tt viewman} program}
+\chapter{The =viewman= program}
 #+NAME: the viewman command line
 #+begin_src common-lisp :noweb yes
 char *GraphicsProgram = "$AXIOM/lib/viewman";
 #+end_src
 
-\chapter{The {\tt hypertex} program}
+\chapter{The =hypertex= program}
 #+NAME: the hypertex command line
 #+begin_src common-lisp :noweb yes
 char *HypertexProgram = "$AXIOM/bin/hypertex -s";
 #+end_src
-\chapter{The {\tt clef} program}
+\chapter{The =clef= program}
 #+NAME: the clef command line
 #+begin_src common-lisp :noweb yes
 char *ClefProgram = "$AXIOM/bin/clef -f $AXIOM/lib/command.list -e ";
 #+end_src
-\chapter{The {\tt session} program}
+\chapter{The =session= program}
 #+NAME: the session manager command line
 #+begin_src common-lisp :noweb yes
 char *SessionManagerProgram = "$AXIOM/lib/session";
@@ -2491,7 +2485,7 @@ main(void)
 <<ses.main>>
 
 #+end_src
-\chapter{The {\tt spadclient} program}
+\chapter{The =spadclient= program}
 #+NAME: the spadclient command line
 #+begin_src common-lisp :noweb yes
 char *SpadClientProgram = "$AXIOM/lib/spadclient";

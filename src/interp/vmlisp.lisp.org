@@ -1,13 +1,6 @@
 documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src/interp depsys.lisp}
-\author{Lars Ericson, Barry Trager, Martial Schor, Timothy Daly}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
+#+TITLE: depsys.lisp
+#+AUTHOR: Lars Ericson, Barry Trager, Martial Schor, Timothy Daly
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1583,7 +1576,7 @@ Camm issued a fix. This used to read:
 This whole C excursion exists because CLtL1 had no way to ask a hash
 table for its test: the snippet casts the table object to a short
 array and reads GCL's internal layout at offset 12. ANSI added
-{\bf hash-table-test}, which answers the same question by name on
+*hash-table-test*, which answers the same question by name on
 every conforming host, so the portable branch is one case form with
 no C at all. The GCL branch is kept verbatim behind a reader
 conditional rather than switched to hash-table-test, because GCL
@@ -3376,8 +3369,8 @@ such as modemaps to see if the $X$ object occurs within $Y$. One
 particular use is in a function called isPartialMode (see
 i-funsel.boot) to decide
 if a modemap is only partially complete. If this is true then the 
-modemap will contain the constant \verb|$EmptyMode|. So the call 
-ends up being CONTAINED \verb|$EmptyMode| Y. 
+modemap will contain the constant =$EmptyMode=. So the call 
+ends up being CONTAINED =$EmptyMode= Y. 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 (DEFUN CONTAINED (X Y)
@@ -3487,7 +3480,7 @@ the vector to get extended by 1 and copied. These patches fix the
 problem since vectors with fill pointers don't need to be copied.
 
 These cut out the lion's share of the gc problem
-on this compile.  30min {\tt ->} 7 min on my box.  There is still some gc
+on this compile.  30min =->= 7 min on my box.  There is still some gc
 churning in cons pages due to many calls to 'list' with small n.  One
 can likely improve things further with an appropriate (declare
 (:dynamic-extent ...)) in the right place -- gcl will allocate such
@@ -6055,7 +6048,6 @@ o  there is some code at the end of SPECEVAL BOOT that puts "up"
 (defmacro |cdr|    (x) `(cdr    ,x))
 
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

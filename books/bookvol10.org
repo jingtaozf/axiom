@@ -1,9 +1,3 @@
-\documentclass[dvipdfm]{book}
-\newcommand{\VolumeName}{Volume 10: Axiom Algebra: Implementation}
-\input{bookheader.tex}
-\pagenumbering{arabic}
-\mainmatter
-\setcounter{chapter}{0} % Chapter 1
 * The Algebra Makefile
 ** Adding new algebra
 This is a complex process by its very nature. Developers and Maintainers
@@ -48,19 +42,19 @@ creating a two part stanza of information. For instance,
 and a link to the book containing the source code. The color and name
 of the book are related:
 \begin{enumerate}
-\item \#4488FF == bookvol10.2
-\item \#88FF44 == bookvol10.3
-\item \#FF4488 == bookvol10.4
-\item \#444488 == bookvol10.5
+\item #4488FF == bookvol10.2
+\item #88FF44 == bookvol10.3
+\item #FF4488 == bookvol10.4
+\item #444488 == bookvol10.5
 \end{enumerate}
 \item The second part is the graph structure. All of the loaded algebra
 files are listed (currently as comments due to the size of the complete
 graph). In particular, the node that ``supports'' BSD is FSAGG so we
-make sure that the graph edge \verb|"BSD" -> "FSAGG"| is uncommented.
+make sure that the graph edge ="BSD" -> "FSAGG"= is uncommented.
 \end{enumerate}
 \item Insert the documentation after the layer (e.g after layer 14).
 This documentation is used to reconstruct the full and partial graphs.
-\item Insert the \verb|${OUT}/BSD.o| file into the layer's file list. This
+\item Insert the =${OUT}/BSD.o= file into the layer's file list. This
 will cause the algebra to build after all of the algebra it depends on is
 built.
 \item Add the algebra to the books
@@ -77,7 +71,7 @@ one. Follow the directions for the kind of algebra you are adding.
 *** Adding a Category
 *** Adding a Domain
 In the Domains book we see that each domain is in alphabetic order by
-the {\bf full domain name}, not by the abbreviation. So for BSD we see
+the *full domain name*, not by the abbreviation. So for BSD we see
 several parts. 
 **** The section separator
 This gives a visual and logical separation for each domain. 
@@ -405,7 +399,7 @@ our example, we need to add
     BasicStochasticDifferential.regress
 #+end_example
 
-We must also add the domain to the \verb|$globalExposureGroupAlist|
+We must also add the domain to the =$globalExposureGroupAlist=
 in the interpreter (book volume 5). This is a lisp cons structure
 where the CAR is the domain name and the CDR is the domain abbreviation.
 So we add the line:
@@ -422,17 +416,17 @@ of spad file dependencies. However this is, in reality, a graph rather
 than a lattice. In order to break cycles in this graph we explicitly
 cache a few of the intermediate generated lisp code for certain files.
 These are marked throughout (both here and in the various pamphlet
-files) with the word {\bf BOOTSTRAP}.
+files) with the word *BOOTSTRAP*.
 
-If we take a cycle such as {\bf RING} we discover that in order to
-compile the spad code we must load the compiled definition of {\bf RING}.
+If we take a cycle such as *RING* we discover that in order to
+compile the spad code we must load the compiled definition of *RING*.
 In this case we must compile the cached lisp code before we try to 
 compile the spad file.
 
-The cycle for {\bf SETCAT} is longer consisting of: {\bf SETCAT} needs
-{\bf SINT} needs {\bf UFD} needs {\bf GCDDOM} needs {\bf COMRING} needs
-{\bf RING} needs {\bf RNG} needs {\bf ABELGRP} needs {\bf CABMON} needs
-{\bf ABELMON} needs {\bf ABELSG} needs {\bf SETCAT}.
+The cycle for *SETCAT* is longer consisting of: *SETCAT* needs
+*SINT* needs *UFD* needs *GCDDOM* needs *COMRING* needs
+*RING* needs *RNG* needs *ABELGRP* needs *CABMON* needs
+*ABELMON* needs *ABELSG* needs *SETCAT*.
 
 It is highly recommended that you try to become a developer of Axiom
 and read the archived mailing lists before you decide to change a
@@ -497,19 +491,19 @@ when we build the system for the first time but they are
 forcibly recompiled at the end of the build so they reflect
 current code (just in case someone changes the spad code but
 does not re-cache the generated lisp). If you add these files
-as preconditions (note that they are all in the {\bf MID} 
-directory rather than the {\bf OUT} directory like everything
+as preconditions (note that they are all in the *MID* 
+directory rather than the *OUT* directory like everything
 else) then the final recompile will invalidate all of the
 rest of the algebra targets which will get rebuilt again causing
 these targets to be out of date. The rest of the loop is left
 up to the student.
 
 The bootstrap process works because first we ask for the compiled
-lisp code stanzas (the \verb|\${MID}/BAR.o| files), THEN we ask for
-the final algebra code stanzas (the \verb|\${OUT}/BAR.o| files). This
+lisp code stanzas (the =\${MID}/BAR.o= files), THEN we ask for
+the final algebra code stanzas (the =\${OUT}/BAR.o= files). This
 is a very subtle point so think it through carefully. Notice that
-this is the only layer calling for \verb|\${MID}| files. All other 
-layers call for \verb|\${OUT}| files. If you break this the world
+this is the only layer calling for =\${MID}= files. All other 
+layers call for =\${OUT}= files. If you break this the world
 will no longer compile so don't change it if you don't understand it.
 
 #+begin_example
@@ -17410,18 +17404,18 @@ OBJECT
 
 ** The Environment
 *** The working directories
-We define 5 directories for this build. The{\bf IN} directory
+We define 5 directories for this build. The*IN* directory
 contains the pamphlet files for the algebra. These are expanded
-into the{\bf MID} directory as either .spad or .as files. The
+into the*MID* directory as either .spad or .as files. The
 .spad files are compiled by the native spad internal compiler.
 The .as files are compiled using the Aldor compiler. The output
 of the compilation has two purposes. Part of the information is
 used to build various database files (daase files). The other
-part is executable code which is placed in the {\bf OUT}
+part is executable code which is placed in the *OUT*
 directory. When invoked as ``make document'' we construct
-the .dvi files in the{\bf DOC} directory.
+the .dvi files in the*DOC* directory.
 
-The \verb|OUTSRC=${MNT}/${SYS}/src/algebra| subdirectory contains the 
+The =OUTSRC=${MNT}/${SYS}/src/algebra= subdirectory contains the 
 algebra source files extracted from the pamphlet files. These sources 
 allow the end user to change the algebra if needed.
 
@@ -17443,7 +17437,7 @@ BOOKS=${SPD}/books
 
 #+end_src
 *** The depsys variable
-The {\bf depsys} image is the compile-time environment for boot and lisp
+The *depsys* image is the compile-time environment for boot and lisp
 files.
 
 #+NAME: environment
@@ -17453,7 +17447,7 @@ DEPSYS=${OBJ}/${SYS}/bin/depsys
 
 #+end_src
 *** The interpsys variable
-The {\bf interpsys} image is the compile-time environment for algebra
+The *interpsys* image is the compile-time environment for algebra
 files.
 
 #+NAME: environment
@@ -17518,18 +17512,18 @@ A 5 stanza group for this case performs the following functions:
 
 The subtle point here occurs in the first item. The bootstrap code
 group (in the layer0 bootstrap code chunk above) asks for the
-compiled ``.o'' files in the \verb|\${MID}| directory. Essentially this
+compiled ``.o'' files in the =\${MID}= directory. Essentially this
 code group calls for intermediate compiled files. This triggers the
 bootstrap stanzas (items 1 and 2 above). All of the other layer 
-chunks ask for compiled code in the \verb|\${OUT}| directory which is
+chunks ask for compiled code in the =\${OUT}= directory which is
 the final algebra directory. 
 
 The bootstrap process works because first we ask for the compiled
-lisp code stanzas (the \verb|\${MID}/BAR.o| files), THEN we ask for
-the final algebra code stanzas (the \verb|\${OUT}/BAR.o| files). This
+lisp code stanzas (the =\${MID}/BAR.o= files), THEN we ask for
+the final algebra code stanzas (the =\${OUT}/BAR.o= files). This
 is a very subtle point so think it through carefully. The layer0
-bootstrap list is the only file list that calls for \verb|\${MID}| files.
-All other layers ask for \verb|\${OUT}| files. Make sure you
+bootstrap list is the only file list that calls for =\${MID}= files.
+All other layers ask for =\${OUT}= files. Make sure you
 understand this before you change things. If you break it the
 world will no longer compile.
 
@@ -17790,7 +17784,7 @@ refer to the parts of the grep output that come before and after the
 ``:'' respectively.
 
 The variable ``chunk'' is assigned the actual chunk name minus
-the '\verb|\begin{chunk}{|' and '\verb|}|' delimiters. 
+the '=\begin{chunk}{=' and '=}=' delimiters. 
 In the example given above this will become
 #+begin_example
 package LEXTRIPK LexTriangularPackage
@@ -17813,7 +17807,7 @@ original ``zerodim.spad.pamphlet'' file.
 The second line is the body of the makefile stanza which calls 
 notangle to extract the algebra from the original pamphlet using
 the chunk name and writes it to the intermediate subdirectory. In
-the case above this would resolve to \verb|\${MID}/LEXTRIPK.spad|.
+the case above this would resolve to =\${MID}/LEXTRIPK.spad=.
 
 For the line given above it outputs the following:
 #+begin_example
@@ -18034,7 +18028,7 @@ This is part of a Makefile that structure within the algebra Makefile.
 This Makefile gets extracted by the Makefile in the input subdirectory.
 Thus there is a connection between the two Makefiles (algebra and input).
 This algebra regression Makefile goes by the chunk name 
-{\bf algebra.regress}. It contains a list of regression files and a 
+*algebra.regress*. It contains a list of regression files and a 
 single stanza:
 #+begin_example
 %.regress: %.input
@@ -18056,7 +18050,7 @@ single stanza:
 	  fgrep "regression result" $*.regress )
 
 #+end_example
-The input Makefile extracts {\bf algebra.regress} and then calls 
+The input Makefile extracts *algebra.regress* and then calls 
 make to process this file.
 
 This keeps the regression test list in the algebra Makefile.
@@ -19390,7 +19384,7 @@ clean:
 * Algebra Background
 \begin{center}
 \includegraphics{ps/sweeney.eps}\\
-"source: Kaisler\cite{Kais09} Complex Adaptive Systems"
+"source: Kaisler[cite:@Kais09] Complex Adaptive Systems"
 \end{center}
 
 ** How NAG Libraries were used
@@ -19398,7 +19392,7 @@ clean:
 Based on our experiences with IRENA, we decided to use generic
 inter-process communication tools for the link to AXIOM. This has the
 added advantage that we can operate across a network. The main
-technique we use is the {\sl Remote Procedure Call} (RPC) [Sun
+technique we use is the /Remote Procedure Call/ (RPC) [Sun
 Microsystems Inc., 1988] which allows us to interact with a server on
 another machine (or on the local machine). RPC takes care of
 differences in data representation (e.g. the byte-order of floating
@@ -19448,11 +19442,11 @@ compiler to take care of low-level portability problems.
 
 
 ** Algebraic Function Fields and Algebraic Geometry
-Axiom implements the PAFF package by Hache\cite{Hach95} which deals
+Axiom implements the PAFF package by Hache[cite:@Hach95] which deals
 with algebraic geometry codes.
 
 *** The Genus of a Plane Curve
-From Doctor Vogler\cite{Vogl07} and Walker\cite{Walk78}:
+From Doctor Vogler[cite:@Vogl07] and Walker[cite:@Walk78]:
 
 Computing the genus of a curve defined by one equation is a
 straight-forward process. Most of this comes from
@@ -19463,7 +19457,7 @@ Suppose you have a plane curve (let's call it $C$) defined by one equation
 where $f(x, y)$ is a polynomial in two variables ($x$ and $y$).  Suppose
 that the degree of this polynomial is $d$.  (That is, add up the
 exponents of $x$ and $y$ in each term, and take the largest sum.  That's
-$d$.)  Then the genus of $C$ is {\bf at most} $(d-1)(d-2)/2$.  In fact, the
+$d$.)  Then the genus of $C$ is *at most* $(d-1)(d-2)/2$.  In fact, the
 genus is exactly $(d-1)(d-2)/2$ if and only if $C$ is nonsingular.
 
 What is a nonsingular curve?  Every curve has finitely many singular
@@ -19482,9 +19476,9 @@ just rational numbers) to the three equations
 
 That is, the polynomial function and its two partial derivatives (with
 respect to $x$ and to $y$) are all zero.  Since there are more equations
-in this system than variables, you {\bf usually} have no solutions (in the
+in this system than variables, you *usually* have no solutions (in the
 sense that most real numbers are not rational, but then most numbers
-you encounter in math class are rational).  When you {\bf do} have
+you encounter in math class are rational).  When you *do* have
 solutions, then every such solution is a singular point on your curve.
 Not all singular points are rational points.
 
@@ -19550,7 +19544,7 @@ which is 0 whenever $(a, b)$ is a point on your curve.  The next term
 \[ (f_x(a, b)x + f_y(a, b)y)t\]
 
 which is 0 whenever $(a, b)$ is a singular point on your curve.  The
-smallest integer $r$ such that the coefficient of $t^r$ is {\bf not} the zero
+smallest integer $r$ such that the coefficient of $t^r$ is *not* the zero
 polynomial (as a polynomial in $x$ and $y$) is the multiplicity of the
 point $(a, b)$.  So points not on the curve have multiplicity 0,
 nonsingular points on the curve have multiplicity 1, and singular
@@ -19562,7 +19556,7 @@ So what is an ordinary singular point?  Let's look again at the polynomial
 \[ f(a + xt, b + yt)\]
 
 The coefficient of $t^r$ is a homogeneous polynomial in $x$ and $y$ of
-degree $r$.  (Homogeneous means that {\bf every} term has degree $r$.) That
+degree $r$.  (Homogeneous means that *every* term has degree $r$.) That
 means that you can write this coefficient as
 
 \[ y^r g(x/y)\]
@@ -19580,7 +19574,7 @@ curve, namely
 
 (or the vertical line $x = a$ when $z = \infty$).  (Note that some
 tangent lines might be rational, in the sense that the root $z$ is
-rational, but they won't always be.)  The singular point is {\bf ordinary}
+rational, but they won't always be.)  The singular point is *ordinary*
 if all of these $r$ tangent lines are distinct, that is, if there are no
 multiple roots of the polynomial $g(z)$ and its degree is either $r$ or
 $r-1$ (so that infinity is not a multiple root).  Note that you can
@@ -19621,7 +19615,7 @@ by more.  I'm not sure if there is a more direct way to compute the
 amount by which these points reduce the genus, but one way (described
 in Walker) is to transform the curve into another one where the
 singular point is ordinary.  Walker describes how to transform the
-curve into one with the same genus but with {\bf only} ordinary singular
+curve into one with the same genus but with *only* ordinary singular
 points.  But you can actually do each singular point separately
 instead of all at once, which can keep things manageable when you have
 many non-ordinary singular points.  The trick is to keep track of things.
@@ -19850,7 +19844,7 @@ R:=DMP([X,Y,Z],K)
                                                                  Type: Domain
 #+end_example
 
-Then we tell to the package {\tt PAFF} over which field the computation 
+Then we tell to the package =PAFF= over which field the computation 
 must be done. Also, you must give the same list of variables which 
 is used to defined the polynomial.
 
@@ -19875,7 +19869,7 @@ C:R:=X^5 + Y^2*Z^3+Y*Z^4
                Type: DistributedMultivariatePolynomial([X,Y,Z],PrimeField(2))
 #+end_example
 
-We give it to the package {\tt PAFF(K,[X,Y,Z])} which was assigned to the
+We give it to the package =PAFF(K,[X,Y,Z])= which was assigned to the
 variable $P$
 #+begin_example
 setCurve(C)$P
@@ -19904,12 +19898,12 @@ singularPoints()$P
                                    Type: List(ProjectivePlane(PrimeField(2)))
 #+end_example
 
-The results of {\tt singularPoints()\$P} is the list of all
+The results of =singularPoints()\$P= is the list of all
 the singular points of the curve in the projective plane.
 
 
 The Brill-Noether algorithm use the notion of ``adjunction divisor''.
-To compute it simply do {\tt adjunctionDivisor()\$P}
+To compute it simply do =adjunctionDivisor()\$P=
 You should obtained something like
 #+begin_example
             1
@@ -19917,8 +19911,8 @@ You should obtained something like
 #+end_example
 
 This is a divisor of the function field of the curve, consisting
-of 8 times the place {\tt \%I1} which is of degree 1 (the exponant).
-The place {\tt \%I1} is a place above a singular point (the unique one 
+of 8 times the place =\%I1= which is of degree 1 (the exponant).
+The place =\%I1= is a place above a singular point (the unique one 
 for this example). This mean that the ``desingularization tree''
 has been computed. 
 #+begin_example
@@ -19930,9 +19924,9 @@ adjunctionDivisor()$P
 #+end_example
 
 To compute the ``desingularization tree'' simply do:
-{\tt desingTree()\$P}
+=desingTree()\$P=
 
-For this example, you should obtained from {\tt desingTree()\$P}
+For this example, you should obtained from =desingTree()\$P=
 #+begin_example
         ["UU.."]
 #+end_example
@@ -19970,8 +19964,8 @@ desingTree()$P
 #+end_example
 
 To see more information about the desingularization trees,
-issue the command, {\tt fullDesTree()\$P}, and recall the command 
-{\tt desingTree()\$P}. Here you have a bit more information about
+issue the command, =fullDesTree()\$P=, and recall the command 
+=desingTree()\$P=. Here you have a bit more information about
 the infinitly near points in the desingularization trees.
 For this example, the result corresponds to the following
 #+begin_example
@@ -20136,9 +20130,9 @@ that is the curve defined by
       X  + Y Z  + Y Z  = 0
 #+end_example
 
-{\bf NOTE THAT we will use the package {\bf PAFFFF} instead of {\bf PAFF}.}
+*NOTE THAT we will use the package *PAFFFF* instead of *PAFF*.*
 
-With {\tt PAFFFF} the computation are done using dynamic extension 
+With =PAFFFF= the computation are done using dynamic extension 
 over the FINITE ground field that is given to PAFFFF. 
 
 For example,
@@ -20150,19 +20144,19 @@ will do computation in any finite extension of $K$ when NEEDED ONLY, while
            PAFF(K,[X,Y,Z]) 
 #+end_example
 only do computation over the field $K$ and, when 
-some extension is needed, {\tt PAFF} cannot go further and stop.
+some extension is needed, =PAFF= cannot go further and stop.
 
-In fact the difference between {\tt PAFF(K,[X,Y,Z])} and {\tt
-PAFFFF(K,[X,Y,Z])} is that {\tt PAFFFF(K,[X,Y,Z])} will do the
+In fact the difference between =PAFF(K,[X,Y,Z])= and {\tt
+PAFFFF(K,[X,Y,Z])} is that =PAFFFF(K,[X,Y,Z])= will do the
 computation using the domain
 #+begin_example
       PseudoAlgebraicClosureOfFiniteField  (abbreviation PACOFF)
 #+end_example
 
 Note that it is almost right to say that  
-{\tt PAFFFF(K,[X,Y,Z])} is  the same as
-{\tt PAFF(PACOFF(K),[X,Y,Z])} but 
-{\tt PAFFFF(K,[X,Y,Z])} is easier to use.
+=PAFFFF(K,[X,Y,Z])= is  the same as
+=PAFF(PACOFF(K),[X,Y,Z])= but 
+=PAFFFF(K,[X,Y,Z])= is easier to use.
 
 We want here to construct an AG-code over the field $GF(2^4)$
 and also, we want the code to be of length equal to the number of places
@@ -20187,7 +20181,7 @@ contruct an AG-code of length equal to the number of places of degree
 1 of the function field of the curve.
 
 First, let us find all the places of degree 3 of $F$.
-The results from {\tt PAFFFF} will be something like this:
+The results from =PAFFFF= will be something like this:
 #+begin_example
                  2       3         2   3
         [[%D4:%D4  + 1:1] ,[%D4:%D4 :1] ]
@@ -20241,7 +20235,7 @@ plc3:= placesOfDegree(3)$P1
 
 #+end_example
 
-\%D5 is an element created by the domain {\tt PACOFF}: it is a root
+\%D5 is an element created by the domain =PACOFF=: it is a root
 of the irreducible polynomial of degree 3 that is used to defined the
 extension of degree 3 of $GF(2)$.
 
@@ -20304,7 +20298,7 @@ lB1:= lBasis(D)$P1
 #+end_example
 
 Since we want to construct a code over $GF(2^4)$, we defined the 
-package {\tt PAFFFF} over $GF(2^4)$ to compute all the places of degree 1
+package =PAFFFF= over $GF(2^4)$ to compute all the places of degree 1
 
 #+begin_example
 K4:= FFCG(2,4)
@@ -20712,12 +20706,12 @@ an easier set to use.
 
 *** How To Compute A Groebner Basis
 
-From Verschelde\cite{Vers16} and Norman\cite{Normxx} we have the
+From Verschelde[cite:@Vers16] and Norman[cite:@Normxx] we have the
 algorithm for computing a Groebner Basis.
 
 Let $I=<f_1,f_2,\cdots,f_t>$. Write $F=\{f_1,f_2,\cdots,f_t\}$.
 
-{\bf S-polynomials} (Subtraction polynomials) 
+*S-polynomials* (Subtraction polynomials) 
 
 A term is a product of a coefficient and a monomial.
 
@@ -20742,7 +20736,7 @@ linear equations. If we take a system of homogeneous linear equations
 (i.e. the constant coefficient equals zero), then bringing the system
 into triangular form yields a Groebner basis.
 
-{\bf Buchberger's Algorithm:}
+*Buchberger's Algorithm:*
 
 Choose a pair $f_i,f_j$ and compute $\overline{S(f_i,f_j)}^F=h$.
 If this is zero, then go to the next pair. If it is not zero,
@@ -20750,7 +20744,7 @@ adjoin $h$ to the set $F$. Then start over with the enlarged $F$
 in place of the original $F$. If the $S$ polynomials are zero
 for all pairs, then stop.
 
-{\sl Example 1} Let $I=<f_1=xy-x,f_2=x^2-y>$. We use the 
+/Example 1/ Let $I=<f_1=xy-x,f_2=x^2-y>$. We use the 
 lexicographic order with $x > y$.
 \begin{enumerate}
 \item We compute
@@ -20800,38 +20794,38 @@ guarantee a unique reduced Groebner basis.
 *** Monomial Ordering
 Four common monomial orderings are Lexicographic (dictionary),
 Degree Lexicographic, Reverse Lexicographic, and
-Degree Reverse Lexicographic.\cite{Coxx07}
+Degree Reverse Lexicographic.[cite:@Coxx07]
 
 Given
 \[f=4xy^2z + 4z^2 - 5x^3 + 7x^2z^2\]
 and each monomial has the form
-\[m_1 = x_1^{i_1} \ldots x_n^{i_n}\]
-\[m_2 = x_1^{j_1} \ldots x_n^{j_n}\]
+\[m_1 = x_1^{i_1} ... x_n^{i_n}\]
+\[m_2 = x_1^{j_1} ... x_n^{j_n}\]
 
-In {\bf Lexicographic} order, then $m_1 < m_2$ if
-\[i_1=j_1,\ldots,\i_{k-1}=j_{k-1},i_k < j_k\]
+In *Lexicographic* order, then $m_1 < m_2$ if
+\[i_1=j_1,...,\i_{k-1}=j_{k-1},i_k < j_k\]
 for some $k$. That is $m_1 < m_2$ if the first variable with 
 different exponents has a lower degree in $m_1$ than in $m_2$.
 
 Sorting $f$ in Lexicographic order (Lex) we see
 \[f = -5x^3 + 7x^2z^2 + 4xy^2z + 4z^2\]
 
-In {\bf Degree Lexicographic} order, then $m_1 < m_2$ if
+In *Degree Lexicographic* order, then $m_1 < m_2$ if
 $mdeg(m_1) < mdeg(m_2)$ or if $mdeg(m_1)=mdeg(m_2)$ and $m_1 < m_2$
 with respect to Lex.
 
 Sorting $f$ in Degree Lexicographic order (Deglex) we see
 \[f=7x^2z^2 + 4xy^2z - 5x^3 + 4z^2\]
 
-In {\bf Reverse Lexicographic} order, then $m_1 < m_2$ if
-\[i_n=j_n,\ldots,i_{k+1}=j_{k+1},i_k > j>k\]
+In *Reverse Lexicographic* order, then $m_1 < m_2$ if
+\[i_n=j_n,...,i_{k+1}=j_{k+1},i_k > j>k\]
 That is, $m_1 < m_2$ if the last variable with different
 exponents has a higher degree in $m_1$ than in $m_2$.
 
 Sorting $f$ in Reverse Degree Lexicographic order (Revlex) we see
 \[f=-5x^3 + xxy^2z + 4z^2 + 7x^2z^2\]
 
-In {\bf Degree Reverse Lexicographic} order, then $m_1 < m_2$ if
+In *Degree Reverse Lexicographic* order, then $m_1 < m_2$ if
 $mdeg(m_1) < mdeg(m_2)$ or if $mdeg(m_1)=mdeg(m_2)$ and $m_1 < m_2$
 with respect to Revlex.
 
@@ -20839,7 +20833,7 @@ Sorting $f$ in Degree Reverse Lexicographic order (Degrevlex) we see
 \[f = 4xy^2z + 7x^2z^2 = 5x^3 +4z^2\]
 
 *** Variable Ordering
-Each monomial ordering depends {\bf on the ordering of the variables}.
+Each monomial ordering depends *on the ordering of the variables*.
 For instance, Lex with the ordering $x > y > z$ is a different ordering
 than Lex with $y > x > z$. In the above examples, we order
 \[x_1 > x_2 > \cdots > x_n\]
@@ -20899,16 +20893,16 @@ it is considering. So the line that reads:
    [[ci= p,tci= 4,cj= p,tcj= 4,c= z,tc= 5,rc= z,trc= 5,tF= 4,tD= 3]]
 #+end_example
 tells us that
-- {\bf ci= p} Leading monomial for critpair calculation
-- {\bf tci= 4} Number of terms of polynomial i
-- {\bf cj= p} Leading monomial  for critpair calculation
-- {\bf tcj= 4} Number of terms of polynomial j
-- {\bf c= z} Leading monomial of critpair polynomial
-- {\bf tc= 5} Number of terms of critpair polynomial
-- {\bf rc= z} Leading monomial of redcritpair polynomial
-- {\bf trc= 5} Number of terms of redcritpair polynomial
-- {\bf tF= 4} Number of polynomials in reduction list F
-- {\bf tD= 3} Number of critpairs still to do
+- *ci= p* Leading monomial for critpair calculation
+- *tci= 4* Number of terms of polynomial i
+- *cj= p* Leading monomial  for critpair calculation
+- *tcj= 4* Number of terms of polynomial j
+- *c= z* Leading monomial of critpair polynomial
+- *tc= 5* Number of terms of critpair polynomial
+- *rc= z* Leading monomial of redcritpair polynomial
+- *trc= 5* Number of terms of redcritpair polynomial
+- *tF= 4* Number of polynomials in reduction list F
+- *tD= 3* Number of critpairs still to do
 
 #+begin_example
 groebner(sn7,"redcrit","info")
@@ -21045,7 +21039,7 @@ issue facing the mathematical library developer is the plethora of
 possibilities, and while some choices are demonstrably inferior, there
 is rarely a choice which is clearly best.
 
-Following Kahan\cite{Kaha86}, we will refer to the mathematical formula we use
+Following Kahan[cite:@Kaha86], we will refer to the mathematical formula we use
 to define the principal branch of each such function as its principal
 expression. For the inverse trigonometric and inverse hyperbolic
 functions, this principal expression is given in terms of the
@@ -21094,7 +21088,7 @@ A useful function for representing identities involving complex
 functions which are related to the logarithm function is the complex
 signum function, defined as:
 \[
-{\rm csgn}(z) = 
+csgn(z) = 
 \left\{
 \begin{array}{cc}
 1, & \mbox{if }\Re z > 0 \mbox{ or }\Re z = 0\mbox{ and }\Im z > 0 \\
@@ -21103,8 +21097,8 @@ signum function, defined as:
 \right.
 \]
 
-The value of ${\rm csgn}(0)$ is unspecified. Note, for example, that 
-$\sqrt{z^2} = z {\rm csgn}(z)$.
+The value of $csgn(0)$ is unspecified. Note, for example, that 
+$\sqrt{z^2} = z csgn(z)$.
 
 Using the principal expressions for each of the 12 inverse
 trigonometric and hyperbolic functions as given in this Standard, we
@@ -21118,7 +21112,7 @@ $\begin{array}{l}
 \\
 = -\arcsin(-z) \\ 
 = \displaystyle\frac{\pi}{2} - \arccos(z) \\ 
-= -i {\rm arcsinh}(iz) \\ 
+= -i arcsinh(iz) \\ 
 \\
 \end{array}$ \\
 \hline
@@ -21127,7 +21121,7 @@ $\begin{array}{l}
 \\
 = \pi - \arccos(-z) \\ 
 = \displaystyle\frac{\pi}{2} - \arcsin(z) \\
-= i {\rm csgn}(i(z-1)) {\rm arccosh}(z) \\ 
+= i csgn(i(z-1)) arccosh(z) \\ 
 \\
 \end{array}$\\
 \hline
@@ -21135,39 +21129,39 @@ $\arctan(z)$ &
 $\begin{array}{l} 
 \\
 = -\arctan(-z) \\
-= \displaystyle\frac{\pi}{2} - {\rm arccot}(z) \\
-= -i {\rm arctanh}(iz) \\ 
+= \displaystyle\frac{\pi}{2} - arccot(z) \\
+= -i arctanh(iz) \\ 
 = -i \displaystyle\ln\left(\frac{1+iz}{\sqrt{z^2+1}}\right) \\
 \\
 \end{array}$ \\
 \hline
-${\rm arccot}(z)$ &
+$arccot(z)$ &
 $\begin{array}{l}
 \\
-= \pi - {\rm arccot}(-z) \\
+= \pi - arccot(-z) \\
 = \displaystyle\frac{\pi}{2} - \arctan(z) \\
-= i {\rm arccoth}(iz)+\displaystyle\frac{\pi}{2}(1-{\rm csgn}(z+i)) \\ 
+= i arccoth(iz)+\displaystyle\frac{\pi}{2}(1-csgn(z+i)) \\ 
 = -i \displaystyle\ln\left(\frac{z+i}{\sqrt{z^2+1}}\right) \\
 \\
 \end{array}$\\
 \hline
-${\rm arccsc}(z)$ &
+$arccsc(z)$ &
 $\begin{array}{l} 
 \\
-= - {\rm arccsc}(-z) \\
+= - arccsc(-z) \\
 = \displaystyle\arcsin(\frac{1}{z}) \\
-= \displaystyle\frac{\pi}{2} - {\rm arcsec}(z) \\
-= i\ {\rm arccsch}(iz) \\
+= \displaystyle\frac{\pi}{2} - arcsec(z) \\
+= i\ arccsch(iz) \\
 \\
 \end{array}$ \\
 \hline
-${\rm arcsec}(z)$ &
+$arcsec(z)$ &
 $\begin{array}{l}
 \\
-= \pi - {\rm arcsec}(-z) \\
+= \pi - arcsec(-z) \\
 = \arccos(\displaystyle\frac{1}{z}) \\
-= \displaystyle\frac{\pi}{2} - {\rm arccsc}(z) \\
-= i \displaystyle{\rm csgn}(i(\frac{1}{z}-1)) {\rm arcsech}(z) \\
+= \displaystyle\frac{\pi}{2} - arccsc(z) \\
+= i \displaystylecsgn(i(\frac{1}{z}-1)) arcsech(z) \\
 \\
 \end{array}$\\
 \hline
@@ -21177,64 +21171,63 @@ $\begin{array}{l}
 
 \begin{tabular}{|c|l|}
 \hline
-${\rm arcsin}h(z)$ &
+$arcsinh(z)$ &
 $\begin{array}{l}
 \\
-= -{\rm arcsinh}(-z) \\ 
-= \displaystyle\frac{\pi}{2}i - {\rm csgn}(i-z){\rm arccosh}(-iz) \\ 
-= -i {\rm arcsin}(iz) \\ 
+= -arcsinh(-z) \\ 
+= \displaystyle\frac{\pi}{2}i - csgn(i-z)arccosh(-iz) \\ 
+= -i arcsin(iz) \\ 
 \\
 \end{array}$ \\
 \hline
-${\rm arccosh}(z)$ &
+$arccosh(z)$ &
 $\begin{array}{l}
 \\
-= i {\rm csgn}(i(1-z)){\rm arccos}(z) \\
-= \displaystyle{\rm csgn}(i(1-z))(\frac{\pi}{2}i - {\rm arcsinh}(iz)) \\
+= i csgn(i(1-z))arccos(z) \\
+= \displaystylecsgn(i(1-z))(\frac{\pi}{2}i - arcsinh(iz)) \\
 \\
 \end{array}$ \\
 \hline
-${\rm arctanh}(z)$ &
+$arctanh(z)$ &
 $\begin{array}{l}
 \\
-= -{\rm arctanh}(-z) \\
-= \displaystyle{\rm arccoth}(z) -\frac{\pi}{2}i {\rm csgn}(i(z-1)) \\
-= -i {\rm arctan}(iz) \\
+= -arctanh(-z) \\
+= \displaystylearccoth(z) -\frac{\pi}{2}i csgn(i(z-1)) \\
+= -i arctan(iz) \\
 = -\displaystyle\ln\left(\frac{1-z}{\sqrt{1-z^2}}\right) \\
 \\
 \end{array}$\\
 \hline
-${\rm arccoth}(z)$ &
+$arccoth(z)$ &
 $\begin{array}{l}
 \\
-= \displaystyle{\rm arctanh}(z)+\frac{\pi}{2}i {\rm csgn}(i(z-1)) \\
-= i \displaystyle{\rm arccot}(iz)+\frac{\pi}{2}i ({\rm csgn}(i(z-1))-1) \\
-= i \displaystyle{\rm arctan}(-iz)+\frac{\pi}{2}i {\rm csgn}(i(z-1)) \\
+= \displaystylearctanh(z)+\frac{\pi}{2}i csgn(i(z-1)) \\
+= i \displaystylearccot(iz)+\frac{\pi}{2}i (csgn(i(z-1))-1) \\
+= i \displaystylearctan(-iz)+\frac{\pi}{2}i csgn(i(z-1)) \\
 \\
 \end{array}$ \\
 \hline
-${\rm arccsch}(z) $ &
+$arccsch(z) $ &
 $\begin{array}{l}
 \\
-= -{\rm arccscn}(-z) \\
-= \displaystyle{\rm arcsinn}(\frac{1}{z}) \\
-= \displaystyle{\rm csgn}(i+\frac{1}{z}){\rm arcsech}(-iz)-\frac{\pi}{2}i \\ 
-= i {\rm arccsc}(iz) \\
+= -arccscn(-z) \\
+= \displaystylearcsinn(\frac{1}{z}) \\
+= \displaystylecsgn(i+\frac{1}{z})arcsech(-iz)-\frac{\pi}{2}i \\ 
+= i arccsc(iz) \\
 \\
 \end{array}$ \\
 \hline
-${\rm arcsech}(z)$ &
+$arcsech(z)$ &
 $\begin{array}{l}
 \\
-= \displaystyle{\rm arccosh}(\frac{1}{z}) \\
-= i \displaystyle{\rm csgn}(i(1-\frac{1}{z})) {\rm arcsec}(z) \\
-= \displaystyle{\rm csgn}(i(1-\frac{1}{z}))(\frac{\pi}{2}i+{\rm arccsch}(iz) \\
+= \displaystylearccosh(\frac{1}{z}) \\
+= i \displaystylecsgn(i(1-\frac{1}{z})) arcsec(z) \\
+= \displaystylecsgn(i(1-\frac{1}{z}))(\frac{\pi}{2}i+arccsch(iz) \\
 \\
 \end{array}$ \\
 \hline
 \end{tabular}
 
-\eject
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
 \phantomsection

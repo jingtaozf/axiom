@@ -1,16 +1,7 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/lsp Makefile}
-\author{The Axiom Team}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: Makefile
+#+AUTHOR: The Axiom Team
 ** The Makefile
-We create a dummy file {\bf gcldir} after gcl has been built so
+We create a dummy file *gcldir* after gcl has been built so
 it is not rebuilt. We need to do this because we have no control
 over the gcl Makefiles.
 
@@ -61,7 +52,7 @@ so they are available at link time.
 If malloc() gets called by the C runtime before
 main starts and the shared memory is not yet
 initialised causing failure. We set
-\verb|SET_REAL_MAXPAGE| which forces a call to \verb|init_shared_memory()|.
+=SET_REAL_MAXPAGE= which forces a call to =init_shared_memory()=.
 #+NAME: gcl-2.6.5w.o.alloc.c.patch
 #+begin_src common-lisp :noweb yes
 	@(cd ${GCLVERSION}/o ; \
@@ -87,7 +78,7 @@ We have to do conversions of Windows filenames.
 #+end_src
 ** Gnu Common Lisp 2.6.5
 *** gmp wrappers patch
-The file \verb|gmp_wrappers.h| has the declaration of the integer $j$
+The file =gmp_wrappers.h= has the declaration of the integer $j$
 out of order. This causes the compiler to complain. This patch puts
 the declaration at the beginning of the function.
 #+NAME: gcl-2.6.5.h.gmp\_wrappers.h.patch
@@ -104,15 +95,15 @@ the declaration at the beginning of the function.
 #+end_src
 ** Gnu Common Lisp 2.5.2
 **** socket patch
-This patch is to {\bf h/386-linux.defs} to include two 
-global variables, {\bf EXTRAS} and {\bf EXTRA\_LIB}
+This patch is to *h/386-linux.defs* to include two 
+global variables, *EXTRAS* and *EXTRA\_LIB*
 #+begin_example
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
 #+end_example
-The {\bf EXTRAS} variable is used to include two files into the
-running image. The {\bf cfuns-c} file contains low-level directory
-manipulation routines. The {\bf sockio-c} file contains low level
+The *EXTRAS* variable is used to include two files into the
+running image. The *cfuns-c* file contains low-level directory
+manipulation routines. The *sockio-c* file contains low level
 socket code. Note that versions of GCL beyond gcl-2.4.1 may have
 routines already available. If so the Axiom references to these
 routines should be rewritten.
@@ -395,13 +386,13 @@ requires us to have XDR enabled.
 This patch is no longer necessary as of GCL-2.6.1 because the 
 C preparser symbol HAVE\_XDR is now the default in GCL.
 **** libspad patch
-The second patch changes the {\bf unixport/makefile} to reference
-the {\bf libspad.a} library when building the raw system image.
-References from {\bf cfuns-c} and {\bf sockio-c} are resolved 
-from {\bf libspad.a}
+The second patch changes the *unixport/makefile* to reference
+the *libspad.a* library when building the raw system image.
+References from *cfuns-c* and *sockio-c* are resolved 
+from *libspad.a*
 
 Additionally this patch contains a temporary fix to the makefile
-for the windows port. Apparently the \verb|$^| variable is not
+for the windows port. Apparently the =$^= variable is not
 properly expanded and this works around the problem.
 #+NAME: gcl-2.5.2.libspad.patch
 #+begin_src common-lisp :noweb yes
@@ -980,9 +971,9 @@ file contains the proclaims for GCL's function definitions.
 #+end_src
 
 There appears to be a failure on the new MAC platforms during the 
-gmp build. The fix seems to be to copy a new version of {\tt redc\_1.asm}
-to {\tt gmp4/mpn/x86\_64/k8}. We have cached the correct {\tt redc\_1.asm}
-in the zips subdirectory named {\tt gcl-2.6.12.gmp4.mpn.k8.fix}
+gmp build. The fix seems to be to copy a new version of =redc\_1.asm=
+to =gmp4/mpn/x86\_64/k8=. We have cached the correct =redc\_1.asm=
+in the zips subdirectory named =gcl-2.6.12.gmp4.mpn.k8.fix=
 #+NAME: gcl-2.6.12.gmp4.mpn.k8.fix
 #+begin_src common-lisp :noweb yes
 	@ cp ${ZIPS}/gcl-2.6.12.gmp4.mpn.k8.fix \
@@ -1036,7 +1027,7 @@ relocating object files.
  
 Finally we load some routines for performance reasons. lsp/sys-proclaim
 contains common lisp proclaim statements for the various GCL lisp routines.
-\verb|cmpnew/gcl_collectfn| contains modifications to the common lisp compiler
+=cmpnew/gcl_collectfn= contains modifications to the common lisp compiler
 to collect compile-time type information which will be written to .fn
 files as common lisp structs. These .fn files can be loaded and turned
 into common lisp proclaim statements which the compiler can use to generate
@@ -1973,15 +1964,15 @@ keep us on our toes, they've renamed the files we need to patch.
 The new patches are in the zips directory. Patches now are prefixed
 by GCLVERSION. 
 **** socket patch
-This patch is to {\bf h/386-linux.defs} to include two 
-global variables, {\bf EXTRAS} and {\bf EXTRA\_LIB}
+This patch is to *h/386-linux.defs* to include two 
+global variables, *EXTRAS* and *EXTRA\_LIB*
 #+begin_example
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
 #+end_example
-The {\bf EXTRAS} variable is used to include two files into the
-running image. The {\bf cfuns-c} file contains low-level directory
-manipulation routines. The {\bf sockio-c} file contains low level
+The *EXTRAS* variable is used to include two files into the
+running image. The *cfuns-c* file contains low-level directory
+manipulation routines. The *sockio-c* file contains low level
 socket code. Note that versions of GCL beyond gcl-2.4.1 may have
 routines already available. If so the Axiom references to these
 routines should be rewritten.
@@ -2008,10 +1999,10 @@ requires us to have XDR enabled.
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.h.linux.h.patch )
 #+end_src
 **** libspad patch
-The second patch changes the {\bf unixport/makefile} to reference
-the {\bf libspad.a} library when building the raw system image.
-References from {\bf cfuns-c} and {\bf sockio-c} are resolved 
-from {\bf libspad.a}
+The second patch changes the *unixport/makefile* to reference
+the *libspad.a* library when building the raw system image.
+References from *cfuns-c* and *sockio-c* are resolved 
+from *libspad.a*
 #+NAME: gcl-2.5.libspad.patch
 #+begin_src common-lisp :noweb yes
 	@(cd ${GCLVERSION}/unixport ; \
@@ -2087,15 +2078,15 @@ clean:
 #+end_src
 ** Gnu Common Lisp 2.4.1 (The default build)
 **** socket patch
-This patch is to {\bf h/386-linux.defs} to include two 
-global variables, {\bf EXTRAS} and {\bf EXTRA\_LIB}
+This patch is to *h/386-linux.defs* to include two 
+global variables, *EXTRAS* and *EXTRA\_LIB*
 #+begin_example
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
 #+end_example
-The {\bf EXTRAS} variable is used to include two files into the
-running image. The {\bf cfuns-c} file contains low-level directory
-manipulation routines. The {\bf sockio-c} file contains low level
+The *EXTRAS* variable is used to include two files into the
+running image. The *cfuns-c* file contains low-level directory
+manipulation routines. The *sockio-c* file contains low level
 socket code. Note that versions of GCL beyond gcl-2.4.1 may have
 routines already available. If so the Axiom references to these
 routines should be rewritten.
@@ -2122,10 +2113,10 @@ requires us to have XDR enabled.
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.h.386-linux.h.patch )
 #+end_src 
 **** libspad patch
-The second patch changes the {\bf unixport/makefile} to reference
-the {\bf libspad.a} library when building the raw system image.
-References from {\bf cfuns-c} and {\bf sockio-c} are resolved 
-from {\bf libspad.a}
+The second patch changes the *unixport/makefile* to reference
+the *libspad.a* library when building the raw system image.
+References from *cfuns-c* and *sockio-c* are resolved 
+from *libspad.a*
 #+NAME: gcl-2.4.1.libspad.patch
 #+begin_src common-lisp :noweb yes
 	@(cd ${GCLVERSION}/unixport ; \
@@ -2307,7 +2298,6 @@ clean:
 
 
 
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

@@ -1,16 +1,7 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{books/Makefile}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: books/Makefile
+#+AUTHOR: Timothy Daly
 This Makefile creates all the primary documentation for Axiom
 as pdf files in the final output tree.
-\end{abstract}
-\eject
-\tableofcontents
-\eject
 Note that we need to set the SHELL variable here because the
 default shell appears to be /bin/sh which does not follow the
 semantics of echo used by /bin/bash. Thus, while trying to 
@@ -429,12 +420,12 @@ patterns remove the last braced item in the line. If a new one
 shows up you'll have to add the pattern here to remove it.
 
 The cruft I've found so far has the forms:
-- \verb|{chapter.1}|
-- \verb|{section.1.1}|
-- \verb|{subsection.1.1}|
-- \verb|{appendix.A}|
-- \verb|{section.A.1}|
-- \verb|{subsection.A.1}|
+- ={chapter.1}=
+- ={section.1.1}=
+- ={subsection.1.1}=
+- ={appendix.A}=
+- ={section.A.1}=
+- ={subsection.A.1}=
 The sed patterns to match and remove them (in order) are:
 #+NAME: sed pattern
 #+begin_src common-lisp :noweb yes
@@ -629,13 +620,12 @@ spadedit:
 
 #+end_src
 ** Combined Bibliography
-\eject
 \begin{thebibliography}{99}
-\bibitem{1} CMUCL {\bf http://www.cons.org/cmucl}
-\bibitem{2} GCL {\bf http://savannah.gnu.org/projects/gcl}
+\bibitem{1} CMUCL *http://www.cons.org/cmucl*
+\bibitem{2} GCL *http://savannah.gnu.org/projects/gcl*
 \bibitem{3} Codemist Ltd, ``Alta'', Horsecombe Vale Combs Down
 Bath BA2 5QR UK Tel. +44-1225-837430 
-{\bf http://www.codemist.co.uk}
+*http://www.codemist.co.uk*
 \bibitem{4} \$SPAD/zips/noweb-2.10a.tgz, the noweb source tree
 \bibitem{5} \$SPAD/zips/advi-1.2.0.tar.gz, the advi source tree
 \end{thebibliography}

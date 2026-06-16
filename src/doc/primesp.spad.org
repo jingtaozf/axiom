@@ -1,30 +1,21 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src/algebra primesp.spad}
-\author{Manindra Agrawal, Neeraj Kayal and Nitin Saxena}
-\maketitle
-\begin{abstract}
+#+TITLE: primesp.spad
+#+AUTHOR: Manindra Agrawal, Neeraj Kayal and Nitin Saxena
 We present a deterministic polynomial-time algorithm that determines
 whether an input number $n$ is prime or composite.
-\end{abstract}
 \begin{quote}
 {\sl
 "The problem of distinguishing prime numbers from composite numbers and of
 resolving the latter into their prime factors is known to be one of the most
 important and useful in arithmetic. It has engaged the industry and wisdom
 of ancient and modern geometers to such an extent that it should be 
-superfluous to discuss the problem at length\ldots Further, the dignity of
+superfluous to discuss the problem at length... Further, the dignity of
 the science itself seems to require that every possible means be explored
 for the solution of a problem so elegant and so celebrated."}
 \begin{flushright}
-Karl Friedrich Gauss, {\sl Disquisitiones Arithmeticae}, 1801 (translated
+Karl Friedrich Gauss, /Disquisitiones Arithmeticae/, 1801 (translated
 from [Knu98])
 \end{flushright}
 \end{quote}
-\eject
-\tableofcontents
-\eject
 ** Introduction
 Since ancient times, mathematicians have been fascinated by problems 
 concerning prime numbers. One of the fundamental problems concerning prime
@@ -37,10 +28,10 @@ finding an efficient algorithm for testing primality. The Sieve of
 Eratosthenes (ca. 240 BC) is the most ancient algorithm that works correctly
 for all primes, however, its time complexity ($=\Omega{}(n)$ where $n$ is
 input number) is exponential in the size of input. In 17th Century, Fermat
-proved what is referred as {\sl Fermat's Little Theorem} stating that for
+proved what is referred as /Fermat's Little Theorem/ stating that for
 any prime number $p$, and any number $a$ not divisible by $p$,
 $a^{p-1} = 1 (mod p)$. Although the converse of this theorem does not hold
-(and in fact fails spectacularly for {\sl Carmichael numbers}, this result
+(and in fact fails spectacularly for /Carmichael numbers/, this result
 has been the starting point for seeral efficient primality testing algorithms.
 In 1976, Miller [Mil76] used this property to obtain a deterministic 
 polynomial-time algorithm for primality testing assuming {\sl Extended
@@ -56,7 +47,7 @@ giving a deterministic algorithm for primality that runs in
 $(log n)^{O(log long log n)}$ time (all the previous deterministic
 algorithms require exponential time). In 1986, Goldwasser and Killian [GK86] 
 proposed a randomized algorithm based on Elliptic curves running in expected
-polynomial-time on almost all inputs ({\sl all} inputs under a widely
+polynomial-time on almost all inputs (/all/ inputs under a widely
 believed hypothesis) that produces a certificate of primality (until then,
 all randomized algorithms produced certificates for compositeness only). A
 similar algorithm was developed by Atkin [Atk86]. Adelman and Huang [AH92]
@@ -86,19 +77,15 @@ of correctness.
 Our test is based on the following identity for prime numbers.
 This same identity was basis for a randomized polynomial-time algorithm
 in [AB99]:
-\vskip .1cm
-\noindent
-{\bf Identity} 
-{\sl Suppose that a is coprime to p. Then p is prime if and only if}
+*Identity* 
+/Suppose that a is coprime to p. Then p is prime if and only if/
 $$(x-a)^p == (x^p - a)(mod\ p)\eqno{1}$$
 
-\noindent
-{\sl Proof}. For $0 < i < p$, the coefficient of $x^i$ in 
+/Proof/. For $0 < i < p$, the coefficient of $x^i$ in 
 $((x-a)^p - (x^p - a))$ is $(-1)^i \left(p \over i\right) a^{p-i}$.
 Now if $p$ is prime, $\left(p \over i\right) == 0(mod\ p)$
 and hence all the coefficients are zero.
 
-\noindent
 If $p$ is composite: consider a prime $q$ that is a factor of $p$
 and let $q^k \vert\vert p$. Then $q^k$ does not divide 
 $\left(p \over q\right)$ and is coprime to $a^{p-q}$ and hence the 
@@ -113,7 +100,6 @@ evaluate both sides of (1) modulo a polynomial of the form $x^r - 1$.
 One iteration of our algorithm will consist of evaluating whether the
 following holds:
 $$(x - a)^p == (x^p - a)(mod\ x^r - 1,p)\eqno{2}$$
-\noindent
 From the identity it is immediate that all primes $p$ satisfy the above
 congruence for all values of $a$ and $r$; however some composites $p$ may
 also satisfy (2) for a few values of $(a,r)$. The above congruence takes
@@ -145,10 +131,8 @@ We now collect some simple facts from algebra that can be found in any
 standard text, e.g. [LN86, Fra90]. We also prove some of these for the
 sake of completeness.
 
-\noindent
-{\bf Lemma 3.1} 
-{\sl Let p and r be prime numbers, $p \ne r$.}
-\vskip .1cm
+*Lemma 3.1* 
+/Let p and r be prime numbers, $p \ne r$./
 \begin{enumerate}
 \item {\sl The multiplicative group of any field $F_{p^t}$ for $t > 0$, denoted
 by $F_{p^t}^*$ is cyclic.}
@@ -160,20 +144,17 @@ $$x^m == x^{m_r}\ (mod\ h(x))$$}
 $F_p$, ${{x^r - 1}\over{x-1}}$ factorises into irreducible polynomials
 each of degree $o_r(p)$.}
 \end{enumerate}
-\vskip .2cm
-\noindent
-{\sl Proof}
+/Proof/
 \begin{enumerate}
 \item See, e.g., [LN86]
-\item Let $f(x) = a_0+a_1x+\ldots+a_dx^d$. The coefficient of $x^i$ in 
+\item Let $f(x) = a_0+a_1x+...+a_dx^d$. The coefficient of $x^i$ in 
 $f(x)^p$ is
-$$\Sigma_{{i_0+\ldots+i_d=p}\over{i_1+2i_2+\ldots+di_d=i}}
-a_0^{i_0} \dots a_d^{i_d} {{p!}\over{i_0! \dots i_d!}}$$
+$$\Sigma_{{i_0+...+i_d=p}\over{i_1+2i_2+...+di_d=i}}
+a_0^{i_0} ... a_d^{i_d} {{p!}\over{i_0! ... i_d!}}$$
 Note that this sum is divisible by $p$ unless one of the $i_j$'s is $p$.
 In the latter case $i=pj$ and the coefficient of $x^i$ is
 $a_j^p = a_j$. This gives us the required congruence.
 \item Let $m=kr+m_r$. Now
-\vskip .1cm
 \begin{tabular}{llllll}
 \ \ \ \ \ \ \ \ &     & $x^r$        & $==$ & $1$       & $(mod\ x^r - 1)$\\
 \ \ \ \ \ \ \ \ &$=>$ & $x^{kr}$     & $==$ & $1$       & $(mod\ x^r - 1)$\\
@@ -185,14 +166,12 @@ Suppose that $Q_r(x)$ has an irreducible factor, $h(x)$ in $F_p$ of
 degree $k$. Now $F_p[x]/h(x)$ forms a field of size $p^k$ and the 
 multiplicative subgroup of $F_p[x]/h(x)$ is cyclic with a generator,
 say $g(x)$. Also, in this galois field, by fact(2) above, we have
-\vskip .1cm
 \begin{tabular}{llllll}
 \ \ \ \ \ \ \ \ &     & $g(x)^p$         & $==$ & $g(x^p)$\\
 \ \ \ \ \ \ \ \ &$=>$ & $g(x)^{p^d}$     & $==$ & $g(x^{p^d})$\\
 \ \ \ \ \ \ \ \ &$=>$ & $g(x)^{p^d}$     & $==$ & $g(x)$ [By fact (3) above]\\
 \ \ \ \ \ \ \ \ &$=>$ & $g(x)^{{p^d}-1}$ & $==$ & $1$
 \end{tabular}
-\vskip .1cm
 Since $(p^k - 1)$ is the order of $g(x)$, we get $(p^k - 1) \vert (p^d - 1)$
 which implies that $k \vert d$. We also have that $h(x) \vert (x^r - 1)$ in
 $F_p$ and therefore in the field $F_p[x]/h(x)$ we have
@@ -205,22 +184,18 @@ $d \vert k$. Therefore, $k = d$, and the lemma follows.
 In addition to the above algebraic facts, we will need the following two 
 number theoretic facts.
 
-\noindent
-{\bf Lemma 3.2} {\sl [Fou85, BH96] Let $P(n)$ denote the greatest prime
+*Lemma 3.2* {\sl [Fou85, BH96] Let $P(n)$ denote the greatest prime
 divisor of $n$. There exist constants $c > 0$ and $n_0$ such that,
 for all $x \ge n_0$}
 $$\vert \{p \vert p\ is\ prime, p \le x\ and\ P(p-1) > x^{{2}\over{3}} \}
 \vert \ge c{{x}\over{log\ x}}$$
 The above lemma is, in fact, known to hold for exponents up to $0.6683$
 (see [BH96] for a summary of results of this kind).
-\noindent
-{\bf Lemma 3.3}
-{\sl [Apo97] Let $\pi(n)$ be the number of primes $\le n$. Then for $n \ge 1$:}
+*Lemma 3.3*
+/[Apo97] Let $\pi(n)$ be the number of primes $\le n$. Then for $n \ge 1$:/
 $${{n}\over{6\ log\ n}} \le \pi(n) \le {{8n}\over{log\ n}}$$
-\eject
 ** The Algorithm
 \hrule
-\vskip .1cm
 Input: integer $n > 1$
 \begin{enumerate}
 \item if ($n$ is of the form $a^b$, $b>1$) output COMPOSITE;
@@ -239,58 +214,47 @@ Input: integer $n > 1$
 \end{enumerate}
 
 \hrule
-\vskip .3cm
 
-\noindent
-{\bf Theorem 4.1}
-{\sl The algorithm above returns PRIME if and only if $n$ is prime}
+*Theorem 4.1*
+/The algorithm above returns PRIME if and only if $n$ is prime/
 
 In the remainder of the section, we establish this theorem through a 
 sequence of lemmas. First note that the algorithm has two loops. The
 first loop tries to find a prime $r$ such that $r-1$ has a large prime
 factor $q \ge 4\sqrt{r}\ log\ n$, and that $q \vert o_r(n)$, where $o_r(n)$
 is the order of $n\ modulo\ r$. Let us first bound the number of iterations
-of the {\bf while} loop after which such an $r$ is found.
+of the *while* loop after which such an $r$ is found.
 
-\vskip .2cm
-\noindent
-{\bf Lemma 4.2}
+*Lemma 4.2*
 {\sl There exist positive constants $c_1$ and $c_2$ for which there is a
 prime $r$ in the interval 
 $[c_1 (log\ n)^6, c_2 (log\ n)^6]$ such that $r - 1$ has a prime factor
 $q \ge 4 \sqrt{r}\ log\ n$ and $q \vert o_r(n)$.}
 
-\vskip .2cm
-\noindent
-{\sl Proof}
+/Proof/
 Let $c$ and $P(n)$ be as given in Lemma 3.2. Thus, the number of prime
-$r$'s (lets call them {\sl special} primes) between $c_1(log\ n)^6$ and
+$r$'s (lets call them /special/ primes) between $c_1(log\ n)^6$ and
 $c_2(log\ n)^6$ such that 
 $P(r-1) > (c_2(log\ n)^6)^{{2}\over{3}} > r^{{2}\over{3}}$
 is (for large enough $n$)
-\vskip .1cm
 \begin{tabular}{lll}
-\ \ \ \ \ \ \ \ & $\ge$ & No of special primes in $[1\dots c_2(log\ n)^6]-$\\
-                &       & No of primes in $[1\dots c_1(log\ n)^6]$\\
+\ \ \ \ \ \ \ \ & $\ge$ & No of special primes in $[1... c_2(log\ n)^6]-$\\
+                &       & No of primes in $[1... c_1(log\ n)^6]$\\
 \ \ \ \ \ \ \ \ & $\ge$ & ${{cc_2(log\ n)^6}\over{7\ log\ log\ n}} - 
 {{8c_1(log\ n)^6}\over{6\ log\ log\ n}}$ (using Lemma 3.3)\\
 \ \ \ \ \ \ \ \ & $=$   & ${{(log\ n)^6}\over{log\ log\ n}}
 \left({{cc_2}\over{7}} - {{8c_1}\over{6}}\right)$
 \end{tabular}
-\vskip .3cm
 
-\noindent
 Choose constants $c_1 \ge 4^6$ and $c_2$ so that the quantity in braces is a 
 positive constant, say $c_3$.
 
 Let $x=c_2(log\ n)^6$. Consider the product
-$$\Pi = (n-1)(n^2-1)\dots(n^{x^{{1}\over{3}}} - 1)$$
+$$\Pi = (n-1)(n^2-1)...(n^{x^{{1}\over{3}}} - 1)$$
 
-\noindent
 This product has at most $x^{{2}\over{3}}\ log\ n$ prime factors. Note that:
 $$x^{{2}\over{3}}\ log\ n < {{c_3(log\ n)^6}\over{log\ log\ n}}$$
 
-\noindent
 Therefore, there is at least one special prime, say $r$, that does not 
 divide the product $\Pi$
 
@@ -298,20 +262,16 @@ This is the required prime: $r-1$ has a large prime factor
 $q \ge r^{{2}\over{3}} \ge 4\sqrt{r}\ log\ n$ 
 (since $c_1 \ge 4^6$), and $q \vert o_r(n)$.
 
-Once we know that the {\bf while} loop halts, we are ready to show:
+Once we know that the *while* loop halts, we are ready to show:
 
-\vskip .3cm
-\noindent
-{\bf Lemma 4.3} {\sl If $n$ is prime, the algorithm returns PRIME}
-\vskip .3cm
-\noindent
-{\sl Proof}. The {\bf while} loop cannot return COMPOSITE since
+*Lemma 4.3* /If $n$ is prime, the algorithm returns PRIME/
+/Proof/. The *while* loop cannot return COMPOSITE since
 $gcd(n,r) = 1$ for all $r \le c_2(log\ n)^6$, where $c_2$ is as in
-Lemma 4.2. By Lemma 3.1 (fact 2), the {\bf for} loop also cannot
+Lemma 4.2. By Lemma 3.1 (fact 2), the *for* loop also cannot
 return COMPOSITE. Thus, algorithm will identify $n$ as PRIME.
 
 Now let us turn our attention to the case where a composite $n$ is input to
-our algorithm. The significance of the $r$ found by the {\bf while} loop
+our algorithm. The significance of the $r$ found by the *while* loop
 arises when $n$ is composite with say $p_i$, $1 \le i \le k$, as its
 prime factors. In this case, $o_r(n) \vert lcm_i\{o_r(p_i)\}$ and hence
 there exists a prime factor $p$ of $n$ such that $q \vert o_r(p)$, where
@@ -326,21 +286,17 @@ irreducible in $F_p$. Note that
 $$(x-a)^n == (x^n - a)(mod\ x^r - 1,n)$$
 implies that
 $$(x-a)^n == (x^n - a)(mod\ h(x),p)$$
-\vskip .2cm
-\noindent
 So the identities on each binomial hold in the field $F_p[x]/(h(x))$.
-The set of {\sl l} binomials form a large cyclic group in this field:
+The set of /l/ binomials form a large cyclic group in this field:
 
-\noindent
-{\bf Lemma 4.4}
+*Lemma 4.4*
 {\sl In the field $F_p[x]/(h(x))$, the group generated by the l
 binomials: $(x-a)$,$1 \le a \le l$ i.e.,
 $$G = \left\{\Pi_{1 \le a \le l} (x-a)^{\alpha_a} \vert \alpha_a \ge 0,
 \forall 1 \le a \le l\right\}$$
 is cyclic and of size $> \left({d}\over{l}\right)^l$
 
-\noindent
-{\sl Proof}
+/Proof/
 It is clear that $G$ is a group and sinze it is a subgroup of the cyclic
 group $(F_p[x]/(h(x)))^*$, it is also cyclic.
 
@@ -349,11 +305,10 @@ $$S=\left{\Pi_{1 \le a \le l} (x-a)^{\alpha_a} \vert
 \Sigma_{1 \le a \le l} \alpha_a \le d - 1, \alpha_a \ge 0, 
 \forall{l} \le a \le l\right}$$
 
-\noindent
 The following argument shows that all the elements of $S$ are distinct in
-$F_p[x]/(h(x)). The {\tt while} loop ensures that once it halts the final 
+$F_p[x]/(h(x)). The =while= loop ensures that once it halts the final 
 $r$ is such that $r > q > 4\sqrt(r)\ log\ n > l$. Also step 4 of the
-algorithm checks {\tt gcd} of $r$ and $n$. If any of the $a$'s are
+algorithm checks =gcd= of $r$ and $n$. If any of the $a$'s are
 congruent modulo $p$, then $p < l < r$ and thus step 4 of the algorithm
 identifies $n$ as composite. Thus, none of the $a$'s are congruent module
 $p$. So any two elements of $S$ are distinct module $p$. This implies that 
@@ -363,11 +318,10 @@ degree of any element of $S$ is less thatn $d$ -- the degree of h(x).
 The crdinality of the set $S$ is:
 \begin{tabular}{lll}
 $$\left({l + d - 1}\over{l}\right)$$ & $=$ & 
-$${l + d - 1)(l + d - 2)\dots(d)}\over{l!}$$\\
+$${l + d - 1)(l + d - 2)...(d)}\over{l!}$$\\
 & $$\left({d}\over{l}\right)^l$$
 \end{tabular}
 
-\noindent
 Since $S$ is just a subset of $G$ we get the result.
 
 Since $d \ge 2l$, size of $G$ is $> 2^l = n^{2\sqrt{r}}$. Let $g(x)$ be a
@@ -413,7 +367,6 @@ AbelianGroup(): Category == CancellationAbelianMonoid with
           double((-n) pretend PositiveInteger,-x)
 
 @
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

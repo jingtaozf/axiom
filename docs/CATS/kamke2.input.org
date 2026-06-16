@@ -1,18 +1,9 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src/input kamke2.input}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: kamke2.input
+#+AUTHOR: Timothy Daly
 This is the 50 ODEs of the Kamke test suite as published by 
-E. S. Cheb-Terrab\cite{1}. They have been rewritten using Axiom
+E. S. Cheb-Terrab[cite:@1]. They have been rewritten using Axiom
 syntax. Where possible we show that the particular solution actually
 satisfies the original ordinary differential equation.
-\end{abstract}
-\eject
-\tableofcontents
-\eject
 <<*>>=
 )spool kamke2.output
 )set break resume
@@ -516,7 +507,7 @@ ode112 := x*D(y(x),x) - sqrt(y(x)**2 + x**2) - y(x)
 @
 Maxima gets
 $$x=\%c \%e^{\displaystyle
-\frac{x {\rm asinh}\left(\frac{y}{x}\right)}{\vert x\vert}}$$
+\frac{x asinh\left(\frac{y}{x}\right)}{\vert x\vert}}$$
 which does not simplify to 0 on substitution.
 
 Maple gets 0 but simplification gives the result $csgn(x)x$.
@@ -543,7 +534,7 @@ ode113 := x*D(y(x),x) + a*sqrt(y(x)**2 + x**2) - y(x)
 @
 Maxima gets
 $$x=\%c \%e^{\displaystyle
--\frac{x {\rm asinh}\left(\frac{y}{x}\right)}{a\vert x\vert}}$$
+-\frac{x asinh\left(\frac{y}{x}\right)}{a\vert x\vert}}$$
 which does not simplify to 0 on substitution.
 
 Maple gets 0 but on substitition this simplifies to $a~csgn(x)~x$
@@ -775,7 +766,7 @@ $$\frac{x^2}{e^{\left(\frac{\_C1}{e^x}\right)}}$$
 which, on substitution, does not simplify to 0.
 
 Mathematics get:
-$$2e^{-e^{-x} C[1]+e^{-x}{\rm ExpIntegralEi}[x]}x$$
+$$2e^{-e^{-x} C[1]+e^{-x}ExpIntegralEi[x]}x$$
 which does not simplify to 0 on substitution.
 <<*>>=
 --S 45 of 126
@@ -855,8 +846,7 @@ $$\%c~x=\%e^{\displaystyle -\frac{
 which, on substitution, does not simplify to 0.
 
 Maple gets:
-$$\arctan\left(\frac{2x~\_C1}{1+x^2~\_C1^2}\quad,\quad
--\frac{-1+x^2~\_C1^2}{1+x^2~\_C1^2}\right)x$$
+$$\arctan\left(\frac{2x~\_C1}{1+x^2~\_C1^2} , -\frac{-1+x^2~\_C1^2}{1+x^2~\_C1^2}\right)x$$
 which, on substitution, simplifies to 0.
 
 Mathematica get:
@@ -945,7 +935,7 @@ ode126 := x*D(y(x),x) - y(x)*f(x*y(x))
 Maxima fails.
 
 Maple gets
-$$\frac{{\rm RootOf}\left(-\log(x)+~\_C1+
+$$\frac{RootOf\left(-\log(x)+~\_C1+
 \displaystyle\int^{\_Z}{\frac{1}{\displaystyle\_a(1+g(\_a))}}~d\_a\right)}{x}$$
 which, on substitution, simplifies to 0.
 
@@ -998,7 +988,7 @@ ode128 := x*D(y(x),x) + a*y(x) - f(x)*g(x**a*y(x))
 Maxima fails.
 
 Maple gives 
-$$\frac{{\rm RootOf}\left(
+$$\frac{RootOf\left(
 -\int{f(x)x^{(-1+a)}}~dx+\int^{\_Z}{\frac{1}{g(\_a)}~d\_a+\_C1}\right)}{x^a}$$
 which, on substitution, gives 0.
 
@@ -1029,12 +1019,12 @@ which, on substitution, does not simplify to 0.
 
 Maple gives
 $$\frac{e^x}
-{-e^x-e^{(-1)}{\rm Ei}(1,-x-1)x-e^{(-1)}{\rm Ei}(1,-x-1)+x~\_C1+~\_C1}$$
+{-e^x-e^{(-1)}Ei(1,-x-1)x-e^{(-1)}Ei(1,-x-1)+x~\_C1+~\_C1}$$
 which, on substitution, simplifies to 0.
 
 Mathematica gives
-$$-\frac{e^{1+x}}{e^{1+x}-eC[1]-exC[1]-{\rm ExpIntegralEi}(1+x)-
-x{\rm ExpIntegralEi}(1+x)}$$
+$$-\frac{e^{1+x}}{e^{1+x}-eC[1]-exC[1]-ExpIntegralEi(1+x)-
+xExpIntegralEi(1+x)}$$
 <<*>>=
 --S 63 of 126
 yx:=solve(ode129,y,x)
@@ -1247,11 +1237,11 @@ $$\%e^{1/x}
 which, on substitution, simplifies to 0.
 
 Maple gives
-$$\left({\rm Ei}\left(1,\frac{1}{x}\right)+~\_C1\right)e^{(\frac{1}{x})}$$
+$$\left(Ei\left(1,\frac{1}{x}\right)+~\_C1\right)e^{(\frac{1}{x})}$$
 which simplifies to 0 on substitution.
 
 Mathematica gets:
-$$e^{1/x}C[1]-e^{1/x}{\rm ExpIntegralEi}\left(-\frac{1}{x}\right)$$
+$$e^{1/x}C[1]-e^{1/x}ExpIntegralEi\left(-\frac{1}{x}\right)$$
 which simplifies to 0 on substitution.
 <<*>>=
 --S 75 of 126
@@ -2056,15 +2046,15 @@ ode148 := (x**2+1)*D(y(x),x) + x*y(x) - 1
 --E 115
 @
 Maxima gets
-$$({\rm asinh}(x)+\%c)\%e^{-\frac{\displaystyle\log(x^2+1)}{\displaystyle 2}}$$
+$$(asinh(x)+\%c)\%e^{-\frac{\displaystyle\log(x^2+1)}{\displaystyle 2}}$$
 which when substituted, does not simplify to 0.
 
 Maple gets
-$$\frac{{\rm arcsinh}(x)+~\_C1}{\sqrt{x^2+1}}$$
+$$\frac{arcsinh(x)+~\_C1}{\sqrt{x^2+1}}$$
 which when substituted, simplifies to 0.
 
 Mathematica gets
-$$\frac{{\rm arcsinh}(x)}{\sqrt{1+x^2}}+\frac{C[1]}{\sqrt{1+x^2}}$$
+$$\frac{arcsinh(x)}{\sqrt{1+x^2}}+\frac{C[1]}{\sqrt{1+x^2}}$$
 gives 0 when substituted.
 <<*>>=
 --S 116 of 126
@@ -2207,11 +2197,9 @@ ode150expr := (x**2+1)*D(yx,x) + 2*x*yx - 2*x**2
 )lisp (bye)
  
 @
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} {\bf http://www.cs.uwaterloo.ca/$\tilde{}$ecterrab/odetools.html}
 \bibitem{2} Mathematica 6.0.1.0
 \bibitem{3} Maple 11.01 Build ID 296069
 \bibitem{4} Maxima 5.13.0
 \end{thebibliography}
-\end{document}

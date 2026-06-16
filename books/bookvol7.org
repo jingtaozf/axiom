@@ -1,9 +1,3 @@
-\documentclass[dvipdfm]{book}
-\newcommand{\VolumeName}{Volume 7: Axiom Hyperdoc}
-\input{bookheader.tex}
-\pagenumbering{arabic}
-\mainmatter
-\setcounter{chapter}{0} % Chapter 1
 * Overview
 
 This book covers 5 top level commands that make up the Axiom Hyperdoc
@@ -11,7 +5,6 @@ browser. The primary command is the hypertex command which can be run
 as a standalone program to browse the Axiom documentation. It can also
 be run by Axiom to enable lookup of information in the Axiom runtime.
 
-\eject
 ** The Original Plan
 \begin{center}
 The Original Hypertex Plan (courtesy of Scott Morrison)\\
@@ -25,17 +18,17 @@ Not mentioned elsewhere,
 to resolve page path names.
 \item the HTASCII shell variable, if set, is used to choose between
 ascii and the IBM Code Page 850 character set.
-See initScanner \ref{initScanner} on page~\pageref{initScanner}
+See initScanner \ref{initScanner} on page~[[#initScanner][initScanner]]
 \item the XENVIRONMENT shell variable, if set is used to find the X
 database to merge, otherwise it uses .Xdefaults from the HOME directory.
-See \ref{mergeDatabases} on page~\pageref{mergeDatabases}
+See \ref{mergeDatabases} on page~[[#mergeDatabases][mergeDatabases]]
 \item NOFREE shell variable is supposed to turn off freeing memory.
-See \ref{freePage} on page~\pageref{freePage}
+See \ref{freePage} on page~[[#freePage][freePage]]
 \item SPADNUM shell variable is the number of the spad communication socket.
-See \ref{sendPile} on page~\pageref{sendPile}
+See \ref{sendPile} on page~[[#sendPile][sendPile]]
 \end{itemize}
 
-The Axiom user properties in \verb|$HOME/.Xdefaults.| can contain
+The Axiom user properties in =$HOME/.Xdefaults.= can contain
 these initialization names:
 - Axiom.hyperdoc.FormGeometry
 - Axiom.hyperdoc.Geometry
@@ -93,7 +86,7 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
 * The hypertex language
 \begin{verbatim}
   \$Data
-  \#
+  #
   \%
   \&
   \,
@@ -109,7 +102,7 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \aleph
   \aliascon#1#2
   \aliascon{HomogeneousAggregate\&}{HOAGG-}
-  \allowbreak
+  
   \alpha
   \argDef{"Axiom 2D"}
   \asharp{}
@@ -188,7 +181,6 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
 
   \bf
   \bgroup
-  \bigbreak
   \blankline
   \bmod
   \bot
@@ -201,12 +193,10 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \caption{Three-Dimensional Lighting Panel.}
   \cdot
   \cdots
-  \center
   \centerline
   \chapref{ugPackages}.{ugCategories}{12.12.}{Anonymous Categories}  \Clef{}
   \chi
-  \cite{gtz:gbpdpi}
-  \cleardoublepage
+  [cite:@gtz:gbpdpi]
   \command
   \con
   \conf
@@ -226,7 +216,7 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \dlink
   \dom
   \dot
-  \dots
+  ...
   \downarrow
   \downlink{`Table'}{TableXmpPage}
 
@@ -259,7 +249,6 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \forall
   \frac{(x - 1)^2}{2}
   \free{Data}
-  \frenchspacing
   \funArgs{color}
   \funSyntax{blue}
 
@@ -320,7 +309,6 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \inputimage{{#1}.view/image}}
   \inputpixmap
   \inputstring{FindTopic}{15}{series}
-  \input{gallery/antoine.htex}
   \int_{0}^{1}
   \iota
   \it
@@ -340,7 +328,7 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \Language{}
   \large
   \Large
-  \ldots
+  ...
   \le 
   \left
   \leftarrow
@@ -395,16 +383,9 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \narrowDisplay
   \narrower
   \neg
-  \newcommand{\aliasdom}[2]{\lispdownlink{#1}{(|conPage| '|#2|)}}
-  \newcommand{\autobuttLayout}[1]{\centerline{#1}}}
-  \newcommand{\autobuttMaker}[1]{\autobuttLayout{\HelpButton{#1}}}
-  \newcommand{\riddlebuttons}[1]{\autobuttLayout{\link{\HelpBitmap}{#1}}}
-  \newline
-  \newpage
   \newsearchresultentry
   \newspadclient}[1]{xterm -n "#1" -e 
   \noOutputXtc
-  \noindent
   \nolimits
   \nolines
   \nonLibAxiomType{?(Integer)},
@@ -426,8 +407,7 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \over
 
   \pagename
-  \pageref{fig-quadform}
-  \par
+  [[#fig-quadform][fig-quadform]]
   \parallel
   \parindent=1pc 
   \partial
@@ -450,10 +430,8 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \pspadfun{drawRibbons}
   \pspadtype{DataList}
 
-  \quad
-
+ 
   \radiobox[0]{rthree}{sample}
-  \raggedright
   \ranb{}
   \ref{fig-clifalg}.
   \ReturnBitmap
@@ -468,7 +446,6 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \sc
   \searchresultentry
   \searchwindow{Start Search}
-  \setcounter{chapter}{0}}{}
   \sf
   \showBlurb{AssociationList}
   \showpaste
@@ -477,11 +454,9 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   \sim
   \simplebox
   \sin
-  \sloppy
   \small
   \smath{(k,t)}
-  \sp
-  \space{-1}
+    \space{-1}
   \spad{al}
   \spadatt{commutative("*")}
   \spadcmd{)abbreviation query}
@@ -543,7 +518,7 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
   
 
   \tab{5}
-  \TeX{}
+  TeX{}
   \texht{Gr\"{o}bner}{Groebner}
   \texht{Poincar\'e}{Poincare
   \Theta
@@ -1343,16 +1318,12 @@ Usage: htadd [-s|-l|-f db-directory] [-d|-n] filenames
 
   \varphi
   \vbox
-  \verb+--+
+  =--=
   \vertline
   \viewport{/tmp/mobius}
   \viewportasbutton{/tmp/mobius} 
   \void{}
-  \vskip .5
-  \vskip 1pc
-  \vskip 4pt
   \vspace
-  \vspace{-25}
 
   \windowid
   \windowlink{ErrorPage}{ErrorPage}
@@ -6491,37 +6462,37 @@ int getChar(void) {
     c = getChar1();
     if (useAscii) {
         switch (c) {
-          case 'Ä':
+          case 'ï¿½':
             c = '-';
             break;
-          case 'Ú':
+          case 'ï¿½':
             c = '+';
             break;
-          case 'Ã':
+          case 'ï¿½':
             c = '[';
             break;
-          case 'À':
+          case 'ï¿½':
             c = '+';
             break;
-          case 'Â':
+          case 'ï¿½':
             c = '-';
             break;
-          case 'Å':
+          case 'ï¿½':
             c = '+';
             break;
-          case 'Á':
+          case 'ï¿½':
             c = '-';
             break;
-          case '¿':
+          case 'ï¿½':
             c = '+';
             break;
-          case '´':
+          case 'ï¿½':
             c = ']';
             break;
-          case 'Ù':
+          case 'ï¿½':
             c = '+';
             break;
-          case '³':
+          case 'ï¿½':
             c = '|';
             break;
           default:
@@ -6911,7 +6882,7 @@ int beType(char *which) {
 
 #+end_src
 *** beginType
-This routine parses a statement of the form \verb|\begin{word}|. Once it has
+This routine parses a statement of the form =\begin{word}=. Once it has
 read the word it tries to assign it a type. Once that is done it sends
 the word id, and the type to pushBeStack and then returns the type.
 For the moment I cannot even going to use a hashTable, although in the
@@ -7557,24 +7528,24 @@ hfree(char *p) {
 
 #+end_src
 ** include/hyper.h
-The \verb|hypertex| function, of which this is the top level, is a browser
+The =hypertex= function, of which this is the top level, is a browser
 for Axiom information. It works off a database of pages. The pages are
-stored in the \verb|$AXIOM/doc| subdirectory and there is
-a key file called \verb|ht.db| in that subdirectory which contains 
+stored in the =$AXIOM/doc= subdirectory and there is
+a key file called =ht.db= in that subdirectory which contains 
 critical information about each page. If you add or delete pages you
-must rerun the \verb|htadd| command.
-(See the \verb|htadd| command in \verb|src/hyper/htadd.pamphlet|.)
+must rerun the =htadd= command.
+(See the =htadd= command in =src/hyper/htadd.pamphlet=.)
 
 Generally, if you add or delete pages you can recreate a proper 
-\verb|pages/ht.db| file by doing:
+=pages/ht.db= file by doing:
 \begin{verbatim}
 cd $AXIOM/doc
 htadd -f pages -n pages/*
 \end{verbatim}
 
 
-The \verb|hypertex| function looks in \verb|$AXIOM/doc| by
-default. This can be over-ridden by setting the \verb|HTPATH| shell
+The =hypertex= function looks in =$AXIOM/doc= by
+default. This can be over-ridden by setting the =HTPATH= shell
 variable to point to the desired directory containing the pages and
 the ht.db file.
 #+NAME: include/hyper.h
@@ -8954,13 +8925,13 @@ cflow --emacs -l -n -b -T --omit-arguments htadd.c
   195 {   2}     +-copyFile() <void copyFile () line:2429> [see 137]
   196 {   2}     \-unlink()
 \end{verbatim}
-The \verb|htadd| function can manipulate the database of hypertex pages.
-To rebuild the hypertex database changes to the \verb|$AXIOM/doc| 
+The =htadd= function can manipulate the database of hypertex pages.
+To rebuild the hypertex database changes to the =$AXIOM/doc= 
 subdirectory and type:
 \begin{verbatim}
 htadd -f pages -n pages/*
 \end{verbatim}
-This will create a file called \verb|pages/ht.db| which contains entries
+This will create a file called =pages/ht.db= which contains entries
 similar to:
 \begin{verbatim}
         algebra.ht 1102052108
@@ -9545,12 +9516,12 @@ This source file implements HyperDoc's ability to scan files for a
 given pattern.  For that purpose it needs a ``regex'' for string
 pattern matching.  
 
-This source file used to rely on \verb|<regexp.h>| which was
+This source file used to rely on =<regexp.h>= which was
 originally part of the X/Open System Interface and Headers Issue 2.
 However, since then, it has been withdrawn and no longer always
 available on newer platfroms.  Consequently, we need to use a
 different, portable regex library.  The POSIX definition provides one,
-namely through \verb|<regex.h>|.  That is what we use now.  Its
+namely through =<regex.h>=.  That is what we use now.  Its
 availability is tested at configure time.
 
 \begin{verbatim}
@@ -14387,8 +14358,8 @@ static void endifExtent(TextNode *node) {
 
 #+end_src
 *** computeIfcondExtent
-This routine checks the value of the condition and swaps in the {\tt else}
-or the {\tt then} depending.
+This routine checks the value of the condition and swaps in the =else=
+or the =then= depending.
 \index{hypertex!computeIfcondExtent}
 \index{computeIfcondExtent hypertex}
 #+NAME: hypertex
@@ -15944,7 +15915,7 @@ int plh(int height) {
 A few routines used to help with form extents
 
 *** computeFormPage
-To solve the problem of improperly nested \verb|\em|, I will have to keep and
+To solve the problem of improperly nested =\em=, I will have to keep and
 always initialize the top of the stack.
 \index{hypertex!computeFormPage}
 \index{computeFormPage hypertex}
@@ -16649,7 +16620,7 @@ THEMOS says: There is a problem here in that we issue the (|close|) and
 then go on. If this is the last command ,we will soon send a SIGTERM and
 the whole thing will collapse maybe BEFORE the writing out has finished.
 Fix: Call a Lisp function that checks 
-(with \verb|\axiomOp{key}| ps and grep) the
+(with =\axiomOp{key}= ps and grep) the
 health of the viewport. We do this after the (|close|).
 \index{hypertex!getGraphOutput}
 \index{getGraphOutput hypertex}
@@ -17241,7 +17212,7 @@ static void loadFont(XFontStruct **fontInfo, char *fontname) {
 #+end_src
 *** ingItColorsAndFonts
 This routine initializes all the colors and fonts that the user wishes to
-use. It checks for all the following properties in \verb|$HOME/.Xdefaults.|
+use. It checks for all the following properties in =$HOME/.Xdefaults.=
 - Axiom.hyperdoc.ActiveColor
 - Axiom.hyperdoc.Background
 - Axiom.hyperdoc.EmphasizeColor
@@ -19451,7 +19422,7 @@ function will parse until it sees either:
 \begin{enumerate}
 \item A new page starting 
 \item An end of file 
-\item a closing bracket ``\verb|}|''
+\item a closing bracket ``=}=''
 \end{enumerate}
 \index{hypertex!parseHyperDoc}
 \index{parseHyperDoc hypertex}
@@ -20357,7 +20328,7 @@ void makeSpecialPages(HashTable *pageHashTable) {
 #+end_src
 *** addDependencies
 Here is where I put the item into the pages linked list.
-Parse the \verb|\bound{varlist}| command, and add vars to dependency table.
+Parse the =\bound{varlist}= command, and add vars to dependency table.
 \index{hypertex!addDependencies}
 \index{addDependencies hypertex}
 #+NAME: hypertex
@@ -21980,8 +21951,8 @@ void parseEnv(TextNode *node) {
 
 #+end_src
 *** parseValue1
-This parseValue routine accepts an empty \verb|{}| but makes it a zero 
-instead of a one. Thus \verb|\indent{}| is equivelant to \verb|\indent{0}|.
+This parseValue routine accepts an empty ={}= but makes it a zero 
+instead of a one. Thus =\indent{}= is equivelant to =\indent{0}=.
 \index{hypertex!parseValue1}
 \index{parseValue1 hypertex}
 #+NAME: hypertex
@@ -22009,8 +21980,8 @@ void parseValue1(void) {
 
 #+end_src
 *** parseValue2
-This command accepts an empty argument command. Thus \verb|\space{}| is
-equivelant \verb|\space{1}|
+This command accepts an empty argument command. Thus =\space{}= is
+equivelant =\space{1}=
 \index{hypertex!parseValue2}
 \index{parseValue2 hypertex}
 #+NAME: hypertex
@@ -22039,7 +22010,7 @@ void parseValue2(void) {
 
 #+end_src
 *** parseTable
-Parse a \verb|\table| command.
+Parse a =\table= command.
 \index{hypertex!parseTable}
 \index{parseTable hypertex}
 #+NAME: hypertex
@@ -23666,7 +23637,7 @@ Sock *acceptMenuConnection(Sock *server_sock) {
 *** acceptMenuServerConnection
 TTT thinks this code should just provide a Sock to the page. The only
 client assumed is a spadbuf. Since spadbuf was invoked with the page
-name, it just passes it back here as a check (\verb|get_string| line).
+name, it just passes it back here as a check (=get_string= line).
 \index{hypertex!acceptMenuServerConnection}
 \index{acceptMenuServerConnection hypertex}
 #+NAME: hypertex
@@ -24959,9 +24930,9 @@ This is part of 'presea' which is is run on output
  \newsearchresultentry{1}{Asp27 Example Code}{Asp27ExampleCode}
  ....
 \end{verbatim}
-after splitting on ``\{'' the first field is \verb|'\newsearchresultentry'|
+after splitting on ``\{'' the first field is ='\newsearchresultentry'=
 and the second is number of occurences of search term in the page.  The
-test for \verb|'j >= 2'| is just to tolerate garbage.  presea is supposed
+test for ='j >= 2'= is just to tolerate garbage.  presea is supposed
 to count the number of matches and put it in the header for search
 results.  The previous version reported no matches in the header.
 This used to read:
@@ -25519,7 +25490,6 @@ static char noop_bits[] = {
    0xf9, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x07, 0xfe, 0xff, 0xff, 0xff,
    0xff, 0xff, 0xff, 0x0f, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x05};
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

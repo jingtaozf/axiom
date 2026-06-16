@@ -1,10 +1,8 @@
-\documentclass{article}
 \normalsize\baselineskip=12pt
 \parskip=0pt
 \parindent=10pt
 \tolerance=5000
 \pretolerance=5000
-\frenchspacing
 \hangindent=10pt
 \skip\footins=18pt
 \global\textwidth 31pc \global\textheight 47pc
@@ -12,8 +10,6 @@
 \oddsidemargin 0pt
 \evensidemargin 0pt
 %
-\renewcommand{\textfraction}{.1}
-\renewcommand{\floatpagefraction}{.75}
 %
 \catcode`@=11
 \def\ps@plain{\let\@mkboth\@gobbletwo%
@@ -31,31 +27,13 @@ Chichester, United Kingdom, ISBN 0-471-98353-5, xvi+436 pages, 1999.}}
 %
 \pagestyle{plain}
 
-\begin{document}
 %
 % \nth{n} produces 1^{st}, 2^{nd}, 3^{rd}, 4^{th}, etc.
 %
-\def\nth#1{$#1^{\rm \ifcase#1 th\or st\or nd\or rd\else th\fi}$}
+\def\nth#1{$#1^\ifcase#1 th\or st\or nd\or rd\else th\fi$}
 %
 % Abbreviations
 %
-\newcommand{\Axiom}{{\sf Axiom}}
-\newcommand{\Derive}{{\sf Derive}}
-\newcommand{\DoCon}{{\sf DoCon}}
-\newcommand{\GAP}{{\sf GAP}}
-\newcommand{\Gmp}{{\sf Gmp}}
-\newcommand{\Macsyma}{{\sf Macsyma}}
-\newcommand{\Magnus}{{\sf Magnus}}
-\newcommand{\Maxima}{{\sf Maxima}}
-\newcommand{\Maple}{{\sf Maple}}
-\newcommand{\Mathematica}{{\sf Mathematica}}
-\newcommand{\MuPAD}{{\sf MuPAD}}
-\newcommand{\Octave}{{\sf Octave}}
-\newcommand{\Pari}{{\sf Pari}}
-\newcommand{\Reduce}{{\sf Reduce}}
-\newcommand{\Scilab}{{\sf Scilab}}
-\newcommand{\Sumit}{{\sf Sumit}}
-\newcommand{\Yacas}{{\sf Yacas}}
 
 ** Introduction
 
@@ -134,18 +112,12 @@ System & \rm{Type} & \rm{Interpreted or Compiled}\\
 ** Programming and Miscellaneous
 
 \begingroup
-\newcommand{\OR}{{\em or }}
-\newcommand{\fnm}{\footnotemark}
-\newcommand{\h}[1]{{\rm #1}}
-\newcommand{\m}[2]{\multicolumn{#1}{l}{#2}}
-\newcommand{\q}{\quad}
-\newcommand{\st}{\small\tt}
 \parindent=0pt
 \hfuzz=1pt
 \begin{tt}
 
 \begin{tabular}{l|ll}
-& \m{2}{\rm Unix/Microsoft user initialization file} \\
+& \m{2}Unix/Microsoft user initialization file \\
 \hline
 \Axiom       & \~{}/axiom.input          & \\
 \GAP         & \~{}/.gaprc               & GAP.RC \\
@@ -168,7 +140,7 @@ System & \rm{Type} & \rm{Interpreted or Compiled}\\
 \end{tabular} \\[10pt]
 
 \begin{tabular}{l|ll}
-& \h{Describe {\em keyword}} & \h{Find keywords containing {\em pattern}} \\
+& \h{Describe /keyword/} & \h{Find keywords containing /pattern/} \\
 \hline
 \Axiom       &                       & )what operations pattern \\
 \Derive      &                       & \\
@@ -200,15 +172,15 @@ simplistic.}
 \Axiom       & -- comment    & input \_<CR>input   & \% & Yes & real    \\
 \Derive      & "comment"     & input \~{}<CR>input &    & No  & real    \\
 \DoCon       &               &                     &    &     & \\
-\GAP         & \# comment    & input$\backslash$<CR>input&last&Yes&no assumption\\
+\GAP         & # comment    & input$\backslash$<CR>input&last&Yes&no assumption\\
 \Gmp         &               &                     &    &     & \\
 \Macsyma     & /* comment */ & input<CR>input;     & \% & No  & real    \\
 \Magnus      &               &                     &    &     & \\
 \Maxima      & /* comment */ & input<CR>input;     & \% & No  & real    \\
-\Maple       & \# comment    & input<CR>input;     & \% & Yes & complex \\
+\Maple       & # comment    & input<CR>input;     & \% & Yes & complex \\
 \Mathematica & (* comment *) & input<CR>input      & \% & Yes & complex \\
-\MuPAD       & \# comment \# & input<CR>input;     & \% & Yes & complex \\
-\Octave      & \#\#          &                     &    & Yes & \\
+\MuPAD       & # comment # & input<CR>input;     & \% & Yes & complex \\
+\Octave      & ##          &                     &    & Yes & \\
 \Pari        &               &                     &    &     & \\
 \Reduce      & \% comment    & input<CR>input;     & ws & No  & complex \\
 \Scilab      &               &                     &    &     & \\
@@ -222,7 +194,7 @@ simplistic.}
 \Axiom       & )read "file" )quiet    & )set messages time on  & )quit \\
 \Derive      & [Transfer Load Derive] &                        & [Quit] \\
 \DoCon       &                        &                        & \\
-\GAP         & Read("file");          & time; \h{(also see {\tt Runtime();})}&quit;\\
+\GAP         & Read("file");          & time; \h{(also see =Runtime();=)}&quit;\\
 \Gmp         &                        &                        & \\
 \Macsyma     & load("file")\$         & showtime: all\$        & quit(); \\
 \Magnus      &                        &                        & \\
@@ -288,7 +260,7 @@ simplistic.}
 \begin{tabular}{l|llll}
 & \h{Equation} & \h{List element} & \h{Matrix element} & \h{Length of a list} \\
 \hline
-\Axiom       & x = 0  & l . 2      & m(2, 3)       & \#l          \\
+\Axiom       & x = 0  & l . 2      & m(2, 3)       & #l          \\
 \Derive      & x = 0  & l SUB 2    & m SUB 2 SUB 3 & DIMENSION(l) \\
 \DoCon       &        &            &               & \\
 \GAP         & x=0    & l[2]       & m[2][3]       & Length(l)    \\
@@ -308,7 +280,7 @@ simplistic.}
 \end{tabular} \\[10pt]
 
 \begin{tabular}{l|lll}
-& \m{2}{\rm Prepend/append an element to a list} & \h{Append two lists} \\
+& \m{2}Prepend/append an element to a list & \h{Append two lists} \\
 \hline
 \Axiom       & cons(e, l)     & concat(l, e)   & append(l1, l2)   \\
 \Derive      & APPEND([e], l) & APPEND(l, [e]) & APPEND(l1, l2)   \\
@@ -353,7 +325,7 @@ simplistic.}
 \Yacas       &                           & \\
 \end{tabular} \\[10pt]
 
-\footnotetext{See the definition of {\tt matrix} above.}
+\footnotetext{See the definition of =matrix= above.}
 
 \begin{tabular}{l|l}
 & \h{Convert a column vector into a list} \\
@@ -387,9 +359,9 @@ simplistic.}
 \DoCon       &      &       &      &    &     &    & \\
 \GAP         & true & false\fnm & and  & or & not & = & <>     \\
 \Gmp         &      &       &      &    &     &    & \\
-\Macsyma     & true & false & and  & or & not & =  & \#    \\
+\Macsyma     & true & false & and  & or & not & =  & #    \\
 \Magnus      &      &       &      &    &     &    & \\
-\Maxima      & true & false & and  & or & not & =  & \#    \\
+\Maxima      & true & false & and  & or & not & =  & #    \\
 \Maple       & true & false & and  & or & not & =  & <>    \\
 \Mathematica & True & False & \&\& & || & !   & == & !=    \\
 \MuPAD       & true & false & and  & or & not & =  & <>    \\
@@ -425,12 +397,12 @@ simplistic.}
 \end{tabular} \\[10pt]
 
 \begin{tabular}{l|ll}
-& \h{Simple loop and Block} & \h{Generate the list $[1, 2, \ldots, n]$} \\
+& \h{Simple loop and Block} & \h{Generate the list $[1, 2, ..., n]$} \\
 \hline
 \Axiom       & for i in 1..n repeat ( x; y )       & [f(i) for i in 1..n]     \\
 \Derive      & VECTOR([x, y], i, 1, n)             & VECTOR(f(i), i, 1, n)    \\
 \DoCon       &                                     & \\
-\GAP         & for i in [1..n] do \_ od;           & [1..n] {\rm or} [1,2..n]\\
+\GAP         & for i in [1..n] do \_ od;           & [1..n] or [1,2..n]\\
 \Gmp         &                                     & \\
 \Macsyma     & for i:1 thru n do (x, y);           & makelist(f(i), i, 1, n); \\
 \Magnus      &                                     & \\
@@ -542,7 +514,7 @@ no symbolic variables}\\
 \Yacas       &                        & \\
 \end{tabular} \\[10pt]
 \footnotetext{Variables can be assigned to generators of a suitable free
-object, for example {\tt x:=X(Rationals,"x");} or {\tt
+object, for example =x:=X(Rationals,"x");= or {\tt
 f:=FreeGroup(2);x:=f.1;}.}
 \addtocounter{footnote}{-1}%
 
@@ -569,7 +541,7 @@ f:=FreeGroup(2);x:=f.1;}.}
 \Yacas       &                                   & \\
 \end{tabular} \\[10pt]
 
-\footnotetext{\tt procedure xapply(f, lst); lisp(f . cdr(lst))\$}
+\footnotetext=procedure xapply(f, lst); lisp(f . cdr(lst))\$=
 \addtocounter{footnote}{-1}%
 
 \begin{tabular}{l|ll}
@@ -586,7 +558,7 @@ f:=FreeGroup(2);x:=f.1;}.}
 \Magnus      &                    & \\
 \Maxima      & apply(f, l)        & map(lambda([x], x + y), [1, 2])         \\
 \Maple       & f(op(l))           & map(x -> x + y, [1, 2])                 \\
-\Mathematica & Apply[f, l]        & Map[\# + y \&, \{1, 2\}]                \\
+\Mathematica & Apply[f, l]        & Map[# + y \&, \{1, 2\}]                \\
 \MuPAD       & f(op(l))           & map([1, 2], func(x + y, x))             \\
 \Octave      &                    & \\
 \Pari        &                    & \\
@@ -671,9 +643,9 @@ f:=FreeGroup(2);x:=f.1;}.}
 & \h{operator} & \h{\nth{1} operand} & \h{List of expression operands} \\
 \hline
 \Axiom\fnm   &            & kernels(e) . 1 & kernels(e)              \\
-\Derive      &            &                & {\em various}\fnm       \\
+\Derive      &            &                & /various/\fnm       \\
 \DoCon       &            &                & \\
-\GAP         &\m{3}{\rm There are no formal unevaluated expressions}\\
+\GAP         &\m{3}There are no formal unevaluated expressions\\
 \Gmp         &            &                & \\
 \Macsyma     & part(e, 0) & part(e, 1)     & args(e)                 \\
 \Magnus      &            &                & \\
@@ -694,7 +666,7 @@ f:=FreeGroup(2);x:=f.1;}.}
 \footnotetext{The following commands work only on expressions that consist of a
 single level (e.g., $x + y + z$ but not $a/b + c/d$).}
 \addtocounter{footnote}{-1}%
-\footnotetext{{\tt TERMS}, {\tt FACTORS}, {\tt NUMERATOR}, {\tt LHS}, etc.}
+\footnotetext{=TERMS=, =FACTORS=, =NUMERATOR=, =LHS=, etc.}
 
 \begin{tabular}{l|l}
 & \h{Print text and results} \\
@@ -721,7 +693,7 @@ single level (e.g., $x + y + z$ but not $a/b + c/d$).}
 \end{tabular} \\[10pt]
 
 \begin{tabular}{l|ll}
-& \h{Generate FORTRAN} & \h{Generate \TeX/\LaTeX} \\
+& \h{Generate FORTRAN} & \h{Generate TeX/LaTeX} \\
 \hline
 \Axiom       & outputAsFortran(e)                    & outputAsTex(e)      \\
 \Derive      & [Transfer Save Fortran]               & \\
@@ -744,10 +716,10 @@ single level (e.g., $x + y + z$ but not $a/b + c/d$).}
 \end{tabular} \\[10pt]
 
 \begin{tabular}{l|l}
-& \h{Import two space separated columns of integers from {\tt file}} \\
+& \h{Import two space separated columns of integers from =file=} \\
 \hline
 \Axiom       & \\
-\Derive      & [Transfer Load daTa] ({\rm from} file.dat)          \\
+\Derive      & [Transfer Load daTa] (from file.dat)          \\
 \DoCon       & \\
 \GAP         & \\
 \Gmp         & \\
@@ -766,13 +738,13 @@ single level (e.g., $x + y + z$ but not $a/b + c/d$).}
 \end{tabular} \\[10pt]
 
 \begin{tabular}{l|l}
-& \h{Export two space separated columns of integers to {\tt file}\fnm} \\
+& \h{Export two space separated columns of integers to =file=\fnm} \\
 \hline
-\Axiom       & )set output algebra "file" \q ({\rm creates} file.spout)       \\
+\Axiom       & )set output algebra "file" \q (creates file.spout)       \\
              & for i in 1..n repeat output( \_                                \\
              & \q concat([string(xy(i, 1)), " ", string(xy(i, 2))]) )         \\
              & )set output algebra console                                    \\
-\Derive      & xy  [Transfer Print Expressions File]\q({\rm creates} file.prt)\\
+\Derive      & xy  [Transfer Print Expressions File]\q(creates file.prt)\\
 \DoCon       & \\
 \GAP         & PrintTo("file");for i in [1..n] do\\
              &\q AppendTo("file",xy[i][1]," ",xy[i][2],"$\backslash$n");od;\\
@@ -799,7 +771,7 @@ single level (e.g., $x + y + z$ but not $a/b + c/d$).}
 \Yacas       & \\
 \end{tabular} \\[10pt]
 
-\footnotetext{Some editing of {\tt file} will be necessary for all systems but
+\footnotetext{Some editing of =file= will be necessary for all systems but
 \Maple\ and \Mathematica.}
 
 ** Mathematics and Graphics
@@ -811,7 +783,7 @@ the calculus functionality listed in the following section.}
 & $e$ & $\pi$ & $i$ & $+\infty$ & $\sqrt{2}$ & $2^{1/3}$ \\
 \hline
 \Axiom       & \%e    & \%pi & \%i & \%plusInfinity & sqrt(2) & 2**(1/3)   \\
-\Derive      & \#e    & pi   & \#i & inf            & SQRT(2) & 2\^{}(1/3) \\
+\Derive      & #e    & pi   & #i & inf            & SQRT(2) & 2\^{}(1/3) \\
 \DoCon       &        &      &     &                &         & \\
 \GAP         &        &      & E(4) & infinity & ER(2)\fnm &\\
 \Gmp         &        &      &     &                &         & \\
@@ -828,7 +800,7 @@ the calculus functionality listed in the following section.}
 \Sumit       &        &      &     &                &         & \\
 \Yacas       &        &      &     &                &         & \\
 \end{tabular} \\[10pt]
-\footnotetext{{\tt ER} represents special cyclotomic numbers and is not a
+\footnotetext{=ER= represents special cyclotomic numbers and is not a
 root function.}
 \addtocounter{footnote}{-1}%
 
@@ -1015,7 +987,7 @@ root function.}
 \Yacas       &                                 & \\
 \end{tabular} \\[10pt]
 
-\footnotetext{This is an option for {\tt Integrate}.}
+\footnotetext{This is an option for =Integrate=.}
 
 \begin{tabular}{l|l}
 & \h{Basic simplification of an expression $e$} \\
@@ -1124,7 +1096,7 @@ a\^{}2\\
 \Magnus      & \\
 \Maxima      & algebraic:true\$ \q tellrat(a\^{}2 - 2)\$ \q rat(a\^{}2);   \\
 \Maple       & a:= RootOf(x\^{}2 - 2): \q simplify(a\^{}2);                \\
-\Mathematica & a = Root[\#\^{}2 - 2 \&, 2] \q a\^{}2                       \\
+\Mathematica & a = Root[#\^{}2 - 2 \&, 2] \q a\^{}2                       \\
 \MuPAD       & \\
 \Octave      & \\
 \Pari        & \\
@@ -1161,7 +1133,7 @@ a\^{}2\\
 \end{tabular} \\[10pt]
 
 \begin{tabular}{l|ll}
-& \m{2}{\rm Decrease/increase angles in trigonometric functions} \\
+& \m{2}Decrease/increase angles in trigonometric functions \\
 \hline
 \Axiom       & \m{2}{simplify(normalize(sin(2*x)))} \\
 \Derive      & Trigonometry:= Expand         & Trigonometry:= Collect      \\
@@ -1428,7 +1400,7 @@ a\^{}2\\
 \Magnus      & \\
 \Maxima      & load(opalg)\$ \q L: (diffop(x) - 1)\$ \q L(sin(x));  \\
 \Maple       & id:= x -> x: \q L:= (D + id): \q L(sin)(x);          \\
-\Mathematica & L = D[\#, x]\& + Identity; \q Through[L[Sin[x]]]     \\
+\Mathematica & L = D[#, x]\& + Identity; \q Through[L[Sin[x]]]     \\
 \MuPAD       & L:= (D + id): \q L(sin)(x);                          \\
 \Octave      & \\
 \Pari        & \\
@@ -1508,4 +1480,3 @@ a\^{}2\\
 
 \end{tt}
 \endgroup
-\end{document}

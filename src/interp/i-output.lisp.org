@@ -1,19 +1,10 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src/interp i-output.lisp}
-\author{The Axiom Team}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: i-output.lisp
+#+AUTHOR: The Axiom Team
 
 ** CHARYBDIS by Jonathan K. Millen
 *** Introduction
 
-From Millen\cite{Mill68} we paraphrase:
+From Millen[cite:@Mill68] we paraphrase:
 
 CHARYBDIS (from CHARacter-composed sYmBolic DISplay) is a LISP program
 to display mathematical expressions on typewriter-like devices such as
@@ -50,7 +41,7 @@ really only one possible way to handle most of these initial
 problems. The resulting displays are somewhat alien at first glance,
 but they are readable and easy to get used to.
 
-In MATHLAB\cite{ENGE65}, 
+In MATHLAB[cite:@ENGE65], 
 which reads expressions in a FORTRAN-like form, but prints
 them out using CHARYBDIS. A complete explanation of the commands and
 replies shown would be too lengthy to include here, but the
@@ -239,7 +230,7 @@ example at the end.
 There are two steps to the display of an expression. First, a list is
 built up of the atomic symbols making up the display, together with
 the Cartesian coordinates of their initial characters. Then this list,
-the {\sl display list}, is handed line by line to SCYLLA, a function
+the /display list/, is handed line by line to SCYLLA, a function
 which writes it out onto the device referenced by the system function
 PRIN1.
 
@@ -248,7 +239,7 @@ but a succession of display lists is created and written.
 
 CHARYBDIS, the main function, contains the algorithm for splitting
 expressions over several lines and the loop which sends the
-{\sl display list} to SCYLLA. CHARYBDIS enters the function APP to
+/display list/ to SCYLLA. CHARYBDIS enters the function APP to
 obtain the display list.
 
 APP, which is the doorway to the rest of the program, has no other
@@ -280,18 +271,18 @@ is, by design, a short one.
 
 The framework comprises the definitions of four terms:
 \begin{enumerate}
-\item The {\sl origin} is a distinguished location within a display,
+\item The /origin/ is a distinguished location within a display,
 whose coordinates are restricted as follows. The abscissa of the
 origin is that of the leftmost character in the display, and the
 ordinate of the origin is neither greater than that of the highest
 character in the display nor less than that of the lowest. The choice
 of ordinate is otherwise arbitrary.
-\item The {\sl width} of a display is the number of columns from the
+\item The /width/ of a display is the number of columns from the
 extreme left of the display (the origin, in fact) to its extreme
 right.
-\item The {\sl superspan} of a display is the number of lines it
+\item The /superspan/ of a display is the number of lines it
 extends above the origin
-\item The {\sl subspan} of a display is the number of lines it extends
+\item The /subspan/ of a display is the number of lines it extends
 below the origin
 \end{enumerate}
 #+begin_example
@@ -330,13 +321,12 @@ argument
 \item a function of one argument whose value is its subspan.
 \end{enumerate}
 
-\noindent
-{\bf Example}
+*Example*
 
 Let us suppose that we wish to specify the display of a sum of two
 terms, whose input expression is: (SUM term$_1$ term$_2$). The sum is
 made up out of two variable subexpressions -- the terms -- and a plus
-sign. The plus sign is a character, {\sl a fortiori} an atom, and may
+sign. The plus sign is a character, /a fortiori/ an atom, and may
 be viewed as just another subexpression. Our job is to specify the
 positions of these three subexpressions relative to one another, and
 place the whole at some given location. Restated in our conceptual
@@ -7503,7 +7493,6 @@ without stack overflow.  MCD.
 
 
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

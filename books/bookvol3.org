@@ -1,15 +1,9 @@
-\documentclass[dvipdfm]{book}
-\newcommand{\VolumeName}{Volume 3: Axiom Programmers Guide}
-\input{bookheader.tex}
-\pagenumbering{arabic}
-\mainmatter
-\setcounter{chapter}{0} % Chapter 1
 \chapter[A Language for Computational Algebra]
 {A Language for Computational Algebra by Jenks and Trager}
 
 ** Introduction
 
-Jenks and Trager\cite{Jenk81} describe a language with parameterized
+Jenks and Trager[cite:@Jenk81] describe a language with parameterized
 types and generic operators particularly suited to computational algebra.
 A flexible framework is given for building algebraic structures and
 defining algorithms which work in as general a setting as possible.
@@ -19,7 +13,7 @@ and ``categories''.
 A language for computational algebra should be able to express algorithms
 for dealing with algebraic objects at their most natural level of abstraction.
 We can illustrate this concept with two simple algorithms. First, we wish
-to write a function {\sl max} which computes the maximum of two elements
+to write a function /max/ which computes the maximum of two elements
 of any set on which an ordering predicate is defined. One approach to this
 problem is to explicitly pass the ordering predicate as an additional
 argument to max. Thus max might be defined by
@@ -31,7 +25,7 @@ the number of additional arguments required gets out of hand. Our approach
 is instead to require the arguments $x$ and $y$ of max to be elements
 of some specific algebraic structure which has a ``less than'' operation
 '$<$' implemented by some function. We will call such algebraic structures
-{\bf domains}. Thus '$<$' is a ``generic'' operation which has different
+*domains*. Thus '$<$' is a ``generic'' operation which has different
 function definitions for different domains. Our definition of max, with
 suitable declarations, becomes:
 #+begin_example
@@ -42,12 +36,12 @@ The requirement that a generic operation have a particular name does not
 characterize its algebraic properties. In the above definition of max,
 it is implicitly assumed that '$<$' provides a total ordering on the
 elements of its domain. To this end, our domains will also have a set of
-{\sl attributes} which permit a description of the algebraic properties
+/attributes/ which permit a description of the algebraic properties
 of its operations (e.g. so as to distinguish between totally-ordered and
 partially-ordered sets).
 
 As a second example, we examine the classical algorithm for computing the
-{\sl gcd}, the greatest common divisor, of two integers:
+/gcd/, the greatest common divisor, of two integers:
 #+begin_example
    gcd(x,y) == if x = 0 then y else gcd(y,remainder(x,y))
 #+end_example
@@ -58,9 +52,9 @@ actually required. In fact, the same algorithm can be used on gaussian
 integers, polynomials over fields, or any other domain which has an
 appropriate remainder function. We wish to specify the minimum requirements
 of an algebraic structure for the gcd algorithm to be applicable. To do this,
-we introduce a grouping of domains called a {\bf category}, in this case,
+we introduce a grouping of domains called a *category*, in this case,
 ``the category of Euclidean domains''. Any domain of this category will be
-an integral domain with a generic function {\sl remainder} satisfying two
+an integral domain with a generic function /remainder/ satisfying two
 requirements. The first is that 
 #+begin_example
    remainder(x,y) = x - q*x*y
@@ -95,8 +89,8 @@ function could be written:
        if x=0 then y else gcd(y,remainder(x,y))
 #+end_example
 
-Expressions of the form ``A:B'' are called {\sl declarations}. The
-arguments $x$ and $y$ of gcd are {\sl declared} to be elements of some
+Expressions of the form ``A:B'' are called /declarations/. The
+arguments $x$ and $y$ of gcd are /declared/ to be elements of some
 domain R which, in turn, is declared to be a member of EuclideanDomain.
 Declaring ``A:B'' means ``A is a member of B'' in the following sense.
 Declaring a domain to be a member of a category indicates that all the
@@ -112,7 +106,7 @@ invoking a function which returns a category. Categories may be augmented,
 diminished, or ``joined'' with other categories to produce a new category
 containing all of the operations and attributes of the individual categories.
 
-A domain is always created by a function which we call a {\bf functor}.
+A domain is always created by a function which we call a *functor*.
 Some simple domains are ``the integers'' and ``the booleans'' which are
 produced by functors of no arguments. Other domains such as ``the integers
 mod 7'' are produced by functors which take arguments (such as the modulus
@@ -137,7 +131,7 @@ converted to objects of other domains.
 Figure 1: Algebraic Categories\\
 \begin{tabular}{|l|l|l|}
 \hline
-{\bf category}            & {\bf extends}    & {\bf operations}\\
+*category*            & *extends*    & *operations*\\
 \hline
 Set                       &                  & $=$\\
 AbelianGroup              & Set              & $0,+,-$\\
@@ -191,29 +185,29 @@ and ``categories'' for the abstract description of algorithms for
 computational algebra. The facility for categories is unique to our
 language and its use seems to be invaluable for describing algorithms
 for computational algebra. Our domains are similar to ``modes'' in
-EL1\cite{Wegb74} and ``types'' in RUSSELL\cite{Deme79} and ADAPT\cite{Leve80}.
-As in EL1, but in contrast to Ada\cite{ADAx83}, domains are computed values.
+EL1[cite:@Wegb74] and ``types'' in RUSSELL[cite:@Deme79] and ADAPT[cite:@Leve80].
+As in EL1, but in contrast to Ada[cite:@ADAx83], domains are computed values.
 Our notions of categories and functors are based on concepts in universal
-algebra \cite{Cohn65} developed by the ADJ group \cite{That82} and Burstall
-and Goguen \cite{Burs77}. In addition, categories extend the idea of
-``type constraint'' in CLU \cite{Lisk79} and Alphard \cite{Wulf76} where
+algebra [cite:@Cohn65] developed by the ADJ group [cite:@That82] and Burstall
+and Goguen [cite:@Burs77]. In addition, categories extend the idea of
+``type constraint'' in CLU [cite:@Lisk79] and Alphard [cite:@Wulf76] where
 functions can require that their arguments have certain operations available
-to them. For related work in computer algebra, see \cite{Ausi79}, 
-\cite{Gris76}, \cite{Jenk74}, and \cite{Loos74}.
+to them. For related work in computer algebra, see [cite:@Ausi79], 
+[cite:@Gris76], [cite:@Jenk74], and [cite:@Loos74].
 
 ** Concepts
 
 In this section, we give precise definitions and examples of the concepts
 of domain, category, and functor.
 
-{\bf Domain}. By a {\sl domain of computation}, or, simply, {\bf domain},
+*Domain*. By a /domain of computation/, or, simply, *domain*,
 we mean:
 \begin{enumerate}
-\item a set of generic {\bf operations}
-\item a {\bf representation}
-\item a set of {\bf functions} which implement the operations in terms
+\item a set of generic *operations*
+\item a *representation*
+\item a set of *functions* which implement the operations in terms
 of the representation
-\item a set of {\bf attributes}, which designate useful facts such as
+\item a set of *attributes*, which designate useful facts such as
 axioms and mathematical theorems which are true for the operations as
 implemented by the functions.
 \end{enumerate}
@@ -226,11 +220,11 @@ are RationalNumber (``the rational numbers''), Matrix(Integer)
 Polynomial(X,RationalNumber) (``the polynomials in X with rational
 number coefficients'').
 
-The generic operations are given by {\bf signatures}, expressions consisting
-of an {\sl operation name}, a {\sl source}, and a {\sl target}. The domain
+The generic operations are given by *signatures*, expressions consisting
+of an /operation name/, a /source/, and a /target/. The domain
 Integer, for example, has the operation ``less than'' expressed by the
 signture:
-\[`<`: ({\rm Integer},{\rm Integer}) \rightarrow {\rm Boolean}\]
+\[`<`: (Integer,Integer) \rightarrow Boolean\]
 with '$<$' as operation name, (Integer,Integer) as source, and Boolean
 as target. The source part of the signature is any sequence of domains,
 and the target part is any domain.
@@ -242,9 +236,9 @@ The functions component is a set of compiled functions providing a
 domain-specific implementation for each generic operation. For example,
 domain Integer has a function ``Integer$<$'' which implements ``less than''.
 If a domain has an operation signature 
-\[{\rm op:}(D_1,\ldots,Dn) \rightarrow D_0\]
+\[op:(D_1,...,Dn) \rightarrow D_0\]
 then the associated function must take arguments from the representations
-of $D_1,\ldots,D_n$ respectively and return a result in the representation
+of $D_1,...,D_n$ respectively and return a result in the representation
 of $D_0$.
 
 The attribute component of a domain is described either by a name, e.g.
@@ -253,16 +247,16 @@ The attribute component of a domain is described either by a name, e.g.
 provide complete axiomatic descriptions of an operation, rather to assert
 facts which programs can query.
 
-{\bf Category} A ``category'' designates a class of domains with common
+*Category* A ``category'' designates a class of domains with common
 operations and attributes but with different functions and representations.
 The categories of interest here will be those of algebraic structures such
 as Ring (``the class of all rings''), Field (``the class of all fields''),
 and Set (``the class of all sets'').
 
-By a {\bf category} we mean:
+By a *category* we mean:
 \begin{enumerate}
-\item a set of generic {\bf operations}
-\item a set of {\bf attributes}, which designate facts which must be
+\item a set of generic *operations*
+\item a set of *attributes*, which designate facts which must be
 true for any implementation of the operations.
 \end{enumerate}
 
@@ -282,7 +276,7 @@ and the attribute associative('$\times$').
 We say a domain D is ``a member of'' a category C, equivalently, D is of C,
 if D contains every operation and attribute of C with \$ replaced by D.
 For example, Integer is of Set because it contains an operation 
-\[=: ({\rm Integer},{\rm Integer}) \rightarrow {\rm Boolean}\]
+\[=: (Integer,Integer) \rightarrow Boolean\]
 We say that a category B extends a category A if all of the operations and
 attributes of A are contained in B. SemiGroup extends Set since all of the
 operations ('$=$') of Set are contained in SemiGroup.
@@ -293,12 +287,12 @@ Figure 2. Examples of Category Definitions
 
 \hrulefill
 
-Set: Category == {\bf category}\\
-\hbox{\hskip 0.5cm} [{\sl operations}] =:(\$,\$) $\rightarrow$ Boolean
+Set: Category == *category*\\
+\hbox{\hskip 0.5cm} [/operations/] =:(\$,\$) $\rightarrow$ Boolean
 
 SemiGroup: Category == Set with\\
-\hbox{\hskip 0.5cm} [{\sl operations}] $\times$:(\$,\$) $\rightarrow$ \$\\
-\hbox{\hskip 0.5cm} [{\sl attributes}] {\rm associative}('$\times$')
+\hbox{\hskip 0.5cm} [/operations/] $\times$:(\$,\$) $\rightarrow$ \$\\
+\hbox{\hskip 0.5cm} [/attributes/] associative('$\times$')
 [($x \times y) \times z = x \times (y \times z)$]
 
 \hrulefill
@@ -312,7 +306,7 @@ category value indicated to the right of the '$==$'. Evaluation of
 ``SemiGroup'' similary causes ``SemiGroup'' to be rewritten by the
 corresponding right-hand expression. Further evaluation causes Set to be 
 replaced by its value, a category to which the '$\times$' operation and
-associative('$\times$') attribute are added by the {\bf with} operation.
+associative('$\times$') attribute are added by the *with* operation.
 As implied by this evaluation mechanism, two categories are equivalent
 iff they have equivalent sets of operations and attributes, irrespecitive
 of how they were created.
@@ -324,11 +318,11 @@ Figure 3. Examples of Category Definitions
 \hrulefill
 
 Module(R:Ring) : Category == AbelianGroup with\\
-\hbox{\hskip 0.5cm} [{\sl operations}] $\times$:(R,\$) $\rightarrow$ \$\\
-\hbox{\hskip 0.5cm} [{\sl attributes}] $\ldots$
+\hbox{\hskip 0.5cm} [/operations/] $\times$:(R,\$) $\rightarrow$ \$\\
+\hbox{\hskip 0.5cm} [/attributes/] $...$
 
 Algebra(R:Ring) : Category == (Ring,Module(R)) with\\
-\hbox{\hskip 0.5cm} [{\sl attributes}] $\ldots$
+\hbox{\hskip 0.5cm} [/attributes/] $...$
 
 \hrulefill
 
@@ -338,13 +332,13 @@ Module creates the category of all R-modules, that is, modules over a given
 ring R. For example, the function Module applied to Integer produces the
 category of all $Z$-modules, domains D which are abelian groups with
 the additional operations 
-\[\times: ({\rm Integer,D}) \rightarrow {\rm Integer}\].
+\[\times: (Integer,D) \rightarrow Integer\].
 
 This category includes domain Integer since Integer is an abelian group
 and has the operation 
-\[\times: ({\rm Integer,Integer}) \rightarrow {\rm Integer}\].
+\[\times: (Integer,Integer) \rightarrow Integer\].
 
-The function Algebra(R) extends the {\sl join} of a Ring and a Module(R),
+The function Algebra(R) extends the /join/ of a Ring and a Module(R),
 written (Ring,Module(R)). The join designates the category formed by
 directly combining the operations and attributes of Ring with those of
 Module(R).
@@ -353,14 +347,14 @@ Another way of parameterizing categories is by operator names. For example,
 the above definition of SemiGroup could be extended to take a binary operation
 as a parameter:\\
 \hbox{\hskip 0.5cm}SemiGroup(op) : Category == Set with\\
-\hbox{\hskip 1.0cm}[{\sl operations}] op: (\$,\$) $\rightarrow$ \$\\
-\hbox{\hskip 1.0cm}[{\sl attributes}] associative(op)
+\hbox{\hskip 1.0cm}[/operations/] op: (\$,\$) $\rightarrow$ \$\\
+\hbox{\hskip 1.0cm}[/attributes/] associative(op)
 [$op(op(x,y),z) = op(x,op(y,z))$]
 
 after which we may refer to the multiplicative form of SemiGroup in 
 Figure 2 by SemiGroup('$\times$').
 
-{\bf Functor} By a {\bf functor} we mean any function which returns a
+*Functor* By a *functor* we mean any function which returns a
 domain. A functor creates a domain, a member of some category. A category
 never creates anything: it simply acts as a template for domains,
 describing which operations and attributes must be present. A functor 
@@ -380,8 +374,8 @@ and produces the domain ``the set of all vectors of length $n$ with
 elements from $D$''. Struct produces a domain represented by a set of
 name-value pairs, e.g. Struct(real:Integer,imag:Integer) describes
 an appropriate representation for ``the Gaussian integers''. 
-Union(A,$\ldots$,B) creates a new domain $D$ form the domains $A,\ldots,B$
-which is the disjoint union of the domains $A,\ldots,B$.
+Union(A,$...$,B) creates a new domain $D$ form the domains $A,...,B$
+which is the disjoint union of the domains $A,...,B$.
 
 The language permits the building of new functors from these basic
 functors. A simple example is FiniteField in Figure 4.
@@ -392,17 +386,17 @@ Figure 4. Example of Functor Definition
 \hrulefill
 
 FiniteField(p:PrimeNumber) : GaloisField ==\\
-\hbox{\hskip 0.5cm} {\bf capsule}\\
-\hbox{\hskip 1.0cm} [{\sl representation}]\\
+\hbox{\hskip 0.5cm} *capsule*\\
+\hbox{\hskip 1.0cm} [/representation/]\\
 \hbox{\hskip 1.5cm} Rep := Integer\\
-\hbox{\hskip 1.0cm} [{\sl declarations}]\\
+\hbox{\hskip 1.0cm} [/declarations/]\\
 \hbox{\hskip 1.5cm} x,y : \$\\
-\hbox{\hskip 1.0cm} [{\sl definitions}]\\
+\hbox{\hskip 1.0cm} [/definitions/]\\
 \hbox{\hskip 1.5cm} 0 == Integer.0\\
 \hbox{\hskip 1.5cm} 1 == Integer.1\\
-\hbox{\hskip 1.5cm} x+y == {\bf if} (w $\leftarrow$ x Integer.$+$ y) $>$ p\\
-\hbox{\hskip 3.0cm} {\bf then} w - p\\
-\hbox{\hskip 3.0cm} {\bf else} w\\
+\hbox{\hskip 1.5cm} x+y == *if* (w $\leftarrow$ x Integer.$+$ y) $>$ p\\
+\hbox{\hskip 3.0cm} *then* w - p\\
+\hbox{\hskip 3.0cm} *else* w\\
 \hbox{\hskip 1.5cm} $\cdots$
 
 \hrulefill
@@ -411,7 +405,7 @@ The functor FiniteField applied to p, a prime number, creates a domain
 ``the integers modulo p'', a member of its target category GaloisField
 (``the class of all Galois fields''). The set of operations and 
 attributes of this domain are given by GaloisField, the representation
-and set of functions, by the {\sl capsule} part of the definition which
+and set of functions, by the /capsule/ part of the definition which
 appears to the right of the `$==$'. The representation is always defined
 by the distinguished symbol Rep in terms of a ``lower level'' functor.
 For FiniteFields, Rep is defined to be Integer (meaning that elements
@@ -424,14 +418,14 @@ Figure 5. Example of Functor Definition
 
 \hrulefill
 
-IntegerMod(m:Integer | m $>$ 1): T == C {\bf where}\\
-\hbox{\hskip 0.5cm} T == (Ring,Finite) {\bf with}\\
-\hbox{\hskip 2.5cm} {\bf if} isPrime m {\bf then} GaloisField\\
-\hbox{\hskip 0.5cm} C == {\bf capsule}\\
+IntegerMod(m:Integer | m $>$ 1): T == C *where*\\
+\hbox{\hskip 0.5cm} T == (Ring,Finite) *with*\\
+\hbox{\hskip 2.5cm} *if* isPrime m *then* GaloisField\\
+\hbox{\hskip 0.5cm} C == *capsule*\\
 \hbox{\hskip 1.5cm} $\cdots$\\
-\hbox{\hskip 1.0cm} [{\sl definitions}]\\
-\hbox{\hskip 1.5cm} {\bf if} isPrime m {\bf then}\\
-\hbox{\hskip 2.0cm} x / y == $\ldots$\\
+\hbox{\hskip 1.0cm} [/definitions/]\\
+\hbox{\hskip 1.5cm} *if* isPrime m *then*\\
+\hbox{\hskip 2.0cm} x / y == $...$\\
 \hbox{\hskip 1.5cm} $\cdots$
 
 \hrulefill
@@ -461,7 +455,7 @@ LocalAlgebra) to produce reduced fractions. Similarly, if R has a
 derivation defined for it, QuotientField extends this derivation to the
 field of fractions.
 
-{\bf Conclusions} Our language provides the useful notions of ``domains''
+*Conclusions* Our language provides the useful notions of ``domains''
 and ``categories'' for the abstract description of algorithms for
 computational algebra. Domains are the algebraic structures on which 
 computation is performed. Categories are groupings of domains with common
@@ -502,26 +496,24 @@ into categories have been show to be useful computational devices. By
 preserving this natural structure, we hope to have eased the task of 
 finding computational models for algebraic structures.
 
-\newpage 
 \begin{center}
 Figure 6. Definition of Localization Functors
 \end{center}
-\vskip -0.2cm
 \hrulefill
 
-Localize(isZeroDivisor,M,D) : Module(R) == C {\bf where}\\
+Localize(isZeroDivisor,M,D) : Module(R) == C *where*\\
 \hbox{\hskip 0.5cm} R:Ring\\
 \hbox{\hskip 0.5cm} M: Module(R)\\
 \hbox{\hskip 0.5cm} D: Monoid $\vert$ D $\subseteq$ R\\
 \hbox{\hskip 0.5cm} isZeroDivisor: M $\rightarrow$ Boolean\\
-\hbox{\hskip 0.5cm} C == {\bf capsule} $\ldots$\\
-\hbox{\hskip 1.5cm} [{\sl representation}]\\
+\hbox{\hskip 0.5cm} C == *capsule* $...$\\
+\hbox{\hskip 1.5cm} [/representation/]\\
 \hbox{\hskip 2.0cm} Rep := Struct(num:M, den:D)\\
-\hbox{\hskip 1.5cm} [{\sl declarations}]\\
+\hbox{\hskip 1.5cm} [/declarations/]\\
 \hbox{\hskip 2.0cm} x,y: \$\\
 \hbox{\hskip 2.0cm} n: Integer\\
 \hbox{\hskip 2.0cm} r:R ; d:D\\
-\hbox{\hskip 1.5cm} [{\sl definitions}]\\
+\hbox{\hskip 1.5cm} [/definitions/]\\
 \hbox{\hskip 2.0cm} 0 == Rep(0,1)\\
 \hbox{\hskip 2.0cm} -x == Rep(-x.num,x.den)\\
 \hbox{\hskip 2.0cm} x=y == isZeroDivisor(y.den $\times$ x.num - 
@@ -529,41 +521,36 @@ x.den $\times$ y.num)\\
 \hbox{\hskip 2.0cm} x+y == Rep(y.den $\times$ x.num + x.den $\times$ y.num,
 x.den $\times$ y.den)\\
 \hbox{\hskip 2.0cm} n $\times$ x == Rep(n $\times$ x.num,x.den)\\
-\hbox{\hskip 2.0cm} r $\times$ x == {\bf if} r=x.den {\bf then}
-Rep(x.num,1) {\bf else} Rep(r $\times$ x.num,x.den)\\
+\hbox{\hskip 2.0cm} r $\times$ x == *if* r=x.den *then*
+Rep(x.num,1) *else* Rep(r $\times$ x.num,x.den)\\
 \hbox{\hskip 2.0cm} x / d == Rep(x.num,d $\times$ x.den)
-\vskip 0.2cm
-LocalAlgebra(isZeroDivisor,A,D): T == C {\bf where}\\
+LocalAlgebra(isZeroDivisor,A,D): T == C *where*\\
 \hbox{\hskip 0.5cm} R: Ring\\
 \hbox{\hskip 0.5cm} A: Algebra(R)\\
 \hbox{\hskip 0.5cm} isZeroDivisor: A $\rightarrow$ Boolean\\
 \hbox{\hskip 0.5cm} D: Monoid $\vert$ D $\subseteq$ R\\
-\hbox{\hskip 0.5cm} T == Algebra(R) {\bf with if} A {\bf has}
-commutative('$\times$') {\bf then} commutative('$\times$')\\
-\hbox{\hskip 0.5cm} C == Localize(isZeroDivisor,A,D) {\bf add} $\ldots$\\
+\hbox{\hskip 0.5cm} T == Algebra(R) *with if* A *has*
+commutative('$\times$') *then* commutative('$\times$')\\
+\hbox{\hskip 0.5cm} C == Localize(isZeroDivisor,A,D) *add* $...$\\
 \hbox{\hskip 2.0cm} 1 == Rep(1,1)\\
 \hbox{\hskip 2.0cm} x $\times$ y == Rep(x.num $\times$ y.num,
 x.den $\times$ y.den)\\
 \hbox{\hskip 2.0cm} characteristic == A.characteristic
-\vskip 0.2cm
-QuotientField(R; IntegralDomain) : T == C {\bf where}\\
-\hbox{\hskip 0.5cm} T == (Field,Algebra(R)) {\bf with if}
-R of DifferentialRing {\bf then} DifferentialRing\\
-\hbox{\hskip 0.5cm} C == LocalAlgebra(\$1 = 0,R,R) {\bf add} $\ldots$\\
-\hbox{\hskip 2.0cm} {\bf if} R {\bf has} gcd: (R,R) $\rightarrow$ R 
-{\bf then}\\
-\hbox{\hskip 2.5cm} x + y == $\ldots$\\
-\hbox{\hskip 2.5cm} x $\times$ y == $\ldots$\\
-\hbox{\hskip 2.5cm} {\bf where} cancelGcd(x:\$):\$ == $\ldots$\\
-\hbox{\hskip 2.0cm} {\bf if} R of DifferentialRing {\bf then}\\
-\hbox{\hskip 2.5cm} {\bf if} R {\bf has} gcd: (R,R) $\rightarrow$ R\\
-\hbox{\hskip 3.0cm} {\bf then} deriv(x) == $\ldots$\\
-\hbox{\hskip 3.0cm} {\bf else} deriv(x) == $\ldots$
-\vskip 0.2cm
+QuotientField(R; IntegralDomain) : T == C *where*\\
+\hbox{\hskip 0.5cm} T == (Field,Algebra(R)) *with if*
+R of DifferentialRing *then* DifferentialRing\\
+\hbox{\hskip 0.5cm} C == LocalAlgebra(\$1 = 0,R,R) *add* $...$\\
+\hbox{\hskip 2.0cm} *if* R *has* gcd: (R,R) $\rightarrow$ R 
+*then*\\
+\hbox{\hskip 2.5cm} x + y == $...$\\
+\hbox{\hskip 2.5cm} x $\times$ y == $...$\\
+\hbox{\hskip 2.5cm} *where* cancelGcd(x:\$):\$ == $...$\\
+\hbox{\hskip 2.0cm} *if* R of DifferentialRing *then*\\
+\hbox{\hskip 2.5cm} *if* R *has* gcd: (R,R) $\rightarrow$ R\\
+\hbox{\hskip 3.0cm} *then* deriv(x) == $...$\\
+\hbox{\hskip 3.0cm} *else* deriv(x) == $...$
 RationalFunction(x:Expression, R:Ring) == QuotientField(Polynomial(x,R))
-\vskip 0.2cm
 RationalNumber == QuotientField(Integer)
-\vskip -0.2cm
 \hrulefill
 
 
@@ -572,11 +559,11 @@ Axiom maintains internal representations for domains.
 There are functions for examining the internals of objects of
 a particular domain. 
 ** Examining Internals
-One useful function is {\bf devaluate} which takes an object
+One useful function is *devaluate* which takes an object
 and returns a Lisp pair. The CAR of the pair is the Axiom type.
 The CDR of the pair is the object representation.
 For instances, consider the session where we create a list of 
-objects using the domain {\bf List(Any)}.
+objects using the domain *List(Any)*.
 #+begin_example
 (1) -> w:=[1,7.2,"luanne",3*x^2+5,_
            (3*x^2+5)::FRAC(POLY(INT)),_
@@ -588,16 +575,16 @@ objects using the domain {\bf List(Any)}.
                                                               Type: List(Any)
 
 #+end_example
-The first object, {\bf 1} is a primitive object that has the domain
-{\bf PI} and uses the underlying Lisp representation for the number.
+The first object, *1* is a primitive object that has the domain
+*PI* and uses the underlying Lisp representation for the number.
 #+begin_example
 (2) -> devaluate(1)$Lisp
 
    (2)  1
                                                             Type: SExpression
 #+end_example
-The second object, {\bf 7.2} is a primitive object that has the domain
-{\bf FLOAT} and uses the underlying Lisp representation for the number,
+The second object, *7.2* is a primitive object that has the domain
+*FLOAT* and uses the underlying Lisp representation for the number,
 in this case, itself a pair whose CAR is the floating point base and whose
 CDR is the mantissa,
 #+begin_example
@@ -606,7 +593,7 @@ CDR is the mantissa,
    (3)  (265633114661417543270 . - 65)
                                                             Type: SExpression
 #+end_example
-The third object, {\tt {\bf "luanne"}} is from the domain {\bf STRING}
+The third object, =*"luanne"*= is from the domain *STRING*
 and uses the Lisp string representation.
 #+begin_example
 (4) -> devaluate("luanne")$Lisp
@@ -625,17 +612,17 @@ representation.
    (5)  (1 x (2 0 . 3) (0 0 . 5))
                                                             Type: SExpression
 #+end_example
-The fourth object, $3x^2+5$ is from the domain {\bf POLY(INT)}. It is stored
+The fourth object, $3x^2+5$ is from the domain *POLY(INT)*. It is stored
 as the list
 #+begin_example
    (1 x (2 0 . 3) (0 0 . 5))
 #+end_example
-From the domain {\bf POLY} (Vol 10.3, POLY) we see that
+From the domain *POLY* (Vol 10.3, POLY) we see that
 #+begin_example
    Polynomial(R:Ring): ...
       == SparseMultivariatePolynomial(R, Symbol) add ...
 #+end_example
-So objects from this domain are represented as {\bf SMP(INT,SYMBOL)}. 
+So objects from this domain are represented as *SMP(INT,SYMBOL)*. 
 From this domain we ss that 
 #+begin_example
    SparseMultivariatePolynomial(R: Ring,VarSet: OrderedSet): ...
@@ -643,12 +630,12 @@ From this domain we ss that
        --representations
        D := SparseUnivariatePolynomial(%)
 #+end_example
-So objects from this domain are represented as a {\bf SUP(INT)}
+So objects from this domain are represented as a *SUP(INT)*
 #+begin_example
    SparseUnivariatePolynomial(R:Ring): ...
      == PolynomialRing(R,NonNegativeInteger) add
 #+end_example
-So objects from this domain are represented as {\bf PR(INT,NNI)}
+So objects from this domain are represented as *PR(INT,NNI)*
 #+begin_example
    PolynomialRing(R:Ring,E:OrderedAbelianMonoid): ...
      FreeModule(R,E) add
@@ -656,7 +643,7 @@ So objects from this domain are represented as {\bf PR(INT,NNI)}
        Term:=  Record(k:E,c:R)
        Rep:=  List Term
 #+end_example
-So objects from this domain are represented as {\bf FM(INT,NNI)}
+So objects from this domain are represented as *FM(INT,NNI)*
 #+begin_example
    FreeModule(R:Ring,S:OrderedSet):
       == IndexedDirectProductAbelianGroup(R,S) add
@@ -664,12 +651,12 @@ So objects from this domain are represented as {\bf FM(INT,NNI)}
         Term:=  Record(k:S,c:R)
         Rep:=  List Term
 #+end_example
-So objects from this domain are represented as {\bf IDPAG(INT,NNI)}
+So objects from this domain are represented as *IDPAG(INT,NNI)*
 #+begin_example
    IndexedDirectProductAbelianGroup(A:AbelianGroup,S:OrderedSet):
      ==  IndexedDirectProductAbelianMonoid(A,S) add
 #+end_example
-So objects from this domain are represented as {\bf IDPAM(INT,NNI)}
+So objects from this domain are represented as *IDPAM(INT,NNI)*
 #+begin_example
    IndexedDirectProductAbelianMonoid(A:AbelianMonoid,S:OrderedSet):
      ==  IndexedDirectProductObject(A,S) add
@@ -677,7 +664,7 @@ So objects from this domain are represented as {\bf IDPAM(INT,NNI)}
        Term:=  Record(k:S,c:A)
        Rep:=  List Term
 #+end_example
-So objects from this domain are represented as {\bf IDPO(INT,NNI)}
+So objects from this domain are represented as *IDPO(INT,NNI)*
 #+begin_example
 IndexedDirectProductObject(A:SetCategory,S:OrderedSet):
  == add
@@ -721,10 +708,9 @@ IndexedDirectProductObject(A:SetCategory,S:OrderedSet):
 
 
 ** Makefile
-This book is actually a literate program\cite{Knut92} and can contain 
+This book is actually a literate program[cite:@Knut92] and can contain 
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 
-\eject
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage
 \phantomsection

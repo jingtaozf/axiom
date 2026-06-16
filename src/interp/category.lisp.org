@@ -1,14 +1,5 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src/interp category.lisp}
-\author{The Axiom Team}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: category.lisp
+#+AUTHOR: The Axiom Team
 ** Category
 Functions for building categories.
 
@@ -101,7 +92,7 @@ We compute the list of parameters that occur in signatures on the
 sigList, removing duplicates, and skipping the ``known'' constructors,
 Union, Mapping, List, and Record.
 
-\verb|$PrimitiveDomainNames| is a list of domains that we need not cache.
+=$PrimitiveDomainNames= is a list of domains that we need not cache.
 It is set in init.lisp.pamphlet.
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1576,7 +1567,7 @@ Ancestor chasing code
 *** JoinInner
 The implementation of Join
 **** hasCategoryBug
-The hasCategoryBug (bug000001)\cite{2} manifests itself by causing a
+The hasCategoryBug (bug000001)[cite:@2] manifests itself by causing a
 value stack overflow when compiling algebra code that uses conditions
 that read ``if R has ...'' when using GCL (but not CCL). Essentially
 the [[|Ring|]] category keeps getting added to the list each time
@@ -1606,7 +1597,7 @@ copy-seq in there which is not getting executed in the assignment of
 [[|$NewCatVec|]] before the setelt.
 
 The original code failed to copy the NewCatVec before updating
-it. This code from macros.lisp\cite{1} checks whether the array is
+it. This code from macros.lisp[cite:@1] checks whether the array is
 adjustable.
 
 #+begin_example
@@ -2407,7 +2398,6 @@ copy.
                  (EXIT (|isCategoryForm| |u| |e|))))))))))
 
 #+end_src
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} [[pamphlet:src/interp/macros.lisp.pamphlet]]
 \bibitem{2} [[pamphlet:KNOWN.BUGS.pamphlet]]

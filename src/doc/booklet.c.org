@@ -1,15 +1,6 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src/doc booklet.c}
-\author{David Mentre, Timothy Daly}
-\maketitle
-\begin{abstract}
+#+TITLE: booklet.c
+#+AUTHOR: David Mentre, Timothy Daly
 Booklet preprocesses a file and expands protocol specifiers in chunk names
-\end{abstract}
-\eject
-\tableofcontents
-\eject
 ** Start
 This is the booklet program. It scans the input file for a set of chunk
 names that contain ``protocol specifiers''. These protocol specifiers
@@ -18,7 +9,7 @@ are replaced by their results. Any other normal chunk is undisturbed.
 A protocol specifier is a prefix within the chunk name. For the moment
 this program recognizes only one protocol specifier, the ``file:''
 protocol. This is used to specify a file which will be included into
-the file (similar to C style \#include statements). The syntax is:
+the file (similar to C style #include statements). The syntax is:
 
 file:PATH-AND-FILENAME
 
@@ -51,9 +42,9 @@ Without error, it returns 0. On error, it prints on stderr a trace
 and returns -1.
 
 We read input file character by character. We rely on libc buffering for
-performance. If we find the opening $<<$ of a chunk we call \verb|find_url|
+performance. If we find the opening $<<$ of a chunk we call =find_url=
 to handle the chunk. Note that the two characters we swallow will be
-output by \verb|find_url| if this is not a protocol chunk.
+output by =find_url= if this is not a protocol chunk.
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -140,7 +131,7 @@ have our URL, we call the dispatch routine on it to expand it.
 
 If, for any reason, we do not find a valid chunk name we output the
 characters we found so the original file is unchanged. If we do find
-a valid chunk name we call \verb|url_dispatch| to look for a protocol
+a valid chunk name we call =url_dispatch= to look for a protocol
 specifier.
 
 We use a buffer of fixed size buf to store the search URL. {\bf

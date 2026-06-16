@@ -1,17 +1,8 @@
-\documentclass{article}
-\usepackage{axiom}
-\begin{document}
-\title{\$SPAD/src Makefile}
-\author{Timothy Daly}
-\maketitle
-\begin{abstract}
-\end{abstract}
-\eject
-\tableofcontents
-\eject
+#+TITLE: Makefile
+#+AUTHOR: Timothy Daly
 ** Directory overview
 *** Environment variables
-DIRS is a list of directories with the suffix {\bf dir}.
+DIRS is a list of directories with the suffix *dir*.
 
 There is a partial order of the directories which is not apparent.
 
@@ -57,7 +48,7 @@ smandir: ${SPD}/books/bookvol6.org
 
 #+end_src
 *** The share directory
-The {\bf share} directory files that are shared by all version of the
+The *share* directory files that are shared by all version of the
 system.
 
 #+NAME: sharedir
@@ -86,7 +77,7 @@ shareclean: ${SRC}/share/Makefile
 #+end_src
 *** The boot directory
 Axiom is built in layers. The first layer is contructed into
-an image called {\bf bootsys}. The {\bf bootsys} image is used
+an image called *bootsys*. The *bootsys* image is used
 to translate boot code to common lisp code. Since a boot coded
 interpreter is needed to translate the code for the boot coded
 interpreter we have a "boot-strapping" problem. In order to get
@@ -118,8 +109,8 @@ bootclean: ${SRC}/boot/Makefile
 
 #+end_src
 *** The interp directory
-Once {\bf bootsys} exists we need to build {\bf depsys}
-and {\bf interpsys}. Since these two images share a lot of
+Once *bootsys* exists we need to build *depsys*
+and *interpsys*. Since these two images share a lot of
 files they are built in the interp subdirectory using the
 same Makefile.
 
@@ -206,7 +197,7 @@ inputclean: ${SRC}/input/Makefile
 *** The etc directory
 The etc directory contains code used as tools surrounding Axiom.
 
-The asq \cite{2} command, contained in this directory, is useful
+The asq [cite:@2] command, contained in this directory, is useful
 for finding detailed information about domains, packages, and
 categories from the shell without running Axiom.
 #+NAME: etcdir
@@ -285,8 +276,8 @@ graphdir: ${SPD}/books/bookvol8.org
 #+end_src
 *** The algebra directory
 The algebra directory contains code written in Axiom's computer
-algebra language called {\bf spad}. There are two compilers for
-this language, the spad compiler and the {\bf Aldor}\cite{1} compiler.
+algebra language called *spad*. There are two compilers for
+this language, the spad compiler and the *Aldor*[cite:@1] compiler.
 
 Both of these compilers accept the same input language except for
 some platform-dependent differences. The spad compiler is written
@@ -378,7 +369,7 @@ browserdir: ${SPD}/books/bookvol11.org
 
 ** The Makefile
 
-The second call will execute the {\bf all} stanza. This stanza walks 
+The second call will execute the *all* stanza. This stanza walks 
 all of the lower level directories.
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -410,9 +401,8 @@ setup: ${SETUP}
 <<browserdir>>
 
 #+end_src
-\eject
 \begin{thebibliography}{99}
-\bibitem{1} Watt, Stephen, The Aldor compiler, {\bf www.aldor.org}
+\bibitem{1} Watt, Stephen, The Aldor compiler, *www.aldor.org*
 \bibitem{2} \$AXIOM/src/etc/asq.c.pamphlet
 \bibitem{3} \$AXIOM/src/clef/edible.c.pamphlet
 \end{thebibliography}
