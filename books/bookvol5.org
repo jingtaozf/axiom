@@ -22695,89 +22695,86 @@ The pform data structure
 
 The leaves are:
 
-\begin{tabular}{lcl}
-  char          &:=& ('char expr position) \\
-  Document      &:=& ('Document expr position) \\
-  error         &:=& ('error expr position) \\
-  expression    &:=& ('expression expr position) \\
-  float         &:=& ('float expr position) \\
-  id            &:=& ('id expr position)\\
-  idsy          &:=& ('idsy expr position)\\
-  integer       &:=& ('integer expr position)\\
-  string        &:=& ('string expr position)\\
-  symbol        &:=& ('symbol expr position)
-\end{tabular}
+| char | := | ('char expr position) |
+| Document | := | ('Document expr position) |
+| error | := | ('error expr position) |
+| expression | := | ('expression expr position) |
+| float | := | ('float expr position) |
+| id | := | ('id expr position) |
+| idsy | := | ('idsy expr position) |
+| integer | := | ('integer expr position) |
+| string | := | ('string expr position) |
+| symbol | := | ('symbol expr position) |
+
 
 The special nodes:
 
-\begin{tabular}{lcl}
-  ListOf        &:=& ('listOf items)\\
-  Nothing       &:=& ('nothing)\\
-  SemiColon     &:=& ('SemiColon (Body: Expr))
-\end{tabular}
+| ListOf | := | ('listOf items) |
+| Nothing | := | ('nothing) |
+| SemiColon | := | ('SemiColon (Body: Expr)) |
+
           
 The expression nodes:
 
-\begin{tabular}{lcl}
- Add &:=& ('Add (Base: [Typed], Addin: Expr))\\ 
- And &:=& ('And left right)\\
- Application &:=& ('Application (Op: Expr, Arg: Expr))\\
- Assign &:=& ('Assign (LhsItems: [AssLhs], Rhs: Expr))\\
- Attribute &:=& ('Attribute (Expr: Primary))\\
- Break &:=& ('Break (From: ? Id))\\
- Coerceto &:=& ('Coerceto (Expr: Expr, Type: Type))\\
- Collect &:=& ('Collect (Body: Expr, Iterators: [Iterator]))\\
- ComDefinition &:=& ('ComDefinition (Doc: Document, Def: Definition))\\
- DeclPart &&\\
- Definition &:=& ('Definition (LhsItems: [Typed], Rhs: Expr))\\
- DefinitionSequence &:=& (Args: [DeclPart])\\
- Do &:=& ('Do (Body: Expr))\\
- Document &:=& ('Document strings)\\
- DWhere &:=& ('DWhere (Context: [DeclPart], Expr: [DeclPart]))\\
- EnSequence &:=&\\
- Exit &:=& ('Exit (Cond: ? Expr, Expr: ? Expr))\\
- Export &:=& ('Export (Items: [Typed]))\\
- Forin &:=& ('Forin (Lhs: [AssLhs], Whole: Expr))\\
- Free &:=& ('Free (Items: [Typed]))\\
- Fromdom &:=& ('Fromdom (What: Id, Domain: Type))\\
- Hide &:=& ('hide, arg)\\
- If &:=& ('If (Cond: Expr, Then: Expr, Else: ? Expr))\\
- Import &:=& ('Import (Items: [QualType]))\\
- Inline &:=& ('Inline (Items: [QualType]))\\
- Iterate &:=& ('Iterate (From: ? Id))\\
- Lambda &:=& ('Lambda (Args: [Typed], Rets: ReturnedTyped, Body: Expr))\\
- Literal \\
- Local &:=& ('Local (Items: [Typed]))\\
- Loop &:=& ('Loop (Iterators: [Iterator]))\\
- Macro &:=& ('Macro (Lhs: Id, Rhs: ExprorNot))\\
- MLambda &:=& ('MLambda (Args: [Id], Body: Expr))\\
- Not &:=& ('Not arg)\\
- Novalue &:=& ('Novalue (Expr: Expr))\\
- Or &:=& ('Or left right)\\
- Pretend &:=& ('Pretend (Expr: Expr, Type: Type))\\
- QualType &:=& ('QualType (Type: Type, Qual: ? Type))\\
- Restrict &:=& ('Restrict (Expr: Expr, Type: Type))\\
- Retract &:=& ('RetractTo (Expr: Expr, Type: Type))\\
- Return &:=& ('Return (Expr: ? Expr, From: ? Id))\\
- ReturnTyped &:=& ('returntyuped (type body))\\
- Rule &:=& ('Rule (lhsitems, rhsitems))\\
- Sequence &:=& ('Sequence (Args: [Expr]))\\
- Suchthat &:=& ('Suchthat (Cond: Expr))\\
- Symb &:=& if leaf then symbol else expression\\
- Tagged &:=& ('Tagged (Tag: Expr, Expr: Expr))\\
- TLambda &:=&('TLambda (Args: [Typed], \\
- && {}Rets: ReturnedTyped Type, Body: Expr))\\
- Tuple &:=& ('Tuple (Parts: [Expr]))\\
- Typed &:=& ('Typed (Id: Id, Type: ? Type))\\
- Typing &:=& ('Typing (Items: [Typed]))\\
- Until &:=& ('Until (Cond: Expr)) NOT USED\\
- WDeclare &:=& ('WDeclare (Signature: Typed, Doc: ? Document))\\
- Where &:=& ('Where (Context: [DeclPart], Expr: Expr))\\
- While &:=& ('While (Cond: Expr))\\
- With &:=& ('With (Base: [Typed], Within: [WithPart]))\\
- WIf &:=& ('WIf (Cond: Primary, Then: [WithPart], Else: [WithPart]))\\
- Wrong &:=& ('Wrong (Why: Document, Rubble: [Expr]))
-\end{tabular}
+| Add | := | ('Add (Base: [Typed], Addin: Expr)) |
+| And | := | ('And left right) |
+| Application | := | ('Application (Op: Expr, Arg: Expr)) |
+| Assign | := | ('Assign (LhsItems: [AssLhs], Rhs: Expr)) |
+| Attribute | := | ('Attribute (Expr: Primary)) |
+| Break | := | ('Break (From: ? Id)) |
+| Coerceto | := | ('Coerceto (Expr: Expr, Type: Type)) |
+| Collect | := | ('Collect (Body: Expr, Iterators: [Iterator])) |
+| ComDefinition | := | ('ComDefinition (Doc: Document, Def: Definition)) |
+| DeclPart |  |  |
+| Definition | := | ('Definition (LhsItems: [Typed], Rhs: Expr)) |
+| DefinitionSequence | := | (Args: [DeclPart]) |
+| Do | := | ('Do (Body: Expr)) |
+| Document | := | ('Document strings) |
+| DWhere | := | ('DWhere (Context: [DeclPart], Expr: [DeclPart])) |
+| EnSequence | := |  |
+| Exit | := | ('Exit (Cond: ? Expr, Expr: ? Expr)) |
+| Export | := | ('Export (Items: [Typed])) |
+| Forin | := | ('Forin (Lhs: [AssLhs], Whole: Expr)) |
+| Free | := | ('Free (Items: [Typed])) |
+| Fromdom | := | ('Fromdom (What: Id, Domain: Type)) |
+| Hide | := | ('hide, arg) |
+| If | := | ('If (Cond: Expr, Then: Expr, Else: ? Expr)) |
+| Import | := | ('Import (Items: [QualType])) |
+| Inline | := | ('Inline (Items: [QualType])) |
+| Iterate | := | ('Iterate (From: ? Id)) |
+| Lambda | := | ('Lambda (Args: [Typed], Rets: ReturnedTyped, Body: Expr)) |
+| Literal \\ |
+| Local | := | ('Local (Items: [Typed])) |
+| Loop | := | ('Loop (Iterators: [Iterator])) |
+| Macro | := | ('Macro (Lhs: Id, Rhs: ExprorNot)) |
+| MLambda | := | ('MLambda (Args: [Id], Body: Expr)) |
+| Not | := | ('Not arg) |
+| Novalue | := | ('Novalue (Expr: Expr)) |
+| Or | := | ('Or left right) |
+| Pretend | := | ('Pretend (Expr: Expr, Type: Type)) |
+| QualType | := | ('QualType (Type: Type, Qual: ? Type)) |
+| Restrict | := | ('Restrict (Expr: Expr, Type: Type)) |
+| Retract | := | ('RetractTo (Expr: Expr, Type: Type)) |
+| Return | := | ('Return (Expr: ? Expr, From: ? Id)) |
+| ReturnTyped | := | ('returntyuped (type body)) |
+| Rule | := | ('Rule (lhsitems, rhsitems)) |
+| Sequence | := | ('Sequence (Args: [Expr])) |
+| Suchthat | := | ('Suchthat (Cond: Expr)) |
+| Symb | := | if leaf then symbol else expression |
+| Tagged | := | ('Tagged (Tag: Expr, Expr: Expr)) |
+| TLambda | := | ('TLambda (Args: [Typed], |
+|  |  | {}Rets: ReturnedTyped Type, Body: Expr)) |
+| Tuple | := | ('Tuple (Parts: [Expr])) |
+| Typed | := | ('Typed (Id: Id, Type: ? Type)) |
+| Typing | := | ('Typing (Items: [Typed])) |
+| Until | := | ('Until (Cond: Expr)) NOT USED |
+| WDeclare | := | ('WDeclare (Signature: Typed, Doc: ? Document)) |
+| Where | := | ('Where (Context: [DeclPart], Expr: Expr)) |
+| While | := | ('While (Cond: Expr)) |
+| With | := | ('With (Base: [Typed], Within: [WithPart])) |
+| WIf | := | ('WIf (Cond: Primary, Then: [WithPart], Else: [WithPart])) |
+| Wrong | := | ('Wrong (Why: Document, Rubble: [Expr])) |
+
 
 Special cases of expression nodes are:
 
@@ -53165,17 +53162,16 @@ See Steele Common Lisp 1990 p305
 \defmacro{DFAtan2}
 Compute a strongly typed doublefloat atan with 2 arguments
 
-\begin{tabular}{lllc}
-$y = 0$ & $x > 0$ & Positive x-axis & 0\\
-$y > 0$ & $x > 0$ & Quadrant I      & $0 <$ result $< \pi/2$\\
-$y > 0$ & $x = 0$ & Positive y-axis & $\pi/2$\\
-$y > 0$ & $x < 0$ & Quadrant II     & $\pi/2 <$ result $<\pi$\\
-$y = 0$ & $x < 0$ & Negative x-axis & $\pi$\\
-$y < 0$ & $x < 0$ & Quadrant III    & $-\pi <$ result $< -\pi/2$\\
-$y < 0$ & $x = 0$ & Negative y-axis & $-\pi/2$\\
-$y < 0$ & $x > 0$ & Quadrant IV     & $-\pi/2 <$ result $< 0$\\
-$y = 0$ & $x = 0$ & Origin          & error
-\end{tabular}
+| $y = 0$ | $x > 0$ | Positive x-axis | 0 |
+| $y > 0$ | $x > 0$ | Quadrant I | $0 <$ result $< \pi/2$ |
+| $y > 0$ | $x = 0$ | Positive y-axis | $\pi/2$ |
+| $y > 0$ | $x < 0$ | Quadrant II | $\pi/2 <$ result $<\pi$ |
+| $y = 0$ | $x < 0$ | Negative x-axis | $\pi$ |
+| $y < 0$ | $x < 0$ | Quadrant III | $-\pi <$ result $< -\pi/2$ |
+| $y < 0$ | $x = 0$ | Negative y-axis | $-\pi/2$ |
+| $y < 0$ | $x > 0$ | Quadrant IV | $-\pi/2 <$ result $< 0$ |
+| $y = 0$ | $x = 0$ | Origin | error |
+
 
 See Steele Common Lisp 1990 p306
 #+NAME: defmacro DFAtan2 0
@@ -70031,15 +70027,14 @@ Note that ACL2 does not support FLOATP.
 #+end_src
 * The Global Variables
 ** Star Global Variables
-\begin{tabular}{lll}
-NAME                        & SET              & USE \\
-,*eof*                       & ncTopLevel       & \\
-,*features*                  &                  & restart \\
-,*package*                   &                  & restart \\
-,*standard-input*            &                  & ncIntLoop \\
-,*standard-output*           &                  & ncIntLoop \\
-,*top-level-hook*            & set-restart-hook & \\
-\end{tabular}
+| NAME | SET | USE |
+| ,*eof* | ncTopLevel |  |
+| ,*features* |  | restart |
+| ,*package* |  | restart |
+| ,*standard-input* |  | ncIntLoop |
+| ,*standard-output* |  | ncIntLoop |
+| ,*top-level-hook* | set-restart-hook |  |
+
 *** *eof*
 The =*eof*= variable is set to NIL in ncTopLevel.
 *** *features*
@@ -70069,75 +70064,74 @@ a function to invoke when an image is started. In our case it is
 called restart. This is the entry point to the Axiom interpreter.
 
 ** Dollar Global Variables
-\begin{tabular}{lll}
-NAME                         & SET                 & USE \\
-\$boot                       & ncTopLevel          & \\
-coerceFailure                &                     & runspad \\
-curinstream                  & ncIntLoop           & \\
-curoutstream                 & ncIntLoop           & \\
-\$currentLine                & restart             & removeUndoLines \\
-\$dalymode                   &                     & intloopReadConsole \\
-\$displayStartMsgs           &                     & restart \\
-\$e                          & ncTopLevel          & \\
-\$erMsgToss                  & SpadInterpretStream & \\
-                             & SpadInterpretStream & \\
-\$frameRecord                & initvars            & \\
-                             & clearFrame          & \\
-                             & undoSteps           & undoSteps \\
-                             & recordFrame         & recordFrame \\
-\$HiFiAccess                 & initHist            & historySpad2Cmd \\
-                             & historySpad2Cmd     & \\
-                             &                     & setHistoryCore \\
-\$HistList                   & initHist            & \\
-\$HistListAct                & initHist            & \\
-\$HistListLen                & initHistList        & \\
-\$HistRecord                 & initHistList        & \\
-\$historyDirectory           &                     & makeHistFileName \\
-                             &                     & makeHistFileName \\
-\$historyFileType            & initvars           & histInputFileName \\
-\$InteractiveFrame           & restart             & ncTopLevel \\
-                             & undo                & recordFrame \\
-                             & undoSteps           & undoSteps \\
-                             &                     & reportUndo \\
-\$internalHistoryTable       & initvars            & \\
-\$interpreterFrameName       & initializeInterpreterFrameRing & \\
-\$interpreterFrameRing       & initializeInterpreterFrameRing & \\
-\$intRestart                 &                     & intloop \\
-\$intTopLevel                & intloop             & \\
-\$IOindex                    & restart             & historySpad2Cmd \\
-                             & removeUndoLines     & undoCount \\
-\$genValue                   & bookvol5            & i-toplev \\
-                             &                     & i-analy \\
-                             &                     & i-syscmd \\
-                             &                     & i-spec1 \\
-                             &                     & i-spec2 \\
-                             &                     & i-map \\
-\$lastPos                    & SpadInterpretStream & \\
-\$libQuiet                   & SpadInterpretStream & \\
-\$msgDatabaseName            & reroot              * \\
-\$ncMsgList                  & SpadInterpretStream & \\
-\$newcompErrorCount          & SpadInterpretStream & \\
-\$newspad                    & ncTopLevel          & \\
-\$nopos                      &                     & SpadInterpretStream \\
-\$okToExecuteMachineCode     & SpadInterpretStream & \\
-\$oldHistoryFileName         & initvars            & oldHistFileName \\
-\$options                    &                     & history \\
-                             & historySpad2Cmd     & historySpad2Cmd \\
-                             &                     & undo \\
-\$previousBindings           & initvars            & \\
-                             & clearFrame          & \\
-                             & recordFrame         & recordFrame \\
-\$PrintCompilerMessageIfTrue & spad                & \\
-\$reportundo                 & initvars            & diffAlist \\
-\$spad                       & ncTopLevel          & \\
-\$SpadServer                 & restart             & \\
-\$SpadServerName             & initvars            & restart \\
-\$systemCommandFunction      & SpadInterpretStream & \\
-top\_level                   &                     & runspad \\
-\$quitTag                    &                     & runspad \\
-\$useInternalHistoryTable    & initvars            & initHist \\
-                             & setHistoryCore      & setHistoryCore \\
-\end{tabular}
+| NAME | SET | USE |
+| \$boot | ncTopLevel |  |
+| coerceFailure |  | runspad |
+| curinstream | ncIntLoop |  |
+| curoutstream | ncIntLoop |  |
+| \$currentLine | restart | removeUndoLines |
+| \$dalymode |  | intloopReadConsole |
+| \$displayStartMsgs |  | restart |
+| \$e | ncTopLevel |  |
+| \$erMsgToss | SpadInterpretStream |  |
+|  | SpadInterpretStream |  |
+| \$frameRecord | initvars |  |
+|  | clearFrame |  |
+|  | undoSteps | undoSteps |
+|  | recordFrame | recordFrame |
+| \$HiFiAccess | initHist | historySpad2Cmd |
+|  | historySpad2Cmd |  |
+|  |  | setHistoryCore |
+| \$HistList | initHist |  |
+| \$HistListAct | initHist |  |
+| \$HistListLen | initHistList |  |
+| \$HistRecord | initHistList |  |
+| \$historyDirectory |  | makeHistFileName |
+|  |  | makeHistFileName |
+| \$historyFileType | initvars | histInputFileName |
+| \$InteractiveFrame | restart | ncTopLevel |
+|  | undo | recordFrame |
+|  | undoSteps | undoSteps |
+|  |  | reportUndo |
+| \$internalHistoryTable | initvars |  |
+| \$interpreterFrameName | initializeInterpreterFrameRing |  |
+| \$interpreterFrameRing | initializeInterpreterFrameRing |  |
+| \$intRestart |  | intloop |
+| \$intTopLevel | intloop |  |
+| \$IOindex | restart | historySpad2Cmd |
+|  | removeUndoLines | undoCount |
+| \$genValue | bookvol5 | i-toplev |
+|  |  | i-analy |
+|  |  | i-syscmd |
+|  |  | i-spec1 |
+|  |  | i-spec2 |
+|  |  | i-map |
+| \$lastPos | SpadInterpretStream |  |
+| \$libQuiet | SpadInterpretStream |  |
+| \$msgDatabaseName | reroot              * |
+| \$ncMsgList | SpadInterpretStream |  |
+| \$newcompErrorCount | SpadInterpretStream |  |
+| \$newspad | ncTopLevel |  |
+| \$nopos |  | SpadInterpretStream |
+| \$okToExecuteMachineCode | SpadInterpretStream |  |
+| \$oldHistoryFileName | initvars | oldHistFileName |
+| \$options |  | history |
+|  | historySpad2Cmd | historySpad2Cmd |
+|  |  | undo |
+| \$previousBindings | initvars |  |
+|  | clearFrame |  |
+|  | recordFrame | recordFrame |
+| \$PrintCompilerMessageIfTrue | spad |  |
+| \$reportundo | initvars | diffAlist |
+| \$spad | ncTopLevel |  |
+| \$SpadServer | restart |  |
+| \$SpadServerName | initvars | restart |
+| \$systemCommandFunction | SpadInterpretStream |  |
+| top\_level |  | runspad |
+| \$quitTag |  | runspad |
+| \$useInternalHistoryTable | initvars | initHist |
+|  | setHistoryCore | setHistoryCore |
+
 
 *** \$boot
 The =$boot= variable is set to NIL in ncTopLevel.

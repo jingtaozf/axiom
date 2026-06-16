@@ -1062,26 +1062,25 @@ Domipheus [cite:@Domi18] provides a VHDL (hardware description language)
 CPU which provides the actual electrical timing of signals all the way
 up to a machine language which consists of
 
-\begin{tabular}{ll}
-\hline
-OPERATION & FUNCTION\\
-\hline
-Add & D = A + B\\
-Substrct & D = A - B\\
-Bitwise Or & D = A or B\\
-Bitwise Xor & D = A xor B\\
-Bitwise And & D = A and B\\
-Bitwise Not & B = not A\\
-Read & D = Memory[A]\\
-Write & Memory[A] = B\\
-Load & D = 8-bit immediate value\\
-Compare & D = cmp(A,B)\\
-Shift Left & D = A $<<$ B\\
-Shift Right & D = A $>>$ B\\
-Jump/Branch & PC = A Register or Immediate Value\\
-Jump/Brance conditionally & PC = Register if (condition) else nop\\
-\hline
-\end{tabular}
+|---+---|
+| OPERATION | FUNCTION |
+|---+---|
+| Add | D = A + B |
+| Substrct | D = A - B |
+| Bitwise Or | D = A or B |
+| Bitwise Xor | D = A xor B |
+| Bitwise And | D = A and B |
+| Bitwise Not | B = not A |
+| Read | D = Memory[A] |
+| Write | Memory[A] = B |
+| Load | D = 8-bit immediate value |
+| Compare | D = cmp(A,B) |
+| Shift Left | D = A $<<$ B |
+| Shift Right | D = A $>>$ B |
+| Jump/Branch | PC = A Register or Immediate Value |
+| Jump/Brance conditionally | PC = Register if (condition) else nop |
+|---+---|
+
 
 ** Setting up the problem
 
@@ -1398,19 +1397,18 @@ integers $q,r$ such that $a = qb + r$ and $0 \le r \le \abs{b}$.
 *** Hoare's axioms and gcd proof
 From Hoare [cite:@Hoar69]
 
-\begin{tabular}{rll}
-A1 & $x+y = y+x$ & addition is commutative\\
-A2 & $x\times y = y\times x$ & multiplication is commutative\\
-A3 & $(x+y)+z = x+(y+z)$ &  addition is associative\\
-A4 & $(x\times y)\times z = x\times (y\times z)$ &
-multiplication is associative\\
-A5 & $x\times (y+z) = x\times y + x\times z$ &
-multiplication distributes through addition\\
-A6 & $y \le x \to (x-y) + y = x$ & addition cancels subtraction\\
-A7 & $x + 0 = x$ &\\
-A8 & $x\times 0 = 0$ &\\
-A9 & $x\times 1 = x$ &\\
-\end{tabular}
+| A1 | $x+y = y+x$ | addition is commutative |
+| A2 | $x\times y = y\times x$ | multiplication is commutative |
+| A3 | $(x+y)+z = x+(y+z)$ | addition is associative |
+| A4 | $(x\times y)\times z = x\times (y\times z)$ |  |
+| multiplication is associative\\ |
+| A5 | $x\times (y+z) = x\times y + x\times z$ |  |
+| multiplication distributes through addition\\ |
+| A6 | $y \le x \to (x-y) + y = x$ | addition cancels subtraction |
+| A7 | $x + 0 = x$ |  |
+| A8 | $x\times 0 = 0$ |  |
+| A9 | $x\times 1 = x$ |  |
+
 
 *D0 Axiom of Assignment*
 \[\vdash P_0 \{x:=f\} P\]
@@ -1783,13 +1781,12 @@ Since the GCD stays the same as you reduce the terms, $z$ is also the GCD
 of the original pair of numbers. This is Euclid's algorithm. Here is an
 example of how it works, using 18 and 12:
 
-\begin{tabular}{rcl}
-GCD(18;12;g) & = & GCD(12;18 rem 12;g)\\
-             & = & GCD(12;6;g\\
-             & = & GCD(6;12 rem 6;g)\\
-             & = & GCD(6;0;g)\\
-	     & $\to$ & g = 6
-\end{tabular}
+| GCD(18;12;g) | = | GCD(12;18 rem 12;g) |
+|  | = | GCD(12;6;g |
+|  | = | GCD(6;12 rem 6;g) |
+|  | = | GCD(6;0;g) |
+|  | $\to$ | g = 6 |
+
 
 Using this idea we can not only prove that the GCD exists but we can also
 construct a method for actually computing the GCD. A great feature of
@@ -4266,45 +4263,44 @@ common substitution instances, a property which is true of V.
 
 The core rules:
 
-\begin{tabular}{ll}
-/Axioms/ &\\
-C1. assignment axioms: & $\displaystyle
-P\vert_t^x\{x\leftarrow t\}P$\\
-&\\
-C2. frame axioms: & $\displaystyle
-P\{q(x;t)\}P$ provided $\lnot(x\in VAR(P))$\\
-&\\
-C3. procedure declarations: & $\displaystyle
-p(x;y)$ PROC K\\
-&\\
-C4. logical theorems: & $P$ for all $P$ s.t. $\vdash P$\\
-&\\
-/Rules/&\\
-C5. consequence: & 
-$\displaystyle\frac{P\supset Q Q\{A\}R}{P\{A\}R} \displaystyle\frac{P\{A\}Q Q\supset R}{P\{A\}R}$\\
-&\\
-C6. and/or: &
-$\displaystyle\frac{P\{A\}Q R\{A\}S}{P\land R\{A\}Q\land S} \displaystyle\frac{P\{A\}Q R\{A\}S}{P\lor R\{A\}Q\lor S}$\\
-&\\
-C7. composition: &
-$\displaystyle\frac{P\{A\}Q Q\{B\}R}{P\{A;B\}R}$\\
-&\\
-C8.conditional: &
-$\displaystyle\frac{P\land R\{A\}Q P\land\lnot R\{B\}Q}
-{P\{if\ R\ then\ A\ else\ B\}Q}$\\
-&\\
-C9. substitution: 
-& $\displaystyle(L) \frac{P(x;y)\{q(x;y)\}Q(x;y)}
-{P(z;y)\{q(z;y)\}Q(z;y)}$\\
-&\\
-& $\displaystyle(R) \frac{P(x;y)\{q(x;y)\}Q(x;y)}
-{P(x;s)\{q(x;s)\}Q(x;s)}$\\
-&\\
-C10. procedure call: &
-$\displaystyle\frac{p(x;y){\rm\ PROC\ }K(p) P\{r(x;y)\}Q 
+| /Axioms/ |  |
+| C1. assignment axioms: | $\displaystyle |
+| P\vert_t^x\{x\leftarrow t\}P$\\ |
+|  |  |
+| C2. frame axioms: | $\displaystyle |
+| P\{q(x;t)\}P$ provided $\lnot(x\in VAR(P))$\\ |
+|  |  |
+| C3. procedure declarations: | $\displaystyle |
+| p(x;y)$ PROC K\\ |
+|  |  |
+| C4. logical theorems: | $P$ for all $P$ s.t. $\vdash P$ |
+|  |  |
+| /Rules/ |  |
+| C5. consequence: |  |
+| $\displaystyle\frac{P\supset Q Q\{A\}R}{P\{A\}R} \displaystyle\frac{P\{A\}Q Q\supset R}{P\{A\}R}$\\ |
+|  |  |
+| C6. and/or: |  |
+| $\displaystyle\frac{P\{A\}Q R\{A\}S}{P\land R\{A\}Q\land S} \displaystyle\frac{P\{A\}Q R\{A\}S}{P\lor R\{A\}Q\lor S}$\\ |
+|  |  |
+| C7. composition: |  |
+| $\displaystyle\frac{P\{A\}Q Q\{B\}R}{P\{A;B\}R}$\\ |
+|  |  |
+| C8.conditional: |  |
+| $\displaystyle\frac{P\land R\{A\}Q P\land\lnot R\{B\}Q} |
+| {P\{if\ R\ then\ A\ else\ B\}Q}$\\ |
+|  |  |
+| C9. substitution: |
+|  | $\displaystyle(L) \frac{P(x;y)\{q(x;y)\}Q(x;y)} |
+| {P(z;y)\{q(z;y)\}Q(z;y)}$\\ |
+|  |  |
+|  | $\displaystyle(R) \frac{P(x;y)\{q(x;y)\}Q(x;y)} |
+| {P(x;s)\{q(x;s)\}Q(x;s)}$\\ |
+|  |  |
+| C10. procedure call: |  |
+| $\displaystyle\frac{p(x;y){\rm\ PROC\ }K(p) P\{r(x;y)\}Q |
 \dststile{}{} P\{K(r)\}Q}
-{P\{p(x;y)\}Q}$\\
-\end{tabular}
+| {P\{p(x;y)\}Q}$\\ |
+
 
 Note that in C9 (1) $s$ does not contain members of $x$;
 (ii) members of $x$ must be distinct and $x$ must contain no variable
@@ -4926,116 +4922,114 @@ Clarke shows several proofs
 *Primary specification constructs*
 \end{center}
 
-\begin{tabular}{|l|l|}
-\hline
-*pre*(expression-list) & Declares preconditions\\
-\hline
-*post*(expression-list) & Declares postconditions\\
-\hline
-& Declares the value returned by a\\
-& function. Equivalent to *post(result)* ==\\
-*returns*(expression) & /expression/ except that recursion is\\
-& permitted in /expression/\\
-\hline
-*assert*(expression-list) & Asserts conditions\\
-\hline
-& Used in class declarations to declare\\
-*invariant*(expression-list) & class invariants, and in *typedef*\\
-& declarations to declare constraints\\
-\hline
-*keep*(expression-list) & Declares loop invariants\\
-\hline
-*decrease*(expression-list) & Declares loop variant or recursion\\
-& variant expressions\\
-\hline
-& Declares what non-local variables the\\
-& function modifies. If a function is\\
-*writes*(lvalue-expression-list) 
-& declared without a writes-clause, then\\
-& a default writes-clause is constructed\\
-& based on the signature of the function\\
-\hline
-*assumes*(expression-list) & Declares predicates to be assumed\\
-& without proof\\
-\hline
-*ghost*(expression-list) & Declares ghost variables, functions\\
-& parameters, etc.\\
-\hline
-\end{tabular}
+|---+---|
+| *pre*(expression-list) | Declares preconditions |
+|---+---|
+| *post*(expression-list) | Declares postconditions |
+|---+---|
+|  | Declares the value returned by a |
+|  | function. Equivalent to *post(result)* == |
+| *returns*(expression) | /expression/ except that recursion is |
+|  | permitted in /expression/ |
+|---+---|
+| *assert*(expression-list) | Asserts conditions |
+|---+---|
+|  | Used in class declarations to declare |
+| *invariant*(expression-list) | class invariants, and in *typedef* |
+|  | declarations to declare constraints |
+|---+---|
+| *keep*(expression-list) | Declares loop invariants |
+|---+---|
+| *decrease*(expression-list) | Declares loop variant or recursion |
+|  | variant expressions |
+|---+---|
+|  | Declares what non-local variables the |
+|  | function modifies. If a function is |
+| *writes*(lvalue-expression-list) |
+|  | declared without a writes-clause, then |
+|  | a default writes-clause is constructed |
+|  | based on the signature of the function |
+|---+---|
+| *assumes*(expression-list) | Declares predicates to be assumed |
+|  | without proof |
+|---+---|
+| *ghost*(expression-list) | Declares ghost variables, functions |
+|  | parameters, etc. |
+|---+---|
+
 
 \begin{center}
 *Additional specification expressions*
 \end{center}
 
-\begin{tabular}{|l|l|}
-\hline
-*exists* /identifier/ *in* & Existential quantification over the\\
-/expression/ :- /predicate/ 
-& elements of /expression/ which must be\\
-& an array or an abstract collection type\\
-\hline
-*exists* /type identifier/ := & Existential quantification over all\\
-/predicate/ & values of type\\
-\hline
-*forall* /identifier/ *in* & Universal quantification over the\\
-/expression/ :- /predicate/ 
-& elements of /expression/, which must be \\
-& an array or an abstract collection type\\
-\hline
-*forall* /type identifier/ :- & Universal quantification over all\\
-/predicate/ & values of type\\
-\hline
-& Applies the mapping function\\
-*for* /identifier/ *in* /expression1/ 
-& /expression2/ to each element of\\
-*yield* /expression2/ 
-& collection /expression1/, yielding a new\\
-& collection\\
-\hline
-*those* /identifer/ *in* & Selects those elements of collection\\
-/expression1/ :- /predicate/ 
-& /expression1/ for which /predicate/ is\\
-& true\\
-\hline
-*that* /identifier/ *in* & Selects the single element of the\\
-/expression1/ :- /predicate/
-& collection /expression1/ for which\\
-& /predicate/ is true\\
-\hline
-& Shorthand for *exists* /id/ *in* /expression2/\\
-/expression1/ *in* /expression2/ 
-& :- /id/ == /expression1/, where /id/ is a new\\
-& identifier\\
-\hline
-& /expression/ must have union type, and\\
-& /member/ must be a member of that\\
-/expression/ *holds* /member/ 
-& type. Yields true if and only if the\\
-& value of /expression/ was defined by\\
-& assignment or initialization through\\
-& /member/\\
-\hline
-& Yields true if and only if no two\\
-& objects in the expression list have\\
-*disjoint*(/lvalue-expression-list/) 
-& overlapping storage. Typically used\\
-& in preconditions to state that parameters\\
-& passed by pointer or reference refer to\\
-& distinct objects\\
-\hline
-& Left-fold /operator/ over collection\\
-/operator/ *over* /expression/ 
-& /expression/. Used to express e.g.\\
-& summation of the elements of an array\\
-\hline
-& When used in a postcondition, this\\
-& referes to the value of /expression/ when\\
-& the function was entered. When used\\
-*old*/(expreesion)/ & in a loop invariant, it refers to the\\
-& value of /expression/ just before the\\
-& first iteration of the loop.\\
-\hline
-\end{tabular}
+|---+---|
+| *exists* /identifier/ *in* | Existential quantification over the |
+| /expression/ :- /predicate/ |
+|  | elements of /expression/ which must be |
+|  | an array or an abstract collection type |
+|---+---|
+| *exists* /type identifier/ := | Existential quantification over all |
+| /predicate/ | values of type |
+|---+---|
+| *forall* /identifier/ *in* | Universal quantification over the |
+| /expression/ :- /predicate/ |
+|  | elements of /expression/, which must be |
+|  | an array or an abstract collection type |
+|---+---|
+| *forall* /type identifier/ :- | Universal quantification over all |
+| /predicate/ | values of type |
+|---+---|
+|  | Applies the mapping function |
+| *for* /identifier/ *in* /expression1/ |
+|  | /expression2/ to each element of |
+| *yield* /expression2/ |
+|  | collection /expression1/, yielding a new |
+|  | collection |
+|---+---|
+| *those* /identifer/ *in* | Selects those elements of collection |
+| /expression1/ :- /predicate/ |
+|  | /expression1/ for which /predicate/ is |
+|  | true |
+|---+---|
+| *that* /identifier/ *in* | Selects the single element of the |
+| /expression1/ :- /predicate/ |
+|  | collection /expression1/ for which |
+|  | /predicate/ is true |
+|---+---|
+|  | Shorthand for *exists* /id/ *in* /expression2/ |
+| /expression1/ *in* /expression2/ |
+|  | :- /id/ == /expression1/, where /id/ is a new |
+|  | identifier |
+|---+---|
+|  | /expression/ must have union type, and |
+|  | /member/ must be a member of that |
+| /expression/ *holds* /member/ |
+|  | type. Yields true if and only if the |
+|  | value of /expression/ was defined by |
+|  | assignment or initialization through |
+|  | /member/ |
+|---+---|
+|  | Yields true if and only if no two |
+|  | objects in the expression list have |
+| *disjoint*(/lvalue-expression-list/) |
+|  | overlapping storage. Typically used |
+|  | in preconditions to state that parameters |
+|  | passed by pointer or reference refer to |
+|  | distinct objects |
+|---+---|
+|  | Left-fold /operator/ over collection |
+| /operator/ *over* /expression/ |
+|  | /expression/. Used to express e.g. |
+|  | summation of the elements of an array |
+|---+---|
+|  | When used in a postcondition, this |
+|  | referes to the value of /expression/ when |
+|  | the function was entered. When used |
+| *old*/(expreesion)/ | in a loop invariant, it refers to the |
+|  | value of /expression/ just before the |
+|  | first iteration of the loop. |
+|---+---|
+
 
 \subsection{Davenport [cite:@Dave85c]}
 
@@ -5489,22 +5483,20 @@ complementary, and the can be used for different purposes.
 Here is a functional program to compute the greatest common divisor of
 positive integers.
 
-\begin{tabular}{lll}
-F4.1 & $gcd(x,y)=x$ & if $x=y$\\
-F4.2 & $gcd(x,y)=gcd(x-y,y)$ & if $x>y$\\
-F4.3 & $gcd(x,y)=gcd(y,x)$ & if $x<y$\\
-\end{tabular}
+| F4.1 | $gcd(x,y)=x$ | if $x=y$ |
+| F4.2 | $gcd(x,y)=gcd(x-y,y)$ | if $x>y$ |
+| F4.3 | $gcd(x,y)=gcd(y,x)$ | if $x<y$ |
+
 
 To compute the greatest common divisor of 10 and 6:
 
-\begin{tabular}{rclr}
-gcd(10,6) & = & gcd(4,6) & by F4.2\\
-          & = & gcd(6,4) & by F4.3\\
-          & = & gcd(2,4) & by F4.2\\
-          & = & gcd(4,2) & by F4.3\\
-          & = & gcd(2,2) & by F4.2\\
-          & = & 2 & by F4.1\\
-\end{tabular}
+| gcd(10,6) | = | gcd(4,6) | by F4.2 |
+|  | = | gcd(6,4) | by F4.3 |
+|  | = | gcd(2,4) | by F4.2 |
+|  | = | gcd(4,2) | by F4.3 |
+|  | = | gcd(2,2) | by F4.2 |
+|  | = | 2 | by F4.1 |
+
 
 However, the responsibility for controlling this goal-directed
 behavior is placed upon the programmer, who has to prove that there is
@@ -5580,11 +5572,10 @@ precondition is P6.3 and its postcondition is P6.4. The task can be
 split into four subtasks, in accordance with the following series of
 intermediate assertions.
 
-\begin{tabular}{rcl}
-P6.3 & $\land$ & (X odd $\lor$ Y odd)\\
-P6.3 & $\land$ & (Y add)\\
-P6.3 & $\land$ & (Y odd) $\land$ X=Y\\
-\end{tabular}
+| P6.3 | $\land$ | (X odd $\lor$ Y odd) |
+| P6.3 | $\land$ | (Y add) |
+| P6.3 | $\land$ | (Y odd) $\land$ X=Y |
+
 
 \subsection{Jenks [cite:@Jenk75]}
 

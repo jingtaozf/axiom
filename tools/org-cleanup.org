@@ -322,6 +322,53 @@ def convert_list_envs(lines):
 
 #+end_src
 
+* Phase 9 — Tables
+
+Convert =\begin{tabular}= blocks to org tables.
+
+#+begin_src python :tangle org-cleanup.py
+def convert_tables(lines):
+    """Convert tabular blocks to org tables."""
+    result = []
+    in_table = False
+    col_spec = None
+    for idx, line, region in lines:
+        stripped = line.strip()
+        if region != 'prose':
+            result.append((idx, line, region))
+            continue
+        m = re.match(r'\\begin\{tabular\}\{([^}]*)\}', stripped)
+        if m:
+            in_table = True
+            col_spec = m.group(1)
+            continue
+        if '\\end{tabular}' in stripped:
+            in_table = False
+            col_spec = None
+            result.append((idx, chr(10), 'prose'))
+            continue
+        if not in_table:
+            result.append((idx, line, region))
+            continue
+        if stripped == '\\hline':
+            ncols = len(col_spec.replace('|', '')) if col_spec else 2
+            sep = '|' + '+'.join(['---'] * ncols) + '|'
+            result.append((idx, sep + chr(10), 'prose'))
+            continue
+        if '&' in stripped:
+            row = stripped.rstrip('\\\\').strip()
+            cells = [c.strip() for c in row.split('&')]
+            org_row = '| ' + ' | '.join(cells) + ' |'
+            result.append((idx, org_row + chr(10), 'prose'))
+            continue
+        if stripped and not stripped.startswith('\\'):
+            result.append((idx, '| ' + stripped + ' |' + chr(10), 'prose'))
+            continue
+        result.append((idx, line, region))
+    return result
+
+#+end_src
+
 * File Processing
 
 #+begin_src python :tangle org-cleanup.py
@@ -354,11 +401,14 @@ def process_file(filepath, dry_run=False, phases=None):
         changes['total'] += phase_changes
 
     # Phases 2-6: Apply to prose lines only
-    if any(p in phases for p in [2, 3, 4, 5, 6, 7, 8]):
+    if any(p in phases for p in [2, 3, 4, 5, 6, 7, 8, 9]):
         classified = list(classify_lines(lines))
         # Phase 8: List environments (pre-process before line-by-line)
         if 8 in phases:
             classified = convert_list_envs(classified)
+        # Phase 9: Tables
+        if 9 in phases:
+            classified = convert_tables(classified)
         new_lines = []
         phase_counts = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
         for i, line, region in classified:

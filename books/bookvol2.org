@@ -25,31 +25,30 @@ and a feeling of discontent among algorithm implementors was common.
 The reactions of the computer algebra system-builders to the
 complexity are interesting to tabulate.
 
-\begin{tabular}{rp{11cm}}
-Macsyma & embarked on the, ultimately futile, ``new rational function''
-project, which was to have re-written much of the algebraic kernel in
-a more mathematically structured way, but which was unable to maintain
-backwards compatibility.\\
-Reduce & developed into Reduce 3, with its concept of domains , which
-meant that new constant domains could be added relatively simply
-See Bradford et al.[cite:@Brad86]\\
-Waterloo's & emerging team decided that none of the existing solutions
-was right, and opted for a new design based round a very small kernel,
-typically not knowing any algebra, and loadable modules, which would
-contain the algebraic knowledge of the system. This became the Maple
-system. Over the years, the definition of the kernel has changed, as it
-became obvious that certain algorithms, e.g. modular ones, could not
-be implemented efficiently in the interpreted modules.\\
-MuMath & and its successor Derive based themselves on the philosophy
-that ``whatever fitted on a PC'' was much closer to most users'
-requirements than ``the best possible mathematics'', and, in terms of
-the number of users, they are certainly correct.\\
-IBM &embarked on a lengthy period of algebraic reflection, prototyping
-and experimentation, sporadically reported in the literature 
-Davenport \& Jenks[cite:@Dave81a] and Jenks \& Trager[cite:@Jenk81] 
-first product of this process). Axiom is the end product of this 
-process of reflection.
-\end{tabular}
+| Macsyma | embarked on the, ultimately futile, ``new rational function'' |
+| project, which was to have re-written much of the algebraic kernel in |
+| a more mathematically structured way, but which was unable to maintain |
+| backwards compatibility.\\ |
+| Reduce | developed into Reduce 3, with its concept of domains , which |
+| meant that new constant domains could be added relatively simply |
+| See Bradford et al.[cite:@Brad86]\\ |
+| Waterloo's | emerging team decided that none of the existing solutions |
+| was right, and opted for a new design based round a very small kernel, |
+| typically not knowing any algebra, and loadable modules, which would |
+| contain the algebraic knowledge of the system. This became the Maple |
+| system. Over the years, the definition of the kernel has changed, as it |
+| became obvious that certain algorithms, e.g. modular ones, could not |
+| be implemented efficiently in the interpreted modules.\\ |
+| MuMath | and its successor Derive based themselves on the philosophy |
+| that ``whatever fitted on a PC'' was much closer to most users' |
+| requirements than ``the best possible mathematics'', and, in terms of |
+| the number of users, they are certainly correct.\\ |
+| IBM | embarked on a lengthy period of algebraic reflection, prototyping |
+| and experimentation, sporadically reported in the literature |
+| Davenport \ | Jenks[cite:@Dave81a] and Jenks \ | Trager[cite:@Jenk81] |
+| first product of this process). Axiom is the end product of this |
+| process of reflection. |
+
 
 ** Axiom's philosophy
 
@@ -1345,18 +1344,17 @@ It is this third style of programming that this paper addresses.
 
 Axiom has several fundamental concepts, which we have to outline briefly.
 
-\begin{tabular}{rp{11cm}}
-*Domain* & A domain is what many other languages would call an
-/abstract data type/, i.e. a specification of certain data objects
-and the operations on them. A typical domain would be =Integer=,
-whose elements are the underlying integers of the implementation 
-(infinite precision, of course), and which supports the following
-operations, as given by the Axiom command =)show Integer=, or by
-using the Hyperdoc browser. We remind the reader that \pct{} is Axiom's
-notation for the ``current domain'', i.e. =Integer= in this case,
-and that all operations are prefix unless shown otherwise (e.g. the
-infix =*= and =quo=).
-\end{tabular}
+| *Domain* | A domain is what many other languages would call an |
+| /abstract data type/, i.e. a specification of certain data objects |
+| and the operations on them. A typical domain would be =Integer=, |
+| whose elements are the underlying integers of the implementation |
+| (infinite precision, of course), and which supports the following |
+| operations, as given by the Axiom command =)show Integer=, or by |
+| using the Hyperdoc browser. We remind the reader that \pct{} is Axiom's |
+| notation for the ``current domain'', i.e. =Integer= in this case, |
+| and that all operations are prefix unless shown otherwise (e.g. the |
+| infix =*= and =quo=). |
+
 
 #+begin_example
  Integer  is a domain constructor
@@ -1434,21 +1432,19 @@ infix =*= and =quo=).
  subtractIfCan : (%,%) -> Union(%,"failed")
  unitNormal : % -> Record(unit: %,canonical: %,associate: %)
 #+end_example
-\begin{tabular}{rp{11cm}}
-{\hskip 1.5cm} 
-& It must be stressed that the use of =)show= or the browser is essential
-to understanding what is already present in Axiom, and what one has to add
-to produce a valid domain. If fact, a user cannot write a domain, merely
-a function (see later) which, when called, will create a domain.
-\end{tabular}
+| {\hskip 1.5cm} |
+|  | It must be stressed that the use of =)show= or the browser is essential |
+| to understanding what is already present in Axiom, and what one has to add |
+| to produce a valid domain. If fact, a user cannot write a domain, merely |
+| a function (see later) which, when called, will create a domain. |
 
-\begin{tabular}{rp{11cm}}
-*Category* & The set of all domains (declared as) belonging to this
-category, i.e. having the stated operations and associated axioms. For
-example, the domain =Integer= belongs to the category =Ring=,
-which has the following operations, again given by =)show Ring= or
-the browser.
-\end{tabular}
+
+| *Category* | The set of all domains (declared as) belonging to this |
+| category, i.e. having the stated operations and associated axioms. For |
+| example, the domain =Integer= belongs to the category =Ring=, |
+| which has the following operations, again given by =)show Ring= or |
+| the browser. |
+
 #+begin_example
  Ring  is a category constructor
  Abbreviation for Ring is RING 
@@ -1471,59 +1467,54 @@ the browser.
  characteristic : () -> NonNegativeInteger
  subtractIfCan : (%,%) -> Union(%,"failed")
 #+end_example
-\begin{tabular}{rp{11cm}}
-{\hskip 1.5cm} 
-& Note that 0 and 1 are /nullary operations/, since their actual
-value may well be very different in different domains belonging to the
-category =Ring=, e.g. in the ring of $n$-by-$n$ square matrices,
-the 1 is the identity matrix, and not the matrix consisting entirely
-of 1.\\
-& Categories can be parameterized, as in =Algebra($R$)=, where $R$
-is some =CommutativeRing=, which gives the category of all 
-algebras over $R$.
-\end{tabular}
+| {\hskip 1.5cm} |
+|  | Note that 0 and 1 are /nullary operations/, since their actual |
+| value may well be very different in different domains belonging to the |
+| category =Ring=, e.g. in the ring of $n$-by-$n$ square matrices, |
+| the 1 is the identity matrix, and not the matrix consisting entirely |
+| of 1.\\ |
+|  | Categories can be parameterized, as in =Algebra($R$)=, where $R$ |
+| is some =CommutativeRing=, which gives the category of all |
+| algebras over $R$. |
 
-\begin{tabular}{rp{11cm}}
-*Functor* & A function which takes arguments which are either
-individual objects, in which case the domain they come from is
-specified, or domains, in which case the category they come from is
-specified, and which returns a domain specified to live in a particular
-category. for Example:
-\begin{tabular}{rp{9cm}}
-*Z=Integer* & is the result of applying the function =Integer=
-to no arguments;\\
-*Q* & is the result of applying the function =Fraction= (which
-requires an =IntegralDomain= as its argument) to the 
-=IntegralDomain Integer=. The result is a =Field=.\\
-*Z*[$y$] & is the result of applying the functor
-=UnivariatePolynomial= to the object $y$ (from the domain 
-=Symbol=) and the domain =Integer= (from the category =Ring=).
-The result is declared to be a =Ring=, or, more precisely, to belong
-to the category =UnivariatePolynomialCategory($R$)=, where $R$ is
-the =Ring= supplied.
-\end{tabular}
-\end{tabular}
 
-\begin{tabular}{rp{11cm}}
-*Package* & Very like a function, but does not specify a new data
-object, merely some new functions. A typical example would be
-=UnivariatePolynomialFunctions2=, which defines the operation
+| *Functor* | A function which takes arguments which are either |
+| individual objects, in which case the domain they come from is |
+| specified, or domains, in which case the category they come from is |
+| specified, and which returns a domain specified to live in a particular |
+| category. for Example: |
+| *Z=Integer* | is the result of applying the function =Integer= |
+| to no arguments;\\ |
+| *Q* | is the result of applying the function =Fraction= (which |
+| requires an =IntegralDomain= as its argument) to the |
+| =IntegralDomain Integer=. The result is a =Field=.\\ |
+| *Z*[$y$] | is the result of applying the functor |
+| =UnivariatePolynomial= to the object $y$ (from the domain |
+| =Symbol=) and the domain =Integer= (from the category =Ring=). |
+| The result is declared to be a =Ring=, or, more precisely, to belong |
+| to the category =UnivariatePolynomialCategory($R$)=, where $R$ is |
+| the =Ring= supplied. |
+
+
+
+| *Package* | Very like a function, but does not specify a new data |
+| object, merely some new functions. A typical example would be |
+| =UnivariatePolynomialFunctions2=, which defines the operation |
 #+begin_example
 map:(R -> S, UnivariatePolynomial(x,R)) -> UnivariatePolynomial(y,S)
 #+end_example
-where $x$ and $y$ are elements of =Symbol=, and $R$ and $S$ belong
-to the category =Ring=. In mathematical terms, this function takes
-a function $\theta$ from $R$ to $S$, and performs the corresponding
-function from $R[x]$ to $S[y]$. To get the actual function from 
-$R[x]$ to $S[y]$, one would have to use Axiom's notation for ``lambda
-expressions'', viz. =map(f,#1)=, i.e. that function which, given
-an element $p$ of =UnivariatePolynomial(x,R)= computes
-=map(f,$p$)=.
-\end{tabular}
+| where $x$ and $y$ are elements of =Symbol=, and $R$ and $S$ belong |
+| to the category =Ring=. In mathematical terms, this function takes |
+| a function $\theta$ from $R$ to $S$, and performs the corresponding |
+| function from $R[x]$ to $S[y]$. To get the actual function from |
+| $R[x]$ to $S[y]$, one would have to use Axiom's notation for ``lambda |
+| expressions'', viz. =map(f,#1)=, i.e. that function which, given |
+| an element $p$ of =UnivariatePolynomial(x,R)= computes |
+| =map(f,$p$)=. |
 
-\begin{tabular}{rp{11cm}}
-*Constructor* & The generic term including category, functor, and package.
-\end{tabular}
+
+| *Constructor* | The generic term including category, functor, and package. |
+
 
 ** A first problem -- Weighted Polynomials
 
