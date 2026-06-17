@@ -299,29 +299,33 @@ Convert =\begin{itemize}= / =\begin{enumerate}= blocks to org lists.
 
 #+begin_src python :tangle org-cleanup.py
 def convert_list_envs(lines):
-    """Convert itemize/enumerate blocks to org lists."""
+    """Convert itemize/enumerate blocks to org lists. Handles nesting."""
     NL = chr(10)
     result = []
-    list_type = None
+    stack = []  # stack of ('itemize'|'enumerate', indent_level)
     for idx, line, region in lines:
         stripped = line.strip()
         if region != 'prose':
             result.append((idx, line, region))
             continue
         if r'\begin{itemize}' in stripped:
-            list_type = 'itemize'
+            stack.append('itemize')
             continue
         if r'\begin{enumerate}' in stripped:
-            list_type = 'enumerate'
+            stack.append('enumerate')
             continue
         if r'\end{itemize}' in stripped or r'\end{enumerate}' in stripped:
-            list_type = None
-            result.append((idx, NL, 'prose'))
+            if stack:
+                stack.pop()
+            if not stack:
+                result.append((idx, NL, 'prose'))
             continue
-        if list_type and stripped.startswith(r'\item'):
+        if stack and stripped.startswith(r'\item'):
             content = stripped[5:].strip()
-            prefix = '- ' if list_type == 'itemize' else '1. '
-            result.append((idx, prefix + content + NL, 'prose'))
+            depth = len(stack)
+            indent = '  ' * (depth - 1)
+            prefix = '- ' if stack[-1] == 'itemize' else '1. '
+            result.append((idx, indent + prefix + content + NL, 'prose'))
             continue
         result.append((idx, line, region))
     return result

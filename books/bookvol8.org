@@ -23251,127 +23251,126 @@ information macros or functions.
 
 ** X11 API calls
 - XSolidColor
-- moColor to define the foreground color
-- moColor\_BG to define the background color
-
-\item void XMakeAssoc(Display *,HashTable *,Window,int *);
-\item int *XLookUpAssoc(Display *, HashTable *, Window);
-\item void XDeleteAssoc(Display * , HashTable * , Window );
-\item XID x\_id; -- The X Window System id
-\item XPoint *
-\item XLoadQueryFont(dsply,xDefault)
-\item XEvent
-\item XClearArea(dsply,control->controlWindow,0,0,controlWidth,potA,False);
-\item XWindowAttributes  cwInfo;
-\item XGetWindowAttributes(dsply,cp->controlWindow,\&cwInfo);
-\item XFlush(dsply);
-\item XQueryTree(dsply,tmpW,\&rootW,\&parentW,\&childrenWs,\&nChildren);
-\item XFree(childrenWs);
-\item XSetWindowAttributes cwAttrib, controlAttrib;
-\item XSizeHints	       sizehints;
-\item XColor	       foreColor, backColor;
-\item XCreateBitmapFromData(dsply,rtWindow,mouseBitmap\_bits,
+  - moColor to define the foreground color
+  - moColor\_BG to define the background color
+- void XMakeAssoc(Display *,HashTable *,Window,int *);
+- int *XLookUpAssoc(Display *, HashTable *, Window);
+- void XDeleteAssoc(Display * , HashTable * , Window );
+- XID x\_id; -- The X Window System id
+- XPoint *
+- XLoadQueryFont(dsply,xDefault)
+- XEvent
+- XClearArea(dsply,control->controlWindow,0,0,controlWidth,potA,False);
+- XWindowAttributes  cwInfo;
+- XGetWindowAttributes(dsply,cp->controlWindow,\&cwInfo);
+- XFlush(dsply);
+- XQueryTree(dsply,tmpW,\&rootW,\&parentW,\&childrenWs,\&nChildren);
+- XFree(childrenWs);
+- XSetWindowAttributes cwAttrib, controlAttrib;
+- XSizeHints	       sizehints;
+- XColor	       foreColor, backColor;
+- XCreateBitmapFromData(dsply,rtWindow,mouseBitmap\_bits,
 				    mouseBitmap\_width,mouseBitmap\_height);
-\item XQueryColor(dsply,colorMap,\&foreColor);
-\item XCreatePixmapCursor(dsply,mousebits,mousemask,
+- XQueryColor(dsply,colorMap,\&foreColor);
+- XCreatePixmapCursor(dsply,mousebits,mousemask,
 					\&foreColor,\&backColor,
 					mouseBitmap\_x\_hot,mouseBitmap\_y\_hot);
-\item XCreateWindow(dsply,rtWindow,
+- XCreateWindow(dsply,rtWindow,
 		     cXY.putX,cXY.putY,controlWidth,controlHeight,3,
 		     CopyFromParent,InputOutput,CopyFromParent,
 		     controlCreateMASK,\&cwAttrib);
-\item XSetNormalHints(dsply,cw,\&sizehints);
-\item XSetStandardProperties(dsply,cw,"2D Control Panel","2D Control Panel",
+- XSetNormalHints(dsply,cw,\&sizehints);
+- XSetStandardProperties(dsply,cw,"2D Control Panel","2D Control Panel",
 			 None,NULL,0,\&sizehints);
-\item XMakeAssoc(dsply,table,(control->buttonQueue[i]).self,
+- XMakeAssoc(dsply,table,(control->buttonQueue[i]).self,
 	       \&((control->buttonQueue[i]).buttonKey));
-\item XMapWindow(dsply,(control->buttonQueue[i]).self);
-\item XRaiseWindow(dsply,control->controlWindow);
-\item XMoveWindow(dsply,control->controlWindow,whereControl.putX,
+- XMapWindow(dsply,(control->buttonQueue[i]).self);
+- XRaiseWindow(dsply,control->controlWindow);
+- XMoveWindow(dsply,control->controlWindow,whereControl.putX,
 	      whereControl.putY);
-\item XClearArea(dsply,viewport->controlPanel->controlWindow,
+- XClearArea(dsply,viewport->controlPanel->controlWindow,
 	     0,controlMessageY-2,controlWidth,controlMessageHeight,False);
-\item XFontStruct   *globalFont,*buttonFont,*headerFont,*titleFont,
-\item XrmDatabase      rDB; -- X resource database
-\item XrmValue value;
-\item XGCValues gcVals;
-\item (XArc *)malloc(xPointsNeeded * sizeof(XArc))
-\item XSetFont(dsply,gc,font->fid)
-\item XCreateAssocTable(nbuckets);  
-\item XInitSpadFill(dsply,scrn,\&colorMap,
+- XFontStruct   *globalFont,*buttonFont,*headerFont,*titleFont,
+- XrmDatabase      rDB; -- X resource database
+- XrmValue value;
+- XGCValues gcVals;
+- (XArc *)malloc(xPointsNeeded * sizeof(XArc))
+- XSetFont(dsply,gc,font->fid)
+- XCreateAssocTable(nbuckets);
+- XInitSpadFill(dsply,scrn,\&colorMap,
                               \&totalHues,\&totalSolidShades,
                               \&totalDitheredAndSolids,\&totalShades);
-\item XQueryFont(dsply,XGContextFromGC(DefaultGC(dsply,scrn)));
-\item XrmGetResource(rDB,
+- XQueryFont(dsply,XGContextFromGC(DefaultGC(dsply,scrn)));
+- XrmGetResource(rDB,
 		     "Axiom.2D.messageFont",
 		     "Axiom.2D.Font",
 		     str\_type, \&value) == True)
-\item XLoadQueryFont(dsply, prop)
-\item XCreateGC(dsply,rtWindow,GCForeground | GCBackground ,
+- XLoadQueryFont(dsply, prop)
+- XCreateGC(dsply,rtWindow,GCForeground | GCBackground ,
 			\&controlGCVals);  
-\item XrmInitialize();
-\item XrmGetFileDatabase(name);
-\item XrmMergeDatabases(applicationDB, \&rDB);
-\item XResourceManagerString(dsply)
-\item XrmGetStringDatabase(XResourceManagerString(dsply));
-\item XResourceManagerString(dsply)
-\item XSync(dsply,False);
-\item XUnmapWindow(dsply,control->controlWindow);
-\item XWindowAttributes       graphWindowAttrib;
-\item Xcon = ConnectionNumber(dsply);
-\item XEventsQueued(dsply, QueuedAlready)
-\item XPending(dsply)
-\item XNextEvent(dsply,event);
-\item (XButtonEvent *)event
-\item (XEvent *)event)
-\item XCheckWindowEvent(dsply,
+- XrmInitialize();
+- XrmGetFileDatabase(name);
+- XrmMergeDatabases(applicationDB, \&rDB);
+- XResourceManagerString(dsply)
+- XrmGetStringDatabase(XResourceManagerString(dsply));
+- XResourceManagerString(dsply)
+- XSync(dsply,False);
+- XUnmapWindow(dsply,control->controlWindow);
+- XWindowAttributes       graphWindowAttrib;
+- Xcon = ConnectionNumber(dsply);
+- XEventsQueued(dsply, QueuedAlready)
+- XPending(dsply)
+- XNextEvent(dsply,event);
+- (XButtonEvent *)event
+- (XEvent *)event)
+- XCheckWindowEvent(dsply,
 			      viewport->titleWindow,
 			      ExposureMask,
 			      \&tempEvent);
-\item XGetWindowAttributes(dsply,
+- XGetWindowAttributes(dsply,
 				 whichWindow,
 				 \&graphWindowAttrib);
-\item XResizeWindow(dsply,
+- XResizeWindow(dsply,
 			  viewport->viewWindow,
 			  graphWindowAttrib.width,
 			  graphWindowAttrib.height-titleHeight);
-\item XMapWindow(dsply,whichWindow);
-\item XCheckMaskEvent(dsply,
+- XMapWindow(dsply,whichWindow);
+- XCheckMaskEvent(dsply,
 				   ButtonMotionMask,
 				   event));
-\item (XButtonEvent *)event)
-\item XFlush(dsply);
-\item XUnmapWindow(dsply,control->controlWindow);
-\item XLookUpAssoc(dsply,table,whichWindow));
-\item XMoveWindow(dsply,viewport->titleWindow,i1,i2);
-\item XResizeWindow(dsply,viewport->titleWindow,i1,i2+titleHeight); 
-\item XFreeGC(dsply,globalGC1);
-\item XFreeFont(dsply,globalFont);
-\item XFreeColormap(dsply,colorMap);
-\item XCloseDisplay(dsply);
-\item XWindowAttributes attribInfo;
-\item XClearWindow(dsply,viewport->titleWindow); 
-\item XCharStruct       overall;
-\item XTextExtents(unitFont,"o",1,\&dummyInt,\&ascent,\&descent,\&overall);
-\item XSolidColor((int)(aPoint->hue),(int)(aPoint->shade)),
-\item XTextWidth(unitFont,aunit,strlength)/2;
-\item Xoption
-\item XSizeHints           titleSizeHints,viewSizeHints;
-\item XSetWindowAttributes viewAttrib;
-\item XColor               foreColor, backColor;
-\item XQueryColor(dsply,colorMap,\&foreColor);
-\item XInternAtom(dsply, "WM\_DELETE\_WINDOW", False);
-\item XSetWMProtocols(dsply, viewTitleWindow, \&wm\_delete\_window, 1);
-\item XSetNormalHints(dsply,viewTitleWindow,\&titleSizeHints); 
-\item XSetStandardProperties(dsply,viewTitleWindow,"Axiom 2D",viewport->title,
+- (XButtonEvent *)event)
+- XFlush(dsply);
+- XUnmapWindow(dsply,control->controlWindow);
+- XLookUpAssoc(dsply,table,whichWindow));
+- XMoveWindow(dsply,viewport->titleWindow,i1,i2);
+- XResizeWindow(dsply,viewport->titleWindow,i1,i2+titleHeight);
+- XFreeGC(dsply,globalGC1);
+- XFreeFont(dsply,globalFont);
+- XFreeColormap(dsply,colorMap);
+- XCloseDisplay(dsply);
+- XWindowAttributes attribInfo;
+- XClearWindow(dsply,viewport->titleWindow);
+- XCharStruct       overall;
+- XTextExtents(unitFont,"o",1,\&dummyInt,\&ascent,\&descent,\&overall);
+- XSolidColor((int)(aPoint->hue),(int)(aPoint->shade)),
+- XTextWidth(unitFont,aunit,strlength)/2;
+- Xoption
+- XSizeHints           titleSizeHints,viewSizeHints;
+- XSetWindowAttributes viewAttrib;
+- XColor               foreColor, backColor;
+- XQueryColor(dsply,colorMap,\&foreColor);
+- XInternAtom(dsply, "WM\_DELETE\_WINDOW", False);
+- XSetWMProtocols(dsply, viewTitleWindow, \&wm\_delete\_window, 1);
+- XSetNormalHints(dsply,viewTitleWindow,\&titleSizeHints);
+- XSetStandardProperties(dsply,viewTitleWindow,"Axiom 2D",viewport->title,
 			   None,NULL,0,\&titleSizeHints);
-\item XWriteBitmapFile(dsply,viewBitmapFilename,
+- XWriteBitmapFile(dsply,viewBitmapFilename,
 				  viewport->titleWindow,vwInfo.width,
 				  vwInfo.height+vwInfo.border\_width+20,-1,-1);
-\item XResizeWindow(dsply,viewport->titleWindow,300,300+titleHeight);
-\item XDeleteAssoc(dsply,table,(control->buttonQueue[i]).self);
-\item XDestroyWindow(dsply,control->controlWindow);
-\item XCreateImage(/* display */        dsply,
+- XResizeWindow(dsply,viewport->titleWindow,300,300+titleHeight);
+- XDeleteAssoc(dsply,table,(control->buttonQueue[i]).self);
+- XDestroyWindow(dsply,control->controlWindow);
+- XCreateImage(/* display */        dsply,
 			/* visual */         DefaultVisual(dsply,scrn),
 			/* depth */          DefaultDepth(dsply,scrn),
 			/* format */         ZPixmap,
@@ -23381,53 +23380,53 @@ information macros or functions.
 			/* height */         1,
 			/* bitmap\_pad */     32,
 			/* bytes\_per\_line */ 0);
-\item XSizeHints sizehint;
-\item XGetImage(dsply, slicer\_pixmap, 0, 0, slicer\_width, slicer\_height,
+- XSizeHints sizehint;
+- XGetImage(dsply, slicer\_pixmap, 0, 0, slicer\_width, slicer\_height,
 			  AllPlanes, ZPixmap);
-\item XChangeShade(dsply, i);
-\item XShadeRectangle(dsply,cp->controlWindow,
+- XChangeShade(dsply, i);
+- XShadeRectangle(dsply,cp->controlWindow,
 		      colormapX + colorOffsetX + i*shadeWidth,
 		      colormapY + colorOffsetY - 10, shadeWidth, 40);
-\item XFree(childrenWs);
-\item XPoint           *quadMesh;
-\item XGetErrorText(display,event->error\_code,buffer,511);
-\item XSetErrorHandler(the\_handler);
-\item XCreateAssocTable(nbuckets);  
-\item XInitSpadFill(dsply,scrn,\&colorMap,
+- XFree(childrenWs);
+- XPoint           *quadMesh;
+- XGetErrorText(display,event->error\_code,buffer,511);
+- XSetErrorHandler(the\_handler);
+- XCreateAssocTable(nbuckets);
+- XInitSpadFill(dsply,scrn,\&colorMap,
                               \&totalHues,\&totalSolidShades,
                               \&totalDitheredAndSolids,\&totalShades);
-\item XInitShades(dsply,scrn) ;
-\item XGContextFromGC(DefaultGC(dsply,scrn))
-\item XCreatePixmap(dsply,viewport->viewWindow,
+- XInitShades(dsply,scrn) ;
+- XGContextFromGC(DefaultGC(dsply,scrn))
+- XCreatePixmap(dsply,viewport->viewWindow,
 			  vwInfo.width,vwInfo.height,
 			  DisplayPlanes(dsply,scrn));
-\item .Xdefaults
-\item XQueryPointer(dsply,rtWindow,\&dummy,\&dummy,\&px,\&py,\&lx,\&ly,\&lbuttons);
-\item XPixelColor((int)colorindx-1)
-\item XCreatePixmap(/* display */     dsply,
+- .Xdefaults
+- XQueryPointer(dsply,rtWindow,\&dummy,\&dummy,\&px,\&py,\&lx,\&ly,\&lbuttons);
+- XPixelColor((int)colorindx-1)
+- XCreatePixmap(/* display */     dsply,
 			    /* drawable */    viewport->viewWindow,
 			    /* width */       vwInfo.width,
 			    /* height */      vwInfo.height,
 			    /* depth */       DefaultDepth(dsply,scrn));
-\item XFillRectangle(dsply,viewmap,trashGC,0,0,vwInfo.width,vwInfo.height);
-\item XPutPixel(imageX,i,0,foregroundColor);
-\item XPutImage(dsply,viewport->viewWindow,trashGC,imageX,0,0,0,
+- XFillRectangle(dsply,viewmap,trashGC,0,0,vwInfo.width,vwInfo.height);
+- XPutPixel(imageX,i,0,foregroundColor);
+- XPutImage(dsply,viewport->viewWindow,trashGC,imageX,0,0,0,
 		scanline,vwInfo.width,1);
-\item XDestroyImage(imageX);
-\item XCopyArea(dsply,viewmap,viewport->viewWindow,trashGC,0,0,
+- XDestroyImage(imageX);
+- XCopyArea(dsply,viewmap,viewport->viewWindow,trashGC,0,0,
 		  vwInfo.width,vwInfo.height,0,0);
-\item XCopyArea(dsply,viewmap,viewport->viewWindow,trashGC,0,0,
+- XCopyArea(dsply,viewmap,viewport->viewWindow,trashGC,0,0,
 			  vwInfo.width,vwInfo.height,0,0);
-\item XFillPolygon(dsply, viewport->viewWindow, aGC, quadMesh, p->numpts,
+- XFillPolygon(dsply, viewport->viewWindow, aGC, quadMesh, p->numpts,
 		     Convex,CoordModeOrigin);
-\item XPeekEvent(dsply,\&peekEvent);
-\item XDrawLines(dsply, wid, gc, points, numberOfPoints, mode);
-\item XGContextFromGC(viewGCx);
-\item (impl) XCreateAssocTable(int size)
-\item (impl) XMakeAssoc(Display * dsp, HashTable *table, Window w, int * p)
-\item (impl) XLookUpAssoc(Display * dsp, HashTable *table,Window w)
-\item (impl) XDeleteAssoc(Display * dsp,HashTable * table, Window w)
-\item XSelectInput(dsply, menu, KeyPressMask|ButtonPressMask|ExposureMask);
+- XPeekEvent(dsply,\&peekEvent);
+- XDrawLines(dsply, wid, gc, points, numberOfPoints, mode);
+- XGContextFromGC(viewGCx);
+- (impl) XCreateAssocTable(int size)
+- (impl) XMakeAssoc(Display * dsp, HashTable *table, Window w, int * p)
+- (impl) XLookUpAssoc(Display * dsp, HashTable *table,Window w)
+- (impl) XDeleteAssoc(Display * dsp,HashTable * table, Window w)
+- XSelectInput(dsply, menu, KeyPressMask|ButtonPressMask|ExposureMask);
 
 
 * libspad

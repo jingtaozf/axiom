@@ -19,18 +19,18 @@ of adding algebra code. Lets assume that you have a brand new spad
 file, called bsd.spad containing a simple domain BSD. The
 steps in the process of adding this file are:
 1. Find out where the algebra code lives in the lattice.
-1. Start a new interpsys session. This will give you a clean build.
-1. )set mes auto on -- This will allow us to see what algebra files
+  1. Start a new interpsys session. This will give you a clean build.
+  1. )set mes auto on -- This will allow us to see what algebra files
 get loaded during compile
-1. )co BAR.spad
-1. We collect all the names of the algebra files BSD loaded. Look for
+  1. )co BAR.spad
+  1. We collect all the names of the algebra files BSD loaded. Look for
 lines that say a file is loaded. Collect all of the names of those files.
-1. For each of the loaded files determine which layer contains the
+  1. For each of the loaded files determine which layer contains the
 loaded file by searching this file. For instance, if BAR.spad required
 FSAGG then look for /FSAGG.o, which resides in layer 13. 
-1. Determine the highest layer (e.g. 13) that contains the required files
+  1. Determine the highest layer (e.g. 13) that contains the required files
 and add the new algebra file (e.g. BSD.o) in the next layer (e.g. 14).
-1. Next we need to create the graph structure information. This involves
+  1. Next we need to create the graph structure information. This involves
 creating a two part stanza of information. For instance,
 #+begin_example
 "BSD" [color="#88FF44",href="bookvol10.3.pdf#nameddest=BSD",
@@ -40,25 +40,23 @@ creating a two part stanza of information. For instance,
 /*"BSD" -> {"IEVALAB"; "CLAGG"; "SETAGG"; "FINITE"; "OM"; "PATMAB"}*/
 "BSD" -> "FSAGG" 
 #+end_example
-1. The first part determines the color, shape of the graph node,
+  1. The first part determines the color, shape of the graph node,
 and a link to the book containing the source code. The color and name
 of the book are related:
-1. #4488FF == bookvol10.2
-1. #88FF44 == bookvol10.3
-1. #FF4488 == bookvol10.4
-1. #444488 == bookvol10.5
-
-\item The second part is the graph structure. All of the loaded algebra
+    1. #4488FF == bookvol10.2
+    1. #88FF44 == bookvol10.3
+    1. #FF4488 == bookvol10.4
+    1. #444488 == bookvol10.5
+  1. The second part is the graph structure. All of the loaded algebra
 files are listed (currently as comments due to the size of the complete
 graph). In particular, the node that ``supports'' BSD is FSAGG so we
 make sure that the graph edge ="BSD" -> "FSAGG"= is uncommented.
-
-\item Insert the documentation after the layer (e.g after layer 14).
+1. Insert the documentation after the layer (e.g after layer 14).
 This documentation is used to reconstruct the full and partial graphs.
-\item Insert the =${OUT}/BSD.o= file into the layer's file list. This
+1. Insert the =${OUT}/BSD.o= file into the layer's file list. This
 will cause the algebra to build after all of the algebra it depends on is
 built.
-\item Add the algebra to the books
+1. Add the algebra to the books
 
 
 ** Adding the algebra to the proper book
@@ -101,17 +99,16 @@ stored in BSD.output
 and ``--E n'' to end the test.
 - save the test as bsdtest.input
 - Validate the newly formatted test file (bsdtest.input):
-- start a new Axiom
-- )co BSD -- compile your new algebra
-- )read bsdtest.input -- BE SURE to use the new test file format.
+  - start a new Axiom
+  - )co BSD -- compile your new algebra
+  - )read bsdtest.input -- BE SURE to use the new test file format.
 If you did it right it will create a new file called
 BasicStochasticDifferential.output
-- )lisp (regress "BasicStochasticDifferential.output") -- this will
+  - )lisp (regress "BasicStochasticDifferential.output") -- this will
 run the regress function which compares the actual output with the
 expected output and reports success or failure.
-- fix up failures and repeat until none remain
-- add the contents of bsdtest.input to the algebra file
-
+  - fix up failures and repeat until none remain
+  - add the contents of bsdtest.input to the algebra file
 
 
 **** The input section

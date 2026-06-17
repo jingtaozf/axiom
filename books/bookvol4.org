@@ -3092,54 +3092,52 @@ Axiom lives in the silver subdirectory.
 In more detail these steps are:
 
 1. Add the lateset GCL sources to Axiom
-1. Download the latest GCL from gnu.org\\
+  1. Download the latest GCL from gnu.org\\
       For these instructions assume the file is 
 #+begin_example
       gcl-Version_2_6_10.tar.gz
 #+end_example
-1. move the tar file into /tmp\\
+  1. move the tar file into /tmp\\
       We are going to make changes to the distribution via patches
-1. untar the file
+  1. untar the file
 #+begin_example
       tar -zxf gcl-Version_2_6_10.tar.gz
 #+end_example
-1. cd to the untarred directory
+  1. cd to the untarred directory
 #+begin_example
       cd gcl-Version_2_6_10
 #+end_example
-1. rename the gcl directory\\
+  1. rename the gcl directory\\
       Camm follows a convention that the top level directory in the
       tar file is called gcl. Since we maintain several past versions
       we need to rename this and re-tar it
 #+begin_example
       mv gcl gcl-2.6.10
 #+end_example
-1. rename gcl to use our naming convention
+  1. rename gcl to use our naming convention
 #+begin_example
       tar -zcf gcl-2.6.10.tgz gcl-2.6.10
 #+end_example
-1. We move the original, renamed, retarred file to the zip directory
+  1. We move the original, renamed, retarred file to the zip directory
 #+begin_example
       mv gcl-2.6.10.tgz $AXHOME/silver/zips
 #+end_example      
-1. We have to make sure to include the new file in the git commit
+  1. We have to make sure to include the new file in the git commit
 #+begin_example
      cd $AXHOME/silver
 #+end_example      
-1. Tell git we care about the file
+  1. Tell git we care about the file
 #+begin_example
      git add zips/gcl-2.6.10.tgz
 #+end_example
-
-\item Update the patches to the new version
-1. find the previous patches
+1. Update the patches to the new version
+  1. find the previous patches
 #+begin_example
      ls $AXHOME/silver/zips/gcl-2.6.8pre7*patch
 #+end_example
-1. for each patch do ( Step 3 ; Step 4 )
-
-\item create diff -Naur patches to the gcl sources
-1. assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
+  1. for each patch do ( Step 3 ; Step 4 )
+1. create diff -Naur patches to the gcl sources
+  1. assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
      The name tells us what file to patch. From the above we can see
      that when Axiom builds GCL it will
 #+begin_example
@@ -3152,65 +3150,60 @@ In more detail these steps are:
         patch <gcl-2.6.8pre7.h.linux.defs.patch
 #+end_example
      which will apply the patch .... So we need to make a patch
-1. move to the subdirectory containing the file
+  1. move to the subdirectory containing the file
 #+begin_example
       cd /tmp/gcl-Version_2_6_10/gcl-2.6.10/h
 #+end_example
-1. edit the 'linux.defs' file to create the proper patch
-1. save the changed file as linux.defs.tpd
-1. in a shell, create a diff -Naur patch by
+  1. edit the 'linux.defs' file to create the proper patch
+  1. save the changed file as linux.defs.tpd
+  1. in a shell, create a diff -Naur patch by
 #+begin_example
       diff -Naur linux.defs linux.defs.tpd >gcl-2.6.10.h.linux.defs.patch
 #+end_example
-1. move it to the zips directory
+  1. move it to the zips directory
 #+begin_example
       mv gcl-2.6.10.h.linux.defs.patch $AXHOME/silver/zips
       cd $AXHOME/silver
       git add zips/gcl-2.6.10.h.linux.defs.patch
 #+end_example
-
-\item update lsp/Makefile.pamphlet to apply the patch at build
-1. edit lsp/Makefile.pamphlet
-1. search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
-1. copy the chunk and name the new chunk
+1. update lsp/Makefile.pamphlet to apply the patch at build
+  1. edit lsp/Makefile.pamphlet
+  1. search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
+  1. copy the chunk and name the new chunk
 =gcl-2.6.10.h.linux.defs.patch=
-
-\item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-1. find the subsection ``The GCL-2.6.8pre7 stanza''
-1. make a copy named ``The GCL-2.6.10 stanza''
-1. add the new patches
-1. tell git we care
+1. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+  1. find the subsection ``The GCL-2.6.8pre7 stanza''
+  1. make a copy named ``The GCL-2.6.10 stanza''
+  1. add the new patches
+  1. tell git we care
 #+begin_example
       cd $AXHOME/silver
       git add lsp/Makefile.pamphlet
 #+end_example
-
-\item Change the GCLVERSION to point at the new sources
-1. emacs =$AXHOME/silver/Makefile.pamphlet=
-1. search for =#GCLVERSION=, a Makefile comment line
-1. the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
+1. Change the GCLVERSION to point at the new sources
+  1. emacs =$AXHOME/silver/Makefile.pamphlet=
+  1. search for =#GCLVERSION=, a Makefile comment line
+  1. the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
       gcl-2.6.8pre7 was is the name of the current version we are
       replacing. We will use this name in the next step
-1. put a # in front of the GCLVERSION variable to comment it out\\
+  1. put a # in front of the GCLVERSION variable to comment it out\\
       We maintain the list of old, working patches. We also remember the
       names of the prior GCLVERSIONS in case we have to back up
-1. Add a new line reading:
+  1. Add a new line reading:
 #+begin_example
          GCLVERSION=gcl-2.6.10
 #+end_example
       This will cause Axiom to untar this tgz file to get the sources
       and apply the corresponding patches
-
-\item change the Makefile to match Makefile.pamphlet
-- compile the tangle program
+1. change the Makefile to match Makefile.pamphlet
+  - compile the tangle program
 \begin{verbatim}
       ( cd books ; gcc -o tangle tangle.c )
 \end{verbatim}
-- use books/tangle to extract the new Makefile
+  - use books/tangle to extract the new Makefile
 \begin{verbatim}
       books/tangle Makefile.pamphlet >Makefile
 \end{verbatim}
-
 
 
 ** Literate Programming
