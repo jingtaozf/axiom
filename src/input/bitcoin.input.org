@@ -575,10 +575,10 @@ point, n the order, and d the private key. The recipe for signing is
 as follows:
 
 1. Choose some integer k between 1 and n - 1.
-1. Calculate the point (x, y) = k * G, using scalar multiplication.
-1. Find r = x mod n. If r = 0, return to step 1.
-1. Find s = (z + r * d) / k mod n. If s = 0, return to step 1.
-1. The signature is the pair (r, s)
+2. Calculate the point (x, y) = k * G, using scalar multiplication.
+3. Find r = x mod n. If r = 0, return to step 1.
+4. Find s = (z + r * d) / k mod n. If s = 0, return to step 1.
+5. The signature is the pair (r, s)
 
 
 As a reminder, in step 4, if the numbers result in a fraction (which
@@ -600,7 +600,7 @@ Let's pick our data to be the number 17, and follow the recipe. Our variables:
     d = 2 (private key)
 #+end_example
 
-1. Pick a random number:
+6. Pick a random number:
 
 #+begin_example
     k = rand(1, n - 1)
@@ -609,7 +609,7 @@ Let's pick our data to be the number 17, and follow the recipe. Our variables:
             our example simpler!)
 #+end_example
 
-2. Calculate the point. This is done in the same manner as determining
+7. Calculate the point. This is done in the same manner as determining
 the public key, but for brevity let's omit the arithmetic for point
 addition and point doubling.
 
@@ -622,7 +622,7 @@ addition and point doubling.
     y = 63
 #+end_example
 
-3. Find r:
+8. Find r:
 
 #+begin_example
     r = x mod n
@@ -630,7 +630,7 @@ addition and point doubling.
     r = 62
 #+end_example
 
-4. Find s:
+9. Find s:
 
 #+begin_example
     s = (z + r * d) / k mod n
@@ -657,7 +657,7 @@ before, we have hidden some gory details by computing it elsewhere):
     s = 47
 #+end_example
 
-5. Our signature is the pair (r, s) = (62, 47).
+10. Our signature is the pair (r, s) = (62, 47).
 
 As with the private and public keys, this signature is normally
 represented by a hexadecimal string.  
@@ -671,12 +671,12 @@ we are the senders. Let's see how this works.
 With Q being the public key and the other variables defined as before,
 the steps for verifying a signature are as follows:
 
-1. Verify that $r$ and $s$ are between $1$ and $n - 1$.
-1. Calculate $w = s^{-1} mod n$
-1. Calculate $u = z * w mod n$
-1. Calculate $v = r * w mod n$
-1. Calculate the point $(x, y) = uG + vQ$
-1. Verify that $r = x mod n$. The signature is invalid if it is not.
+11. Verify that $r$ and $s$ are between $1$ and $n - 1$.
+12. Calculate $w = s^{-1} mod n$
+13. Calculate $u = z * w mod n$
+14. Calculate $v = r * w mod n$
+15. Calculate the point $(x, y) = uG + vQ$
+16. Verify that $r = x mod n$. The signature is invalid if it is not.
 
 
 Why do these steps work? We are skipping the proof, but you can read
@@ -691,14 +691,14 @@ variables, once again:
     Q = (52, 7) (public key)
 #+end_example
 
-1. Verify that r and s are between 1 and n - 1. Check and check.
+17. Verify that r and s are between 1 and n - 1. Check and check.
 
 #+begin_example
     r: 1 <= 62 < 79
     s: 1 <= 47 < 79
 #+end_example
 
-2. Calculate w:
+18. Calculate w:
 
 #+begin_example
          -1
@@ -708,7 +708,7 @@ variables, once again:
     w = 37
 #+end_example
 
-3. Calculate u:
+19. Calculate u:
 
 #+begin_example
     u = zw mod n
@@ -717,7 +717,7 @@ variables, once again:
     u = 76
 #+end_example
 
-4. Calculate v:
+20. Calculate v:
 
 #+begin_example
     v = rw mod n
@@ -726,7 +726,7 @@ variables, once again:
     v = 3
 #+end_example
 
-5. Calculate the point (x, y):
+21. Calculate the point (x, y):
 
 #+begin_example
     (x, y) = uG + vQ
@@ -784,7 +784,7 @@ Putting them together:
 
 Clearly step 5 is the bulk of the work. For the final step,
 
-6. Verify that r = x mod n
+22. Verify that r = x mod n
 
 #+begin_example
     r = x mod n

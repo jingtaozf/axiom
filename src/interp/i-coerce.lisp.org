@@ -201,11 +201,11 @@ coerceInteractive and canCoerceFrom are the two coercion functions
 for $InteractiveMode. They translate RN, RF and RR to QF I, QF P
 and RE RN, respectively, and call coerceInt or canCoerce, which
 both work in the same way (e.g. coercion from t1 to t2):
-1. they try to coerce t1 to t2 directly (tower coercion), and, if
+2. they try to coerce t1 to t2 directly (tower coercion), and, if
   this fails, to coerce t1 to the last argument of t2 and embed
   this last argument into t2. These embedding functions are now only
   defined in the algebra code. (RSS 2-27-87)
-2. the tower coercion looks whether there is any applicable local
+3. the tower coercion looks whether there is any applicable local
   coercion, which means, one defined in boot or in algebra code.
   If there is an applicable function from a constructor, which is
   inside the type tower of t1, to the top level constructor of t2,
@@ -227,9 +227,9 @@ finally we embed s1 into t2, which completes the coercion t1 to t2
 the result of canCoerceFrom is TRUE or NIL
 the result of coerceInteractive is a object or NIL (=failed)
 all boot coercion functions have the following result:
-1. if u=$fromCoerceable$, then TRUE or NIL
-2. if the coercion succeeds, the coerced value (this may be NIL)
-3. if the coercion fails, they throw to a catch point in
+4. if u=$fromCoerceable$, then TRUE or NIL
+5. if the coercion succeeds, the coerced value (this may be NIL)
+6. if the coercion fails, they throw to a catch point in
      coerceByFunction
 
 Interpreter Coercion Query Functions

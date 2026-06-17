@@ -140,30 +140,30 @@ sake of completeness.
 /Let p and r be prime numbers, $p \ne r$./
 1. {\sl The multiplicative group of any field $F_{p^t}$ for $t > 0$, denoted
 by $F_{p^t}^*$ is cyclic.}
-1. {\sl Let $f(x)$ be a polynomial with integral coefficients. Then
+2. {\sl Let $f(x)$ be a polynomial with integral coefficients. Then
 $$f(x)^p == f(x^p)(mod\ p)$$}
-1. {\sl Let h(x) be any factor of $x^r - 1$. Let $m == m_r(mod\ r)$. Then
+3. {\sl Let h(x) be any factor of $x^r - 1$. Let $m == m_r(mod\ r)$. Then
 $$x^m == x^{m_r}\ (mod\ h(x))$$}
-1. {\sl Let $o_r(p)$ be the order of $p\ module\ r$. Then in
+4. {\sl Let $o_r(p)$ be the order of $p\ module\ r$. Then in
 $F_p$, ${{x^r - 1}\over{x-1}}$ factorises into irreducible polynomials
 each of degree $o_r(p)$.}
 
 /Proof/
-1. See, e.g., [LN86]
-1. Let $f(x) = a_0+a_1x+...+a_dx^d$. The coefficient of $x^i$ in
+5. See, e.g., [LN86]
+6. Let $f(x) = a_0+a_1x+...+a_dx^d$. The coefficient of $x^i$ in
 $f(x)^p$ is
 $$\Sigma_{{i_0+...+i_d=p}\over{i_1+2i_2+...+di_d=i}}
 a_0^{i_0} ... a_d^{i_d} {{p!}\over{i_0! ... i_d!}}$$
 Note that this sum is divisible by $p$ unless one of the $i_j$'s is $p$.
 In the latter case $i=pj$ and the coefficient of $x^i$ is
 $a_j^p = a_j$. This gives us the required congruence.
-1. Let $m=kr+m_r$. Now
+7. Let $m=kr+m_r$. Now
 | \ \ \ \ \ \ \ \ |  | $x^r$ | $==$ | $1$ | $(mod\ x^r - 1)$ |
 | \ \ \ \ \ \ \ \ | $=>$ | $x^{kr}$ | $==$ | $1$ | $(mod\ x^r - 1)$ |
 | \ \ \ \ \ \ \ \ | $=>$ | $x^{kr+m_r}$ | $==$ | $x^{m_r}$ | $(mod\ x^r - 1)$ |
 | \ \ \ \ \ \ \ \ | $=>$ | $x^m$ | $==$ | $x^{m_r}$ | $(mod\ h(x))$ |
 
-1. Let $d = o_r(p)$ and $Q_r(x) = {{x^r-1}\over{x-1}}$.
+8. Let $d = o_r(p)$ and $Q_r(x) = {{x^r-1}\over{x-1}}$.
 Suppose that $Q_r(x)$ has an irreducible factor, $h(x)$ in $F_p$ of
 degree $k$. Now $F_p[x]/h(x)$ forms a field of size $p^k$ and the 
 multiplicative subgroup of $F_p[x]/h(x)$ is cyclic with a generator,
@@ -198,19 +198,19 @@ $${{n}\over{6\ log\ n}} \le \pi(n) \le {{8n}\over{log\ n}}$$
 ** The Algorithm
 \hrule
 Input: integer $n > 1$
-1. if ($n$ is of the form $a^b$, $b>1$) output COMPOSITE;
-1. $r = 2$;
-1. while $(r < n)$ \{
-1. \ \ \ \ if ($gcd(n,r) \ne 1$) output COMPOSITE;
-1. \ \ \ \ if ($r$ is prime)
-1. \ \ \ \ \ \ \ \ let $q$ be the largest prime factor of $r - 1$;
-1. \ \ \ \ \ \ \ \ if ($q \ge 4\sqrt{r}\ log\ n$) and ($n^{{r-1}\over{q}} !== 1 (mod\ r)$)
-1. \ \ \ \ \ \ \ \ \ \ \ \ break;
-1. \ \ \ \ $r \leftarrow r + 1$;
-1. \}
-1. for $a = 1$ to $2\sqrt{r}\ log\ n$
-1. \ \ \ \ if ($(x-a)^n !== (x^n - a)(mod\ x^r-1,n)$) output COMPOSITE;
-1. output PRIME;
+9. if ($n$ is of the form $a^b$, $b>1$) output COMPOSITE;
+10. $r = 2$;
+11. while $(r < n)$ \{
+12. \ \ \ \ if ($gcd(n,r) \ne 1$) output COMPOSITE;
+13. \ \ \ \ if ($r$ is prime)
+14. \ \ \ \ \ \ \ \ let $q$ be the largest prime factor of $r - 1$;
+15. \ \ \ \ \ \ \ \ if ($q \ge 4\sqrt{r}\ log\ n$) and ($n^{{r-1}\over{q}} !== 1 (mod\ r)$)
+16. \ \ \ \ \ \ \ \ \ \ \ \ break;
+17. \ \ \ \ $r \leftarrow r + 1$;
+18. \}
+19. for $a = 1$ to $2\sqrt{r}\ log\ n$
+20. \ \ \ \ if ($(x-a)^n !== (x^n - a)(mod\ x^r-1,n)$) output COMPOSITE;
+21. output PRIME;
 
 
 \hrule

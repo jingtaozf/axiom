@@ -6689,11 +6689,11 @@ Here are the details:
 1. 
 If $x=\tan t$ and $g=\tan (t/3)$ then the following 
 algebraic relation is true: $${g^3-3xg^2-3g+x=0}$$
-1. 
+2. 
 Integrate $g$ using this algebraic relation; this produces:
 $${\frac{(24g^2 - 8)\log(3g^2 - 1) + (81x^2 + 24)g^2 + 72xg - 27x^2 - 16}
 {54g^2 - 18}}$$
-1. 
+3. 
 Rationalize the denominator, producing:
 $$\frac{8\log(3g^2-1) - 3g^2 + 18xg + 16}{18}$$
 Replace $g$ by the initial definition
@@ -7628,12 +7628,12 @@ Now, you may ask, what exactly is a category?   Like
 domains, categories can be defined in the Axiom language.  A category
 is defined by three components:
 
-1. a name (for example, =Ring=),
+4. a name (for example, =Ring=),
 used to refer to the class of domains that the category represents;
-1. a set of operations, used to refer to the operations that
+5. a set of operations, used to refer to the operations that
 the domains of this class support
 (for example, ``=+='', ``=-='', and ``=*='' for rings); and
-1. an optional list of other categories that this category extends.
+6. an optional list of other categories that this category extends.
 
 
 %Original Page 64
@@ -8399,13 +8399,13 @@ This tries *sayBranch* with a floating-point number.
 
 There are two things of interest about this particular
 example to which we would like to draw your attention.
-1. Axiom normally converts a result to the target value
+7. Axiom normally converts a result to the target value
 before passing it to the function.
 If we left the declaration information out of this function definition
 then the *sayBranch* call would have been attempted with an
 =Integer= rather than a =Union=, and an error would have
 resulted.
-1. The types in a =Union= are searched in the order given.
+8. The types in a =Union= are searched in the order given.
 So if the type were given as
 
 %\noindent
@@ -8876,9 +8876,9 @@ $$
 # label: ugTypesSubdomains
 
 A /subdomain/ S of a domain D is a domain consisting of
-1. those elements of D that satisfy some
+9. those elements of D that satisfy some
 /predicate/ (that is, a test that returns =true= or =false=) and 
-1. a subset of the operations of D.
+10. a subset of the operations of D.
 
 Every domain is a subdomain of itself, trivially satisfying the
 membership test: =true=.
@@ -9800,8 +9800,8 @@ button and click.
 A /search string/ is used for searching some database.  To learn
 about search strings, we suggest that you bring up the HyperDoc
 glossary.  To do this from the top-level page of HyperDoc:
-1. Click on Reference, bringing up the Axiom Reference page.
-1. Click on Glossary, bringing up the glossary.
+11. Click on Reference, bringing up the Axiom Reference page.
+12. Click on Glossary, bringing up the glossary.
 
 
 The glossary has an input area at its bottom.  We review the various
@@ -10334,10 +10334,10 @@ numbers, except in exponents.  This is the default behavior but can be
 turned off by issuing =)set fortran ints2floats off=.  
  The rules governing when the conversion 
 is done are:
-1. If an integer is an exponent, convert it to a floating point
+13. If an integer is an exponent, convert it to a floating point
 number if it is greater than 32767 in absolute value, otherwise leave it
 as an integer.
-1. Convert all other integers in an expression to floating point numbers.
+14. Convert all other integers in an expression to floating point numbers.
 
 
 These rules only govern integers in expressions.\\  
@@ -10760,9 +10760,9 @@ expression before the ``==>='' must evaluate to =true= or =false=.
 The expression following the ``==>='' is the return value for the block.
 
 A block can be constructed in two ways:
-1. the expressions can be separated by semicolons
+15. the expressions can be separated by semicolons
 and the resulting expression surrounded by parentheses, and
-1. the expressions can be written on succeeding lines with each line
+16. the expressions can be written on succeeding lines with each line
 indented the same number of spaces (which must be greater than zero).
 #+INDEX: indentation
 A block entered in this form is
@@ -11957,11 +11957,11 @@ for i in 1..10
 \returnType{Type: Void}
 
 Here are useful rules for composing loop expressions:
-1. =while= predicates can only refer to variables that
+17. =while= predicates can only refer to variables that
 are global (or in an outer scope)
 or that are defined in =for= clauses to the left of the
 predicate.
-1. A ``such that'' predicate (something following ``=|='')
+18. A ``such that'' predicate (something following ``=|='')
 must directly follow a =for= clause and can only refer to
 variables that are global (or in an outer scope)
 or defined in the modified =for= clause
@@ -13140,30 +13140,30 @@ invisible.
 How does Axiom determine what library function to call?  It very much
 depends on the particular example, but the simple case of creating the
 polynomial $x + 2/3$ will give you an idea.
-1. The $x$ is analyzed and its default type is
+19. The $x$ is analyzed and its default type is
 =Variable(x)=.
-1. The $2$ is analyzed and its default type is
+20. The $2$ is analyzed and its default type is
 =PositiveInteger=.
-1. The $3$ is analyzed and its default type is
+21. The $3$ is analyzed and its default type is
 =PositiveInteger=.
-1. Because the arguments to ``=/='' are integers, Axiom
+22. Because the arguments to ``=/='' are integers, Axiom
 gives the expression $2/3$ a default target type of
 =Fraction(Integer)=.
-1. Axiom looks in =PositiveInteger= for ``=/=''.
+23. Axiom looks in =PositiveInteger= for ``=/=''.
 It is not found.
-1. Axiom looks in =Fraction(Integer)= for ``=/=''.
+24. Axiom looks in =Fraction(Integer)= for ``=/=''.
 It is found for arguments of type =Integer=.
-1. The $2$ and $3$ are converted to objects of type
+25. The $2$ and $3$ are converted to objects of type
 =Integer= (this is trivial) and ``=/='' is applied,
 creating an object of type =Fraction(Integer)=.
-1. No ``=+='' for arguments of types =Variable(x)= and
+26. No ``=+='' for arguments of types =Variable(x)= and
 =Fraction(Integer)= are found in either domain.
-1. Axiom resolves
+27. Axiom resolves
 #+INDEX: resolve
 (see \sectionref{ugTypesResolve})
 the types and gets \\
 =Polynomial(Fraction(Integer))=.
-1. The $x$ and the $2/3$ are converted to objects of this
+28. The $x$ and the $2/3$ are converted to objects of this
 type and =+= is applied, yielding the answer, an object of type
 =Polynomial (Fraction (Integer))=.
 
@@ -14296,12 +14296,12 @@ you issue a =free= declaration for a parameter, it is still local.
 
 What happens if you do not declare that a variable $x$ in the body of
 your function is =local= or =free=?  Well, Axiom decides on this basis:
-1. Axiom scans your function line-by-line, from top-to-bottom.
+29. Axiom scans your function line-by-line, from top-to-bottom.
 The right-hand side of an assignment is looked at before the left-hand
 side.
-1. If $x$ is referenced before it is assigned a value, it is a
+30. If $x$ is referenced before it is assigned a value, it is a
 =free= (global) variable.
-1. If $x$ is assigned a value before it is referenced, it is a
+31. If $x$ is assigned a value before it is referenced, it is a
 =local= variable.
 
 
@@ -14546,13 +14546,13 @@ $\hbox/parm/_{N}$ ) =+->= /expression/}
 }
 
 You can apply an anonymous function in several ways.
-1. Place the anonymous function definition in parentheses
+32. Place the anonymous function definition in parentheses
 directly followed by a list of arguments.
-1. Assign the anonymous function to a variable and then
+33. Assign the anonymous function to a variable and then
 use the variable name when you would normally use a function name.
-1. Use ``===='' to use the anonymous function definition as
+34. Use ``===='' to use the anonymous function definition as
 the arguments and body of a regular function definition.
-1. Have a named function contain a declared anonymous function and
+35. Have a named function contain a declared anonymous function and
 use the result returned by the named function.
 
 
@@ -14717,16 +14717,16 @@ The one you use is a matter of taste.
 \returnType{Type: Void}
 
 When should you declare an anonymous function?  
-1. If you use an anonymous function and Axiom can't figure out what
+36. If you use an anonymous function and Axiom can't figure out what
 you are trying to do, declare the function.  
-1. If the function has nontrivial argument types or a nontrivial
+37. If the function has nontrivial argument types or a nontrivial
 return type that Axiom may be able to determine eventually, but you 
 are not willing to wait that long, declare the function.  
-1. If the function will only be used for arguments of specific types
+38. If the function will only be used for arguments of specific types
 and it is not too much trouble to declare the function, do so.  
-1. If you are using the anonymous function as an argument to another
+39. If you are using the anonymous function as an argument to another
 function (such as *map* or *sort*), consider declaring the function.  
-1. If you define an anonymous function inside a named function,
+40. If you define an anonymous function inside a named function,
 you /must/ declare the anonymous function.  
 
 
@@ -23514,9 +23514,9 @@ $$
 
 When you want to work with an extension of a finite field in Axiom,
 you have three choices to make:
-1. Do you want to generate an extension of the prime field
+41. Do you want to generate an extension of the prime field
 (for example, =PrimeField 2=) or an extension of a given field?
-1. Do you want to use a representation that is particularly
+42. Do you want to use a representation that is particularly
 efficient for multiplication, exponentiation and addition but uses a
 lot of computer memory (a representation that models the cyclic group
 structure of the multiplicative group of the field extension and uses
@@ -23528,7 +23528,7 @@ machine's performance) sized fields.  If the field is large and the
 normal basis is relatively simple, the normal basis representation is
 more efficient for exponentiation than the irreducible polynomial
 representation.
-1. Do you want to provide a polynomial explicitly, a root of which
+43. Do you want to provide a polynomial explicitly, a root of which
 ``generates'' the extension in one of the three senses in (2), or do
 you wish to have the polynomial generated for you?
 
@@ -24569,9 +24569,9 @@ ideal} polynomial ideals over fields of characteristic zero.  The
 algorithm
 %is discussed in [cite:@gtz:gbpdpi] and
 works in essentially two steps:
-1. the problem is solved for 0-dimensional ideals by ``generic''
+44. the problem is solved for 0-dimensional ideals by ``generic''
 projection on the last coordinate
-1. a ``reduction process'' uses localization and ideal quotients
+45. a ``reduction process'' uses localization and ideal quotients
 to reduce the general case to the 0-dimensional one.
 
 The Axiom constructor =PolynomialIdeals= represents ideals with
@@ -25000,9 +25000,9 @@ factored is the field generated by
 
 %Original Page 299
 
-1. the algebraic numbers that appear
+46. the algebraic numbers that appear
 in the coefficients of the polynomial, and
-1. the algebraic numbers that
+47. the algebraic numbers that
 appear in a list passed as an optional second argument of the operation.
 
 In our case, the coefficients of $p$
@@ -25410,13 +25410,13 @@ this computation for all the roots of $r(x)$ and represent the Galois
 group of $p(x)$ as a subgroup of the symmetric group on five letters.
 
 Here are two other problems that you may attack in a similar fashion:
-1. Show that the Galois group of
+48. Show that the Galois group of
 $p(x) = x^4 + 2 x^3 - 2 x^2 - 3 x + 1$
 is the dihedral group of order eight. 
 (The splitting field of this polynomial is the Hilbert class field
  of  the quadratic field
 $*Q*(\sqrt{145})$.)
-1. Show that the Galois group of
+49. Show that the Galois group of
 $p(x) = x^6 + 108$
 has order 6 and is isomorphic to $S_3,$ the symmetric group on three letters.
  (The splitting field of this polynomial is the 
@@ -62504,12 +62504,12 @@ Let's find out from where the operations of =Matrix= come.
 
 %Original Page 557
 
-1. Click on =MatrixCategory=, then on *Exports*.\\
+50. Click on =MatrixCategory=, then on *Exports*.\\
 Here you see that =MatrixCategory= explicitly exports many matrix\\
 operations. Also, it inherits its operations from\\
 =TwoDimen\-sionalArrayCategory=.
 
-1. Click on =TwoDimensionalArrayCategory=, then on *Exports*.
+51. Click on =TwoDimensionalArrayCategory=, then on *Exports*.
 Here you see explicit operations dealing with rows and columns.
 In addition, it inherits operations from
 =HomogeneousAggregate=.
@@ -62518,11 +62518,11 @@ In addition, it inherits operations from
 %And so on.
 %If you continue doing this, eventually you will
 
-1. Click on \UpBitmap{} and then
+52. Click on \UpBitmap{} and then
 click on =Object=, then on *Exports*, where you see
 there are no exports.
 
-1. Click on \UpBitmap{} repeatedly to return to the constructor page
+53. Click on \UpBitmap{} repeatedly to return to the constructor page
 for =Matrix=.
 
 
@@ -62581,30 +62581,30 @@ constructors that provide operations in addition to those
 exported by the domain.
 
 Try this exercise.
-1. Click on *Relatives*, bringing up a list of
+54. Click on *Relatives*, bringing up a list of
 packages.
 
-1. Click on =LinearSystemMatrixPackage= bringing up its
+55. Click on =LinearSystemMatrixPackage= bringing up its
 constructor page.\footnote{You may want to widen your HyperDoc
 window to make what follows more legible.}
 
-1. Click on *Operations*.
+56. Click on *Operations*.
 Here you see *rank*, an operation also exported by
 =Matrix= itself.
 
-1. Click on *rank*.
+57. Click on *rank*.
 This \spadfunFrom{rank}{LinearSystemMatrixPackage} has two arguments and
 thus is different from the \spadfunFrom{rank}{Matrix} from
 =Matrix=.
 
-1. Click on \UpBitmap{} to return to the list of operations for the
+58. Click on \UpBitmap{} to return to the list of operations for the
 package *LinearSystemMatrixPackage*.
 
-1. Click on *solve* to bring up a
+59. Click on *solve* to bring up a
 \spadfunFrom{solve}{LinearSystemMatrixPackage} for linear systems of
 equations.
 
-1. Click on \UpBitmap{} several times to return to the cross
+60. Click on \UpBitmap{} several times to return to the cross
 reference page for =Matrix=.
 
 
@@ -62832,28 +62832,28 @@ For example, =Matrix= exports the *inverse* operation
 only if the domain =R= is a =Field=.
 To see this, try this from the main constructor page:
 
-1. Enter =Integer= into the input area at the bottom of the page.
+61. Enter =Integer= into the input area at the bottom of the page.
 
-1. Click on *Operations*, producing a table of operations.
+62. Click on *Operations*, producing a table of operations.
 Note the number of operation names that appear at the top of the
 page.
 
-1. Click on \UpBitmap{} to return to the constructor page.
+63. Click on \UpBitmap{} to return to the constructor page.
 
-1. Use the
+64. Use the
 \fbox*Delete*
 or
 \fbox*Backspace*
 keys to erase =Integer= from the input area.
 
-1. Click on *Operations* to produce a new table of operations.
+65. Click on *Operations* to produce a new table of operations.
 Look at the number of operations you get.
 This number is greater than what you had before.
 Find, for example, the operation *inverse*.
 
 %Original Page 562
 
-1. Click on *inverse* to produce a page describing the operation
+66. Click on *inverse* to produce a page describing the operation
 *inverse*.
 At the bottom of the description, you notice that the {\bf
 Conditions} line says ``=R= has =Field=.''
@@ -87819,22 +87819,22 @@ operations. These definitions may instead come from domains
 in the /add-chain/ or from default packages.
 When a function call is made for an
 operation in the domain, up to five steps are carried out.
-1. If the domain itself implements a function for the operation,
+67. If the domain itself implements a function for the operation,
 that function is returned.
-1. Each of the domains in the /add-chain/ are searched;
+68. Each of the domains in the /add-chain/ are searched;
 if one of these domains implements the function, that function is
 returned.
-1. Each of the default packages
+69. Each of the default packages
 for the
 domain are searched in order of the /lineage/.
 If any of the default packages implements the function, the first one
 found is returned.
-1. Each of the default packages
+70. Each of the default packages
 for each of the
 domains in the /add-chain/ are searched in the order of their
 /lineage/. If any of the default packages implements the
 function, the first one found is returned.
-1. If all of the above steps fail, an error message is reported.
+71. If all of the above steps fail, an error message is reported.
 
 }
 
@@ -87923,8 +87923,8 @@ Reference} for *Field* in Browse.
 
 
 =*file=*{%
-1. a program or collection of data stored on disk, tape or other medium.
-2. an object of a *File* domain.
+72. a program or collection of data stored on disk, tape or other medium.
+73. an object of a *File* domain.
 }
 
 
@@ -88081,12 +88081,12 @@ codes for fast lookup.
 
 
 =*heap=*{%
-1. an area of storage used by data in programs.
+74. an area of storage used by data in programs.
 For example, Axiom will use the heap to hold the partial results of
 symbolic computations.
 When cancellations occur, these results remain in the heap until
 garbage collected.
-2. an object of a *Heap* domain.
+75. an object of a *Heap* domain.
 }
 
 
@@ -88141,7 +88141,7 @@ For example, *Monoid* and *** are implicit exports of
 1.
 a variable that counts the number of times a /loop/ is
 repeated.
-2. the ``address'' of an element in a data structure (see also category
+76. the ``address'' of an element in a data structure (see also category
 *LinearAggregate*).
 }
 
@@ -88308,7 +88308,7 @@ function and such that its binding is invisible to any function
 that function calls.
 Also called a /lexical/ variable.
 By default in the interpreter:
-1. 
+77. 
 any variable $x$ that appears on the left-hand side of an
 assignment
 is normally regarded a local variable of that function.
@@ -88317,7 +88317,7 @@ is normally regarded a local variable of that function.
 If the intention of an assignment is to change the value of a
 /global variable/ $x$, the body of the function must then
 contain the statement $free x$.
-1. 
+78. 
 any other variable is regarded as a /free variable/.
 
 An optional declaration $local x$ is available to declare
@@ -88355,7 +88355,7 @@ or =while=.
 
 
 =*macro=*{%
-1. /(interactive syntax)/
+79. /(interactive syntax)/
 An expression of the form $macro a == b$ where $a$ is a
 /symbol/ causes $a$ to be textually replaced by the
 expression $b$ at /parse/ time.
@@ -88367,7 +88367,7 @@ $c$ at parse time, where $c$ is the expression obtained by
 replacing $a$ by $x$ everywhere in $b$.
 See also /definition/ where a similar substitution is done
 during /evaluation/.
-3. /(programming language syntax)/
+80. /(programming language syntax)/
 An expression of the form $a ==> b$ where $a$ is a symbol.
 }
 

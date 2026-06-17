@@ -973,18 +973,18 @@ structure of the form (see [[#emptyInterpreterFrame][emptyInterpreterFrame]]).
 The parts of a frame and their initial, default values are:
 1. *\$interpreterFrameName*\refto{interpreterFrameName},
 a string, is the name of the current frame. 
-1. *\$InteractiveFrame*\refto{InteractiveFrame}
+2. *\$InteractiveFrame*\refto{InteractiveFrame}
 which defaults to ((nil))
-1. *\$IOindex*\refto{IOindex}
+3. *\$IOindex*\refto{IOindex}
 also known as the step number, which defaults to 1
-1. *\$HiFiAccess*\refto{HiFiAccess}
-1. *\$HistList*\refto{HistList}
-1. *\$HistListLen*\refto{HistListLen}
-1. *\$HistListAct*\refto{HistListAct}
-1. *\$HistRecord*\refto{HistRecord}
-1. *\$internalHistoryTable*\refto{internalHistoryTable}
+4. *\$HiFiAccess*\refto{HiFiAccess}
+5. *\$HistList*\refto{HistList}
+6. *\$HistListLen*\refto{HistListLen}
+7. *\$HistListAct*\refto{HistListAct}
+8. *\$HistRecord*\refto{HistRecord}
+9. *\$internalHistoryTable*\refto{internalHistoryTable}
 which defaults to nil 
-1. {*localExposureDataDefault*} is a copy of the current
+10. {*localExposureDataDefault*} is a copy of the current
 local exposure data
 
 
@@ -9209,9 +9209,9 @@ itself and never exits. It is the primary Read-Eval-Print-Loop (REPL).
 
 *intloopReadConsole*
 reads the next line and calls one of three kinds of processors
-1. *intnplisp* to handle )lisp input
-1. *ncloopCommand* to handle )command input
-1. *intloopProcessString* to handle everything else
+11. *intnplisp* to handle )lisp input
+12. *ncloopCommand* to handle )command input
+13. *intloopProcessString* to handle everything else
 
 
 There are only two ways out of the REPL, either using the command
@@ -17159,11 +17159,11 @@ Axiom ``zips'' a function together with two delays into a delay.
 #+END_LATEX
 #+END_LATEX
 This function takes
-1. *eb* -- in Integer
-1. *ss* -- a list of strings
-1. *ln* -- an Integer
-1. *ufos* -- a list of strings
-1. *states* -- a list of integers
+14. *eb* -- in Integer
+15. *ss* -- a list of strings
+16. *ln* -- an Integer
+17. *ufos* -- a list of strings
+18. *states* -- a list of integers
 
 and constructs a call to *Delay*.
 
@@ -33189,8 +33189,8 @@ complete.
 #+END_LATEX
 This calls hasCat, which looks up a hashtable and returns:
 #+begin_example
- 1. T, NIL or a (has x1 x2) condition, if cat is not parameterized
- 2. a list of pairs (argument to cat,condition) otherwise
+ 3. T, NIL or a (has x1 x2) condition, if cat is not parameterized
+ 4. a list of pairs (argument to cat,condition) otherwise
 #+end_example
 then the substitution sl is augmented, or the result is 'failed
 # calls: hasCaty -> hasAttSig
@@ -34127,11 +34127,11 @@ coerceInteractive and canCoerceFrom are the two coercion functions
 for $InteractiveMode. They translate RN, RF and RR to QF I, QF P
 and RE RN, respectively, and call coerceInt or canCoerce, which
 both work in the same way (e.g. coercion from t1 to t2):
-1. they try to coerce t1 to t2 directly (tower coercion), and, if
+19. they try to coerce t1 to t2 directly (tower coercion), and, if
   this fails, to coerce t1 to the last argument of t2 and embed
   this last argument into t2. These embedding functions are now only
   defined in the algebra code. (RSS 2-27-87)
-2. the tower coercion looks whether there is any applicable local
+20. the tower coercion looks whether there is any applicable local
   coercion, which means, one defined in boot or in algebra code.
   If there is an applicable function from a constructor, which is
   inside the type tower of t1, to the top level constructor of t2,
@@ -34153,9 +34153,9 @@ finally we embed s1 into t2, which completes the coercion t1 to t2
 the result of canCoerceFrom is TRUE or NIL
 the result of coerceInteractive is a object or NIL (=failed)
 all boot coercion functions have the following result:
-1. if u=$fromCoerceable$, then TRUE or NIL
-2. if the coercion succeeds, the coerced value (this may be NIL)
-3. if the coercion fails, they throw to a catch point in
+21. if u=$fromCoerceable$, then TRUE or NIL
+22. if the coercion succeeds, the coerced value (this may be NIL)
+23. if the coercion fails, they throw to a catch point in
      coerceByFunction
 
 #+end_example
@@ -39370,18 +39370,18 @@ in documentation (online or textual) provided with the package.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
-1. Redistributions of source code must retain the copyright
+24. Redistributions of source code must retain the copyright
    notice, this list of conditions and the following disclaimer.
-2. Redistributions in binary form must reproduce the above copyright
+25. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
-3. All advertising materials mentioning features or use of this software
+26. All advertising materials mentioning features or use of this software
    must display the following acknowledgement:
    "This product includes cryptographic software written by
     Eric Young (eay@mincom.oz.au)"
    The word 'cryptographic' can be left out if the rouines from the library
    being used are not cryptographic related :-).
-4. If you include any Windows specific code (or a derivative thereof) from 
+27. If you include any Windows specific code (or a derivative thereof) from 
    the apps directory (application code) you must include an acknowledgement:
    "This product includes software written by Tim Hudson (tjh@mincom.oz.au)"
 
@@ -52162,19 +52162,19 @@ generated.
 what is generated in these functions.)
 
 These functions are required to do two things:
-1. do a putValue on the operator vector with the computed value
+28. do a putValue on the operator vector with the computed value
      of the node, which is a triple.  This is usually done in the
      eval functions.
-1. do a putModeSet on the operator vector with a list of the
+29. do a putModeSet on the operator vector with a list of the
      computed type of the node.  This is usually done in the
      up functions.
 
 
 There are several special modes used in these functions:
-1. Void is the mode that should be used for all statements
+30. Void is the mode that should be used for all statements
      that do not otherwise return values, such as declarations,
      loops, IF-THEN's without ELSE's, etc..
-1. =$NoValueMode= and =$ThrowAwayMode= used to be used
+31. =$NoValueMode= and =$ThrowAwayMode= used to be used
       in situations where Void is now used, and are being phased out 
       completely.
 
@@ -54855,13 +54855,13 @@ For now in NRUNTIME do database update only if forced
 #+END_LATEX
 #+END_LATEX
 Making new databases consists of:
-1. reset all of the system hash tables
-1. set up Union, Record and Mapping
-1. map )library across all of the system files (fills the databases)
-1. loading some normally autoloaded files
-1. making some database entries that are computed (like ancestors)
-1. writing out the databases
-1. write out 'warm' data to be loaded into the image at build time
+32. reset all of the system hash tables
+33. set up Union, Record and Mapping
+34. map )library across all of the system files (fills the databases)
+35. loading some normally autoloaded files
+36. making some database entries that are computed (like ancestors)
+37. writing out the databases
+38. write out 'warm' data to be loaded into the image at build time
 
 
 Note that this process should be done in a clean image
@@ -67340,14 +67340,14 @@ Given =("one" "two" "three")= generate ="(one,two,three)"=
 *** HTPage Layout
 # label: HTPage Layout
 This is a list with the fields
-1. name
-1. Domain Conditions
-1. Domain Variable Alist
-1. Domain Pvar Subst List
-1. Radio Button Alist
-1. Input Area Alist
-1. Property List
-1. Description
+39. name
+40. Domain Conditions
+41. Domain Variable Alist
+42. Domain Pvar Subst List
+43. Radio Button Alist
+44. Input Area Alist
+45. Property List
+46. Description
 
 
 #+BEGIN_LATEX
@@ -71960,14 +71960,14 @@ This creates a page for any cat, dom, package, default package
 constructors Cname\#\E\sig \args   \abb \comments (C is C, D, P, X)
 #+end_example
 There are 8 parts of an htPage:
-1. kind
-1. name
-1. nargs
-1. xflag
-1. sig
-1. args
-1. abbrev
-1. comments
+47. kind
+48. name
+49. nargs
+50. xflag
+51. sig
+52. args
+53. abbrev
+54. comments
 
 
 # calls: kPage -> dbXParts

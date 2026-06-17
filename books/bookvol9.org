@@ -197,7 +197,7 @@ example, the fragment
 declares =Monoid= as a Spad category with two signatures:
 1. the symbol $*$ is a binary operation on the domain belonging to
 this category
-1. the identifier 1 denotes a constant object of a domain belonging
+2. the identifier 1 denotes a constant object of a domain belonging
 to the category being defined.
 
 
@@ -1938,14 +1938,14 @@ element is no longer used. The third element is the byte offset from
 the beginning of the file.
 
 So to read the ``operationAlist'' from this file you would:
-1. open the index.kaf file
-1. (read) the integer
-1. (seek) to the integer offset from the beginning of the file
-1. (read) the index of triples
-1. find the keyword (e.g. ``operationAlist'') triple
-1. select the third element, an integer
-1. (seek) to the integer offset from the beginning of the file
-1. (read) the ``operationAlist''
+3. open the index.kaf file
+4. (read) the integer
+5. (seek) to the integer offset from the beginning of the file
+6. (read) the index of triples
+7. find the keyword (e.g. ``operationAlist'') triple
+8. select the third element, an integer
+9. (seek) to the integer offset from the beginning of the file
+10. (read) the ``operationAlist''
 
 
 Note that the information below has been reformatted to fit this 
@@ -3263,9 +3263,9 @@ Axiom.
 This is frequently all you need to compile your file.
 
 This simple command:
-1. Invokes the Spad compiler and produces Lisp output.
-1. Calls the Lisp compiler if the compilation was successful.
-1. Uses the =)library= command to tell Axiom about
+11. Invokes the Spad compiler and produces Lisp output.
+12. Calls the Lisp compiler if the compilation was successful.
+13. Uses the =)library= command to tell Axiom about
 the contents of your compiled file and arrange to have those
 contents loaded on demand.
 
@@ -6363,9 +6363,9 @@ is called to attempt to compile the form.
 The functions in this section are called through the symbol-plist
 of the symbol being parsed. In general, each of these functions
 takes 3 arguments
-1. the *form* which is specific to the function
-1. the *mode* a |Join|, which is a set of categories and domains
-1. the *env* which is a list of functions and their modemaps
+14. the *form* which is specific to the function
+15. the *mode* a |Join|, which is a set of categories and domains
+16. the *env* which is a list of functions and their modemaps
 
 and the functions return modified versions of the three arguments
 suitable for further processing.
@@ -6522,9 +6522,9 @@ by setting the =special= keyword on the DEF symbol property list.
 \defun{compDefine}{compDefine}
 #+END_LATEX
 The compDefine function expects three arguments:
-1. the *form* which is an def specifying the domain to define.
-1. the *mode* a |Join|, which is a set of categories and domains
-1. the *env* which is a list of functions and their modemaps
+17. the *form* which is an def specifying the domain to define.
+18. the *mode* a |Join|, which is a set of categories and domains
+19. the *env* which is a list of functions and their modemaps
 
 # calls: compDefine -> compDefine1
 # defsdollar: compDefine -> tripleCache
@@ -12552,20 +12552,20 @@ by setting the =special= keyword on the =add= symbol property list.
 \defun{compAdd}{compAdd}
 #+END_LATEX
 The compAdd function expects three arguments:
-1. the *form* which is an |add| specifying the domain
+20. the *form* which is an |add| specifying the domain
 to extend and a set of functions to be added
-1. the *mode* a |Join|, which is a set of categories and domains
-1. the *env* which is a list of functions and their modemaps
+21. the *mode* a |Join|, which is a set of categories and domains
+22. the *env* which is a list of functions and their modemaps
 
 
 The bulk of the work is performed by a call to compOrCroak which 
 compiles the functions in the add form capsule.
 
 The compAdd function returns a triple, the result of a call to compCapsule.
-1. the *compiled capsule* which is a progn form which returns
+23. the *compiled capsule* which is a progn form which returns
 the domain
-1. the *mode* from the input argument
-1. the *env* prepended with the signatures of the functions
+24. the *mode* from the input argument
+25. the *env* prepended with the signatures of the functions
 in the body of the add.
 
 # calls: compAdd -> comp

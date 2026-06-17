@@ -288,7 +288,7 @@ compilation of (PLUS X Y) in three cases:
 1. X is 2 of mode Integer, Y is 3 of mode Integer. Then the modemap
 for PLUS tells us to apply the function IntegerPlus, and the evaluator
 does so, returning the answer 5.
-1. X and Y are known to be of mode Integer, but their values are
+2. X and Y are known to be of mode Integer, but their values are
 not known. For example, they might be the formal parameters of a
 function. In this case, we can still select a function from the
 modemap for PLUS, since we do know the modes of X and Y. We cannot
@@ -296,7 +296,7 @@ apply the function IntegerPlus that is produced, but we can compile
 code to produce it, so the compiled code\footnote{The current MODLISP
 implementation compiles into LISP370[cite:@IBMx78], which is compiled
 into machine code by the LISP370 compiler.} is (IntegerPlus X Y).
-1. Nothing is known about X and Y. In this case, we have no idea
+3. Nothing is known about X and Y. In this case, we have no idea
 how to apply the modemap for PLUS, and we must compile a call to eval.
 
 
@@ -3077,13 +3077,13 @@ Axiom caches versions to ensure that nothing breaks. Changing GCL
 versions has introduced subtle bugs at various times. The steps
 necessary to introduce a new version are
 
-1. Add the latest GCL sources to Axiom
-1. Update the patches to the new version
-1. create diff -Naur patches to the gcl sources
-1. update lsp/Makefile.pamphlet to apply the patch at build
-1. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-1. Change the GCLVERSION to point at the new sources
-1. change the Makefile to match Makefile.pamphlet
+4. Add the latest GCL sources to Axiom
+5. Update the patches to the new version
+6. create diff -Naur patches to the gcl sources
+7. update lsp/Makefile.pamphlet to apply the patch at build
+8. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+9. Change the GCLVERSION to point at the new sources
+10. change the Makefile to match Makefile.pamphlet
 
 
 We assume in the following that =$AXHOME= is the home directory and that
@@ -3091,53 +3091,53 @@ Axiom lives in the silver subdirectory.
 
 In more detail these steps are:
 
-1. Add the lateset GCL sources to Axiom
+11. Add the lateset GCL sources to Axiom
   1. Download the latest GCL from gnu.org\\
       For these instructions assume the file is 
 #+begin_example
       gcl-Version_2_6_10.tar.gz
 #+end_example
-  1. move the tar file into /tmp\\
+  2. move the tar file into /tmp\\
       We are going to make changes to the distribution via patches
-  1. untar the file
+  3. untar the file
 #+begin_example
       tar -zxf gcl-Version_2_6_10.tar.gz
 #+end_example
-  1. cd to the untarred directory
+  4. cd to the untarred directory
 #+begin_example
       cd gcl-Version_2_6_10
 #+end_example
-  1. rename the gcl directory\\
+  5. rename the gcl directory\\
       Camm follows a convention that the top level directory in the
       tar file is called gcl. Since we maintain several past versions
       we need to rename this and re-tar it
 #+begin_example
       mv gcl gcl-2.6.10
 #+end_example
-  1. rename gcl to use our naming convention
+  6. rename gcl to use our naming convention
 #+begin_example
       tar -zcf gcl-2.6.10.tgz gcl-2.6.10
 #+end_example
-  1. We move the original, renamed, retarred file to the zip directory
+  7. We move the original, renamed, retarred file to the zip directory
 #+begin_example
       mv gcl-2.6.10.tgz $AXHOME/silver/zips
 #+end_example      
-  1. We have to make sure to include the new file in the git commit
+  8. We have to make sure to include the new file in the git commit
 #+begin_example
      cd $AXHOME/silver
 #+end_example      
-  1. Tell git we care about the file
+  9. Tell git we care about the file
 #+begin_example
      git add zips/gcl-2.6.10.tgz
 #+end_example
-1. Update the patches to the new version
-  1. find the previous patches
+2. Update the patches to the new version
+  10. find the previous patches
 #+begin_example
      ls $AXHOME/silver/zips/gcl-2.6.8pre7*patch
 #+end_example
-  1. for each patch do ( Step 3 ; Step 4 )
-1. create diff -Naur patches to the gcl sources
-  1. assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
+  11. for each patch do ( Step 3 ; Step 4 )
+3. create diff -Naur patches to the gcl sources
+  12. assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
      The name tells us what file to patch. From the above we can see
      that when Axiom builds GCL it will
 #+begin_example
@@ -3150,52 +3150,52 @@ In more detail these steps are:
         patch <gcl-2.6.8pre7.h.linux.defs.patch
 #+end_example
      which will apply the patch .... So we need to make a patch
-  1. move to the subdirectory containing the file
+  13. move to the subdirectory containing the file
 #+begin_example
       cd /tmp/gcl-Version_2_6_10/gcl-2.6.10/h
 #+end_example
-  1. edit the 'linux.defs' file to create the proper patch
-  1. save the changed file as linux.defs.tpd
-  1. in a shell, create a diff -Naur patch by
+  14. edit the 'linux.defs' file to create the proper patch
+  15. save the changed file as linux.defs.tpd
+  16. in a shell, create a diff -Naur patch by
 #+begin_example
       diff -Naur linux.defs linux.defs.tpd >gcl-2.6.10.h.linux.defs.patch
 #+end_example
-  1. move it to the zips directory
+  17. move it to the zips directory
 #+begin_example
       mv gcl-2.6.10.h.linux.defs.patch $AXHOME/silver/zips
       cd $AXHOME/silver
       git add zips/gcl-2.6.10.h.linux.defs.patch
 #+end_example
-1. update lsp/Makefile.pamphlet to apply the patch at build
-  1. edit lsp/Makefile.pamphlet
-  1. search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
-  1. copy the chunk and name the new chunk
+4. update lsp/Makefile.pamphlet to apply the patch at build
+  18. edit lsp/Makefile.pamphlet
+  19. search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
+  20. copy the chunk and name the new chunk
 =gcl-2.6.10.h.linux.defs.patch=
-1. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-  1. find the subsection ``The GCL-2.6.8pre7 stanza''
-  1. make a copy named ``The GCL-2.6.10 stanza''
-  1. add the new patches
-  1. tell git we care
+5. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+  21. find the subsection ``The GCL-2.6.8pre7 stanza''
+  22. make a copy named ``The GCL-2.6.10 stanza''
+  23. add the new patches
+  24. tell git we care
 #+begin_example
       cd $AXHOME/silver
       git add lsp/Makefile.pamphlet
 #+end_example
-1. Change the GCLVERSION to point at the new sources
-  1. emacs =$AXHOME/silver/Makefile.pamphlet=
-  1. search for =#GCLVERSION=, a Makefile comment line
-  1. the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
+6. Change the GCLVERSION to point at the new sources
+  25. emacs =$AXHOME/silver/Makefile.pamphlet=
+  26. search for =#GCLVERSION=, a Makefile comment line
+  27. the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
       gcl-2.6.8pre7 was is the name of the current version we are
       replacing. We will use this name in the next step
-  1. put a # in front of the GCLVERSION variable to comment it out\\
+  28. put a # in front of the GCLVERSION variable to comment it out\\
       We maintain the list of old, working patches. We also remember the
       names of the prior GCLVERSIONS in case we have to back up
-  1. Add a new line reading:
+  29. Add a new line reading:
 #+begin_example
          GCLVERSION=gcl-2.6.10
 #+end_example
       This will cause Axiom to untar this tgz file to get the sources
       and apply the corresponding patches
-1. change the Makefile to match Makefile.pamphlet
+7. change the Makefile to match Makefile.pamphlet
   - compile the tangle program
 \begin{verbatim}
       ( cd books ; gcc -o tangle tangle.c )
@@ -4171,11 +4171,11 @@ find it useful.
 Hyperdoc will sometimes exit and also kill the AXIOMsys image with
 no error message. One way to get around this is to replace the 
 AXIOMsys image with the debugsys image:
-1. mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
+12. mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
 This keeps the failing axiomsys image around for later restoration.
-1. cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
+13. cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
 This puts an interpreted version of axiom in place of the compiled form
-1. axiom\\
+14. axiom\\
 Now we are running a fully interpreted form and the error messages are
 much more informative.
 
@@ -6426,12 +6426,12 @@ If the bug seems to happen during startup the only method of
 debugging might be to use strace. To do this, replace the 
 \$AXIOM/bin/AXIOMsys binary with a shell script. You should:
 
-1. rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
-1. create the shell script shown below
-1. copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will
+15. rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
+16. create the shell script shown below
+17. copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will
 execute in place of the normal Axiom image
-1. chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
-1. start axiom normally
+18. chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
+19. start axiom normally
 
 
 The script reads:
@@ -6724,20 +6724,20 @@ description section be simple text with a single character between the
 ``++'' and the first word of the text.
 
 
-1. Choose the right book:
+20. Choose the right book:
 - Category goes into book bookvol10.2.pamphlet
 - Domain goes into book bookvol10.3.pamphlet
 - Package goes into book bookvol10.4.pamphlet
 - Numerics goes into book bookvol10.5.pamphlet
-1. Find the right chapter. Chapter ordered by name, not abbreviation
-1. Create a new section. The easiest way to do this is to copy another
+21. Find the right chapter. Chapter ordered by name, not abbreviation
+22. Create a new section. The easiest way to do this is to copy another
 section and change the names. In any case, your new section will need
-1. Create a dividiing line consisting of all \% signs.
+23. Create a dividiing line consisting of all \% signs.
 Note that this character is the comment character for TeX.
-1. Create the =\section= tag. This tag should contain the exact text of
+24. Create the =\section= tag. This tag should contain the exact text of
 the )abbrev line from your algebra code. It reads:
 =)section{package INTERGB InterfaceGroebnerPackage}=
-1. Create a regression test chunk. This chunk derives its name from the
+25. Create a regression test chunk. This chunk derives its name from the
 algebra name as in ``InterfaceGroebnerPackage.input''. This chunk will
 be automatically extracted and run during regression testing. For the
 moment the chunk should be a simple empty input file as in:
@@ -6756,7 +6756,7 @@ moment the chunk should be a simple empty input file as in:
 )spool
 )lisp (bye)
 #+end_example
-1. Create a help text chunk. This chunk dervies its name from the
+26. Create a help text chunk. This chunk dervies its name from the
 algebra name as in ``InterfaceGroebnerPackage.help''. This chunk will
 be automatically extracted and used to build help text during build.
 For the moment the chunck should be a simple empty help text file as in:
@@ -7261,17 +7261,17 @@ to see that the description paragraph exists.
 Suppose we want to add a new algebra file from a new pamphlet.
 For example, we want to add BLAS1.spad in books/newbook.pamphlet.
 The explanation for the steps follow. The steps are:
-1. write the algebra code
-1. create the pamphlet file called newbook.pamphlet
-1. create a new section in newbook.pamphlet
-1. create the chunk name stanza in newbook.pamphlet
-1. insert BLAS1.spad into the new stanza
-1. create the dotabb stanza in newbook.pamphlet
-1. update src/algebra/Makefile.pamphlet to insert BLAS1.spad
-1. update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
-1. update the dotabb stanza in newbook.pamphlet
-1. update src/Makefile.pamphlet to copy the newbook file to src/algebra
-1. update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
+27. write the algebra code
+28. create the pamphlet file called newbook.pamphlet
+29. create a new section in newbook.pamphlet
+30. create the chunk name stanza in newbook.pamphlet
+31. insert BLAS1.spad into the new stanza
+32. create the dotabb stanza in newbook.pamphlet
+33. update src/algebra/Makefile.pamphlet to insert BLAS1.spad
+34. update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
+35. update the dotabb stanza in newbook.pamphlet
+36. update src/Makefile.pamphlet to copy the newbook file to src/algebra
+37. update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
 
 
 ** Makefile

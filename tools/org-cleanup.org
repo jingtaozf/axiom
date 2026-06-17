@@ -302,30 +302,38 @@ def convert_list_envs(lines):
     """Convert itemize/enumerate blocks to org lists. Handles nesting."""
     NL = chr(10)
     result = []
-    stack = []  # stack of ('itemize'|'enumerate', indent_level)
+    stack = []  # stack of ['itemize'|'enumerate', counter]
     for idx, line, region in lines:
         stripped = line.strip()
         if region != 'prose':
             result.append((idx, line, region))
             continue
         if r'\begin{itemize}' in stripped:
-            stack.append('itemize')
+            stack.append(['itemize', 0])
             continue
         if r'\begin{enumerate}' in stripped:
-            stack.append('enumerate')
+            stack.append(['enumerate', 0])
             continue
         if r'\end{itemize}' in stripped or r'\end{enumerate}' in stripped:
-            if stack:
-                stack.pop()
-            if not stack:
-                result.append((idx, NL, 'prose'))
+            if stack: stack.pop()
+            if not stack: result.append((idx, NL, 'prose'))
             continue
         if stack and stripped.startswith(r'\item'):
             content = stripped[5:].strip()
             depth = len(stack)
             indent = '  ' * (depth - 1)
-            prefix = '- ' if stack[-1] == 'itemize' else '1. '
+            if stack[-1][0] == 'itemize':
+                prefix = '- '
+            else:
+                stack[-1][1] += 1
+                prefix = str(stack[-1][1]) + '. '
             result.append((idx, indent + prefix + content + NL, 'prose'))
+            continue
+        # Non-\item line inside a list: keep indentation
+        if stack:
+            depth = len(stack)
+            indent = '  ' * depth
+            result.append((idx, indent + stripped + NL, 'prose'))
             continue
         result.append((idx, line, region))
     return result

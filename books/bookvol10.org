@@ -20,17 +20,17 @@ file, called bsd.spad containing a simple domain BSD. The
 steps in the process of adding this file are:
 1. Find out where the algebra code lives in the lattice.
   1. Start a new interpsys session. This will give you a clean build.
-  1. )set mes auto on -- This will allow us to see what algebra files
+  2. )set mes auto on -- This will allow us to see what algebra files
 get loaded during compile
-  1. )co BAR.spad
-  1. We collect all the names of the algebra files BSD loaded. Look for
+  3. )co BAR.spad
+  4. We collect all the names of the algebra files BSD loaded. Look for
 lines that say a file is loaded. Collect all of the names of those files.
-  1. For each of the loaded files determine which layer contains the
+  5. For each of the loaded files determine which layer contains the
 loaded file by searching this file. For instance, if BAR.spad required
 FSAGG then look for /FSAGG.o, which resides in layer 13. 
-  1. Determine the highest layer (e.g. 13) that contains the required files
+  6. Determine the highest layer (e.g. 13) that contains the required files
 and add the new algebra file (e.g. BSD.o) in the next layer (e.g. 14).
-  1. Next we need to create the graph structure information. This involves
+  7. Next we need to create the graph structure information. This involves
 creating a two part stanza of information. For instance,
 #+begin_example
 "BSD" [color="#88FF44",href="bookvol10.3.pdf#nameddest=BSD",
@@ -40,23 +40,23 @@ creating a two part stanza of information. For instance,
 /*"BSD" -> {"IEVALAB"; "CLAGG"; "SETAGG"; "FINITE"; "OM"; "PATMAB"}*/
 "BSD" -> "FSAGG" 
 #+end_example
-  1. The first part determines the color, shape of the graph node,
+  8. The first part determines the color, shape of the graph node,
 and a link to the book containing the source code. The color and name
 of the book are related:
     1. #4488FF == bookvol10.2
-    1. #88FF44 == bookvol10.3
-    1. #FF4488 == bookvol10.4
-    1. #444488 == bookvol10.5
-  1. The second part is the graph structure. All of the loaded algebra
+    2. #88FF44 == bookvol10.3
+    3. #FF4488 == bookvol10.4
+    4. #444488 == bookvol10.5
+  9. The second part is the graph structure. All of the loaded algebra
 files are listed (currently as comments due to the size of the complete
 graph). In particular, the node that ``supports'' BSD is FSAGG so we
 make sure that the graph edge ="BSD" -> "FSAGG"= is uncommented.
-1. Insert the documentation after the layer (e.g after layer 14).
+2. Insert the documentation after the layer (e.g after layer 14).
 This documentation is used to reconstruct the full and partial graphs.
-1. Insert the =${OUT}/BSD.o= file into the layer's file list. This
+3. Insert the =${OUT}/BSD.o= file into the layer's file list. This
 will cause the algebra to build after all of the algebra it depends on is
 built.
-1. Add the algebra to the books
+4. Add the algebra to the books
 
 
 ** Adding the algebra to the proper book
@@ -17498,11 +17498,11 @@ rules will ever be executed. The first two rules happen when the
 system is built from scratch.
 
 A 5 stanza group for this case performs the following functions:
-1. extract the lisp BAR.lsp from the pamphlet foo.spad.pamphlet
-1. compile and copy the bootstrap lisp to the final algebra directory
-1. extract the bootstrap BAR.lsp from the spad file foo.spad
-1. compile the extracted BAR domain
-1. copy the compiled BAR to the final algebra directory
+2. extract the lisp BAR.lsp from the pamphlet foo.spad.pamphlet
+3. compile and copy the bootstrap lisp to the final algebra directory
+4. extract the bootstrap BAR.lsp from the spad file foo.spad
+5. compile the extracted BAR domain
+6. copy the compiled BAR to the final algebra directory
 
 
 The subtle point here occurs in the first item. The bootstrap code
@@ -17530,15 +17530,15 @@ also contains default code which gives a 3+2+2+2 (9) stanza case.
 (see TSETCAT for an example. Be sure to read the items in reverse order).
 
 A 9 stanza group for this case performs the following functions:
-1. extract the bootstrap BAR.lsp from the foo.spad.pamphlet
-1. compile the bootstrap BAR.lsp and copy to the intermediate directory
-1. extract the bootstrap BAR-.lsp from the foo.spad.pamphlet
-1. compile the bootstrap BAR-.lsp and copy to intermediate directory
-1. extract the spad BAR.spad from the pamphlet foo.spad.pamphlet
-1. compile the extracted BAR.spad domain (to get BAR.o)
-1. copy the BAR.o to the final algebra directory
-1. compile the extracted BAR.spad domain (to get BAR-.o)
-1. copy the BAR-.o to the final algebra directory
+7. extract the bootstrap BAR.lsp from the foo.spad.pamphlet
+8. compile the bootstrap BAR.lsp and copy to the intermediate directory
+9. extract the bootstrap BAR-.lsp from the foo.spad.pamphlet
+10. compile the bootstrap BAR-.lsp and copy to intermediate directory
+11. extract the spad BAR.spad from the pamphlet foo.spad.pamphlet
+12. compile the extracted BAR.spad domain (to get BAR.o)
+13. copy the BAR.o to the final algebra directory
+14. compile the extracted BAR.spad domain (to get BAR-.o)
+15. copy the BAR-.o to the final algebra directory
 
 
 As you can see this is just the combination of the two possible 5
@@ -20738,16 +20738,16 @@ for all pairs, then stop.
 
 /Example 1/ Let $I=<f_1=xy-x,f_2=x^2-y>$. We use the 
 lexicographic order with $x > y$.
-1. We compute
+16. We compute
 \[S(f_1,f_2)=\frac{x^2y}{xy} \cdot (xy-x)-
 \frac{x^2y}{x^2} \cdot (x^2-y) = -x^2+y^2\]
-1. We compute $\overline{S(f_1,f_2)}^F$. It is $f_3=y^2-y$.
+17. We compute $\overline{S(f_1,f_2)}^F$. It is $f_3=y^2-y$.
 We adjoin this to $F$, so that $F$ is now $F=\{f_1,f_2,f_3\}$.
-1. We start over with the new $F$. It is automatic that
+18. We start over with the new $F$. It is automatic that
 $\overline{S(f_i,f_j)}^F=0$. We need to compute
 $S(f_1,f_3)$ and $S(f_2,f_3)$.
-1. We compute $S(f_1,f_3)=0$
-1. We compute $S(f_2,f_3)=x^3-xy^2$. We compute
+19. We compute $S(f_1,f_3)=0$
+20. We compute $S(f_2,f_3)=x^3-xy^2$. We compute
 $\overline{x^3-xy^2}^F=0$. Note that $F=\{f_1,f_2,f_3\}$.
 
 
@@ -20769,8 +20769,8 @@ removed, then that smaller set is also a Groebner basis.
 
 By definition, a Groebner basis $G$ of an ideal $I$ is a minimal
 basis provided it satisfies
-1. $leadingCoefficient(p) = 1 \forall p \in G$
-1. $\forall p \in G, the leadingTerm(p) \notin <leadingTerm(G-p)>$
+21. $leadingCoefficient(p) = 1 \forall p \in G$
+22. $\forall p \in G, the leadingTerm(p) \notin <leadingTerm(G-p)>$
 
 
 To construct this minimal bases we divide each element in the given
@@ -21037,15 +21037,15 @@ functions $\ln{}z$ and $\sqrt{z}$.
 
 The choices set out in this Standard are derived from the following
 principles:
-1. Branch cuts must lie completely within either the real or imaginary axis.
-1. The principal expression must not have any singularities at finite
+23. Branch cuts must lie completely within either the real or imaginary axis.
+24. The principal expression must not have any singularities at finite
 points which the original function does not share.
-1. Branch cuts end at branch points.
-1. Where not otherwise determined, the value of a function on its branch
+25. Branch cuts end at branch points.
+26. Where not otherwise determined, the value of a function on its branch
 cut or cuts is obtained by taking a limit along a path which approaches the 
 branch cut in a counterclockwise manner around one of the branch points 
 which terminate the cut (“counterclockwise continuity”, or CCC for short).
-1. Each inverse trigonometric or hyperbolic function must be real-valued
+27. Each inverse trigonometric or hyperbolic function must be real-valued
 on the range of the corresponding trigonometric or hyperbolic function when 
 restricted to the real axis. 
 
