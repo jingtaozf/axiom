@@ -865,13 +865,12 @@ input files''.
 Axiom programs are statically compiled to machine code, then
 placed into library modules.  Categories provide an important role in
 obtaining efficient object code by enabling:
-\begin{itemize}
-\item static type-checking at compile time;
-\item fast linkage to operations in domain-valued parameters;
-\item optimization techniques to be used for partially specified types
+- static type-checking at compile time;
+- fast linkage to operations in domain-valued parameters;
+- optimization techniques to be used for partially specified types
 (operations for ``vectors of $R$'', for instance, can be open-coded even
 though =R= is unknown).
-\end{itemize}
+
 
 *** Axiom is Extensible
 
@@ -896,14 +895,13 @@ code is applicable in all such contexts.
 
 Finally, Axiom provides an automatic, guaranteed interaction
 between new and old code.  For example:
-\begin{itemize}
-\item if you write a new algorithm that requires a parameter to be a
+- if you write a new algorithm that requires a parameter to be a
 field, then your algorithm will work automatically with every field
 defined in the system; past, present, or future.
-\item if you introduce a new domain constructor that produces a field,
+- if you introduce a new domain constructor that produces a field,
 then the objects of that domain can be used as parameters to any algorithm
 using field objects defined in the system; past, present, or future.
-\end{itemize}
+
 
 
 Before embarking on the tour, we need to brief those readers working
@@ -1014,28 +1012,27 @@ see another name.
 *** Typographic Conventions
 # label: sec:Typographic Conventions
 In this document we have followed these typographical conventions:
-\begin{itemize}
 %
-\item Categories, domains and packages are displayed in this font:
+- Categories, domains and packages are displayed in this font:
 =Ring=, =Integer=, =DiophantineSolutionPackage=.
 %
-\item Prefix operators, infix operators, and punctuation symbols in 
+- Prefix operators, infix operators, and punctuation symbols in
 the Axiom language are displayed in the text like this:
 =+=, =\$=, =+->=.
 %
-\item Axiom expressions or expression fragments are displayed in this font:\\
+- Axiom expressions or expression fragments are displayed in this font:\\
 =inc(x) == x + 1=.
 %
-\item For clarity of presentation, TeX{} is often used to format expressions\\
+- For clarity of presentation, TeX{} is often used to format expressions\\
 $g(x)=x^2+1$.
 %
-\item Function names and HyperDoc button names are displayed in the text in
+- Function names and HyperDoc button names are displayed in the text in
 this font:
 *factor*, *integrate*,  *Lighting*.
 %
-\item Italics are used for emphasis and for words defined in the glossary: \\
+- Italics are used for emphasis and for words defined in the glossary: \\
 /category/.
-\end{itemize}
+
 
 This document contains over many examples of Axiom input and output.  All
 examples were run though Axiom and their output was created in TeX{}
@@ -6362,21 +6359,20 @@ $$
 The discovery of this algebraic relationship is necessary for correct
 integration of this function.
 Here are the details:
-\begin{enumerate}
-\item
+1. 
 If $x=\tan t$ and $g=\tan (t/3)$ then the following 
 algebraic relation is true: $${g^3-3xg^2-3g+x=0}$$
-\item
+1. 
 Integrate $g$ using this algebraic relation; this produces:
 $${{(24g^2 - 8)\log(3g^2 - 1) + (81x^2 + 24)g^2 + 72xg - 27x^2 - 16}
 \over{54g^2 - 18}}$$
-\item
+1. 
 Rationalize the denominator, producing:
 $${8\log(3g^2-1) - 3g^2 + 18xg + 16} \over {18}$$
 Replace $g$ by the initial definition
 $g = \tan(\arctan(x)/3)$
 to produce the final result.
-\end{enumerate}
+
 #+INDEX: arctan
 
 This is an example of a mixed function where
@@ -6853,14 +6849,13 @@ clicking on the *PS* button.
 
 *** Plotting 2D graphs
 There are three kinds of 2D graphs of curves defined by
-\begin{enumerate}
-\item a function $y=f(x)$ over a finite interval of $x$
+1. a function $y=f(x)$ over a finite interval of $x$
 (page~[[#sec:2Dcase1][sec:2Dcase1]])
-\item parametric equations $x=f(t)$ $y=g(t)$
+1. parametric equations $x=f(t)$ $y=g(t)$
 (page~[[#sec:2Dcase2][sec:2Dcase2]])
-\item nonsingular solutions in a rectangular region
+1. nonsingular solutions in a rectangular region
 (page~[[#sec:2Dcase3][sec:2Dcase3]])
-\end{enumerate}
+
 
 PostScript
  output is available so that Axiom images can be
@@ -8098,14 +8093,13 @@ and drop it on a different graph.
 
 *** Plotting 3D Graphs
 There are 3 kinds of three dimensional graphs you can generate:
-\begin{enumerate}
-\item surfaces defined by a function of two real variables
+1. surfaces defined by a function of two real variables
 (page~[[#sec:3Dcase1][sec:3Dcase1]])
-\item space curves and tubes defined by parametric equations
+1. space curves and tubes defined by parametric equations
 (page~[[#sec:3Dcase2][sec:3Dcase2]])
-\item surfaces defined by parametric equations
+1. surfaces defined by parametric equations
 (page~[[#sec:3Dcase3][sec:3Dcase3]])
-\end{enumerate} 
+
 **** Plotting 3D functions of 2 variables
 # label: sec:3Dcase1
 \boxer{4.6in}{
@@ -9361,14 +9355,13 @@ Now, you may ask, what exactly is a category?   Like
 domains, categories can be defined in the Axiom language.  A category
 is defined by three components:
 %
-\begin{enumerate}
-\item a name (for example, =Ring=),
+1. a name (for example, =Ring=),
 used to refer to the class of domains that the category represents;
-\item a set of operations, used to refer to the operations that
+1. a set of operations, used to refer to the operations that
 the domains of this class support
 (for example, ``=+='', ``=-='', and ``=*='' for rings); and
-\item an optional list of other categories that this category extends.
-\end{enumerate}
+1. an optional list of other categories that this category extends.
+
 %
 This last component is a new idea.  And it is key to the design of
 Axiom.  Because categories can extend one another, they form
@@ -10125,14 +10118,13 @@ This tries *sayBranch* with a floating-point number.
 
 There are two things of interest about this particular
 example to which we would like to draw your attention.
-\begin{enumerate}
-\item Axiom normally converts a result to the target value
+1. Axiom normally converts a result to the target value
 before passing it to the function.
 If we left the declaration information out of this function definition
 then the *sayBranch* call would have been attempted with an
 =Integer= rather than a =Union=, and an error would have
 resulted.
-\item The types in a =Union= are searched in the order given.
+1. The types in a =Union= are searched in the order given.
 So if the type were given as
 
 %\noindent
@@ -10140,7 +10132,7 @@ So if the type were given as
 
 then the result would have been ``String branch'' because there
 is a conversion from =Integer= to =String=.
-\end{enumerate}
+
 
 Sometimes =Union= types can have extremely long names.  Axiom
 therefore abbreviates the names of unions by printing the type of the
@@ -10617,11 +10609,10 @@ $$
 # label: sec:Subdomains Again
 #+INDEX: subdomains
 A /subdomain/ S of a domain D is a domain consisting of
-\begin{enumerate} 
-\item those elements of D that satisfy some 
+1. those elements of D that satisfy some
 /predicate/ (that is, a test that returns =true= or =false=) and 
-\item a subset of the operations of D.  
-\end{enumerate} 
+1. a subset of the operations of D.
+
 Every domain is a subdomain of itself, trivially satisfying the
 membership test: =true=.
 
@@ -11498,10 +11489,9 @@ button and click.
 A /search string/ is used for searching some database.  To learn
 about search strings, we suggest that you bring up the HyperDoc
 glossary.  To do this from the top-level page of HyperDoc:
-\begin{enumerate}
-\item Click on Reference, bringing up the Axiom Reference page.
-\item Click on Glossary, bringing up the glossary.
-\end{enumerate}
+1. Click on Reference, bringing up the Axiom Reference page.
+1. Click on Glossary, bringing up the glossary.
+
 
 The glossary has an input area at its bottom.  We review the various
 kinds of search strings you can enter to search the glossary.
@@ -12007,12 +11997,11 @@ numbers, except in exponents.  This is the default behavior but can be
 turned off by issuing =)set fortran ints2floats off=.  
  The rules governing when the conversion 
 is done are:
-\begin{enumerate}
-\item If an integer is an exponent, convert it to a floating point
+1. If an integer is an exponent, convert it to a floating point
 number if it is greater than 32767 in absolute value, otherwise leave it
 as an integer.
-\item Convert all other integers in an expression to floating point numbers.
-\end{enumerate}
+1. Convert all other integers in an expression to floating point numbers.
+
 These rules only govern integers in expressions.  Numbers generated by
 Axiom for $DIMENSION$ statements are also integers.
 

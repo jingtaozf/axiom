@@ -17,20 +17,19 @@ The Original Hypertex Plan (courtesy of Scott Morrison)\\
 
 ** External Variables
 Not mentioned elsewhere, 
-\begin{itemize} 
-\item the HTPATH shell variable, if set, is used
+- the HTPATH shell variable, if set, is used
 to resolve page path names.
-\item the HTASCII shell variable, if set, is used to choose between
+- the HTASCII shell variable, if set, is used to choose between
 ascii and the IBM Code Page 850 character set.
 See initScanner [[#initScanner][initScanner]] on page~[[#initScanner][initScanner]]
-\item the XENVIRONMENT shell variable, if set is used to find the X
+- the XENVIRONMENT shell variable, if set is used to find the X
 database to merge, otherwise it uses .Xdefaults from the HOME directory.
 See [[#mergeDatabases][mergeDatabases]] on page~[[#mergeDatabases][mergeDatabases]]
-\item NOFREE shell variable is supposed to turn off freeing memory.
+- NOFREE shell variable is supposed to turn off freeing memory.
 See [[#freePage][freePage]] on page~[[#freePage][freePage]]
-\item SPADNUM shell variable is the number of the spad communication socket.
+- SPADNUM shell variable is the number of the spad communication socket.
 See [[#sendPile][sendPile]] on page~[[#sendPile][sendPile]]
-\end{itemize}
+
 
 The Axiom user properties in =$HOME/.Xdefaults.= can contain
 these initialization names:
@@ -6331,15 +6330,14 @@ void tpderror(char *msg, int errn) {
 
 ** Shared Code for Lexical Analyzer
 Lexical analyzer stuff. Exported functions: 
-\begin{itemize}
-\item parserInit() -- initialize the parser tables with keywords
-\item initScanner() -- initialize scanner for reading a new page 
-\item getToken() -- sets the ``token'' variable to be the next token 
+- parserInit() -- initialize the parser tables with keywords
+- initScanner() -- initialize scanner for reading a new page
+- getToken() -- sets the ``token'' variable to be the next token
 in the current input stream 
-\item saveScannerState()  -- save the current state of scanner so
+- saveScannerState()  -- save the current state of scanner so
 that the scanner input mode may be switched 
-\item restoreScannerState() -- undo the saved state
-\end{itemize}
+- restoreScannerState() -- undo the saved state
+
 
 Note: The scanner reads from four separate input locations depending on the
 value of the variable ``inputType''.  If this variable is:
@@ -9195,20 +9193,18 @@ static int buildDBFilename(short flag, char *db_dir, char *dbfilename) {
 #+end_src
 *** addfile
 This procedure now works as follows:
-\begin{enumerate}
-\item It adds the files to the dbFile without full pathnames.\\
+1. It adds the files to the dbFile without full pathnames.\\
 Two names are going to be used when adding a file -
 - addname <-- The name without any paths
 - fullname <-- The name with a path prepended to it
-\item If the user specifies a pathname, then it is the path name that
+1. If the user specifies a pathname, then it is the path name that
 is used. If the user does not specify a path name, then possible
 paths are found as follows:
-\begin{itemize}
-\item If the user has an environment variable HTPATH set, the
+- If the user has an environment variable HTPATH set, the
 paths mentioned are used.
-\item If not, then the \$AXIOM environment variable is used.
-\end{itemize}
-\end{enumerate}
+- If not, then the \$AXIOM environment variable is used.
+
+
 #+INDEX: htadd!addfile
 #+INDEX: addfile htadd
 #+NAME: htadd
@@ -19432,11 +19428,10 @@ static void parsePage(HyperDocPage *page) {
 *** parseHyperDoc
 The general HyperDoc parsing function.  expects to see anything. This
 function will parse until it sees either: 
-\begin{enumerate}
-\item A new page starting 
-\item An end of file 
-\item a closing bracket ``=}=''
-\end{enumerate}
+1. A new page starting
+1. An end of file
+1. a closing bracket ``=}=''
+
 #+INDEX: hypertex!parseHyperDoc
 #+INDEX: parseHyperDoc hypertex
 #+NAME: hypertex
@@ -22342,15 +22337,14 @@ ImageStruct *insertImageStruct(char *filename) {
 ** Scrollbar handling routines
 The scrollbar is displayed on the side of the HyperDoc display, if needed.
 It is composed of four windows
-\begin{itemize}
-\item fScrollUpWindow -- the arrowed box at the top of the scrollbar. 
+- fScrollUpWindow -- the arrowed box at the top of the scrollbar.
 Scrolls the window up a line at a time.
-\item fScrollDownWindow -- Located at the bottom of the window, 
+- fScrollDownWindow -- Located at the bottom of the window,
 it is used to scroll down a single line at a time.
-\item scrollbar -- this is the window which does the variable scrolling. 
+- scrollbar -- this is the window which does the variable scrolling.
 It houses the actual scroller.
-\item scroller -- This is the scroller inside the scroll bar.
-\end{itemize}
+- scroller -- This is the scroller inside the scroll bar.
+
 
 The procedure below, makes all these windows, and also makes three bitmaps,
 - sup -- The up arrow for the fScrollUpWindow.

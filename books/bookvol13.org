@@ -307,130 +307,127 @@ That said, we can list quite a few reasons why PAC will not succeed,
 most of which are explained in more detail in [cite:@Cyph17]. We
 provide useful names for the likely criticisms presented there and
 paraphrase those criticisms applied to our context.
-\begin{enumerate}
-\item *Leap of Faith* All of these efforts either require making a
+1. *Leap of Faith* All of these efforts either require making a
 leap of faith to go from verified code to a real-world problem, or
 required the use of an artificially restricted system in order to
 function (the NewSpeak approach, create a language in which it is
 impossible to think bad thoughts), indicating that formal verification
 down to the binary code level is unlikely to be practical in any
 generally accepted formal methods sense.
-\item *Tools for Toy Problems* The tools used to support formal
+1. *Tools for Toy Problems* The tools used to support formal
 methods arose from an academic research envvironment characterised by
 a small number of highly skilled users. The tools were tested on small
 problems (usually referred to somewhat disparagingly as ``toy
 problems'') which were targeted more at exercising the tools than
 exercising the problem.
-\item *Opaque Specifications* Another factor which complicates the
+1. *Opaque Specifications* Another factor which complicates the
 use of formal methods is that the mathematical methods available to
 software engineers are often very difficult to use and plagued by
 notation which is cumbersome and hard to read and understand.
-\item *Too Large a Task* The national technology base for this
+1. *Too Large a Task* The national technology base for this
 level of task is essentially non-existent. There do not appear to be
 even 20 people in the world that have undertaken the essential
 steps. ``In order to get a system with excellent system integrity, you
 must ensure that it is designed and built by geniuses. Geniuses are in
 short supply'' [cite:@Blak96].
-\item *False Axioms* Problems occur when a proof has to be
+1. *False Axioms* Problems occur when a proof has to be
 manually augmented with ``self-vidient'' truths which sometimes turn
 out to be false and end up misguiding the prover.
-\item *Intellectual Cost* Requiring a proof of an algorithm adds to the
+1. *Intellectual Cost* Requiring a proof of an algorithm adds to the
 already outsized cost of creating the algorithm in Axiom, given the
 steep intellectual hill such a system already presents.
-\item *Ripple Cost* Multiple layers of abstraction are required to
+1. *Ripple Cost* Multiple layers of abstraction are required to
 go from a proof to its implementation and a change in any of the
 layers can result in a ripple effect as changes propagate. If a change
 manages to propagate its way into a formally proven section, portions
 of, or possibly all of, the proof might need to be redone.
-\item *Informal Implementation Details* Current techniques rarely
+1. *Informal Implementation Details* Current techniques rarely
 reach down any further than the high-level specificaiton resulting in
 large amounts of time and energy being poured into producing a design
 specification which is void of any implementation details.
-\item *Specification Mismatch* Formal proofs that a specification
+1. *Specification Mismatch* Formal proofs that a specification
 is correct don't show that the assumptions made in the proof are
 correct in the actual physical system. If the code which is supposed
 to implement the formal specification doesn't quite conform to it or
 the compiler can't produce an executable which quite matches what was
 intended in the code then no amount of formal proving will be able to
 guarantee the execution behaviour of the code.
-\item *Natural / Formal Mismatch* Natural language descriptions of
+1. *Natural / Formal Mismatch* Natural language descriptions of
 what is intended may mismatch the formal language descriptions. In
 many cases ``common sense'' assumptions come into play which are never
 formally stated.
-\item *Specification Flaws* The code may implement a specification
+1. *Specification Flaws* The code may implement a specification
 exactly as stated but the specification can be flawed.
-\item *Mis-implemented Specifications* The specification may be
+1. *Mis-implemented Specifications* The specification may be
 correct but the implementation does not match the specification.
-\item *Specification Narrowing* The specification language may not
+1. *Specification Narrowing* The specification language may not
 be sufficient to state all of the required concepts so a ``narrowing''
 of the specification is made to approximate the intent.
-\item *Specification Widening* The specification language may
+1. *Specification Widening* The specification language may
 generalize the required concepts so a ``widening'' of the
 specification is made beyond the required intent.
-\item *Specification Impedence Mismatch* The specification
+1. *Specification Impedence Mismatch* The specification
 language does not cover the concepts in the domain of interest,
 requiring considerable effort to ``model'' the domain.
-\item *Specification Blindness* The specification writers can't
+1. *Specification Blindness* The specification writers can't
 take into account every eventuality which will arise. As a result, an
 implemention of a specification doesn't just implement it, it alters
 it in order to fit real-world constraints which weren't foreseen by
 the original authors of the specification.
-\item *Contradictory Proofs* If the system is inconsistent, it would
+1. *Contradictory Proofs* If the system is inconsistent, it would
 be possible to find two contradictory proofs. It is likely that such
 an inconsistency will not be detected and only one of the proofs will
 be accepted since the other one is never generated.
-\item *Likely to be Ignored* There are thousands of proofs published,
+1. *Likely to be Ignored* There are thousands of proofs published,
 most of which are ``write only'' and are never checked. This is likely
 to be the case with Axiom's proofs.
-\item *Proven Programs are Wrong* It is possible to prove a
+1. *Proven Programs are Wrong* It is possible to prove a
 program correct and still get wrong results. Testing is still
 required.
-\item *Proofs are a Social Process* Axiom's ``social circle'' is
+1. *Proofs are a Social Process* Axiom's ``social circle'' is
 vanishingly small.
-\item *Chicken and Egg* Do proofs follow from programs or programs
+1. *Chicken and Egg* Do proofs follow from programs or programs
 follow from proofs? 
-\item *Boiling the Ocean* The task is much too large.
-\item *MetaTheory Cost* There is a cost to developing theories for
+1. *Boiling the Ocean* The task is much too large.
+1. *MetaTheory Cost* There is a cost to developing theories for
 new data types; these are unnecessary ``meta'' costs.
-\item *Partial Functions* Not all of the functions are total so it
+1. *Partial Functions* Not all of the functions are total so it
 is difficult to prove theorems about them.
-\item *Undecidable Theories* Some theories are known to be
+1. *Undecidable Theories* Some theories are known to be
 undecidable so there will be problems with their proofs.
-\end{enumerate}
+
 
 Fenton [cite:@Fent93] states that there is no hard evidence to show that
-\begin{enumerate}
-\item formal methods have been used cost effectively on a real
+1. formal methods have been used cost effectively on a real
 safety-critical system development
-\item the use of formal methods can deliver reliability more cost
+1. the use of formal methods can deliver reliability more cost
 effectively than traditional structured methods with enhanced testing
-\item sufficient numbers of either developers or users can ever be
+1. sufficient numbers of either developers or users can ever be
 trained to make proper use of formal methods
-\end{enumerate}
+
 
 Calude, et al. [cite:@Calu07] take a quite different attack on the idea
 of proving and programming, specifically
-\begin{enumerate}
-\item Theorems (in mathematics) correspond to algorithms and not
+1. Theorems (in mathematics) correspond to algorithms and not
 programs (in computer science); algorithms are subject to mathematical
 proofs (for example correctness)
-\item The role of proof in mathematical modeling is very small:
+1. The role of proof in mathematical modeling is very small:
 adequacy is the main issue
-\item Programs (in computer science) correspond to mathematical
+1. Programs (in computer science) correspond to mathematical
 models. They are not subject to proofs, but to an adequacy and
 relevance analysis; in this type of analysis, some proofs may
 appear. Correctness proofs in computer science (if any) are not
 cost-effective. 
-\item Rigour in programming is superior to rigour in mathematical
+1. Rigour in programming is superior to rigour in mathematical
 proofs.
-\item Programming gives mathematics a new form of understanding
-\item Although the Hilbertian notion of proof has few chances to
+1. Programming gives mathematics a new form of understanding
+1. Although the Hilbertian notion of proof has few chances to
 change, future proofs will be of various types and will play different
 roles, and their truth will be checked differently.
-\item In general, correctness is undecidable
-\item for most non-trivial cases, correctness is a monumental task
+1. In general, correctness is undecidable
+1. for most non-trivial cases, correctness is a monumental task
 which gives an added confidence at a disproportionate cost.
-\end{enumerate}
+
 
 Still another attack comes from Hoare [cite:@Hoar96] which states that
 "By surveying current software engineering practice, this paper
@@ -503,33 +500,30 @@ will work; he does not know what happens when it exceeds those
 limits. And yet he has that mystical stamp of approval ``VERIFIED.''"
 
 Manna and Waldinger [cite:@Mann78] mentions
-\begin{enumerate}
-\item We can never be sure that the specifications are correct
-\item No verification system can verify every correct program
-\item We can never be certain that a verification system is correct
-\end{enumerate}
+1. We can never be sure that the specifications are correct
+1. No verification system can verify every correct program
+1. We can never be certain that a verification system is correct
+
 
 Hall [cite:@Hall90] presents 7 myths of formal methods.
-\begin{enumerate}
-\item Formal methods can guarantee that software is perfect.
-\item They work by proving that programs are correct.
-\item Only highly critical systems benefit from their use.
-\item They involve complex mathematics.
-\item They increase the cost of development.
-\item They are incomprehensible to clients.
-\item Nobody uses them for real projects.
-\end{enumerate}
+1. Formal methods can guarantee that software is perfect.
+1. They work by proving that programs are correct.
+1. Only highly critical systems benefit from their use.
+1. They involve complex mathematics.
+1. They increase the cost of development.
+1. They are incomprehensible to clients.
+1. Nobody uses them for real projects.
+
 
 Bowen and Hinchey [cite:@Bowe95] follow up with 7 more myths.
-\begin{enumerate}
-\item Formal methods delay the developent process
-\item Formal methods lack tools
-\item Formal methods replace traditional engineering design methods
-\item Formal methods only apply to software
-\item Formal methods are unnecessary
-\item Formal methods are not supported
-\item Formal methods people always use formal methods
-\end{enumerate}
+1. Formal methods delay the developent process
+1. Formal methods lack tools
+1. Formal methods replace traditional engineering design methods
+1. Formal methods only apply to software
+1. Formal methods are unnecessary
+1. Formal methods are not supported
+1. Formal methods people always use formal methods
+
 
 Murray and Oorschot [cite:@Murr18] provide comments that, while they
 are indented for security-related proofs, also apply to proofs in
@@ -642,15 +636,14 @@ necessary for proofs.
 ** General problems with formal verification
 
 In Moy and Wallenburg [cite:@Moyx10] we find:
-\begin{enumerate}
-\item Formal verification is not applied to all parts of a
+1. Formal verification is not applied to all parts of a
 system. Around a formally verified core, there are usually parts of
 the system that cannot be verified formally, because they deal with
 interfacing with other systems or a user, or because it would be too
 costly to verify them (effort/time/money). The cost/benefit ratio of
 formal verification is parricularly important to take into account for
 those less critical parts.
-\item Formal verification is only as strong as the specification
+1. Formal verification is only as strong as the specification
 is. When formally verifying the absence of run-time errors in
 programs, the specification is given by the semantics of the
 programming language. However, in general there is no way to ``guess''
@@ -660,16 +653,16 @@ error-prone as writing programs. In practice, these specifcations are
 not complete functional specifications, as this would be much too
 costly. Only the properties that a developer specified can be formally
 verified. 
-\item Formal verification techniques do not target all desirable
+1. Formal verification techniques do not target all desirable
 properties of programs. Most formal verification frameworks verify the
 absence of run-time errors, and perperties expressed by developers are
 invariants or function contracts. In particular, formal verification
 techniques are not usually good at detecting dead code and ``strange''
 code (inefficient or unidiomatic code), or covert channels.
-\item The formal verification method itself may be flawed, for example
+1. The formal verification method itself may be flawed, for example
 if the immplementation of the underlying theorem prover or static
 analyzer contains problems.
-\end{enumerate}
+
 
 * Progress Will Occur
 
@@ -844,16 +837,15 @@ classes that need not be disjoint; that is, there may be inclusion of
 classes. 
 
 There are at least 4 kinds of escapes from a monomorphic type.
-\begin{itemize}
-\item /Overloading/: Integer constants may have both type integer
+- /Overloading/: Integer constants may have both type integer
 and real.
-\item /Coercion/: An integer value can be used where a real is
+- /Coercion/: An integer value can be used where a real is
 expected, and vice versa.
-\item /Subtyping/: Elements of a subrange type also belong to
+- /Subtyping/: Elements of a subrange type also belong to
 superrange types. 
-\item /Value Sharing/: =nil= in Pascal is a constant that is
+- /Value Sharing/: =nil= in Pascal is a constant that is
 shared by all the pointer types.
-\end{itemize}
+
 
 Wadler and Blott [cite:@Wadl88] point out that it would be nice if
 polymorphic equality could be extended to include user-defined
@@ -947,16 +939,15 @@ subgoals from a program and its post-condition.
 
 Katz and Manna [cite:@Katz75] look at various methods of proving
 termination including
-\begin{itemize}
-\item using the 'no-infinitely-descending-chain property of
+- using the 'no-infinitely-descending-chain property of
 well-founded sets (Floyd's approach)
-\item bounding a counter associated with each loop (/loop/
+- bounding a counter associated with each loop (/loop/
 approach)
-\item showing that some exit of each loop must be taken (/exit/
+- showing that some exit of each loop must be taken (/exit/
 approach)
-\item inducting on the structure of the data domain (Burstall's
+- inducting on the structure of the data domain (Burstall's
 approach)
-\end{itemize}
+
 
 Davis [cite:@Davi09],
 Myreen and Davis [cite:@Myre11], Myreen and Davis [cite:@Myre14],
@@ -1091,14 +1082,13 @@ the Euclidean GCD algorithm is correct.
 
 We need to be clear about what is to be proven. In this case, we
 need to show that, given GCD(a,b),
-\begin{enumerate}
-\item *GCD* is a function from $a\times b \Rightarrow c$
-\item *a* and *b* are elements of the correct type
-\item *c*, the result, is the correct type
-\item the meaning of *divisor*
-\item the meaning of a *common divisor*
-\item *GCD* terminates
-\end{enumerate}
+1. *GCD* is a function from $a\times b \Rightarrow c$
+1. *a* and *b* are elements of the correct type
+1. *c*, the result, is the correct type
+1. the meaning of *divisor*
+1. the meaning of a *common divisor*
+1. *GCD* terminates
+
 
 We next need to set up the things we know in "the global environment",
 generally referred to as *E* in Coq.
@@ -1361,14 +1351,13 @@ From WikiProof [cite:@Wiki14a] we quote:
 Let \[a, b \in \Z\] and $a \ne 0$ or $b \ne 0$.
 
 The steps of the algorithm are:
-\begin{enumerate}
-\item Start with $(a,b)$ such that $\abs{a} \ge \abs{b}$.
+1. Start with $(a,b)$ such that $\abs{a} \ge \abs{b}$.
 If $b = 0$ then the task is complete and the GCD is $a$.
-\item if $b \ne 0$ then you take the remainder $r$ of $a/b$.
-\item set $a \leftarrow b$, $b \leftarrow r$ (and thus
+1. if $b \ne 0$ then you take the remainder $r$ of $a/b$.
+1. set $a \leftarrow b$, $b \leftarrow r$ (and thus
 $\abs{a} \ge \abs{b}$ again).
-\item repeat these steps until $b = 0$
-\end{enumerate}
+1. repeat these steps until $b = 0$
+
 Thus the GCD of $a$ and $b$ is the value of the variable $a$ 
 at the end of the algorithm.
 
@@ -1413,12 +1402,11 @@ From Hoare [cite:@Hoar69]
 *D0 Axiom of Assignment*
 \[\vdash P_0 \{x:=f\} P\]
 where
-\begin{itemize}
-\item $x$ is a variable identifier
-\item $f$ is an expression
-\item $P_0$ is obtained from $P$ by substituting $f$ for all
+- $x$ is a variable identifier
+- $f$ is an expression
+- $P_0$ is obtained from $P$ by substituting $f$ for all
 occurrences of $x$
-\end{itemize}
+
 
 ** The Division Algorithm
 From Judson [cite:@Juds15],
@@ -1543,13 +1531,12 @@ common divisor, =gcd=, of two natural numbers:
 #+end_example
 
 We have introduced some notation in the pre and post-conditions:
-\begin{itemize}
-\item (A) just means $\forall$, that is 'for all', written in standard
+- (A) just means $\forall$, that is 'for all', written in standard
 keyboard characters. $\exists$ would be (E). 
-\item $|$ means 'divides', or 'is a factor of'. (Note that it is not
+- $|$ means 'divides', or 'is a factor of'. (Note that it is not
 the same symbol as the division sign '$/$'.)
 \[z~|~x \Leftrightarrow \exists y: nat. (x=z \times y)\]
-\item When we write '$y:nat$', we are using the predicate $nat$ as
+- When we write '$y:nat$', we are using the predicate $nat$ as
 though it were a Miranda type, though it is not. You can think of 
 '$nat(y)$' and '$y:nat$' as meaning exactly the same, namely that $y$
 is a natural number. But the type-style notation is particularly
@@ -1561,7 +1548,7 @@ P {\rm\ holds}')\\
 \forall y : nat, P & means\\forall y. (nat(y) \implies P)\\
 &('for\ all\ natural\ numbers\ y, P {\rm\ holds}')\\
 \end{array}\]
-\end{itemize}
+
 
 Be sure to understnad these, and in particular why it is that
 $\exists$ goes naturally with $\land$, and $\forall$ with
@@ -1683,16 +1670,15 @@ Let us now state this as a reasoning principle:
 #+end_example
  
 A recursion variant for a function must obey the following rules:
-\begin{itemize}
-\item It is calculated from the arguments of the function
-\item It is a natural number (at least when the pre-conditions of the
+- It is calculated from the arguments of the function
+- It is a natural number (at least when the pre-conditions of the
 function hold). For instances, in =gcd= the recursion variant of $y$. 
-\item It is calculated (trivially) from the function's arguments 
+- It is calculated (trivially) from the function's arguments
 $x$ and $y$)
-\item It always decreases in the recursive calls. For the recursive
+- It always decreases in the recursive calls. For the recursive
 call $gcd y (x{\rm\ mod\ }y)$, the recursion variant $x{\rm\ mod\ }y$
 is less than $y$, the variant for $gcd x y$.
-\end{itemize}
+
 
 * GCD in COQ
 
@@ -2151,27 +2137,24 @@ are
 *** Terms
 A /term/ in the calculus of constructions is constructed using the
 following rules:
-\begin{itemize}
-\item *T* is a term (also called /Type/)
-\item *P* is a term (also called /Prop/, the type of all propositions)
-\item Variables ($x,y,...$) are terms
-\item if *A* and *B* are terms, then so are
-\begin{itemize}
-\item *$(A,B)$*
-\item *$(\lambda x: A,B)$*
-\item *$(\forall x: A,B)$*
-\end{itemize}
-\end{itemize}
+- *T* is a term (also called /Type/)
+- *P* is a term (also called /Prop/, the type of all propositions)
+- Variables ($x,y,...$) are terms
+- if *A* and *B* are terms, then so are
+- *$(A,B)$*
+- *$(\lambda x: A,B)$*
+- *$(\forall x: A,B)$*
+
+
 
 The calculus of constructions has five kinds of objects:
-\begin{enumerate}
-\item /proofs/, which are terms whose types are /propositions/
-\item /propositions/, which are also known as /small types/
-\item /predicates/, which are functions that return propositions
-\item /large types/, which are the types of predicates. *P* is
+1. /proofs/, which are terms whose types are /propositions/
+1. /propositions/, which are also known as /small types/
+1. /predicates/, which are functions that return propositions
+1. /large types/, which are the types of predicates. *P* is
 an example of a large type)
-\item *T* itself, which is the type of large types.
-\end{enumerate}
+1. *T* itself, which is the type of large types.
+
 
 *** Judgements
 
@@ -2297,16 +2280,15 @@ delete parts of code that are useless. For example, to extract a sorting
 algorithm we would prove the statement ``for every list $l$ there
 is a list $k$ such that $k$ is ordered and $k$ is a permutation of $l$''.
 If we write this down in Coq and extract without using Prop, we will get:
-\begin{enumerate}
-\item ``for all $l$ there is a $k$'' which gives us a map *sort* which
+1. ``for all $l$ there is a $k$'' which gives us a map *sort* which
 takes lists to lists,
-\item ``such that $k$ is ordered'' will give a function *verify* which
+1. ``such that $k$ is ordered'' will give a function *verify* which
 runs through $k$ and checks that it is sorted, and
-\item ``$k$ is a permutation of $l$ will give a permutation *p1* which
+1. ``$k$ is a permutation of $l$ will give a permutation *p1* which
 takes $l$ to $k$. Note that *p1* is not just a mapping, but also the
 inverse mapping together with programs verifying that the two maps really
 are inverses.
-\end{enumerate}
+
 
 While the extra stuff is not totally useless, in many applications we want
 to get ride of it and keep just *sort*. This can be accomplished if we
@@ -4236,18 +4218,17 @@ would be considered natural for human understanding of what the
 program and its sub-programs do. 
 
 In the logic of programs containing assertions they are of three kinds
-\begin{enumerate}
-\item assertions
-\item statements of the form P\{A\}Q where P, Q are assertions and A
+1. assertions
+1. statements of the form P\{A\}Q where P, Q are assertions and A
 is a program or asserted program. P\{A\}Q means ``if P is true of the
 input state and A halts then Q is true of the output state''
-\item procedure declarations of the form $p(x;y)$ PROC K where $p$ is
+1. procedure declarations of the form $p(x;y)$ PROC K where $p$ is
 a procedure name, $x$ and $y$ are lists of variable and value
 parameters respectively, and $K$ is a program or asserted program (the
 procedure body), in which the variables designated by $y$ do not occur
 in the left-hand side of an assignment statement, nor occur as a
 variable parameter in a procedure statement. 
-\end{enumerate}
+
 
 If a primitive procedure name, say $q$, occurs in a program about
 which we are to prove a certain theorem, we have to either give a set
@@ -4758,17 +4739,16 @@ gcd(P,gcd(\mathcal{P}))
 \]
 
 Note that
-\begin{itemize}
-\item $x\in C$ is a root of every polynomial in $\mathcal{P}$ 
+- $x\in C$ is a root of every polynomial in $\mathcal{P}$
 if and only if it is the root of gcd($\mathcal{P}$)
-\item $x\in C$ is not a root of any polynomial in $\mathcal{Q}$ 
+- $x\in C$ is not a root of any polynomial in $\mathcal{Q}$
 if and only if
 it is not a root of $\prod_{Q\in \mathcal{Q}}Q$ 
 (with the convention that the proeuct of the empy family is 1).
-\item every root of $P$ in $C$ is a root of $Q$ if and only if 
+- every root of $P$ in $C$ is a root of $Q$ if and only if
 $gcd(P,Q^{deg(\mathcal{P})})$ 
 (with the convention that $Q^{deg(0)}=0)$.
-\end{itemize}
+
 
 WIth these observations the following lemma is clear:
 
@@ -4862,12 +4842,11 @@ distinction between *equivalence* and *inclusion* as it occurs
 in subtypes (p483). The FUN language defines *Quantified Types* as
 
 QuantifiedType ::=
-\begin{itemize}
-\item[ ] $\forall$ A, Type $\vert$Universal Quantification
-\item[ ] $\exists$ A. Type $\vert$Existential Quantification
-\item[ ] $\forall$ A $\subseteq$ Type. Type $\vert$
+- [ ] $\forall$ A, Type $\vert$Universal Quantification
+- [ ] $\exists$ A. Type $\vert$Existential Quantification
+- [ ] $\forall$ A $\subseteq$ Type. Type $\vert$
 $\exists$ A $\subseteq$ Type. Type  {}Bounded Quantification
-\end{itemize}
+
 
 See p516 for the Classification of Type Systems diagram.
 
@@ -5048,10 +5027,9 @@ division.
 
 *Definition* {\sl h is said to be a greatest commmon divisor, or
 g.c.d, of f and g if, and only if
-\begin{enumerate}
-\item h divides both f and g
-\item if h' divides both f and g, then h' divides h
-\end{enumerate}
+1. h divides both f and g
+1. if h' divides both f and g, then h' divides h
+
 
 This definition clearly extends to any number of arguments. The g.c.d
 is normally written gcd(f,g).}
@@ -5093,10 +5071,9 @@ positive, but the general case is more difficult.
 
 /Definition/ {\sl h is said to be a least common multiple, or
 l.c.m. of f and g if, and only if
-\begin{enumerate}
-\item both f and g divide h
-\item if both f and g divide h', the h divides h'
-\end{enumerate}}
+1. both f and g divide h
+1. if both f and g divide h', the h divides h'
+
 
 This definition clearly extends to any number of arguments. The
 l.c.m. is normally written lcm(f,g).
@@ -5162,17 +5139,16 @@ The Coq *Correctness* tactic takes an annotated program as
 argument and generates a set of goals, which are logical propositions
 to be proved by the user. Given an annotated program $e$, the tactic 
 *Correctness* applies the following steps:
-\begin{enumerate}
-\item It determines the type of computation of $\kappa$ of $e$ by the
+1. It determines the type of computation of $\kappa$ of $e$ by the
 typing algorithm
-\item proposition $\hat{\kappa}$ is computed and declared as a goal
-\item The partial proof term $\hat{e}$ is computed following
+1. proposition $\hat{\kappa}$ is computed and declared as a goal
+1. The partial proof term $\hat{e}$ is computed following
 Definition 8 and is given to the proof engine, using the =Refine=
 tactic developed on purpose, and each hole in $\hat{e}$ leads to a
 subgoal 
-\item Once the proofs are completed, the program is added to the
+1. Once the proofs are completed, the program is added to the
 environment and may be used in other programs
-\end{enumerate}
+
 
 Some features have been added to simplify the specification of
 programs -- mainly, the possibility of inserting labels in the
@@ -5432,14 +5408,13 @@ This can be shown by mathematical induction: We assume the result for
 all $p$ and $q$ strictly less than $N$, and prove it for all $p$ and
 $q$ less than or equal to $N$. For such numbers, four cases can be
 distinguished.
-\begin{enumerate}
-\item Both $p$ and $q$ are strictly less than $N$. In this case, what
+1. Both $p$ and $q$ are strictly less than $N$. In this case, what
 we have to prove is the same as the induction hypothesis, which may be
 assumed without proof.
-\item Both $p$ and $q$ are equal to $N$. Then the result
+1. Both $p$ and $q$ are equal to $N$. Then the result
 \[N=gcd(p,q)\] 
 is proved immediately by law L3.1
-\item $p=N$ and $q<N$. It follows that $p-q$ is positive and less than
+1. $p=N$ and $q<N$. It follows that $p-q$ is positive and less than
 $N$. By the induction hypothesis, there is an $r$ such that
 \[r=gcd(p-q,q)\]
 is deducible from the algebraic laws. One application of L3.2 then
@@ -5447,13 +5422,13 @@ gives
 \[r=gcd(p-q)+q,q)\]
 which by the laws of arithmetic leads to the required conclusion
 \[r=gcd(p,q)\]
-\item $p<n$ and $q=N$. Then there is an $r$ such that
+1. $p<n$ and $q=N$. Then there is an $r$ such that
 \[r=gcd(q,p)\]
 is provable in the same way as in case (3) described above. One
 application of L3.3 then gives
 \[r=gcd(p,q)\]
 That concludes the proof that the algebraic specification is complete.
-\end{enumerate}
+
 
 Clearly there is no structural correspondence between the three
 clauses of the algebraic specification and the five clauses expressing
@@ -5511,8 +5486,7 @@ $x$.
 
 We can optimize the search for the greatest common divisor
 algebraically.
-\begin{itemize}
-\item L5.1 If $z$ divides $x$, the $2z$ divides $2x$. So if $z$ is the
+- L5.1 If $z$ divides $x$, the $2z$ divides $2x$. So if $z$ is the
 greatest common divisor of $x$ and $y$, then $2z$ is a common divisor
 of $2x$ and $2y$. It is therefore not greater than their greatest
 common divisor
@@ -5522,7 +5496,7 @@ then $z$ is even and $z/2$ is a common divisor of $x$ and $y$.
 \[gcd(2x,y2)/2 \le gcd(x,y)\]
 From these two inequalities ti follows that
 \[2 gcd(x,y)=gcd(2x,2y)\]
-\item L5.2 All divisors of an odd number are odd, and if an odd number
+- L5.2 All divisors of an odd number are odd, and if an odd number
 divides $2x$ is also divides $x$. If $y$ is odd, the greatest common
 divisor of $2x$ and $y$ is odd, so it is also a common divisor of $x$
 and $y$
@@ -5531,26 +5505,25 @@ Conversely, every divisor of $x$ divides $2x$
 \[gcd(x,y) \le gcd(2x,y)\]
 From these two inequalities it follows that
 \[gcd(2x,y)=gcd(x,y) if\y{\rm\ is\ odd}\]
-\item L5.3 If both $x$ and $y$ are odd, and $x$ is greater than $y$,
+- L5.3 If both $x$ and $y$ are odd, and $x$ is greater than $y$,
 it follows that $x-y$ is positive and even. So under these conditions
 \[gcd(x,y)=gcd((x-y)/2,x)\]
-\end{itemize}
+
 When these equations are coded as a functional program, it becomes
 clear that the number of operations required when the argument of size
 $2^N$ has been reduced to about $N$.
 
 A Procedural program has some assertions, generally specified as
 preconditions, invariants, and postconditions. 
-\begin{itemize}
-\item P6.1 $x>0 \land y > 0$ as a precondition
-\item P6.2 $Z=gcd(x,y)$ as a postcondition
-\item P6.3 $s^N gcd(X,Y)=gcd(x,y)$. The task of the first part is to
+- P6.1 $x>0 \land y > 0$ as a precondition
+- P6.2 $Z=gcd(x,y)$ as a postcondition
+- P6.3 $s^N gcd(X,Y)=gcd(x,y)$. The task of the first part is to
 make P6.3 true on termination. That is easily accomplished by just one
 multiple assignment
 \[N,Z,Y:=0,x,y\] 
 which can be proven by substitution
 \[2^0 gcd(x,y) = gcd(x,y)\]
-\item P6.4 We can show that
+- P6.4 We can show that
 \[2^N Z=gcd(x,y)\]
 This would be obviously true if $N$ were already zero. If $N$ is
 non-zero, it can be made closer to zero by subtracting one. But ath
@@ -5564,7 +5537,7 @@ loop
 On termination of this loop, the value of $N$ is zero and P6.4 is
 still true. Consequently, the postcondition of the whole program has
 been established.
-\end{itemize}
+
 
 Having completed the first and last of the three tasks, the time has
 come to confess that the middle task is the most difficult. Its
@@ -5672,21 +5645,20 @@ genuine mathematical ingenuity. Although both specification and
 program are executable, the program is significanly more efficient.
 
 Note:
-\begin{enumerate}
-\item The functional notation gcd(x y) = z an be rewritten in
+1. The functional notation gcd(x y) = z an be rewritten in
 relational notation as Gcd(x y z)
-\item By exploiting functional notation, the second clause of the
+1. By exploiting functional notation, the second clause of the
 program can be written more compactly as
 #+begin_example
    gcd(x y) = gcd(r x) if x <= y
                        and x divides y with remainder r
                        and r != 0
 #+end_example
-\item For the sake of completeness we need to add a third clause
+1. For the sake of completeness we need to add a third clause
 #+begin_example
    gcd(x y) = gcd(y x) if y <= x
 #+end_example
-\end{enumerate}
+
 
 (from the questions): In this gcd example Kowalski seemed to
 indicate that the seaarch for gcd(x y) would be limited to numbers
@@ -6332,18 +6304,17 @@ contradiction, while the stronger notion of soundness says that
 everything derived in a system is in some sense true.
 
 Consistency is defined as:
-\begin{itemize}
-\item Assume that a relation *contradictory($\phi$)* has been
+- Assume that a relation *contradictory($\phi$)* has been
 defined on finite sets $\phi$ of formulae in a language so that 
 *contradictory($\phi$)* captures the intuitive notion that the formulae
 in $\phi$ are explicitly contradictory.
-\item A logical system of reasoning is *strongly consistent* if it
+- A logical system of reasoning is *strongly consistent* if it
 is not possible to prove all of the formulae in a set $\phi$ such that
 *contradictory($\phi$)*.
-\item A logical system of reasoning is *weakly consistent* if it
+- A logical system of reasoning is *weakly consistent* if it
 is not possible to prove a single formula $F$ such that
 *contradictory($\phi$)*.
-\end{itemize}
+
 Strong consistency certainly implies weak consistency.
 
 In Hoare logics, two formulae $A\{P\}B$ and $C\{Q\}D$ cannot be
@@ -6356,15 +6327,14 @@ system, but it is not in general a sufficient condition, since a
 system might prove a formula which is false but does not contradict
 any other provable formula.
 
-\begin{itemize}
-\item A set of formulae $\phi$ *implies* a formula $F$ if $F$ is
+- A set of formulae $\phi$ *implies* a formula $F$ if $F$ is
 true in every world in which all the formulae in $\phi$ are true.
-\item A logical system is *theorem sound* if every provable
+- A logical system is *theorem sound* if every provable
 formula is true
-\item A logical system is *inferentially sound* if, for every set
+- A logical system is *inferentially sound* if, for every set
 of formulae $\phi$ and every formulae $F$, if $F$ can be proved from
 assumptions in $\phi$, the $\phi$ implies $F$.
-\end{itemize}
+
 In any system where contradictory formulae cannot all be true, theorem
 soundness implies strong consistency. By letting $\phi$ be the empty
 set, we see that inferential soundness implies theorem soundness.
@@ -6607,14 +6577,13 @@ The EEZ-GCD algorithm
     generally faster and is particularly suited for computing gcd of
     sparse multivariate polynomials. The EEZ-GCD algorithm is
     characterized by the following features:
-    \begin{enumerate}
-    \item avoiding unlucky evaluations,
-    \item predetermining the correct leading coefficient of the
+1. avoiding unlucky evaluations,
+1. predetermining the correct leading coefficient of the
     desired gcd,
-    \item using the sparsity of the given polynomials to determine
+1. using the sparsity of the given polynomials to determine
     terms in the gcd and
-    \item direct methods for dealing with the ``common divisor problem.''
-    \end{enumerate}
+1. direct methods for dealing with the ``common divisor problem.''
+
     The common divisor problem occurs when the gcd has a different
     common divisor with each of the cofactors. The EZ-GCD algorithm
     does a square-free decomposition in this case. It can be avoided

@@ -285,11 +285,10 @@ MODLISP [cite:@Jenk79] is based on such a concept, but, as it is
 independent of the ideas considered in this paper, we shall not
 discuss it further.} As an example of this, let us consider the
 compilation of (PLUS X Y) in three cases:
-\begin{enumerate}
-\item X is 2 of mode Integer, Y is 3 of mode Integer. Then the modemap
+1. X is 2 of mode Integer, Y is 3 of mode Integer. Then the modemap
 for PLUS tells us to apply the function IntegerPlus, and the evaluator
 does so, returning the answer 5.
-\item X and Y are known to be of mode Integer, but their values are
+1. X and Y are known to be of mode Integer, but their values are
 not known. For example, they might be the formal parameters of a
 function. In this case, we can still select a function from the
 modemap for PLUS, since we do know the modes of X and Y. We cannot
@@ -297,9 +296,9 @@ apply the function IntegerPlus that is produced, but we can compile
 code to produce it, so the compiled code\footnote{The current MODLISP
 implementation compiles into LISP370[cite:@IBMx78], which is compiled
 into machine code by the LISP370 compiler.} is (IntegerPlus X Y).
-\item Nothing is known about X and Y. In this case, we have no idea
+1. Nothing is known about X and Y. In this case, we have no idea
 how to apply the modemap for PLUS, and we must compile a call to eval.
-\end{enumerate}
+
 
 These additions to the evaluator, to allow it to function as a
 compiler as well, while requiring significant changes to the treatment
@@ -2778,16 +2777,15 @@ the password for the userid git is linus.
 This assumes that you have set up ssh on the Savannah site.
 CVS does not use a password. You have to log onto the Savannah
 site and set up a public key. This requires you to:
-\begin{itemize}
-\item set up a local public key:
+- set up a local public key:
 ssh-keygen -b 1024 -t rsa1
-\item open a browser
-\item nagivate to the savannah page that has your personal keys
-\item open .ssh/identity.pub
-\item cut .ssh/identity.pub
-\item paste it into your personal key list on savannah
-\item go have a beer (the page takes an hour or two to update)
-\end{itemize}
+- open a browser
+- nagivate to the savannah page that has your personal keys
+- open .ssh/identity.pub
+- cut .ssh/identity.pub
+- paste it into your personal key list on savannah
+- go have a beer (the page takes an hour or two to update)
+
 
 Once you have a working key you can do the cvs login.
 If it prompts you for a password then the key is not working.
@@ -3079,74 +3077,69 @@ Axiom caches versions to ensure that nothing breaks. Changing GCL
 versions has introduced subtle bugs at various times. The steps
 necessary to introduce a new version are
 
-\begin{enumerate}
-\item Add the latest GCL sources to Axiom
-\item Update the patches to the new version
-\item create diff -Naur patches to the gcl sources
-\item update lsp/Makefile.pamphlet to apply the patch at build
-\item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-\item Change the GCLVERSION to point at the new sources
-\item change the Makefile to match Makefile.pamphlet
-\end{enumerate}
+1. Add the latest GCL sources to Axiom
+1. Update the patches to the new version
+1. create diff -Naur patches to the gcl sources
+1. update lsp/Makefile.pamphlet to apply the patch at build
+1. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+1. Change the GCLVERSION to point at the new sources
+1. change the Makefile to match Makefile.pamphlet
+
 
 We assume in the following that =$AXHOME= is the home directory and that
 Axiom lives in the silver subdirectory.
 
 In more detail these steps are:
 
-\begin{enumerate}
-\item Add the lateset GCL sources to Axiom
-\begin{enumerate}
-\item Download the latest GCL from gnu.org\\
+1. Add the lateset GCL sources to Axiom
+1. Download the latest GCL from gnu.org\\
       For these instructions assume the file is 
 #+begin_example
       gcl-Version_2_6_10.tar.gz
 #+end_example
-\item move the tar file into /tmp\\
+1. move the tar file into /tmp\\
       We are going to make changes to the distribution via patches
-\item untar the file
+1. untar the file
 #+begin_example
       tar -zxf gcl-Version_2_6_10.tar.gz
 #+end_example
-\item cd to the untarred directory
+1. cd to the untarred directory
 #+begin_example
       cd gcl-Version_2_6_10
 #+end_example
-\item rename the gcl directory\\
+1. rename the gcl directory\\
       Camm follows a convention that the top level directory in the
       tar file is called gcl. Since we maintain several past versions
       we need to rename this and re-tar it
 #+begin_example
       mv gcl gcl-2.6.10
 #+end_example
-\item rename gcl to use our naming convention
+1. rename gcl to use our naming convention
 #+begin_example
       tar -zcf gcl-2.6.10.tgz gcl-2.6.10
 #+end_example
-\item We move the original, renamed, retarred file to the zip directory
+1. We move the original, renamed, retarred file to the zip directory
 #+begin_example
       mv gcl-2.6.10.tgz $AXHOME/silver/zips
 #+end_example      
-\item We have to make sure to include the new file in the git commit
+1. We have to make sure to include the new file in the git commit
 #+begin_example
      cd $AXHOME/silver
 #+end_example      
-\item Tell git we care about the file
+1. Tell git we care about the file
 #+begin_example
      git add zips/gcl-2.6.10.tgz
 #+end_example
-\end{enumerate}
+
 \item Update the patches to the new version
-\begin{enumerate}
-\item find the previous patches
+1. find the previous patches
 #+begin_example
      ls $AXHOME/silver/zips/gcl-2.6.8pre7*patch
 #+end_example
-\item for each patch do ( Step 3 ; Step 4 )
-\end{enumerate}
+1. for each patch do ( Step 3 ; Step 4 )
+
 \item create diff -Naur patches to the gcl sources
-\begin{enumerate}
-\item assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
+1. assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
      The name tells us what file to patch. From the above we can see
      that when Axiom builds GCL it will
 #+begin_example
@@ -3159,70 +3152,66 @@ In more detail these steps are:
         patch <gcl-2.6.8pre7.h.linux.defs.patch
 #+end_example
      which will apply the patch .... So we need to make a patch
-\item move to the subdirectory containing the file
+1. move to the subdirectory containing the file
 #+begin_example
       cd /tmp/gcl-Version_2_6_10/gcl-2.6.10/h
 #+end_example
-\item edit the 'linux.defs' file to create the proper patch
-\item save the changed file as linux.defs.tpd
-\item in a shell, create a diff -Naur patch by 
+1. edit the 'linux.defs' file to create the proper patch
+1. save the changed file as linux.defs.tpd
+1. in a shell, create a diff -Naur patch by
 #+begin_example
       diff -Naur linux.defs linux.defs.tpd >gcl-2.6.10.h.linux.defs.patch
 #+end_example
-\item move it to the zips directory
+1. move it to the zips directory
 #+begin_example
       mv gcl-2.6.10.h.linux.defs.patch $AXHOME/silver/zips
       cd $AXHOME/silver
       git add zips/gcl-2.6.10.h.linux.defs.patch
 #+end_example
-\end{enumerate}
+
 \item update lsp/Makefile.pamphlet to apply the patch at build
-\begin{enumerate}
-\item edit lsp/Makefile.pamphlet
-\item search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
-\item copy the chunk and name the new chunk 
+1. edit lsp/Makefile.pamphlet
+1. search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
+1. copy the chunk and name the new chunk
 =gcl-2.6.10.h.linux.defs.patch=
-\end{enumerate}
+
 \item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-\begin{enumerate}
-\item find the subsection ``The GCL-2.6.8pre7 stanza''
-\item make a copy named ``The GCL-2.6.10 stanza''
-\item add the new patches
-\item tell git we care
+1. find the subsection ``The GCL-2.6.8pre7 stanza''
+1. make a copy named ``The GCL-2.6.10 stanza''
+1. add the new patches
+1. tell git we care
 #+begin_example
       cd $AXHOME/silver
       git add lsp/Makefile.pamphlet
 #+end_example
-\end{enumerate}
+
 \item Change the GCLVERSION to point at the new sources
-\begin{enumerate}
-\item emacs =$AXHOME/silver/Makefile.pamphlet=
-\item search for =#GCLVERSION=, a Makefile comment line
-\item the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
+1. emacs =$AXHOME/silver/Makefile.pamphlet=
+1. search for =#GCLVERSION=, a Makefile comment line
+1. the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
       gcl-2.6.8pre7 was is the name of the current version we are
       replacing. We will use this name in the next step
-\item put a # in front of the GCLVERSION variable to comment it out\\
+1. put a # in front of the GCLVERSION variable to comment it out\\
       We maintain the list of old, working patches. We also remember the
       names of the prior GCLVERSIONS in case we have to back up
-\item Add a new line reading:
+1. Add a new line reading:
 #+begin_example
          GCLVERSION=gcl-2.6.10
 #+end_example
       This will cause Axiom to untar this tgz file to get the sources
       and apply the corresponding patches
-\end{enumerate}
+
 \item change the Makefile to match Makefile.pamphlet
-\begin{itemize}
-\item compile the tangle program
+- compile the tangle program
 \begin{verbatim}
       ( cd books ; gcc -o tangle tangle.c )
 \end{verbatim}
-\item use books/tangle to extract the new Makefile
+- use books/tangle to extract the new Makefile
 \begin{verbatim}
       books/tangle Makefile.pamphlet >Makefile
 \end{verbatim}
-\end{itemize}
-\end{enumerate}
+
+
 
 ** Literate Programming
 The Axiom source code was originally developed at IBM Research.
@@ -3611,13 +3600,12 @@ The code for sign in ORDRING-.nrlib/code.lsp has the signature:
 #+end_example
 
 We can "decode" the meaning of the function name as
-\begin{itemize}
-\item *ORDRING-* the implementing file
-\item *sign* the function name
-\item *SI* returns SingleInteger (an old domain name)
-\item *3* the third function in the file
+- *ORDRING-* the implementing file
+- *sign* the function name
+- *SI* returns SingleInteger (an old domain name)
+- *3* the third function in the file
 (unique, to distinguish multiple functions with the same name)
-\end{itemize}
+
 
 It takes 2 arguments, 
 - *=|x|=* which should be a SingleInteger
@@ -4190,15 +4178,14 @@ find it useful.
 Hyperdoc will sometimes exit and also kill the AXIOMsys image with
 no error message. One way to get around this is to replace the 
 AXIOMsys image with the debugsys image:
-\begin{enumerate}
-\item mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
+1. mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
 This keeps the failing axiomsys image around for later restoration.
-\item cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
+1. cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
 This puts an interpreted version of axiom in place of the compiled form
-\item axiom\\
+1. axiom\\
 Now we are running a fully interpreted form and the error messages are
 much more informative.
-\end{enumerate}
+
 ** Understanding a compiled function
 Suppose we stop a program at a function call to some low level lisp function,
 say ONEP. We can do that by entering
@@ -6446,14 +6433,13 @@ If the bug seems to happen during startup the only method of
 debugging might be to use strace. To do this, replace the 
 \$AXIOM/bin/AXIOMsys binary with a shell script. You should:
 
-\begin{enumerate}
-\item rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
-\item create the shell script shown below
-\item copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will 
+1. rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
+1. create the shell script shown below
+1. copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will
 execute in place of the normal Axiom image
-\item chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
-\item start axiom normally
-\end{enumerate}
+1. chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
+1. start axiom normally
+
 
 The script reads:
 #+begin_example
@@ -6718,19 +6704,18 @@ InterfaceGroebnerPackage(K,symb,E,OV,R):Exports == Implementation where
 #+end_example
 
 There are some things to check and things to change.
-\begin{itemize}
-\item remove all tabs. Spad is a language that assigns meaning to 
+- remove all tabs. Spad is a language that assigns meaning to
 indentation and tabs are not going to survive the build process intact.
-\item try to stay within 80 characters. Spad code is printed in the books
+- try to stay within 80 characters. Spad code is printed in the books
 so it should try to limit line lengths everywhere.
-\item change ``)abbreviation'' to ``)abbrev''. The Makefile will search
+- change ``)abbreviation'' to ``)abbrev''. The Makefile will search
 for the abbrev line and expect this exact text. 
 \begin{verbatim}
 )abbrev package INTERGB InterfaceGroebnerPackage
 \end{verbatim}
-\item make sure there is only a single space between the items in the
+- make sure there is only a single space between the items in the
 abbrev line. The Makefile assumes this.
-\item Add the comment header block. The author information is used to
+- Add the comment header block. The author information is used to
 check that all authors are included in the credits. The description
 tag is used as output by the ``)describe'' command. For example:
 \begin{verbatim}
@@ -6744,23 +6729,22 @@ Other tags can be included but are not used. Do not assume that any
 format information will be correctly translated or preserved. Make the
 description section be simple text with a single character between the
 ``++'' and the first word of the text.
-\end{itemize}
 
-\begin{enumerate}
-\item Choose the right book:
+
+1. Choose the right book:
 - Category goes into book bookvol10.2.pamphlet
 - Domain goes into book bookvol10.3.pamphlet
 - Package goes into book bookvol10.4.pamphlet
 - Numerics goes into book bookvol10.5.pamphlet
-\item Find the right chapter. Chapter ordered by name, not abbreviation
-\item Create a new section. The easiest way to do this is to copy another
+1. Find the right chapter. Chapter ordered by name, not abbreviation
+1. Create a new section. The easiest way to do this is to copy another
 section and change the names. In any case, your new section will need
-\item Create a dividiing line consisting of all \% signs. 
+1. Create a dividiing line consisting of all \% signs.
 Note that this character is the comment character for TeX.
-\item Create the =\section= tag. This tag should contain the exact text of
+1. Create the =\section= tag. This tag should contain the exact text of
 the )abbrev line from your algebra code. It reads:
 =)section{package INTERGB InterfaceGroebnerPackage}=
-\item Create a regression test chunk. This chunk derives its name from the
+1. Create a regression test chunk. This chunk derives its name from the
 algebra name as in ``InterfaceGroebnerPackage.input''. This chunk will
 be automatically extracted and run during regression testing. For the
 moment the chunk should be a simple empty input file as in:
@@ -6779,7 +6763,7 @@ moment the chunk should be a simple empty input file as in:
 )spool
 )lisp (bye)
 #+end_example
-\item Create a help text chunk. This chunk dervies its name from the
+1. Create a help text chunk. This chunk dervies its name from the
 algebra name as in ``InterfaceGroebnerPackage.help''. This chunk will
 be automatically extracted and used to build help text during build.
 For the moment the chunck should be a simple empty help text file as in:
@@ -6792,7 +6776,7 @@ See Also:
 o )show InterfaceGroebnerPackage
 
 #+end_example
-\end{enumerate}
+
 
 At this point we need information from the Axiom interpreter to continue.
 Start Axiom and compile your program with ``autoload'' on. For example:
@@ -7284,19 +7268,18 @@ to see that the description paragraph exists.
 Suppose we want to add a new algebra file from a new pamphlet.
 For example, we want to add BLAS1.spad in books/newbook.pamphlet.
 The explanation for the steps follow. The steps are:
-\begin{enumerate}
-\item write the algebra code
-\item create the pamphlet file called newbook.pamphlet
-\item create a new section in newbook.pamphlet
-\item create the chunk name stanza in newbook.pamphlet
-\item insert BLAS1.spad into the new stanza
-\item create the dotabb stanza in newbook.pamphlet
-\item update src/algebra/Makefile.pamphlet to insert BLAS1.spad 
-\item update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
-\item update the dotabb stanza in newbook.pamphlet
-\item update src/Makefile.pamphlet to copy the newbook file to src/algebra
-\item update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
-\end{enumerate}
+1. write the algebra code
+1. create the pamphlet file called newbook.pamphlet
+1. create a new section in newbook.pamphlet
+1. create the chunk name stanza in newbook.pamphlet
+1. insert BLAS1.spad into the new stanza
+1. create the dotabb stanza in newbook.pamphlet
+1. update src/algebra/Makefile.pamphlet to insert BLAS1.spad
+1. update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
+1. update the dotabb stanza in newbook.pamphlet
+1. update src/Makefile.pamphlet to copy the newbook file to src/algebra
+1. update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
+
 
 ** Makefile
 This book is actually a literate program[cite:@Knut92] and can contain 

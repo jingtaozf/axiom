@@ -1694,13 +1694,12 @@ input files''.
 Axiom programs are statically compiled to machine code, then
 placed into library modules.  Categories provide an important role in
 obtaining efficient object code by enabling:
-\begin{itemize}
-\item static type-checking at compile time;
-\item fast linkage to operations in domain-valued parameters;
-\item optimization techniques to be used for partially specified types
+- static type-checking at compile time;
+- fast linkage to operations in domain-valued parameters;
+- optimization techniques to be used for partially specified types
 (operations for ``vectors of $R$'', for instance, can be open-coded even
 though =R= is unknown).
-\end{itemize}
+
 
 ** Axiom is Extensible
 
@@ -1727,14 +1726,13 @@ code is applicable in all such contexts.
 
 Finally, Axiom provides an automatic, guaranteed interaction
 between new and old code.  For example:
-\begin{itemize}
-\item if you write a new algorithm that requires a parameter to be a
+- if you write a new algorithm that requires a parameter to be a
 field, then your algorithm will work automatically with every field
 defined in the system; past, present, or future.
-\item if you introduce a new domain constructor that produces a field,
+- if you introduce a new domain constructor that produces a field,
 then the objects of that domain can be used as parameters to any algorithm
 using field objects defined in the system; past, present, or future.
-\end{itemize}
+
 
 These are the key ideas.  For further information, we particularly
 recommend your reading chapters 11, 12, and 13, where these ideas are
@@ -4298,28 +4296,27 @@ You are ready to begin your journey into the world of Axiom.
 ** Typographic Conventions
 # label: ugIntroTypo
 In this document we have followed these typographical conventions:
-\begin{itemize}
 %
-\item Categories, domains and packages are displayed in this font:\\
+- Categories, domains and packages are displayed in this font:\\
 =Ring=, =Integer=, =DiophantineSolutionPackage=.
 %
-\item Prefix operators, infix operators, and punctuation symbols in 
+- Prefix operators, infix operators, and punctuation symbols in
 the Axiom language are displayed in the text like this:
 =+=, =\$=, =+->=.
 %
-\item Axiom expressions or expression fragments are displayed in this font:\\
+- Axiom expressions or expression fragments are displayed in this font:\\
 =inc(x) == x + 1=.
 %
-\item For clarity of presentation, TeX{} is often used to format expressions\\
+- For clarity of presentation, TeX{} is often used to format expressions\\
 $g(x)=x^2+1$.
 %
-\item Function names and HyperDoc button names are displayed in the text in
+- Function names and HyperDoc button names are displayed in the text in
 this font:
 *factor*, *integrate*,  *Lighting*.
 %
-\item Italics are used for emphasis and for words defined in the glossary: \\
+- Italics are used for emphasis and for words defined in the glossary: \\
 /category/.
-\end{itemize}
+
 
 This document contains over 2500 examples of Axiom input and output.  All
 examples were run though Axiom and their output was created in TeX{}
@@ -6689,21 +6686,20 @@ $$
 The discovery of this algebraic relationship is necessary for correct
 integration of this function.
 Here are the details:
-\begin{enumerate}
-\item
+1. 
 If $x=\tan t$ and $g=\tan (t/3)$ then the following 
 algebraic relation is true: $${g^3-3xg^2-3g+x=0}$$
-\item
+1. 
 Integrate $g$ using this algebraic relation; this produces:
 $${\frac{(24g^2 - 8)\log(3g^2 - 1) + (81x^2 + 24)g^2 + 72xg - 27x^2 - 16}
 {54g^2 - 18}}$$
-\item
+1. 
 Rationalize the denominator, producing:
 $$\frac{8\log(3g^2-1) - 3g^2 + 18xg + 16}{18}$$
 Replace $g$ by the initial definition
 $g = \tan(\arctan(x)/3)$
 to produce the final result.
-\end{enumerate}
+
 
 This is an example of a mixed function where
 the algebraic layer is over the transcendental one.
@@ -7632,14 +7628,13 @@ Now, you may ask, what exactly is a category?   Like
 domains, categories can be defined in the Axiom language.  A category
 is defined by three components:
 
-\begin{enumerate}
-\item a name (for example, =Ring=),
+1. a name (for example, =Ring=),
 used to refer to the class of domains that the category represents;
-\item a set of operations, used to refer to the operations that
+1. a set of operations, used to refer to the operations that
 the domains of this class support
 (for example, ``=+='', ``=-='', and ``=*='' for rings); and
-\item an optional list of other categories that this category extends.
-\end{enumerate}
+1. an optional list of other categories that this category extends.
+
 
 %Original Page 64
 
@@ -8404,14 +8399,13 @@ This tries *sayBranch* with a floating-point number.
 
 There are two things of interest about this particular
 example to which we would like to draw your attention.
-\begin{enumerate}
-\item Axiom normally converts a result to the target value
+1. Axiom normally converts a result to the target value
 before passing it to the function.
 If we left the declaration information out of this function definition
 then the *sayBranch* call would have been attempted with an
 =Integer= rather than a =Union=, and an error would have
 resulted.
-\item The types in a =Union= are searched in the order given.
+1. The types in a =Union= are searched in the order given.
 So if the type were given as
 
 %\noindent
@@ -8419,7 +8413,7 @@ So if the type were given as
 
 then the result would have been ``String branch'' because there
 is a conversion from =Integer= to =String=.
-\end{enumerate}
+
 
 Sometimes =Union= types can have extremely long names.  Axiom
 therefore abbreviates the names of unions by printing the type of the
@@ -8882,11 +8876,10 @@ $$
 # label: ugTypesSubdomains
 
 A /subdomain/ S of a domain D is a domain consisting of
-\begin{enumerate} 
-\item those elements of D that satisfy some 
+1. those elements of D that satisfy some
 /predicate/ (that is, a test that returns =true= or =false=) and 
-\item a subset of the operations of D.  
-\end{enumerate} 
+1. a subset of the operations of D.
+
 Every domain is a subdomain of itself, trivially satisfying the
 membership test: =true=.
 
@@ -9807,10 +9800,9 @@ button and click.
 A /search string/ is used for searching some database.  To learn
 about search strings, we suggest that you bring up the HyperDoc
 glossary.  To do this from the top-level page of HyperDoc:
-\begin{enumerate}
-\item Click on Reference, bringing up the Axiom Reference page.
-\item Click on Glossary, bringing up the glossary.
-\end{enumerate}
+1. Click on Reference, bringing up the Axiom Reference page.
+1. Click on Glossary, bringing up the glossary.
+
 
 The glossary has an input area at its bottom.  We review the various
 kinds of search strings you can enter to search the glossary.
@@ -10342,12 +10334,11 @@ numbers, except in exponents.  This is the default behavior but can be
 turned off by issuing =)set fortran ints2floats off=.  
  The rules governing when the conversion 
 is done are:
-\begin{enumerate}
-\item If an integer is an exponent, convert it to a floating point
+1. If an integer is an exponent, convert it to a floating point
 number if it is greater than 32767 in absolute value, otherwise leave it
 as an integer.
-\item Convert all other integers in an expression to floating point numbers.
-\end{enumerate}
+1. Convert all other integers in an expression to floating point numbers.
+
 
 These rules only govern integers in expressions.\\  
 Numbers generated by Axiom for $DIMENSION$ statements are also integers.
@@ -10769,15 +10760,14 @@ expression before the ``==>='' must evaluate to =true= or =false=.
 The expression following the ``==>='' is the return value for the block.
 
 A block can be constructed in two ways:
-\begin{enumerate}
-\item the expressions can be separated by semicolons
+1. the expressions can be separated by semicolons
 and the resulting expression surrounded by parentheses, and
-\item the expressions can be written on succeeding lines with each line
+1. the expressions can be written on succeeding lines with each line
 indented the same number of spaces (which must be greater than zero).
 #+INDEX: indentation
 A block entered in this form is
 called a /pile/.
-\end{enumerate}
+
 
 %Original Page 113
 
@@ -11967,17 +11957,16 @@ for i in 1..10
 \returnType{Type: Void}
 
 Here are useful rules for composing loop expressions:
-\begin{enumerate}
-\item =while= predicates can only refer to variables that
+1. =while= predicates can only refer to variables that
 are global (or in an outer scope)
 or that are defined in =for= clauses to the left of the
 predicate.
-\item A ``such that'' predicate (something following ``=|='')
+1. A ``such that'' predicate (something following ``=|='')
 must directly follow a =for= clause and can only refer to
 variables that are global (or in an outer scope)
 or defined in the modified =for= clause
 or any =for= clause to the left.
-\end{enumerate}
+
 
 ** Creating Lists and Streams with Iterators
 # label: ugLangIts
@@ -13151,34 +13140,33 @@ invisible.
 How does Axiom determine what library function to call?  It very much
 depends on the particular example, but the simple case of creating the
 polynomial $x + 2/3$ will give you an idea.
-\begin{enumerate}
-\item The $x$ is analyzed and its default type is
+1. The $x$ is analyzed and its default type is
 =Variable(x)=.
-\item The $2$ is analyzed and its default type is
+1. The $2$ is analyzed and its default type is
 =PositiveInteger=.
-\item The $3$ is analyzed and its default type is
+1. The $3$ is analyzed and its default type is
 =PositiveInteger=.
-\item Because the arguments to ``=/='' are integers, Axiom
+1. Because the arguments to ``=/='' are integers, Axiom
 gives the expression $2/3$ a default target type of
 =Fraction(Integer)=.
-\item Axiom looks in =PositiveInteger= for ``=/=''.
+1. Axiom looks in =PositiveInteger= for ``=/=''.
 It is not found.
-\item Axiom looks in =Fraction(Integer)= for ``=/=''.
+1. Axiom looks in =Fraction(Integer)= for ``=/=''.
 It is found for arguments of type =Integer=.
-\item The $2$ and $3$ are converted to objects of type
+1. The $2$ and $3$ are converted to objects of type
 =Integer= (this is trivial) and ``=/='' is applied,
 creating an object of type =Fraction(Integer)=.
-\item No ``=+='' for arguments of types =Variable(x)= and
+1. No ``=+='' for arguments of types =Variable(x)= and
 =Fraction(Integer)= are found in either domain.
-\item Axiom resolves
+1. Axiom resolves
 #+INDEX: resolve
 (see \sectionref{ugTypesResolve})
 the types and gets \\
 =Polynomial(Fraction(Integer))=.
-\item The $x$ and the $2/3$ are converted to objects of this
+1. The $x$ and the $2/3$ are converted to objects of this
 type and =+= is applied, yielding the answer, an object of type
 =Polynomial (Fraction (Integer))=.
-\end{enumerate}
+
 
 ** Compiling vs. Interpreting
 # label: ugUserCompInt
@@ -14308,15 +14296,14 @@ you issue a =free= declaration for a parameter, it is still local.
 
 What happens if you do not declare that a variable $x$ in the body of
 your function is =local= or =free=?  Well, Axiom decides on this basis:
-\begin{enumerate}
-\item Axiom scans your function line-by-line, from top-to-bottom.
+1. Axiom scans your function line-by-line, from top-to-bottom.
 The right-hand side of an assignment is looked at before the left-hand
 side.
-\item If $x$ is referenced before it is assigned a value, it is a
+1. If $x$ is referenced before it is assigned a value, it is a
 =free= (global) variable.
-\item If $x$ is assigned a value before it is referenced, it is a
+1. If $x$ is assigned a value before it is referenced, it is a
 =local= variable.
-\end{enumerate}
+
 
 Set two global variables to 1.
 \spadcommand{a := b := 1}
@@ -14559,16 +14546,15 @@ $\hbox/parm/_{N}$ ) =+->= /expression/}
 }
 
 You can apply an anonymous function in several ways.
-\begin{enumerate}
-\item Place the anonymous function definition in parentheses
+1. Place the anonymous function definition in parentheses
 directly followed by a list of arguments.
-\item Assign the anonymous function to a variable and then
+1. Assign the anonymous function to a variable and then
 use the variable name when you would normally use a function name.
-\item Use ``===='' to use the anonymous function definition as
+1. Use ``===='' to use the anonymous function definition as
 the arguments and body of a regular function definition.
-\item Have a named function contain a declared anonymous function and
+1. Have a named function contain a declared anonymous function and
 use the result returned by the named function.
-\end{enumerate}
+
 
 *** Some Examples
 # label: ugUserAnonExamp
@@ -14731,19 +14717,18 @@ The one you use is a matter of taste.
 \returnType{Type: Void}
 
 When should you declare an anonymous function?  
-\begin{enumerate}
-\item If you use an anonymous function and Axiom can't figure out what
+1. If you use an anonymous function and Axiom can't figure out what
 you are trying to do, declare the function.  
-\item If the function has nontrivial argument types or a nontrivial 
+1. If the function has nontrivial argument types or a nontrivial
 return type that Axiom may be able to determine eventually, but you 
 are not willing to wait that long, declare the function.  
-\item If the function will only be used for arguments of specific types 
+1. If the function will only be used for arguments of specific types
 and it is not too much trouble to declare the function, do so.  
-\item If you are using the anonymous function as an argument to another 
+1. If you are using the anonymous function as an argument to another
 function (such as *map* or *sort*), consider declaring the function.  
-\item If you define an anonymous function inside a named function, 
+1. If you define an anonymous function inside a named function,
 you /must/ declare the anonymous function.  
-\end{enumerate}
+
 
 This is an example of a named function for integers that returns a
 function.
@@ -17020,14 +17005,13 @@ Display the new =TwoDimensionalViewport= containing both graphs.
 The Axiom three-di\-men\-sion\-al graphics package provides the ability to
 #+INDEX: graphics!three-dimensional
 %
-\begin{itemize}
 %
-\item generate surfaces defined by a function of two real variables
+- generate surfaces defined by a function of two real variables
 %
-\item generate space curves and tubes defined by parametric equations
+- generate space curves and tubes defined by parametric equations
 %
-\item generate surfaces defined by parametric equations
-\end{itemize}
+- generate surfaces defined by parametric equations
+
 These graphs can be modified by using various options, such as calculating
 points in the spherical coordinate system or changing the polygon grid size
 of a surface.
@@ -22722,11 +22706,10 @@ equation} differential equations in closed-form and in series.
 Axiom provides facilities for closed-form solution of
  single
 differential equations of the following kinds:
-\begin{itemize}
-\item linear ordinary differential equations, and
-\item non-linear first order ordinary differential equations
+- linear ordinary differential equations, and
+- non-linear first order ordinary differential equations
 when integrating factors can be found just by integration.
-\end{itemize}
+
 
 For a discussion of the solution of systems of linear and polynomial
 equations, see \sectionref{ugProblemLinPolEqn}.
@@ -22906,13 +22889,12 @@ solution still exists.  While it is mathematically complicated to
 describe exactly when the solutions are guaranteed to be found, the
 following statements are correct and form good guidelines for linear
 ordinary differential equations:
-\begin{itemize}
-\item If the coefficients are constants, Axiom finds a complete basis
+- If the coefficients are constants, Axiom finds a complete basis
 of solutions (i,e. all solutions).
-\item If the coefficients are rational functions in the dependent variable,
+- If the coefficients are rational functions in the dependent variable,
 Axiom at least finds all solutions that do not involve algebraic
 functions.
-\end{itemize}
+
 
 Note that this last statement does not mean that Axiom does not find
 the solutions that are algebraic functions.  It means that it is not
@@ -23532,10 +23514,9 @@ $$
 
 When you want to work with an extension of a finite field in Axiom,
 you have three choices to make:
-\begin{enumerate}
-\item Do you want to generate an extension of the prime field
+1. Do you want to generate an extension of the prime field
 (for example, =PrimeField 2=) or an extension of a given field?
-\item Do you want to use a representation that is particularly
+1. Do you want to use a representation that is particularly
 efficient for multiplication, exponentiation and addition but uses a
 lot of computer memory (a representation that models the cyclic group
 structure of the multiplicative group of the field extension and uses
@@ -23547,10 +23528,10 @@ machine's performance) sized fields.  If the field is large and the
 normal basis is relatively simple, the normal basis representation is
 more efficient for exponentiation than the irreducible polynomial
 representation.
-\item Do you want to provide a polynomial explicitly, a root of which
+1. Do you want to provide a polynomial explicitly, a root of which
 ``generates'' the extension in one of the three senses in (2), or do
 you wish to have the polynomial generated for you?
-\end{enumerate}
+
 
 This illustrates one of the most important features of Axiom: you can
 choose exactly the right data-type and representation to suit your
@@ -24232,17 +24213,16 @@ $$
 =FiniteFieldPolynomialPackage= (abbreviation =FFPOLY=)
 provides operations for generating, counting and testing polynomials
 over finite fields. Let's start with a couple of definitions:
-\begin{itemize}
-\item A polynomial is /primitive/ if its roots are primitive
+- A polynomial is /primitive/ if its roots are primitive
 #+INDEX: polynomial!primitive
 elements in an extension of the coefficient field of degree equal
 to the degree of the polynomial.
-\item A polynomial is /normal/ over its coefficient field
+- A polynomial is /normal/ over its coefficient field
 #+INDEX: polynomial!normal
 if its roots are linearly independent
 elements in an extension of the coefficient field of degree equal
 to the degree of the polynomial.
-\end{itemize}
+
 
 In what follows, many of the generated polynomials have one
 ``anonymous'' variable.  This indeterminate is displayed as a question
@@ -24589,12 +24569,11 @@ ideal} polynomial ideals over fields of characteristic zero.  The
 algorithm
 %is discussed in [cite:@gtz:gbpdpi] and
 works in essentially two steps:
-\begin{enumerate}
-\item the problem is solved for 0-dimensional ideals by ``generic''
+1. the problem is solved for 0-dimensional ideals by ``generic''
 projection on the last coordinate
-\item a ``reduction process'' uses localization and ideal quotients
+1. a ``reduction process'' uses localization and ideal quotients
 to reduce the general case to the 0-dimensional one.
-\end{enumerate}
+
 The Axiom constructor =PolynomialIdeals= represents ideals with
 coefficients in any field and supports the basic ideal operations,
 including intersection, sum and quotient.  =Ideal\-DecompositionPackage= 
@@ -25021,12 +25000,11 @@ factored is the field generated by
 
 %Original Page 299
 
-\begin{enumerate}
-\item the algebraic numbers that appear
+1. the algebraic numbers that appear
 in the coefficients of the polynomial, and
-\item the algebraic numbers that
+1. the algebraic numbers that
 appear in a list passed as an optional second argument of the operation.
-\end{enumerate}
+
 In our case, the coefficients of $p$
 are all rational integers and only $beta$
 appears in the list, so the field is simply
@@ -25432,19 +25410,18 @@ this computation for all the roots of $r(x)$ and represent the Galois
 group of $p(x)$ as a subgroup of the symmetric group on five letters.
 
 Here are two other problems that you may attack in a similar fashion:
-\begin{enumerate}
-\item Show that the Galois group of
+1. Show that the Galois group of
 $p(x) = x^4 + 2 x^3 - 2 x^2 - 3 x + 1$
 is the dihedral group of order eight. 
 (The splitting field of this polynomial is the Hilbert class field
  of  the quadratic field
 $*Q*(\sqrt{145})$.)
-\item Show that the Galois group of
+1. Show that the Galois group of
 $p(x) = x^6 + 108$
 has order 6 and is isomorphic to $S_3,$ the symmetric group on three letters.
  (The splitting field of this polynomial is the 
 splitting field of $x^3 - 2$.)
-\end{enumerate}
+
 
 ** Non-Associative Algebras and Modelling Genetic Laws
 # label: ugProblemGenetic
@@ -52495,15 +52472,14 @@ compute with differential and difference equations.
 
 In the following, let A be an integral domain, equipped with two
 endomorphisms $\sigma$ and $\delta$ where:
-\begin{itemize}
-\item $\sigma$: A $->$ A is an injective ring endomorphism
-\item $\delta$: A $->$ A, the pseudo-derivation with respect to $\sigma$, 
+- $\sigma$: A $->$ A is an injective ring endomorphism
+- $\delta$: A $->$ A, the pseudo-derivation with respect to $\sigma$,
 is an additive endomorphism with 
 $$
      \delta(ab) = \sigma(a)\delta(b) + \delta(a)b
 $$    
 for all $a,b$ in A
-\end{itemize}
+
 
 The skew polynomial ring $[\Delta;\sigma,\delta]$ is the ring of 
 polynomials in $\Delta$ with coefficients in A, with the usual addition,
@@ -52512,12 +52488,11 @@ $$
  \Delta a = \sigma(a)\Delta + \delta(a) {}{\rm\ for\ a\ in\ A}
 $$
 The two most important examples of skew polynomial rings are:
-\begin{itemize}
-\item $K(x)[D,1,\delta]$, where 1 is the identity on $K$ and $\delta$ is 
+- $K(x)[D,1,\delta]$, where 1 is the identity on $K$ and $\delta$ is
 the usual derviative, is the ring of differential polynomials
-\item $K_n [E,n,\mapsto n+1,0]$ is the ring of linear recurrence operators
+- $K_n [E,n,\mapsto n+1,0]$ is the ring of linear recurrence operators
 with polynomial coefficients
-\end{itemize}
+
 
 The UnivariateSkewPolynomialCategory (OREPCAT) provides a unified
 framework for polynomial rings in a non-central indeterminate over
@@ -61054,14 +61029,13 @@ Domain constructors are documented in the same way as package constructors.
 Domain =QuadraticForm(n, K)=, for a given positive integer
 $n$ and domain $K$, explicitly exports three operations:
 %
-\begin{itemize}
-\item$quadraticForm(A)$ creates a quadratic form from a matrix
+- $quadraticForm(A)$ creates a quadratic form from a matrix
 $A$.
-\item$matrix(q)$ returns the matrix $A$ used to create
+- $matrix(q)$ returns the matrix $A$ used to create
 the quadratic form $q$.
-\item$q.v$ computes the scalar $v^TAv$
+- $q.v$ computes the scalar $v^TAv$
 for a given vector $v$.
-\end{itemize}
+
 
 Compared with the corresponding syntax given for the definition of a
 package, you see that a domain constructor has three optional parts to
@@ -62530,13 +62504,12 @@ Let's find out from where the operations of =Matrix= come.
 
 %Original Page 557
 
-\begin{enumerate}
-\item Click on =MatrixCategory=, then on *Exports*.\\
+1. Click on =MatrixCategory=, then on *Exports*.\\
 Here you see that =MatrixCategory= explicitly exports many matrix\\
 operations. Also, it inherits its operations from\\
 =TwoDimen\-sionalArrayCategory=.
 
-\item Click on =TwoDimensionalArrayCategory=, then on *Exports*.
+1. Click on =TwoDimensionalArrayCategory=, then on *Exports*.
 Here you see explicit operations dealing with rows and columns.
 In addition, it inherits operations from
 =HomogeneousAggregate=.
@@ -62545,14 +62518,14 @@ In addition, it inherits operations from
 %And so on.
 %If you continue doing this, eventually you will
 
-\item Click on \UpBitmap{} and then
+1. Click on \UpBitmap{} and then
 click on =Object=, then on *Exports*, where you see
 there are no exports.
 
-\item Click on \UpBitmap{} repeatedly to return to the constructor page
+1. Click on \UpBitmap{} repeatedly to return to the constructor page
 for =Matrix=.
 
-\end{enumerate}
+
 
 **** Related Operations
 
@@ -62608,33 +62581,32 @@ constructors that provide operations in addition to those
 exported by the domain.
 
 Try this exercise.
-\begin{enumerate}
-\item Click on *Relatives*, bringing up a list of
+1. Click on *Relatives*, bringing up a list of
 packages.
 
-\item Click on =LinearSystemMatrixPackage= bringing up its
+1. Click on =LinearSystemMatrixPackage= bringing up its
 constructor page.\footnote{You may want to widen your HyperDoc
 window to make what follows more legible.}
 
-\item Click on *Operations*.
+1. Click on *Operations*.
 Here you see *rank*, an operation also exported by
 =Matrix= itself.
 
-\item Click on *rank*.
+1. Click on *rank*.
 This \spadfunFrom{rank}{LinearSystemMatrixPackage} has two arguments and
 thus is different from the \spadfunFrom{rank}{Matrix} from
 =Matrix=.
 
-\item Click on \UpBitmap{} to return to the list of operations for the
+1. Click on \UpBitmap{} to return to the list of operations for the
 package *LinearSystemMatrixPackage*.
 
-\item Click on *solve* to bring up a
+1. Click on *solve* to bring up a
 \spadfunFrom{solve}{LinearSystemMatrixPackage} for linear systems of
 equations.
 
-\item Click on \UpBitmap{} several times to return to the cross
+1. Click on \UpBitmap{} several times to return to the cross
 reference page for =Matrix=.
-\end{enumerate}
+
 
 **** Dependents
 
@@ -62860,29 +62832,28 @@ For example, =Matrix= exports the *inverse* operation
 only if the domain =R= is a =Field=.
 To see this, try this from the main constructor page:
 
-\begin{enumerate}
-\item Enter =Integer= into the input area at the bottom of the page.
+1. Enter =Integer= into the input area at the bottom of the page.
 
-\item Click on *Operations*, producing a table of operations.
+1. Click on *Operations*, producing a table of operations.
 Note the number of operation names that appear at the top of the
 page.
 
-\item Click on \UpBitmap{} to return to the constructor page.
+1. Click on \UpBitmap{} to return to the constructor page.
 
-\item Use the
+1. Use the
 \fbox*Delete*
 or
 \fbox*Backspace*
 keys to erase =Integer= from the input area.
 
-\item Click on *Operations* to produce a new table of operations.
+1. Click on *Operations* to produce a new table of operations.
 Look at the number of operations you get.
 This number is greater than what you had before.
 Find, for example, the operation *inverse*.
 
 %Original Page 562
 
-\item Click on *inverse* to produce a page describing the operation
+1. Click on *inverse* to produce a page describing the operation
 *inverse*.
 At the bottom of the description, you notice that the {\bf
 Conditions} line says ``=R= has =Field=.''
@@ -62892,7 +62863,7 @@ This operation is /not/ exported by =Matrix(Integer)= since
 Try putting the name of a domain such as =Fraction Integer=
 (which is a field) into the input area, then clicking on *Operations*.
 As you see, the operation *inverse* is exported.
-\end{enumerate}
+
 
 ** Miscellaneous Features of Browse
 # label: ugBrowseMiscellaneousFeatures
@@ -63249,14 +63220,13 @@ general, the correspondence to Axiom types is as follows.
 =MachineComplex=, respectively; see \sectionref{aspSection}.)
 
 The correspondence for aggregates is as follows.
-\begin{itemize}
-\item A one-dimensional Fortran array corresponds to a
+- A one-dimensional Fortran array corresponds to a
       =Matrix= with one column.
-\item A two-dimensional Fortran ARRAY corresponds to a
+- A two-dimensional Fortran ARRAY corresponds to a
       =Matrix=.
-\item A three-dimensional Fortran ARRAY corresponds to a
+- A three-dimensional Fortran ARRAY corresponds to a
       =ThreeDimensionalMatrix=.
-\end{itemize}
+
 Higher-dimensional arrays are not currently needed for the Nag Library.
 
 Arguments which are Fortran FUNCTIONs or SUBROUTINEs correspond
@@ -63294,13 +63264,12 @@ $ifail$.  With a few exceptions, the principle is that on input
 $ifail$ takes
 one of the values $-1,0,1$.  This determines how the routine behaves when
 it encounters an error:
-\begin{itemize}
-\item a value of 1 causes the NAG routine to return without printing an error
+- a value of 1 causes the NAG routine to return without printing an error
 message;
-\item a value of 0 causes the NAG routine to print an error message and abort;
-\item a value of -1 causes the NAG routine to return and 
+- a value of 0 causes the NAG routine to print an error message and abort;
+- a value of -1 causes the NAG routine to return and
 print an error message.
-\end{itemize}
+
 
 The user is STRONGLY ADVISED to set $ifail$ to $-1$ when using the link.
 If $ifail$ has been set to $1$ or $-1$ on input, then its value on output
@@ -87850,24 +87819,23 @@ operations. These definitions may instead come from domains
 in the /add-chain/ or from default packages.
 When a function call is made for an
 operation in the domain, up to five steps are carried out.
-\begin{enumerate}
-\item  If the domain itself implements a function for the operation,
+1. If the domain itself implements a function for the operation,
 that function is returned.
-\item  Each of the domains in the /add-chain/ are searched;
+1. Each of the domains in the /add-chain/ are searched;
 if one of these domains implements the function, that function is
 returned.
-\item Each of the default packages
+1. Each of the default packages
 for the
 domain are searched in order of the /lineage/.
 If any of the default packages implements the function, the first one
 found is returned.
-\item  Each of the default packages
+1. Each of the default packages
 for each of the
 domains in the /add-chain/ are searched in the order of their
 /lineage/. If any of the default packages implements the
 function, the first one found is returned.
-\item  If all of the above steps fail, an error message is reported.
-\end{enumerate}
+1. If all of the above steps fail, an error message is reported.
+
 }
 
 
@@ -88340,8 +88308,7 @@ function and such that its binding is invisible to any function
 that function calls.
 Also called a /lexical/ variable.
 By default in the interpreter:
-\begin{enumerate}
-\item
+1. 
 any variable $x$ that appears on the left-hand side of an
 assignment
 is normally regarded a local variable of that function.
@@ -88350,9 +88317,9 @@ is normally regarded a local variable of that function.
 If the intention of an assignment is to change the value of a
 /global variable/ $x$, the body of the function must then
 contain the statement $free x$.
-\item
+1. 
 any other variable is regarded as a /free variable/.
-\end{enumerate}
+
 An optional declaration $local x$ is available to declare
 explicitly a variable to be a local variable.
 All formal parameters

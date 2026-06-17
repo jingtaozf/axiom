@@ -8198,12 +8198,11 @@ It expects either a GET or POST request.
 
 A GET request fetches a new page, calling ``getFile''.
 A POST request starts with 
-\begin{itemize}
-\item ``command='' which expects axiom interpreter commands. 
+- ``command='' which expects axiom interpreter commands.
        When this is recognized we call the ``getCommand'' function.
-\item ``lispcall='' which expects lisp interpreter input
+- ``lispcall='' which expects lisp interpreter input
        When this is recognized we call the ``getLisp'' function.
-\end{itemize}
+
 #+NAME: package AXSERV AxiomServer
 #+begin_src common-lisp :noweb yes
 
@@ -8518,13 +8517,12 @@ and contains the string "command". Essentially the game here is
 to rebind the various output streams used by Axiom so we can
 capture the normal output. This function returns a set of HTML 5 div
 blocks:
-\begin{enumerate}
-\item stepnum, the value of lastStep()
-\item command, the value of the  command variable
-\item algebra, the value of the algebra variable
-\item mathml, the value of the mathml variable
-\item type, the value of lastType()
-\end{enumerate}
+1. stepnum, the value of lastStep()
+1. command, the value of the  command variable
+1. algebra, the value of the algebra variable
+1. mathml, the value of the mathml variable
+1. type, the value of lastType()
+
 The HTML functions in the hyperdoc browser depend on the order
 of these variables so do not change this without changing the
 corresponding functions in the browser HTML.
@@ -8580,13 +8578,12 @@ and contains the string "command". Essentially the game here is
 to rebind the various output streams used by Axiom so we can
 capture the normal output. This function returns a set of HTML 5 div
 blocks:
-\begin{enumerate}
-\item stepnum, the value of lastStep()
-\item command, the value of the  command variable
-\item algebra, the value of the algebra variable
-\item mathml, the value of the mathml variable
-\item type, the value of lastType()
-\end{enumerate}
+1. stepnum, the value of lastStep()
+1. command, the value of the  command variable
+1. algebra, the value of the algebra variable
+1. mathml, the value of the mathml variable
+1. type, the value of lastType()
+
 The HTML functions in the hyperdoc browser depend on the order
 of these variables so do not change this without changing the
 corresponding functions in the browser HTML.
@@ -13068,14 +13065,13 @@ Differentiating a sum with respect to its indexing variable correctly gives
 zero. This is due to the introduction of dummy variables in the internal
 representation of a sum: the operator =%defsum= takes 5 arguments, namely
 
-\begin{enumerate}
-\item the summands, where each occurrence of the indexing variable is replaced
+1. the summands, where each occurrence of the indexing variable is replaced
   by 
-\item the dummy variable,
-\item the indexing variable,
-\item the lower bound, and
-\item the upper bound.
-\end{enumerate}
+1. the dummy variable,
+1. the indexing variable,
+1. the lower bound, and
+1. the upper bound.
+
 
 **** dvprod and dvdprod
 The dvprod and dvdprod operations implement differentiation of products with 
@@ -58527,12 +58523,11 @@ The differentiation operator opdiff takes three arguments corresponding to
 $$
 F_{,i}(a_1,a_2,...,a_n):
 $$
-\begin{enumerate}
-\item $F(a_1,...,dm,...a_n)$, where the $i$^{th} argument is a
+1. $F(a_1,...,dm,...a_n)$, where the $i$^{th} argument is a
   dummy variable,
-\item $dm$, the dummy variable, and
-\item $a_i$, the point at which the differential is evaluated.
-\end{enumerate}
+1. $dm$, the dummy variable, and
+1. $a_i$, the point at which the differential is evaluated.
+
 
 In the following, it seems to be safe to use the same dummy variable
 throughout.  At least, this is done also in FunctionSpace, and did
@@ -86605,11 +86600,10 @@ the required prime numbers. Overall this is a small percentage of the
 time needed to factor.
 
 This loop uses three pieces of information
-\begin{enumerate}
-\item n which is the number we are testing
-\item d which is the current prime to test
-\item lim which is the upper limit of the primes to test
-\end{enumerate}
+1. n which is the number we are testing
+1. d which is the current prime to test
+1. lim which is the upper limit of the primes to test
+
 
 We loop d over the list of primes. If the remaining number n is
 smaller than the square of d then n must be prime and if it is
@@ -226394,15 +226388,14 @@ This file contains a crude na\"ive implementation of rational interpolation,
 where the coefficients of the rational function are in any given field.
 
 *** Questions and Outlook
-\begin{itemize}
-\item Maybe this file should be joined with pinterp.spad, where polynomial
+- Maybe this file should be joined with pinterp.spad, where polynomial
   Lagrange interpolation is implemented. I have a second version that parallels
   the structure of pinterp.spad closely. 
-\item There are probably better ways to implement rational interpolation. Maybe
+- There are probably better ways to implement rational interpolation. Maybe
   {http://www.cs.ucsb.edu/~omer/personal/abstracts/rational.html} contains
   something useful, but I don't know.
-\item Comments welcome!
-\end{itemize}
+- Comments welcome!
+
 
 #+NAME: RationalInterpolation.input
 #+begin_src axiom-input :noweb yes
@@ -229753,8 +229746,7 @@ if it does not appear in any other argument. (=%defsum= is a good example)
 
 The arguments of the two operators are as follows:
 
-\begin{enumerate}
-\item eq, the vanishing expression
+1. eq, the vanishing expression
 
 #+NAME: implementation: RecurrenceOperator
 #+begin_src common-lisp :noweb yes
@@ -229762,7 +229754,7 @@ The arguments of the two operators are as follows:
     eqAsF l == l.1
 #+end_src
 
-\item dummy, a dummy variable to make substitutions possible
+1. dummy, a dummy variable to make substitutions possible
 
 #+NAME: implementation: RecurrenceOperator
 #+begin_src common-lisp :noweb yes
@@ -229773,7 +229765,7 @@ The arguments of the two operators are as follows:
     dummyAsF l == l.2
 #+end_src
 
-\item the variable for display
+1. the variable for display
 
 #+NAME: implementation: RecurrenceOperator
 #+begin_src common-lisp :noweb yes
@@ -229781,7 +229773,7 @@ The arguments of the two operators are as follows:
     displayVariable l == l.3
 #+end_src
 
-\item operatorName(argument)
+1. operatorName(argument)
 
 #+NAME: implementation: RecurrenceOperator
 #+begin_src common-lisp :noweb yes
@@ -229800,22 +229792,21 @@ operator, it is intended to indicate the coefficient, not the argument of the
 power series.
 
 
-\item values in reversed order.
+1. values in reversed order.
 
-  \begin{itemize}
-  \item rootOfRec: maybe values should be preceded by the index of the
+- rootOfRec: maybe values should be preceded by the index of the
     first given value. Currently, the last value is interpreted as $f(0)$.
 
-  \item rootOfADE: values are the first few coefficients of the power
+- rootOfADE: values are the first few coefficients of the power
     series expansion in order.
-  \end{itemize}
+
 
 #+NAME: implementation: RecurrenceOperator
 #+begin_src common-lisp :noweb yes
     initialValues: List F -> List F
     initialValues l == rest(l, 4)
 #+end_src
-\end{enumerate}
+
 
 *** Recurrences
 

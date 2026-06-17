@@ -9678,23 +9678,22 @@ int writeViewport(int thingsToWrite) {
 #+end_src
 *** main
 The main function performs the following steps
-\begin{enumerate}
-\item calls XOpenDisplay 
+1. calls XOpenDisplay
 (See [[#XOpenDisplay][XOpenDisplay]] on page~[[#XOpenDisplay][XOpenDisplay]]), 
 using the DISPLAY variable from the environment, to choose the display.
-\item uses the DefaultScreen macro 
+1. uses the DefaultScreen macro
 (See [[#DefaultScreen][DefaultScreen]] on page~[[#DefaultScreen][DefaultScreen]]), to get the
 user's default screen.
-\item uses the RootWindow macro 
+1. uses the RootWindow macro
 (See [[#RootWindow][RootWindow]] on page~[[#RootWindow][RootWindow]]), to get the
 root window on the user's display and screen.
-\item calls XCreateAssocTable to create an association table with
+1. calls XCreateAssocTable to create an association table with
 =nbuckets= which is elsewhere defined to be 128. Note that we
 do not actually use the X10 definition of this function but use our
 own version. See [[#XCreateAssocTable][XCreateAssocTable]] on page~[[#XCreateAssocTable][XCreateAssocTable]].
 This table is used to hold an association between the control panel buttons
 and the window they control.
-\end{enumerate}
+
 #+INDEX: view2d!main
 #+INDEX: main view2d
 #+NAME: view2d
@@ -12830,16 +12829,15 @@ Traverse each component.
 We decide here, before we begin traversing the
 component what we want to interpret it as.
 Here's the convention used to figure that out:
-\begin{itemize}
-\item points: #anLLPoint$\rightarrow$numOfLists was 1\\
+- points: #anLLPoint$\rightarrow$numOfLists was 1\\
 #anLPoint$\rightarrow$numOfPoints is 1
-\item lines: #anLLPoint$\rightarrow$ numOfLists was 1\\
+- lines: #anLLPoint$\rightarrow$ numOfLists was 1\\
 #anLPoint$\rightarrow$numOfPoints > 1
-\item polygons: #anLLPoint$\rightarrow$numOfLists was 2\\
+- polygons: #anLLPoint$\rightarrow$numOfLists was 2\\
 #anLPoint$\rightarrow$numOfPoints is 1
-\item surface: #anLLPoint$\rightarrow$numOfLists was some $m>1$\\
+- surface: #anLLPoint$\rightarrow$numOfLists was some $m>1$\\
 #anLPoint$\rightarrow$numOfPoints all point lists are the same.
-\end{itemize}
+
 #+NAME: view3d
 #+begin_src common-lisp :noweb yes
     anLLPoint = viewData.lllp.llp;
@@ -20897,22 +20895,21 @@ The region box is not drawn correctly when perspective is altered.
 
 
 *FUTURE DIRECTIONS*:
-\begin{itemize}
-\item for view3d color rendering, may want to convert LINE drawing color
+- for view3d color rendering, may want to convert LINE drawing color
 to the appropriate grayscale.  Right now, they're all drawn in black.
-\item for view3d's routines for color rendering, may want to implement
+- for view3d's routines for color rendering, may want to implement
 color drawing for postscript functions just in case someone does
 have access to a color postscript printer.
-\item implement more functionality for attributes used in GC, i.e., dashed
+- implement more functionality for attributes used in GC, i.e., dashed
 line, dotted line etc.
-\item implement a display postscript menu to set things like picture size,
+- implement a display postscript menu to set things like picture size,
 landscape/portrait orientation, picture centered, left, right, up,
 down, etc., reversed video.
-\item make font an attribute in postscripts's graphics context so the
+- make font an attribute in postscripts's graphics context so the
 font can be set in user program.  Right now, it uses only 1 font.
-\item for view2d's stuff, implement a smaller font for the drawing the 
+- for view2d's stuff, implement a smaller font for the drawing the
 units on the axes.
-\end{itemize}
+
 
 ** gfun.c
 Indices for PostScript draw procedures.
@@ -22840,21 +22837,20 @@ XDrawString (Display *display, Drawable drawable, GC gc,
              int x, int y, char *string, int length);
 #+end_example
 
-\begin{itemize}
-\item =display= --
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =drawable= -- Specifies the drawable. 
-\item =gc= -- Specifies the graphics context. 
-\item =x= --
+- =drawable= -- Specifies the drawable.
+- =gc= -- Specifies the graphics context.
+- =x= --
 Specify the x coordinate of the baseline starting position for
 the character, relative to the origin of the specified drawable.
-\item =y= --
+- =y= --
 Specify the y coordinate of the baseline starting position for
 the character, relative to the origin of the specified drawable.
-\item =string= -- Specifies the character string. 
-\item =length= -- 
+- =string= -- Specifies the character string.
+- =length= --
 Specifies the number of characters in the string argument. 
-\end{itemize}
+
 
 XDrawString draws the given string into a drawable using the
 foreground only to draw set bits in the font. It does not affect any
@@ -22878,18 +22874,17 @@ From the Xlib Drawing Primitives, XDrawPoint draws a point.
 XDrawPoint (Display *display, Drawable drawable, GC gc, int x, int y);
 #+end_example
 *Arguments*
-\begin{itemize}
-\item =display= --
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =drawable= -- Specifies the drawable. 
-\item =gc= -- Specifies the graphics context. 
-\item =x= --
+- =drawable= -- Specifies the drawable.
+- =gc= -- Specifies the graphics context.
+- =x= --
 Specify the x coordinate of the point, relative to the corner of the 
 drawable. 
-\item =y= --
+- =y= --
 Specify the y coordinate of the point, relative to the corner of the 
 drawable. 
-\end{itemize}
+
 
 XDrawPoint uses the foreground pixel and function components of the
 graphics con- text to draw a single point into the specified
@@ -22905,24 +22900,23 @@ From the Xlib Drawing Primitives, XDrawLine draws a line between two points.
 XDrawLine(Display *display, Drawable drawable, GCgc, 
           int x1, int y1, int x2, int y2);
 #+end_example
-\begin{itemize}
-\item =display= --
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =drawable= -- Specifies the drawable. 
-\item =gc= -- Specifies the graphics context. 
-\item =x1= --
+- =drawable= -- Specifies the drawable.
+- =gc= -- Specifies the graphics context.
+- =x1= --
 Specify the x coordinate of the start point of the line relative to
 the drawable origin. 
-\item =y1= --
+- =y1= --
 Specify the y coordinate of the start point of the line relative to
 the drawable origin. 
-\item =x2= --
+- =x2= --
 Specify the x coordinate of the end point of the line relative to
 the drawable origin. 
-\item =y2= --
+- =y2= --
 Specify the y coordinate of the end point of the line relative to
 the drawable origin. 
-\end{itemize}
+
 
 XDrawLine connects point (xl, yl) to point (x2, y2).  XDrawLine uses
 the components of the specified graphics context to draw a line
@@ -22946,22 +22940,21 @@ XDrawImageString(Display *display, Drawable drawable, GC gc, int x, int y,
                  char *string, int length);
 #+end_example
 
-\begin{itemize}
-\item =display= --
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =drawable= -- Specifies the drawable. 
-\item =gc= -- Specifies the graphics context. 
-\item =x= --
+- =drawable= -- Specifies the drawable.
+- =gc= -- Specifies the graphics context.
+- =x= --
 Specify the x coordinate of the baseline starting position for the
 image text character, relative to the origin of the specified
 drawable.
-\item =y= --
+- =y= --
 Specify the y coordinate of the baseline starting position for the
 image text character, relative to the origin of the specified
 drawable.
-\item =string= -- Specifies the character string
-\item =length= -- Specifies the number of characters in the string
-\end{itemize}
+- =string= -- Specifies the character string
+- =length= -- Specifies the number of characters in the string
+
 
 XDrawImageString uses these graphics context components: plane\_mask,
 foreground, background, font, subwindow\_mode, clip x origin,
@@ -22987,28 +22980,27 @@ XFillArc (Display *display, Drawable drawable, GC gc,
 #+end_example
 
 *Arguments*
-\begin{itemize}
-\item =display= --
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =drawable= -- Specifies the drawable. 
-\item =gc= -- Specifies the graphics context. 
-\item =x= --
+- =drawable= -- Specifies the drawable.
+- =gc= -- Specifies the graphics context.
+- =x= --
 Specify the x coordinate of the upper-left corner of the bounding box 
 containing the arc, relative to the origin of the drawable. 
-\item =y= --
+- =y= --
 Specify the y coordinate of the upper-left corner of the bounding box 
 containing the arc, relative to the origin of the drawable. 
-\item =width= --
+- =width= --
 Specify the width in pixels. These are the major and minor axes of the arc. 
-\item =height= --
+- =height= --
 Specify the height in pixels. These are the major and minor axes of the arc. 
-\item =angle1= --
+- =angle1= --
 Specifies the start of the arc relative to the three-o'clock position
 from the center. Angles are specified in degrees, multiplied by 64.
-\item =angle2= --
+- =angle2= --
 Specifies the path and extent of the arc relative to the start of the
 arc. Angles are specified in degrees, multiplied by 64.
-\end{itemize}
+
 
 *Description*
 
@@ -23039,30 +23031,29 @@ a rectangle.
 XDrawArc(Display *display, Drawable drawable, GC gc, int x, int y, 
          unsigned int width, unsigned int height, int angle1, int angle2);
 #+end_example
-\begin{itemize}
-\item =display= --
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =drawable= -- Specifies the drawable. 
-\item =gc= -- Specifies the graphics context. 
-\item =x= --
+- =drawable= -- Specifies the drawable.
+- =gc= -- Specifies the graphics context.
+- =x= --
 Specify the x coordinate of the upper-left corner of the rectangle that 
 contains the arc, relative to the origin of the specified drawable. 
-\item =y= --
+- =y= --
 Specify the y coordinate of the upper-left corner of the rectangle that 
 contains the arc, relative to the origin of the specified drawable. 
-\item =width= --
+- =width= --
 Specify the width in pixels of the major and minor axes of the arc. 
-\item =height= --
+- =height= --
 Specify the height in pixels of the major and minor axes of the arc. 
-\item =angle1= --
+- =angle1= --
 Specifies the start of the arc relative to the three-o'clock position
 from the center. Angles are specified in 64ths of a degree, (360 * 64
 is a complete circle).
-\item =int angle2= --
+- =int angle2= --
 Specifies the path and extent of the arc relative to the start of the
 arc.  Angles are specified in 64ths of a degree, (360 * 64 is a
 complete circle).
-\end{itemize}
+
 
 XDrawArc draws a circular or elliptical arc. An arc is specified by a
 rectangle and two angles. The x and y coordinates are relative to the
@@ -23101,13 +23092,12 @@ XSetForeground m set the foreground pixel value in a graphics context.
 XSetForeground (Display *display, GC gc, unsigned long foreground);
 #+end_example
 *Arguments*
-\begin{itemize}
-\item =display= -- 
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =gc= -- Specifies the graphics context. 
-\item =foreground= --
+- =gc= -- Specifies the graphics context.
+- =foreground= --
 Specifies the foreground you want to set for the specified graphics context. 
-\end{itemize}
+
 
 *** XSetBackground
 # label: XSetBackground
@@ -23118,13 +23108,12 @@ XSetBackground m set the background pixel value in a graphics context.
 XSetBackground (Display *display, GC gc, unsigned long background);
 #+end_example
 *Arguments*
-\begin{itemize}
-\item =display= -- 
+- =display= --
 Specifies a pointer to the Display structure; returned from XOpenDisplay. 
-\item =gc= -- Specifies the graphics context. 
-\item =background= --
+- =gc= -- Specifies the graphics context.
+- =background= --
 Specifies the background you want to set for the specified graphics context. 
-\end{itemize}
+
 
 *** XSetLineAttributes
 # label: XSetLineAttributes
@@ -23132,23 +23121,22 @@ Specifies the background you want to set for the specified graphics context.
 In Xlib, in the Graphics Context, the function XSetLineAttributes 
 sets four types of line characteristics in the GC: line\_width, 
 line\_style, cap\_style, and join\_style. 
-\begin{itemize}
-\item =line\_width= -- Specifies the line width you want to set
+- =line\_width= -- Specifies the line width you want to set
 for the specified graphics context.  A line\_width of zero (0) means
 to use the fastest algorithm for drawing a line of one pixel
 width. These lines may not meet properly with lines specified as width
 1 or more.
-\item =line\_style= -- 
+- =line\_style= --
 Specifies the line style you want to set for the specified graphics context. 
 Possible values are LineSolid, LineOnOffDash, or LineDouble-Dash. 
-\item =cap\_style= --
+- =cap\_style= --
 Specifies the line and cap style you want to set for the specified graphics 
 context. Possible values are CapNotLast, CapButt, CapRound, or 
 CapProjecting. 
-\item =join\_style= --
+- =join\_style= --
 Specifies the line-join style you want to set for the specified graphics con- 
 text. Possible values are JoinMiter, JoinRound, or JoinBevel. 
-\end{itemize}
+
 
 *** DefaultScreen
 # label: DefaultScreen
@@ -23169,10 +23157,9 @@ of this function.
   XAssocTable *XCreateAssocTable(int size) 
 #+end_example
 *Arguments*
-\begin{itemize}
-\item =size= 
+- =size=
 Specifies the number of buckets in the hashed association table. 
-\end{itemize}
+
 *Description*
 XCreateAssocTable creates an association table, which allows you to
 associate your own structures with X resources in a fast lookup
@@ -23202,12 +23189,11 @@ use XOpenDisplay().
     Display *XOpenDisplay(char *displayname);
 #+end_example
 *Arguments*
-\begin{itemize}
-\item =displayname= Specifies the hardware display name, which
+- =displayname= Specifies the hardware display name, which
 determines the display and communications domain to be used. On a
 POSIX-conformant system, if the displayname is NULL, it defaults to
 the value of the DISPLAY environment variable.
-\end{itemize}
+
 
 *Description*
 
@@ -23264,12 +23250,10 @@ access elements of the Display and Screen structures only by using the
 information macros or functions. 
 
 ** X11 API calls
-\begin{itemize}
-\item XSolidColor
-\begin{itemize}
-\item moColor to define the foreground color
-\item moColor\_BG to define the background color
-\end{itemize}
+- XSolidColor
+- moColor to define the foreground color
+- moColor\_BG to define the background color
+
 \item void XMakeAssoc(Display *,HashTable *,Window,int *);
 \item int *XLookUpAssoc(Display *, HashTable *, Window);
 \item void XDeleteAssoc(Display * , HashTable * , Window );
@@ -23444,7 +23428,7 @@ information macros or functions.
 \item (impl) XLookUpAssoc(Display * dsp, HashTable *table,Window w)
 \item (impl) XDeleteAssoc(Display * dsp,HashTable * table, Window w)
 \item XSelectInput(dsply, menu, KeyPressMask|ButtonPressMask|ExposureMask);
-\end{itemize}
+
 
 * libspad
 These are library routines to support the graphics. Two of them,
@@ -23518,11 +23502,10 @@ signal are ignored and discarded.
 Options may be specified by setting /sa\_flags/. 
 The meaning of the various bits is as follows:
 
-\begin{itemize}
-\item *SA\_NOCLDSTOP* If this bit is set when installing a catching 
+- *SA\_NOCLDSTOP* If this bit is set when installing a catching
 function for the SIGCHLD signal, the SIGCHLD signal will  be generated 
 only when a child process exits, not when a child process stops.
-\item *SA\_NOCLDWAIT*
+- *SA\_NOCLDWAIT*
 If this bit is set when calling /sigaction()/ for the
 SIGCHLD signal, the system will not create zombie processes
 when children of the calling process exit. If the calling
@@ -23530,20 +23513,20 @@ process subsequently issues a /wait()/ (or equivalent),
 it blocks until all of the calling process's child processes
 terminate, and then returns a value of -1 with errno set to
 ECHILD.
-\item *SA\_ONSTACK* If this bit is set, the system will deliver the 
+- *SA\_ONSTACK* If this bit is set, the system will deliver the
 signal to the process on a /signal stack/, specified with
 *sigaltstack(2)*.
-\item *SA\_NODEFER* If this bit is set, further occurrences of the 
+- *SA\_NODEFER* If this bit is set, further occurrences of the
 delivered signal are not masked during the execution of the handler.
-\item *SA\_RESETHAND* If this bit is set, the handler is reset 
+- *SA\_RESETHAND* If this bit is set, the handler is reset
 to SIG\_DFL at the moment the signal is delivered.
-\item *SA\_RESTART* See the paragraph below
-\item {SA\_SIGINFO} If this bit is set, the handler function is assumed to 
+- *SA\_RESTART* See the paragraph below
+- {SA\_SIGINFO} If this bit is set, the handler function is assumed to
 be pointed to by the sa\_sigaction member of struct sigaction
 and should match the prototype shown above or as below in
 EXAMPLES. This bit should not be set when assigning SIG\_DFL
 or SIG\_IGN
-\end{itemize}
+
 If a signal is caught during the system calls listed below, the call may be 
 forced to terminate with the error EINTR, the call may return with a data 
 transfer shorter than requested, or the call may be restarted. Restart of 
@@ -23643,13 +23626,12 @@ ucontext\_t.
 
 The *sigaction()* system call will fail and no new signal handler will be
 installed if one of the following occurs:
-\begin{itemize}
-\item *[EFAULT]* Either /act/ or /oact/ points to memory that 
+- *[EFAULT]* Either /act/ or /oact/ points to memory that
 is not a valid part of the process address space
-\item *[EINVAL]* The /sig/ argument is not a valid signal number
-\item *[EINVAL]* An attempt is made to ignore or supply a handler 
+- *[EINVAL]* The /sig/ argument is not a valid signal number
+- *[EINVAL]* An attempt is made to ignore or supply a handler
 for SIGKILL or SIGSTOP
-\end{itemize}
+
 
 #+NAME: bsdsignal.c
 #+begin_src c :noweb yes

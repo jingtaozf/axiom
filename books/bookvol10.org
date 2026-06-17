@@ -18,21 +18,19 @@ The first idea that you need to understand is the overall process
 of adding algebra code. Lets assume that you have a brand new spad
 file, called bsd.spad containing a simple domain BSD. The
 steps in the process of adding this file are:
-\begin{enumerate}
-\item Find out where the algebra code lives in the lattice.
-\begin{enumerate}
-\item Start a new interpsys session. This will give you a clean build.
-\item )set mes auto on -- This will allow us to see what algebra files
+1. Find out where the algebra code lives in the lattice.
+1. Start a new interpsys session. This will give you a clean build.
+1. )set mes auto on -- This will allow us to see what algebra files
 get loaded during compile
-\item )co BAR.spad       
-\item We collect all the names of the algebra files BSD loaded. Look for
+1. )co BAR.spad
+1. We collect all the names of the algebra files BSD loaded. Look for
 lines that say a file is loaded. Collect all of the names of those files.
-\item For each of the loaded files determine which layer contains the 
+1. For each of the loaded files determine which layer contains the
 loaded file by searching this file. For instance, if BAR.spad required
 FSAGG then look for /FSAGG.o, which resides in layer 13. 
-\item Determine the highest layer (e.g. 13) that contains the required files
+1. Determine the highest layer (e.g. 13) that contains the required files
 and add the new algebra file (e.g. BSD.o) in the next layer (e.g. 14).
-\item Next we need to create the graph structure information. This involves
+1. Next we need to create the graph structure information. This involves
 creating a two part stanza of information. For instance,
 #+begin_example
 "BSD" [color="#88FF44",href="bookvol10.3.pdf#nameddest=BSD",
@@ -42,27 +40,26 @@ creating a two part stanza of information. For instance,
 /*"BSD" -> {"IEVALAB"; "CLAGG"; "SETAGG"; "FINITE"; "OM"; "PATMAB"}*/
 "BSD" -> "FSAGG" 
 #+end_example
-\item The first part determines the color, shape of the graph node,
+1. The first part determines the color, shape of the graph node,
 and a link to the book containing the source code. The color and name
 of the book are related:
-\begin{enumerate}
-\item #4488FF == bookvol10.2
-\item #88FF44 == bookvol10.3
-\item #FF4488 == bookvol10.4
-\item #444488 == bookvol10.5
-\end{enumerate}
+1. #4488FF == bookvol10.2
+1. #88FF44 == bookvol10.3
+1. #FF4488 == bookvol10.4
+1. #444488 == bookvol10.5
+
 \item The second part is the graph structure. All of the loaded algebra
 files are listed (currently as comments due to the size of the complete
 graph). In particular, the node that ``supports'' BSD is FSAGG so we
 make sure that the graph edge ="BSD" -> "FSAGG"= is uncommented.
-\end{enumerate}
+
 \item Insert the documentation after the layer (e.g after layer 14).
 This documentation is used to reconstruct the full and partial graphs.
 \item Insert the =${OUT}/BSD.o= file into the layer's file list. This
 will cause the algebra to build after all of the algebra it depends on is
 built.
 \item Add the algebra to the books
-\end{enumerate}
+
 
 ** Adding the algebra to the proper book
 The algebra sources are in 4 books:
@@ -93,31 +90,29 @@ will run the code and then compare the actual output with the lines marked
 ``--R'' and report any differences. 
 
 You can create this file by:
-\begin{itemize}
-\item Start Axiom
-\item make a bsd.input file with all of your algebra tests
-\item )co BSD -- compile your algebra to make sure it is up to date
-\item )spool BSD.output -- this will put all output into a file
-\item )read bsd -- this will read the tests and the output will be
+- Start Axiom
+- make a bsd.input file with all of your algebra tests
+- )co BSD -- compile your algebra to make sure it is up to date
+- )spool BSD.output -- this will put all output into a file
+- )read bsd -- this will read the tests and the output will be
 stored in BSD.output
-\item Modify the BSD.output file to have the same format using 
+- Modify the BSD.output file to have the same format using
 ``--S n of N'' to start the test, ``--R'' to prefix the actual output, 
 and ``--E n'' to end the test.
-\item save the test as bsdtest.input
-\item Validate the newly formatted test file (bsdtest.input):
-\begin{itemize}
-\item start a new Axiom
-\item )co BSD -- compile your new algebra
-\item )read bsdtest.input -- BE SURE to use the new test file format.
+- save the test as bsdtest.input
+- Validate the newly formatted test file (bsdtest.input):
+- start a new Axiom
+- )co BSD -- compile your new algebra
+- )read bsdtest.input -- BE SURE to use the new test file format.
 If you did it right it will create a new file called
 BasicStochasticDifferential.output
-\item )lisp (regress "BasicStochasticDifferential.output") -- this will
+- )lisp (regress "BasicStochasticDifferential.output") -- this will
 run the regress function which compares the actual output with the
 expected output and reports success or failure.
-\item fix up failures and repeat until none remain
-\item add the contents of bsdtest.input to the algebra file
-\end{itemize}
-\end{itemize}
+- fix up failures and repeat until none remain
+- add the contents of bsdtest.input to the algebra file
+
+
 
 **** The input section
 Here we use BasicStochasticDifferential.output to create a set of test
@@ -17506,13 +17501,12 @@ rules will ever be executed. The first two rules happen when the
 system is built from scratch.
 
 A 5 stanza group for this case performs the following functions:
-\begin{enumerate}
-\item extract the lisp BAR.lsp from the pamphlet foo.spad.pamphlet
-\item compile and copy the bootstrap lisp to the final algebra directory
-\item extract the bootstrap BAR.lsp from the spad file foo.spad
-\item compile the extracted BAR domain
-\item copy the compiled BAR to the final algebra directory
-\end{enumerate}
+1. extract the lisp BAR.lsp from the pamphlet foo.spad.pamphlet
+1. compile and copy the bootstrap lisp to the final algebra directory
+1. extract the bootstrap BAR.lsp from the spad file foo.spad
+1. compile the extracted BAR domain
+1. copy the compiled BAR to the final algebra directory
+
 
 The subtle point here occurs in the first item. The bootstrap code
 group (in the layer0 bootstrap code chunk above) asks for the
@@ -17539,17 +17533,16 @@ also contains default code which gives a 3+2+2+2 (9) stanza case.
 (see TSETCAT for an example. Be sure to read the items in reverse order).
 
 A 9 stanza group for this case performs the following functions:
-\begin{enumerate}
-\item extract the bootstrap BAR.lsp from the foo.spad.pamphlet
-\item compile the bootstrap BAR.lsp and copy to the intermediate directory
-\item extract the bootstrap BAR-.lsp from the foo.spad.pamphlet
-\item compile the bootstrap BAR-.lsp and copy to intermediate directory
-\item extract the spad BAR.spad from the pamphlet foo.spad.pamphlet
-\item compile the extracted BAR.spad domain (to get BAR.o)
-\item copy the BAR.o to the final algebra directory
-\item compile the extracted BAR.spad domain (to get BAR-.o)
-\item copy the BAR-.o to the final algebra directory
-\end{enumerate}
+1. extract the bootstrap BAR.lsp from the foo.spad.pamphlet
+1. compile the bootstrap BAR.lsp and copy to the intermediate directory
+1. extract the bootstrap BAR-.lsp from the foo.spad.pamphlet
+1. compile the bootstrap BAR-.lsp and copy to intermediate directory
+1. extract the spad BAR.spad from the pamphlet foo.spad.pamphlet
+1. compile the extracted BAR.spad domain (to get BAR.o)
+1. copy the BAR.o to the final algebra directory
+1. compile the extracted BAR.spad domain (to get BAR-.o)
+1. copy the BAR-.o to the final algebra directory
+
 
 As you can see this is just the combination of the two possible 5
 stanza case. We just have to deal with the BAR- both in regular
@@ -19429,17 +19422,16 @@ relinked each time.
 
 It would be nice if this were not necessary. The authors of the link
 considered two other possibilities:
-\begin{itemize}
-\item Have AXIOM simulate the ASPs, so that the NAG Library would call
+- Have AXIOM simulate the ASPs, so that the NAG Library would call
 back to AXIOM when it wanted to call an ASP. This was rejected as
 being far too slow across a network.
-\item Give NAGD the ability to interpret AXIOM or Fortran code. Thus
+- Give NAGD the ability to interpret AXIOM or Fortran code. Thus
 the NAG routine would call a function which would evaluate a
 representation of an ASP to get the required values. This may happen
 in the future if data interchange mechanisms between systems are
 stanardised, but was rejected for the time being since such a system
 would have to be tailored to match each Fortran compiler that NAGD used.
-\end{itemize}
+
 
 By transmitting source code for ASPs we allow the remote Fortran
 compiler to take care of low-level portability problems.
@@ -19679,14 +19671,13 @@ variables by mapping
 This map causes some of those ``funny things'' to happen in a useful
 way, in certain circumstances.  Those circumstances are the following:
 
-\begin{itemize}
-\item The point that concerns us (generally a non-ordinary singular
+- The point that concerns us (generally a non-ordinary singular
  point) is $(1, 0, 0)$ in projective coordinates.
-\item The points $(0, 1, 0)$ and $(0, 0, 1)$ are not on the curve.
-\item The line $x_0 = 0$ intersects the curve with no multiple points.
-\item The lines $x_1 = 0$ and $x_2 = 0$ intersect the curve with no multiple
+- The points $(0, 1, 0)$ and $(0, 0, 1)$ are not on the curve.
+- The line $x_0 = 0$ intersects the curve with no multiple points.
+- The lines $x_1 = 0$ and $x_2 = 0$ intersect the curve with no multiple
  points other than $(1, 0, 0)$, which has multiplicity $r$.
-\end{itemize}
+
 
 Satisfying all of these conditions, however, only requires a bit of
 simple shifting of the curve.  I shall first describe what happens
@@ -20750,19 +20741,18 @@ for all pairs, then stop.
 
 /Example 1/ Let $I=<f_1=xy-x,f_2=x^2-y>$. We use the 
 lexicographic order with $x > y$.
-\begin{enumerate}
-\item We compute
+1. We compute
 \[S(f_1,f_2)=\frac{x^2y}{xy} \cdot (xy-x)-
 \frac{x^2y}{x^2} \cdot (x^2-y) = -x^2+y^2\]
-\item We compute $\overline{S(f_1,f_2)}^F$. It is $f_3=y^2-y$.
+1. We compute $\overline{S(f_1,f_2)}^F$. It is $f_3=y^2-y$.
 We adjoin this to $F$, so that $F$ is now $F=\{f_1,f_2,f_3\}$.
-\item We start over with the new $F$. It is automatic that
+1. We start over with the new $F$. It is automatic that
 $\overline{S(f_i,f_j)}^F=0$. We need to compute
 $S(f_1,f_3)$ and $S(f_2,f_3)$.
-\item We compute $S(f_1,f_3)=0$
-\item We compute $S(f_2,f_3)=x^3-xy^2$. We compute
+1. We compute $S(f_1,f_3)=0$
+1. We compute $S(f_2,f_3)=x^3-xy^2$. We compute
 $\overline{x^3-xy^2}^F=0$. Note that $F=\{f_1,f_2,f_3\}$.
-\end{enumerate}
+
 
 We see that $\{f_1,f_2,f_3\}$ is a Groebner basis for the ideal $I$.
 
@@ -20782,10 +20772,9 @@ removed, then that smaller set is also a Groebner basis.
 
 By definition, a Groebner basis $G$ of an ideal $I$ is a minimal
 basis provided it satisfies
-\begin{enumerate}
-\item $leadingCoefficient(p) = 1 \forall p \in G$
-\item $\forall p \in G, the leadingTerm(p) \notin <leadingTerm(G-p)>$
-\end{enumerate}
+1. $leadingCoefficient(p) = 1 \forall p \in G$
+1. $\forall p \in G, the leadingTerm(p) \notin <leadingTerm(G-p)>$
+
 
 To construct this minimal bases we divide each element in the given
 basis by its leading coefficient. Now put the elements in some
@@ -21051,19 +21040,18 @@ functions $\ln{}z$ and $\sqrt{z}$.
 
 The choices set out in this Standard are derived from the following
 principles:
-\begin{enumerate}
-\item Branch cuts must lie completely within either the real or imaginary axis.
-\item The principal expression must not have any singularities at finite 
+1. Branch cuts must lie completely within either the real or imaginary axis.
+1. The principal expression must not have any singularities at finite
 points which the original function does not share.
-\item Branch cuts end at branch points.
-\item Where not otherwise determined, the value of a function on its branch 
+1. Branch cuts end at branch points.
+1. Where not otherwise determined, the value of a function on its branch
 cut or cuts is obtained by taking a limit along a path which approaches the 
 branch cut in a counterclockwise manner around one of the branch points 
 which terminate the cut (“counterclockwise continuity”, or CCC for short).
-\item Each inverse trigonometric or hyperbolic function must be real-valued 
+1. Each inverse trigonometric or hyperbolic function must be real-valued
 on the range of the corresponding trigonometric or hyperbolic function when 
 restricted to the real axis. 
-\end{enumerate}
+
 
 Further explanation of these principles can be found in [1].
 

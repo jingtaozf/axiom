@@ -138,34 +138,32 @@ sake of completeness.
 
 *Lemma 3.1* 
 /Let p and r be prime numbers, $p \ne r$./
-\begin{enumerate}
-\item {\sl The multiplicative group of any field $F_{p^t}$ for $t > 0$, denoted
+1. {\sl The multiplicative group of any field $F_{p^t}$ for $t > 0$, denoted
 by $F_{p^t}^*$ is cyclic.}
-\item {\sl Let $f(x)$ be a polynomial with integral coefficients. Then
+1. {\sl Let $f(x)$ be a polynomial with integral coefficients. Then
 $$f(x)^p == f(x^p)(mod\ p)$$}
-\item {\sl Let h(x) be any factor of $x^r - 1$. Let $m == m_r(mod\ r)$. Then
+1. {\sl Let h(x) be any factor of $x^r - 1$. Let $m == m_r(mod\ r)$. Then
 $$x^m == x^{m_r}\ (mod\ h(x))$$}
-\item {\sl Let $o_r(p)$ be the order of $p\ module\ r$. Then in 
+1. {\sl Let $o_r(p)$ be the order of $p\ module\ r$. Then in
 $F_p$, ${{x^r - 1}\over{x-1}}$ factorises into irreducible polynomials
 each of degree $o_r(p)$.}
-\end{enumerate}
+
 /Proof/
-\begin{enumerate}
-\item See, e.g., [LN86]
-\item Let $f(x) = a_0+a_1x+...+a_dx^d$. The coefficient of $x^i$ in 
+1. See, e.g., [LN86]
+1. Let $f(x) = a_0+a_1x+...+a_dx^d$. The coefficient of $x^i$ in
 $f(x)^p$ is
 $$\Sigma_{{i_0+...+i_d=p}\over{i_1+2i_2+...+di_d=i}}
 a_0^{i_0} ... a_d^{i_d} {{p!}\over{i_0! ... i_d!}}$$
 Note that this sum is divisible by $p$ unless one of the $i_j$'s is $p$.
 In the latter case $i=pj$ and the coefficient of $x^i$ is
 $a_j^p = a_j$. This gives us the required congruence.
-\item Let $m=kr+m_r$. Now
+1. Let $m=kr+m_r$. Now
 | \ \ \ \ \ \ \ \ |  | $x^r$ | $==$ | $1$ | $(mod\ x^r - 1)$ |
 | \ \ \ \ \ \ \ \ | $=>$ | $x^{kr}$ | $==$ | $1$ | $(mod\ x^r - 1)$ |
 | \ \ \ \ \ \ \ \ | $=>$ | $x^{kr+m_r}$ | $==$ | $x^{m_r}$ | $(mod\ x^r - 1)$ |
 | \ \ \ \ \ \ \ \ | $=>$ | $x^m$ | $==$ | $x^{m_r}$ | $(mod\ h(x))$ |
 
-\item Let $d = o_r(p)$ and $Q_r(x) = {{x^r-1}\over{x-1}}$.
+1. Let $d = o_r(p)$ and $Q_r(x) = {{x^r-1}\over{x-1}}$.
 Suppose that $Q_r(x)$ has an irreducible factor, $h(x)$ in $F_p$ of
 degree $k$. Now $F_p[x]/h(x)$ forms a field of size $p^k$ and the 
 multiplicative subgroup of $F_p[x]/h(x)$ is cyclic with a generator,
@@ -182,7 +180,7 @@ $$x^r == 1$$
 Thus the order of $x$ in this field must be $r$ (since $r$ is prime and
 $x !== 1$). Therefore $r \vert (p^k - 1)$, i.e. $p^k == 1 (mod\ r)$. Hence,
 $d \vert k$. Therefore, $k = d$, and the lemma follows.
-\end{enumerate}
+
 
 In addition to the above algebraic facts, we will need the following two 
 number theoretic facts.
@@ -200,21 +198,20 @@ $${{n}\over{6\ log\ n}} \le \pi(n) \le {{8n}\over{log\ n}}$$
 ** The Algorithm
 \hrule
 Input: integer $n > 1$
-\begin{enumerate}
-\item if ($n$ is of the form $a^b$, $b>1$) output COMPOSITE;
-\item $r = 2$;
-\item while $(r < n)$ \{
-\item \ \ \ \ if ($gcd(n,r) \ne 1$) output COMPOSITE;
-\item \ \ \ \ if ($r$ is prime)
-\item \ \ \ \ \ \ \ \ let $q$ be the largest prime factor of $r - 1$;
-\item \ \ \ \ \ \ \ \ if ($q \ge 4\sqrt{r}\ log\ n$) and ($n^{{r-1}\over{q}} !== 1 (mod\ r)$)
-\item \ \ \ \ \ \ \ \ \ \ \ \ break;
-\item \ \ \ \ $r \leftarrow r + 1$;
-\item \}
-\item for $a = 1$ to $2\sqrt{r}\ log\ n$
-\item \ \ \ \ if ($(x-a)^n !== (x^n - a)(mod\ x^r-1,n)$) output COMPOSITE;
-\item output PRIME;
-\end{enumerate}
+1. if ($n$ is of the form $a^b$, $b>1$) output COMPOSITE;
+1. $r = 2$;
+1. while $(r < n)$ \{
+1. \ \ \ \ if ($gcd(n,r) \ne 1$) output COMPOSITE;
+1. \ \ \ \ if ($r$ is prime)
+1. \ \ \ \ \ \ \ \ let $q$ be the largest prime factor of $r - 1$;
+1. \ \ \ \ \ \ \ \ if ($q \ge 4\sqrt{r}\ log\ n$) and ($n^{{r-1}\over{q}} !== 1 (mod\ r)$)
+1. \ \ \ \ \ \ \ \ \ \ \ \ break;
+1. \ \ \ \ $r \leftarrow r + 1$;
+1. \}
+1. for $a = 1$ to $2\sqrt{r}\ log\ n$
+1. \ \ \ \ if ($(x-a)^n !== (x^n - a)(mod\ x^r-1,n)$) output COMPOSITE;
+1. output PRIME;
+
 
 \hrule
 

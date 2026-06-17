@@ -452,15 +452,14 @@ So we could replace command (2) above by
 
 A large number of coercions are performed automatically. Even the
 simple computation $x+1$ causes three coercions:
-\begin{itemize}
-\item[(1)] the variable x from the domain =Variable= to the domain 
+- [(1)] the variable x from the domain =Variable= to the domain
 =Polynomial Integer=;
-\item[(2)] the number 1 from the domain =PositiveInteger= to the domain 
+- [(2)] the number 1 from the domain =PositiveInteger= to the domain
 =Polynomial Integer=, passing via =Integer=;
-\item[(3)] the result $x + 1$ from the domain =Polynomial Integer= 
+- [(3)] the result $x + 1$ from the domain =Polynomial Integer=
 to the domain OutputForm, using sub-coercions of $x$ and 1 to 
 =OutputForm=.
-\end{itemize}
+
 
 All printing actually takes place from the domain =OutputForm=, which
 is also the starting point for conversions to TeX format, Fortran etc.
@@ -516,16 +515,15 @@ entries, and seems to behave as one. First, we need to explain what
 combined into a (disjoint) union domain, denoted 
 =Union=($D_1,...,D_n$). The $D_i$ are called the *branches* of the 
 union. The operations available on this union domain are:}
-\begin{itemize}
-\item {\sl equality -- two elements are equal if they come from the same 
+- {\sl equality -- two elements are equal if they come from the same
 branch and are equal in that branch;}
-\item /coercion to OutputForm;/
-\item /coercion from each $D_i$ to the union domain;/
-\item {\sl coercion to each $D_i$ from the union domain, which may fail if 
+- /coercion to OutputForm;/
+- /coercion from each $D_i$ to the union domain;/
+- {\sl coercion to each $D_i$ from the union domain, which may fail if
 the union object is not in the correct branch;}
-\item {\sl an in x predicate case , for testing if the union object 
+- {\sl an in x predicate case , for testing if the union object
 actually is in a particular branch or not.}
-\end{itemize}
+
 {\sl These union domains correspond to what some other languages call 
 ``sum types''. A particularly useful case is exemplified by the 
 ``exact quotient'' operation on =Integer=: its return type is 
@@ -678,12 +676,11 @@ some help.
 symbols (such as $+$) or complete english words strung together. In this 
 case, every word after the first is capitalised. Thus =integrate=
 but =complexIntegrate=. In addition:}
-\begin{itemize}
-\item {\sl all boolean predicates end in a *?* , as in =odd?=, 
+- {\sl all boolean predicates end in a *?* , as in =odd?=,
 which tests if a number is odd}
-\item {\sl all destructive functions which operate on data structures 
+- {\sl all destructive functions which operate on data structures
 end in a *!* , as in =reverse!=, which reverses a list destructively.}
-\end{itemize}
+
 {\sl Conversely, the names of domains (and other constructors we will come 
 to later) consist of english words strung together, all of which are 
 capitalised, as in =IntegerMod= or =UnivariatePuiseuxSeries=.}
@@ -1547,8 +1544,7 @@ polynomial ordering, and hence the truncation is not as efficient as it
 might be.
 
 The key Axiom functions that we need to use are briefly explained now.
-\begin{itemize}
-\item *Polynomial* is the type Axiom assigns by default to polynomial-like
+- *Polynomial* is the type Axiom assigns by default to polynomial-like
 objects. These types can be seen in Axiom after every object is computed (use
 the Axiom system command =)set message type on= if they are not being
 shown). This is a functor, which, given a =Ring= $R$, returns a domain in\\
@@ -1560,7 +1556,7 @@ Hence this type is a traditional sparse multivariate polynomial, and is
 Axiom's default type. There are others, in particular dense polynomials
 and polynomials represented in a distributed, rather than recursive, fashion,
 but these do not appear unless explicitly called for.
-\item *PolynomialCategory* is the category of the result of 
+- *PolynomialCategory* is the category of the result of
 =Polynomial=, as is show by the browser (the =Parents= option on
 =Polynomial=). This category takes as arguments a =Ring= $R$,
 an =OrderedSet=, known typically as =VarSet=, which represents the
@@ -1580,7 +1576,7 @@ property.}, known as $E$, which represents the exponents of the polynomial
 structure. So a domain in the category =PolynomialCategory(R,E,VarSet)=
 is a representation of polynomials with variables =VarSet= and coefficients
 from $R$, using $E$ as the representation of the exponents.
-\item *PolynomialRing* is used in the implementation of =Polynomial=
+- *PolynomialRing* is used in the implementation of =Polynomial=
 (via\\
 =SparseMultivariatePolynomial=, as can be found by the =Lineage=
 option of the browser). This functor takes as arguments a =Ring= $R$, 
@@ -1590,7 +1586,7 @@ set of exponents, and produces formal polynomials. In particular, if $E$
 is $\mathbb{N}$ (the domain =NonNegativeInteger= in Axiom parlance),
 one gets the standard univariate polynomials, where no name has been
 given to the variable.
-\item *FreeModule* is used in the implementation of =PolynomialRing=,
+- *FreeModule* is used in the implementation of =PolynomialRing=,
 as can be found by using the =Lineage= option of the browser. This takes
 as arguments a =Ring= $R$ and an =OrderedSet= $S$, and generates
 the free module over $R$ whose generators are indexed by the elements of
@@ -1599,7 +1595,7 @@ addition etc., but adding definitions of multiplication, relying on the
 addition between the exponents to define the multiplication of polynomials.
 Let us see precisely how this is defined (we have deleted lines redundant
 to the expository points we wish to make)
-\end{itemize}
+
 #+begin_example
 PolynomialRing(R:Ring,E:OrderedAbelianMonoid):
   FiniteAbelianMonoidRing(R,E) with
@@ -1687,28 +1683,27 @@ for some symbols, and an initial weight level. This will return a {\tt
 Ring} as result, the ring of weighted polynomials, in the named
 symbols (at least), over $R$, with the weight level as specified. At
 this point, certain design decisions need to be made.
-\begin{itemize}
-\item Should the weight level be changeable? In Reduce, it is, and advice 
+- Should the weight level be changeable? In Reduce, it is, and advice
 from the theory of repeated approximation (see, for example, Barton \&
 Fitch[cite:@Bart72]) led us to believe that the weight level should be
 changeable.
-\item Should the weights themselves be changeable? In Reduce, they are
+- Should the weights themselves be changeable? In Reduce, they are
 not, and making them changeable would require the re-computation of
 the weights of all products. Of course, the user of Axiom is free to
 build two different domains with different weights assigned in each,
 a flexibility that is not possible in Reduce, and we believe that this
 should be sufficient.
-\item How should the weights be represented. We could produce a separate
+- How should the weights be represented. We could produce a separate
 Axiom data type, we could accept them as equations, and insist at run
 time that they be of the form ``symbol=non-negative integer'', or we
 could treat them as a list of symbols and a corresponding list of
 non-negative integers. For simplicity, we chose the last as the user
 interface (but see later for the internal handling).
-\item Should the weighted polynomials contain only the symbols specified
+- Should the weighted polynomials contain only the symbols specified
 in the weight list, or others? This is debatable, but it seemed simpler,
 as the implementation progressed, to allow other symbols, which then
 effectively have a weight of 0.
-\end{itemize}
+
 
 We can now probably write the specification part of this functor.
 #+begin_example
@@ -1808,16 +1803,15 @@ WeightedPolynomials(R:RIng,VarSet: OrderedSet, E:OrderedAbelianMonoidSup,
 
 How are we going to implement this type? There are various possibilities
 for implementing a functor in Axiom.
-\begin{itemize}
-\item[(1)] Direct re-use of another domain, as\\
+- [(1)] Direct re-use of another domain, as\\
 =OrdinaryWeightedPolynomials= re-uses =WeightedPolynomials=
-\item[(2)] An existing domain with new operators added by means of an
+- [(2)] An existing domain with new operators added by means of an
 =add= clause. The previous method can be viewed as a trivial case
 of this method.
-\item[(3)] A new implementation, where the representation of the data
+- [(3)] A new implementation, where the representation of the data
 objects is defined, but all operations are defined from scratch (or
 provided by the default definitions given in certain categories)
-\item[(4)] A hybrid approach, where a domain is added to, but we also
+- [(4)] A hybrid approach, where a domain is added to, but we also
 quote its representation in order to dive into its internals. This is
 quite common (see, for example, the definition of =PolynomialRing=
 in terms of =FreeModule=), but also the most dangerous, as the
@@ -1825,7 +1819,7 @@ domain to which one adds is no longer being treated as a ``black box'',
 but rather as something one can dive into at will. Any changes in the
 representation of the domain being added to can invalidate the new
 domain being built.
-\end{itemize}
+
 
 *** The problem implementation
 
@@ -1973,20 +1967,19 @@ specific to most general.}
 
 
 The implications of this rule for exponentiation are as follows.
-\begin{itemize}
-\item[(i)] There is a default definition of exponentiation in =Monoid=,
+- [(i)] There is a default definition of exponentiation in =Monoid=,
 and hence in =Ring=, which works by repeated squaring. This 
 definition would be perfectly adequate for our use (using multiplication
 we have just defined in =WeightedPolynomials=)
-\item[(ii)] There are other definitions of exponentiation in 
+- [(ii)] There are other definitions of exponentiation in
 =PolynomialRing=, as we have seen earlier, which use the binomial
 theorem if the coefficient ring is commutative, and a repeated
 multiplication algorithm otherwise.
-\item[(iii)] Therefore, by the rule quoted above, it is one of the
+- [(iii)] Therefore, by the rule quoted above, it is one of the
 definitions in (ii) which will be used. Hence, they will use the definition
 of multiplication defined in =PolynomialRing=, and so will not take
 advantage of the weight level.
-\end{itemize}
+
 Hence, in order to get a satisfactory implementation of exponentiation,
 we need to repeat the defaulting definition, or provide some definition
 that will use the multiplication of =WeightedPolynomials=.
@@ -2528,13 +2521,12 @@ interpretation of $D_1$ and $D_n$:
 Having defined bounded coercion paths, we can present sufficient
 conditions for admissibility: A coercion graph is admissible if
 functions $\iota$ and $f$ exist with:
-\begin{enumerate}
-\item a bounded coercion path $D\Rightarrow...\Rightarrow D^\prime$
+1. a bounded coercion path $D\Rightarrow...\Rightarrow D^\prime$
 exists for any two coercible domains (i.e. 
 $D\Rightarrow^{\prime\prime}D^\prime$) and
-\item the construction of bounded coercion paths is a terminating
+1. the construction of bounded coercion paths is a terminating
 process (for any domains $D$ and $D^\prime$)
-\end{enumerate}
+
 
 The concept of bounded coercion paths depending on functions $\iota$
 and $f$ seems to be very general. The SCRATCHPAD type system, for
@@ -2585,11 +2577,10 @@ For a computer algebra system, it is crucial to select appropriate
 functions efficiently. In a system like SCRATCHPAD, with several
 hundreds of domains, the predicate /canCoerce/ is called very
 frequently. Efficiency of this algorithm can be improved by two means: 
-\begin{enumerate}
-\item avoiding computation of unnecessary coercion paths, especially
+1. avoiding computation of unnecessary coercion paths, especially
 dead end paths
-\item saving already computed vertices in a hash table
-\end{enumerate}
+1. saving already computed vertices in a hash table
+
 
 Each coercion rewrite rule can be restricted to left-right
 (right-left) application only. E.g, a rule 
@@ -2820,16 +2811,15 @@ A functor F from category C to category D consists of
 -  arrow function takes arrows of C to arrows of D
 
 Structurally we have 3 things to preserve.
-\begin{itemize}
-\item domains and co-domains of arrows.
+- domains and co-domains of arrows.
 In order to preserve structure the functor F has to commute with the
 domain and co-domain functions. That is, $F(dom(f)) = dom(F(f))$ and
 $F(co-dom(f)) = co-dom(F(f))$.
-\item identity arrows.
+- identity arrows.
 The functor F must preserve identity so $F(id(x)) = id(F(x))$.
-\item composition properties of arrows.
+- composition properties of arrows.
 The functor F must take commuting diagrams to commuting diagrams.
-\end{itemize}
+
 
 * Axiom Implementation Details
 ** Makefile
@@ -2980,16 +2970,15 @@ operator in compiled code.}
 combined into a (disjoint) union domain, denoted 
 =Union=($D_1,...,D_n$). The $D_i$ are called the *branches* of the 
 union. The operations available on this union domain are:}
-\begin{itemize}
-\item {\sl equality -- two elements are equal if they come from the same 
+- {\sl equality -- two elements are equal if they come from the same
 branch and are equal in that branch;}
-\item /coercion to OutputForm;/
-\item /coercion from each $D_i$ to the union domain;/
-\item {\sl coercion to each $D_i$ from the union domain, which may fail if 
+- /coercion to OutputForm;/
+- /coercion from each $D_i$ to the union domain;/
+- {\sl coercion to each $D_i$ from the union domain, which may fail if
 the union object is not in the correct branch;}
-\item {\sl an in x predicate case , for testing if the union object 
+- {\sl an in x predicate case , for testing if the union object
 actually is in a particular branch or not.}
-\end{itemize}
+
 {\sl These union domains correspond to what some other languages call 
 ``sum types''. A particularly useful case is exemplified by the 
 ``exact quotient'' operation on =Integer=: its return type is 
@@ -3060,12 +3049,11 @@ to the lambda-calculus expression ``$\lambda$variables.expression''.}
 symbols (such as $+$) or complete english words strung together. In this 
 case, every word after the first is capitalised. Thus =integrate=
 but =complexIntegrate=. In addition:}
-\begin{itemize}
-\item {\sl all boolean predicates end in a *?* , as in =odd?=, 
+- {\sl all boolean predicates end in a *?* , as in =odd?=,
 which tests if a number is odd}
-\item {\sl all destructive functions which operate on data structures 
+- {\sl all destructive functions which operate on data structures
 end in a *!* , as in =reverse!=, which reverses a list destructively.}
-\end{itemize}
+
 {\sl Conversely, the names of domains (and other constructors we will come 
 to later) consist of english words strung together, all of which are 
 capitalised, as in =IntegerMod= or =UnivariatePuiseuxSeries=.}

@@ -25,31 +25,26 @@ arise include
 - What are the dominant features of the portrait of the orbit?
 
 Some common applications of Lyapunov functions are in the area of
-\begin{itemize}
-\item assessing the importance of non-linear terms in stability and
+- assessing the importance of non-linear terms in stability and
 instability
-\item estimating the domain of attraction of an equilibrium point
-\item designing control laws that guarantee global asymptotic stability
-\end{itemize}
+- estimating the domain of attraction of an equilibrium point
+- designing control laws that guarantee global asymptotic stability
+
 
 Rate control for communications networks /Kelly et al/ (1998)
-\begin{itemize}
-\item Proposed optimization framework
-\begin{itemize}
-\item Larger system problem decomposed into a User and a Network problem
-\end{itemize}
+- Proposed optimization framework
+- Larger system problem decomposed into a User and a Network problem
+
 \item Proposed rate control algorithm
-\begin{itemize}
-\item System of differential equations in the rate/capacity allocated
+- System of differential equations in the rate/capacity allocated
 to each user
-\end{itemize}
+
 \item With the correct choice of Lyapunov function, it is shown that:
-\begin{itemize}
-\item the found equilibrium point is asymptotically stable
-\item the lyapunov function closely approximates the Network's 
+- the found equilibrium point is asymptotically stable
+- the lyapunov function closely approximates the Network's
 optimization problem.
-\end{itemize}
-\end{itemize}
+
+
 
 Lyapunov equations have been used to determine the stability of a:
 - F-8 aircraft
@@ -190,23 +185,21 @@ The resulting linear system is given by
 \]
 
 The stability of the system can then be assessed using the following rules:
-\begin{enumerate}
-\item The equilibrium point is asymptotically stable if the linearised
+1. The equilibrium point is asymptotically stable if the linearised
 system is strictly stable.
-\item The equilibrium point is unstable if the linearised system is
+1. The equilibrium point is unstable if the linearised system is
 strictly unstable.
-\item If the linearised system is marginally stable, then we cannot
+1. If the linearised system is marginally stable, then we cannot
 conclude anything from the linear approximation.
-\end{enumerate}
+
 
 Consider rule 1. If all the eigenvalues of $A$ have negative real parts,
 then the linearised system is asymptotically stable. Problems include
-\begin{itemize}
-\item If some of the eigenvalues are zero, we cannot conclude anything
+- If some of the eigenvalues are zero, we cannot conclude anything
 about the system.
-\item The linear approximation is valid when the initial conditions are
+- The linear approximation is valid when the initial conditions are
 close to $\overline{x}$, however how ``close'' is close?
-\end{itemize}
+
 *** Direct Method
 Stability is determined by observing how a scalar function of the state
 variables of the system changes in time.
@@ -216,23 +209,21 @@ Consider the system
 \dot{x} = f(x)
 \]
 where
-\begin{itemize}
-\item $\overline{x}$ is the equilibrium point of the system;
-\item $f \in C^1(R)$, where $C^k(R)$ defines the class of all continuous
+- $\overline{x}$ is the equilibrium point of the system;
+- $f \in C^1(R)$, where $C^k(R)$ defines the class of all continuous
 functions on region $R$ with $k$th derivatives also continuous on $R$; and
-\item $x(t^0) = x^0$, $x^0 \in R$
-\end{itemize}
+- $x(t^0) = x^0$, $x^0 \in R$
+
 
 *Definition 2.3.6:* 
 Let $V(x)$ be a real valued scalar function
 belonging to $C^0(S)$ for some region $S$ of $R^n$. Suppose
 $V(\overline{x}) = 0$. Then,
-\begin{enumerate}
-\item $V$ is positive definite on $S$ if $V(x) > 0$, for $x \ne \overline{x}$
-\item $V$ is negative definite on $S$ if $V(x) < 0$, for $x \ne \overline{x}$
-\item If the equalities are not strict, then $V$ is considered positive and
+1. $V$ is positive definite on $S$ if $V(x) > 0$, for $x \ne \overline{x}$
+1. $V$ is negative definite on $S$ if $V(x) < 0$, for $x \ne \overline{x}$
+1. If the equalities are not strict, then $V$ is considered positive and
 negative semi-definite respectively.
-\end{enumerate}
+
 
 *Definition 2.3.7:* 
 Let $V(x)$ be a real valued scalar function belonging to
@@ -250,12 +241,11 @@ $x = x(t,x^0)$ is
 
 *Theorem 1:* Suppose there exists a function $V(x)$ with the following
 properties:
-\begin{enumerate}
-\item $V(\overline{x}) = 0$
-\item $V(x)$ is positive definite for $x \ne \overline{x}$
-\item $\dot{V}(x)$ is negative semi-definite along trajectories of 
+1. $V(\overline{x}) = 0$
+1. $V(x)$ is positive definite for $x \ne \overline{x}$
+1. $\dot{V}(x)$ is negative semi-definite along trajectories of
 $\dot{x} = f(x)$
-\end{enumerate}
+
 Then $V(x)$ is known as a Lyapunov function and $\overline{x}$ is stable.
 Note that if $\dot{V}(x)$ is negative definite, then $\overline{x}$ is
 asymptotically stable.
@@ -265,12 +255,11 @@ $\overline{x} = 0$ for simplicity. It is easily extendable to the
 situation where this is not the case.
 
 Let
-\begin{itemize}
-\item $J_\epsilon$ be the interior of a sphere of radius $\epsilon$, whose
+- $J_\epsilon$ be the interior of a sphere of radius $\epsilon$, whose
 center is at point 0. Further, assume $\epsilon$ is such that 
 $J_\epsilon$ lies in the region $R$.
-\item $S_\epsilon$ be the spherical surface of the sphere
-\end{itemize}
+- $S_\epsilon$ be the spherical surface of the sphere
+
 Let $V$ be a function that satisfies properties 1-3 from above.
 
 Since $V(x)$ is continuous and positive on the closed, bounded surface
@@ -285,11 +274,10 @@ $J_\epsilon$.
 - Choose $\delta$ such that $V(x) < L, \forall x \in J_\delta$
 
 Let $x^0$ be a point inside $J_\delta$.
-\begin{itemize}
-\item Consider the trajectory $x(x^0,t)$ coming from point $x^0$ and
+- Consider the trajectory $x(x^0,t)$ coming from point $x^0$ and
 satisfying the system of differential equations under consideration
-\item Assume the trajectory travels outside the sphere $S_\epsilon$.
-\end{itemize}
+- Assume the trajectory travels outside the sphere $S_\epsilon$.
+
 Since the trajectory is continuous, it will intersect the boundary
 $S_\epsilon$ at some point $x^*$. 
 Recall that $V(x)$ satisfies the property

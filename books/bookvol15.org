@@ -1053,12 +1053,11 @@ machinery rather than on type theory as a "proof" bit of machinery.
 Consider a simple example of a Coq program proof.
 
 We need to specify three things:
-\begin{itemize}
-\item *L*, a formal model of the syntax and semantics of the
+- *L*, a formal model of the syntax and semantics of the
 programming language
-\item *P*, a formal representation in model *L*
-\item *S*, a specification of the property to be verified
-\end{itemize}
+- *P*, a formal representation in model *L*
+- *S*, a specification of the property to be verified
+
 
 *** An example
 
@@ -1073,12 +1072,11 @@ while (!(n <= 0)) {
 }
 #+end_example
 we need to have
-\begin{itemize}
-\item a formal model of the semantics of the language used
-\item a precise specification of the program structure
-\item a specification that this computes the sum of integers
+- a formal model of the semantics of the language used
+- a precise specification of the program structure
+- a specification that this computes the sum of integers
 from 1 to n.
-\end{itemize}
+
 
 *** Specification of the example in Coq
 
@@ -1587,12 +1585,11 @@ functor. Specifically we are thinking of the types of the language as
 forming a category, whose objects are the types themselves, and an
 arrow from *A* to *B* is a function of type *A=->=B*. What
 is a functor from type to itself? It has two components
-\begin{itemize}
-\item a mapping *F*, say, from *Type* to *Type*; that is
+- a mapping *F*, say, from *Type* to *Type*; that is
 the object part of the functor; and
-\item a mapping on functions which respects their types, so that the
+- a mapping on functions which respects their types, so that the
 image of an arrow *a=->=a* is an arrow *(F a)=->=(F b)*.
-\end{itemize}
+
 
 (There are also some logical constraints on the behaviour of these
 mappings; we cannot formalise these in Aldor.) How can this be
@@ -1641,8 +1638,7 @@ We are currently investigating ways in which the Aldor dependent type
 mechanism can be modified to allow evaluation within type contexts as
 well as within value contexts. A number of possibilities suggest
 themselves. 
-\begin{itemize}
-\item The type system provides the *pretend* conversion routine
+- The type system provides the *pretend* conversion routine
 which converts or (type) casts any type to any other type\footnote{
 The *pretend* function is used in the definition of
 *rep* and *per* in the current version of Aldor; a more secure
@@ -1657,23 +1653,22 @@ Ident : Functor(idType) == add {                             (8)
 This achieves a result, but at some cost. Whenever we expect to need
 some degree of evaluation, that has to be shadowed by a type cast;
 these casts are also potentially completely unsafe.
-\item Another possibility is to suggest that the system is modified to
+- Another possibility is to suggest that the system is modified to
 include coercion functions which would provide conversion between type
 pairs such as *idType(a)* and *a*. This suggestion could be
 implemented but we envisage two difficulties with it.
-\begin{itemize}
-\item In all but the simplest of situations we will need to supply
+- In all but the simplest of situations we will need to supply
 uniformly-defined /families/ of coercions rather than single
 coercions. This will substantially complicate an already complex
 mechanism.
-\item Coercions are currently not applied transitively: the effect of
+- Coercions are currently not applied transitively: the effect of
 this is to allow us to model single steps of evaluation but not to
 take their transitive closure.
-\end{itemize}
+
 Putting these two facts together force us to conclude that effectively
 mimicking the evaluation process as coercions is not a reasonable
 solution to the problem at hand.
-\end{itemize}
+
 
 Instead of pursuing either of these solutions we are currently
 investigating the possibility of performing some evaluation during
@@ -1733,8 +1728,7 @@ correspondence in a table
 Predicates (that is dependent types) can be constructed in a number of
 different ways. We look at the example of the `less than' predicate
 over the natural numbers.
-\begin{itemize}
-\item A first approach is to give an explicit (primitive recursive)
+- A first approach is to give an explicit (primitive recursive)
 definition of the type, which in Aldor might take the form
 #+begin_example
 lessThan(n:Nat,m:Nat) : Type ==                              (9)
@@ -1742,7 +1736,7 @@ lessThan(n:Nat,m:Nat) : Type ==                              (9)
          else (if n=0 then Triv
                       else lessThan(n-1,m-1));
 #+end_example
-\item A second approach introduces them inductively as a
+- A second approach introduces them inductively as a
 generalisation of the algebraic types which appear in Haskell and
 SML. We might define the less than predicate `=<=' of type 
 *Nat =->= Nat =->= Type* by saying that there are two constructors for
@@ -1751,7 +1745,7 @@ the type of the following signature
 ZeroLess : (n:Nat)(0 < S n)
 SuccLess : (m:Nat)(n:Nat)((m < n) -> (S m < S n))
 #+end_example
-\end{itemize}
+
 
 This approach leads to a powerful style of proof in which inductions
 are performed over the form of proof objects, that is the elements of
@@ -1997,13 +1991,12 @@ Pearce and Groves created a language, called
 Whiley, specifically designed to be easier to prove. 
 
 They have a list of design decisions.
-\begin{enumerate}
-\item Functions are pure, whilst methods maybe impure
-\item Compound data types have value (copy) semantics
-\item Arithmetic is unbounded
-\item All specifications are checkable at runtime
-\item Type checking is separate from verification
-\end{enumerate}
+1. Functions are pure, whilst methods maybe impure
+1. Compound data types have value (copy) semantics
+1. Arithmetic is unbounded
+1. All specifications are checkable at runtime
+1. Type checking is separate from verification
+
 
 They introduce
 keywords like =requires= and =ensures=. For example,
@@ -2307,23 +2300,22 @@ NonNegativeInteger <- AbelianMonoid, AbelianSemiGroup, BasicType, CancellationAb
 The sorted order above is not the actual order needed. Let us look at
 each category in more detail.
 
-\begin{itemize}
-\item BasicType =<-= \{\}
-\item CoercibleTo =<-= \{\}
-\item SetCategory =<-= BasicType, CoercibleTo
-\item OrderedSet =<-= SetCategory
-\item SemiGroup =<-= SetCategory
-\item Monoid =<-= SemiGroup
-\item AbelianSemiGroup =<-= SetCategory
-\item AbelianMonoid =<-= AbelianSemiGroup
-\item CancellationAbelianMonoid =<-= AbelianMonoid
-\item OrderedAbelianSemiGroup =<-= AbelianSemiGroup, OrderedSet
-\item OrderedAbelianMonoid =<-= AbelianMonoid, OrderedAbelianSemiGroup
-\item OrderedCancellationAbelianMonoid =<-= CancellationAbelianMonoid,
+- BasicType =<-= \{\}
+- CoercibleTo =<-= \{\}
+- SetCategory =<-= BasicType, CoercibleTo
+- OrderedSet =<-= SetCategory
+- SemiGroup =<-= SetCategory
+- Monoid =<-= SemiGroup
+- AbelianSemiGroup =<-= SetCategory
+- AbelianMonoid =<-= AbelianSemiGroup
+- CancellationAbelianMonoid =<-= AbelianMonoid
+- OrderedAbelianSemiGroup =<-= AbelianSemiGroup, OrderedSet
+- OrderedAbelianMonoid =<-= AbelianMonoid, OrderedAbelianSemiGroup
+- OrderedCancellationAbelianMonoid =<-= CancellationAbelianMonoid,
 OrderedAbelianMonoid
-\item OrderedAbelianMonoidSup =<-= OrderedCancellationAbelianMonoid
-\item NonNegativeInteger =<-= Monoid, OrderedAbelianMonoidSup
-\end{itemize}
+- OrderedAbelianMonoidSup =<-= OrderedCancellationAbelianMonoid
+- NonNegativeInteger =<-= Monoid, OrderedAbelianMonoidSup
+
 
 \begin{center}
 \begin{tikzpicture}[node distance=1.75cm]
@@ -3814,14 +3806,13 @@ We must distinguish the language used for specification (the
 
 Hoare [cite:@Hoar04] creates a ``Unified Theories of Programming''
 in which he shows that there are 3 kinds of specification, namely
-\begin{enumerate}
-\item *Denotational*, relating a program to a specification of its
+1. *Denotational*, relating a program to a specification of its
 observable properties and behaviour
-\item *Algebraic*, providing equations and inequalities for
+1. *Algebraic*, providing equations and inequalities for
 comparison, transformation and optimisation of designs and programs
-\item *Operational*, describing individual steps of a possible
+1. *Operational*, describing individual steps of a possible
 mechanical implementation
-\end{enumerate}
+
 
 This paper presents simple theories of sequential non-deterministic
 programming in each of these three styles; by deriving each
@@ -3861,40 +3852,37 @@ show is that the language construct ``covers'' the use case in
 the particular function.
 
 They raise a series of question about a specification [cite:@Sann99]
-\begin{enumerate}
-\item What is a specifiation?
-\item What does a specification mean?
-\item When does a program satisfy a specification?
-\item When does a specification guarantee a property that it does not
+1. What is a specifiation?
+1. What does a specification mean?
+1. When does a program satisfy a specification?
+1. When does a specification guarantee a property that it does not
 state explicitly?
-\item How does one prove this?
-\item How are specifications structured?
-\item How does the structure of a specification relate to the
+1. How does one prove this?
+1. How are specifications structured?
+1. How does the structure of a specification relate to the
 structure of programs?
-\item When does one specification correctly refine another
+1. When does one specification correctly refine another
 specification?
-\item How does one prove correctness of refinement steps?
-\item When do refinement steps compose?
-\item What is the role of information hiding?
-\end{enumerate}
+1. How does one prove correctness of refinement steps?
+1. When do refinement steps compose?
+1. What is the role of information hiding?
+
 
 The specification language is related to what we wish to prove. 
 [cite:@Kahr98]. Is it a
-\begin{enumerate}
-\item proof that a given program satisfies a given specification?
-\item proof that one specification is a refinement of another?
-\item proof that all programs satisfying a given specification will
+1. proof that a given program satisfies a given specification?
+1. proof that one specification is a refinement of another?
+1. proof that all programs satisfying a given specification will
 satisfy a given property?
-\end{enumerate}
+
 
 John Hughes [cite:@Hugh19] identifies several types of specification tests:
-\begin{enumerate}
-\item invariant properties
-\item postconditions
-\item metamorphic properties
-\item inductive properties
-\item model-based properties
-\end{enumerate}
+1. invariant properties
+1. postconditions
+1. metamorphic properties
+1. inductive properties
+1. model-based properties
+
 
 *** The specification class
 
@@ -3928,13 +3916,12 @@ John Hughes [cite:@Hugh19] identifies several types of specification tests:
 
 The main activities of formal methods,
 according to Hall [cite:@Hall90], are
-\begin{itemize}
-\item writing a formal specification
-\item proving properties about the specification
-\item constructing a program by mathematically manipulating the
+- writing a formal specification
+- proving properties about the specification
+- constructing a program by mathematically manipulating the
 specification
-\item verifying a program by mathematical argument.
-\end{itemize}
+- verifying a program by mathematical argument.
+
 
 ** Writing a formal specification
 
@@ -3942,11 +3929,10 @@ Davenport [cite:@Dave17a] says:
 
 ``$g$ is the greatest common divisor of $f_1$, $f_2$ [and more]'' is
 actually two assertions:
-\begin{itemize}
-\item $g$ divides $f_1$, $f_2$ (implicitly over
+- $g$ divides $f_1$, $f_2$ (implicitly over
 $\mathbb{Z}[x_1,...,x_n]$);
-\item Any $h$ that also divides them divides $g$
-\end{itemize}
+- Any $h$ that also divides them divides $g$
+
 
 Note that $g$ is not unique: $-g$ would do as well. CA systems enforce
 uniqueness by making the leading coefficient positive, but this then
@@ -4077,25 +4063,24 @@ Call =pretty=
 \cite[p4]{Dosr11}
 [cite:@Daly17]
 
-\begin{itemize}
-\item *marker* is a constant to know if something is a category,
+- *marker* is a constant to know if something is a category,
 a domain, or a package.
-\item *parents* is a list of the direct parents of this 
+- *parents* is a list of the direct parents of this
 category.
-\item *CategoryForm* holds the canonical category form of the expression
+- *CategoryForm* holds the canonical category form of the expression
 whose evaluation produces the category object under consideration
-\item *ExportInfoList* holds a list of function signatures exported by the
+- *ExportInfoList* holds a list of function signatures exported by the
 category
-\item *AttributeList* holds a list of attributes and the conditions under
+- *AttributeList* holds a list of attributes and the conditions under
 which they hold
-\item *CategoryMark* always contains the form (Category). It serves as a
+- *CategoryMark* always contains the form (Category). It serves as a
 runtime type checking tag
-\item *PrincipalAncestorList* is a list of principal ancestor category forms
-\item *ExtendedCategoryList* is a list of directly extended category forms
-\item *DomainInfoList* is a list of domains explicitly used in that category
-\item *UsedDomainList* holds the list of all domain forms mentioned in
+- *PrincipalAncestorList* is a list of principal ancestor category forms
+- *ExtendedCategoryList* is a list of directly extended category forms
+- *DomainInfoList* is a list of domains explicitly used in that category
+- *UsedDomainList* holds the list of all domain forms mentioned in
 the exported signatures
-\end{itemize}
+
 
 *** The hasclause class
 
@@ -5281,12 +5266,11 @@ calls to nreverse could be removed.
 
 The *sourcecode* type contains 4 fields:
 %\index[code]{sourcecode}
-\begin{enumerate}
-\item name -- the filename of the source file
-\item rawcode -- the exact source text in the file
-\item pile -- remove $--$ comments, continued lines
-\item tree -- piled strings to a nested tree
-\end{enumerate}
+1. name -- the filename of the source file
+1. rawcode -- the exact source text in the file
+1. pile -- remove $--$ comments, continued lines
+1. tree -- piled strings to a nested tree
+
 
 *** The sourcecode class
 
@@ -6513,14 +6497,13 @@ The *FSM-gather* macro rips lines that pass the test
 \index[code]{defmacro!FSM-gather}
 \index[code]{FSM-gather!defmacro}
 from the list of input strings.It expects 3 arguments
-\begin{enumerate}
-\item *linelist* is a list of input strings from the raw
+1. *linelist* is a list of input strings from the raw
 field of the sourcecode class object.
-\item *test* is a test to decide whether this line should
+1. *test* is a test to decide whether this line should
 be gathered from the linelist. 
-\item *into* is an instance of the *gather* class 
+1. *into* is an instance of the *gather* class
 that will hold the lines that pass the test.
-\end{enumerate}
+
 Given a linelist that looks like:
 #+begin_example
   ("++ Author: Stephen M. Watt"
@@ -6584,12 +6567,11 @@ NOTE: *These macros assume two variables in the environment.*
 \index[code]{variable!split}
 \index[code]{result!variable}
 \index[code]{variable!result}
-\begin{enumerate}
-\item *split* that is a tokenized list of the input,
+1. *split* that is a tokenized list of the input,
 usually by calling the *splitchar* function. Each element of the
 list is a string.
-\item *result* is a variable used to collect matches in a list.
-\end{enumerate}
+1. *result* is a variable used to collect matches in a list.
+
 
 The *FSM-startsWith*
 \index[code]{defmacro!FSM-startsWith}
@@ -12863,19 +12845,18 @@ Let $U$ be a /universe/
 A /group/ in $U$ is a sequence
 ${(G,e,i,m,\lambda,\rho,\lambda^\prime,\rho^\prime,\alpha,\iota)}$,
 where
-\begin{itemize}
-\item $G$ is a type of $U$
-\item $e:G$
-\item $i:G\rightarrow G$
-\item $m:G\times G\rightarrow G$
-\item $\lambda$ is a proof that for every $a:G, m(e,a)=a$
-\item $\rho$ is a proof that for every $a:G, m(a,e)=a$
-\item $\lambda^\prime$ is a proof that for every $a:G, m(i(a),a)=e$
-\item $\rho^\prime$ is a proof that for every $a:G, m(a,i(a))=e$
-\item $\alpha$ is a proof that for every 
+- $G$ is a type of $U$
+- $e:G$
+- $i:G\rightarrow G$
+- $m:G\times G\rightarrow G$
+- $\lambda$ is a proof that for every $a:G, m(e,a)=a$
+- $\rho$ is a proof that for every $a:G, m(a,e)=a$
+- $\lambda^\prime$ is a proof that for every $a:G, m(i(a),a)=e$
+- $\rho^\prime$ is a proof that for every $a:G, m(a,i(a))=e$
+- $\alpha$ is a proof that for every
 $a,b,c:G:m(m(a,b),c)=m(a,m(b,c))$
-\item $\iota$ is a proof that $G$ is a set
-\end{itemize}
+- $\iota$ is a proof that $G$ is a set
+
 
 #+NAME: defclass GroupType
 #+begin_src common-lisp :noweb yes
@@ -17451,20 +17432,19 @@ properties like "modemaps" but the interpreter will never ask for
 this information.
 
 So, the design is as follows:
-\begin{itemize}
-\item the modemap.daase needs to be built. this is done by doing
+- the modemap.daase needs to be built. this is done by doing
 a )library on ALL of the nrlib files that are going into the system.
 this will bring in "modemap" information and add it to the
 ,*modemaps-hash* hashtable.
-\item database build proceeds, accessing the "modemap" property
+- database build proceeds, accessing the "modemap" property
 from the hashtables. once this completes this information is never
 used again.
-\item the interp.daase database is built. this contains only the
+- the interp.daase database is built. this contains only the
 information necessary to run the interpreter. note that during the
 running of the interpreter users can extend the system by do a
 )library on a new nrlib file. this will cause fields such as "modemap"
 to be read and hashed.
-\end{itemize}
+
 
 Each constructor (e.g. LIST) had one library directory (e.g. LIST.nrlib). 
 This directory contained a random access file called the index.kaf file. 
@@ -17510,19 +17490,18 @@ list. this also has the advantage that eq hash tables no longer
 need to be moved during garbage collection.
 
 There are 3 potential speedups that could be done. 
-\begin{itemize}
-\item the best would be to use the value cell of the symbol rather than the
+- the best would be to use the value cell of the symbol rather than the
 property list but i'm unable to determine all uses of the
 value cell at the present time.
-\item a second speedup is to guarantee that the property list is
+- a second speedup is to guarantee that the property list is
 a single item, namely the database structure. this removes
 an assoc but leaves one open to breaking the system if someone
 adds something to the property list. this was not done because
 of the danger mentioned.
-\item a third speedup is to make the getdatabase call go away, either
+- a third speedup is to make the getdatabase call go away, either
 by making it a macro or eliding it entirely. this was not done
 because we want to keep the flexibility of changing the database forms.
-\end{itemize}
+
 
 The new design does not use hash tables. the database structure
 contains an entry for each item that used to be in a hash table.
@@ -47147,13 +47126,12 @@ specification.
 ** Rewrite loops into recursion
 
 Assuming loop structure where
-\begin{itemize}
-\item *header* processing before the loop and newly declared
+- *header* processing before the loop and newly declared
 variables 
-\item *condition* when to stop the loop
-\item *loopbody* changes variables and pararmeters passed in
-\item *tail* what happens after the loop and return result
-\end{itemize}
+- *condition* when to stop the loop
+- *loopbody* changes variables and pararmeters passed in
+- *tail* what happens after the loop and return result
+
 
 #+begin_example
 Iter(params) {
@@ -47358,11 +47336,10 @@ connected and completely specified.
 
 As the Mealy Machine is completely specified, we have 2 cases for each
 state:
-\begin{enumerate}
-\item All transitions coming into this state have the same output
-\item At least 2 transitions coming into this state have different
+1. All transitions coming into this state have the same output
+1. At least 2 transitions coming into this state have different
 outputs
-\end{enumerate}
+
 
 For case 1: The equivalent for this state would simply be changing the
 notation, i.e. mark all transitions into this state simply by the
@@ -47499,15 +47476,14 @@ $=bsearch\_correct\=xs~v~i~j~k \overset{\Delta}{=}\\
 \land (i\le k< j \land xs[k]=v)$
 
 Assuming the preconditions, we have the following facts.
-\begin{itemize}
-\item =bsearch= will run and terminate without crashing (a
+- =bsearch= will run and terminate without crashing (a
 consequence of the definition of Hoare triples)
-\item =bsearch= will not modify the contents of the input array 
+- =bsearch= will not modify the contents of the input array
 ("$a\leadsto =Array\=xs$" appears in both the pre- and
 post-conditions, with the same $xs$)
-\item =bsearch= will return a correct result, according to the 
+- =bsearch= will return a correct result, according to the
 =bsearch\_correct= predicate
-\end{itemize}
+
 
 A technical remark: one might wonder why the ``pure'' assumptions on
 $i$, $j$ and $xs$ are not part of the triple precondition, and instead
@@ -48017,19 +47993,18 @@ Let $U$ be a /universe/
 A /group/ in $U$ is a sequence
 ${(G,e,i,m,\lambda,\rho,\lambda^\prime,\rho^\prime,\alpha,\iota)}$,
 where
-\begin{itemize}
-\item $G$ is a type of $U$
-\item $e:G$
-\item $i:G\rightarrow G$
-\item $m:G\times G\rightarrow G$
-\item $\lambda$ is a proof that for every $a:G, m(e,a)=a$
-\item $\rho$ is a proof that for every $a:G, m(a,e)=a$
-\item $\lambda^\prime$ is a proof that for every $a:G, m(i(a),a)=e$
-\item $\rho^\prime$ is a proof that for every $a:G, m(a,i(a))=e$
-\item $\alpha$ is a proof that for every 
+- $G$ is a type of $U$
+- $e:G$
+- $i:G\rightarrow G$
+- $m:G\times G\rightarrow G$
+- $\lambda$ is a proof that for every $a:G, m(e,a)=a$
+- $\rho$ is a proof that for every $a:G, m(a,e)=a$
+- $\lambda^\prime$ is a proof that for every $a:G, m(i(a),a)=e$
+- $\rho^\prime$ is a proof that for every $a:G, m(a,i(a))=e$
+- $\alpha$ is a proof that for every
 $a,b,c:G:m(m(a,b),c)=m(a,m(b,c))$
-\item $\iota$ is a proof that $G$ is a set
-\end{itemize}
+- $\iota$ is a proof that $G$ is a set
+
 
 \begin{quote}
 Why did he want Univalence? He knew from the beginning that it would
@@ -48425,28 +48400,26 @@ From Bauer [cite:@Baue19]
 
 From Bauer [cite:@Baue19a]
 
-\begin{itemize}
-\item $\Gamma \vdash A =type=$ is a type
-\item $\Gamma \vdash t : A$ is a term of type $A$
-\item $\Gamma \vdash A \equiv B$ types $A$ and $B$ are equal
-\item $\Gamma \vdash t \equiv u : A$ terms $t$ and $u$ of type $A$ are
+- $\Gamma \vdash A =type=$ is a type
+- $\Gamma \vdash t : A$ is a term of type $A$
+- $\Gamma \vdash A \equiv B$ types $A$ and $B$ are equal
+- $\Gamma \vdash t \equiv u : A$ terms $t$ and $u$ of type $A$ are
 equal 
-\end{itemize}
+
 
 From Bauer [cite:@Baue19a], Rules for dependent products
-\begin{itemize}
-\item rule $\Pi$ (A type) (\{x:A\} B type) type
-\item rule $\lambda$ (A type) (\{x:A\} B type) 
+- rule $\Pi$ (A type) (\{x:A\} B type) type
+- rule $\lambda$ (A type) (\{x:A\} B type)
  (\{x:A\} e : \{B\}) : $\Pi$ A B
-\item app (A type) (\{x:A\} B type)
+- app (A type) (\{x:A\} B type)
 (S : $\Pi$ A B) (a : A) : B\{a\}
-\item rule $\Pi\_\beta$ (A type) (\{x:A\} B type)
+- rule $\Pi\_\beta$ (A type) (\{x:A\} B type)
 (\{x:A\} S : B\{x\}) (a : A)\\
 : app A B ($\lambda$ A B S) a $\equiv$ S\{a\} : B\{a\}
-\item rule Id (A type (a : A) (b : A) type
-\item rule equality\_reflection\\
+- rule Id (A type (a : A) (b : A) type
+- rule equality\_reflection\\
 (A type (a:A0 (b:A) (p:Id A a b) : a $\equiv$ b : A
-\end{itemize}
+
 
 ** Verbx Regular Expressions
 
@@ -48663,15 +48636,14 @@ mathematics as we practice it is anywhere near formally correct.}\\
 \begin{quote}
 {\bf Given the concepts 0, /number/, and /successor/ 
 and the rules
-\begin{enumerate}
-\item 0 is a /number/
-\item the /successor/ of any /number/ is a /number/
-\item no two /numbers/ have the same /successor/
-\item 0 is not the /successor/ of any /number/
-\item any property which belongs to 0 and also to the /succesor/
+1. 0 is a /number/
+1. the /successor/ of any /number/ is a /number/
+1. no two /numbers/ have the same /successor/
+1. 0 is not the /successor/ of any /number/
+1. any property which belongs to 0 and also to the /succesor/
 of every /number/ which has the property, belongs to all the
 /numbers/
-\end{enumerate}}
+
 
 -- Giuseppe Peano [cite:@Russ1920]
 \end{quote}

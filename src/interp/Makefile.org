@@ -809,23 +809,21 @@ ${MID}/debugsys.lisp: ${IN}/debugsys.lisp.org
 *** autoload dependencies
 If you are adding a file which is to be autoloaded the following step
 information is useful. There are 2 cases:
-\begin{enumerate}
-\item adding files to currently autoloaded parts\\
+1. adding files to currently autoloaded parts\\
 (as of 2/92: browser old parser and old compiler)
-\item adding new files
-\begin{itemize}
-\item case 1:
-\item [(a)] you have to add the file to the list of files currently there
+1. adding new files
+- case 1:
+- [(a)] you have to add the file to the list of files currently there
 (e.g. see BROBJS above)
-\item [(b)] add an autolaod rule
+- [(b)] add an autolaod rule
 (e.g. ${AUTO}/parsing.${O}: ${OUT}/parsing.${O})
-\item [(c)] edit util.lisp to add the 'external' function (those that
+- [(c)] edit util.lisp to add the 'external' function (those that
 should trigger the autoload
-\end{itemize}
+
 \item case 2:\\
      build-interpsys (in util.lisp) needs an extra argument for the
      new autoload things and several functions in util.lisp need hacking.
-\end{enumerate}
+
 database.date is a marker file used to force a rebuild of interpsys if the
 database is rebuilt (src/algebra/Makefile).
 #+NAME: databases

@@ -521,14 +521,13 @@ For $a \ge 0$ and $b > 0$ in an Archimedean monoid *T*, we define
 
 *Lemma 5.12* In an Archimedean monoid *T* with positive 
 $x,a,b$
-\begin{itemize}
-\item $b$ divides $a$ $\Leftrightarrow$ =remainder\_nonnegative(a,b)==0
-\item $b$ divides $a$ $\Rightarrow$ $b \le a$
-\item $a>b \land x$ divides $a \land x$ divides $b$ $\Rightarrow$
+- $b$ divides $a$ $\Leftrightarrow$ =remainder\_nonnegative(a,b)==0
+- $b$ divides $a$ $\Rightarrow$ $b \le a$
+- $a>b \land x$ divides $a \land x$ divides $b$ $\Rightarrow$
 $x$ divides $(a-b)$
-\item $x$ divides $a \land x$ divides $b \Rightarrow$ divides
+- $x$ divides $a \land x$ divides $b \Rightarrow$ divides
 =remainder\_nonnegative(a,b)=
-\end{itemize}
+
 
 The /greatest common divisor/ of $a$ and $b$, denoted by gcd(a,b),
 is a divisor of $a$ and $b$ that is divisible by any other common
@@ -539,15 +538,14 @@ rings.}
 
 *Lemma 5.13* In an Archimedean monoid, the following holds for
 positive $x,a,b$:
-\begin{itemize}
-\item gcd is commutative
-\item gcd is associative
-\item $x$ divides $a$ $\land$ $x$ divides $b \Rightarrow$
+- gcd is commutative
+- gcd is associative
+- $x$ divides $a$ $\land$ $x$ divides $b \Rightarrow$
 $x\le gcd(a,b)$ 
-\item gcd(a,b) is unique
-\item gcd(a,a) = a
-\item $a>b \Rightarrow$ gcd(a,b) = gcd(a-b,b)
-\end{itemize}
+- gcd(a,b) is unique
+- gcd(a,a) = a
+- $a>b \Rightarrow$ gcd(a,b) = gcd(a-b,b)
+
 
 The previous lemmas immediately imply that if the following algorithm
 terminates, it returns the gcd of its arguments:\footnote{It is known
@@ -1316,13 +1314,12 @@ If one cannot make determinations as to whether $w=0$, or if its real
 part is 0, or whether various conditions hold on $y$, then some
 alternatives must be considered.
 
-\begin{enumerate}
-\item We could ask the user, or inquire of some assumption ``knowledge
+1. We could ask the user, or inquire of some assumption ``knowledge
 base'' in the system to try to determine appropriate information. Some
 CAS designers (e.g. Maple) are opposed to halting the computation to
 ask the user. Others (e.g. Macsyma) are not so shy. A reference to a
 set of ``assumptions'' is possible in either of these systems.
-\item We could give a symbolic =If [...]= answer along the lines
+1. We could give a symbolic =If [...]= answer along the lines
 of the construction above. This is rarely useful unless (a) it
 collapses substantially as a consequence of arithmetic and/or logical
 simplification, and (b) the CAS is able to continue computation with
@@ -1331,20 +1328,20 @@ multiplyig them, inverting them (!), etc. This is a challenge, but in
 some sense inevitable if the answer to the questions of domain are not
 and cannot yet be ``known''. Although we've written this out, it does
 not seem to warrant repetition.
-\item We could assume that if one cannot prove (say) $a=0$, then it is
+1. We could assume that if one cannot prove (say) $a=0$, then it is
 definitely the case that $a\ne 0$. Although some CAS use this ``closed
 world assumption'' (that all true things are known, and anything that
 is not known or provable is false), the consequences are potentially
 dreadful.
-\item We could defer the execution of the program that evaluates the
+1. We could defer the execution of the program that evaluates the
 test conditions until the time that it is in fact needed to proceed
 with a computation. At that time our computer program would insist
 that any information that is indeed needed is provided. This so-called
 lazy evaluation is rarly used in computer algebra systems with the
 exception of some series computations in which terms are computed
 ``as needed''.
-\item One could refuse to solve the equation as given.
-\end{enumerate}
+1. One could refuse to solve the equation as given.
+
 
 We recommend some version of 2, as being almost inevitable in cases
 where ``symbolic'' parameters must be used, although in some
@@ -1370,18 +1367,17 @@ That is,
 \left<_x_,-\overline{x}\right> \]
 
 Given that convention
-\begin{itemize}
-\item the sum of $x$ and $y$ is evaluated by
+- the sum of $x$ and $y$ is evaluated by
 \[\left<\nabla(_x_ + _y_),
   -\nabla(-\overline{x} - \overline{y})\right> \]
-\item changing the sign of an interval $x$ is achieved by swapping
+- changing the sign of an interval $x$ is achieved by swapping
 the two bounds, that is $\left<-\overline{x},_x_\right>$
-\item joining two intervals (that is, finding an interval containing
+- joining two intervals (that is, finding an interval containing
 all numbers in both, or finding the minimum of the lower bounds
 and the maximum of the higher bounds) is performed as
 \[\left<min(_x_,_y_),
   -min((-\overline{x}),(-\overline{y}))\right>\]
-\end{itemize}
+
 
 Lambov defines operations which, under the given rounding condition,
 give the tightest bounds.
@@ -1767,12 +1763,11 @@ the other hand, introducing algebraic numbers may be necessary, for
 example it is proven in [cite:@Risc69a] that any field containing an
 integral of $1/(x^2+2)$ must also contain $\sqrt{2}$. Modern research
 has yielded so-called ``rational'' algorithms that
-\begin{itemize}
-\item compute as much of the integral as possible with all
+- compute as much of the integral as possible with all
 calculations being done in $K(x)$, and
-\item compute the minimal algebraic extension of $K$ necessary to
+- compute the minimal algebraic extension of $K$ necessary to
 express the integral
-\end{itemize}
+
 The first rational algorithms for integration date back to the
 $19^{th}$ century, when both Hermite [cite:@Herm1872] and
 Ostrogradsky [cite:@Ostr1845] invented methods for 
@@ -2084,12 +2079,11 @@ process. We describe here the lazy Hermite reduction [cite:@Bron98], which
 avoids the precomputation of an integral basis. It is based on the
 observation that if $m > 1$ and [[#Int8][Int8]] does not have a solution allowing
 us to perform the reduction, then either
-\begin{itemize}
-\item the $S_i$'s are linearly dependent over $K(x)$, or
-\item [[#Int8][Int8]] has a unique solution in $K(x)$ whose denominator has a
+- the $S_i$'s are linearly dependent over $K(x)$, or
+- [[#Int8][Int8]] has a unique solution in $K(x)$ whose denominator has a
 nontrivial common factor with $V$, or
-\item the denominator of some $w_i$ is not squarefree
-\end{itemize}
+- the denominator of some $w_i$ is not squarefree
+
 In all of the above cases, we can replace our basis $w$ by a new one,
 also made up of integral elements, so that that $K[x]$-module
 generated by the new basis strictly contains the one generated by $w$:
@@ -2356,24 +2350,23 @@ ramification index at infinity. Trager [cite:@Trag84] described an
 algorithm that converts an arbitrary integral basis $w_1,...,w_n$
 into one that is also normal at infinity, so the first part of his
 integration algorithm is as follows:
-\begin{enumerate}
-\item Pick any basis $b=(b_1,...,b_n)$ of $E$ over $K(x)$ that is
+1. Pick any basis $b=(b_1,...,b_n)$ of $E$ over $K(x)$ that is
 composed of integral elements.
-\item Pick an integer $N \in \mathbb{Z}$ that is not zero of the
+1. Pick an integer $N \in \mathbb{Z}$ that is not zero of the
 denominator of $f$ with respect to $b$, nor of the discriminant of $E$
 over $K(x)$, and perform the change of variable $x=N+1/z$,
 $dx=-dz/z^2$ on the integrand.
-\item Compute an integral basis $w$ for $E$ over $K(z)$ and make it
+1. Compute an integral basis $w$ for $E$ over $K(z)$ and make it
 normal at infinity
-\item Perform the Hermite reduction on $f$ using $w$, this yields 
+1. Perform the Hermite reduction on $f$ using $w$, this yields
 $g,h \in E$ such that $\int{f~dz}=g+\int{h~dz}$ and $h$ has a
 squarefree denominator with respect to $w$.
-\item If $hz^2$ has a pole at infinity, then $\int{f~dz}$ and
+1. If $hz^2$ has a pole at infinity, then $\int{f~dz}$ and
 $\int{h~dz}$ are not elementary functions
-\item Otherwise, $\int{h~dz}$ is elementary if and only if there are
+1. Otherwise, $\int{h~dz}$ is elementary if and only if there are
 constants $c_1,...,c_k \in \overline{K}$ and 
 $u_1,...,u_k \in E(c_1,...,c_k)^{*}$ such that
-\end{enumerate}
+
 \begin{equation}# label: Int14
 h=\frac{c_1}{u_1}\frac{du_1}{dz}+\cdots+\frac{c_k}{u_k}\frac{du_k}{dz}
 \end{equation}
@@ -2406,14 +2399,13 @@ without computing an integral basis.
 Following the previous sections, we are left with solving equation
 [[#Int14][Int14]] for the constants $c_1,...,c_k$ and for $u_1,...,u_k$. We
 must make at this point the following additional assumptions:
-\begin{itemize}
-\item we have an integral primitive element for $E$ over $K(z)$, {\sl
+- we have an integral primitive element for $E$ over $K(z)$, {\sl
 i.e.} $y \in *O*_{K[z]}$ such that $E=K(z)(y)$,
-\item $[E : K(z)]=[E : \overline{K}(z)]$, /i.e./ the minimal
+- $[E : K(z)]=[E : \overline{K}(z)]$, /i.e./ the minimal
 polynomial for $y$ over $K[z]$ is absolutely reducible, and
-\item we have an integral basis $w=(w_1,...,w_n)$ for $E$ over
+- we have an integral basis $w=(w_1,...,w_n)$ for $E$ over
 $K(z)$, and $w$ is normal at infinity
-\end{itemize}
+
 A primitive element can be computed by considering linear combinations
 of the generators of $E$ over $K(x)$ with random coefficients in
 $K(x)$, and Trager [cite:@Trag84] describes an absolute factorization
@@ -2439,28 +2431,27 @@ $\delta$ is principal, the $\sum{n_P}=0$, but the converse is not
 generally true, except if $E=K(z)$. Trager's algorithm proceeds
 essentially by constructing candidate divisors for the $u_i$'s of
 [[#Int14][Int14]]: 
-\begin{itemize}
-\item Let $\sum_{i=1}^n A_iw_i$ be the numerator of $h$ with respect
+- Let $\sum_{i=1}^n A_iw_i$ be the numerator of $h$ with respect
 to $w$, and $D$ be its (squarefree) denominator
-\item Write $\sum_{i=1}^n A_iw_i=G/H$, where $G \in K[z,y]$ and 
+- Write $\sum_{i=1}^n A_iw_i=G/H$, where $G \in K[z,y]$ and
 $H \in K[z]$
-\item Let $f \in K[z,y]$ be the (monic) minimum polynomial for $y$
+- Let $f \in K[z,y]$ be the (monic) minimum polynomial for $y$
 over $K(z)$, $t$ be a new indeterminante and compute
 \[
 R(t)=resultant_z\\left({\rm\ pp_t }\left({\rm\ resultant_y\ }\left(
 G-tH\frac{dD}{dz},F\right)\right),D\right) \in K[t]
 \]
-\item Let $\alpha_1,...,\alpha_s \in \overline{K}$ be the distinct
+- Let $\alpha_1,...,\alpha_s \in \overline{K}$ be the distinct
 nonzero roots of $R$, $(q_1,...,q_k)$ be a basis for the vector
 space that they generate over $\mathbb{Q}$, write
 $\alpha_i=r_{i1}q_1+\cdots+r_{ik}q_k$ for each $i$, where 
 $r_{ij} \in \mathbb{Q}$ and let $m > 0$ be a common denominator for
 all the $r_{ij}$'s
-\item For $1 \le j \le k$, let 
+- For $1 \le j \le k$, let
 $\delta_j=\sum_{i=1}^s mr_{ij}\sum_l r_lP_l$ where $r_l$ is the
 ramification index of $P_l$ and $P_l$ runs over all the places at
 which $h~dz$ has residue $r_i\alpha_i$
-\item If there are nonzero integers $n_1,...,n_k$ such that 
+- If there are nonzero integers $n_1,...,n_k$ such that
 $n_j\delta_j$ is principal for each $j$, then let
 \[
 u=h-\frac{1}{m}\sum_{j=1}^k\frac{q_j}{n_ju_j}\frac{du_j}{dz}
@@ -2470,7 +2461,7 @@ $n_j\delta_j=(u_j)$. If $u=0$, then
 $\int{h~dz}=\sum_{j=1}^k q_j\log(u_j)/(mn_j)$, otherwise if either 
 $u \ne 0$ or there is no such integer $n_j$ for at least one $j$,
 then $h~dz$ has no elementary integral.
-\end{itemize}
+
 Note that this algorithm expresses the integral, when it is
 elementary, with the smallest possible number of logarithms. Steps 3
 to 6 requires computing in the splitting field $K_0$ of $R$ over $K$,
@@ -2599,13 +2590,12 @@ on $K$. In that case, an element $t \in E$ is a /monomial/ over
 $K$ if $t$ is transcendental over $K$ and $t' \in K[t]$, which implies
 that both $K[t]$ and $K(t)$ are closed under $^{\prime}$. An element $t \in E$
 is /elementary over/ $K$ if either
-\begin{itemize}
-\item $t'=b'/b$ for some $b \in K^{*}$, in which case we say that $t$
+- $t'=b'/b$ for some $b \in K^{*}$, in which case we say that $t$
 is a /logarithm/ over $K$, and write $t=log(b)$, or
-\item $t'=b't$ for some $b \in K^{*}$, in which case we say that $t$
+- $t'=b't$ for some $b \in K^{*}$, in which case we say that $t$
 is an /exponential/ over $K$, and write $t=e^b$, or
-\item $t$ is algebraic over $K$
-\end{itemize}
+- $t$ is algebraic over $K$
+
 
 A differential extension $(E,')$ of $(K,')$ is /elementary over/
 $K$, if there exist $t_1,...,t_m$ in $E$ such that
@@ -2818,14 +2808,13 @@ Note that the roots of each $Q_i$ must all be constants, and that the
 arguments of the logarithms can be obtained directly from the
 subresultant PRS of $D$ and $A-zD'$ as in the rational function
 case. It can then be proven [cite:@Bron97] that
-\begin{itemize}
-\item $f-g'$ is always ``simpler'' than $f$
-\item the splitting field of $Q_1\cdots Q_k$ over $K$ is the minimal
+- $f-g'$ is always ``simpler'' than $f$
+- the splitting field of $Q_1\cdots Q_k$ over $K$ is the minimal
 algebraic extension of $K$ needed in order to express $\int f$ in the
 form [[#Int4][Int4]]
-\item if $f$ has an elementary integral over $K(t)$, then 
+- if $f$ has an elementary integral over $K(t)$, then
 $R | \kappa(R)$ in $K[z]$ and the denominator of $f-q'$ is special
-\end{itemize}
+
 Thus, while in the pure rational function case the remaining integrand
 is a polynomial, in this case the remaining integrand has a special
 denominator. In that case we have additionally that if its integral is
@@ -4495,12 +4484,11 @@ which gives\hbox{\hskip 2cm}$\overline{AO}-\overline{OC}=
 \overline{DO}-\overline{OB}$\\
 The two vectors here equated are parallel to the diagonals respectively. 
 Such an equation is, of course, absurd unless 
-\begin{enumerate}
-\item The diagonals are parallel, in which case the figure 
+1. The diagonals are parallel, in which case the figure
 is not a parallelogram; 
-\item $\overline{AO} = \overline{OC}$, and 
+1. $\overline{AO} = \overline{OC}$, and
 $\overline{DO} = \overline{OB}$, the proposition. 
-\end{enumerate}
+
 
 (b) {\sl To shew that a triangle can be constructed, whose sides 
 are parallel, and equal, to the bisectors of the sides of any 
@@ -8558,15 +8546,14 @@ changing from any one set of coordinate axes to another ; and
 derive from your general result, and also from special investiga 
 tions, the usual expressions for the following cases: 
 
-\begin{itemize}
-\item[(a)] Rectangular axes turned about z through any angle. 
+- [(a)] Rectangular axes turned about z through any angle.
 
-\item[(b)] Rectangular axes turned into any new position by rota 
+- [(b)] Rectangular axes turned into any new position by rota
 tion about a line equally inclined to the three. 
 
-\item[(c)] Rectangular turned to oblique, one of the new axes 
+- [(c)] Rectangular turned to oblique, one of the new axes
 lying in each of the former coordinate planes. 
-\end{itemize}
+
 
 *2*. Point out the distinction between 
 $$
@@ -8632,21 +8619,20 @@ expressed in terms of two given quaternions.
 *8*. Prove the following theorems, and exhibit them as properties 
 of determinants : 
 
-\begin{itemize}
-\item[(a)] $S.(\alpha+\beta)(\beta+\gamma)(\gamma+\alpha)=
+- [(a)] $S.(\alpha+\beta)(\beta+\gamma)(\gamma+\alpha)=
 2S.\alpha\beta\gamma$
-\item[(b)]$S.V\alpha\beta V\beta\gamma V\gamma\alpha=
+- [(b)]$S.V\alpha\beta V\beta\gamma V\gamma\alpha=
 -(S.\alpha\beta\gamma)^2$
-\item[(c)]$S.V(\alpha+\beta)(\beta+\gamma)V(\beta+\gamma)(\gamma+\alpha)
+- [(c)]$S.V(\alpha+\beta)(\beta+\gamma)V(\beta+\gamma)(\gamma+\alpha)
 V(\gamma+\alpha)(\alpha+\beta)=-4(S.\alpha\beta\gamma)^2$
-\item[(d)]$S.V(V\alpha\beta V\beta\gamma)V(V\beta\gamma V\gamma\alpha)
+- [(d)]$S.V(V\alpha\beta V\beta\gamma)V(V\beta\gamma V\gamma\alpha)
 V(V\gamma\alpha V\alpha\beta)=-(S.\alpha\beta\gamma)^4$
-\item[(e)]$S.\delta\epsilon\zeta=-16(S.\alpha\beta\gamma)^4$\\
+- [(e)]$S.\delta\epsilon\zeta=-16(S.\alpha\beta\gamma)^4$\\
 where 
 $$\delta=V(V(\alpha+\beta)(\beta+\gamma)V(\beta+\gamma)(\gamma+\alpha))$$
 $$\epsilon=V(V(\beta+\gamma)(\gamma+\alpha)V(\gamma+\alpha)(\alpha+\beta))$$
 $$\zeta=V(V(\gamma+\alpha)(\alpha+\beta)V(\alpha+\beta)(\beta+\gamma))$$
-\end{itemize}
+
 
 *9*. Prove the common formula for the product of two determinants 
 of the third order in the form 
@@ -8701,25 +8687,23 @@ $$
 diagonals of the quadrilateral are equal. 
 
 *14*. Show that 
-\begin{itemize}
-\item [(a)]$S.q^2=2S^2q-T^2q$
-\item [(b)]$S.q^3=S^3q-3SqT^2Vq$
-\item [(c)]$\alpha^2\beta^2\gamma^2+S^2.\alpha\beta\gamma=
+- [(a)]$S.q^2=2S^2q-T^2q$
+- [(b)]$S.q^3=S^3q-3SqT^2Vq$
+- [(c)]$\alpha^2\beta^2\gamma^2+S^2.\alpha\beta\gamma=
 V^2.\alpha\beta\gamma$
-\item [(d)]$S(V.\alpha\beta\gamma V.\beta\gamma\alpha V.\gamma\alpha\beta)=
+- [(d)]$S(V.\alpha\beta\gamma V.\beta\gamma\alpha V.\gamma\alpha\beta)=
 4S\alpha\beta S\beta\gamma S\gamma\alpha S.\alpha\beta\gamma$
-\item [(e)]$V.q^3=(2S^2q-T^2Vq)Vq$
-\item [(f)]$qUVq^{-1}=-Sq.UVq+TVq$
-\end{itemize}
+- [(e)]$V.q^3=(2S^2q-T^2Vq)Vq$
+- [(f)]$qUVq^{-1}=-Sq.UVq+TVq$
+
 
 and interpret each as a formula in plane or spherical trigonometry. 
 
 *15*. If $q$ be an undetermined quaternion, what loci are represented by 
-\begin{itemize}
-\item[(a)]$(q\alpha^{-1})^2=-a^2$
-\item[(b)]$(q\alpha^{-1})^4=a^4$
-\item[(c)]$S.(q-\alpha)^2=a^2$
-\end{itemize}
+- [(a)]$(q\alpha^{-1})^2=-a^2$
+- [(b)]$(q\alpha^{-1})^4=a^4$
+- [(c)]$S.(q-\alpha)^2=a^2$
+
 where $a$ is any given scalar and $\alpha$ any given vector ? 
 
 *16*. If $q$ be any quaternion, show that the equation 
@@ -9272,14 +9256,13 @@ cases where the basis matrices are of order two, the inverse will be
 shown to be a linear function of $c$.
 
 The method can be summed up as follows.
-\begin{enumerate}
-\item Find the matrix basis of the Clifford algebra.
-\item Find the matrix representation of the Clifford number whose
+1. Find the matrix basis of the Clifford algebra.
+1. Find the matrix representation of the Clifford number whose
 inverse is required.
-\item Compute the characteristic or minimal polynomial.
-\item Check for the existence of the inverse.
-\item Compute the inverse using the coefficients from the polynomial.
-\end{enumerate}
+1. Compute the characteristic or minimal polynomial.
+1. Check for the existence of the inverse.
+1. Compute the inverse using the coefficients from the polynomial.
+
 
 Step 1 need only be done once for any Clifford algebra, and this can
 be done using the method in the previous section, where needed.
@@ -9849,22 +9832,21 @@ The figure above, Hamming [cite:@Hamm62]
 calls a lozenge diagram. A line starting at
 a point on the left edge and following some path across the page
 defines an interpolation formula if the following rules are used.
-\begin{itemize}
-\item[*1a*] For a left-to-right step, /add/
-\item[*1b*] For a right-to-left, /subtract/
-\item[*2a*] If the /slope/ of the step is /positive/, 
+- [*1a*] For a left-to-right step, /add/
+- [*1b*] For a right-to-left, /subtract/
+- [*2a*] If the /slope/ of the step is /positive/,
 use the product of the difference crossed times the factor 
 immediately /below/.
-\item[*2b*] If the /slope/ of the step is /negative/,
+- [*2b*] If the /slope/ of the step is /negative/,
 use the product of the difference crossed times the factor
 immediately /above/
-\item[*3a*] If the step is /horizontal/ and passes through a
+- [*3a*] If the step is /horizontal/ and passes through a
 /difference/, use the product of the difference times the 
 /average/ of the factors /above/ and /below/.
-\item[*3b*] If the step is /horizontal/ and passes through a
+- [*3b*] If the step is /horizontal/ and passes through a
 /factor/, use the product of the factor times the /average/
 of the differences /above/ and /below/.
-\end{itemize}
+
 
 As an example of rules *1a* and *2a*, consider starting at
 $y(0)$ and going down to the right. We get, term by term,
@@ -10528,13 +10510,12 @@ Let $\langle M ,\leq \rangle$ be a
 partially ordered set.
 The /free lower semi-lattice on $\langle M ,\leq \rangle$/
 is the following  partially ordered set $\langle F, \preceq \rangle$:
-\begin{enumerate}
-\item $F$ is the set of all non-empty subsets of $M$
+1. $F$ is the set of all non-empty subsets of $M$
 whose elements are pairwise incomparable with respect to $\leq$.
-\item If $S_1, S_2 \in F$ then
+1. If $S_1, S_2 \in F$ then
       $$ S_1 \preceq S_2 \Longleftrightarrow           \forall s_2 \in S_2 \: \exists s_1 \in S_1 \, . \,
            s_1 \leq s_2.$$
-\end{enumerate}
+
 
 *Lemma 1. (Free Lower Semi-Lattices)*
 # label: lefrelosela
@@ -10608,14 +10589,13 @@ The other direction is shown analogously. \qed
 {\sl Let $ \langle M ,\leq \rangle$ be a finite partially ordered set. Then
 $ \langle M ,\leq \rangle$ is not a quasi-lattice
 iff there are $a,b,c,d \in M$ such that
-\begin{enumerate}
-\item $a \leq c$ and $a \leq d$,
-\item $b \leq c$ and $b \leq d$,
-\item $a \not \leq b$ and $b \not \leq a$,
-\item $c \not \leq d$ and $d \not \leq c$,
-\item # label: lacolenolat there is no $e \in M$ which is a common upper bound
+1. $a \leq c$ and $a \leq d$,
+1. $b \leq c$ and $b \leq d$,
+1. $a \not \leq b$ and $b \not \leq a$,
+1. $c \not \leq d$ and $d \not \leq c$,
+1. # label: lacolenolat there is no $e \in M$ which is a common upper bound
 of $a$ and $b$ and a common lower bound of $c$ and $d$.
-\end{enumerate}}
+
 
 \begin{figure}
 
@@ -10725,13 +10705,12 @@ fulfill the monotonicity condition.
 #+INDEX: order-sorted terms!set of|ii
 of sort $\sigma$ freely  generated by $V$,
 $T_\Sigma(V)_\sigma$, is the least set satisfying}
-\begin{itemize}
-\item if $x \in V_{\sigma'}$ and $\sigma' \leq \sigma$,
+- if $x \in V_{\sigma'}$ and $\sigma' \leq \sigma$,
 then $x \in T_\Sigma(V)_\sigma$
-\item if $f \in \Sigma_{\omega,\sigma'}$,  $\omega = \sigma_1 ... \sigma_n$,
+- if $f \in \Sigma_{\omega,\sigma'}$,  $\omega = \sigma_1 ... \sigma_n$,
  $\sigma' \leq \sigma$ and $t_i \in T_\Sigma(V)_{\sigma_i}$ then
 $f(t_1, ..., t_n) \in T_\Sigma(V)_\sigma$.
-\end{itemize}
+
 
 If $t \in T_\Sigma(V)_\sigma$ we will also write $t:\sigma$.
 
@@ -10790,13 +10769,12 @@ not have a minimal sort.
 #+INDEX: term!complexity|ii
  of a term $t\in T_\Sigma(V)$, $\com(t)$ is inductively
 defined as follows:
-\begin{itemize}
-\item $\com(t)=1$, if $t \in V_\sigma$ or $t \in \Sigma_{\epsilon,\sigma}$
+- $\com(t)=1$, if $t \in V_\sigma$ or $t \in \Sigma_{\epsilon,\sigma}$
 for some $\sigma \in S$,
-\item if $f \in \Sigma_{\omega,\sigma'}$,  $\omega = \sigma_1 \cdots \sigma_n$,
+- if $f \in \Sigma_{\omega,\sigma'}$,  $\omega = \sigma_1 \cdots \sigma_n$,
 and $t_i \in T_\Sigma(V)_{\sigma_i}$ then
 $$\com(f(t_1,...,t_n))= \max(\com(t_1), ..., \com(t_n)) + 1.$$
-\end{itemize}}
+
 
 *Definition 11.*
 {\sl A /substitution/ $\theta$ 
@@ -10929,11 +10907,10 @@ $$
 {\sl (more precisely a family of functions
 $\circ_{A,B,C}$ for all objects $A,B,C$) such that the following
 axioms are satisfied:
-\begin{enumerate}
-\item $(h \circ g ) \circ f = h \circ (g \circ f)$
+1. $(h \circ g ) \circ f = h \circ (g \circ f)$
  /(associativity)/ \\
 for all morphisms $f,g,h$, if at least one side is defined.
-\item For each object $A \in \obj{C}$ there is a morphism
+1. For each object $A \in \obj{C}$ there is a morphism
 $id_A \in \mor{C}{A,A}$, called 
 /identity of $A$/, such that we have for all
 $f: A \longrightarrow B$ and
@@ -10942,7 +10919,7 @@ $f \circ id_A = f \mbox{ and } id_A \circ g =g$
  /(identity)/.
 
 #+INDEX:  id@$id_A$|ii
-\end{enumerate}}
+
 
 /Frequently we will write/
 $$A \stackrel{f}{\longrightarrow} B$$
@@ -10956,10 +10933,9 @@ $$f: A \longrightarrow B .$$
 $\cat{C}^op$, the /opposite category/ of
 $\cat{C}$, is the category which is
 defined by 
-\begin{enumerate}
-\item $\obj{C^op}= \obj{C}$,
-\item $\mor{C^op}{A,B} =\mor{C}{B,A}$.
-\end{enumerate}
+1. $\obj{C^op}= \obj{C}$,
+1. $\mor{C^op}{A,B} =\mor{C}{B,A}$.
+
 Sometimes we will call $\cat{C}^op$ the
 /dual category/ of $\cat{C}$.}
 
@@ -10969,11 +10945,10 @@ For any categories $\cat{C}$ and $\cat{D}$
 we will write
 $\cat{C} \times \cat{D}$
 for the category which is defined by
-\begin{enumerate}
-\item $\obj{C \times D}= \obj{C} \times \obj{D}$,
-\item $\mor{C\times D}{(A,A'),\,(B,B')} =\mor{C}{A,B} \times 
+1. $\obj{C \times D}= \obj{C} \times \obj{D}$,
+1. $\mor{C\times D}{(A,A'),\,(B,B')} =\mor{C}{A,B} \times
 \mor{D}{A',B'}$,
-\end{enumerate}
+
 where the symbol $\times$ on the right hand side of the equations
 denotes the usual set theoretic Cartesian product.
 
@@ -10994,12 +10969,11 @@ an object $F(A)$ in $\cat{D}$ and to each morphism
 $f: A \longrightarrow B$ in $\cat{C}$ a morphism
 $F(f): F(A) \longrightarrow F(B)$ in
 $\cat{D}$ such that the following axioms are satisfied:
-\begin{enumerate}
-\item $F(g \circ f) = F(g) \circ F(f)$ for all $g \circ f$ in
+1. $F(g \circ f) = F(g) \circ F(f)$ for all $g \circ f$ in
 $\cat{C}$,
-\item $F(id_A) = id_{F(A)}$ for all objects $A$ 
+1. $F(id_A) = id_{F(A)}$ for all objects $A$
 in $\cat{C}$.
-\end{enumerate}}
+
 
 {\sl The composition of two functors
 $F: \cat{C} \longrightarrow \cat{D}$ and
@@ -11060,11 +11034,10 @@ up to isomorphism.
 
 The type system of {\sf Axiom} consists of three levels:
 
-\begin{enumerate}
-\item elements,
-\item domains,
-\item categories.
-\end{enumerate}
+1. elements,
+1. domains,
+1. categories.
+
 
 The elements belong to domains, which correspond to types in the
 traditional programming terminology.
@@ -11316,16 +11289,15 @@ Notice the use of multiple declarations, which can be achieved in
 In the following we will sometimes assume that we have a {\em
 semantics} for the /ground types/ which satisfies the following
 conditions:
-\begin{itemize}
-\item The ground types correspond to mathematical objects
+- The ground types correspond to mathematical objects
 in the sense of universal algebra or model theory
 (A comprehensive reference for universal algebra is [cite:@Grae79],
 for model theory [cite:@Chan90]).
-\item Functions between ground types are set theoretical
+- Functions between ground types are set theoretical
 functions. If we say that two functions $f,g: t_1 \longrightarrow t_2$
 are equal ($f=g$) we mean equality between them as set theoretic
 objects.
-\end{itemize}
+
 
 Since we only need a set theoretic semantics for /ground types/
 and functions between ground types, the obvious interpretations of the
@@ -11373,15 +11345,14 @@ finite.} and downward complete if one allows to form the
 ``conjunction'' $\sigma_1 \wedge \sigma_2$ of sorts $\sigma_1$ and
 $\sigma_2$.  This conjunction has to fulfill the following conditions:
 
-\begin{enumerate}
-\item $\sigma_1 \wedge \sigma_2$ has to be the meet of $\sigma_1$ and
+1. $\sigma_1 \wedge \sigma_2$ has to be the meet of $\sigma_1$ and
 $\sigma_2$ in the free lower semi-lattice on the partially ordered set
 $\langle S, \leq \rangle$ (cf.\ Def. 5).
-\item If a type constructor $\chi$ has declarations $\chi: (\gamma_1
+1. If a type constructor $\chi$ has declarations $\chi: (\gamma_1
 \cdots \gamma_n) \gamma$ and $\chi: (\delta_1 \cdots \delta_n) \delta$
 then it also has a declaration $$\chi: (\gamma_1 \wedge \delta_1 \:
 \cdots \gamma_n \wedge \delta_n) \gamma \wedge \delta.$$
-\end{enumerate}
+
 
 Using =Join= there is a possibility to form such conjunctions of
 sort having the required properties in {\sf Axiom}.
@@ -12240,11 +12211,10 @@ mapping is a view is not implemented (cf.\ \cite[Sec.~4.3]{Gogu92}).
 As we have seen it is not possible to specify all structures used in a
 computer algebra system by equations.  Their are several possibilities
 to overcome this problem: 
-\begin{enumerate} 
-\item Use more powerful specification techniques.  
-\item Do not specify all structures 
+1. Use more powerful specification techniques.
+1. Do not specify all structures
 /ab initio/, but take some of the structures as given.  
-\end{enumerate}
+
 
 The first possibility is used in [cite:@Limo92].  There the
 framework of first-order logic was chosen for the specification of
@@ -12797,10 +12767,9 @@ functions we can give the following definition of coherence.
 # label: defcoh 
 {\sl A type system is /coherent/ if the following condition is satisfied:
 
-\begin{itemize} \item[] For any ground types $t_1$ and $t_2$ of the
 type system, if $\phi,\psi: t_1 \longrightarrow t_2$ are coercions
 then $\phi=\psi$.  
-\end{itemize}}
+
 
 **** General Assumptions
 
@@ -12900,14 +12869,13 @@ For $i \notin {\cal A}_f \cup {\cal M}_f$ let $\phi_i$ and $\phi'_i$
 be the appropriate identities.}
 
 {\sl Then the following conditions are satisfied: 
-\begin{enumerate} 
-\item ${\cal F}_f(t_1,...,t_n,t_1, ..., t_n, id_{t_1}, ...,
+1. ${\cal F}_f(t_1,...,t_n,t_1, ..., t_n, id_{t_1}, ...,
 id_{t_n})$ is the identity on $f(t_1,...,t_n)$, 
-\item ${\cal F}_f(t_1,...,t_n,t''_1, ..., t''_n, \phi_1 \circ \phi'_1,
+1. ${\cal F}_f(t_1,...,t_n,t''_1, ..., t''_n, \phi_1 \circ \phi'_1,
 ..., \phi_n \circ \phi'_n) =$ \\ ${\cal F}_f(t_1,...,t_n,t'_1,
 ..., t'_n, \phi_1, ..., \phi_n) \circ {\cal
 F}_f(t'_1,...,t'_n,t''_1, ..., t''_n, \phi'_1, ..., \phi'_n).$ 
-\end{enumerate} }
+
 
 Let $f: (\sigma_1 \cdots \sigma_n) \sigma$ be an $n$-ary type
 constructor which induces a structural coercion.  
@@ -13047,14 +13015,13 @@ this respect the situation is similar to the one in Sec.~[[#s43][s43]].
 {\sl Let $f:(\sigma_1 \cdots \sigma_n)\sigma$ be a $n$-ary type constructor.
 
 Then the following conditions hold: 
-\begin{enumerate} 
-\item $|{\cal D}_f|\leq 1$.  
-\item The coercion functions which give rise to the
+1. $|{\cal D}_f|\leq 1$.
+1. The coercion functions which give rise to the
 direct embedding are unique, i.\,e.\ if $\Phi^{i}_{f,t_1,...,t_n}:
 t_i \longrightarrow f(t_1,...,t_n)$ and
 $\Psi^{i}_{f,t_1,...,t_n}: t_i \longrightarrow f(t_1,...,t_n)$,
 then $$\Phi^{i}_{f,t_1,...,t_n}=\Psi^{i}_{f,t_1,...,t_n}.$$
-\end{enumerate} }
+
 
 Many important type constructors such as $\tf{list}$, $\tf{M}_{n,n}$,
 $\tf{FF}$, and in general the ones describing a ``closure'' or a
@@ -13238,13 +13205,12 @@ if these local conditions are satisfied.
 # label: thmain
 {\sl Assume  that all coercions between ground types
 are only built by one of the following mechanisms:
-\begin{enumerate}
-\item coercions between base types;
-\item coercions induced by structural coercions;
-\item direct embeddings in a type constructor;
-\item composition of coercions;
-\item identity function on ground types as coercions.
-\end{enumerate}
+1. coercions between base types;
+1. coercions induced by structural coercions;
+1. direct embeddings in a type constructor;
+1. composition of coercions;
+1. identity function on ground types as coercions.
+
 If the assumptions 1, 2, 3, 4, and 5 are satisfied,
 then the set of  ground types as objects and the coercions
 between them as arrows form a category which is a preorder.}
@@ -13383,15 +13349,14 @@ well known first-order type for that purpose
 Moreover, it is reasonable to assume that type isomorphisms have the
 following properties which cannot be deduced from the properties of
 general coercion functions.
-\begin{enumerate}
-\item Isomorphic types belong to the same type class, i.\,e.\ if $t_1
+1. Isomorphic types belong to the same type class, i.\,e.\ if $t_1
   : \sigma$ and $t_1 \typeiso t_2$ then $t_2 : \sigma$.
-\item If $f: (\sigma_1 \cdots \sigma_n)\sigma$ is an $n$-ary type
+1. If $f: (\sigma_1 \cdots \sigma_n)\sigma$ is an $n$-ary type
   constructor, $t_1:\sigma_1, ..., t_n:\sigma_n$, $t'_1:\sigma_1,
   ..., t'_n:\sigma_n$, such that
 $$ t_i \typeiso t'_i \forall i$$ then
 $$f(t_1, ..., t_n ) \typeiso f(t'_1, ..., t'_n ).$$
-\end{enumerate}
+
 
 The second condition is only implied by the rules for structural
 coercions if $f$ would be monotonic or antimonotonic in all arguments.
@@ -13601,13 +13566,12 @@ first need a technical result.
 *Definition 23.*
 {\sl Let $f : \{P,F\}^* \longrightarrow \{P,F\}^*$ be the function, which
 is defined by the following algorithm:
-\begin{itemize}
-\item[] If no $F$ is occurring in the input string, then return the
+- [] If no $F$ is occurring in the input string, then return the
   input string as output string.
 
 Otherwise, remove any $F$ except the leftmost occurrence from the
 input string and return the result as output string.
-\end{itemize}}
+
 
 {\sl Let $\equiv$ be the binary relation on $\{P,F\}^*$ which is defined by}
 $$\forall v,w \in \{P,F\}^*: \; v \equiv w \iff f(v)=f(w).$$
@@ -13673,24 +13637,23 @@ polynomials in a ``new'' indeterminate.
 Thus if a computer algebra system has a fixed integral domain $\tf{R}$
 and names for symbols $\tf{x}_0, \tf{x}_1, \tf{x}_2 ...$, it should
 also provide types of the form
-\begin{enumerate}
-\item $\tf{R}$, # label: l11
-\item $\tf{FF}(\tf{R})$, # label: l12
-\item $\tf{UP}(\tf{R},\tf{x}_0)$, # label: l13
-\item $\tf{UP}(\tf{FF}(\tf{R}),\tf{x}_0)$, # label: l14
-\item $\tf{FF}(\tf{UP}(\tf{R},\tf{x}_0))$, # label: l15
-\item $\tf{UP}(\tf{UP}(\tf{R},\tf{x}_0),\tf{x}_1)$, # label: l16
-\item
+1. $\tf{R}$, # label: l11
+1. $\tf{FF}(\tf{R})$, # label: l12
+1. $\tf{UP}(\tf{R},\tf{x}_0)$, # label: l13
+1. $\tf{UP}(\tf{FF}(\tf{R}),\tf{x}_0)$, # label: l14
+1. $\tf{FF}(\tf{UP}(\tf{R},\tf{x}_0))$, # label: l15
+1. $\tf{UP}(\tf{UP}(\tf{R},\tf{x}_0),\tf{x}_1)$, # label: l16
+1. 
   $\tf{UP}(\tf{FF}(\tf{UP}(\tf{R},\tf{x}_0)),\tf{x}_1)$, # label: l17
-\item
+1. 
   $\tf{FF}(\tf{UP}(\tf{UP}(\tf{R},\tf{x}_0),\tf{x}_1))$, # label: l18
-\item
+1. 
   $\tf{FF}(\tf{UP}(\tf{FF}(\tf{UP}(\tf{R},\tf{x}_0)),\tf{x}_1)$, # label: l19
-\item
+1. 
   $\tf{UP}(\tf{UP}(\tf{UP}(\tf{R},\tf{x}_0),\tf{x}_1),\tf{x}_2)$, \label{l1
   10}
-\item[] \rule{0mm}{0mm} \vdots
-\end{enumerate}
+1. [] \rule{0mm}{0mm} \vdots
+
 
 It is convenient to use the same symbols for a mathematical object and
 the symbolic expression which denotes the object.  In order to clarify
@@ -13738,11 +13701,10 @@ occurring in $t$.
 *Definition 25.*
 {\sl Define a function {\sf trans} from $\{F,P\}^*$ into the set of types
 recursively by the following equations.  For $w \in \{F,P\}^*$,
-\begin{itemize}
-\item ${\sf trans}(\varepsilon) = \tf{R}$,
-\item ${\sf trans}(Fw)=\tf{FF}({\sf trans}(w))$,
-\item ${\sf trans}(Pw)=\tf{up}({\sf trans}(w))$.
-\end{itemize}}
+- ${\sf trans}(\varepsilon) = \tf{R}$,
+- ${\sf trans}(Fw)=\tf{FF}({\sf trans}(w))$,
+- ${\sf trans}(Pw)=\tf{up}({\sf trans}(w))$.
+
 
 If we take $\lsb \tf{R} \rsb$ to be the ring of integers, the
 following lemma will be an exercise in elementary
@@ -14080,14 +14042,13 @@ $$\typesetinterpr{\cat{C}_{n+1}} \circ \rtypeasop .$$
 
 Thus for a $n$-ary first-order operator $op$ the requirements
 that
-\begin{enumerate}
-\item the assignments of a range type for an operation given
+1. the assignments of a range type for an operation given
   instantiations of a type class and its parameters has to be
   ``functorial'' and
-\item the instantiation of the operator has to correspond to a natural
+1. the instantiation of the operator has to correspond to a natural
   transformation between functors giving the set-theoretic
   interpretations of the ground types and the coercions between them
-\end{enumerate}
+
 will guarantee that type classes and coercions interact nicely,
 i.\,e.\ give expressions involving $op$ a unique meaning.
 
@@ -14358,16 +14319,15 @@ the expression
 $$op(o_1, ..., o_n)$$
 will be well typed having type $\xi_{n+1}$
 iff the following conditions are satisfied.
-\begin{enumerate}
-\item If $\xi=\overline{t}_i$ for some ground type
+1. If $\xi=\overline{t}_i$ for some ground type
 $\overline{t}_i$ then $t_i \subtype \overline{t}_i$.
-\item If $\xi_i = \xi_j = v_{\tau_l}$ for some
+1. If $\xi_i = \xi_j = v_{\tau_l}$ for some
 $i \neq j$ then there is a type $t : \tau_l$
 such that
 $t_i \subtype t$ and $t_j \subtype t$.
-\item If $\xi_i = v_{\tau_k}$ then there is a type
+1. If $\xi_i = v_{\tau_k}$ then there is a type
 $t:\tau_k$ such that $t_i \subtype t$.
-\end{enumerate}
+
 
 Notice that if we require that all
 objects have ground types then algorithms solving the problems
@@ -14635,24 +14595,22 @@ of $t_1$ and $t_2$.}
 {\sl A /minimal upper bound/ $\mub(t_1,t_2)$ of two types
 $t_1$ and $t_2$ is a type $t$ satisfying the following
 conditions.
-\begin{enumerate}
-\item The type $t$ is a common upper bound of $t_1$ and $t_2$.
-\item If $t'$ is a type which is a common
+1. The type $t$ is a common upper bound of $t_1$ and $t_2$.
+1. If $t'$ is a type which is a common
 upper bound of $t_1$ and $t_2$
  such that $t' \subtype t$,
 then $t \subtype t'$.
-\end{enumerate}
+
 A /complete set of minimal upper bounds/
 for two types $t_1$ and $t_2$
 is a set $\CSMUB(t_1,t_2)$ such that
-\begin{enumerate}
-\item
+1. 
  all $t \in \CSMUB(t_1,t_2)$
 are a minimal common upper bound of $t_1$ and $t_2$, and
-\item for every type $t'$
+1. for every type $t'$
 which is a common upper bound of $t_1$ and $t_2$ there is
 a $t \in \CSMUB(t_1,t_2)$ such that $t \subtype t'$.
-\end{enumerate}}
+
 
 If two types $t_1$ and $t_2$ have no minimal
 upper bound then the complete sets of minimal upper bounds
@@ -14958,12 +14916,11 @@ given in [cite:@Tiur92].
 Many functions arising in the area of computer algebra are only
 partially defined. Some basic examples are
 
-\begin{enumerate}
-\item division in a field, which is defined for non-zero elements only;
-\item matrices over fields have inverses only, if they are regular;
-\item the square-root over the reals exists for non-negative
+1. division in a field, which is defined for non-zero elements only;
+1. matrices over fields have inverses only, if they are regular;
+1. the square-root over the reals exists for non-negative
 values only.
-\end{enumerate}
+
 
 We could make partial functions total by introducing new types --- the
 type of elements, on which the function is defined.
@@ -15054,11 +15011,10 @@ type theories including such constructs.
 
 There are some important examples of data structures whose type
 depends on a non-negative integer.
-\begin{itemize}
-\item Elements of $\ZZ_m$.
-\item Vectors of dimension $n$.
-\item The $m \times n$-matrices.
-\end{itemize}
+- Elements of $\ZZ_m$.
+- Vectors of dimension $n$.
+- The $m \times n$-matrices.
+
 However, the elements a type can depend on are not restricted to
 integers.
 
@@ -15103,13 +15059,12 @@ it is not possible to have type-safe compile-time type-checking.
 # label: lemundetychtydeel
 {\sl Let ${\cal R}$ be the class of unary recursive functions.
 Then the following questions are undecidable:
-\begin{enumerate}
-\item For $f \in {\cal R}$, is  $f(x)=n$
+1. For $f \in {\cal R}$, is  $f(x)=n$
 for some fixed $n \in \NN$ and for all $x$?
-\item  For $f \in {\cal R}$, is $f(x)$  a prime number for all $x$?
-\item  For $f \in {\cal R}$, is $\gcd(f(x),n)=1$ for some fixed $n \in \NN$ 
+1. For $f \in {\cal R}$, is $f(x)$  a prime number for all $x$?
+1. For $f \in {\cal R}$, is $\gcd(f(x),n)=1$ for some fixed $n \in \NN$
 and for all $x$?
-\end{enumerate}}
+
 
 \begin{proof}
 All of the questions above are equal to determining the membership of
@@ -15329,23 +15284,22 @@ type classes.
 Since Axiom has the most references in the literature of typed
 computer algebra systems, the notation used here is based on an
 Axiom-like language which assumes:
-\begin{enumerate}
-\item values which consist of value variables, records, record
+1. values which consist of value variables, records, record
 components, (higher order) functions, term application, value
 components of packages and /let/ expressions
-\item type expressions with type variables, base types, record types,
+1. type expressions with type variables, base types, record types,
 tagged unions, recursive types, function types, type components from
 packages, type constructors, and type application
-\item domain expressions with domain variables, self, domain
+1. domain expressions with domain variables, self, domain
 constructors, parameterized domains and application
-\item expressions which can be used either as domains or types
-\item packages with package variables, package constructors, package
+1. expressions which can be used either as domains or types
+1. packages with package variables, package constructors, package
 components of other packages, parameterized packages and application
-\item categories with category variables, sharing, category
+1. categories with category variables, sharing, category
 constructors, parameterized categories and application
-\item sharing constraints
-\item facilities for accessing package components
-\end{enumerate}
+1. sharing constraints
+1. facilities for accessing package components
+
 
 The abstract syntax of the language is given by the following grammar:
 \[\begin{array}{ll}
@@ -15700,12 +15654,11 @@ Mitchell and Plotkin [cite:@Mitc88]
 proposed that the {\sl interface part of a data type be viewed as a
 type, while the implementation part as a value of that
 type}. According to this analysis a domain comprises:
-\begin{enumerate}
-\item the internal representation of its instances
-\item operations for analyzing and manipulating this representation
-\item an abstraction barrier that prevents any access to the
+1. the internal representation of its instances
+1. operations for analyzing and manipulating this representation
+1. an abstraction barrier that prevents any access to the
 representation except by means of the given operations
-\end{enumerate}
+
 
 Some of the functions defined in the example with rationals, like
 /numerator/, /denominator/, /SetNumDenom/, and /new/
@@ -16327,13 +16280,12 @@ dependent products. The subtyping relation in this case involves
 the body type. The type $\Pi(m:C_1).C_2$ places a stronger constraint
 on the behaviour of its instances than $\Pi(m:C^\prime_1).C^\prime_2$
 if it demands that:
-\begin{enumerate}
-\item they behave properly on a larger set of inputs
+1. they behave properly on a larger set of inputs
 $(C^\prime_1)\sqsubseteq C_1)$ or
-\item their results fall within a smaller set of outputs
+1. their results fall within a smaller set of outputs
 $(C^\prime_2\sqsubseteq C^\prime_2)$, provided that the inputs range
 in $C^\prime_1$
-\end{enumerate}
+
 or possibly both ([$\Pi$-sub]).
 
 **** Sharing (Take Two)
@@ -16445,15 +16397,14 @@ handle these cases automatically and in a transparent way.
 The application of dependent product types can be defined in terms of
 already defined constructs such as nested packages and sharings as the
 previous examples indicate. We distinguish two cases of interest:
-\begin{enumerate}
-\item Declarations of packages as instances of applications of
+1. Declarations of packages as instances of applications of
 $\Pi$-types of the form
 \[P_2:(\Pi(P:C_1).C_2)P_1:=P_3\]
-\item Inheritance of applications of $\Pi$-types of the form
+1. Inheritance of applications of $\Pi$-types of the form
 \[C_3:=\Sigma((\Pi P:C_1.C_2)P_1).C_x\]
 the right hand side of which is essentially the expression
 \[with((\Pi(P:C_1).C_2)P_1 ; C_x)\]
-\end{enumerate}
+
 The expression $(\Pi(P:C_1).C_2)P_1$ creates a sum type
 $\Sigma P:C_1=P_2.C_2$ with the sharing specification $P=P_2$.
 
@@ -16484,19 +16435,18 @@ mechanism should be coded directly in the $\Pi$-types and then
 elaborated during their applications, so that the appropriate
 components of the resulting $\Sigma$-types and their instances will be
 introduced when needed. This involves the following steps:
-\begin{enumerate}
-\item Add a directive for introducing component $p$ in the definition
+1. Add a directive for introducing component $p$ in the definition
 of the instances of the category resulting from applying
 $\Pi(P:C_1).C_2$ to a package $P_1$. In order to avoid name conflicts,
 a fresh variable $P^\prime$ can be introduced instead of $P$,
 performing the appropriate $\alpha$-conversions.
-\item Create a dummy package $P_{dummy}$ which satisfies $C_1$
-\item In the definition of the sum
+1. Create a dummy package $P_{dummy}$ which satisfies $C_1$
+1. In the definition of the sum
 $\Sigma P^\prime:C_1.[P^\prime/P]C_2$
 propagate the directive of step 1 and do type-checking by sharing
 $P_{dummy}$ from step 2 with $P^\prime$. The directive from step 1
 should now affect the instances of the sum.
-\item If type checking succeeds, remove $P_{dummy}$. When a domain is
+1. If type checking succeeds, remove $P_{dummy}$. When a domain is
 matched against the introduced sum, the stored directives introduce
 the appropriate nested packages automatically, resulting in the
 generation of a new package. Add the appropriate sharings by
@@ -16508,11 +16458,11 @@ generated including all the components of $M$ plus a component
 $P^\prime$ resulting from the directives of step 3. A sharing
 specification $R^\prime=M$ is added to $Module_{flat}$. Type checking
 and propagation of sharings proceed.
-\item Any other operation involving sums should take into account the
+1. Any other operation involving sums should take into account the
 directives stored in them, or inherited by other sums. In this case,
 /Ring/ should include the directives given by
 /LeftModule(\%)/.
-\end{enumerate}
+
 
 The above result in the rules $\Pi$-apply and $\Pi$-subapply in
 figure([[#figure3][figure3]]).
@@ -17118,25 +17068,24 @@ exception handling, pattern matching, etc. although these constructs
 are subject to typing in our scheme.
 
 Additional research is of interest in the following subjects:
-\begin{enumerate}
-\item Introduction of =first class packages= in the system without
+1. Introduction of =first class packages= in the system without
 sacrificing the nice properties of the presented stratification. This
 should split packages and functors into a static and dynamic part. In
 such case, records and functions can be removed as special cases of
 higher order constructs. The difficulties here involve recursive
 definitions and effects. We need a clear semantics for recursive
 package definitions.
-\item Examination of the appropriate constraints for the introduction
+1. Examination of the appropriate constraints for the introduction
 of conditional categories in order to maintain soundness.
-\item An efficient implementation of type classes without sacrificing
+1. An efficient implementation of type classes without sacrificing
 space
-\item A scheme for coercions which involes algebraic relations as in
+1. A scheme for coercions which involes algebraic relations as in
 the case of the /Weyl/ system by Zippel [cite:@Zipp93] instead of simple
 coercions from one type to another.
-\item A more remote target is the introduction of propositions at the
+1. A more remote target is the introduction of propositions at the
 category level and the integration of an environment for theorem
 proving at the top level.
-\end{enumerate}
+
 
 This introduced type system is currently implemented for the
 $\lambda{}A$ language designed and implemented by the author at ETH
@@ -17188,10 +17137,9 @@ and maybe a few others.
 
 Another factor is the actual relationship between the various
 types. In our above example, of the polynomial ring, we know that:
-\begin{enumerate}
-\item there is a ring monomorphism from the underlying ring to the
+1. there is a ring monomorphism from the underlying ring to the
 polynomial ring
-\item there is an injection from the variable type\footnote{The
+1. there is an injection from the variable type\footnote{The
 type from which all the variables are taken. In Axiom, the
 variables are usually elements such as X, Y, and Z which are
 from the type Symbol} to the polynomial ring. (In fact, an
@@ -17200,7 +17148,7 @@ $\phi$, which is both a set-homomorphism (which is just a total
 function) and preserves order. So if $a<b$ then $\phi(a) < \phi(b)$.
 Mathematicians often utilise the order on the variables and extend it
 to an order on polynomials}.)
-\end{enumerate}
+
 
 Other types often have more complicated lattices of
 relationships. These relationships are often able to be abstracted out
@@ -17211,18 +17159,17 @@ to apply all the instance types of a particular abstract data type.
 
 A commonly encountered difficulty in languages which utilise types is
 the following:
-\begin{enumerate}
-\item Given =thing=, of type =Type1=, can we change the type
+1. Given =thing=, of type =Type1=, can we change the type
 of =thing= to be that of =Type2=? More accurately, can we
 create an element of =Type2=, which corresponds, in some natural
 way to =thing= of type =Type1=?
-\item If so, how do we go about performing such an operation? Can we
+1. If so, how do we go about performing such an operation? Can we
 perform this task algorithmically?
-\item Does there exist a way of abstracting this question or must
+1. Does there exist a way of abstracting this question or must
 every (=Type1=, =Type2=) pair be considered? Moreover, can we
 abstract such an algorithm (as mooted in 2, above) out to cover all
 cases? 
-\end{enumerate}
+
 
 Such type changes are often called /coercions/, /conversions/,
 or /castings/, with all three words having slightly different
@@ -17471,17 +17418,16 @@ type of the ``item'' and the new location for the bridge is the
 analogue of the type to which we are coercing the ``item''.
 
 Thus what we need to know are:
-\begin{enumerate}
-\item what are the foundations of the bridge?\\
+1. what are the foundations of the bridge?\\
 (*Analogue*: what are the constants of our type?)
-\item what is the length, width, strength of the bridge?\\
+1. what is the length, width, strength of the bridge?\\
 (*Analogue*: what are the parameters of the type?)
-\item how do you alter the bricks to be of a new shape/material?\\
+1. how do you alter the bricks to be of a new shape/material?\\
 (*Analogue*: we need to be able to recursively call the coercion
 algorithm on types which are ``recursively required for
 coercion''. That is types which form the bits of the ``item'' once we
 have chopped it up.)
-\end{enumerate}
+
 
 This is our analogy and we may consider many data types to be
 constructed (or built) similarly. For example, lists (in the
@@ -17490,17 +17436,16 @@ or by being the =cons= of something to the front of another list.
 
 As a more complicated example, polynomials are constructed via one of
 the following mechanisms:
-\begin{enumerate}
-\item by being a member of (the included monomorphic copy of) the
+1. by being a member of (the included monomorphic copy of) the
 underlying ring (a constant polynomial)
-\item by being a symbol exponentiated to some positive power (a
+1. by being a symbol exponentiated to some positive power (a
 univariate monic monomial)
-\item by being the product of a monic monomial and a univariate monic
+1. by being the product of a monic monomial and a univariate monic
 monomial (a monic monomial)
-\item by being the product of a monic monomial and a member of the
+1. by being the product of a monic monomial and a member of the
 underlying ring (a monomial)
-\item by adding a monomial to a polynomial
-\end{enumerate}
+1. by adding a monomial to a polynomial
+
 
 So we see that at least two of the most basic types in computer
 algebra are constructed in this way.
@@ -17539,11 +17484,10 @@ of categories or ``abstract algebras''\footnote{Axiom's
 the order on sorts is never explicitly defined and there are some
 difficulties in the definition of the operator symbols.} for the
 following reasons:
-\begin{enumerate}
-\item economy of effort (section [[#DoyeSubSec2.5.1][DoyeSubSec2.5.1]])
-\item interest (section [[#DoyeSubSec2.5.2][DoyeSubSec2.5.2]])
-\item functoriality (section [[#DoyeSubSec2.5.3][DoyeSubSec2.5.3]])
-\end{enumerate}
+1. economy of effort (section [[#DoyeSubSec2.5.1][DoyeSubSec2.5.1]])
+1. interest (section [[#DoyeSubSec2.5.2][DoyeSubSec2.5.2]])
+1. functoriality (section [[#DoyeSubSec2.5.3][DoyeSubSec2.5.3]])
+
 
 **** Economy of effort
 # label: DoyeSubSec2.5.1
@@ -17766,12 +17710,11 @@ which is best left to be discussed after the following definition.
 # label: Doye3.2.10
  Let B, C be categories, then a functor,
 $T : C \rightarrow B$ consists of two functions
-\begin{enumerate}
-\item $T:Obj(C) \rightarrow Obj(B)$
+1. $T:Obj(C) \rightarrow Obj(B)$
 (the object function)
-\item $T:Arr{C} \rightarrow Arr{B}$
+1. $T:Arr{C} \rightarrow Arr{B}$
 (the arrow function)
-\end{enumerate}
+
 
 These must obey the following:
 
@@ -17912,16 +17855,15 @@ inheritance mechanism.
 To distinguish between Axiom's internal structures
 and those commonly used in mathematics, things which belong to Axiom
 will be writtin in *this font*. Specifically,
-\begin{itemize}
-\item *Category* will always refer to Axiom's distinguished
+- *Category* will always refer to Axiom's distinguished
 symbol, to which all Axiom's *Categories* belong.
-\item Hence, a *Category* is an Axiom object declared to be
+- Hence, a *Category* is an Axiom object declared to be
 such an object, e.g. *Ring*, *PolynomialCategory(R,E,V)*
-\item A *Domain* is an Axiom object declared to be a member
+- A *Domain* is an Axiom object declared to be a member
 of a particular *Category*, e.g. *Integer*,
 *Polynomial(Integer)*
-\item An *item* is an element of a *Domain*, e.g. 1, 5*x**2+1
-\end{itemize}
+- An *item* is an element of a *Domain*, e.g. 1, 5*x**2+1
+
 \end{DoyeNotation}
 
 Axiom's main view of things is that every object
@@ -18221,24 +18163,22 @@ $\bigcup_{n,q,s}\Sigma_{n,q,s}$. We define $T_\Sigma(X)$ to be the
 $S$-indexed family of sets of strings of symbols from
 $\bigcup_{s\in S}X_x\cup\Delta\cup\bigcup_{n,q,s}\Sigma_{n,q,s}$
 each set as small as possible satisfying these conditions:
-\begin{enumerate}
-\item $(\forall s \in S)(\Sigma_{0,(),s} \subseteq T_\Sigma(X)_s)$
-\item $(\forall s \in S)(X_s \subseteq T_\Sigma(X)_s)$
-\item $(\forall \sigma \in \Sigma_{n,q,s})
+1. $(\forall s \in S)(\Sigma_{0,(),s} \subseteq T_\Sigma(X)_s)$
+1. $(\forall s \in S)(X_s \subseteq T_\Sigma(X)_s)$
+1. $(\forall \sigma \in \Sigma_{n,q,s})
 (\forall i \in \{1,...,n\})
 (\forall t_i \in T_\Sigma(X)_{q_i})
 (\sigma(t_1,...,t_n)\in T_\Sigma(X)_s)$
-\end{enumerate}
+
 
 We make $T_\Sigma(X)$ into a $\Sigma$-algebra by defining
 operators $\sigma_T$ on $T_\Sigma(X)$, for each
 $\sigma \in \Sigma_{n,q,s}$ via:
-\begin{itemize}
-\item If $n=0$ then $\sigma_T:=\sigma$ (Guaranteed to be in
+- If $n=0$ then $\sigma_T:=\sigma$ (Guaranteed to be in
 $T_\Sigma(X)$ by (1)).
-\item Else, define $\sigma_T(t_1,...,t_n)$ to be the string
+- Else, define $\sigma_T(t_1,...,t_n)$ to be the string
 $\sigma(t_1,...,t_n)$
-\end{itemize}
+
 
 $T_\Sigma(X)$ is called the term algebra, and an element
 of $T_\Sigma(X)$ is called a term.
@@ -18303,14 +18243,13 @@ $S$-indexed family of subsets of $A$, known as the carriers of the
 algebra, and $\alpha$ is a set of sets of functions
 $\alpha_{n,q,s}=\bigcup_{\sigma\in\Sigma_{n,q,s}}
 \{\alpha_{n,q,s,\sigma} : A^q\rightarrow A_s\}$, such that:
-\begin{enumerate}
-\item $A_u=A$
-\item If $s\preceq s^\prime$ in $S$, then $A_s \subseteq A_{s^\prime}$
-\item If $\sigma\in\Sigma_{n,q,s}\cap\Sigma_{n,q^\prime,s^\prime}$,
+1. $A_u=A$
+1. If $s\preceq s^\prime$ in $S$, then $A_s \subseteq A_{s^\prime}$
+1. If $\sigma\in\Sigma_{n,q,s}\cap\Sigma_{n,q^\prime,s^\prime}$,
 with $s\preceq s^\prime$ and $q^\prime \preceq q$, then
 $\alpha_{n,q,s,\sigma}\vert_{A^{q^\prime}}=
 \alpha_{n,q^\prime,s^\prime,\sigma}$
-\end{enumerate}
+
 
 \end{DoyeDefinition}
 
@@ -18354,27 +18293,25 @@ $\bigcup_{n,q,s}X_s\cup\Delta\cup
 \bigcup_{n,q,s}\Sigma_{n,q,s}$, each set of small as possible
 satisfying these conditions:
 
-\begin{enumerate}
-\item $(\forall s\in S)(\Sigma_{0,(),s}\subseteq T_\Sigma(X)_s)$
-\item $(\forall s\in S)(X_s \subseteq T_\Sigma(X)_s)$
-\item $(\forall s,s^\prime\in S)
+1. $(\forall s\in S)(\Sigma_{0,(),s}\subseteq T_\Sigma(X)_s)$
+1. $(\forall s\in S)(X_s \subseteq T_\Sigma(X)_s)$
+1. $(\forall s,s^\prime\in S)
 ((s\preceq s^\prime) \Rightarrow (T_\Sigma(x)_s\subseteq 
 T_\Sigma(X)_{s^\prime}))$
-\item $(\forall \sigma \in \Sigma_{n,q,s})
+1. $(\forall \sigma \in \Sigma_{n,q,s})
 (\forall i \in \{1,...,n\})
 (\forall t_i\in T_\Sigma(X)_{q_i})
 (\sigma(t_1,...,t_n)\in T_\Sigma(X)_s)$
-\end{enumerate}
+
 
 We make $T_\Sigma(X)$ into a $\Sigma$-algebra by letting the
 first component be $T_\Sigma(X)_u$ and defining operators $\sigma_T$
 on $T_\Sigma(X)$, for each $\sigma\in\Sigma_{n,q,s}$ via:
-\begin{itemize}
-\item If $n=0$ then $\sigma_T:=\sigma$. (Guaranteed to be in
+- If $n=0$ then $\sigma_T:=\sigma$. (Guaranteed to be in
 $T_\Sigma(X)_s$ by (1))
-\item Else, define $\sigma_T(t_1,...,t_n)$ to be the string
+- Else, define $\sigma_T(t_1,...,t_n)$ to be the string
 $\sigma(t_1,...,t_n)$
-\end{itemize}
+
 
 $T_\Sigma(X)$ is called the algebra, and an element of
 $T_Sigma(X)$ is called a term.
@@ -18552,17 +18489,16 @@ Basically, having a void sort $\tilde{s}$ in the signature means that
 there are no constants of that type
 $(\Sigma_{0,(),\tilde{s}}=\emptyset$) and that one of the following is
 true.
-\begin{itemize}
-\item no operators have $\tilde{s}$ as a return type:
+- no operators have $\tilde{s}$ as a return type:
 $((\forall q,n)(\Sigma_{n,q,s}=\emptyset)$ where $q$ is an arity of
 rank $n$)
-\item every operator with $\tilde{s}$ as a return type has an argument
+- every operator with $\tilde{s}$ as a return type has an argument
 whose sort is either void or $\tilde{s}$:
 $((\forall q,n)(\Sigma_{n,q,s}\ne\emptyset)\Rightarrow
 (\exists i \in \{1,...,n\})
 (q_i {\rm\ is\ a\ void\ sort\ or\ }\tilde{s}))$ where $q$ is an arity
 of rank $n$)
-\end{itemize}
+
 
 \begin{DoyeLemma}
 # label: Doye4.6.5
@@ -18972,17 +18908,16 @@ domain or non-empty stacks.
 Let $\langle\Sigma, S\rangle$ define an
 order-sorted signature. If we define $\langle\Lambda,L\rangle$ to be
 the signature where
-\begin{enumerate}
-\item $L=S\cup\{u_1,...,u_m\}$ (a set of symbols distinct from all
+1. $L=S\cup\{u_1,...,u_m\}$ (a set of symbols distinct from all
 those in $S$)
-\item $(\forall i \in \{1,...,m\})(\exists s_{u_i}\in S)
+1. $(\forall i \in \{1,...,m\})(\exists s_{u_i}\in S)
 (u_i\prec_L s_{u_i})$
-\item $(\forall n\in \mathbb{N}\cup\{0\})(\forall s \in S)
+1. $(\forall n\in \mathbb{N}\cup\{0\})(\forall s \in S)
 (\forall q\in S^n)(\Lambda_{n,q,s}=\Sigma_{n,q,s})$
-\item $(\exists n\in\mathbb{N})(\exists q\in L^n \backslash S^n)
+1. $(\exists n\in\mathbb{N})(\exists q\in L^n \backslash S^n)
 (\exists s\in S)(\Lambda_{n,q,s}\ne\emptyset)$ (Note that there may be
 more than one such triple $\langle n,q,s\rangle$)
-\end{enumerate}
+
 then we say that the $u_i$ are virtual sorts of
 $\langle\Sigma, S\rangle$ and\\
 $\lambda_{n,q,s}\in\Lambda_{n,q,s}(n\in\mathbb{N})
@@ -19056,13 +18991,12 @@ Let $\langle \Sigma^\prime,S^\prime\rangle$ be a sub-signature of
 $\langle \Sigma,S\rangle$. A $\Sigma^\prime$-algebra
 $\langle A,\alpha\rangle$ is said to be a $\Sigma^\prime$-subalgebra
 of the $\Sigma$-algebra $\langle B,\beta\rangle$ iff
-\begin{enumerate}
-\item $(\forall s\in S^\prime)(A_s=B_s)$
-\item $(\forall n\in\mathbb{N}\cup\{0\})
+1. $(\forall s\in S^\prime)(A_s=B_s)$
+1. $(\forall n\in\mathbb{N}\cup\{0\})
 (\forall q{\rm\ arities\ of\ rank\ }n)(\forall s\in S)
 (\forall\sigma\in\Sigma_{n,q,s})
 (\alpha_\sigma=\beta_\sigma\vert_{A^q})$
-\end{enumerate}
+
 \end{DoyeDefinition}
 
 \begin{DoyeDefinition}
@@ -19072,13 +19006,12 @@ $\langle \Sigma,S\rangle$. A $\Sigma^\prime$-algebra
 $\langle A,\alpha\rangle$ is said to be a weak
 $\Sigma^\prime$-subalgebra of the $\Sigma$-algebra
 $\langle B,\beta\rangle$ iff
-\begin{enumerate}
-\item $(\forall s\in S^\prime)(A_s=B_s)$
-\item $(\forall n\in\mathbb{N}\cup\{0\})
+1. $(\forall s\in S^\prime)(A_s=B_s)$
+1. $(\forall n\in\mathbb{N}\cup\{0\})
 (\forall q{\rm\ arities\ of\ rank\ }n)(\forall s\in S)
 (\forall\sigma\in\Sigma_{n,q,s})(\alpha_\sigma 
 \le_\bot \beta_\sigma\vert_{A^q})$
-\end{enumerate}
+
 where ``$\le_\bot$'' is defined via
 \[f\le_\bot g\Leftrightarrow(\forall x)((f(x){\rm\ is\ not\ defined\ }
 \lor (f(x)=g(x)))\]
@@ -19254,26 +19187,24 @@ strings of symbols from
 $\{if,P,then\}\cup\bigcup_{s\in S}X_s\cup\Delta\cup\bigcup_{n,q,s}
 \Sigma_{n,q,s}$ each set as small as possible satisfying these
 conditions:
-\begin{enumerate}
-\item $(\forall s\in S)(\Sigma_{0,(),s}\subseteq T_{C\Sigma}(X)_s)$
-\item $(\forall s\in S)(X_s\subseteq T_{C\Sigma}(X)_s)$
-\item $(\forall ``if\ P(w)\ then\ \sigma''\in C\Sigma_{n,q,s})
+1. $(\forall s\in S)(\Sigma_{0,(),s}\subseteq T_{C\Sigma}(X)_s)$
+1. $(\forall s\in S)(X_s\subseteq T_{C\Sigma}(X)_s)$
+1. $(\forall ``if\ P(w)\ then\ \sigma''\in C\Sigma_{n,q,s})
 (\forall i\in\{1,...,n\})
 (\forall t_i\in T_{C\Sigma}(X)_{q_i})\\
 (``if\ P(w)\ then\ \sigma'' (t_1,...,t_n)\in T_{C\Sigma}(X)_s)$
-\end{enumerate}
+
 
 We make $T_{C\Sigma}(X)$ into a conditional $C\Sigma$-algebra by
 defining conditional operators ``$if\ P(w)\ then\ \sigma_T$'' on
 $T_{C\Sigma}(X)$, for each ``$if\ P(w)\ then\ \sigma''\in 
 C\Sigma_{n,q,s}$ via:
-\begin{itemize}
-\item if $n=0$ then ``$~if\ P(w)\ then\ \sigma_T$'':=``$~if\ P(w)\ then\
+- if $n=0$ then ``$~if\ P(w)\ then\ \sigma_T$'':=``$~if\ P(w)\ then\
 \sigma$''. (Guaranteed to be in $T_{C\Sigma}(X)_s$ by (1)).
-\item Else, define ``$~if\ P(w)\ then\ \sigma_T(t_1,...,t_n)$''
+- Else, define ``$~if\ P(w)\ then\ \sigma_T(t_1,...,t_n)$''
 to be the string\\
 ``$~if\ P(w)\ then\ \sigma(t_1,...,t_n)$''
-\end{itemize}
+
 $T_{C\Sigma}(X)$ is called the conditional term algebra, and an
 element of $T_{C\Sigma}(X)$ is called a conditional term.
 \end{DoyeDefinition}
@@ -19349,10 +19280,9 @@ family of subsets of $A$, known as the carriers of the algebra,
 and $\alpha$ is a set of sets of functions
 $\alpha_{n,q,s}=\bigcup_{\sigma\in\Sigma_{n,q,s}}
 \{\alpha_{n,q,s,\sigma}:A^q\rightarrow A_s~\vert~P(A^w)\}$, such that
-\begin{enumerate}
-\item $A_u=A$
-\item If $s\preceq s^\prime\in S$, then $A_s\subseteq A_{s^\prime}$
-\item If ``$~if\ P(w)\ then\ \sigma''\in C\Sigma_{n,q,s}$\\
+1. $A_u=A$
+1. If $s\preceq s^\prime\in S$, then $A_s\subseteq A_{s^\prime}$
+1. If ``$~if\ P(w)\ then\ \sigma''\in C\Sigma_{n,q,s}$\\
 and ``$~if\ P^\prime(w^\prime)\ then\ \sigma'' \in
 C\Sigma{n,q^\prime,s^\prime}$, with $s\preceq s^\prime$\\
 and 
@@ -19360,7 +19290,7 @@ $q^\prime\preceq q$, and also $P(A^w)$ and $P^\prime(A^{w^\prime})$\\
 then
 $\alpha_{n,q,s,\sigma}~\vert_{A^{q^\prime}}=
 \alpha_{n,q^\prime,s^\prime,\sigma}$
-\end{enumerate}
+
 \end{DoyeDefinition}
 
 Clearly, if all the $P$ are tautologies then a conditional signature
@@ -19972,10 +19902,9 @@ t_i=t^\prime_i=t^{\prime\prime}_i ~and~
 \end{array}\]
 
 Then the following conditions are satisfied:
-\begin{enumerate}
-\item $\mathcal{F}_f(t_1,...,t_n,t_1,...,t_n,
+1. $\mathcal{F}_f(t_1,...,t_n,t_1,...,t_n,
 id_{t_1},...,id_{t_n})=id_{f(t_1,...,t_n)}$
-\item $\mathcal{F}_f(t_1,...,t_n,
+1. $\mathcal{F}_f(t_1,...,t_n,
 t^{\prime\prime}_1,...,t^{\prime\prime}_n,
 \phi_1\circ \phi^\prime_1,...,\phi_n\circ \phi^\prime_n)=$\\
 $\mathcal{F}_f(t_1,...,t_n,t^\prime_1,...,t^\prime_n,
@@ -19983,7 +19912,7 @@ $\mathcal{F}_f(t_1,...,t_n,t^\prime_1,...,t^\prime_n,
 \mathcal{F}_f(t^\prime_1,...,t^\prime_n,
 t^{\prime\prime}_1,...,t^{\prime\prime}_n,
 \phi^\prime_1,...,\phi^\prime_n)$
-\end{enumerate}
+
 \end{DoyeAssumption}
 
 This is a condition which stops direct embeddings ``becoming
@@ -19996,14 +19925,13 @@ direct embeddings, where they exist, are unique.
 # label: Doye6.3.5
 Let $f$ be an $n$-ary type constructor. Then the following
 conditions hold:
-\begin{enumerate}
-\item $\vert\mathcal{D}_f\vert$ = 1
-\item Direct embedding coercions are unique, i.e. if~
+1. $\vert\mathcal{D}_f\vert$ = 1
+1. Direct embedding coercions are unique, i.e. if~
 $\Phi^i_{f,t_1,...,t_n}:t_i\rightarrow f(t_1,...,t_n)$ and
 $\Psi^i_{f,t_1,...,t_n} : t_i\rightarrow f(t_1,...,t_n)$ 
 then
 \[\Phi^i_{f,t_1,...,t_n}=\Psi^i_{f,t_1,...,t_n}\]
-\end{enumerate}
+
 \end{DoyeAssumption}
 
 The following assumption is highly technical and shows how direct
@@ -20091,13 +20019,12 @@ give more assumptions and a proper proof in section
 # label: Doye6.3.7
 Assume that all coercions between ground types are only built by
 one of the following mechanisms:
-\begin{enumerate}
-\item coercions between base types
-\item coercions induced by structural coercions
-\item direct embeddings in a type constructor
-\item composition of coercions
-\item identity funciton on ground types as coercions
-\end{enumerate}
+1. coercions between base types
+1. coercions induced by structural coercions
+1. direct embeddings in a type constructor
+1. composition of coercions
+1. identity funciton on ground types as coercions
+
 
 If assumptions 6.3.1, 6.3.3, 6.3.4, 6.3.5, and 6.3.6 are
 satisfied, then the set of ground types as objects, and the coercions
@@ -20248,12 +20175,11 @@ neglected to cover all the possible case of $\phi$ and $\psi$.
 
 All our coercions are compositions of coercions (or just a single
 coercion) from the list
-\begin{enumerate}
-\item coercions between base types
-\item coercions induced by structural coercions
-\item direct embeddings in a type constructor
-\item identiy function on ground types as coercions
-\end{enumerate}
+1. coercions between base types
+1. coercions induced by structural coercions
+1. direct embeddings in a type constructor
+1. identiy function on ground types as coercions
+
 
 Suppose that $\phi=\tau_1\circ\phi^\prime$ and that
 $\psi=\tau_2\circ\psi^\prime$ where $\tau_1$ and $\tau_2$ are single
@@ -20263,40 +20189,39 @@ $\psi^\prime$.
 
 For a proof by induction on com, we need to cover all the cases of
 ($\tau_1,\tau_2$) pairs. Thus the list we need to consider is
-\begin{enumerate}
-\item $\tau_1$ is a coercion between base types.
+1. $\tau_1$ is a coercion between base types.
 $\tau_2$ is a coercion between base types.
-\item $\tau_1$ is a coercion between base types. 
+1. $\tau_1$ is a coercion between base types.
 $\tau_2$ is a structual coercion
-\item $\tau_1$ is a coercion between base types. 
+1. $\tau_1$ is a coercion between base types.
 $\tau_2$ is a direct embedding.
-\item $\tau_1$ is a coercion between base types. 
+1. $\tau_1$ is a coercion between base types.
 $\tau_2$ is an identity function.
-\item $\tau_1$ is a structural coercion. 
+1. $\tau_1$ is a structural coercion.
 $\tau_2$ is a coercion between base types.
-\item $\tau_1$ is a structural coercion. 
+1. $\tau_1$ is a structural coercion.
 $\tau_2$ is a structural coercion.
-\item $\tau_1$ is a structural coercion. 
+1. $\tau_1$ is a structural coercion.
 $\tau_2$ is a direct embedding.
-\item $\tau_1$ is a structural coercion.
+1. $\tau_1$ is a structural coercion.
 $\tau_2$ is the identity function.
-\item $\tau_1$ is a direct embedding.
+1. $\tau_1$ is a direct embedding.
 $\tau_2$ is a coercion between base types.
-\item $\tau_1$ is a direct embedding.
+1. $\tau_1$ is a direct embedding.
 $\tau_2$ is a structural coercion.
-\item $\tau_1$ is a direct embedding.
+1. $\tau_1$ is a direct embedding.
 $\tau_2$ is a direct embedding.
-\item $\tau_1$ is a direct embedding.
+1. $\tau_1$ is a direct embedding.
 $\tau_2$ is an identity function.
-\item $\tau_1$ is an identity function.
+1. $\tau_1$ is an identity function.
 $\tau_2$ is a coercion between base types.
-\item $\tau_1$ is an identity function.
+1. $\tau_1$ is an identity function.
 $\tau_2$ is a structural coercion.
-\item $\tau_1$ is an identity function.
+1. $\tau_1$ is an identity function.
 $\tau_2$ is a direct embedding.
-\item $\tau_1$ is an identity function.
+1. $\tau_1$ is an identity function.
 $\tau_2$ is a identity function.
-\end{enumerate}
+
 
 Firstly notice we are only interested in the pairs as unordered
 entities. Thus some of these cases are duplicates.
@@ -20509,14 +20434,13 @@ theorem.
 # label: Doye6.4.7
 Assume that all coercions between ground types are only built by
 one of the following mechanisms:
-\begin{enumerate}
-\item coercions between base types
-\item coercions induced by structural coercions
-\item direct embeddings (definition [[#Doye6.4.3][Doye6.4.3]]) in a type
+1. coercions between base types
+1. coercions induced by structural coercions
+1. direct embeddings (definition [[#Doye6.4.3][Doye6.4.3]]) in a type
 constructor
-\item composition of coercions
-\item identity function on ground types as coercions
-\end{enumerate}
+1. composition of coercions
+1. identity function on ground types as coercions
+
 If assumptions [[#Doye6.3.1][Doye6.3.1]], [[#Doye6.3.3][Doye6.3.3]], [[#Doye6.3,4][Doye6.3,4]],
 [[#Doye6.3.5][Doye6.3.5]], [[#Doye6.3.6][Doye6.3.6]], [[#Doye6.4.1][Doye6.4.1]], [[#Doye6.4.5][Doye6.4.5]],
 [[#Doye6.4.6][Doye6.4.6]] are satisfied, then the set of ground types as
@@ -21015,13 +20939,12 @@ We now alter assumption [[#Doye6.3.5][Doye6.3.5]] to the following
 # label: Doye6.5.3
 Let $f$ be an $n$-ary type constructor. Then the following
 conditions hold:
-\begin{enumerate}
-\item $(i,s),(j,s)\in\overline{\mathcal{D}}_f\rightarrow i=j$
-\item Direct embedding coercions are unique. i.e. if
+1. $(i,s),(j,s)\in\overline{\mathcal{D}}_f\rightarrow i=j$
+1. Direct embedding coercions are unique. i.e. if
 $\Phi^i_{f,t_1,...,t_n}:t_i\rightarrow f(t_1,...,t_n)$ and
 $\Psi^i_{f,t_1,...,t_n}:t_i\rightarrow f(t_1,...,t_n)$ then
 \[\Phi^i_{f,t_1,...,t_n}=\Psi^i_{f,t_1,...,t_n}\]
-\end{enumerate}
+
 \end{DoyeAssumption}
 
 So we may now extend the coherence theorem (theorem [[#Doye6.4.7][Doye6.4.7]])
@@ -21033,14 +20956,13 @@ merely the cases which involved assumption [[#Doye6.3.5][Doye6.3.5]].
 # label: Doye6.5.4
 Assume that all coercions between ground types are only built by
 one of the following mechanisms:
-\begin{enumerate}
-\item coercions between base types
-\item coercions induced by structural coercions
-\item direct embeddings (definition [[#Doye6.5.2][Doye6.5.2]]) in a type
+1. coercions between base types
+1. coercions induced by structural coercions
+1. direct embeddings (definition [[#Doye6.5.2][Doye6.5.2]]) in a type
 constructor
-\item composition of coercions
-\item identity function on ground types as coercions
-\end{enumerate}
+1. composition of coercions
+1. identity function on ground types as coercions
+
 
 If assumptions [[#Doye6.3.1][Doye6.3.1]], [[#Doye6.3.3][Doye6.3.3]], [[#Doye6.3.4][Doye6.3.4]],
 [[#Doye6.3.6][Doye6.3.6]], [[#Doye6.5.1][Doye6.5.1]], [[#Doye6.4.6][Doye6.4.6]], [[#Doye6.4.1][Doye6.4.1]],
@@ -21647,12 +21569,11 @@ $\alpha_{\pi_{\sigma_{n,q,S_1},i}}$
 \begin{DoyeDefinition}
 # label: Doye7.6.1
 For a term $t$ in a term algebra $T_\Sigma(X)$ if
-\begin{enumerate}
-\item $t\in X_s~then~length(t)=1$\\
-\item $t\in\Sigma_{0,(),s}~then~length(t)=1$\\
-\item $t=\sigma(t_1,...,t_n)~then~
+1. $t\in X_s~then~length(t)=1$\\
+1. $t\in\Sigma_{0,(),s}~then~length(t)=1$\\
+1. $t=\sigma(t_1,...,t_n)~then~
 length(t)=1+length(t_1)+\cdots+length(t_n)$
-\end{enumerate}
+
 \end{DoyeDefinition}
 
 The definition of length of an element will form the basis of our
@@ -21903,9 +21824,8 @@ requiring much rewriting of Spad compilers. This is also true of the
 method given in a later section.
 
 A Spad *Domain* contains the following parts:
-\begin{enumerate}
-\item the name of the type constructor
-\item a (variable name, *Category*) pair\footnote{Occasionally a
+1. the name of the type constructor
+1. a (variable name, *Category*) pair\footnote{Occasionally a
 (variable name, *Domain*) pair. For example,
 *IntegerMod(p:PositiveInteger)*} for each\footnote{This is not the
 same as all the sorts of the signature. One may declare extra unused
@@ -21914,12 +21834,12 @@ may contain a ground type. For example, functions which return a
 boolean-like type are usually declared to return *Boolean* rather
 than a pair where the *Category* is the *Category* of
 boolean-like types.} of the parameters of the type constructor
-\item a *Category* or *Join* (intersection) of
+1. a *Category* or *Join* (intersection) of
 *Categories* to which the *Domain* belongs
-\item a list of additional operator symbols (functions) for the type
-\item a list of methods for (some of or all) the operator symbols of
+1. a list of additional operator symbols (functions) for the type
+1. a list of methods for (some of or all) the operator symbols of
 the type
-\end{enumerate}
+
 
 Every operator symbol definition in a *Domain* or *Category*
 (and hence available in a *Domain* of that *Category*) has a
@@ -21994,17 +21914,16 @@ release of Axiom. For various reasons outlined below, only a working
 prototype was implemented.
 
 Deliberate restrictions placed by the author on the deisgn were:
-\begin{enumerate}
-\item Query function names were restricted to be the name of their
+1. Query function names were restricted to be the name of their
 associated constant function with a "?" appended.
-\item The number of (non 0-ary) constructors was limited to one
-\item Recursion through *coerceInteractive* was achieved using a
+1. The number of (non 0-ary) constructors was limited to one
+1. Recursion through *coerceInteractive* was achieved using a
 na\"ive means
-\item Neither the existence of
+1. Neither the existence of
 $\langle\langle\Sigma,S\rangle,S\rangle$ nor
 $\langle\langle\Delta,\mathcal{D}\rangle,\mathcal{D}\rangle$ were
 checked. (See algorithm [[#Doye7.4.1][Doye7.4.1]] for the meaning of these).
-\end{enumerate}
+
 
 Both the first two items could have easily been worked around but
 would have required a more complex $++$ comment reader. This was
@@ -22086,15 +22005,14 @@ reference to Axiom is detailed in [cite:@Mart97]. This paper details
 recent research and near-future directions for the subject.
 
 Other flaws which will be dealt with next including:
-\begin{enumerate}
-\item Some Axiom *Categories* do not agree with our notion of
+1. Some Axiom *Categories* do not agree with our notion of
 varieties (specified by signatures or theories) (Sections
 [[#DoyeSec9.2][DoyeSec9.2]], [[#DoyeSec9.4][DoyeSec9.4]], [[#DoyeSec9.5][DoyeSec9.5]])
-\item Axiom *Domains* have too much in common with their
+1. Axiom *Domains* have too much in common with their
 *Categories*. There is a lack of distinction between operator
 symbols and operators. Similarly between sorts and carriers
 (Sections [[#DoyeSec9.3][DoyeSec9.3]], [[#DoyeSec9.6][DoyeSec9.6]])
-\end{enumerate}
+
 
 *** Conclusion
 # label: DoyeSec8.8
@@ -22335,20 +22253,19 @@ Thus *ListAggregate* is not a protecting extension of
 applied.
 
 There are three obvious solutions:
-\begin{enumerate}
-\item Disallow coercions from *List* to *Set*. Although we
+1. Disallow coercions from *List* to *Set*. Although we
 would still allow a non-homomorphic *convert* operator
-\item Move the element-counting-operation further down the
+1. Move the element-counting-operation further down the
 *Category* inheritance lattice until it does not appear in any
 *Categories* to which /both/ *List* and *Set*
 belong. Or if they do both belong to this *Category*, ensure that
 none of the part functions, constants, queries, or constructors are
 from this *Category* or any of its ancestors.
-\item Move the adding-new-element-operation further down the lattice,
+1. Move the adding-new-element-operation further down the lattice,
 in a similar manner. Thus *cons* and *insert* would not know
 anything about each other. In this case the automated coercion
 algorithm would still not be applicable
-\end{enumerate}
+
 
 This is merely one example of many such operators which could require
 moving.
@@ -22375,13 +22292,12 @@ map, and hence the right hand side has the value 6.
 
 There is clearly something very wrong here. There are two solutions,
 the first of which is highly unsatisfactory:
-\begin{enumerate}
-\item Stop *characteristic* from being a function. One could
+1. Stop *characteristic* from being a function. One could
 persuade it to be an attribute of the *Ring*.
-\item Alter the carrier of the return type of *characteristic*
+1. Alter the carrier of the return type of *characteristic*
 from *NonNegativeInteger* to being a type with the same elements,
 but a different idea of equality.
-\end{enumerate}
+
 
 This is one of many such cases in Axiom.
 
@@ -23323,24 +23239,22 @@ $\hat{\phi}(N)$ would be $2^2$, whereas that of $N-1$ would be $2^1$
 (and so the ``roots of -1'' enhancement would never operate). A value
 $x$ would pass Rabin's test, with the ``maximal 2-part'' enhancement,
 if it were
-\begin{itemize}
-\item[(1)] a cubic residue modulo $6K+1$
-\item[(2)] a quadratic residue modulo $6K+1$
-\item[(3)] a quartic non-residue modulo $6K+1$
-\item[(4)] a quadratic non-residue modulo $K+1$
-\end{itemize}
+- [(1)] a cubic residue modulo $6K+1$
+- [(2)] a quadratic residue modulo $6K+1$
+- [(3)] a quartic non-residue modulo $6K+1$
+- [(4)] a quadratic non-residue modulo $K+1$
+
 
 On average, one $K$-value in 24 will have these properties for a fixed
 $x$. 
 
 A value $x$ would also pass Rabin's test, but would not contribute to
 the ``maximal 2-part'', if it were
-\begin{itemize}
-\item[(1)] a cubic residue modulo $6K+1$
-\item[(2)] a quadratic residue modulo $6K+1$
-\item[(3)] a quartic residue modulo $6K+1$
-\item[(4)] a quadratic residue modulo $K+1$
-\end{itemize}
+- [(1)] a cubic residue modulo $6K+1$
+- [(2)] a quadratic residue modulo $6K+1$
+- [(3)] a quartic residue modulo $6K+1$
+- [(4)] a quadratic residue modulo $K+1$
+
 
 Again, on average, one $K$-value in 24 will have these properties for
 a fixed $x$.
@@ -25483,22 +25397,20 @@ from mathematics, sicence and engineering.
 
 *References* There are several collections dedicated to quantifier
 elimination (as of 2005):
-\begin{itemize}[noitemsep]
-\item /Algorithms in Real Algebraic Geometry./[cite:@Arno88a]
-\item /Computational Quantifier Elimination/ Hoon Hong, Oxford
+- /Algorithms in Real Algebraic Geometry./[cite:@Arno88a]
+- /Computational Quantifier Elimination/ Hoon Hong, Oxford
 University Press (1993)
-\item /Quantifier Elimination and Cylindrical Algebraic Decomposition/
+- /Quantifier Elimination and Cylindrical Algebraic Decomposition/
 [cite:@Cavi98]
-\item /Quantifier Elimination and Applications/ Journal of Symbolic
+- /Quantifier Elimination and Applications/ Journal of Symbolic
 Computation, Hoon Hong and Richard Liska, Academic Press (1996)
-\end{itemize}
+
 
 There are also a few books that give and exposition on the subject
-\begin{itemize}[noitemsep]
-\item /Algorithmic Algebra/[cite:@Mish93]
-\item /Goemetrie algebrique reelle/ Jacek, Bochnak, Michel Coste,
+- /Algorithmic Algebra/[cite:@Mish93]
+- /Goemetrie algebrique reelle/ Jacek, Bochnak, Michel Coste,
 Marie-Francoius Roy (1986)
-\end{itemize}
+
 
 ** General Methods
 
@@ -25570,26 +25482,24 @@ $P_1^2 + ... + P_r^2$, we can reduce the above (1) and (2) to
 *Reduction 4*: Next we will reduce the case (3) to the case
 ($2^\prime$). Suppose that all the polynomials $Q_i$'s are positive
 on some value $p$ of $x$. Then there are only three possibilities:
-\begin{itemize}
-\item All the polynomials continued to be positive for $x > p$.
-\item All the polynomials continued to be positive for $x < p$
-\item There are two values $p_1$ and $p_2$, $p_1 < p < p_2$ such that
+- All the polynomials continued to be positive for $x > p$.
+- All the polynomials continued to be positive for $x < p$
+- There are two values $p_1$ and $p_2$, $p_1 < p < p_2$ such that
 one of the polynomials vanish on $p_1$ and one (possibly the same)
 of the polynomials vanish on $p_2$. More succinctly put, the product of
 all the polynomials vanishes on $p_1$ and $p_2$. 
 By Rolle's theorem[cite:@Roll1691], then,
 there must exist in ($p_1,p_2$) a real root of the derivative of the
 product of the polynomials.
-\end{itemize}
+
 
 Let lc denote leading coefficient. We can write the above case
 analysis formally:
-\begin{itemize}
-\item lc$(Q_1) > 0 \land \cdots \land $ lc$(Q_s) > 0$
-\item lc$(Q_1)(-1)^{deg(Q_1)} > 0 \land \cdots \land $
+- lc$(Q_1) > 0 \land \cdots \land $ lc$(Q_s) > 0$
+- lc$(Q_1)(-1)^{deg(Q_1)} > 0 \land \cdots \land $
 lc$(Q_s)(-1)^{deg(Q_s)} > 0$
-\item $\exists x [(Q_1\cdots Q_s)^\prime = 0 \land Q_1 > 0\cdots Q_s > 0]$
-\end{itemize}
+- $\exists x [(Q_1\cdots Q_s)^\prime = 0 \land Q_1 > 0\cdots Q_s > 0]$
+
 
 Note that the first two are already quantifier-free and the last one
 belongs to the case $(2^\prime)$. Thus, the case (3) has been reduced
@@ -25764,27 +25674,26 @@ We first begin by explaining the name of the method:
 /Cylindrical Algebraic Decomposition/
 
 *Definition 1*
-\begin{itemize}[noitemsep]
-\item A /decomposition/ of $U \subseteq \mathbb{R}^r$ is a finite
+- A /decomposition/ of $U \subseteq \mathbb{R}^r$ is a finite
 collection of disjoint connected subsets of $U$ whose union is $U$.
 Each subset is called a /cell/.
-\item A cell $c$ is called /algebraic/ if it can be described by a
+- A cell $c$ is called /algebraic/ if it can be described by a
 quantifier-free formula. The formula is called a /defining formula/
 of the cell, denoted by $d_c$.
-\item A decomposition is called /algebraic/ if every cell is algebraic
-\item a /stack/ over $U \subseteq \mathbb{R}^r$ is a decomposition of
+- A decomposition is called /algebraic/ if every cell is algebraic
+- a /stack/ over $U \subseteq \mathbb{R}^r$ is a decomposition of
 $U\times\mathbb{R}$ such that the projection of each cell on $\mathbb{R}^r$
 is exactly $U$.
-\item A decomposition of $D$ of $\mathbb{R}^r$ is called /cylindrical/
+- A decomposition of $D$ of $\mathbb{R}^r$ is called /cylindrical/
 if $r=1$, or $r > 0$ and $D$ can be partitioned into stacks over cells of
 a cylindrical decomposition of $D^\prime$ of $\mathbb{R}^{r-1}$. It is easy
 to see that $D^\prime$ is unique and we call it the /induced/
 decomposition of $D$.
-\item Let $A$ be a finite subset of $\mathbb{Z}[x_1,...,x_r]$. 
+- Let $A$ be a finite subset of $\mathbb{Z}[x_1,...,x_r]$.
 A decomposition of $\mathbb{R}^\prime$ is 
 called /A-sign invariant/ if each polynomial
 in $A$ has a constant sign throughout each cell. $\blacksquare$
-\end{itemize}
+
 
 Let $F\equiv (Q_{f+1}x_{f+1})\cdots(Q_rx_r)F(x_1,...,x_r)$.
 Let $A$ be the set of polynomials occurring in $F$.
@@ -25793,13 +25702,12 @@ Let $D_k$ be the induced cylindrical algebraic decomposition of
 $D_{k+1}$ for $k=1,...,r-1$. We can immediately observe the following:
 
 *Proposition 1*
-\begin{itemize}[noitemsep]
-\item The truth of $(Q_{f+1}x_{f+1})\cdots(Q_rx_r)F(x_1,...,x_r)$
+- The truth of $(Q_{f+1}x_{f+1})\cdots(Q_rx_r)F(x_1,...,x_r)$
 is constant throughout each cell $c$ of $D_k$. Let $v_c$ denote this
 truth value.
-\item Let $c$ be a cell of $D_r$, and let $s_c$ be a point in $c$.
+- Let $c$ be a cell of $D_r$, and let $s_c$ be a point in $c$.
 Then $v_c=F(s_c)$. We will call $s_c$ a /sample/ point of $c$.
-\item Let $c$ be a cell of $D_k$, $f\le k < r$, and let $c_1,...,c_n$
+- Let $c$ be a cell of $D_k$, $f\le k < r$, and let $c_1,...,c_n$
 be the cells in the stack over $c$. Then we have
 \[v_c =
 \left\{
@@ -25809,9 +25717,9 @@ be the cells in the stack over $c$. Then we have
 \end{array}
 \right.
 \]
-\item $F \Longleftrightarrow \bigvee_{c\in D_f, v_c=true}d_c$
+- $F \Longleftrightarrow \bigvee_{c\in D_f, v_c=true}d_c$
  $\blacksquare$
-\end{itemize}
+
 
 Now assuming we have an algorithm (CAD) that constructs a $A$-sign
 invariant cylindrical algebraic decomposition, we can immediately
@@ -25826,23 +25734,21 @@ $F^\prime \longleftarrow QE(F)$
 | /Output/: | $F^\prime$ is a quantifier-free formula equivalent to $F$ |
 
 
-\begin{itemize}[noitemsep]
-\item[(1)] $D_r \longleftarrow CAD(A)$
-\item[(2)] For every cell $c$ in $D_r$, $v_c \longleftarrow F(s_c)$
-\item[(3)] For $k=r-1,...,f$ and for every cell $c$ in $D_k$
-\begin{itemize}[noitemsep]
-\item[(i)] Let $c_1,...,c_n$ be the cells in the stack over $c$
-\item[(ii)] $v_c \longleftarrow
+- [(1)] $D_r \longleftarrow CAD(A)$
+- [(2)] For every cell $c$ in $D_r$, $v_c \longleftarrow F(s_c)$
+- [(3)] For $k=r-1,...,f$ and for every cell $c$ in $D_k$
+- [(i)] Let $c_1,...,c_n$ be the cells in the stack over $c$
+- [(ii)] $v_c \longleftarrow
 \left\{
 \begin{array}{rl}
 \lor_{i=1}^n v_{c_i} & {\rm\ if\ }Q_{k+1} = \exists\\
 \land_{i=1}^n v_{c_i} & {\rm\ if\ }Q_{k+1} = \forall\\
 \end{array}
 \right.$
-\end{itemize}
+
 \item[(4)] $F^\prime \longleftarrow \bigvee_{c\in D_f,v_c=true}d_c$
  $\blacksquare$
-\end{itemize}
+
 \hrulefill
 
 Now it remains to describe how to construct an $A$-sign invariant
@@ -25957,12 +25863,11 @@ D^\prime &=& \{psc_k(c,c^\prime) ~|~ c \in C,
 P &=& L \cup R \cup D \cup D^\prime
 \end{array}\]
 where
-\begin{itemize}[noitemsep]
-\item 'lc' stands for the leading coefficient
-\item 'red' for polynomial reductum, that is, red($a$) is the polynomial
+- 'lc' stands for the leading coefficient
+- 'red' for polynomial reductum, that is, red($a$) is the polynomial
 obtained from $a$ by removing the leading term.
-\item 'der' for derivative
-\item 'psc' for principal subresultant coefficient. Let
+- 'der' for derivative
+- 'psc' for principal subresultant coefficient. Let
 $a=a_mx^m+...+a_0$ and $b=b_nx^n+...+b_0$. Then
 psc$_k(a,b)$ is the determinant of the square (Sylvester) matrix
 \[\left[
@@ -25979,7 +25884,7 @@ b_n & b_{n-1} & \cdots  &  b_0   &         &        &\\
 \right]\]
 in which there are $n-k$ rows of $a$ coefficients, $m-k$ rows of $b$
 coefficients, and all elements not shown are zero. $\blacksquare$
-\end{itemize}
+
 Roughly put, $L$ is there for vertical asymptotes, $R$ for crossing,
 $D$ for vertical tangents or isolated points, and $D^\prime$ for
 vertical tangents/isolated points of derivatives.
@@ -25999,15 +25904,14 @@ $D \longleftarrow CAD(A)$
 | decomposition |
 
 
-\begin{itemize}[noitemsep]
-\item[(1)] if $r=1$ then build a $A$-cylindrical algebraic decomposition
+- [(1)] if $r=1$ then build a $A$-cylindrical algebraic decomposition
 $D$ of $\mathbb{R}^1$ as described above and return
-\item[(2)] $P \longleftarrow PROJ(A)$
-\item[(3)] $E \longleftarrow CAD(P)$
-\item[(4)] For each cell $c$ of $E$, build an $A$-sign invariant stack $S_c$
+- [(2)] $P \longleftarrow PROJ(A)$
+- [(3)] $E \longleftarrow CAD(P)$
+- [(4)] For each cell $c$ of $E$, build an $A$-sign invariant stack $S_c$
 over $c$ as described above
-\item[(5)] $D \longleftarrow \cup_{c\in E}S_c$ $\blacksquare$
-\end{itemize}
+- [(5)] $D \longleftarrow \cup_{c\in E}S_c$ $\blacksquare$
+
 \hrulefill
 
 **** Improvements
@@ -26162,10 +26066,9 @@ $A$. For a simple presentation, let us assume that the inputs
 polynomials are well-oriented (and thus McCallum’s projection theorem
 can be applied). Then, we only need to put the following into the
 projection set:
-\begin{itemize}[noitemsep]
-\item The discriminant and (enough of) the coefficients of $A$
-\item The resultant of $A$ and each polynomial occuring in $F$
-\end{itemize}
+- The discriminant and (enough of) the coefficients of $A$
+- The resultant of $A$ and each polynomial occuring in $F$
+
 
 Sometimes we can propagate the property of ``equational constraint''
 down to lower dimensional space so that we can apply the smaller
@@ -26225,8 +26128,7 @@ overall strategy. Thus in this tutorial, we will be satisfied with
 sketching the overall strategy/ideas.
 
 *Overall Ideas*
-\begin{enumerate}
-\item First note that the arbitrary quantifier elimination problem can
+1. First note that the arbitrary quantifier elimination problem can
 be trivially reduced to the /existential/ quantifier elimination problem
 (all quantifiers are existential), because if we have an algorithm for
 the existential quantifier elimination, we can repeatedly apply it to
@@ -26239,7 +26141,7 @@ idea of Collins' Cylindrical Algebraic Decomposition: namely the
 repeated projection. But its projection removes a block of variables
 at once, while Collins' projection removes one variable one at time.
 
-\item The existential quantifier elimination can be straightforwardly
+1. The existential quantifier elimination can be straightforwardly
 (though very tedious) reduced to the /existential/ decision problem (no
 free variables), because we can ``unravel'' a decision algorithm to turn
 it into a parametric one. More specifically, a decision algorithm can
@@ -26258,12 +26160,12 @@ we desire.
 Again, Renegar does not carry this unraveling at each quantifier
 block. But he does this only once for the ``last'' free variable block.
 
-\item The existential decision problem can be reduced to the /smooth/
+1. The existential decision problem can be reduced to the /smooth/
 existential decision problem where the solution set of the
 quantifier-free matrix is closed and smooth. This can be done by some
 simple geometric tricks and (careful) infinitesimal smoothing.
 
-\item Next the smooth existential decision problem is reduced to the
+1. Next the smooth existential decision problem is reduced to the
 /equationally constrained/ existential decision problem:
 \[\exists(x_1,...,x_n)P_1(x_1,...,x_n) \land\cdots
 P_n(x_1,...,x_n) \land F\]
@@ -26293,14 +26195,14 @@ doubly exponential in the number of variables. But some preliminary
 experiments show that this might be a very promising method for small
 inputs.
 
-\item The equationally constrained existential decision problem can be
+1. The equationally constrained existential decision problem can be
 solved in various ways. Usually, the system of equations are ``solved''
 by using the $u$-resultants [cite:@Cann87]
 or the Hermite's quadratic form [cite:@Pede93]
 The sign computation of the polynomials occurring $F$ on the roots of
 the system of equations can be obtained by the method of BKR [cite:@Beno86].
 
-\end{enumerate}
+
 *Grigorev's Algorithm*:
 Now for those who want to get a glance at the details of some
 algorithms, we give a detailed description of the algorithm of
@@ -26312,19 +26214,18 @@ connectivity of the set of all real solutions of the system, which is
 $\mathcal{T}$ 
 in Step (8) of the algorithm described below. We begin by defining
 several notations which will be used in the algorithm description:
-\begin{itemize}
-\item Let $K$ be an arbitrary ordered field. The $\tilde{K}$ denotes
+- Let $K$ be an arbitrary ordered field. The $\tilde{K}$ denotes
 the algebraic closure $K$, and $\tilde{K}$ the real algebraic closure
 of $K$.
-\item Let $\epsilon_1$ be a positive infinitesimal over $\tilde{\mathbb{Q}}$.
+- Let $\epsilon_1$ be a positive infinitesimal over $\tilde{\mathbb{Q}}$.
 Then $F_1$ denotes the real algebraic closure of 
 $\tilde{\mathbb{Q}}(\epsilon_1)$.
-\item Let $\epsilon$ be a positive infinitesimal over $F_1$.
+- Let $\epsilon$ be a positive infinitesimal over $F_1$.
 Then $F$ denotes the real algebraic closure of $F_1(\epsilon)$.
-\item Let $f_1,...,f_m$ be elements of $K[x_1,...,x_n]$.
+- Let $f_1,...,f_m$ be elements of $K[x_1,...,x_n]$.
 Then $\{f_1=0,...,f_m=0\}$ denotes the set of all solutions
 of the system $f_1=\cdots =f_m = 0$ over the algebraic closure of $K$.
-\end{itemize}
+
 
 \hrulefill
 \begin{center}
@@ -26341,11 +26242,10 @@ f_m \ge 0\]
 | P(x_1,...,x_n)$ |
 
 
-\begin{itemize}[noitemsep]
-\item[(1)] Let $f_{m+1} = x_0f_1\cdots f_{k-1}$\\
+- [(1)] Let $f_{m+1} = x_0f_1\cdots f_{k-1}$\\
 Let $g_1=(f_1+\epsilon_1)\cdots(f_{m+1}+\epsilon_1)-\epsilon_1^{m+1}
 \in \mathbb{Z}[\epsilon_1][x_0,...,x_n]$
-\item[(2)] Let $\tilde{L}$ be a bit length bound for the coefficients of
+- [(2)] Let $\tilde{L}$ be a bit length bound for the coefficients of
 $f_i$, and $\tilde{d}$ a degree bound for $f_i$ for every
 $1 \le i \le m+1$.\\
 Let $R=3^{(\tilde{L}+log(m+1))p(\tilde{d}^{n+1})}$,
@@ -26353,12 +26253,11 @@ where $p \in \mathbb{Z}[x]$ is a certain polynomial defined in Page 62 of
 [cite:@Grig88].\\
 Let $g=g_1^2+(x_0^2+\cdots+x_{n+1}^2-(R+1))^2\in 
 \mathbb{Z}[\epsilon_1][x_0,...,x_{n+1}]$
-\item[(3)] Let $N = (8md)^{n+2}$\\
+- [(3)] Let $N = (8md)^{n+2}$\\
 Let $\Gamma = \{1,...,N\}^{n+1}$\\
 Let $\mathcal{I}^\prime = \{\}$
-\item[(4)] For each $\gamma = (\gamma_1,...,\gamma_{n+1})\in \Gamma$ do
-\begin{itemize}[noitemsep]
-\item[(4.1)] Let $\tilde{V}^{(\epsilon)}\subset\tilde{F}^{n+2}$ be the
+- [(4)] For each $\gamma = (\gamma_1,...,\gamma_{n+1})\in \Gamma$ do
+- [(4.1)] Let $\tilde{V}^{(\epsilon)}\subset\tilde{F}^{n+2}$ be the
 variety of the system
 \[\begin{array}{rcl}
 g-\epsilon&=&\displaystyle\left(\frac{\partial g}{\partial x_1}\right)^2
@@ -26371,17 +26270,16 @@ where $\Delta=\sum_{j=0}^{n+1}\left(\frac{\partial g}{\partial x_j}\right)^2$\\
 Let $\tilde{V}^{(\epsilon)}=\bigcup_j \tilde{V}_j^{(\epsilon)}$,
 where each $\tilde{V}_j^{(\epsilon)}$ is a component irreducible over the
 field $\mathbb{Q}(\epsilon_1,\epsilon)$.
-\item[(4.2)] For each null dimensional $\tilde{V}_j^{(\epsilon)}$ do
-\begin{itemize}[noitemsep]
-\item[(4.2.1)] Let $\mathcal{R}\subset\tilde{F}_1^n$ be a set containing the
+- [(4.2)] For each null dimensional $\tilde{V}_j^{(\epsilon)}$ do
+- [(4.2.1)] Let $\mathcal{R}\subset\tilde{F}_1^n$ be a set containing the
 standard part (relative to $\epsilon$) of every point (for which the standard
 part is definable) from the component $\tilde{V}_j^{(\epsilon)}$.
-\item[(4.2.2)] Let $\mathcal{R}_1^\prime = \mathcal{R}_1 \cap
+- [(4.2.2)] Let $\mathcal{R}_1^\prime = \mathcal{R}_1 \cap
 \{g=0\}\cap F_1^{n+2}$
-\item[(4.2.3)] Set $\mathcal{I}^\prime to 
+- [(4.2.3)] Set $\mathcal{I}^\prime to
 ~\mathcal{I}^\prime\cup\mathcal{R}_1^\prime$
-\end{itemize}
-\end{itemize}
+
+
 \item[(5)] Let $\mathcal{I}=\pi(\mathcal{I}^\prime) \subset F_1^{n+1}$
 where $\pi(x_0,...,x_{n+1})=(x_0,...,x_n)$.
 \item[(6)] Let $\mathcal{R}\subset\tilde{\mathbb{Q}}^{n+1}$ be a set
@@ -26393,7 +26291,7 @@ containing the standard part (relative to $\epsilon_1$) of every point
 where $\pi_1(x_0,...,x_n)=(x_1,...,x_n)$
 \item[(9)] Finally let $t$ be true if $\mathcal{T}$ is non-empty,
 false otherwise. $\blacksquare$
-\end{itemize}
+
 \hrulefill
 
 In [cite:@Grig88] it is shown that the worst case time complexity of 
@@ -26417,8 +26315,7 @@ $t \longleftarrow *MainAlgorithm*(P)$
 | P(x_1,...,x_n)$. |
 
 
-\begin{itemize}[noitemsep]
-\item[(1)] Let $g=\{g_1,...,g_m\}$,$g_i\in\mathbb{Z}[x_1,...,x_n]$
+- [(1)] Let $g=\{g_1,...,g_m\}$,$g_i\in\mathbb{Z}[x_1,...,x_n]$
 be the polynomials occurring in the formula $P$.\\
 Let $h=\{h_1,...,h_{6m+2}\}$ where
 \[\begin{array}{lclcr}
@@ -26431,32 +26328,31 @@ h_{4m+1+i} &=& -x_0g_i+1 && i=1,...,m\\
 h_{5m+1+i} &=& -x_0g_i-1 && i=1,...,m\\
 h_{6m+2}   &=& -x_0+1    &&\\
 \end{array}\]
-\item[(2)] Let $d$ be the maximum of the degrees of the polynomials $g_i$\\
+- [(2)] Let $d$ be the maximum of the degrees of the polynomials $g_i$\\
 Let $d^\prime$ be the least even integer which is greater than or equal to
 $d+1$.\\
 Let $\tilde{h}=\{\tilde{h}_1,...,\tilde{h}_{6m+2}\}$ where
 \[\tilde{h}_i(\delta;x_0,...,x_n)=(1-\delta)h_i+
 \delta(1+\sum_{j=0}^n i^jx_j^{d^\prime})\]
-\item[(3)] For each $A\subseteq\{1,...,6m+2\}$ such that
+- [(3)] For each $A\subseteq\{1,...,6m+2\}$ such that
 $|A|\le n+1$ do:
-\begin{itemize}[noitemsep]
-\item[(3.1)] Let $\tilde{h}(x_0,...,x_n)=
+- [(3.1)] Let $\tilde{h}(x_0,...,x_n)=
 \sum_{j=0}^n(6m+3)^jx_j^{d^\prime}$\\
 Let $M_A$ be the matrix with the last row $\nabla_{x_0,...,x_n}\hat{h}$
 and with earlier rows $\nabla_{x_0,...,x_n}\overline{h}, ~i\in A$,
 ordered by increasing indices $i$.
-\item[(3.2)] Let $h_A(\delta;x_0,...,x_n)=
+- [(3.2)] Let $h_A(\delta;x_0,...,x_n)=
 det(M_AM_A^T)+\sum_{i\in A}\overline{h}_i^2$\\
 Let $d_A$ be the degree of $h_A$ with respect to $x_0,...,x_n$
-\item[(3.3)] Let $\tilde{h}_A(\epsilon,\delta;x_0,...,x_n)=
+- [(3.3)] Let $\tilde{h}_A(\epsilon,\delta;x_0,...,x_n)=
 (1-\epsilon)h_A-\epsilon\sum_{j=0}^nx_j^{d_A}$\\
 Let $\tilde{h}_A^{(i)}=\frac{\partial\tilde{h}_A}{\partial x_i}$ for each $i$
-\item[(3.4)] Let $R_A(\epsilon,\delta;u_0,...,u_{n+1})$ be the
+- [(3.4)] Let $R_A(\epsilon,\delta;u_0,...,u_{n+1})$ be the
 $u$-resultant of the polynomials $\tilde{h}_A^{(0)},...,\tilde{h}_A^{(n)}$
 (Use the subalgorithm shown below)
-\item[(3.5)] Let $R_A$ be expanded as
+- [(3.5)] Let $R_A$ be expanded as
 $\sum_{i,j,k}\epsilon^i\delta^ju_0^kR_A^{<i,j,k>}$
-\end{itemize}
+
 \item[(4)] Let $\mathcal{R}$ be the set of all $\mathcal{R}_A^{<i,j,k>}$
 computed in Step (3)
 \item[(5)] Let $\mathcal{B}_{n+1,D}=
@@ -26482,7 +26378,7 @@ Finally let $t=\bigvee_{\sigma\in S}P_\sigma$, where the formula
 $P_\sigma$ is obtained from the formula $P$ by replacing $g_i$ with
 $\sigma_i$
 $\blacksquare$
-\end{itemize}
+
 
 | /Input/: | $f_0,...,f_n\in W[x_0,...,x_n]$, where $W$ |
 | is a commutatuve ring with unity.\\ |
@@ -26491,13 +26387,12 @@ $\blacksquare$
 |  | (See Renegar[cite:@Rene92,Rene92a,Rene92b] for the definition) |
 
 
-\begin{itemize}[noitemsep]
-\item[(1)] Let $\tilde{d}$ be the maximum of the degrees of $f_i$\\
+- [(1)] Let $\tilde{d}$ be the maximum of the degrees of $f_i$\\
 Let $\mathbb{B}=\{x_0^{d_0}\cdots x_{n+1}^{d_{n+1}}|
 d_0+\cdots+d_{n+1}=\hat{d}\}$ where $\hat{d}=(n+1)(\tilde{d}-1)+1$\\
 Let $\mathbb{H}$ be the vector space generated by the basis $\mathbb{B}$
 over the ring $W$
-\item[(2)] For each $x_0^{d_0}\cdots x_{n+1}^{d_{n+1}} \in \mathbb{B}$,
+- [(2)] For each $x_0^{d_0}\cdots x_{n+1}^{d_{n+1}} \in \mathbb{B}$,
 let $i$ denote the least index $i\le n$ and $\tilde{d}\le d_i$, if such
 an $i$ exists, otherwise let $i=n+1$\\
 Let $F_i\in W[x_0,...,x_{n+1}]$ be the degreee $\tilde{d}$-homogenization
@@ -26516,9 +26411,9 @@ if\i = n+1
 where $u=(u_0,...,u_{n+1})$ and $x=(x_0,...,x_{n+1})$\\
 Let $M$ be the matrix representing $\mathcal{T}$ with respect to the
 basis $\mathbb{B}$
-\item[(3)] Finally set $R=D!det(M)$ where $m$ is a $D\times D$
+- [(3)] Finally set $R=D!det(M)$ where $m$ is a $D\times D$
 matrix.$\blacksquare$
-\end{itemize}
+
 
 In [cite:@Rene92] it is shown that the worst case time complexity of this
 algorithm is dominated by $L(log~L)(log~log~L)(md)^{O(n)}$,
@@ -26615,11 +26510,10 @@ can be applied.
 Let $f(x)=a_nx^n+\cdots+a_0$ be a polynomial in an atomic formula.
 From the intended meaning of $\epsilon$, we have the followings (assuming
 that $f$ is a non-zero polynomial):
-\begin{itemize}
-\item $f(\alpha + \epsilon) \ne 0$
-\item The sign of $f(\alpha + \epsilon)$ is the same as that of the
+- $f(\alpha + \epsilon) \ne 0$
+- The sign of $f(\alpha + \epsilon)$ is the same as that of the
 highest non-vanishing derivative of $f$ an $\alpha$.
-\end{itemize}
+
 From these observations, we immediately obtain the following rewrite rules:
 \[\begin{array}{rcl}
 f(\alpha+\epsilon)=0 & \rightarrow & a_n=0 \land\cdots\land a_0=0\\
@@ -26735,11 +26629,10 @@ A formula is said to be /constrained by a quadratic equation/ if it is
 of the following form:
 \[(\exists x \in \mathbb{R})[a_2x^2+a_1x+a_0=0 \land F]\]
 where
-\begin{itemize}
-\item $F$ is a quantifier free formula in $x_1,...,x_r,x$
-\item $a_2,a_1,a_0$ are polynomials over $x_1,...,x_r$ such that
+- $F$ is a quantifier free formula in $x_1,...,x_r,x$
+- $a_2,a_1,a_0$ are polynomials over $x_1,...,x_r$ such that
 $a_2,a_1$ and $a_0$ do not have a common real zero in $\mathbb{R}^r$.
-\end{itemize}
+
 
 **** Mathematical Tool: Slope Resultants
 
@@ -26897,19 +26790,18 @@ We summarize the above results in the following algorithm.
 | /Output/: | A quantifier-free formulat $\tilde{F}$ equivalent to $F$ |
 
 
-\begin{itemize}[noitemsep]
-\item[(1)] Apply on $F$ the recursive algorithm in Theorem 3, obtaining
+- [(1)] Apply on $F$ the recursive algorithm in Theorem 3, obtaining
 a quantifier free formula $F^\prime$.
-\item[(2)] Apply on $F$ the recursive algorithm in Theorem 4, obtaining
+- [(2)] Apply on $F$ the recursive algorithm in Theorem 4, obtaining
 two quantifier free formulas $F^{(1)}$ and $F^{(2)}$
-\item[(3)] Obtain $\tilde{F}$ by putting together $F^\prime$, $F^{(1)}$,
+- [(3)] Obtain $\tilde{F}$ by putting together $F^\prime$, $F^{(1)}$,
 and $F^{(2)}$ as follows:
 \[\begin{array}{rcl}
 \tilde{F} & \equiv & a_2=0 \land a_1 \ne 0 \land F^\prime \lor\\
 &&a_2 \ne 0 \land a_1^2-4a_2a_0 \ge 0 \land [F^{(1)} \lor F^{(2)}]
  \blacksquare
 \end{array}\]
-\end{itemize}
+
 
 *Performance*
 If we allow the determinant symbol in the output, the computing time
@@ -27013,12 +26905,11 @@ that is, the *stha* commutes with specialization.
 
 *Definition 6* {\sl Let $a_0,a_1,...,a_n$ be a list of non zero
 elements in $\mathbb{R}$. We define:
-\begin{itemize}[noitemsep]
-\item *P*($a_0,a_1,...,a_n$) as the number of sign permanence in
+- *P*($a_0,a_1,...,a_n$) as the number of sign permanence in
 the list $a_0,a_1,...,a_n$
-\item *V*($a_0,a_1,...,a_n$) as the number of sign variations in
+- *V*($a_0,a_1,...,a_n$) as the number of sign variations in
 the list $a_0,a_1,...,a_n$ $\blacksquare$
-\end{itemize}}
+
 
 *Definition 7* {\sl Let $a_0,a_1,...,a_n$ be elements in $\mathbb{R}$
 with $a_0\ne 0$. Suppose that it is made of $A_1,Z_1,A_2,Z_2,...,A_t,Z_t$
@@ -27156,34 +27047,31 @@ We will define two notions: /generic quantifiers/ and
 
 *Definition 9 (Generic Quantifiers)*
 /Let $F$ be a formula with one free variable $x$./
-\begin{itemize}[noitemsep]
-\item {\sl The generic universal quantifier, $\dot{\forall}$,
+- {\sl The generic universal quantifier, $\dot{\forall}$,
 is defined by: $\dot{\forall} x F(x)$ is true iff $S(\lnot F)$ is of
 measure zero}
-\item {\sl The generic existential quantifier, $\dot{\exists}$,
+- {\sl The generic existential quantifier, $\dot{\exists}$,
 is defined by: $\dot{\exists} x F(x)$ is true iff $S(F)$ is of
 measure zero} $\blacksquare$
-\end{itemize}
+
 Intuitively, the generic universal quantifier can be read as ``for
 almost all'', and the generic existential quantifier can be be read as
 ``for sufficiently many''. As expected, the following properties hold
 for the generic quantifiers.
 
 *Proposition 2 (Commutativity)*
-\begin{itemize}[noitemsep]
-\item $\dot{\forall}x\dot{\forall}y F(x,y) \Longleftrightarrow
+- $\dot{\forall}x\dot{\forall}y F(x,y) \Longleftrightarrow
 \dot{\forall} y\dot{\forall} x F(x,y)$
-\item $\dot{\exists}x\dot{\exists}y F(x,y) \Longleftrightarrow
+- $\dot{\exists}x\dot{\exists}y F(x,y) \Longleftrightarrow
 \dot{\exists} y\dot{\exists} x F(x,y) \blacksquare$
-\end{itemize}
+
 
 *Proposition 3 (Negation)*
-\begin{itemize}[noitemsep]
-\item $\lnot\dot{\forall} x F(x) \Longleftrightarrow
+- $\lnot\dot{\forall} x F(x) \Longleftrightarrow
 \dot{\exists} x \lnot F(x)$
-\item $\lnot\dot{\exists} x F(x) \Longleftrightarrow
+- $\lnot\dot{\exists} x F(x) \Longleftrightarrow
 \dot{\forall} x \lnot F(x) \blacksquare$
-\end{itemize}
+
 The ``strength'' of the four quantifiers (two exact and two generic)
 form the following spectrum.
 
@@ -27206,13 +27094,12 @@ sets are ``almost the same''. Finally we are ready to state the generic
 quantifier elimination problem.
 
 *Problem*: Device an algorithm with the specification:
-\begin{itemize}[noitemsep]
-\item[/In:/] A formula $F(x_1,...,x_f)$ involving only generic
+- [/In:/] A formula $F(x_1,...,x_f)$ involving only generic
 quantifiers
-\item[/Out:/] A formula $G(x_1,...,x_f)$ such that it involves
+- [/Out:/] A formula $G(x_1,...,x_f)$ such that it involves
 no (generic) quantifiers and $F$ and $G$ are generically equaivalent.
  $\blacksquare$
-\end{itemize}
+
 
 **** Method
 
@@ -27253,26 +27140,24 @@ $J(p)\ne 0$. Then the zero of $A$ delineates the cylinder over $c$.}
 
 *Idea 3: No square-free factorization needed*.
 Stack construction consists of the following steps: 
-\begin{itemize}[noitemsep]
-\item[(1)] Evaluate the
+- [(1)] Evaluate the
 projection polynomials on a sample sample, obtaining a set of
 univariate polynomials. 
-\item[(2)] Factorize the univariate polynomials,
+- [(2)] Factorize the univariate polynomials,
 obtaining square-free and relatively prime factors. 
-\item[(3)] Isolate the
+- [(3)] Isolate the
 real roots of the univariate polynomials. 
-\end{itemize}
+
 The step (2) is often most
 time-consuming. But in generic quantifier elimination, we can drop
 this step since:
-\begin{itemize}[noitemsep]
-\item During the projection phase, the projection polynomials are
+- During the projection phase, the projection polynomials are
 already made to be square-free and relatively prime. (If not, their
 projection polynomials will identically vanish and provide no information).
-\item Since the leading coefficients of the polynomials do not vanish on
+- Since the leading coefficients of the polynomials do not vanish on
 the sample point, the evaluated univariate polynomials will also be
 square-free and relatively prime.
-\end{itemize}
+
 
 *Idea 4: Sturm sequence for free*.
 Again utilizing the fact that the leading coefficients of the
@@ -27285,36 +27170,35 @@ sequence can be used for real root isolation.
 
 Let us make this idea more precise for a subresultant sequence.
 We first need some notation and notions.
-\begin{itemize}[noitemsep]
-\item Let $\mathbb{D}$ denote an integral domain. When necessary, it will
+- Let $\mathbb{D}$ denote an integral domain. When necessary, it will
 also be assumed that $\mathbb{D}$ is ordered.
-\item Let $A_1,A_2\in\mathbb{D}[x]$ be such that deg$(A_1)=n_1$,
+- Let $A_1,A_2\in\mathbb{D}[x]$ be such that deg$(A_1)=n_1$,
 deg$(A_2)=n_2$, and $n_1 \ge n_2 \ge 0$.
-\item A /polynomial remainder sequence/ (prs) of $A_1$ and $A_2$ is a
+- A /polynomial remainder sequence/ (prs) of $A_1$ and $A_2$ is a
 sequence $A_1,...,A_r$ satisfying
 \[e_iA_i = Q_iA_{i+1}+f_iA_{i+2}\]
 where $A_i,Q_i\in\mathbb{D}[x]$, $e_i,f_i\in\mathbb{D}$,
 $deg(A_{i+1}) > deg(A_{i+2})$,
 $A_{r+1}=0$ and $e_if_i\ne 0$.
-\item A /negative/ prs of $A_1$ and $A_2$ is a prs such that
+- A /negative/ prs of $A_1$ and $A_2$ is a prs such that
 $e_if_i < 0$ for every $i$
-\item A /Sturm sequence/ of $A\in\mathbb{D}[x]$ is a negative prs
+- A /Sturm sequence/ of $A\in\mathbb{D}[x]$ is a negative prs
 of $A$ and $A^\prime$.
-\item The $k$-th /Sylvester matrix/ of $A_1$ and $A_2$, $0 \le k \le n_2$,
+- The $k$-th /Sylvester matrix/ of $A_1$ and $A_2$, $0 \le k \le n_2$,
 is the matrix whose rows are the coefficients of the polynomials:
 \[x^{n_2-1-k}A_1,...,A_1,x^{n_1-1-k}A_2,...,A_2\]
 written in the basis:
 $x^{n_1+n_2-1-k},...,1$
-\item The $k$-th /subresultant/ of $A_1$ and $A_2$, $0 \le k \le n_2$,
+- The $k$-th /subresultant/ of $A_1$ and $A_2$, $0 \le k \le n_2$,
 written as $S_k$, is defined by
 \[S_k=\sum_{i=0}^k det(M_k^{(i)})x^i\]
 wher $M_k^{(i)}$ is the submatrix of the $k$-th Sylviester matrix of
 $A_1$ and $A_2$ obtained by taking the first
 $n_1+n_2-1-2k$ columns and the $(n_1+n_2-k-i)$-th column.
-\item The sequence $A_1,A_2,S_{n_2-1},S_{n_3-1},...,S_{n_{r-1}-1}$
+- The sequence $A_1,A_2,S_{n_2-1},S_{n_3-1},...,S_{n_{r-1}-1}$
 is called the /first kind subresultant/ prs of $A_1$ and $A_2$
 $\blacksquare$
-\end{itemize}
+
 Let $\phi$ stand for an evaluation homomorphism that preserves the
 degree (that is, the leading coefficients do not vanish under it).
 Let $A_1,A_2\in\mathbb{D}[y]$. The following theorem shows how to
@@ -27374,51 +27258,48 @@ that of the partial cylindrical algebraic decomposition
 | equivalent to $F$. |
 
 
-\begin{itemize}[noitemsep]
-\item[(1)] [Projection]\\
+- [(1)] [Projection]\\
 Factorize the polynomials occurring in the formula $M$.\\
 For $k=1,...,r$, let $P_k$ be the set of the $i$-level factors.\\
 For $k=r,...,2$ do
-\begin{itemize}[noitemsep]
-\item[(a)] $J \longleftarrowGProj(P_k)$.
+- [(a)] $J \longleftarrowGProj(P_k)$.
 {\sl Use the first kind subresultant polynomial remainder sequence to
 compute} psc's
-\item[(b)] Factorize the polynomials in $J$
-\item[(c)] For $i=1,...,k-1$, append the $i$-level factors to $P_i$
+- [(b)] Factorize the polynomials in $J$
+- [(c)] For $i=1,...,k-1$, append the $i$-level factors to $P_i$
 if they are not already there.
-\end{itemize}
+
 \item[(2)] [Stack Construction]\\
 Initialize the tree as a single node whose truth is ? and whose sample
 point is ().\\
 While there is a candidate node do
-\begin{itemize}[noitemsep]
-\item[(a)] Choose a candidate node $c$. Let $k$ be the level of the node
+- [(a)] Choose a candidate node $c$. Let $k$ be the level of the node
 and let $s=(s_1,...,s_k)$ be its sample point
-\item[(b)] Evaluate the polynomials in $P_{k+1}$ on $s$ obtaining
+- [(b)] Evaluate the polynomials in $P_{k+1}$ on $s$ obtaining
 univariate polynomials
-\item[(c)] Obtain Sturm sequences of the polynomials of the univariate
+- [(c)] Obtain Sturm sequences of the polynomials of the univariate
 polynomials by specializing the first kind subresultant polynomials
 remainder sequences computed during projection.
-\item[(d)] Using the Sturm sequences, find rational numbers
+- [(d)] Using the Sturm sequences, find rational numbers
 $t_1,...,t_\ell$ such that\\
 $t_1 < \alpha_1 < t_2 < \alpha_2 < \cdots < \alpha_{\ell-1} < t_\ell$ 
 where $\alpha_1,...,\alpha_{\ell-1}$ are
 the real roots of the univariate polynomials
-\item[(e)] Attach $\ell$ nodes, say, $c_1,...,c_\ell$, to the node $c$
+- [(e)] Attach $\ell$ nodes, say, $c_1,...,c_\ell$, to the node $c$
 where the sample point of $c_i$ is set to be $(s_1,...,s_k,t_i)$
-\item[(f)] For each child $c_i$, determine the signs of the polynomials
+- [(f)] For each child $c_i$, determine the signs of the polynomials
 in $P_{k+1}$ on it
-\item[(g)] For each child $c_i$, try to determine its truth by using the
+- [(g)] For each child $c_i$, try to determine its truth by using the
 signs
-\item[(h)] Determine the truth values of $c$ if possible, and if so, the
+- [(h)] Determine the truth values of $c$ if possible, and if so, the
 truth values of as many ancestors of $c$ as possible, removing from the
 tree the subtree of each cell whose truth value is thus determined
-\end{itemize}
+
 \item[(3)] [Solution Formula Construction]\\
 By using the method described in [cite:@Hong98],
 construct a quantifier free formula $G$ such that it is true on all the
 true cells and false on all the false cells. $\blacksquare$
-\end{itemize}
+
 
 *** Volume Approximate Quantifier Elimination
 
@@ -27481,16 +27362,15 @@ difference is smaller than $\epsilon$. The advantage of this scheme is
 that once the error-analysis is done, we need to carry out the
 approximation of atomic formulas and the logical operations on them
 only once. But there are two serious disadvantages/difficulties.
-\begin{itemize}
-\item The error-analysis expects and prepares for the ``worst-case''
+- The error-analysis expects and prepares for the ``worst-case''
 situation. Thus, in average, it can induce much more work than
 actually needed.
-\item A reasonable error-analysis is very difficult to do for
+- A reasonable error-analysis is very difficult to do for
 quantifications. A natural (geometric) method gives a totally useless
 bound (too big). One can give better analysis using a root-separation
 theorem, gap theorem, etc. But such analysis is computationally too
 costly.
-\end{itemize}
+
 
 A better way is to take the so-called ``lazy''
 approach. This means to compute only when necessity arises.  In that
@@ -27517,16 +27397,15 @@ use $N_1$ and $S_1$ during the approximation of $F_2$.
 
 Now we turn the ideas discussed above into algorithms. We will use the
 following notations:
-\begin{itemize}
-\item[$+$] /disjoint disjunction/ (or /sum/). $B_1+B_2$ is the
+- [$+$] /disjoint disjunction/ (or /sum/). $B_1+B_2$ is the
 same as $B_1 \lor B_2$ except that it also states that $B_1$ and $B_2$
 are disjoint. Theus, this operation can be trivially done by collecting
 all the boxes in the two box-sets
-\item[$\times$] /independent conjunction/ (or /product/).
+- [$\times$] /independent conjunction/ (or /product/).
 $B_1\times B_2$ is the same as $B_1 \land B_2$ except that it also states
 that $B_1$ and $B_2$ are independent (they do not share variables). Thus,
 it is also trivial to carry out.
-\end{itemize}
+
 
 A technical remark. Though in the end, we would like to obtain a
 necessary box-set and a sufficient box, it is more
@@ -27549,19 +27428,18 @@ $(N,S) \longleftarrow VolumeApproxQE(F)$
 |  | such that $V(N)-V(S)\le \epsilon$. |
 
 
-\begin{itemize}
-\item[(1)] $B_y \longleftarrow$ the empty set (which represents the
+- [(1)] $B_y \longleftarrow$ the empty set (which represents the
 logical false)\\
 $B_n \longleftarrow$ the empty set\\
 $B_u \longleftarrow$ the whole free variable space
-\item[(2)] While $V(B_u) > \epsilon$ repeat\\
+- [(2)] While $V(B_u) > \epsilon$ repeat\\
 $(B_{uy},B_{uu},B_{un}) \longleftarrow ApproxFormula(F,B_u)$\\
 $B_y \longleftarrow B_y+B_{uy}$\\
 $B_u \longleftarrow B_n+B_{un}$\\
 $B_u \longleftarrow B_{uu}$
-\item[(3)] $N \longleftarrow B_y+B_u$\\
+- [(3)] $N \longleftarrow B_y+B_u$\\
 $S \longleftarrow B_y$ $\blacksquare$
-\end{itemize}
+
 \hrulefill
 
 Now we describe the sub-algorithm /ApproxFormula/. We will use the
@@ -27584,55 +27462,54 @@ $(B_y,B_u,B_n) \longleftarrow ApproxFormula(F,B)$
 | that $B_y \Longrightarrow F$ and $B_n \Longrightarrow \lnot F$ |
 
 
-\begin{itemize}
-\item[(1)] $F$ is an atomic formula\\
+- [(1)] $F$ is an atomic formula\\
 $(B_y,B_u,B_n) \longleftarrow ApproxAtomic(F,B)$
-\item[(2)] $F \equiv F_1 \land F_2$\\
+- [(2)] $F \equiv F_1 \land F_2$\\
 $(B_{y*},B_{u*},B_{n*}) \longleftarrow ApproxFormula(F_1,B)$\\
 $(B_{yy},B_{yu},B_{yn}) \longleftarrow ApproxFormula(F_2,B_{y*})$\\
 $(B_{uy},B_{uu},B_{un}) \longleftarrow ApproxFormula(F_2,B_{u*})$\\
 $B_y \longleftarrow B_{yy}$\\
 $B_u \longleftarrow B_{yu}+B_{uy}+B_{uu}$\\
 $B_n \longleftarrow B_{n*}+B_{yn}+B_{un}$\\
-\item[(3)] $F \equiv F_1 \lor F_2$\\
+- [(3)] $F \equiv F_1 \lor F_2$\\
 $(B_{y*},B_{u*},B_{n*}) \longleftarrow ApproxFormula(F_1,B)$\\
 $(B_{ny},B_{nu},B_{nn}) \longleftarrow ApproxFormula(F_2,B_{n*})$\\
 $(B_{uy},B_{uu},B_{un}) \longleftarrow ApproxFormula(F_2,B_{u*})$\\
 $B_y \longleftarrow B_{y*}+B_{ny}+B_{uy}$\\
 $B_u \longleftarrow B_{nu}+B_{un}+B_{uu}$\\
 $B_n \longleftarrow B_{nn}$
-\item[(4)] $F \equiv \lnot F$\\
+- [(4)] $F \equiv \lnot F$\\
 $(B_{y*},B_{u*},B_{n*}) \longleftarrow ApproxFormula(F_1,B)$\\
 $B_y \longleftarrow B_{n*}$\\
 $B_u \longleftarrow B_{u*}$\\
 $B_n \longleftarrow B_{y*}$
-\item[(5)] $F \equiv F_1 \Longrightarrow F_2$\\
+- [(5)] $F \equiv F_1 \Longrightarrow F_2$\\
 $(B_{y*},B_{u*},B_{n*}) \longleftarrow ApproxFormula(F_1,B)$\\
 $(B_{yy},B_{yu},B_{yn}) \longleftarrow ApproxFormula(F_2,B_{y*})$\\
 $(B_{uy},B_{uu},B_{un}) \longleftarrow ApproxFormula(F_2,B_{u*})$\\
 $B_y \longleftarrow B_{n*}+B_{yy}+B_{uy}$\\
 $B_u \longleftarrow B_{yu}+B_{un}+B_{uu}$\\
 $B_n \longleftarrow B_{yn}$
-\item[(6)] $F \equiv F_1 \Longleftrightarrow F_2$\\
+- [(6)] $F \equiv F_1 \Longleftrightarrow F_2$\\
 $(B_{y*},B_{u*},B_{n*}) \longleftarrow ApproxFormula(F_1,B)$\\
 $(B_{yy},B_{yu},B_{yn}) \longleftarrow ApproxFormula(F_2,B_{y*})$\\
 $(B_{ny},B_{nu},B_{nn}) \longleftarrow ApproxFormula(F_2,B_{n*})$\\
 $B_y \longleftarrow B_{yy}+B_{nn}$\\
 $B_u \longleftarrow B_{u*}+B_{yu}+B_{nu}$\\
 $B_n \longleftarrow B_{yn}+B_{ny}$
-\item[(7)] $F \equiv \forall x F_1$ where $x$ is a vector of $n$ variables\\
+- [(7)] $F \equiv \forall x F_1$ where $x$ is a vector of $n$ variables\\
 $(B_{y*},B_{u*},B_{n*}) \longleftarrow 
 ApproxFormula(F_1,B\times\mathbb{R}^n)$\\
 $B_y \longleftarrow \forall x B_{y*}$\\
 $B_n \longleftarrow \exists x B_{n*}$\\
 $B_u \longleftarrow B-(B_y+B_n)$
-\item[(8)] $F \equiv \exists x F_1$ where $x$ is a vector of $n$ variables\\
+- [(8)] $F \equiv \exists x F_1$ where $x$ is a vector of $n$ variables\\
 $(B_{y*},B_{u*},B_{n*}) \longleftarrow 
 ApproxFormula(F_1,B\times\mathbb{R}^n)$\\
 $B_y \longleftarrow \exists x B_{y*}$\\
 $B_n \longleftarrow \forall x B_{n*}$\\
 $B_u \longleftarrow B-(B_y+B_n)$
-\end{itemize}
+
 \hrulefill
 
 In the cases (7) and (8), the notation ``$B\times\mathbb{R}^n$'' means to
@@ -27832,26 +27709,24 @@ $D \longleftarrow UnivQE(x,B,L,U)$
 | $D \Longleftrightarrow L \land \forall x [U \lor B]$ |
 
 
-\begin{itemize}
-\item[(1)] [Prune/Recursion base]\\
+- [(1)] [Prune/Recursion base]\\
 If $L$ is empty then set $D$ to be empty and return\\
 If $U$ is the whole bound variable space then set $D$ to be $L$ and return\\
 If $B$ is empty then set $D$ to be empty and return
-\item[(2)] [Recursion]\\
+- [(2)] [Recursion]\\
 Choose a box $B^1$ from $B$\\
 Let $B^*$ be the box-set of the remaining boxes.\\
 $L^* \longleftarrow L \land _B^1_$\\
 $U^* \longleftarrow U \lor \overline{B^1}$\\
 $D \longleftarrow UnivQE(x,B^*,L^*,U^*) \lor UnivQE(x,B^*,L,U)
  \blacksquare$
-\end{itemize}
+
 \hrulefill
 
 On the top-level, this algorithm is called with $L$ being the whole
 free-variable space and $U$ being empty, so that the output is a box-set
 equivalent to $\forall x B$. Some optimization can be done.
-\begin{itemize}
-\item First, the line in Step (2)
+- First, the line in Step (2)
 \[U^* \longleftarrow U \lor \overline{B^1}\]
 can be replaced by the easier operation
 \[U^* \longleftarrow U + \overline{B^1}\]
@@ -27860,7 +27735,7 @@ The reason is as follows. Whenever $U$ and $\overline{B^1}$ overlap,
 $L$ and $_B^1_$ are disjoint (making $L^*$ empty), and
 thus, the recursive call will not use $U^*$. So, it is safe to carry
 out the ``illegal'' operation.
-\item Next, the line in Step (2)
+- Next, the line in Step (2)
 \[D \longleftarrow UnivQE(x,B^*,L^*,U^*) \lor UnivQE(x,B^*,L,U)\]
 can be replaced by the easier one
 \[D \longleftarrow UnivQE(x,B^*,L^*,U^*) + UnivQE(x,B^*,L,U)\]
@@ -27876,7 +27751,7 @@ Then $(v,w)\in B^1$. Since $B^1$ is disjoint from $U$ and $B^*$, $(v,w)$
 is not in $U\lor B^*$. This contradicts the fact that $\forall x[U\lor B^*]$
 is true on $v$. Thus, the two outputs do not overlap.
 
-\end{itemize}
+
 
 **** Termination
 
@@ -27920,23 +27795,22 @@ By plotting the solution set, one will discover that the
 volume-difference will not shrink, no matter how accurately the atomic
 formula $x\ne y$ is approximated. Thus, the algorithm will loop
 forever. We can avoid such difficulty in several ways.
-\begin{itemize}
-\item In $\forall x F(x,y)$, 
+- In $\forall x F(x,y)$,
 we restrict that the solution set (in the $x$-space) of $F$
 is a closed set for all values of $y$.  Likewise in
 $\exists x F(x,y)$, we restrict that the solution set (in the
 $x$-space) of $F$ is an open set for all values of $y$.
 Then, the algorithm will terminate.
-\item Replace the quantifiers with the generic quantifiers (as defined the
+- Replace the quantifiers with the generic quantifiers (as defined the
 section on Generic Quantifier Elim- ination) and use minimal root
 separation theorems to decide when to abort looping.
-\item Replace the quantifiers with the measure-quantifier $\mathcal{M}^p$,
+- Replace the quantifiers with the measure-quantifier $\mathcal{M}^p$,
 defined as the sentence
 \[\mathcal{M}^p x \in C~F(x)\]
 means that $V(F)/V(C)\ge p$. If $0 < p < 1$, then the algorithm terminates.
-\item Use locally more powerful methods such as: resultants, quadratic
+- Use locally more powerful methods such as: resultants, quadratic
 forms, Krawszyk's operator, etc
-\end{itemize}
+
 Among them, the method of the measure-quantifier seems to be the most
 useful in practice.
 

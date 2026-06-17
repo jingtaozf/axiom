@@ -195,12 +195,11 @@ example, the fragment
       1: %
 #+end_example
 declares =Monoid= as a Spad category with two signatures:
-\begin{enumerate}
-\item the symbol $*$ is a binary operation on the domain belonging to
+1. the symbol $*$ is a binary operation on the domain belonging to
 this category
-\item the identifier 1 denotes a constant object of a domain belonging
+1. the identifier 1 denotes a constant object of a domain belonging
 to the category being defined.
-\end{enumerate}
+
 
 The following category definition
 #+begin_example
@@ -253,14 +252,13 @@ in its /Exports/. For example, the program fragment
 #+end_example
 provides an implementation of =IntMonoid= for the =Monoid=
 specification as follows:
-\begin{itemize}
-\item the object representation domain is =Integer=;
-\item ``multiplication'' of two objects in =IntMonoid= is the value
+- the object representation domain is =Integer=;
+- ``multiplication'' of two objects in =IntMonoid= is the value
 obtained by adding their respective underlying values (returned by the
 $*$ operator);
-\item the =Integer= constant 0 is the underlying value of the unit
+- the =Integer= constant 0 is the underlying value of the unit
 of =IntMonoid=
-\end{itemize}
+
 
 Note that a Spad domain almost always references the ``current domain''
 using the symbol \%.
@@ -1940,16 +1938,15 @@ element is no longer used. The third element is the byte offset from
 the beginning of the file.
 
 So to read the ``operationAlist'' from this file you would:
-\begin{enumerate}
-\item open the index.kaf file
-\item (read) the integer
-\item (seek) to the integer offset from the beginning of the file
-\item (read) the index of triples
-\item find the keyword (e.g. ``operationAlist'') triple
-\item select the third element, an integer
-\item (seek) to the integer offset from the beginning of the file
-\item (read) the ``operationAlist''
-\end{enumerate}
+1. open the index.kaf file
+1. (read) the integer
+1. (seek) to the integer offset from the beginning of the file
+1. (read) the index of triples
+1. find the keyword (e.g. ``operationAlist'') triple
+1. select the third element, an integer
+1. (seek) to the integer offset from the beginning of the file
+1. (read) the ``operationAlist''
+
 
 Note that the information below has been reformatted to fit this 
 document. In order to save space the index.kaf file is does not use
@@ -3110,26 +3107,24 @@ Figure: Layout of category objects
 
 A category object is represented as a large heterogeneous tuple as shown
 in the figure above. Its components have the following meaning:
-\begin{itemize}
-\item slot 0 holds the canonical category form of the expression whose
+- slot 0 holds the canonical category form of the expression whose
 evaluation produces the category object under consideration.
-\item slot 1 holds a list of function signatures exported by the category
-\item slot 2 holds a list of attributes and the condition under which 
+- slot 1 holds a list of function signatures exported by the category
+- slot 2 holds a list of attributes and the condition under which
 they hold
-\item slot 3 always contains the form '(category)'. It serves as a runtime
+- slot 3 always contains the form '(category)'. It serves as a runtime
 type checking tag
-\item slot 4 contains 3 parts:
-\begin{itemize}
-\item a list of principal ancestor category forms
-\item a list of directly extended category forms
-\item a list of domains explicitly used in that category
-\end{itemize}
+- slot 4 contains 3 parts:
+- a list of principal ancestor category forms
+- a list of directly extended category forms
+- a list of domains explicitly used in that category
+
 \item slot 5 holds the list of all domain forms mentioned in the exported
 signatures
 \item each of the slots 6 and onwards holds either runtime information about
 a specific exported signature, or a pointer to a domain object or a 
 category object.
-\end{itemize}
+
 
 ** Global Data Structures
 ** Pratt Parsing
@@ -3269,13 +3264,12 @@ Axiom.
 This is frequently all you need to compile your file.
 
 This simple command:
-\begin{enumerate}
-\item Invokes the Spad compiler and produces Lisp output.
-\item Calls the Lisp compiler if the compilation was successful.
-\item Uses the =)library= command to tell Axiom about
+1. Invokes the Spad compiler and produces Lisp output.
+1. Calls the Lisp compiler if the compilation was successful.
+1. Uses the =)library= command to tell Axiom about
 the contents of your compiled file and arrange to have those
 contents loaded on demand.
-\end{enumerate}
+
 
 Should you not want the =)library= command automatically
 invoked, call =)compile= with the =)nolibrary= option.
@@ -6370,11 +6364,10 @@ is called to attempt to compile the form.
 The functions in this section are called through the symbol-plist
 of the symbol being parsed. In general, each of these functions
 takes 3 arguments
-\begin{enumerate}
-\item the *form* which is specific to the function
-\item the *mode* a |Join|, which is a set of categories and domains
-\item the *env* which is a list of functions and their modemaps
-\end{enumerate}
+1. the *form* which is specific to the function
+1. the *mode* a |Join|, which is a set of categories and domains
+1. the *env* which is a list of functions and their modemaps
+
 and the functions return modified versions of the three arguments
 suitable for further processing.
 | =DEF= | \refto{compDefine} |
@@ -6530,11 +6523,10 @@ by setting the =special= keyword on the DEF symbol property list.
 \defun{compDefine}{compDefine}
 #+END_LATEX
 The compDefine function expects three arguments:
-\begin{enumerate}
-\item the *form* which is an def specifying the domain to define.
-\item the *mode* a |Join|, which is a set of categories and domains
-\item the *env* which is a list of functions and their modemaps
-\end{enumerate}
+1. the *form* which is an def specifying the domain to define.
+1. the *mode* a |Join|, which is a set of categories and domains
+1. the *env* which is a list of functions and their modemaps
+
 # calls: compDefine -> compDefine1
 # defsdollar: compDefine -> tripleCache
 # defsdollar: compDefine -> tripleHits
@@ -12561,24 +12553,22 @@ by setting the =special= keyword on the =add= symbol property list.
 \defun{compAdd}{compAdd}
 #+END_LATEX
 The compAdd function expects three arguments:
-\begin{enumerate}
-\item the *form* which is an |add| specifying the domain
+1. the *form* which is an |add| specifying the domain
 to extend and a set of functions to be added
-\item the *mode* a |Join|, which is a set of categories and domains
-\item the *env* which is a list of functions and their modemaps
-\end{enumerate}
+1. the *mode* a |Join|, which is a set of categories and domains
+1. the *env* which is a list of functions and their modemaps
+
 
 The bulk of the work is performed by a call to compOrCroak which 
 compiles the functions in the add form capsule.
 
 The compAdd function returns a triple, the result of a call to compCapsule.
-\begin{enumerate}
-\item the *compiled capsule* which is a progn form which returns
+1. the *compiled capsule* which is a progn form which returns
 the domain
-\item the *mode* from the input argument
-\item the *env* prepended with the signatures of the functions
+1. the *mode* from the input argument
+1. the *env* prepended with the signatures of the functions
 in the body of the add.
-\end{enumerate}
+
 # calls: compAdd -> comp
 # calls: compAdd -> compSubDomain1
 # calls: compAdd -> nreverse0
@@ -20863,18 +20853,17 @@ equivalent to.
 #+end_src
 
 *** Applying metagrammatical elements of a production (e.g., Star).
-\begin{itemize}
-\item *must* means that if it is not present in the token stream, 
+- *must* means that if it is not present in the token stream,
 it is a syntax error.
-\item *optional* means that if it is present in the token stream, 
+- *optional* means that if it is present in the token stream,
 that is a good thing, otherwise don't worry (like [ foo ] in BNF notation).
-\item *action* is something we do as a consequence of successful 
+- *action* is something we do as a consequence of successful
 parsing; it is inserted at the end of the conjunction of requirements 
 for a successful parse, and so should return T.
-\item *sequence* consists of a head, which if recognized implies that the
+- *sequence* consists of a head, which if recognized implies that the
 tail must follow.   Following tail are actions, which
 are performed upon recognizing the head and tail.
-\end{itemize}
+
 \defmacro{Bang}
 If the execution of prod does not result in an increase in the size of
 the stack, then stack a NIL. Return the value of prod.

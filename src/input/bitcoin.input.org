@@ -574,13 +574,12 @@ the hashing step and just sign the raw data z. We’ll call G the base
 point, n the order, and d the private key. The recipe for signing is
 as follows:
 
-\begin{enumerate}
-\item Choose some integer k between 1 and n - 1.
-\item Calculate the point (x, y) = k * G, using scalar multiplication.
-\item Find r = x mod n. If r = 0, return to step 1.
-\item Find s = (z + r * d) / k mod n. If s = 0, return to step 1.
-\item The signature is the pair (r, s)
-\end{enumerate}
+1. Choose some integer k between 1 and n - 1.
+1. Calculate the point (x, y) = k * G, using scalar multiplication.
+1. Find r = x mod n. If r = 0, return to step 1.
+1. Find s = (z + r * d) / k mod n. If s = 0, return to step 1.
+1. The signature is the pair (r, s)
+
 
 As a reminder, in step 4, if the numbers result in a fraction (which
 in real life they almost always will), the numerator should be
@@ -672,14 +671,13 @@ we are the senders. Let's see how this works.
 With Q being the public key and the other variables defined as before,
 the steps for verifying a signature are as follows:
 
-\begin{enumerate}
-\item Verify that $r$ and $s$ are between $1$ and $n - 1$.
-\item Calculate $w = s^{-1} mod n$
-\item Calculate $u = z * w mod n$
-\item Calculate $v = r * w mod n$
-\item Calculate the point $(x, y) = uG + vQ$
-\item Verify that $r = x mod n$. The signature is invalid if it is not.
-\end{enumerate}
+1. Verify that $r$ and $s$ are between $1$ and $n - 1$.
+1. Calculate $w = s^{-1} mod n$
+1. Calculate $u = z * w mod n$
+1. Calculate $v = r * w mod n$
+1. Calculate the point $(x, y) = uG + vQ$
+1. Verify that $r = x mod n$. The signature is invalid if it is not.
+
 
 Why do these steps work? We are skipping the proof, but you can read
 the details here. Let's follow the recipe and see how it works. Our
