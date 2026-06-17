@@ -5,8 +5,8 @@
 #+AUTHOR: Timothy Daly
 #+BEGIN_abstract
 #+END_abstract
-\section{Directory overview}
-\subsection{Environment variables}
+** Directory overview
+*** Environment variables
 DIRS is a list of directories with the suffix *dir*.
 
 There is a partial order of the directories which is not apparent.
@@ -40,7 +40,7 @@ DIRS=${SRCDIRS}
 VOL11=${BOOKS}/bookvol11.org
 
 #+end_src
-\subsection{The sman directory}
+*** The sman directory
 Superman (sman) is the master process that runs all of the other
 processes including axiom, clef, nagman, graphics, and hyperdoc
 #+NAME: smandir
@@ -52,7 +52,7 @@ smandir: ${SPD}/books/bookvol6.org
 	   ${ENV} ${MAKE} )
 
 #+end_src
-\subsection{The share directory}
+*** The share directory
 The *share* directory files that are shared by all version of the
 system.
 
@@ -80,7 +80,7 @@ shareclean: ${SRC}/share/Makefile
 	@rm -f ${SRC}/share/Makefile.dvi
 
 #+end_src
-\subsection{The boot directory}
+*** The boot directory
 Axiom is built in layers. The first layer is contructed into
 an image called *bootsys*. The *bootsys* image is used
 to translate boot code to common lisp code. Since a boot coded
@@ -113,7 +113,7 @@ bootclean: ${SRC}/boot/Makefile
 	@rm -f ${SRC}/boot/Makefile.dvi
 
 #+end_src
-\subsection{The interp directory}
+*** The interp directory
 Once *bootsys* exists we need to build *depsys*
 and *interpsys*. Since these two images share a lot of
 files they are built in the interp subdirectory using the
@@ -158,7 +158,7 @@ interpclean: ${SRC}/interp/Makefile
 	@rm -f ${SRC}/interp/Makefile.dvi
 
 #+end_src
-\subsection{The input directory}
+*** The input directory
 The input directory contains code used for examples, regression
 testing, and bug tracking. In a shipped system the working examples
 are collected and documented so a user can learn how to use Axiom's
@@ -199,7 +199,7 @@ inputclean: ${SRC}/input/Makefile
 	@rm -f ${SRC}/input/Makefile.dvi
 
 #+end_src
-\subsection{The etc directory}
+*** The etc directory
 The etc directory contains code used as tools surrounding Axiom.
 
 The asq [cite:@2] command, contained in this directory, is useful
@@ -229,7 +229,7 @@ etcclean: ${SRC}/etc/Makefile
 	@rm -f ${SRC}/etc/Makefile.dvi
 
 #+end_src
-\subsection{The doc directory}
+*** The doc directory
 The doc directory contains code used for documenting Axiom.
 
 We've added the books directory above as part of the literate process.
@@ -254,7 +254,7 @@ docdir:
 	  rm -f Makefile11 )
 
 #+end_src
-\subsection{Volume 7:Axiom Hyperdoc book}
+*** Volume 7:Axiom Hyperdoc book
 Hyperdoc is the Axiom document browser.
 #+NAME: hyperdir
 #+begin_src common-lisp :noweb yes
@@ -269,7 +269,7 @@ hyperdir: ${SPD}/books/bookvol7.org ${SPD}/books/bookvol7.1.org
 	  ${ENV} ${MAKE} )
 
 #+end_src
-\subsection{Volume 8: Axiom Graphics book}
+*** Volume 8: Axiom Graphics book
 #+NAME: graphdir
 #+begin_src common-lisp :noweb yes
 graphdir: ${SPD}/books/bookvol8.org
@@ -279,7 +279,7 @@ graphdir: ${SPD}/books/bookvol8.org
 	  ${ENV} ${MAKE} )
 
 #+end_src
-\subsection{The algebra directory}
+*** The algebra directory
 The algebra directory contains code written in Axiom's computer
 algebra language called *spad*. There are two compilers for
 this language, the spad compiler and the *Aldor*[cite:@1] compiler.
@@ -292,7 +292,7 @@ stand-alone. Both compile files that will run in Axiom's
 interpreter. Files which end in ``.spad'' use the internal 
 spad compiler. Files which end in ``.as'' use the external
 Aldor compiler.
-\subsubsection{Making the Makefile}
+**** Making the Makefile
 The main body of the algebra Makefile is extracted from the
 Makefile.pamphlet file as usual. It contains generic rules for
 making all the .spad files in a series of ``layers'' such that
@@ -321,7 +321,7 @@ will extract input files for regression testing from the algebra pamphlets.
 We copy bookvol10.1 (Categories), bookvol10.2 (Domains), 
 and bookvol10.3 (Packages) to the src/algebra subdirectory. 
 
-\subsection{Volume 10: Axiom Algebra book}
+*** Volume 10: Axiom Algebra book
 #+NAME: algebradir
 #+begin_src common-lisp :noweb yes
 algebradir: ${SRC}/algebra/Makefile ${SPD}/books/bookvol10.org \
@@ -356,7 +356,7 @@ algebraclean: ${SRC}/algebra/Makefile
 	@rm -f ${SRC}/algebra/Makefile.dvi
 
 #+end_src
-\subsection{Volume 11: Axiom Browser book}
+*** Volume 11: Axiom Browser book
 These are the pages for the Axiom Firefox browser interface.
 They can be expanded in parallel since they (currently) need no
 post processing. Thus the "-j 10" argument to make. We use 
@@ -372,7 +372,7 @@ browserdir: ${SPD}/books/bookvol11.org
 
 #+end_src
 
-\section{The Makefile}
+** The Makefile
 
 The second call will execute the *all* stanza. This stanza walks 
 all of the lower level directories.

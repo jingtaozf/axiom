@@ -21,7 +21,7 @@ Karl Friedrich Gauss, /Disquisitiones Arithmeticae/, 1801 (translated
 from [Knu98])
 \end{flushright}
 \end{quote}
-\section{Introduction}
+** Introduction
 Since ancient times, mathematicians have been fascinated by problems 
 concerning prime numbers. One of the fundamental problems concerning prime
 numbers is to determine if a given number is prime. In modern times, primality
@@ -78,7 +78,7 @@ In section 2, we summarize the basic idea behind our algorithm. In section
 Thereafter, we state the algorithm in full detail and present the proof
 of correctness.
 
-\section{Basic Idea and Approach}
+** Basic Idea and Approach
 Our test is based on the following identity for prime numbers.
 This same identity was basis for a randomized polynomial-time algorithm
 in [AB99]:
@@ -118,7 +118,7 @@ size at least $r^{({1 \over{2}} +\delta)}$, for some constant $\delta > 0$.
 Thereafter, the algorithm verifies the congruence (2) for a ``small''
 $( O(\sqrt{r}\ log\ p))$ number of $a$'s. We prove that this idea works:
 i.e., the algorithm correctly determines whether $p$ is prime or not.
-\section{Notation and Preliminaries}
+** Notation and Preliminaries
 This section states some algebraic and number theoretic results which we
 will be using in the later proofs.
 
@@ -138,53 +138,49 @@ sake of completeness.
 
 *Lemma 3.1* 
 /Let p and r be prime numbers, $p \ne r$./
-\begin{enumerate}
-\item {\sl The multiplicative group of any field $F_{p^t}$ for $t > 0$, denoted
-by $F_{p^t}^*$ is cyclic.}
-\item {\sl Let $f(x)$ be a polynomial with integral coefficients. Then
-$$f(x)^p == f(x^p)(mod\ p)$$}
-\item {\sl Let h(x) be any factor of $x^r - 1$. Let $m == m_r(mod\ r)$. Then
-$$x^m == x^{m_r}\ (mod\ h(x))$$}
-\item {\sl Let $o_r(p)$ be the order of $p\ module\ r$. Then in 
-$F_p$, ${{x^r - 1}\over{x-1}}$ factorises into irreducible polynomials
-each of degree $o_r(p)$.}
-\end{enumerate}
+1. {\sl The multiplicative group of any field $F_{p^t}$ for $t > 0$, denoted
+  by $F_{p^t}^*$ is cyclic.}
+2. {\sl Let $f(x)$ be a polynomial with integral coefficients. Then
+  $$f(x)^p == f(x^p)(mod\ p)$$}
+3. {\sl Let h(x) be any factor of $x^r - 1$. Let $m == m_r(mod\ r)$. Then
+  $$x^m == x^{m_r}\ (mod\ h(x))$$}
+4. {\sl Let $o_r(p)$ be the order of $p\ module\ r$. Then in
+  $F_p$, ${{x^r - 1}\over{x-1}}$ factorises into irreducible polynomials
+  each of degree $o_r(p)$.}
+
 /Proof/
-\begin{enumerate}
-\item See, e.g., [LN86]
-\item Let $f(x) = a_0+a_1x+...+a_dx^d$. The coefficient of $x^i$ in 
-$f(x)^p$ is
-$$\Sigma_{{i_0+...+i_d=p}\over{i_1+2i_2+...+di_d=i}}
-a_0^{i_0} ... a_d^{i_d} {{p!}\over{i_0! ... i_d!}}$$
-Note that this sum is divisible by $p$ unless one of the $i_j$'s is $p$.
-In the latter case $i=pj$ and the coefficient of $x^i$ is
-$a_j^p = a_j$. This gives us the required congruence.
-\item Let $m=kr+m_r$. Now
-\begin{tabular}{llllll}
-\ \ \ \ \ \ \ \ &     & $x^r$        & $==$ & $1$       & $(mod\ x^r - 1)$\\
-\ \ \ \ \ \ \ \ &$=>$ & $x^{kr}$     & $==$ & $1$       & $(mod\ x^r - 1)$\\
-\ \ \ \ \ \ \ \ &$=>$ & $x^{kr+m_r}$ & $==$ & $x^{m_r}$ & $(mod\ x^r - 1)$\\
-\ \ \ \ \ \ \ \ &$=>$ & $x^m$        & $==$ & $x^{m_r}$ & $(mod\ h(x))$
-\end{tabular}
-\item Let $d = o_r(p)$ and $Q_r(x) = {{x^r-1}\over{x-1}}$.
-Suppose that $Q_r(x)$ has an irreducible factor, $h(x)$ in $F_p$ of
-degree $k$. Now $F_p[x]/h(x)$ forms a field of size $p^k$ and the 
-multiplicative subgroup of $F_p[x]/h(x)$ is cyclic with a generator,
-say $g(x)$. Also, in this galois field, by fact(2) above, we have
-\begin{tabular}{llllll}
-\ \ \ \ \ \ \ \ &     & $g(x)^p$         & $==$ & $g(x^p)$\\
-\ \ \ \ \ \ \ \ &$=>$ & $g(x)^{p^d}$     & $==$ & $g(x^{p^d})$\\
-\ \ \ \ \ \ \ \ &$=>$ & $g(x)^{p^d}$     & $==$ & $g(x)$ [By fact (3) above]\\
-\ \ \ \ \ \ \ \ &$=>$ & $g(x)^{{p^d}-1}$ & $==$ & $1$
-\end{tabular}
-Since $(p^k - 1)$ is the order of $g(x)$, we get $(p^k - 1) \vert (p^d - 1)$
-which implies that $k \vert d$. We also have that $h(x) \vert (x^r - 1)$ in
-$F_p$ and therefore in the field $F_p[x]/h(x)$ we have
-$$x^r == 1$$
-Thus the order of $x$ in this field must be $r$ (since $r$ is prime and
-$x !== 1$). Therefore $r \vert (p^k - 1)$, i.e. $p^k == 1 (mod\ r)$. Hence,
-$d \vert k$. Therefore, $k = d$, and the lemma follows.
-\end{enumerate}
+1. See, e.g., [LN86]
+2. Let $f(x) = a_0+a_1x+...+a_dx^d$. The coefficient of $x^i$ in
+  $f(x)^p$ is
+  $$\Sigma_{{i_0+...+i_d=p}\over{i_1+2i_2+...+di_d=i}}
+  a_0^{i_0} ... a_d^{i_d} {{p!}\over{i_0! ... i_d!}}$$
+  Note that this sum is divisible by $p$ unless one of the $i_j$'s is $p$.
+  In the latter case $i=pj$ and the coefficient of $x^i$ is
+  $a_j^p = a_j$. This gives us the required congruence.
+3. Let $m=kr+m_r$. Now
+| \ \ \ \ \ \ \ \ |  | $x^r$ | $==$ | $1$ | $(mod\ x^r - 1)$ |
+| \ \ \ \ \ \ \ \ | $=>$ | $x^{kr}$ | $==$ | $1$ | $(mod\ x^r - 1)$ |
+| \ \ \ \ \ \ \ \ | $=>$ | $x^{kr+m_r}$ | $==$ | $x^{m_r}$ | $(mod\ x^r - 1)$ |
+| \ \ \ \ \ \ \ \ | $=>$ | $x^m$ | $==$ | $x^{m_r}$ | $(mod\ h(x))$ |
+
+4. Let $d = o_r(p)$ and $Q_r(x) = {{x^r-1}\over{x-1}}$.
+  Suppose that $Q_r(x)$ has an irreducible factor, $h(x)$ in $F_p$ of
+  degree $k$. Now $F_p[x]/h(x)$ forms a field of size $p^k$ and the
+  multiplicative subgroup of $F_p[x]/h(x)$ is cyclic with a generator,
+  say $g(x)$. Also, in this galois field, by fact(2) above, we have
+| \ \ \ \ \ \ \ \ |  | $g(x)^p$ | $==$ | $g(x^p)$ |
+| \ \ \ \ \ \ \ \ | $=>$ | $g(x)^{p^d}$ | $==$ | $g(x^{p^d})$ |
+| \ \ \ \ \ \ \ \ | $=>$ | $g(x)^{p^d}$ | $==$ | $g(x)$ [By fact (3) above] |
+| \ \ \ \ \ \ \ \ | $=>$ | $g(x)^{{p^d}-1}$ | $==$ | $1$ |
+
+  Since $(p^k - 1)$ is the order of $g(x)$, we get $(p^k - 1) \vert (p^d - 1)$
+  which implies that $k \vert d$. We also have that $h(x) \vert (x^r - 1)$ in
+  $F_p$ and therefore in the field $F_p[x]/h(x)$ we have
+  $$x^r == 1$$
+  Thus the order of $x$ in this field must be $r$ (since $r$ is prime and
+  $x !== 1$). Therefore $r \vert (p^k - 1)$, i.e. $p^k == 1 (mod\ r)$. Hence,
+  $d \vert k$. Therefore, $k = d$, and the lemma follows.
+
 
 In addition to the above algebraic facts, we will need the following two 
 number theoretic facts.
@@ -199,24 +195,23 @@ The above lemma is, in fact, known to hold for exponents up to $0.6683$
 *Lemma 3.3*
 /[Apo97] Let $\pi(n)$ be the number of primes $\le n$. Then for $n \ge 1$:/
 $${{n}\over{6\ log\ n}} \le \pi(n) \le {{8n}\over{log\ n}}$$
-\section{The Algorithm}
+** The Algorithm
 \hrule
 Input: integer $n > 1$
-\begin{enumerate}
-\item if ($n$ is of the form $a^b$, $b>1$) output COMPOSITE;
-\item $r = 2$;
-\item while $(r < n)$ \{
-\item \ \ \ \ if ($gcd(n,r) \ne 1$) output COMPOSITE;
-\item \ \ \ \ if ($r$ is prime)
-\item \ \ \ \ \ \ \ \ let $q$ be the largest prime factor of $r - 1$;
-\item \ \ \ \ \ \ \ \ if ($q \ge 4\sqrt{r}\ log\ n$) and ($n^{{r-1}\over{q}} !== 1 (mod\ r)$)
-\item \ \ \ \ \ \ \ \ \ \ \ \ break;
-\item \ \ \ \ $r \leftarrow r + 1$;
-\item \}
-\item for $a = 1$ to $2\sqrt{r}\ log\ n$
-\item \ \ \ \ if ($(x-a)^n !== (x^n - a)(mod\ x^r-1,n)$) output COMPOSITE;
-\item output PRIME;
-\end{enumerate}
+1. if ($n$ is of the form $a^b$, $b>1$) output COMPOSITE;
+2. $r = 2$;
+3. while $(r < n)$ \{
+4. \ \ \ \ if ($gcd(n,r) \ne 1$) output COMPOSITE;
+5. \ \ \ \ if ($r$ is prime)
+6. \ \ \ \ \ \ \ \ let $q$ be the largest prime factor of $r - 1$;
+7. \ \ \ \ \ \ \ \ if ($q \ge 4\sqrt{r}\ log\ n$) and ($n^{{r-1}\over{q}} !== 1 (mod\ r)$)
+8. \ \ \ \ \ \ \ \ \ \ \ \ break;
+9. \ \ \ \ $r \leftarrow r + 1$;
+10. \}
+11. for $a = 1$ to $2\sqrt{r}\ log\ n$
+12. \ \ \ \ if ($(x-a)^n !== (x^n - a)(mod\ x^r-1,n)$) output COMPOSITE;
+13. output PRIME;
+
 
 \hrule
 
@@ -242,14 +237,13 @@ $r$'s (lets call them /special/ primes) between $c_1(log\ n)^6$ and
 $c_2(log\ n)^6$ such that 
 $P(r-1) > (c_2(log\ n)^6)^{{2}\over{3}} > r^{{2}\over{3}}$
 is (for large enough $n$)
-\begin{tabular}{lll}
-\ \ \ \ \ \ \ \ & $\ge$ & No of special primes in $[1... c_2(log\ n)^6]-$\\
-                &       & No of primes in $[1... c_1(log\ n)^6]$\\
-\ \ \ \ \ \ \ \ & $\ge$ & ${{cc_2(log\ n)^6}\over{7\ log\ log\ n}} - 
-{{8c_1(log\ n)^6}\over{6\ log\ log\ n}}$ (using Lemma 3.3)\\
-\ \ \ \ \ \ \ \ & $=$   & ${{(log\ n)^6}\over{log\ log\ n}}
+| \ \ \ \ \ \ \ \ | $\ge$ | No of special primes in $[1... c_2(log\ n)^6]-$ |
+|  |  | No of primes in $[1... c_1(log\ n)^6]$ |
+| \ \ \ \ \ \ \ \ | $\ge$ | ${{cc_2(log\ n)^6}\over{7\ log\ log\ n}} - |
+| {{8c_1(log\ n)^6}\over{6\ log\ log\ n}}$ (using Lemma 3.3)\\ |
+| \ \ \ \ \ \ \ \ | $=$ | ${{(log\ n)^6}\over{log\ log\ n}} |
 \left({{cc_2}\over{7}} - {{8c_1}\over{6}}\right)$
-\end{tabular}
+
 
 Choose constants $c_1 \ge 4^6$ and $c_2$ so that the quantity in braces is a 
 positive constant, say $c_3$.
@@ -321,11 +315,10 @@ all of the elements of $S$ are distinct in the field $F_p[x]/(h(x)) since
 degree of any element of $S$ is less thatn $d$ -- the degree of h(x).
 
 The crdinality of the set $S$ is:
-\begin{tabular}{lll}
-$$\left({l + d - 1}\over{l}\right)$$ & $=$ & 
-$${l + d - 1)(l + d - 2)...(d)}\over{l!}$$\\
-& $$\left({d}\over{l}\right)^l$$
-\end{tabular}
+| $$\left({l + d - 1}\over{l}\right)$$ | $=$ |  |
+| $${l + d - 1)(l + d - 2)...(d)}\over{l!}$$\\ |
+|  | $$\left({d}\over{l}\right)^l$$ |
+
 
 Since $S$ is just a subset of $G$ we get the result.
 
@@ -337,7 +330,7 @@ $$I_{g(x)} = \{m \vert g(x)^m \ident g(x^m)(mod\ x^r - 1,p)\}$$
 
 Here is a nice property of $I_{g(x)}$:
 
-\section{package PRIMESP PrimesIsInP}
+** package PRIMESP PrimesIsInP
 <<package PRIMESP PrimesIsInP>>=
 )abbrev package PRIMESP PrimesIsInP
 ++ Author: Tim Daly

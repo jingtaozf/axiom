@@ -8,20 +8,19 @@
 This is from ``A Collection of Algebraic Identities'' 
 by Titus. Piezas III[cite:@1]
 #+END_abstract
-\section{Part 2. Sums of Squares}
-\subsection{Sums of two squares}
-\begin{enumerate}
-\item $x^2+y^2 = z^k$
-\item $x^2+ny^2 = z^k$
-\item $ad-bc = \pm 1$
-\item $x^2+y^2=z^2+1$
-\item $x^2+y^2=z^2-1$
-\item $x^2+y^2=z^2+nt^2$
-\item $x^2+y^2=z^2+nt^k$
-\item $x^2+y^2=mz^2+nt^2$
-\item $c_1(x^2+ny^2)=c_2(z^2+nt^2)$
-\item $mx^2+ny^2=mz^2+nt^2$
-\end{enumerate}
+** Part 2. Sums of Squares
+*** Sums of two squares
+1. $x^2+y^2 = z^k$
+2. $x^2+ny^2 = z^k$
+3. $ad-bc = \pm 1$
+4. $x^2+y^2=z^2+1$
+5. $x^2+y^2=z^2-1$
+6. $x^2+y^2=z^2+nt^2$
+7. $x^2+y^2=z^2+nt^k$
+8. $x^2+y^2=mz^2+nt^2$
+9. $c_1(x^2+ny^2)=c_2(z^2+nt^2)$
+10. $mx^2+ny^2=mz^2+nt^2$
+
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -33,7 +32,7 @@ by Titus. Piezas III[cite:@1]
 
 #+end_src
 
-\subsection{Form: $x^2+y^2=z^k$}
+*** Form: $x^2+y^2=z^k$
 The smallest primitive solutions (those with $a,b,c$ co-prime) are:
 \{3,4,5\}, \{5,12,13\}, \{7,24,25\}, \{8,15,17\}, etc.
 
@@ -103,12 +102,11 @@ all primitive Pythagorean triples (Barning, 1963, Roberts, 1977)
 
 Note1: There are 4 terms to generate so from $\{a,b,c\}=\{\pm 5,\pm 12,13\}$
 we see:
-\begin{enumerate}
-\item $\{a,b,c\} = \{55,48,73\}$
-\item $\{-a,b,c\} = \{45,28,53\}$
-\item $\{a,-b,c\} = \{7,24,25\}$
-\item $\{-a,-b,c\} = \{-3,4,5\}$
-\end{enumerate}
+1. $\{a,b,c\} = \{55,48,73\}$
+2. $\{-a,b,c\} = \{45,28,53\}$
+3. $\{a,-b,c\} = \{7,24,25\}$
+4. $\{-a,-b,c\} = \{-3,4,5\}$
+
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -341,7 +339,7 @@ A^2+B^2+C^2+D^2 - (a^2+b^2+c^2+d^2)^3
 --E 27
 
 #+end_src
-\subsection{Euler}
+*** Euler
 \[(a^2+b^2)^2 + (b^2+d^2)^2 = (b^2+8c^2+d^2)^2\]
 where
 \[d=\frac{(b^2+3*c^2)}{(2*c)}\]
@@ -380,7 +378,7 @@ a:=sqrt(10*c^2+b^2)
 --E 30
 
 #+end_src
-\subsection{Piezas}
+*** Piezas
 A generalization of the Euler version:
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -492,7 +490,7 @@ c:=sqrt(4*u*w*(u^2+v^2+w^2)-d^2)
 --E 41
 
 #+end_src
-\subsection{Fermat}
+*** Fermat
 *Theorem*: If $p^2+(p+1)^2=r^2$ then $q^2+(q+1)^2=(p+q+r+1)^2$, 
 where $q=3*p+2*r+1$
 #+NAME: *
@@ -529,7 +527,7 @@ q^2 + (q+1)^2 - (p+q+r+1)^2
 
 #+end_src
 Since the last result is not zero, something is wrong.
-\subsection{Fibonacci}
+*** Fibonacci
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -553,7 +551,7 @@ e:=sqrt(c^2+d^2)
 --E 46
 
 #+end_src
-\subsection{Volpicelli}
+*** Volpicelli
 \[(ac+bd)^2 + (ad-bc)^2 = (a^2+b^2)^2\]
 where $a^2+b^2 = c^2+d^2$
 #+NAME: *
@@ -579,7 +577,7 @@ a:=sqrt(c^2+d^2-b^2)
 --E 48
 
 #+end_src
-\subsection{Fleck}
+*** Fleck
 \[(a^2c-b^2c+2abd)^2 + (a^2d-b^2d-2abc)^2 = (a^2+b^2)^3\]
 if $a^2+b^2 = c^2+d^2$
 #+NAME: *
@@ -657,7 +655,7 @@ t1+t2-(a^2+b^2)^4
 --E 54
 
 #+end_src
-\subsection{Piezas}
+*** Piezas
 *Theorem*: Let $F:=(p^2+q^2)(r^2+s^2)$. Then $F^k$ (for $k>0$) is
 identically the sum of two squares in $k+1$ ways.
 #+NAME: *
@@ -708,7 +706,7 @@ a-c
 --E 59
 
 #+end_src
-\subsection{H. Mathieu}
+*** H. Mathieu
 \[(q^2(p^2-2))^2 + (2q^2)^3 = (pq)^4 {\rm\ if\ }q^2-2q^2=1\]
 \[((p^4-p^2)/2)^2 + p^6 = (pq)^4 {\rm\ if\ }p^2-2q^2=-1\]
 #+NAME: *
@@ -754,7 +752,7 @@ p:=sqrt(-1+2*q^2)
 --E 63
 
 #+end_src
-\subsection{Piezas}
+*** Piezas
 \[(4q^2d^4(p^2-2))^2+(4*q^2d^3)^3=(2pqd^2)^4 {\rm\ if\ }p^2-dq^2=1\]
 \[(4*p^2*d^3(p^2-1))^2+(2*p*d)^6=(2*p*q*d^2)^4 {\rm\ if\ }p^2-dq^2=-1\]
 #+NAME: *
@@ -800,7 +798,7 @@ p:=sqrt(-1+d*q^2)
 --E 67
 
 #+end_src
-\subsection{K. Brown}
+*** K. Brown
 \[p^4 + (q^2-1)^3 = (q^3+3q)^2 {\rm\ if\ }p^2-3q^2=1\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes

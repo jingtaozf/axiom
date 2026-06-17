@@ -44,7 +44,7 @@ later.
 
 But first, a crash course on elliptic curves and finite fields.
 
-\section{Elliptic Curves}
+** Elliptic Curves
 
 An elliptic curve is represented algebraically as an equation of the form:
 
@@ -142,7 +142,7 @@ example:
 Here, 7P has been broken down into two point doubling steps and two
 point addition steps.  
 
-\section{Finite Fields}
+** Finite Fields
 
 A finite field, in the context of ECDSA, can be thought of as a
 predefined range of positive numbers within which every calculation
@@ -168,7 +168,7 @@ a:mod7:=9
 
 #+end_src
 
-\section{Putting it Together}
+** Putting it Together
 
 ECDSA uses elliptic curves in the context of a finite field, which
 greatly changes their appearance but not their underlying equations or
@@ -308,7 +308,7 @@ look for the two points with first component of 47, which are
 [47,28] and [47,39]. Thus the reflection point of [47,39] is 
 [47,28].
 
-\section{Back to ECDSA and Bitcoin}
+** Back to ECDSA and Bitcoin
 
 A protocol such as Bitcoin selects a set of parameters for the
 elliptic curve and its finite field representation that is fixed for
@@ -421,7 +421,7 @@ security of that protocol. If you know the secret numbers, you can
 completely break any instantiation of Dual\_\_DRBG.
 \end{quote}
 
-\section{Private Keys and Public Keys}
+** Private Keys and Public Keys
 
 With these formalities out of the way, we are now in a position to
 understand private and public keys and how they are related. Here it
@@ -563,7 +563,7 @@ compressed public key, by keeping just the x value and noting which
 half of the curve the point is on. From this partial information we
 can recover both coordinates.
 
-\section{Signing Data with the Private Key}
+** Signing Data with the Private Key
 
 Now that we have a private and public key pair, let's sign some data!
 
@@ -574,13 +574,12 @@ the hashing step and just sign the raw data z. We’ll call G the base
 point, n the order, and d the private key. The recipe for signing is
 as follows:
 
-\begin{enumerate}
-\item Choose some integer k between 1 and n - 1.
-\item Calculate the point (x, y) = k * G, using scalar multiplication.
-\item Find r = x mod n. If r = 0, return to step 1.
-\item Find s = (z + r * d) / k mod n. If s = 0, return to step 1.
-\item The signature is the pair (r, s)
-\end{enumerate}
+1. Choose some integer k between 1 and n - 1.
+2. Calculate the point (x, y) = k * G, using scalar multiplication.
+3. Find r = x mod n. If r = 0, return to step 1.
+4. Find s = (z + r * d) / k mod n. If s = 0, return to step 1.
+5. The signature is the pair (r, s)
+
 
 As a reminder, in step 4, if the numbers result in a fraction (which
 in real life they almost always will), the numerator should be
@@ -663,7 +662,7 @@ before, we have hidden some gory details by computing it elsewhere):
 As with the private and public keys, this signature is normally
 represented by a hexadecimal string.  
 
-\section{Verifying the Signature with the Public Key}
+** Verifying the Signature with the Public Key
 
 We now have some data and a signature for that data. A third party who
 has our public key can receive our data and signature, and verify that
@@ -672,14 +671,13 @@ we are the senders. Let's see how this works.
 With Q being the public key and the other variables defined as before,
 the steps for verifying a signature are as follows:
 
-\begin{enumerate}
-\item Verify that $r$ and $s$ are between $1$ and $n - 1$.
-\item Calculate $w = s^{-1} mod n$
-\item Calculate $u = z * w mod n$
-\item Calculate $v = r * w mod n$
-\item Calculate the point $(x, y) = uG + vQ$
-\item Verify that $r = x mod n$. The signature is invalid if it is not.
-\end{enumerate}
+1. Verify that $r$ and $s$ are between $1$ and $n - 1$.
+2. Calculate $w = s^{-1} mod n$
+3. Calculate $u = z * w mod n$
+4. Calculate $v = r * w mod n$
+5. Calculate the point $(x, y) = uG + vQ$
+6. Verify that $r = x mod n$. The signature is invalid if it is not.
+
 
 Why do these steps work? We are skipping the proof, but you can read
 the details here. Let's follow the recipe and see how it works. Our
@@ -796,7 +794,7 @@ Clearly step 5 is the bulk of the work. For the final step,
 
 Our signature is valid!
 
-\section{Bitcoin addresses}
+** Bitcoin addresses
 
 Bitcoin does not just check the keys. A bitcoin address is not a public
 key. It is the hash of a public key. The relationship is[cite:@11]
@@ -836,29 +834,28 @@ made with the spender's private key. The hash of the public key can
 be checked (the spender's "address") and the signature can be checked
 with the public key.
 
-\subsection{Base68 encoding}
+*** Base68 encoding
 The bitcoin base58 encoding[cite:@12]
 
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-Value&Char &Value&Char &Value&Char &Value&Char \\
-  0  &  1  &  1  &  2  &  3  &  3  &  3  &  4\\
-  4  &  5  &  5  &  6  &  6  &  7  &  7  &  8\\
-  8  &  9  &  9  &  A  & 10  &  B  & 11  &  C\\
- 12  &  D  & 13  &  E  & 14  &  F  & 15  &  G\\
- 16  &  H  & 17  &  J  & 18  &  K  & 19  &  L\\
- 20  &  M  & 21  &  N  & 22  &  P  & 23  &  Q\\
- 24  &  R  & 25  &  S  & 26  &  T  & 27  &  U\\
- 28  &  V  & 29  &  W  & 30  &  X  & 31  &  Y\\
- 32  &  Z  & 33  &  a  & 34  &  b  & 35  &  c\\
- 36  &  d  & 37  &  e  & 38  &  f  & 39  &  g\\
- 40  &  h  & 41  &  i  & 42  &  j  & 43  &  k\\
- 44  &  m  & 45  &  n  & 46  &  o  & 47  &  p\\
- 48  &  q  & 49  &  r  & 50  &  s  & 51  &  t\\
- 52  &  u  & 53  &  v  & 54  &  w  & 55  &  x\\
- 56  &  y  & 57  &  z 
-\end{tabular} 
+| Value | Char | Value | Char | Value | Char | Value | Char |
+| 0 | 1 | 1 | 2 | 3 | 3 | 3 | 4 |
+| 4 | 5 | 5 | 6 | 6 | 7 | 7 | 8 |
+| 8 | 9 | 9 | A | 10 | B | 11 | C |
+| 12 | D | 13 | E | 14 | F | 15 | G |
+| 16 | H | 17 | J | 18 | K | 19 | L |
+| 20 | M | 21 | N | 22 | P | 23 | Q |
+| 24 | R | 25 | S | 26 | T | 27 | U |
+| 28 | V | 29 | W | 30 | X | 31 | Y |
+| 32 | Z | 33 | a | 34 | b | 35 | c |
+| 36 | d | 37 | e | 38 | f | 39 | g |
+| 40 | h | 41 | i | 42 | j | 43 | k |
+| 44 | m | 45 | n | 46 | o | 47 | p |
+| 48 | q | 49 | r | 50 | s | 51 | t |
+| 52 | u | 53 | v | 54 | w | 55 | x |
+| 56 | y | 57 | z |
 
-\section{Test Vectors}
+
+** Test Vectors
 Bitcoin test examples.[cite:@8]
 \begin{verbatim}
 Curve: secp256k1

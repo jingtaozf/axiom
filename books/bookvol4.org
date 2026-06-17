@@ -4,16 +4,15 @@
 #+LATEX: \setcounter{chapter}{0} % Chapter 1
 \begin{quote}
 Confronting every new programmer learning a new language are
-\begin{itemize}
-\item The Cave of Artifacts
-\item The Forest of Tooling
-\item The Mountain of Language
-\item The Cloud Castle of Mindset
-\end{itemize}
+- The Cave of Artifacts
+- The Forest of Tooling
+- The Mountain of Language
+- The Cloud Castle of Mindset
+
 -- Daniel Higginbotham in Clojure for the Brave and True
 \end{quote}
 
-\section{MODLISP by James Davenport}
+** MODLISP by James Davenport
 This is based on a paper by Davenport and Jenks [cite:@Dave80a].
 
 It provides historical details of the original SCRATCHPAD II design.
@@ -38,7 +37,7 @@ parameterised data types and possesses a unified semantics covering
 interpreted and compiled code, which can call one another at will. In
 short, it is LISP-like.
 
-\subsection{Introduction}
+*** Introduction
 
 MODLISP is a system developed from LISP with the primary aim of
 supporting research in computer algebra. It has been realised for some
@@ -54,7 +53,7 @@ However, MODLISP is more than just an implementation vehicle. It
 is an interesting language in its own right, with powerful features
 for the manipulation of abstract and parameterised data types.
 
-\subsection{Interpretive Structure}
+*** Interpretive Structure
 
 The evaluator is the key to any LISP system, and so it is to MODLISP. 
 The quintessential difference between MODLISP and LISP 1.5 can be
@@ -161,7 +160,7 @@ obvious that a modemap which lists simple domains and the associated
 functions is insufficient for our purposes -- and that is why we need
 the concept of a /mode/.
 
-\subsection{What is a MODE?}
+*** What is a MODE?
 
 In order to discuss MODLISP, we need to define what is meant by the
 term 'mode'. The terminology in this area is sufficiently confused,
@@ -260,7 +259,7 @@ conditional expression of the form
 \end{verbatim}
 which would have the same overall effects as the previous map.
 
-\subsection{Compilation}
+*** Compilation
 
 While such a system may appear laudable, it will not make progress in
 computer algebra unless efficient compilation is available. Many of
@@ -287,21 +286,20 @@ MODLISP [cite:@Jenk79] is based on such a concept, but, as it is
 independent of the ideas considered in this paper, we shall not
 discuss it further.} As an example of this, let us consider the
 compilation of (PLUS X Y) in three cases:
-\begin{enumerate}
-\item X is 2 of mode Integer, Y is 3 of mode Integer. Then the modemap
-for PLUS tells us to apply the function IntegerPlus, and the evaluator
-does so, returning the answer 5.
-\item X and Y are known to be of mode Integer, but their values are
-not known. For example, they might be the formal parameters of a
-function. In this case, we can still select a function from the
-modemap for PLUS, since we do know the modes of X and Y. We cannot
-apply the function IntegerPlus that is produced, but we can compile
-code to produce it, so the compiled code\footnote{The current MODLISP
-implementation compiles into LISP370[cite:@IBMx78], which is compiled
-into machine code by the LISP370 compiler.} is (IntegerPlus X Y).
-\item Nothing is known about X and Y. In this case, we have no idea
-how to apply the modemap for PLUS, and we must compile a call to eval.
-\end{enumerate}
+1. X is 2 of mode Integer, Y is 3 of mode Integer. Then the modemap
+  for PLUS tells us to apply the function IntegerPlus, and the evaluator
+  does so, returning the answer 5.
+2. X and Y are known to be of mode Integer, but their values are
+  not known. For example, they might be the formal parameters of a
+  function. In this case, we can still select a function from the
+  modemap for PLUS, since we do know the modes of X and Y. We cannot
+  apply the function IntegerPlus that is produced, but we can compile
+  code to produce it, so the compiled code\footnote{The current MODLISP
+  implementation compiles into LISP370[cite:@IBMx78], which is compiled
+  into machine code by the LISP370 compiler.} is (IntegerPlus X Y).
+3. Nothing is known about X and Y. In this case, we have no idea
+  how to apply the modemap for PLUS, and we must compile a call to eval.
+
 
 These additions to the evaluator, to allow it to function as a
 compiler as well, while requiring significant changes to the treatment
@@ -317,7 +315,7 @@ be converted from Integer to Rational for the multiplication to be
 performed. This conversion would automatically be done at compile time
 rather than run time.
 
-\subsection{Compilation for Arbitrary Domains}
+*** Compilation for Arbitrary Domains
 
 A significant problem is how to compile code (not just calls to the
 evaluator) for parameterised data types, so that, for example, the
@@ -476,7 +474,7 @@ parameterised types (i.e. not knowing at compile time what the types
 of the operands were) is the cost of the element extraction --
 typically two machine instructions.
 
-\subsection{Partial Declaration}
+*** Partial Declaration
 
 We have seen in the previous section that, if we can declare, for
 example, that X and Y belong to some unspecified domain G which is a
@@ -498,7 +496,7 @@ irrelevant since all the necessary information (functions to
 manipulate them, etc.) will be contained in the vector implementing
 the particular polynomial domain.
 
-\subsection{Status of the Project}
+*** Status of the Project
 
 The MODLISP system is currently implemented above LISP/370[cite:@IBMx78],
 and is being used to develop an experimental computer algebra system
@@ -508,7 +506,7 @@ which takes a ring, and yields another one (i.e. a vector of
 operations which can be accessed by a MODLISP program compiled knowing
 that its arguments came from a ring).
 
-\subsection{Acknowledgments}
+*** Acknowledgments
 
 We are grateful to J.W. Thatcher and E.G. Wagner for many useful
 discussions about abstract parameterised data types, and to
@@ -517,7 +515,7 @@ on MODLISP. Earlier drafts of this paper were read by F.W. Blair,
 R.W. Ryniker II and J.W. Thatcher, and we are grateful to them for
 many helpful comments and criticisms.
 
-\subsection{Appendix A: Description of MODLISP Evaluator}
+*** Appendix A: Description of MODLISP Evaluator
 
 This appendix first gives a formal description of a simplified MODLISP
 evaluator, one which does not provide for partial compilation or
@@ -600,7 +598,7 @@ from the function containing it with value X.
   (EVAL <B M XE>) )))
 \end{verbatim}
 
-\subsection{Explanation}
+*** Explanation
 
 EVAL takes a triple T consisting of an expression X, a ``target'' mode
 M, and an environment E, and returns either a triple or else NIL
@@ -715,7 +713,7 @@ FN is called.
 (COMPILEDP X) test if X represents a piece of compiled code, rather
 than a value.
 
-\subsection{On Extensions for Partial Compilation}
+*** On Extensions for Partial Compilation
 
 In order to cope with partial compilation, several modifications to
 the evaluator must be made. The first, and easiest, is that the fourth
@@ -738,7 +736,7 @@ values are known, then we can proceed by calling LISPEVAL, just as in
 the case of the basic evaluator without the additions for partial
 compilation.
 
-\subsection{On Extensions for Partial Declarations}
+*** On Extensions for Partial Declarations
 
 In the general case where partial declarations are allowed [cite:@Cohe80],
 the definition of EVCONVERT must be replaced by:
@@ -799,7 +797,7 @@ in LS) taking precedence. A final signature is determined therefore by
 SUBLISting LS into (CDAR MAP). A pass over TL is then made to COERCE
 all expressions to the appropriate domain.
 
-\subsection{Appendix B: Sample Compilation by the MODLISP Evaluator}
+*** Appendix B: Sample Compilation by the MODLISP Evaluator
 
 The following illustrates a sample source language function definition
 and corresponding compilation by the current MODLISP evaluator into
@@ -875,9 +873,9 @@ by (QELT r 9). These optimisations which are planned, are global in
 nature. The evaluator already performs several local optimisations,
 such as the use of QCDR.
 
-\section{Tedious Maintainer Tasks}
+** Tedious Maintainer Tasks
 
-\subsection{Maintaining the credits list}
+*** Maintaining the credits list
 
 Asiom tried hard to maintain a list of credits for people who
 contribute to the effort. The contributions range from people
@@ -900,7 +898,7 @@ embedding in the source code.
 
 4) src/input/unittest1.input tests the )credits command
 
-\section{What is the purpose of the HACKPI domain?}
+** What is the purpose of the HACKPI domain?
 
 HACKPI is a hack provided for the benefit of the axiom interpreter.
 As a mathematical type, it is the simple transcendental extension
@@ -918,8 +916,8 @@ non-interactive environment (library), HACKPI would not exist.
 
 (Manuel Bronstein)
 
-\section{How Axiom Builds}
-\subsection{The environment variables}
+** How Axiom Builds
+*** The environment variables
 Axiom uses a tree of Makefiles to build the system. Each Makefile
 is created from the literate file (Makefile.pamphlet) and then executed.
 
@@ -995,13 +993,13 @@ XLIB=/usr/X11R6/lib
 ZIPS=/research/test/zips
 \end{verbatim}
 
-\section{The runtime structure of Axiom}
+** The runtime structure of Axiom
 \begin{center}
 [[ps/v4architecture.eps]]\\
 {\bf Runtime Structure [cite:@Bake14]}
 \end{center}
 
-\subsection{The build step}
+*** The build step
 This shows the steps taken to build Axiom in the sequence they happen.
 Each level of indentation is another level of Makefile being executed.
 \begin{verbatim}
@@ -1199,11 +1197,11 @@ Makefile
                 8g1k2d6 make INT/input/Makefile.algebra 
 \end{verbatim}
 
-\subsection{Where each output file is created}
+*** Where each output file is created
 Here we show which step in the above set of actions creates the file
 that ends up in the final ship directory. We break it down by subdirectory
 in the final image.
-\subsubsection{AXIOM/algebra}
+**** AXIOM/algebra
 \begin{verbatim}
 in AXIOM/algebra:
   *.o
@@ -1216,7 +1214,7 @@ in AXIOM/algebra:
   users.daase
 
 \end{verbatim}
-\subsubsection{AXIOM/autoload}
+**** AXIOM/autoload
 \begin{verbatim}
 in AXIOM/autoload:
   ax.o
@@ -1251,7 +1249,7 @@ in AXIOM/autoload:
   wi2.o
 
 \end{verbatim}
-\subsubsection{AXIOM/bin}
+**** AXIOM/bin
 \begin{verbatim}
 in AXIOM/bin:
   asq            8g1d2f  copy OBJ/SYS/etc/asq AXIOM/bin
@@ -1326,7 +1324,7 @@ in AXIOM/bin:
 ? viewalone          8g1g2d  compile and link AXIOM/lib/viewalone
 
 \end{verbatim}
-\subsubsection{AXIOM/doc}
+**** AXIOM/doc
 \begin{verbatim}
 AXIOM/doc:
   axbook
@@ -1442,7 +1440,7 @@ AXIOM/doc:
       image.xpm
 
 \end{verbatim}
-\subsubsection{AXIOM/graph}
+**** AXIOM/graph
 \begin{verbatim}
 AXIOM/graph
   parabola.view:     8g1g2e extract AXIOM/graph/parabola.view from bookvol8
@@ -1450,13 +1448,13 @@ AXIOM/graph
     graph0
 
 \end{verbatim}
-\subsubsection{AXIOM/input}
+**** AXIOM/input
 \begin{verbatim}
 AXIOM/input:
   *.input files
 
 \end{verbatim}
-\subsubsection{AXIOM/lib}
+**** AXIOM/lib
 \begin{verbatim}
 AXIOM/lib:
   command.list       8g1b1a copy SRC/share/algebra/command.list to AXIOM/lib
@@ -1493,19 +1491,19 @@ AXIOM/lib:
   viewman        8g1g2a compile and link AXIOM/lib/viewman
 
 \end{verbatim}
-\subsubsection{AXIOM/src}
+**** AXIOM/src
 \begin{verbatim}
 AXIOM/src:
 ? algebra
 
 \end{verbatim}
-\subsubsection{AXIOM/timestamp}
+**** AXIOM/timestamp
 \begin{verbatim}
 AXIOM/timestamp
 \end{verbatim}
 
-\section{How Axiom Works}
-\subsection{Input and Type Selection}
+** How Axiom Works
+*** Input and Type Selection
 First we change the default setting for autoload messages to
 turn off the noise of file loading from the library:
 \begin{verbatim}
@@ -1815,7 +1813,7 @@ appropriate type:
                                             Type: Fraction Polynomial Integer
 
 \end{verbatim}
-\subsection{A simple integral}
+*** A simple integral
 
 Now we will show an integration with successive levels of expansion
 of explanation. We will use the expression above:
@@ -1834,7 +1832,7 @@ of explanation. We will use the expression above:
                                           Type: Union(Expression Integer,...)
 
 \end{verbatim}
-\subsection{A simple integral, expansion 1 interpreter}
+*** A simple integral, expansion 1 interpreter
 
 \begin{verbatim}
 (2) -> integrate(f,x)
@@ -2008,7 +2006,7 @@ can print the result:
                                           Type: Union(Expression Integer,...)
 
 \end{verbatim}
-\subsection{A simple integral, expansion 2 integrate}
+*** A simple integral, expansion 2 integrate
 Now that we know how the interpreter has matched the input and called
 the function we need to follow the first level call into the function.
 
@@ -2144,7 +2142,7 @@ and returns the result
  ------------     <== Union(Expression Integer, List Expression Integer)
        a
 \end{verbatim}
-\subsection{A simple integral, expansion 2 internalIntegrate}
+*** A simple integral, expansion 2 internalIntegrate
 If we look at the function definition for integrate:
 \begin{verbatim}
         integrate(f, x) ==
@@ -2276,7 +2274,7 @@ and returned the values:
   - log(-------)     <== IntegrationResult Fraction Polynomial Integer
   a        a
 \end{verbatim}
-\subsection{A simple integral, expansion 3 univariate}
+*** A simple integral, expansion 3 univariate
 But the internalIntegrate function does its work by calling yet
 other functions, the deepest of which is univariate:
 \begin{verbatim}
@@ -2378,7 +2376,7 @@ and the output
 It should be clear that univariate divided the numerator and
 denominator by the leading coefficient of the polynomial in
 the denominator. It also replaced ``x'' with the variable ``?''.
-\subsection{A simple integral, expansion 4 integrate}
+*** A simple integral, expansion 4 integrate
 When univariate returns, the results are fed to another integrate,
 this time from RationalIntegration (INTRAT). This domain looks like:
 \begin{verbatim}
@@ -2434,7 +2432,7 @@ and the function has the signature
    a         a                 Fraction Polynomial Integer
 \end{verbatim}
 
-\subsection{A simple integral, expansion 5 monomialIntegrate}
+*** A simple integral, expansion 5 monomialIntegrate
 The integrate function is defined as:
 \begin{verbatim}
  integrate f ==
@@ -2604,7 +2602,7 @@ and we can watch the monomialIntegrate function call
                                           Type: Union(Expression Integer,...)
 (35) -> 
 \end{verbatim}
-\subsection{A simple integral, expansion 6 HermiteIntegrate}
+*** A simple integral, expansion 6 HermiteIntegrate
 Since ``f'' is not zero we invoke HermiteIntegrate from the domain
 TranscendentalHermiteIntegration which looks like:
 \begin{verbatim}
@@ -2761,14 +2759,14 @@ and now we see
 so HermiteIntegrate did nothing to the input.
 Next we call normalHermiteIntegrate which is a local function
 
-\section{Tools}
-\subsection{svn}
+** Tools
+*** svn
 SVN is a source control system on all platforms. Axiom 'silver' is
 maintained in an SVN archive on sourceforge. This can be pulled from:
 \begin{verbatim}
 svn co https://axiom.svn.sf.net/svnroot/axiom/trunk/axiom axiom
 \end{verbatim}
-\subsection{git}
+*** git
 Git is a unix-based source code control system. Axiom 'silver' is 
 maintained in a git archive. This can be pulled from:
 \begin{verbatim}
@@ -2776,20 +2774,19 @@ git-clone ssh://git@axiom-developer.org/home/git/silver
 \end{verbatim}
 the password for the userid git is linus.
 
-\subsection{cvs}
+*** cvs
 This assumes that you have set up ssh on the Savannah site.
 CVS does not use a password. You have to log onto the Savannah
 site and set up a public key. This requires you to:
-\begin{itemize}
-\item set up a local public key:
-ssh-keygen -b 1024 -t rsa1
-\item open a browser
-\item nagivate to the savannah page that has your personal keys
-\item open .ssh/identity.pub
-\item cut .ssh/identity.pub
-\item paste it into your personal key list on savannah
-\item go have a beer (the page takes an hour or two to update)
-\end{itemize}
+- set up a local public key:
+  ssh-keygen -b 1024 -t rsa1
+- open a browser
+- nagivate to the savannah page that has your personal keys
+- open .ssh/identity.pub
+- cut .ssh/identity.pub
+- paste it into your personal key list on savannah
+- go have a beer (the page takes an hour or two to update)
+
 
 Once you have a working key you can do the cvs login.
 If it prompts you for a password then the key is not working.
@@ -2959,8 +2956,8 @@ image. Please be very careful as this is a world readable copy.
 We don't want to ship nonsense. Test everything. Even trivial
 changes before you upload.
 
-\section{Common Lisps}
-\subsection{GCL}
+** Common Lisps
+*** GCL
 Axiom was ported to run under AKCL which was a common lisp 
 developed by Bill Schelter. He started with KCL (Kyoto Common
 Lisp) and, since he lived and worked in Austin, Texas, named
@@ -3012,7 +3009,7 @@ spent a lot of time and effort making this work for each port.
 The magic knowledge is not written down anywhere and I no longer
 remember the details.
 
-\subsection{CCL}
+*** CCL
 When Axiom was sold to NAG it was ported to CCL (Codemist Common
 Lisp) which is not, strictly speaking, a common lisp implementation.
 It contains just enough common lisp to support Axiom and, as I'm
@@ -3042,191 +3039,175 @@ because I could not understand how to build a CCL system. I plan
 to revisit this in the future and document the process so others
 can follow it as well as build Makefiles to automate it.
 
-\subsection{CMU CL}
+*** CMU CL
 CMU CL grew out of the Carnegie-Mellon University SPICE project.
 That project studied the issues involved in building an optimizing
 compiler for common lisp. Axiom, back when it was Scratchpad at IBM,
 ran on CMU CL. Indeed, a lot of the lisp-level optimizations are 
 due to use of the CMU CL compiler and the disassemble function.
 
-\subsection{Franz Lisp}
+*** Franz Lisp
 Axiom, as Scratchpad, ran on Franz Lisp.
 
-\subsection{Lucid Common Lisp}
+*** Lucid Common Lisp
 Axiom, as Scratchpad, ran on Lucid Common Lisp.
 
-\subsection{Symbolics Common Lisp}
+*** Symbolics Common Lisp
 Axiom, as Scratchpad, ran on Symbolics Common Lisp.
 
-\subsection{Golden Common Lisp}
+*** Golden Common Lisp
 Axiom, as Scratchpad, ran on Golden Common Lisp.
 This was a PC version of Common Lisp which appears to have died.
 
-\subsection{VM/LISP 370}
+*** VM/LISP 370
 Axiom, as Scratchpad, ran on VM/Lisp 370. This was an IBM version
 of lisp and was not a common lisp. The .daase random access
 file format is an artifact of running on this lisp.
 
-\subsection{Maclisp}
+*** Maclisp
 Axiom, as Scratchpad, ran on Maclisp. This was an early MIT version
 of lisp and is not common lisp. Many of the funny function names
 that have slightly different semantics than their common lisp
 counterparts still exist in the system as macros due to this
 lisp. 
 
-\section{Changing GCL versions}
+** Changing GCL versions
 
 Axiom lives on GNU Common Lisp. Axiom adds C code to the lisp image.
 Axiom caches versions to ensure that nothing breaks. Changing GCL
 versions has introduced subtle bugs at various times. The steps
 necessary to introduce a new version are
 
-\begin{enumerate}
-\item Add the latest GCL sources to Axiom
-\item Update the patches to the new version
-\item create diff -Naur patches to the gcl sources
-\item update lsp/Makefile.pamphlet to apply the patch at build
-\item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-\item Change the GCLVERSION to point at the new sources
-\item change the Makefile to match Makefile.pamphlet
-\end{enumerate}
+1. Add the latest GCL sources to Axiom
+2. Update the patches to the new version
+3. create diff -Naur patches to the gcl sources
+4. update lsp/Makefile.pamphlet to apply the patch at build
+5. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+6. Change the GCLVERSION to point at the new sources
+7. change the Makefile to match Makefile.pamphlet
+
 
 We assume in the following that =$AXHOME= is the home directory and that
 Axiom lives in the silver subdirectory.
 
 In more detail these steps are:
 
-\begin{enumerate}
-\item Add the lateset GCL sources to Axiom
-\begin{enumerate}
-\item Download the latest GCL from gnu.org\\
-      For these instructions assume the file is 
-\begin{verbatim}
-      gcl-Version_2_6_10.tar.gz
-\end{verbatim}
-\item move the tar file into /tmp\\
-      We are going to make changes to the distribution via patches
-\item untar the file
-\begin{verbatim}
-      tar -zxf gcl-Version_2_6_10.tar.gz
-\end{verbatim}
-\item cd to the untarred directory
-\begin{verbatim}
-      cd gcl-Version_2_6_10
-\end{verbatim}
-\item rename the gcl directory\\
-      Camm follows a convention that the top level directory in the
-      tar file is called gcl. Since we maintain several past versions
-      we need to rename this and re-tar it
-\begin{verbatim}
-      mv gcl gcl-2.6.10
-\end{verbatim}
-\item rename gcl to use our naming convention
-\begin{verbatim}
-      tar -zcf gcl-2.6.10.tgz gcl-2.6.10
-\end{verbatim}
-\item We move the original, renamed, retarred file to the zip directory
-\begin{verbatim}
-      mv gcl-2.6.10.tgz $AXHOME/silver/zips
-\end{verbatim}      
-\item We have to make sure to include the new file in the git commit
-\begin{verbatim}
-     cd $AXHOME/silver
-\end{verbatim}      
-\item Tell git we care about the file
-\begin{verbatim}
-     git add zips/gcl-2.6.10.tgz
-\end{verbatim}
-\end{enumerate}
-\item Update the patches to the new version
-\begin{enumerate}
-\item find the previous patches
-\begin{verbatim}
-     ls $AXHOME/silver/zips/gcl-2.6.8pre7*patch
-\end{verbatim}
-\item for each patch do ( Step 3 ; Step 4 )
-\end{enumerate}
-\item create diff -Naur patches to the gcl sources
-\begin{enumerate}
-\item assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
-     The name tells us what file to patch. From the above we can see
-     that when Axiom builds GCL it will
-\begin{verbatim}
-        cd lsp/gcl-2.6.8pre7
-\end{verbatim}
-     because GCL is built by the lsp/Makefile.pamphlet. That Makefile
-     will do a
-\begin{verbatim}
-        cd h
-        patch <gcl-2.6.8pre7.h.linux.defs.patch
-\end{verbatim}
-     which will apply the patch .... So we need to make a patch
-\item move to the subdirectory containing the file
-\begin{verbatim}
-      cd /tmp/gcl-Version_2_6_10/gcl-2.6.10/h
-\end{verbatim}
-\item edit the 'linux.defs' file to create the proper patch
-\item save the changed file as linux.defs.tpd
-\item in a shell, create a diff -Naur patch by 
-\begin{verbatim}
-      diff -Naur linux.defs linux.defs.tpd >gcl-2.6.10.h.linux.defs.patch
-\end{verbatim}
-\item move it to the zips directory
-\begin{verbatim}
-      mv gcl-2.6.10.h.linux.defs.patch $AXHOME/silver/zips
-      cd $AXHOME/silver
-      git add zips/gcl-2.6.10.h.linux.defs.patch
-\end{verbatim}
-\end{enumerate}
-\item update lsp/Makefile.pamphlet to apply the patch at build
-\begin{enumerate}
-\item edit lsp/Makefile.pamphlet
-\item search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
-\item copy the chunk and name the new chunk 
-=gcl-2.6.10.h.linux.defs.patch=
-\end{enumerate}
-\item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-\begin{enumerate}
-\item find the subsection ``The GCL-2.6.8pre7 stanza''
-\item make a copy named ``The GCL-2.6.10 stanza''
-\item add the new patches
-\item tell git we care
-\begin{verbatim}
-      cd $AXHOME/silver
-      git add lsp/Makefile.pamphlet
-\end{verbatim}
-\end{enumerate}
-\item Change the GCLVERSION to point at the new sources
-\begin{enumerate}
-\item emacs =$AXHOME/silver/Makefile.pamphlet=
-\item search for =#GCLVERSION=, a Makefile comment line
-\item the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
-      gcl-2.6.8pre7 was is the name of the current version we are
-      replacing. We will use this name in the next step
-\item put a # in front of the GCLVERSION variable to comment it out\\
-      We maintain the list of old, working patches. We also remember the
-      names of the prior GCLVERSIONS in case we have to back up
-\item Add a new line reading:
-\begin{verbatim}
-         GCLVERSION=gcl-2.6.10
-\end{verbatim}
-      This will cause Axiom to untar this tgz file to get the sources
-      and apply the corresponding patches
-\end{enumerate}
-\item change the Makefile to match Makefile.pamphlet
-\begin{itemize}
-\item compile the tangle program
-\begin{verbatim}
-      ( cd books ; gcc -o tangle tangle.c )
-\end{verbatim}
-\item use books/tangle to extract the new Makefile
-\begin{verbatim}
-      books/tangle Makefile.pamphlet >Makefile
-\end{verbatim}
-\end{itemize}
-\end{enumerate}
+1. Add the lateset GCL sources to Axiom
+  1. Download the latest GCL from gnu.org\\
+    For these instructions assume the file is
+    \begin{verbatim}
+    gcl-Version_2_6_10.tar.gz
+    \end{verbatim}
+  2. move the tar file into /tmp\\
+    We are going to make changes to the distribution via patches
+  3. untar the file
+    \begin{verbatim}
+    tar -zxf gcl-Version_2_6_10.tar.gz
+    \end{verbatim}
+  4. cd to the untarred directory
+    \begin{verbatim}
+    cd gcl-Version_2_6_10
+    \end{verbatim}
+  5. rename the gcl directory\\
+    Camm follows a convention that the top level directory in the
+    tar file is called gcl. Since we maintain several past versions
+    we need to rename this and re-tar it
+    \begin{verbatim}
+    mv gcl gcl-2.6.10
+    \end{verbatim}
+  6. rename gcl to use our naming convention
+    \begin{verbatim}
+    tar -zcf gcl-2.6.10.tgz gcl-2.6.10
+    \end{verbatim}
+  7. We move the original, renamed, retarred file to the zip directory
+    \begin{verbatim}
+    mv gcl-2.6.10.tgz $AXHOME/silver/zips
+    \end{verbatim}
+  8. We have to make sure to include the new file in the git commit
+    \begin{verbatim}
+    cd $AXHOME/silver
+    \end{verbatim}
+  9. Tell git we care about the file
+    \begin{verbatim}
+    git add zips/gcl-2.6.10.tgz
+    \end{verbatim}
+2. Update the patches to the new version
+  1. find the previous patches
+    \begin{verbatim}
+    ls $AXHOME/silver/zips/gcl-2.6.8pre7*patch
+    \end{verbatim}
+  2. for each patch do ( Step 3 ; Step 4 )
+3. create diff -Naur patches to the gcl sources
+  1. assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
+    The name tells us what file to patch. From the above we can see
+    that when Axiom builds GCL it will
+    \begin{verbatim}
+    cd lsp/gcl-2.6.8pre7
+    \end{verbatim}
+    because GCL is built by the lsp/Makefile.pamphlet. That Makefile
+    will do a
+    \begin{verbatim}
+    cd h
+    patch <gcl-2.6.8pre7.h.linux.defs.patch
+    \end{verbatim}
+    which will apply the patch .... So we need to make a patch
+  2. move to the subdirectory containing the file
+    \begin{verbatim}
+    cd /tmp/gcl-Version_2_6_10/gcl-2.6.10/h
+    \end{verbatim}
+  3. edit the 'linux.defs' file to create the proper patch
+  4. save the changed file as linux.defs.tpd
+  5. in a shell, create a diff -Naur patch by
+    \begin{verbatim}
+    diff -Naur linux.defs linux.defs.tpd >gcl-2.6.10.h.linux.defs.patch
+    \end{verbatim}
+  6. move it to the zips directory
+    \begin{verbatim}
+    mv gcl-2.6.10.h.linux.defs.patch $AXHOME/silver/zips
+    cd $AXHOME/silver
+    git add zips/gcl-2.6.10.h.linux.defs.patch
+    \end{verbatim}
+4. update lsp/Makefile.pamphlet to apply the patch at build
+  1. edit lsp/Makefile.pamphlet
+  2. search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
+  3. copy the chunk and name the new chunk
+    =gcl-2.6.10.h.linux.defs.patch=
+5. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+  1. find the subsection ``The GCL-2.6.8pre7 stanza''
+  2. make a copy named ``The GCL-2.6.10 stanza''
+  3. add the new patches
+  4. tell git we care
+    \begin{verbatim}
+    cd $AXHOME/silver
+    git add lsp/Makefile.pamphlet
+    \end{verbatim}
+6. Change the GCLVERSION to point at the new sources
+  1. emacs =$AXHOME/silver/Makefile.pamphlet=
+  2. search for =#GCLVERSION=, a Makefile comment line
+  3. the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
+    gcl-2.6.8pre7 was is the name of the current version we are
+    replacing. We will use this name in the next step
+  4. put a # in front of the GCLVERSION variable to comment it out\\
+    We maintain the list of old, working patches. We also remember the
+    names of the prior GCLVERSIONS in case we have to back up
+  5. Add a new line reading:
+    \begin{verbatim}
+    GCLVERSION=gcl-2.6.10
+    \end{verbatim}
+    This will cause Axiom to untar this tgz file to get the sources
+    and apply the corresponding patches
+7. change the Makefile to match Makefile.pamphlet
+  - compile the tangle program
+    \begin{verbatim}
+    ( cd books ; gcc -o tangle tangle.c )
+    \end{verbatim}
+  - use books/tangle to extract the new Makefile
+    \begin{verbatim}
+    books/tangle Makefile.pamphlet >Makefile
+    \end{verbatim}
 
-\section{Literate Programming}
+
+** Literate Programming
 The Axiom source code was originally developed at IBM Research.
 It was sold to The Numerical Algorithms Group (NAG) and was on
 the market as a commercial competitor to Mathematica and Maple.
@@ -3237,7 +3218,7 @@ started on savannah, the GNU Free Software Foundation site the
 source code had been rewritten into ``pamphlet'' files. The reasons
 for this are twofold.
 
-\subsection{Pamphlet files}
+*** Pamphlet files
 
 When the Axiom code was released it contained few comments. That made
 it very difficult to understand what the code actually did. Unlike
@@ -3264,7 +3245,7 @@ weave. The tangle command would be run against a literate document and
 extract the source code, the weave command would be run against the
 literate document and extract the TeX. 
 
-\subsection{noweb}
+*** noweb
 
 Knuth's Web tool was specifically designed to use Pascal code. The
 ``tangle'' operation would prettyprint the output according to the
@@ -3333,8 +3314,8 @@ work within the chunk. To get typeset mathematics use
 -- And you can format things *bold*
 \end{verbatim}
 
-\section{Databases}
-\subsection{libcheck}
+** Databases
+*** libcheck
 The databases are built from the .kaf files in the .nrlib directories.
 (.kaf files are random access files).
 
@@ -3365,7 +3346,7 @@ It used to be run during system build because I frequently ran into
 database problems and this function would alert me to that fact.
 I'll add it back into the Makefile once I elide interp.exposed.
 
-\subsection{asq}
+*** asq
 Axiom has several databases which contain information about domains,
 categories, and packages. The databases are in a compressed format and
 are organized as random-access files using numeric index values so it
@@ -3380,7 +3361,7 @@ asq -so FOOBAR
 and it will tell you the name of the algebra source file that
 defines FOOBAR.
 
-\section{Axiom internal representations}
+** Axiom internal representations
 \begin{verbatim}
 PRIMITIVE REPRESENTATIONS OF AXIOM OBJECTS
 
@@ -3504,9 +3485,9 @@ as the internal representation of
 what could be easier?
 \end{verbatim}
 
-\section{Spad to internal function calling}
+** Spad to internal function calling
 
-\subsection{getdatabse output}
+*** getdatabse output
 \begin{verbatim}
    GETDATABASE('Permutation, 'OPERATIONALIST)$Lisp
 \end{verbatim}
@@ -3613,19 +3594,17 @@ The code for sign in ORDRING-.nrlib/code.lsp has the signature:
 \end{verbatim}
 
 We can "decode" the meaning of the function name as
-\begin{itemize}
-\item *ORDRING-* the implementing file
-\item *sign* the function name
-\item *SI* returns SingleInteger (an old domain name)
-\item *3* the third function in the file
-(unique, to distinguish multiple functions with the same name)
-\end{itemize}
+- *ORDRING-* the implementing file
+- *sign* the function name
+- *SI* returns SingleInteger (an old domain name)
+- *3* the third function in the file
+  (unique, to distinguish multiple functions with the same name)
+
 
 It takes 2 arguments, 
-\begin{itemize}
-\item *=|x|=* which should be a SingleInteger
-\item *=$=* which is the current domain (ORDRING-)
-\end{itemize}
+- *=|x|=* which should be a SingleInteger
+- *=$=* which is the current domain (ORDRING-)
+
 
 So it looks like I have the following structure
 \begin{verbatim}
@@ -4053,19 +4032,19 @@ function which results in .....
 spadcall is a wrapper macro which takes the arguments and a
 function to call. qrefelt does the infovec lookup.
 
-\section{axiom command}
+** axiom command
 The axiom command will eventually be a shell script. At the moment
 it is just a copy of the interpsys image. However the whole Axiom
 system consists of several processes and the axiom command starts
 these processes. The shell script will transparently replace the
 axiom executable image which will be renamed to spadsys.
 
-\section{help command documentation}
+** help command documentation
 Axiom supports a )help command that takes a single argument.
 This argument is interpreted as the name of a flat ascii file
 which should live in \$AXIOM/doc/src/spadhelp.
 
-\subsection{help documentation for algebra}
+*** help documentation for algebra
 The help documentation for algebra files lives within the algebra
 pamphlet. The help chunk contains the name of the domain, thus:
 
@@ -4096,7 +4075,7 @@ and the Type field has been moved toward the center of the line.
 The ``See Also:'' section lists the domain with the ``show'' command
 and the path to the source file in dvi format.
 
-\subsection{Adding help documentation in Makefile}
+*** Adding help documentation in Makefile
 
 There is a section in the src/algebra/Makefile.pamphlet that reads:
 \begin{verbatim}
@@ -4143,7 +4122,7 @@ final help.help file in the MNT/doc/spadhelp directory. Thus, when
 a user types )help with no argument they see a list of domains which
 contain help information.
 
-\subsection{Using help documentation for regression testing}
+*** Using help documentation for regression testing
 
 The fifth line extracts an input test file for the algebra. In general
 each help file is used to create an input test file for regression testing.
@@ -4173,10 +4152,10 @@ make to process this file.
 
 This keeps the regression test list in the algebra Makefile.
 
-\subsection{help documentation as algebra test files}
+*** help documentation as algebra test files
 
 
-\section{debugsys}
+** debugsys
 The ``debugsys'' executable is the ``interpsys'' image but it is
 built using the interpreted lisp code rather than using compiled
 lisp code. This will make it slower but may, in certain cases,
@@ -4190,20 +4169,19 @@ export AXIOM=/home/axiomgnu/new/mnt/linux
 Notice that this image lives in the ``obj'' subtree. It is not
 shipped with the ``final'' system image as only developers could
 find it useful.
-\subsection{debugging hyperdoc}
+*** debugging hyperdoc
 Hyperdoc will sometimes exit and also kill the AXIOMsys image with
 no error message. One way to get around this is to replace the 
 AXIOMsys image with the debugsys image:
-\begin{enumerate}
-\item mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
-This keeps the failing axiomsys image around for later restoration.
-\item cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
-This puts an interpreted version of axiom in place of the compiled form
-\item axiom\\
-Now we are running a fully interpreted form and the error messages are
-much more informative.
-\end{enumerate}
-\section{Understanding a compiled function}
+1. mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
+  This keeps the failing axiomsys image around for later restoration.
+2. cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
+  This puts an interpreted version of axiom in place of the compiled form
+3. axiom\\
+  Now we are running a fully interpreted form and the error messages are
+  much more informative.
+
+** Understanding a compiled function
 Suppose we stop a program at a function call to some low level lisp function,
 say ONEP. We can do that by entering
 \begin{verbatim}
@@ -4670,7 +4648,7 @@ At this point we've reached the metal. Common lisp will evaluate
 the macro-expanded functions and execute the proper code. Essentially
 the compiler has changed all of our spad code into runtime table lookups.
 
-\section{The axiom.input startup file}
+** The axiom.input startup file
 If you add a file in your home directory called ``.axiom.input'' it will
 be read and executed when Axiom starts. This is useful for various
 reasons including setting various switches. Mine reads:
@@ -4683,7 +4661,7 @@ reasons including setting various switches. Mine reads:
 You can execute any command in .axiom.input. Be aware that this will
 ALSO be run while you are doing a ``make'' so be careful what you ask to do.
 
-\section{Where are Axiom symbols stored?}
+** Where are Axiom symbols stored?
 
 You'd think that your question about where the symbol is interned
 would be easy to answer but it is not. The top level loop uses Bill
@@ -4823,7 +4801,7 @@ and following the same steps as above:
 Be sure to set \$DALYMODE to nil if you plan to use Axiom for any
 real computation. Otherwise every expression that begins with an
 open-paren will go directly to lisp.
-\section{Translating individual boot files to common lisp}
+** Translating individual boot files to common lisp
 
 If you are making changes to boot code it is sometimes helpful to
 check the generated lisp code to ensure it does what you want.
@@ -4850,7 +4828,7 @@ The )fin step drops into common lisp
 The (bootran... converts the foo.boot file to foo.clisp
 The (restart) re-enters the top level loop
 
-\section{Directories}
+** Directories
 For this discussion I assume that you have your system rooted
 at /spad and was build to run on linux. These directories
 may not yet be in the CVS tree but are documented here so they
@@ -4895,7 +4873,7 @@ There are several directories explained below. They are:
 ********************************************************
 \end{verbatim}
 
-\subsection{The mnt/linux/bin directory}
+*** The mnt/linux/bin directory
 ./bin
 
 This is a directory of user executable commands, either at the top
@@ -4974,7 +4952,7 @@ name in her home directory and it will get loaded at startup with
 the probable effect of injecting luser errors into the running system.
 sigh.
 
-\subsection{The mnt/linux/doc directory}
+*** The mnt/linux/doc directory
 ./doc
 
 The doc subdirectory contains system documentation.
@@ -5128,7 +5106,7 @@ This one is here because it is here. Existentially speaking, of course.
 This was what the htex files said before history was rewritten...
 (and renamed?)
 
-\subsection{The mnt/linux/algebra directory}
+*** The mnt/linux/algebra directory
 ./algebra
 
 This is where all of the interesting action lives.
@@ -5153,7 +5131,7 @@ of places to search for function names.
 
 *********************************************
 
-\subsection{The mnt/linux/etc directory}
+*** The mnt/linux/etc directory
 ./lib
 
 This directory contains functions that get loaded by the system.
@@ -5250,14 +5228,14 @@ just the historian).
 
 I've drawn a blank; intentionally.
 
-\subsection{The mnt/linux/lib directory}
+*** The mnt/linux/lib directory
 ./etc
 
 This directory intentionally left blank.
 We just can't figure out WHY we intended to leave it blank.
 Historical reasons, no doubt.
 
-\section{The )set command}
+** The )set command
 The *)set* command contains many possible options such as:
 \begin{verbatim}
                      Current Values of )set Variables                      
@@ -5304,12 +5282,12 @@ This will cause AXIOMsys to exit with the return code of 1.
 Note that if you invoke the ``axiom'' shell script to start
 AXIOMsys you will not see this return code (sman swallows it).
 
-\section{Special Output Formats}
+** Special Output Formats
 The first level of special output formatting is handled by
 functions in setvart.boot.pamphlet. This handles the options
 given to the )set command.
 
-\section{Hand creating the hyperdoc binary}
+** Hand creating the hyperdoc binary
 
 First we need *tanglec* which is used to extract the required chunks.
 
@@ -5340,14 +5318,14 @@ cp hypertex mnt/ubuntu/bin
 axiom
 \end{verbatim}
 
-\section{Low Level Debugging Techniques}
+** Low Level Debugging Techniques
 It should be observed that Axiom is basically Common Lisp and 
 some very low level techniques can be used to find where problems
 occur in algebra code. This section walks thru a small problem and
 illustrates some techniques that can be used to find bugs. The 
 point of this exercise is to show a few techniques, not to show a
 general method.
-\subsection{Finding Anonymous Function Signatures}
+*** Finding Anonymous Function Signatures
 This is a technique, adapted from Waldek Hebisch, 
 for asking the interpreter to reveal the actual
 function that will be called in a given circumstance. Here we have a
@@ -5595,7 +5573,7 @@ Continuing in this way we can fully rewrite the assignments as:
 
 Note that rischDEsys is tricky, because rischDEsys returns only List F,
 but tanintegrate expects union. 
-\subsection{The example bug}
+*** The example bug
 Axiom can generate TeX output by typing:
 \begin{verbatim}
 )set output tex on
@@ -6445,19 +6423,18 @@ vector thus:
 Again we rerun the failing function and now tpd1 contains the
 domain vector for the domain CHAR:
 
-\subsection{Operating system level I/O trace (strace)}
+*** Operating system level I/O trace (strace)
 If the bug seems to happen during startup the only method of 
 debugging might be to use strace. To do this, replace the 
 \$AXIOM/bin/AXIOMsys binary with a shell script. You should:
 
-\begin{enumerate}
-\item rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
-\item create the shell script shown below
-\item copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will 
-execute in place of the normal Axiom image
-\item chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
-\item start axiom normally
-\end{enumerate}
+1. rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
+2. create the shell script shown below
+3. copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will
+  execute in place of the normal Axiom image
+4. chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
+5. start axiom normally
+
 
 The script reads:
 \begin{verbatim}
@@ -6473,7 +6450,7 @@ The tee.NNNNN file contains the console output you saw.
 The str.NNNNN contains the output of strace which is a list of all of
 the system calls and their result.
 
-\section{How to make graphs in algebra books}
+** How to make graphs in algebra books
 dot -Tps <pic >books/ps/domain.ps
 
 where file pic contains something like:
@@ -6543,7 +6520,7 @@ and then run the command:
 The output file ``ps/v103univariatetaylorseriesczero.ps'' is included
 after the pagepic of each domain in the book.
 
-\section{Adding or Editing pages in Hyperdoc}
+** Adding or Editing pages in Hyperdoc
 In Axiom it is easy to develop new pages in hyperdoc.
 All of the hyperdoc pages live in bookvol7.1.pamphlet.
 
@@ -6554,7 +6531,7 @@ be extracted as a hyperdoc page.
 
 \begin{verbatim}
  \section{fantastic.ht}  <-- ordinary latex
- \pagehead{FantasticPage}{fantastic.ht}{Fantastic} <-- special latex
+** FantasticPage
  \pageto{.....           <-- for latex (not hyperdoc) links to other pages
  <<fantastic.ht>>=       <-- this is what htadd looks for
 
@@ -6590,7 +6567,7 @@ while (1) do
    rm ht.db                       <-- remove the old database
    htadd bookvol7.1.pamphlet      <-- remake the database
 \end{verbatim}
-\section{Graphviz file creation}
+** Graphviz file creation
 The graphviz output used on the website is a scaled vector graphics
 file (SVG). The dot command to output this file is:
 \begin{verbatim}
@@ -6684,8 +6661,8 @@ function SVGscale(scale) {
 </html>
 \end{verbatim}
 
-\section{Adding Algebra}
-\subsection{Adding algebra to the books}
+** Adding Algebra
+*** Adding algebra to the books
 Assume you have a piece of algebra code that you want to permanently add
 to Axiom. This is a fairly complex process since the system automatically
 runs regression tests, creates help files, etc. and has other standard
@@ -6722,83 +6699,79 @@ InterfaceGroebnerPackage(K,symb,E,OV,R):Exports == Implementation where
 \end{verbatim}
 
 There are some things to check and things to change.
-\begin{itemize}
-\item remove all tabs. Spad is a language that assigns meaning to 
-indentation and tabs are not going to survive the build process intact.
-\item try to stay within 80 characters. Spad code is printed in the books
-so it should try to limit line lengths everywhere.
-\item change ``)abbreviation'' to ``)abbrev''. The Makefile will search
-for the abbrev line and expect this exact text. 
-\begin{verbatim}
-)abbrev package INTERGB InterfaceGroebnerPackage
-\end{verbatim}
-\item make sure there is only a single space between the items in the
-abbrev line. The Makefile assumes this.
-\item Add the comment header block. The author information is used to
-check that all authors are included in the credits. The description
-tag is used as output by the ``)describe'' command. For example:
-\begin{verbatim}
-++ Author: Gaetan Hache
-++ Date Created: September 1996
-++ Date Last Updated: April, 2010, by Tim Daly
-++ Description:
-++ Part of the Package for Algebraic Function Fields in one variable PAFF
-\end{verbatim}
-Other tags can be included but are not used. Do not assume that any
-format information will be correctly translated or preserved. Make the
-description section be simple text with a single character between the
-``++'' and the first word of the text.
-\end{itemize}
+- remove all tabs. Spad is a language that assigns meaning to
+  indentation and tabs are not going to survive the build process intact.
+- try to stay within 80 characters. Spad code is printed in the books
+  so it should try to limit line lengths everywhere.
+- change ``)abbreviation'' to ``)abbrev''. The Makefile will search
+  for the abbrev line and expect this exact text.
+  \begin{verbatim}
+  )abbrev package INTERGB InterfaceGroebnerPackage
+  \end{verbatim}
+- make sure there is only a single space between the items in the
+  abbrev line. The Makefile assumes this.
+- Add the comment header block. The author information is used to
+  check that all authors are included in the credits. The description
+  tag is used as output by the ``)describe'' command. For example:
+  \begin{verbatim}
+  ++ Author: Gaetan Hache
+  ++ Date Created: September 1996
+  ++ Date Last Updated: April, 2010, by Tim Daly
+  ++ Description:
+  ++ Part of the Package for Algebraic Function Fields in one variable PAFF
+  \end{verbatim}
+  Other tags can be included but are not used. Do not assume that any
+  format information will be correctly translated or preserved. Make the
+  description section be simple text with a single character between the
+  ``++'' and the first word of the text.
 
-\begin{enumerate}
-\item Choose the right book:
-\begin{itemize}
-\item Category goes into book bookvol10.2.pamphlet
-\item Domain goes into book bookvol10.3.pamphlet
-\item Package goes into book bookvol10.4.pamphlet
-\item Numerics goes into book bookvol10.5.pamphlet
-\end{itemize}
-\item Find the right chapter. Chapter ordered by name, not abbreviation
-\item Create a new section. The easiest way to do this is to copy another
-section and change the names. In any case, your new section will need
-\item Create a dividiing line consisting of all \% signs. 
-Note that this character is the comment character for TeX.
-\item Create the =\section= tag. This tag should contain the exact text of
-the )abbrev line from your algebra code. It reads:
-=)section{package INTERGB InterfaceGroebnerPackage}=
-\item Create a regression test chunk. This chunk derives its name from the
-algebra name as in ``InterfaceGroebnerPackage.input''. This chunk will
-be automatically extracted and run during regression testing. For the
-moment the chunk should be a simple empty input file as in:
-\begin{verbatim}
-)set break resume
-)sys rm -f InterfaceGroebnerPackage.output
-)spool InterfaceGroebnerPackage.output
-)set message test on
-)set message auto off
-)clear all
 
---S 1 of 1
-)show InterfaceGroebnerPackage
---E 1
+1. Choose the right book:
+  - Category goes into book bookvol10.2.pamphlet
+  - Domain goes into book bookvol10.3.pamphlet
+  - Package goes into book bookvol10.4.pamphlet
+  - Numerics goes into book bookvol10.5.pamphlet
+2. Find the right chapter. Chapter ordered by name, not abbreviation
+3. Create a new section. The easiest way to do this is to copy another
+  section and change the names. In any case, your new section will need
+4. Create a dividiing line consisting of all \% signs.
+  Note that this character is the comment character for TeX.
+5. Create the =\section= tag. This tag should contain the exact text of
+  the )abbrev line from your algebra code. It reads:
+  =)section{package INTERGB InterfaceGroebnerPackage}=
+6. Create a regression test chunk. This chunk derives its name from the
+  algebra name as in ``InterfaceGroebnerPackage.input''. This chunk will
+  be automatically extracted and run during regression testing. For the
+  moment the chunk should be a simple empty input file as in:
+  \begin{verbatim}
+  )set break resume
+  )sys rm -f InterfaceGroebnerPackage.output
+  )spool InterfaceGroebnerPackage.output
+  )set message test on
+  )set message auto off
+  )clear all
+  
+  --S 1 of 1
+  )show InterfaceGroebnerPackage
+  --E 1
+  
+  )spool
+  )lisp (bye)
+  \end{verbatim}
+7. Create a help text chunk. This chunk dervies its name from the
+  algebra name as in ``InterfaceGroebnerPackage.help''. This chunk will
+  be automatically extracted and used to build help text during build.
+  For the moment the chunck should be a simple empty help text file as in:
+  \begin{verbatim}
+  ====================================================================
+  examples InterfaceGroebnerPackage
+  ====================================================================
+  
+  See Also:
+  o )show InterfaceGroebnerPackage
+  
+  \end{verbatim}
 
-)spool
-)lisp (bye)
-\end{verbatim}
-\item Create a help text chunk. This chunk dervies its name from the
-algebra name as in ``InterfaceGroebnerPackage.help''. This chunk will
-be automatically extracted and used to build help text during build.
-For the moment the chunck should be a simple empty help text file as in:
-\begin{verbatim}
-====================================================================
- examples InterfaceGroebnerPackage
-====================================================================
-
-See Also:
-o )show InterfaceGroebnerPackage
-
-\end{verbatim}
-\end{enumerate}
 
 At this point we need information from the Axiom interpreter to continue.
 Start Axiom and compile your program with ``autoload'' on. For example:
@@ -6995,17 +6968,16 @@ PFECAT which lives in layer 10.
 
 Now we have all of the information needed to add the algebra to the book.
 We create a new section that contains the following parts:
-\begin{itemize}
-\item the =\section{...}= header
-\item the input file
-\item the help file
-\item the page head markup
-\item the pagepic markup
-\item the Exports section
-\item the theory and discussion section
-\item the algebra
-\item the dot picture file information
-\end{itemize}
+- the =\section{...}= header
+- the input file
+- the help file
+- the page head markup
+- the pagepic markup
+- the Exports section
+- the theory and discussion section
+- the algebra
+- the dot picture file information
+
 
 We've already explained most of the sections. Now we insert a chunk
 for our algebra. The name of this chunk is important because the Makefile
@@ -7034,12 +7006,11 @@ code that looks like:
 \end{verbatim}
 
 This tells us the name of the node, the background color where
-\begin{itemize}
-\item #4488FF is a category
-\item #88FF44 is a domain
-\item #FF4488 is a package
-\item #FF8844 is a numeric
-\end{itemize}
+- #4488FF is a category
+- #88FF44 is a domain
+- #FF4488 is a package
+- #FF8844 is a numeric
+
 (note the rotation of bytes) and the html link from the graph to 
 the position in the document so the user can click on the picture
 and go to the source code. It names the book and the offset.
@@ -7182,7 +7153,7 @@ overflowing the 80 column limit.
 For this domain we see generate we only have a single export.
 \begin{verbatim}
 *Exports:*\\
-\cross{INTERGB}{groebner}
+[[groebner][INTERGB]]
 \end{verbatim}
 
 The cross function creates a cross-reference entry in the index so you 
@@ -7290,25 +7261,24 @@ to see that the help file exists. Run the command
 \end{verbatim}
 to see that the description paragraph exists.
 
-\subsection{Creating a stand-alone pamphlet file}
+*** Creating a stand-alone pamphlet file
 Suppose we want to add a new algebra file from a new pamphlet.
 For example, we want to add BLAS1.spad in books/newbook.pamphlet.
 The explanation for the steps follow. The steps are:
-\begin{enumerate}
-\item write the algebra code
-\item create the pamphlet file called newbook.pamphlet
-\item create a new section in newbook.pamphlet
-\item create the chunk name stanza in newbook.pamphlet
-\item insert BLAS1.spad into the new stanza
-\item create the dotabb stanza in newbook.pamphlet
-\item update src/algebra/Makefile.pamphlet to insert BLAS1.spad 
-\item update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
-\item update the dotabb stanza in newbook.pamphlet
-\item update src/Makefile.pamphlet to copy the newbook file to src/algebra
-\item update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
-\end{enumerate}
+1. write the algebra code
+2. create the pamphlet file called newbook.pamphlet
+3. create a new section in newbook.pamphlet
+4. create the chunk name stanza in newbook.pamphlet
+5. insert BLAS1.spad into the new stanza
+6. create the dotabb stanza in newbook.pamphlet
+7. update src/algebra/Makefile.pamphlet to insert BLAS1.spad
+8. update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
+9. update the dotabb stanza in newbook.pamphlet
+10. update src/Makefile.pamphlet to copy the newbook file to src/algebra
+11. update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
 
-\section{Makefile}
+
+** Makefile
 This book is actually a literate program[cite:@Knut92] and can contain 
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 

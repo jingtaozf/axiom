@@ -6,8 +6,8 @@
 #+BEGIN_abstract
 #+END_abstract
 
-\section{CHARYBDIS by Jonathan K. Millen}
-\subsection{Introduction}
+** CHARYBDIS by Jonathan K. Millen
+*** Introduction
 
 From Millen[cite:@Mill68] we paraphrase:
 
@@ -31,7 +31,7 @@ structure of the program, emphasizing the way it can be expanded to
 include more mathematical displays, or even arbitrary displays which
 either are not too large or are amenable to recursive techniques.
 
-\subsection{Descriptoin of the Displays}
+*** Descriptoin of the Displays
 
 CHARYBDIS assumes a character set containing the upper case alphabet,
 the decimal digits, and these additional symbols:
@@ -224,7 +224,7 @@ display of a more general nature produced by CHARYBDIS.
             .PA(POSTPONED)
 \end{verbatim}
 
-\subsection{Program Structure}
+*** Program Structure
 
 This section contains a discussion of the global structure of the
 program, a summary of its conceptual basis, and an example of the
@@ -275,21 +275,20 @@ description of a display in these terms to the required LISP functions
 is, by design, a short one.
 
 The framework comprises the definitions of four terms:
-\begin{enumerate}
-\item The /origin/ is a distinguished location within a display,
-whose coordinates are restricted as follows. The abscissa of the
-origin is that of the leftmost character in the display, and the
-ordinate of the origin is neither greater than that of the highest
-character in the display nor less than that of the lowest. The choice
-of ordinate is otherwise arbitrary.
-\item The /width/ of a display is the number of columns from the
-extreme left of the display (the origin, in fact) to its extreme
-right.
-\item The /superspan/ of a display is the number of lines it
-extends above the origin
-\item The /subspan/ of a display is the number of lines it extends
-below the origin
-\end{enumerate}
+1. The /origin/ is a distinguished location within a display,
+  whose coordinates are restricted as follows. The abscissa of the
+  origin is that of the leftmost character in the display, and the
+  ordinate of the origin is neither greater than that of the highest
+  character in the display nor less than that of the lowest. The choice
+  of ordinate is otherwise arbitrary.
+2. The /width/ of a display is the number of columns from the
+  extreme left of the display (the origin, in fact) to its extreme
+  right.
+3. The /superspan/ of a display is the number of lines it
+  extends above the origin
+4. The /subspan/ of a display is the number of lines it extends
+  below the origin
+
 \begin{verbatim}
              |              2
    superspan |           - X
@@ -312,19 +311,18 @@ a quotient, that of the horizontal bar.
 
 The four functions which constitute an individual module for handling
 expressions of a particular type are:
-\begin{enumerate}
-\item a function whose four arguments are an expression, the two
-coordinates $x$ and $y$ of the desired origin, and a partial display
-list; and whose value is the new display list obtained from the one
-given by appending to it the atomic symbols (with their coordinates)
-making up the display of the input expression (This function does not
-work for APP, which derives its name from the fact that it appends to
-the display list)
-\item a function of one argument whose value is the width of its
-argument
-\item a function of one argument whose value is its superspan
-\item a function of one argument whose value is its subspan.
-\end{enumerate}
+1. a function whose four arguments are an expression, the two
+  coordinates $x$ and $y$ of the desired origin, and a partial display
+  list; and whose value is the new display list obtained from the one
+  given by appending to it the atomic symbols (with their coordinates)
+  making up the display of the input expression (This function does not
+  work for APP, which derives its name from the fact that it appends to
+  the display list)
+2. a function of one argument whose value is the width of its
+  argument
+3. a function of one argument whose value is its superspan
+4. a function of one argument whose value is its subspan.
+
 
 *Example*
 
@@ -609,12 +607,11 @@ the complexity of the display itself.
 General convention in the ``app...'' functions:
 Added from an attempt to fix bugs by JHD: 2 Aug 89
 The arguments are:
-\begin{itemize}
-\item what has to be printed
-\item - x - is the horizontal distance along the page at which to start
-\item - y - is some vertical hacking control
-\item - d - is the "layout" so far
-\end{itemize}
+- what has to be printed
+- - x - is the horizontal distance along the page at which to start
+- - y - is some vertical hacking control
+- - d - is the "layout" so far
+
 these functions return an updated ``layout so far'' in general
 \end{verbatim}
 #+NAME: *

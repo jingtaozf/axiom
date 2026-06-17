@@ -6,7 +6,7 @@
 #+AUTHOR: Timothy Daly
 #+BEGIN_abstract
 #+END_abstract
-\section{License}
+** License
 #+NAME: license
 #+begin_src common-lisp :noweb yes
 --Copyright The Numerical Algorithms Group Limited 1991.
@@ -24,7 +24,7 @@
 )set streams calculate 7
  
 #+end_src
-\section{Numbers}
+** Numbers
 Let's begin by playing with numbers: infinite precision integers
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -195,7 +195,7 @@ Cardinal numbers
 --E 14
 
 #+end_src
-\section{Algebra}
+** Algebra
 Numbers are nice, but symbols allow for variability---try some high school
 algebra: rational simplification
 #+NAME: *
@@ -395,7 +395,7 @@ padicFraction(
 --E 30
 
 #+end_src
-\section{Trigonometry}
+** Trigonometry
 Trigonometric manipulations---these are typically difficult for students
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -461,7 +461,7 @@ r:= 'r;
 --E 36
 
 #+end_src
-\section{Determining Zero Equivalence}
+** Determining Zero Equivalence
 The following expressions are all equal to zero
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -688,7 +688,7 @@ normalize(%)
 --E 51
 
 #+end_src
-\section{The Complex Domain}
+** The Complex Domain
  Complex functions---separate into their real and imaginary parts
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -833,7 +833,7 @@ sqrt(%e^z) - %e^(z/2)
 --E 62
 
 #+end_src
-\section{Equations}
+** Equations
 Manipulate an equation using a natural syntax
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1600,7 +1600,7 @@ solve([eq1, eq2, eq3], [x, y, z])
 --E 85
 
 #+end_src
-\section{Matrix Algebra}
+** Matrix Algebra
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 86 of 200
@@ -1740,8 +1740,8 @@ m:= 'm;
 --E 95
 
 #+end_src
-\section{Sums and Products}
-\subsection{Sums: finite and infinite}
+** Sums and Products
+*** Sums: finite and infinite
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 96 of 200
@@ -1775,7 +1775,7 @@ limit(sum(1/k^2 + 1/k^3, k = 1..n), n = %plusInfinity)
 --R                                                    Type: Union("failed",...)
 --E 98
 #+end_src
-\subsection{Products}
+*** Products
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 99 of 200
@@ -1791,8 +1791,8 @@ product(k, k = 1..n)
 --E 99
 
 #+end_src
-\section{Calculus}
-\subsection{Limits --- start with a famous example}
+** Calculus
+*** Limits --- start with a famous example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 100 of 200
@@ -1845,7 +1845,7 @@ D(y(x(t)), t, 2)
 )clear properties x y
 
 #+end_src
-\subsection{Indefinite Integrals}
+*** Indefinite Integrals
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 105 of 200
@@ -2016,7 +2016,7 @@ integrate((sqrt(1 + x) - sqrt(1 - x))/2, x)
 --E 116
 
 #+end_src
-\subsection{Definite Integrals}
+*** Definite Integrals
 The following two functions have a pole at zero
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2107,7 +2107,7 @@ integrate(sqrt(x + 1/x - 2), x = 0..2, "noPole")
 --E 124
 
 #+end_src
-\subsection{Contour integrals}
+*** Contour integrals
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 125 of 200
@@ -2127,7 +2127,7 @@ integrate(cos(x)/(x^2 + a^2), x = %minusInfinity..%plusInfinity, "noPole")
 --E 126
 
 #+end_src
-\subsection{Integrand with a branch point}
+*** Integrand with a branch point
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 127 of 200
@@ -2163,7 +2163,7 @@ integrate(integrate(integrate(1, z = 0..c*(1 - x/a - y/b)), _
 --E 129
 
 #+end_src
-\subsection{Series}
+*** Series
 Taylor series---this first example comes from special relativity
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2307,7 +2307,7 @@ taylor(log(sinh(z)) + log(cosh(z + w)), z = 0)
 --E 140
 
 #+end_src
-\subsection{Power series}
+*** Power series
 Compute the general formula
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2385,7 +2385,7 @@ seriesSolve(%, y, x = 1, 0)
 )clear properties y
 
 #+end_src 
-\subsection{Pade (rational function) approximation}
+*** Pade (rational function) approximation
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 148 of 200
@@ -2399,8 +2399,8 @@ pade(1, 1, taylor(exp(-x), x = 0))
 --E 148
 
 #+end_src
-\section{Transforms}
-\subsection{Laplace and inverse Laplace transforms}
+** Transforms
+*** Laplace and inverse Laplace transforms
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 149 of 200
@@ -2425,8 +2425,8 @@ inverseLaplace(%, s, t)
 --E 150
 
 #+end_src
-\section{Difference and Differential Equations}
-\subsection{Second order linear recurrence equation}
+** Difference and Differential Equations
+*** Second order linear recurrence equation
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 151 of 200
@@ -2455,7 +2455,7 @@ r(n + 2) - 2 * r(n + 1) + r(n) = 2
 )clear properties r
  
 #+end_src
-\subsection{Second order ODE with initial conditions}
+*** Second order ODE with initial conditions
 solve first using Laplace transforms
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2502,7 +2502,7 @@ solve(ode, f, t = 0, [0, 0])
 --E 157
 
 #+end_src
-\subsection{First order linear ODE}
+*** First order linear ODE
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 158 of 200
@@ -2534,7 +2534,7 @@ solve(%, y, x)
 --E 160
 
 #+end_src
-\subsection{Nonlinear ODE}
+*** Nonlinear ODE
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 161 of 200
@@ -2585,7 +2585,7 @@ solve(%, y, x);
 --E 164
 
 #+end_src
-\subsection{ODE with boundary conditions}  
+*** ODE with boundary conditions
 This problem has nontrivial solutions
 $y(x) = A \sin([\pi/2 + n \pi] x)$ for $n$ an arbitrary integer.
 #+NAME: *
@@ -2601,7 +2601,7 @@ solve(D(y(x), x, 2) + k^2*y(x) = 0, y, x)
 -- bc(%, x = 0, y = 0, x = 1, D(y(x), x) = 0)
 
 #+end_src
-\subsection{System of two linear, constant coefficient ODEs}
+*** System of two linear, constant coefficient ODEs
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 166 of 200
@@ -2693,8 +2693,8 @@ map(e +-> rightZero eval(e, [eq1, D(eq1,t), eq2 , D(eq2,t)]), system)
 )clear properties x y
  
 #+end_src
-\section{Operators}
-\subsection{Linear differential operator}
+** Operators
+*** Linear differential operator
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 174 of 200
@@ -2760,7 +2760,7 @@ subst(L(subst(A * sin(z^2), z = x)), x = z)
 --E 180
 
 #+end_src
-\subsection{Truncated Taylor series operator}
+*** Truncated Taylor series operator
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 181 of 200
@@ -2836,7 +2836,7 @@ T(Sin, z, c)
 --E 186
 
 #+end_src
-\section{Programming}
+** Programming
 Write a simple program to compute Legendre polynomials
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2944,8 +2944,8 @@ for i in 0..4 repeat { output(""); _
 )clear properties p pp
 
 #+end_src
-\section{Translation}
-\subsection{Horner's rule}
+** Translation
+*** Horner's rule
 This is important for numerical algorithms
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -2990,8 +2990,8 @@ outputAsFortran('p = p)
 --E 197
 
 #+end_src
-\section{Boolean Logic}
-\subsection{Simplify logical expressions}
+** Boolean Logic
+*** Simplify logical expressions
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 198 of 200

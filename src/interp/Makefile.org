@@ -5,14 +5,14 @@
 #+AUTHOR: Timothy Daly
 #+BEGIN_abstract
 #+END_abstract
-\section{Notes}
+** Notes
 Notes for understanding this makefile:
 
 IMPORTANT: all source file names in this Makefile must be lowercase
 This is for cross-platform compatibility and also makes getting
 them into Lisp much easier at the Makefile level.
 
-\section{The Environment}
+** The Environment
 We define 4 directories for this build. The first three are
 the traditional *IN*, which is where the source pamphlets are,
 *MID* which is where we will put the compiled intermediates and
@@ -303,7 +303,7 @@ exist.
 .PRECIOUS:	${AXIOMSYS}
 
 #+end_src
-\section{Proclaim optimization}
+** Proclaim optimization
 GCL, and possibly other common lisps, can generate much better
 code if the function argument types and return values are proclaimed.
 
@@ -371,7 +371,7 @@ endif
 
 #+end_src
 
-\section{The warm.data file}
+** The warm.data file
 This is a file of commands that will be loaded into interpsys
 at the last minute. It execute functions that will likely be
 used in a running system so all of the required routines will
@@ -402,7 +402,7 @@ ${INT}/algebra/warm.data:
 (setf (gethash '|trignometric| |$topicHash|) 11)
 
 #+end_src
-\section{Building DEPSYS}
+** Building DEPSYS
 The depsys image proceeds all else. it is the compile-time environment
 for all interpreter code. 
 
@@ -426,7 +426,7 @@ file lookup is in conditional lisp code so other lisps will not
 see the file load. The collectfn.lsp code is used by GCL to generate
 the ``.fn'' files which are used to optimize function calling.
 
-\subsection{save depsys image}
+*** save depsys image
 Once the appropriate commands are in the =${OUT}/makedep.lisp= file
 we can load the file into a fresh image and save it. At least that's
 how it used to work. In freebsd we cannot do this so we have to use
@@ -676,7 +676,7 @@ ${DEPSYS}:	${DEP} ${OUT}/sys-pkg.${LISP} ${OUT}/nocompil.${LISP} \
 	@ echo si003 ${DEPSYS} created
 
 #+end_src
-\section{Building SAVESYS and AXIOMSYS}
+** Building SAVESYS and AXIOMSYS
 GCL likes to tell you when it has replaced a function call by a 
 tail-recursive call. This happens when the last form in a function
 is a call to the same function. In general, we don't care so we set
@@ -766,7 +766,7 @@ endif
 
 #+end_src
 
-\section{Building debugsys}
+** Building debugsys
 Note that we assume you've already built interpsys so all of the
 files are known to exist and be up to date. We don't list any of
 the preconditions here. 
@@ -781,7 +781,7 @@ ${DEBUGSYS}: ${MID}/debugsys.lisp
 
 #+end_src
 
-\section{The Interpreter files}
+** The Interpreter files
 
 \subsection{debugsys.lisp [cite:@14]}
 The *debugsys.lisp* file is used to create a *debugsys* runnable image.
@@ -805,27 +805,24 @@ ${MID}/debugsys.lisp: ${IN}/debugsys.lisp.org
 
 #+end_src
 
-\section{The databases}
-\subsection{autoload dependencies}
+** The databases
+*** autoload dependencies
 If you are adding a file which is to be autoloaded the following step
 information is useful. There are 2 cases:
-\begin{enumerate}
-\item adding files to currently autoloaded parts\\
-(as of 2/92: browser old parser and old compiler)
-\item adding new files
-\begin{itemize}
-\item case 1:
-\item [(a)] you have to add the file to the list of files currently there
-(e.g. see BROBJS above)
-\item [(b)] add an autolaod rule
-(e.g. ${AUTO}/parsing.${O}: ${OUT}/parsing.${O})
-\item [(c)] edit util.lisp to add the 'external' function (those that
-should trigger the autoload
-\end{itemize}
-\item case 2:\\
-     build-interpsys (in util.lisp) needs an extra argument for the
-     new autoload things and several functions in util.lisp need hacking.
-\end{enumerate}
+1. adding files to currently autoloaded parts\\
+  (as of 2/92: browser old parser and old compiler)
+2. adding new files
+  - case 1:
+  - [(a)] you have to add the file to the list of files currently there
+    (e.g. see BROBJS above)
+  - [(b)] add an autolaod rule
+    (e.g. ${AUTO}/parsing.${O}: ${OUT}/parsing.${O})
+  - [(c)] edit util.lisp to add the 'external' function (those that
+    should trigger the autoload
+3. case 2:\\
+  build-interpsys (in util.lisp) needs an extra argument for the
+  new autoload things and several functions in util.lisp need hacking.
+
 database.date is a marker file used to force a rebuild of interpsys if the
 database is rebuilt (src/algebra/Makefile).
 #+NAME: databases
@@ -836,7 +833,7 @@ ${OUT}/database.date:
 
 #+end_src
 
-\section{The Makefile}
+** The Makefile
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 

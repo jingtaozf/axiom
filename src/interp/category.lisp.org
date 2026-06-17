@@ -5,7 +5,7 @@
 #+AUTHOR: The Axiom Team
 #+BEGIN_abstract
 #+END_abstract
-\section{Category}
+** Category
 Functions for building categories.
 
 Sorry to say, this hack is needed by isCategoryType
@@ -18,7 +18,7 @@ Sorry to say, this hack is needed by isCategoryType
 (DEFUN |Category| NIL NIL) 
 
 #+end_src
-\subsection{CategoryPrint}
+*** CategoryPrint
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;CategoryPrint(D,$e) ==
@@ -86,7 +86,7 @@ Sorry to say, this hack is needed by isCategoryType
                               ('T (PRETTYPRINT |u|))))))))))))
 
 #+end_src
-\subsection{sigParams}
+*** sigParams
 This code is a performance improvement by Waldek Hebisch.
 The essence of the speedup appears to be caused by two factors.
 The original code was non-recursive and used union across lists.
@@ -213,17 +213,16 @@ It is set in init.lisp.pamphlet.
              |result|)))))
 
 #+end_src
-\subsection{mkCategory}
+*** mkCategory
 This code defines the structure of a category. It creates a new category
 vector. The arguments are:
-\begin{itemize}
-\item domainOrPackage -- ``domain'' or ``package'' which marks the kind
-of category object.
-\item sigList -- list of all signatures
-\item attList -- list of all attributes
-\item domList 
-\item PrincipalAncestor -- principal ancestor (if any)
-\end{itemize}
+- domainOrPackage -- ``domain'' or ``package'' which marks the kind
+  of category object.
+- sigList -- list of all signatures
+- attList -- list of all attributes
+- domList
+- PrincipalAncestor -- principal ancestor (if any)
+
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkCategory(domainOrPackage,sigList,attList,domList,PrincipalAncestor) ==
@@ -440,7 +439,7 @@ of category object.
              |v|)))))
 
 #+end_src
-\subsection{mkOperatorEntry}
+*** mkOperatorEntry
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkOperatorEntry(domainOrPackage,opSig is [op,sig,:flag],pred,count) ==
@@ -484,7 +483,7 @@ of category object.
            (|systemError|
                (CONS '|unknown variable mode: | (CONS |flag| NIL)))))))))
 #+end_src
-\subsection{isCategory}
+*** isCategory
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;isCategory a == REFVECP a and #a>5 and a.3=["Category"]
@@ -494,7 +493,7 @@ of category object.
        (BOOT-EQUAL (ELT |a| 3) (CONS '|Category| NIL))))
 
 #+end_src
-\subsection{DropImplementations}
+*** DropImplementations
 Subsumption code (for operators)
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -524,7 +523,7 @@ Subsumption code (for operators)
           ('T |a|))))))
 
 #+end_src
-\subsection{SigListUnion}
+*** SigListUnion
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;SigListUnion(extra,original) ==
@@ -742,7 +741,7 @@ Subsumption code (for operators)
              |original|)))))
 
 #+end_src
-\subsection{mkOr}
+*** mkOr
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkOr(a,b) ==
@@ -834,7 +833,7 @@ Subsumption code (for operators)
          (COND ((EQL (LENGTH |l|) 1) (CAR |l|)) ('T (CONS 'OR |l|))))))))
 
 #+end_src
-\subsection{mkOr2}
+*** mkOr2
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkOr2(a,b) ==
@@ -897,7 +896,7 @@ Subsumption code (for operators)
              ('T (CONS |a| |b|)))))))
 
 #+end_src
-\subsection{mkAnd}
+*** mkAnd
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAnd(a,b) ==
@@ -969,7 +968,7 @@ Subsumption code (for operators)
          (COND ((EQL (LENGTH |l|) 1) (CAR |l|)) ('T (CONS 'AND |l|))))))))
 
 #+end_src
-\subsection{mkAnd2}
+*** mkAnd2
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAnd2(a,b) ==
@@ -1032,7 +1031,7 @@ Subsumption code (for operators)
              ('T (CONS |a| |b|)))))))
 
 #+end_src
-\subsection{SigListMember}
+*** SigListMember
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;SigListMember(m,list) ==
@@ -1047,7 +1046,7 @@ Subsumption code (for operators)
     ('T (|SigListMember| |m| (CDR LIST)))))
 
 #+end_src
-\subsection{SigEqual}
+*** SigEqual
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;SigEqual([sig1,pred1,:.],[sig2,pred2,:.]) ==
@@ -1066,7 +1065,7 @@ Subsumption code (for operators)
              (|PredImplies| |pred2| |pred1|))))))
 
 #+end_src
-\subsection{PredImplies}
+*** PredImplies
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;PredImplies(a,b) ==
@@ -1081,7 +1080,7 @@ Subsumption code (for operators)
   (COND ((BOOT-EQUAL |a| 'T) 'T) ((BOOT-EQUAL |a| |b|) 'T) ('T NIL)))
 
 #+end_src
-\subsection{SigListOpSubsume}
+*** SigListOpSubsume
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;SigListOpSubsume([[name1,sig1,:.],:.],list) ==
@@ -1123,7 +1122,7 @@ Subsumption code (for operators)
                   (RETURN |ans|)))))))
 
 #+end_src
-\subsection{SigOpsubsume}
+*** SigOpsubsume
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;SigOpsubsume([[name1,sig1,:flag1],pred1,:.],[[name2,sig2,:flag2],pred2,:.]) ==
@@ -1147,7 +1146,7 @@ Subsumption code (for operators)
              (|SourceLevelSubsume| |sig1| |sig2|))))))
 
 #+end_src
-\subsection{SourceLevelSubsume}
+*** SourceLevelSubsume
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;SourceLevelSubsume([out1,:in1],[out2,:in2]) ==
@@ -1188,7 +1187,7 @@ Subsumption code (for operators)
                                       |inarg1|))))))))))))))
 
 #+end_src
-\subsection{SourceLevelSubset}
+*** SourceLevelSubset
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;SourceLevelSubset(a,b) ==
@@ -1222,7 +1221,7 @@ Subsumption code (for operators)
         ('T NIL)))))
 
 #+end_src
-\subsection{MachineLevelSubsume}
+*** MachineLevelSubsume
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;MachineLevelSubsume([name1,[out1,:in1],:flag1],[name2,[out2,:in2],:flag2]) ==
@@ -1270,7 +1269,7 @@ Subsumption code (for operators)
                                       |inarg1|))))))))))))))
 
 #+end_src
-\subsection{MachineLevelSubset}
+*** MachineLevelSubset
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;MachineLevelSubset(a,b) ==
@@ -1316,7 +1315,7 @@ Subsumption code (for operators)
              ('T NIL))))))
 
 #+end_src
-\subsection{FindFundAncs}
+*** FindFundAncs
 Ancestor chasing code
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1436,7 +1435,7 @@ Ancestor chasing code
                     (CONS (CAR |l|) |ans|)))))))))))
 
 #+end_src
-\subsection{CatEval}
+*** CatEval
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;CatEval x ==
@@ -1453,7 +1452,7 @@ Ancestor chasing code
     ('T (CAR (|compMakeCategoryObject| |x| |$e|)))))
 
 #+end_src
-\subsection{AncestorP}
+*** AncestorP
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;AncestorP(xname,leaves) ==
@@ -1478,7 +1477,7 @@ Ancestor chasing code
                               (EXIT (RETURN |y|)))))))))))))
 
 #+end_src
-\subsection{CondAncestorP}
+*** CondAncestorP
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;CondAncestorP(xname,leaves,condition) ==
@@ -1514,7 +1513,7 @@ Ancestor chasing code
                                      (EXIT (RETURN |u'|)))))))))))))))
 
 #+end_src
-\subsection{DescendantP}
+*** DescendantP
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;DescendantP(a,b) ==
@@ -1569,9 +1568,9 @@ Ancestor chasing code
                      ('T NIL)))))))))
 
 #+end_src
-\subsection{JoinInner}
+*** JoinInner
 The implementation of Join
-\subsubsection{hasCategoryBug}
+**** hasCategoryBug
 The hasCategoryBug (bug000001)[cite:@2] manifests itself by causing a
 value stack overflow when compiling algebra code that uses conditions
 that read ``if R has ...'' when using GCL (but not CCL). Essentially
@@ -2384,7 +2383,7 @@ copy.
                  |$NewCatVec|))))))
 
 #+end_src
-\subsection{isCategoryForm}
+*** isCategoryForm
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;isCategoryForm(x,e) ==

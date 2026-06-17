@@ -7,7 +7,7 @@
 We build a couple domains from scratch in order to demonstrate how to build
 Axiom domains using the Axiom compiler.
 #+END_abstract
-\section{Overview}
+** Overview
 
 There are several sections in this tutorial, which is written
 to introduce concepts in Axiom programming, using a step-by-step
@@ -53,13 +53,13 @@ As this is a tutorial, the reader should be aware that we are making
 design choices motivated by simplicity or clarity rather than issues
 of efficiency or generality.
 
-\section{A trivial Axiom program}
+** A trivial Axiom program
 
 We will develop a simple polynomial manipulation program and
 illustrate the various features of the language. By the end of
 this tutorial you should be able to write your own Axiom programs.
 
-\subsection{Some discussion of the Axiom language for the programmer}
+*** Some discussion of the Axiom language for the programmer
 
 These initial comments are intended to give those who are skilled in C
 and C++ an idea of the Axiom language, based on analogy. Those who are
@@ -68,114 +68,113 @@ not C programmers should ignore this section.
 Axiom is a block structured language that is strongly typed. It follows
 a syntactic style similar to C. It has the following simple characteristics:
 
-\begin{itemize}
-\item Printing is done using the *output*.  For example:\\
-\begin{verbatim}
-output "this is a number: "
-\end{verbatim}
-
-\item Printing several items on the same line can by done with the
-*outputList* function. This function takes a list of objects
-and prints them. For example:\\
-\begin{verbatim}
-outputList(["this is a number: ",3])
-\end{verbatim}
-
-\item Assignment uses =:==.  For example:\\
-\begin{verbatim}
-a := 3
-\end{verbatim}
-
-\item The conditional statement has the form: \\
-=if= /condition/ =then= /statement/
-=else= /statement/ \\
-For example: 
-\begin{verbatim}
-if a > 0 then output("positive") else output("negative")
-\end{verbatim}
-
-Note that you must use === instead of ==== for equality.
-
-Note that the =if then else= construct is an expression producing
-a value, as in: 
-\begin{verbatim}
-x := if a = 0 then 1 else 2
-\end{verbatim}
-
-This is the equivalent of the C/C++ expression: 
-\begin{verbatim}
-x = (a == 0 ? 1 : 2)
-\end{verbatim}
-
-\item Iteration may be performed with the =repeat= statement. For
-example: 
-\begin{verbatim}
-for i in 1..10 repeat output(i)
-\end{verbatim}
-
-In Axiom you can iterate over structures in a more elegant and
-abstract fashion than in C, where you normally need to write loops
-which directly access the representation of data structures, or C++,
-where you need to define /friend/ iterator classes. In Axiom every
-domain can provide a /generator/ abstracting the traversal of its
-elements. So, for instance, you can write:
-
-\begin{small}
-\begin{verbatim}
-ls := [1,2,3,4,5]
-for elem in ls repeat output(elem)
-\end{verbatim}
-\end{small}
-
-\item Sequences of statements may be surrounded by braces. For example:
-\begin{small}
-\begin{verbatim}
-{
-  a := 3; 
+- Printing is done using the *output*.  For example:\\
+  \begin{verbatim}
+  output "this is a number: "
+  \end{verbatim}
+  
+- Printing several items on the same line can by done with the
+  *outputList* function. This function takes a list of objects
+  and prints them. For example:\\
+  \begin{verbatim}
+  outputList(["this is a number: ",3])
+  \end{verbatim}
+  
+- Assignment uses =:==.  For example:\\
+  \begin{verbatim}
+  a := 3
+  \end{verbatim}
+  
+- The conditional statement has the form: \\
+  =if= /condition/ =then= /statement/
+  =else= /statement/ \\
+  For example:
+  \begin{verbatim}
+  if a > 0 then output("positive") else output("negative")
+  \end{verbatim}
+  
+  Note that you must use === instead of ==== for equality.
+  
+  Note that the =if then else= construct is an expression producing
+  a value, as in:
+  \begin{verbatim}
+  x := if a = 0 then 1 else 2
+  \end{verbatim}
+  
+  This is the equivalent of the C/C++ expression:
+  \begin{verbatim}
+  x = (a == 0 ? 1 : 2)
+  \end{verbatim}
+  
+- Iteration may be performed with the =repeat= statement. For
+  example:
+  \begin{verbatim}
+  for i in 1..10 repeat output(i)
+  \end{verbatim}
+  
+  In Axiom you can iterate over structures in a more elegant and
+  abstract fashion than in C, where you normally need to write loops
+  which directly access the representation of data structures, or C++,
+  where you need to define /friend/ iterator classes. In Axiom every
+  domain can provide a /generator/ abstracting the traversal of its
+  elements. So, for instance, you can write:
+  
+  \begin{small}
+  \begin{verbatim}
+  ls := [1,2,3,4,5]
+  for elem in ls repeat output(elem)
+  \end{verbatim}
+  \end{small}
+  
+- Sequences of statements may be surrounded by braces. For example:
+  \begin{small}
+  \begin{verbatim}
+  {
+  a := 3;
   if a > 0 then
-          output "positive" 
-  else 
-          output "negative"
-}
-\end{verbatim}
-\end{small}
+  output "positive"
+  else
+  output "negative"
+  }
+  \end{verbatim}
+  \end{small}
+  
+- There is no =main= (unless you want one).
+  Programs are compiled as files. Top level forms (such as *print*)
+  that occur in the file are executed when the (compiled) file is run. The
+  executable version of a file which contains:
+  \begin{small}
+  \begin{verbatim}
+  #include "axllib"
+  print \<\< "hello, world" \<\< newline;
+  \end{verbatim}
+  \end{small}
+  
+  will print \\
+  *hello, world* \\
+  when it is run.
+  This is similar to a ``compiled interpretation language'' like
+  several new versions of Basic.
+  
+- Integers, strings and floating point numbers
+  are not built into the language, but need to be explicitly imported.
+  See the language description for details.
+  
+- domains and categories are similar to the C++ concept of
+  classes and abstract classes.
+  However, functions match /both\// on the types of their arguments
+  and the on types of the results. C++ ignores result types when trying
+  to match function signatures.
+  
+- In contrast to C and C++, which are never indentation sensitive,
+  the Axiom compiler can optionally take account of indentation.
+  Using the =#pile= directive at the top of a file instructs
+  Axiom to consider sequences of statements at the same indentation
+  level as belonging to the same block, when braces are omitted.
+  
 
-\item There is no =main= (unless you want one).
-Programs are compiled as files. Top level forms (such as *print*)
-that occur in the file are executed when the (compiled) file is run. The
-executable version of a file which contains:
-\begin{small}
-\begin{verbatim}
-       #include "axllib"
-       print \<\< "hello, world" \<\< newline;
-\end{verbatim}
-\end{small}
 
-     will print \\
-     *hello, world* \\
-     when it is run.
-     This is similar to a ``compiled interpretation language'' like
-     several new versions of Basic.
-
-\item Integers, strings and floating point numbers
-are not built into the language, but need to be explicitly imported.
-See the language description for details.
-
-\item domains and categories are similar to the C++ concept of
-     classes and abstract classes.
-     However, functions match /both\// on the types of their arguments
-     and the on types of the results. C++ ignores result types when trying 
-     to match function signatures.
-
-\item In contrast to C and C++, which are never indentation sensitive,
-the Axiom compiler can optionally take account of indentation.
-Using the =#pile= directive at the top of a file instructs
-Axiom to consider sequences of statements at the same indentation
-level as belonging to the same block, when braces are omitted.
-
-\end{itemize}
-
-\subsection{Signum - a first function}
+*** Signum - a first function
 
 For the first example we will construct a trivial program to determine
 the sign of its argument (called the *signum* function).
@@ -215,7 +214,7 @@ of our example program is:
 which gives us access to the types *SingleInteger* and *String*, 
 both of which are *Type*s (with a capital *T*).
 
-\subsection{What is a Type?}
+*** What is a Type?
 
 *Type*s (with a capital *T*) are a way to create special kinds
 of new things in the world. Suppose we want a special kind of
@@ -362,9 +361,9 @@ possible cases. They look like:
 \end{verbatim}
 \end{small}
 
-\section{Building an Axiom type}
+** Building an Axiom type
 
-\subsection{ Properties --- a first domain}
+***  Properties --- a first domain
 
 Axiom programs, like C++ programs, are normally developed as objects.
 The idea of an object in these languages is that there exist
@@ -511,7 +510,7 @@ that the functions from *Properties* are in scope. Import allows
 control over which domains we wish to use. There might be many domains
 with the same signature and we wish to choose only one.
 
-\section{A new type: Term - a first representation}
+** A new type: Term - a first representation
 
 {\bf The complete listing for this section is at page 
 [[#FirstTermRepListing][FirstTermRepListing]].}
@@ -569,7 +568,7 @@ Note that this will /not\// allow us to write the polynomial:
 as (2/3) is not a *SingleInteger*. Thus we will need to revisit
 this design decision if we need to divide polynomials.
 
-\subsection{Rep, the representation domain}
+*** Rep, the representation domain
 
 Now that we have made those decisions we need a representation for
 terms.  A *Term* can be stored as a record composed of a
@@ -634,7 +633,7 @@ to get the parts. So the correct form is:
 
 This will (hopefully) become clear as we progress with the example.
 
-\subsection{Importing the Rep}
+*** Importing the Rep
 
 Once we have chosen the representation we must tell the compiler to
 bring the functions related to that representation into the world
@@ -667,7 +666,7 @@ this line /really\// reads (after macro expansion in the compiler):
 This will import operations from the value of =Rep=, which allows
 access to the interior of the object.
 
-\subsection{ Choosing our export list}
+***  Choosing our export list
 
 Another early step in developing a new domain is the choice of
 functions to export. These define the *Type* the user sees. 
@@ -697,7 +696,7 @@ which refers to ``the type being defined''.
 
 Starting with these as the primitive functions we'll develop them one by one.
 
-\subsection{New --- the constructor function}
+*** New --- the constructor function
 
 The function =new= should take the parts of a domain
 representation and construct a new instance of the domain from those
@@ -754,7 +753,7 @@ The magic macro that changes a =Rep= to a =\%= is
 =per=. So the final result of =per([number,variable])= is a 
 *Term*.
 
-\subsection{Dispose! --- destroying an instance }
+*** Dispose! --- destroying an instance 
 
 The function =dispose!= frees up the storage taken up by instances
 of this domain. In this case, we will ignore the storage issues
@@ -855,7 +854,7 @@ This says that we have a function ``*\<\<*'' that takes a
 *TextWriter* and a =\%= (in this case, a *Term*) and returns a
 *TextWriter*.
 
-\subsubsection{The second line}
+**** The second line
 
 We start out with our hands on a *Term* (in the variable called
 *term1*) which we want to print. First we use the form:
@@ -903,7 +902,7 @@ After all of this the first line of the program prints:
 \end{verbatim}
 \end{small}
 
-\subsubsection{The third line}
+**** The third line
 
 The third line of the program calls 
  
@@ -921,7 +920,7 @@ and prints a =*= string. The printed line /now\// looks like:
 \end{verbatim}
 \end{small}
 
-\subsubsection{The fourth line}
+**** The fourth line
 
 Again we need to use
 
@@ -978,7 +977,7 @@ the above signature to the export list and a ``*\<\<*'' function to
 our ``*add* body'' then we can control the way a *Term* is
 printed.
 
-\subsection{Name overloading}
+*** Name overloading
 
 Whew! That is harder to explain than it is to program. However, we are
 using many different ``*\<\<*'' functions and they all have the same
@@ -1004,15 +1003,14 @@ small number of names, or have predefined overloaded operations, but
 do not allow the addition of new operations.  For example, it is
 usually the case that you can write:
 
-\begin{tabular}{llll}
- \    & y=3*4     & which uses & **:(Integer,Integer) -> Integer;* \\
- and  & y=3.0*4.0 & which uses & **:(Float, Float)     -> Float;*   \\
- and  & y=3*4.0   & which uses & **:(Integer, Float)   -> Float;*
-\end{tabular}
+| \ | y=3*4 | which uses | **:(Integer,Integer) -> Integer;* |
+| and | y=3.0*4.0 | which uses | **:(Float, Float)     -> Float;* |
+| and | y=3*4.0 | which uses | **:(Integer, Float)   -> Float;* |
+
 
 but you cannot overload most other function names in other languages.
 
-\subsection{Accessing the representation}
+*** Accessing the representation
 
 Since we have a record of two fields, =coef= and =var=, we'd
 like the world to be able to look inside and access the fields without
@@ -1051,7 +1049,7 @@ that is, =coef= takes a *Term* (verb"term1"), pretends it is a
 *Record*, reaches into the record to get the *var* field (which is
 a *Character*) and returns it.
 
-\subsection{A word about testing}
+*** A word about testing
 
 Every exported function should be tested.  You will notice in the
 examples that follow we try to find boundary cases for all of the
@@ -1082,7 +1080,7 @@ If you compile the file without this compiler switch, you will compile
 the file without the test cases. Running the file will not run the tests.
 Everything between the compiler directives will be commented out.
 
-\subsection{Listing}
+*** Listing
 
 \label{FirstTermRepListing}
 
@@ -1129,12 +1127,12 @@ dispose! term1;
 \end{verbatim}
 \end{small}
 
-\section{A new Type: Polynomial}
+** A new Type: Polynomial
 
 {\bf The complete listing for this section is at page
 [[#PolynomialListing][PolynomialListing]].}
 
-\subsection{Deciding on a representation}
+*** Deciding on a representation
 
 We plan to construct our first polynomial. It will consist of *Term*s
 added together (we will ignore the signs of the terms for now). Since
@@ -1169,7 +1167,7 @@ So we need the lines:
 \end{verbatim}
 \end{small}
 
-\subsection{The type tower --- \\ a closer look at Term}
+*** The type tower --- \\ a closer look at Term
 
 Another important fact is that we've chosen *Array(Term)* as our
 representation.  This assumes that the *Type* constructor 
@@ -1244,7 +1242,7 @@ element. All it has to do is get the two array elements and call
 *Term*, as we have defined it so far, does /not\// implement
 an === function.
 
-\subsection{BasicType}
+*** BasicType
 
 Let's look at *BasicType* for a moment (in *axlcat.as* in
 theAxiom \linebreak *samples/libaxllib* directory --- see
@@ -1291,7 +1289,7 @@ argument /and/ the type of the result are the same.  So, even if
 we have two functions with the same name, it is clear that the rest of
 the signature is different and so they are different.
 
-\subsection{Implementing equality (=) in Term}
+*** Implementing equality (=) in Term
 
 Ultimately, we need to do several things: we need to implement the
 === function for the domain *Term*; we need to define 
@@ -1362,7 +1360,7 @@ they are /not/ equal then the terms cannot be equal and we return
 The fourth line (if we get to it) says that we have passed all of the
 tests so the terms must be equal and we return *true*.
 
-\subsection{Implementing sample in Term}
+*** Implementing sample in Term
 
 The second signature we need to implement is:
 
@@ -1382,7 +1380,7 @@ the domain can rely on specialised properties of the sample, such as
 one-ness or emptyness.  For now, let's return the 0 element. Since the
 variable doesn't matter, we'll use =x=.
 
-\subsection{Fulfilling the contract}
+*** Fulfilling the contract
 
 The next step would be to add both signatures to the export list of
 *Term* --- but it turns out that we don't have to do this. Look
@@ -1474,7 +1472,7 @@ particular, we know that we can compare any two *Term*s for
 equality (because *Term* is a *BasicType* and all 
 *BasicType*s have a definition for equality).
 
-\subsection{Polynomial --- the definition}
+*** Polynomial --- the definition
 
 As usual, we need the minimum functions for a domain:
 
@@ -1519,7 +1517,7 @@ function from the *Term* domain but the =\%= refers to
 \end{verbatim}
 \end{small}
 
-\subsection{Printing --- a digression}
+*** Printing --- a digression
 
 Printing polynomials is a mildly interesting issue. Let's do a step by step
 code development of the ``*\<\<*'' function. 
@@ -1843,7 +1841,7 @@ clearer.
 
 Remember: There is no such thing as a simple job.
 
-\subsection{Polynomial --- a return from printing}
+*** Polynomial --- a return from printing
 
 The accessor functions for a *Polynomial* fall into several cases.
 We would like to be able to access the leading term of the polynomial
@@ -1872,7 +1870,7 @@ the polynomial (referred to as the =degree=):
 This is good enough for a first try at a *Polynomial* type. The
 next example is an implementation of this type.
 
-\subsection{Listing}
+*** Listing
 \label{PolynomialListing}
 
 \begin{small}
@@ -2040,7 +2038,7 @@ print \<\< new(list())@Polynomial \<\< newline; -- true zero polynomial
 \end{verbatim}
 \end{small}
 
-\section{Operations in the Type ``Polynomial''}
+** Operations in the Type ``Polynomial''
 
 {\bf The complete listing for this section is at page
 [[#OpsInPolynomialListing][OpsInPolynomialListing]].}
@@ -2220,7 +2218,7 @@ print \<\< term1 - term1 \<\< newline;
 \end{small}
 %#endif --example5
 
-\subsection{Listing}
+*** Listing
 
 \label{OpsInPolynomialListing}
 
@@ -2425,7 +2423,7 @@ Polynomial: with {
 \end{verbatim}
 \end{small}
 
-\section{Parameterized types}
+** Parameterized types
 
 {\bf The complete listing for this section is at page
 [[#ParamTypesListing][ParamTypesListing]].}
@@ -2638,7 +2636,7 @@ and now it reads:
 \end{verbatim}
 \end{small}
 
-\subsection{Listing}
+*** Listing
 
 \label{ParamTypesListing}
 

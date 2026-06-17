@@ -25,7 +25,7 @@ its directory layout into this tree.
 #+END_abstract
 
 
-\section{Why this book exists}
+** Why this book exists
 
 Three forks descend from the 1992 Axiom: Tim Daly's *Axiom*
 (this repository), *FriCAS*, and *OpenAxiom*. FriCAS and
@@ -48,13 +48,13 @@ Therefore this book is mostly prose. Code chunks appear only where a
 concrete snippet teaches something the prose cannot, and each is
 preceded by the reasoning that motivates it.
 
-\section{What binds Axiom to GCL}
+** What binds Axiom to GCL
 
 Axiom does not ``prefer'' GCL; its entire build architecture is welded to
 the AKCL/GCL family. Five distinct couplings, found by inspecting this
 repository, must each be understood before they can be replaced.
 
-\subsection{The image-dump architecture}
+*** The image-dump architecture
 
 Axiom is built by loading every compiled file into a running Lisp and
 then dumping the live memory image to disk as the *AXIOMsys*
@@ -81,7 +81,7 @@ executable image at all. The ANSI-era replacement is
 executable and folds in the entry point. See the oracle reference in
 Section~\ref{sec:oracle}.
 
-\subsection{The VMLISP portability layer}
+*** The VMLISP portability layer
 
 Axiom is not written directly against ANSI Common Lisp. It is written
 against *VMLISP*, a portability layer inherited from the
@@ -92,7 +92,7 @@ primitives underneath it --- image save, garbage collection, environment
 access, and a foreign-function interface. Most of the port's surface
 area is making VMLISP rest on SBCL instead of on GCL internals.
 
-\subsection{The GCL foreign-function interface}
+*** The GCL foreign-function interface
 
 Axiom reaches into C through GCL's =defentry= and =clines=
 mechanisms. Twenty-three =defentry= bindings exist; by inspection
@@ -107,14 +107,14 @@ expresses the same bindings through =sb-alien= (or CFFI). For a
 filesystem entries are essential; the socket group belongs to HyperDoc
 and may be stubbed initially (Section~\ref{sec:plan}).
 
-\subsection{GCL internal packages}
+*** GCL internal packages
 
 The interpreter calls directly into GCL's private packages:
 =si::= (system internals), =system::=, and
 =compiler::=. Each such call must be mapped to its SBCL
 equivalent or routed through a new shim in the VMLISP layer.
 
-\subsection{A bundled, self-compiled GCL}
+*** A bundled, self-compiled GCL
 
 Finally, GCL is not even an external dependency here: the build patches
 and compiles a specific GCL from source. The selected version is set in
@@ -123,22 +123,21 @@ the top =Makefile= (=GCLVERSION=gcl-2.6.13pre=), and the
 Part of the port is simply deleting this self-compiled-GCL machinery and
 pointing the build at a system SBCL.
 
-\section{The bootstrap chain (Stage 1)}
+** The bootstrap chain (Stage 1)
 
 To know where the couplings of the previous section actually fire, one
 must follow how Axiom builds itself. The chain has three images, each
 built from the previous:
 
-\begin{itemize}
-\item *bootsys* --- the bootstrap of the BOOT translator. BOOT is
+- *bootsys* --- the bootstrap of the BOOT translator. BOOT is
   Axiom's implementation language; it is translated down to Lisp. The
   BOOT-to-Lisp translator must itself run on the host Lisp.
-\item *interpsys* --- the interpreter image, built by loading the
+- *interpsys* --- the interpreter image, built by loading the
   translated interpreter sources into the host Lisp.
-\item *AXIOMsys* --- the final executable, produced when
+- *AXIOMsys* --- the final executable, produced when
   =spad-save= dumps the populated interpreter image
   (Section~2.1).
-\end{itemize}
+
 
 The host Lisp is touched at every hop: the translator runs on it, the
 interpreter is loaded into it, and the final image is dumped by its
@@ -148,7 +147,7 @@ interpreter is loaded into it, and the final image is dumped by its
 the host Lisp are entangled at bootstrap. Mapping each hop onto SBCL is
 the substance of Stage~5 in the plan below.
 
-\section{The OpenAxiom oracle}
+** The OpenAxiom oracle
 \label{sec:oracle}
 
 OpenAxiom already carried this code base onto SBCL, CLISP, ECL and
@@ -184,7 +183,7 @@ correct closed form involving a logarithmic and an arctangent term. This
 gives us a behavioural oracle to compare Axiom's ported output against,
 domain by domain.
 
-\section{The migration plan}
+** The migration plan
 \label{sec:plan}
 
 The guiding principle is /graft, do not rewrite/. The SPAD algebra
@@ -192,14 +191,13 @@ and BOOT interpreter layers are shared ancestry with OpenAxiom and are
 largely host independent once translated; the real work is the host
 layer and the build.
 
-\begin{itemize}
-\item *Stage 0 --- Build the oracle.* Build OpenAxiom on the
+- *Stage 0 --- Build the oracle.* Build OpenAxiom on the
   target platform to obtain a working reference system. /Done/;
   evidence in Section~\ref{sec:oracle} and Section~\ref{sec:gotchas}.
-\item *Stage 1 --- Map the bootstrap.* Document the
+- *Stage 1 --- Map the bootstrap.* Document the
   =bootsys=/=interpsys=/=AXIOMsys= chain and every
   host-Lisp touch point. This chapter (Section~4) is that map.
-\item *Stage 2 --- Host abstraction.* \emph{Done, and smaller
+- *Stage 2 --- Host abstraction.* \emph{Done, and smaller
   than expected.} Inspecting =books/bookvol5.pamphlet= revealed
   that daly's leaf host covers are /already/ conditionalised for
   SBCL: =getenviron= carries \texttt{#+sbcl (sb-ext:posix-getenv
@@ -216,7 +214,7 @@ layer and the build.
   later stages: daly is more SBCL-ready at the leaf than at the
   architecture; the gaps are the image dump (now closed), the foreign
   interface, and the bootstrap internals.
-\item *Stage 3 --- Foreign interface.* \emph{Cfuns done and
+- *Stage 3 --- Foreign interface.* \emph{Cfuns done and
   verified; sockets deferred.} The 23 =defentry= bindings split
   sharply. Five are not really foreign: in =cfuns.lisp.pamphlet=
   GCL supplied =hashString= and =hashCombine= as C compiled
@@ -240,13 +238,13 @@ layer and the build.
   for exactly the irreducibly foreign socket layer and nothing else. The
   rule the files now record: reimplement trivial C in Lisp; reserve
   =sb-alien= for the irreducibly foreign.
-\item *Stage 4 --- Drop bundled GCL.* \emph{Analysed; see
+- *Stage 4 --- Drop bundled GCL.* \emph{Analysed; see
   Section~\ref{sec:stage4}.} Point =bin/lisp= at system SBCL and
   delete the =lspdir= GCL build. The investigation showed this
   cannot be completed independently of Stage 5: the depsys recipe that
   selects the host also calls GCL-only =compiler::= internals, so
   the two stages are one combined effort.
-\item *Stage 5 --- Bootstrap on SBCL.* \emph{Path found; see
+- *Stage 5 --- Bootstrap on SBCL.* \emph{Path found; see
   Section~\ref{sec:stage5}.} Make the BOOT translator and the residual
   =si::=/=compiler::= calls work under SBCL until
   =AXIOMsys= dumps. The depsys recipe is a /reversion/ to its
@@ -256,11 +254,11 @@ layer and the build.
   against the oracle (the =makedep.lisp= file list and the BOOT
   translator on SBCL). This combined Stage~4/5 rewire is the project's
   long pole.
-\item *Stage 6 --- Compile the algebra.* With the interpreter
+- *Stage 6 --- Compile the algebra.* With the interpreter
   alive, compile the SPAD library and confirm basic domains compute.
-\end{itemize}
 
-\section{Stage 4 in detail: replacing the GCL host}
+
+** Stage 4 in detail: replacing the GCL host
 \label{sec:stage4}
 
 Stage 4 is where the port stops being local edits to cover functions and
@@ -269,7 +267,7 @@ Makefiles produced both the substitution plan and an honest surprise:
 Stage 4 cannot be finished without Stage 5, because the same recipe that
 selects the host Lisp also calls GCL-only compiler internals.
 
-\subsection{How the GCL host is built and used}
+*** How the GCL host is built and used
 
 The top =Makefile= (tangled from =books/Makefile.pamphlet=)
 carries the whole GCL apparatus. =GCLVERSION=gcl-2.6.13pre= and
@@ -283,7 +281,7 @@ referred to as =bin/lisp=: in =src/interp/Makefile= both
 so the same GCL image both tangles the literate sources and hosts the
 compile.
 
-\subsection{How the bootstrap drives that host}
+*** How the bootstrap drives that host
 
 The three images are produced by piping a save form into that Lisp. The
 =save depsys image= chunk of =src/interp/Makefile.pamphlet=
@@ -299,7 +297,7 @@ Makefile pipes in is exactly the cover whose =#+:sbcl= arm we
 added. Once =bin/lisp= is SBCL, that arm fires and
 =save-lisp-and-die= writes the image. The cover side is ready.
 
-\subsection{The substitution, and why it is gated on Stage 5}
+*** The substitution, and why it is gated on Stage 5
 
 The intended change is small to state: make =bin/lisp= resolve to
 the system =sbcl= (or a one-line wrapper), and skip the
@@ -320,7 +318,7 @@ SBCL, compare the failure to how OpenAxiom's corresponding Makefile and
 =depsys= equivalent solved it, repeat. This is the long pole of
 the whole project, and it is the next body of work.
 
-\section{Stage 5: rewriting the depsys bootstrap for SBCL}
+** Stage 5: rewriting the depsys bootstrap for SBCL
 \label{sec:stage5}
 
 Reading the =save depsys image= recipe in
@@ -328,7 +326,7 @@ Reading the =save depsys image= recipe in
 problem from daunting into tractable, because the recipe documents its
 own history.
 
-\subsection{What the active recipe actually is (a correction)}
+*** What the active recipe actually is (a correction)
 
 A first reading of this file is misleading, and the correction matters
 enough to record. The prose around the save step shows an elaborate
@@ -358,7 +356,7 @@ reason this subsection exists: in a literate file, what tangles is the
 =\begin{chunk}=, never the surrounding prose, however authoritative
 the prose sounds.
 
-\subsection{Why this makes SBCL close}
+*** Why this makes SBCL close
 
 The simple form is almost host-neutral. =load= and the
 =compile-file= forms that build =makedep.lisp= are standard
@@ -371,7 +369,7 @@ the =boot::restart= top level and exited cleanly. The mechanism
 works; only the build's host-specific variables stand between it and the
 real depsys.
 
-\subsection{The genuine GCL remnants, and what stays open}
+*** The genuine GCL remnants, and what stays open
 
 Three host-specific pieces remain in the depsys path, far fewer than the
 =ld= narrative suggested. =\$\{O\}= is the compiled-object
@@ -389,7 +387,7 @@ the same way: change a variable, build under SBCL, compare the failure to
 OpenAxiom, repeat. The destination is now known; the iteration is the
 long pole.
 
-\subsection{The first cut, taken and verified}
+*** The first cut, taken and verified
 
 The first two of those three remnants are now closed. The top
 =Makefile.pamphlet= gained a =LISPFLAVOR= selector
@@ -413,14 +411,14 @@ What remains open is unchanged: =\$\{PROCLAIMS\}= and the
 depsys/BOOT chain itself, which the next iteration drives by running
 =make LISPFLAVOR=sbcl= onward into =src/interp=.
 
-\section{Build gotchas observed on macOS}
+** Build gotchas observed on macOS
 \label{sec:gotchas}
 
 Building the oracle on Apple Silicon surfaced three traps that will
 recur when Axiom itself is built on this platform. They are recorded
 here so the lesson is not lost.
 
-\subsection{Use the Apple C compiler, not Homebrew's clang}
+*** Use the Apple C compiler, not Homebrew's clang
 
 A Homebrew =clang= earlier in =PATH= cannot link
 executables, failing with =ld: library 'System' not found=,
@@ -429,7 +427,7 @@ told to use Apple's compiler, =CC=/usr/bin/clang=. Axiom's own
 C pieces (=src/lib=, =clef=, the graphics drivers) will
 need the same.
 
-\subsection{HyperDoc is a hard dependency and needs X11}
+*** HyperDoc is a hard dependency and needs X11
 
 One cannot simply skip the HyperDoc help browser: in the build graph the
 interpreter image depends on HyperDoc preprocessing
@@ -442,7 +440,7 @@ default; the location must be supplied explicitly
 For Axiom, the same applies, or HyperDoc must be stubbed wholesale in
 Stage~3.
 
-\subsection{Drive AXIOMsys directly for non-interactive checks}
+*** Drive AXIOMsys directly for non-interactive checks
 
 The =open-axiom= launcher starts a session manager (=sman=)
 that expects a real terminal; feeding it a command file through a pipe
@@ -450,7 +448,7 @@ hangs. For scripted verification, run the raw =AXIOMsys= image
 with the system directory exported and the commands on standard input.
 Axiom's =sman= behaves the same way.
 
-\section{Status: the port runs}
+** Status: the port runs
 
 All stages are complete. =depsys=, =interpsys= and
 =AXIOMsys= build and save under SBCL on Apple Silicon; the full
@@ -459,55 +457,53 @@ algebra compiles (1212 NRLIBs); the interpreter computes end to end ---
 =solve=, =gcd= of large integers, partial fractions, and
 the rest all return correct results.
 
-\subsection{Regression result}
+*** Regression result
 
 Of the 525 runnable =src/input= regression tests (the graphics
 SKIP set excluded), *519 run without a Lisp error* (98.9\%).
 Every failure was a GCL-vs-ANSI divergence; the classes fixed, each
 cross-checked against fricas/open-axiom, were:
 
-\begin{itemize}
-\item *uninitialised vectors* --- GCL's =GETREFV= fills
+- *uninitialised vectors* --- GCL's =GETREFV= fills
   NIL, SBCL's =make-array= fills 0; the 0 in an add-chain slot
   built a self-referencing domain (infinite method lookup). Added
   =:initial-element nil= (open-axiom =newShell=).
-\item *lenient car/cdr* --- BOOT's =is= pattern was
+- *lenient car/cdr* --- BOOT's =is= pattern was
   hand-compiled to raw =(car x)= that crashes on an atom on
   SBCL. Restored with daly's own =eqcar=/=ifcar=/%
   =ifcdr= safe-accessor macros.
-\item *CLtL1 funcallable lambda-lists* --- \texttt{(funcall
+- *CLtL1 funcallable lambda-lists* --- \texttt{(funcall
   '(lambda ...) x)} needs =COERCE ... 'FUNCTION= on SBCL.
-\item *(character n)* on an integer, *(string pathname)*,
+- *(character n)* on an integer, *(string pathname)*,
   *(probe-file symbol)*, *(namestring nil)*,
   *open(:output) on a directory*, *(pathname-type nil)*
   --- ANSI rejects designators GCL accepted; coerced or guarded each.
-\item *unbound specials* (=\$indexList=,
+- *unbound specials* (=\$indexList=,
   =getMsgFTTag=) --- =defvar= to nil.
-\item *printing self-referential domain vectors* ---
+- *printing self-referential domain vectors* ---
   =*print-circle* t=.
-\item *improper-list display message*, \textbf{nil output
+- *improper-list display message*, \textbf{nil output
   stream}, *latin-1 pamphlet decoding in the tangler*.
-\end{itemize}
 
-\subsection{The remaining six: not portable here}
+
+*** The remaining six: not portable here
 
 The last six are not SBCL-port defects and cannot pass in a headless
 SBCL tree:
 
-\begin{itemize}
-\item =graphviz= --- shells out to the =dot= binary.
-\item =herm= --- =)library herm= loads a prebuilt
+- =graphviz= --- shells out to the =dot= binary.
+- =herm= --- =)library herm= loads a prebuilt
   library file absent from the tree.
-\item =monitortest=, =newtonlisp= --- load external files
+- =monitortest=, =newtonlisp= --- load external files
   (e.g. =funcall.o=) the test never builds.
-\item =unittest2= --- reads a chain of GCL compiler internals
+- =unittest2= --- reads a chain of GCL compiler internals
   (=compiler::*compile-verbose*=,
   =*suppress-compiler-notes*=, ...) whose expected output is
   GCL's own values.
-\item =unittest4= --- =)lisp (trace ...)= then prints
+- =unittest4= --- =)lisp (trace ...)= then prints
   domain-vector arguments; SBCL's tracer recurses on the deep
   structure.
-\end{itemize}
+
 
 The socket layer is stubbed (no-op) rather than built, so =draw=
 returns a viewport object without a live viewport manager; wiring the

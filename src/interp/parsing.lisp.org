@@ -11,39 +11,38 @@
 (in-package "BOOT")
 
 #+end_src
-\chapter{META/LISP Parser Generator and Lexical Analysis Utilities (Parsing)}
-\subsection{Stack}
-\subsection{Token}
-\subsection{Reduction}
-\section{Recursive descent parsing support routines}
-\subsection{Stacking and retrieving reductions of rules.}
+* META/LISP Parser Generator and Lexical Analysis Utilities (Parsing)
+*** Stack
+*** Token
+*** Reduction
+** Recursive descent parsing support routines
+*** Stacking and retrieving reductions of rules.
 ;(defmacro sequence (subrules &optional (actions nil))
 ;  `(and ,(pop subrules) .
 ;        ,(append (mapcar #'(lambda (x) (list 'must x)) subrules)
 ;                   (if actions `((progn . ,(append actions '(t))))))))
-\section{Routines for handling lexical scanning}
+** Routines for handling lexical scanning
 Lexical scanning of tokens is performed off of the current line.  No
 token can span more than 1 line.  All real I/O is handled in a line-oriented
 fashion (in a slight paradox) below the character level.  All character
 routines implicitly assume the parameter Current-Line.  We do not make
 Current-Line an explicit optional parameter for reasons of efficiency.
-\subsection{Manipulating the token stack and reading tokens}
+*** Manipulating the token stack and reading tokens
 This section is broken up into 3 levels:
-\begin{itemize}
-\item String grabbing:    Match String, Match Advance String
-\item Token handling:     Current Token, Next Token, Advance Token
-\item Character handling: Current Char, Next Char, Advance Char
-\item Line handling:      Next Line, Print Next Line
-\item Random Stuff
-\end{itemize}
-\subsubsection{Token handling}
+- String grabbing:    Match String, Match Advance String
+- Token handling:     Current Token, Next Token, Advance Token
+- Character handling: Current Char, Next Char, Advance Char
+- Line handling:      Next Line, Print Next Line
+- Random Stuff
+
+**** Token handling
 Tokens are acquired from a stream of characters.  Lexical analysis is performed
 by the functiond Get Token. One-token lookahead is maintained in variables
 Current-Token and Next-Token by procedures Current Token, Next Token, and
 Advance Token. The functions Match Current Token and Match Next Token recognize
 classes of tokens, by type, or by type and symbol.  The current and next tokens
 can be shoved back on the input stream (to the current line) with Unget-Tokens.
-\subsubsection{Line handling}
+**** Line handling
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -65,7 +64,7 @@ can be shoved back on the input stream (to the current line) with Unget-Tokens.
 
 #+end_src
 
-\subsection{Error handling}
+*** Error handling
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 (defparameter errcol nil)
@@ -108,7 +107,7 @@ top
 (defparameter Meta_Errors_Occurred nil  "Did any errors occur")
 
 #+end_src
-\subsection{Constructing parsing procedures}
+*** Constructing parsing procedures
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 (eval-when (eval load)
@@ -252,7 +251,7 @@ top
     (return (nth (1- n) /gensymlist))))))
 
 #+end_src
-\subsection{Managing rule sets}
+*** Managing rule sets
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 (defparameter bac nil)
@@ -284,7 +283,7 @@ top
   (if unpfx-funlist (list pfx-funlist unpfx-funlist))))
 
 #+end_src
-\section{Tracing routines}
+** Tracing routines
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 (defparameter debugmode 'yes "Can be either YES or NO")
@@ -335,7 +334,7 @@ top
    ((/mdef u)))))
 
 #+end_src
-\section{Routines for inspecting and resetting total I/O system state}
+** Routines for inspecting and resetting total I/O system state
 
 bootlex
 #+NAME: *

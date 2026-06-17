@@ -2,8 +2,8 @@
 #+LATEX: \newcommand{\VolumeName}{Volume 10: Axiom Algebra: Implementation}
 #+LATEX: \input{bookheader.tex}
 #+LATEX: \setcounter{chapter}{0} % Chapter 1
-\chapter{The Algebra Makefile}
-\section{Adding new algebra}
+* The Algebra Makefile
+** Adding new algebra
 This is a complex process by its very nature. Developers and Maintainers
 who undertake the process need to understand quite a lot of detail. The
 ultimate steps to add algebra are tedious but simple. Note that only
@@ -59,7 +59,7 @@ steps in the process of adding this file are:
 4. Add the algebra to the books
 
 
-\section{Adding the algebra to the proper book}
+** Adding the algebra to the proper book
 The algebra sources are in 4 books:
 - bookvol10.2 == Category
 - bookvol10.3 == Domain
@@ -68,19 +68,19 @@ The algebra sources are in 4 books:
 
 The algebra in these files is structured slightly differently for each
 one. Follow the directions for the kind of algebra you are adding.
-\subsection{Adding a Category}
-\subsection{Adding a Domain}
+*** Adding a Category
+*** Adding a Domain
 In the Domains book we see that each domain is in alphabetic order by
 the *full domain name*, not by the abbreviation. So for BSD we see
 several parts. 
-\subsubsection{The section separator}
+**** The section separator
 This gives a visual and logical separation for each domain. 
 \begin{verbatim}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{domain BSD BasicStochasticDifferential}
+** domain BSD BasicStochasticDifferential
 \end{verbatim}
 
-\subsubsection{The input section}
+**** The input section
 This is a standard input file format. It will be extracted from the book
 during the testing process so we can keep the test cases with the domain.
 The --R lines are the commented output of actually running the functions.
@@ -112,7 +112,7 @@ You can create this file by:
   - add the contents of bsdtest.input to the algebra file
 
 
-\subsubsection{The input section}
+**** The input section
 Here we use BasicStochasticDifferential.output to create a set of test
 cases. These are automatically extracted as part of the build process
 by the function ``makeInputFiles''. This function is in the tangle.lisp file.
@@ -147,7 +147,7 @@ g := gcd(p, q)
 
 \end{verbatim}
 
-\subsubsection{The help section}
+**** The help section
 This section becomes a help file in the distributed Axiom system.
 This section is automatically extracted as part of the build process
 by the function ``makeHelpFiles''. This function is in the tangle.lisp file.
@@ -187,7 +187,7 @@ o )show BasicStochasticDifferential
 end{chunk}
 \end{verbatim}
 
-\subsubsection{The pagehead section}
+**** The pagehead section
 Next we create the format information for the book itself. This will
 control the display of the new algebra in the book. The ``pagehead''
 macro formats a new section for this algebra and adds it to the proper
@@ -209,30 +209,28 @@ graph. There can be multiple pagefrom macros.
 Together these two macros, pageto and pagefrom, allow the user to 
 follow the thread of domains in the PDF documentation.
 \begin{verbatim}
-\pagehead{BasicStochasticDifferential}{BSD}
-\pagepic{ps/v103basicstochasticdifferential.ps}{BSD}{1.00}
+** BasicStochasticDifferential
 *See*\\
-\pageto{HexadecimalExpansion}{HEXADEC}
+[[HEXADEC][HexadecimalExpansion]]
 \end{verbatim}
 
-\subsubsection{The Exports section}
+**** The Exports section
 This shows the same information as the ``)show'' function in a running
 Axiom. The ``cross'' macro adds information to the index to cross reference
 the domain and the functions.
 \begin{verbatim}
 *Exports:*\\
-\begin{tabular}{lll}
-\cross{BSD}{0} &
-\cross{BSD}{1} &
-\cross{BSD}{abs} \\
-\cross{BSD}{associates?} &
-\cross{BSD}{binary} &
-\cross{BSD}{ceiling} \\
-\cross{BSD}{characteristic} 
-\end{tabular}
+| [[0][BSD]] |  |
+| [[1][BSD]] |  |
+[[abs][BSD]] \\
+| [[associates?][BSD]] |  |
+| [[binary][BSD]] |  |
+[[ceiling][BSD]] \\
+[[characteristic][BSD]] 
+
 \end{verbatim}
 
-\subsubsection{The Code section}
+**** The Code section
 This is the actual algebra. Note that the ``++'' comments from the 
 description section are available at runtime using the ``)describe''
 command. They have certain format limitations so be sure to check
@@ -345,7 +343,7 @@ BasicStochasticDifferential(): Category == Implementation where
   getSmgl(ds:%):Union(Symbol,"failed") == tableBSD(ds)
 \end{verbatim}
 
-\subsubsection{The dotabb section}
+**** The dotabb section
 This section is used to create the ``ps/v103basicstochasticdifferential.ps''
 graph image used above. The actual code used is kept here so we can modify
 or reproduce the result. The first line is the current domain. The second
@@ -404,10 +402,10 @@ So we add the line:
    (|BasicStochasticDifferential| . BSD)
 \end{verbatim}
 
-\subsection{Adding a Package}
-\subsection{Adding Numerics}
+*** Adding a Package
+*** Adding Numerics
 
-\section{Rebuilding the algebra from scratch}
+** Rebuilding the algebra from scratch
 Compile order is important. Here we try to define the ordered lattice
 of spad file dependencies. However this is, in reality, a graph rather
 than a lattice. In order to break cycles in this graph we explicitly
@@ -443,8 +441,8 @@ lattice in this fashion adding layers. Note that at layer 3 this
 process runs into cycles and we create the ``layer 3 bootstrap''
 stanzas before continuing upward.
 
-\section{The Algebra Lattice Layers}
-\subsection{Layer 0 Bootstrap}
+** The Algebra Lattice Layers
+*** Layer 0 Bootstrap
 The easiest way to find out where a spad file lives in the hierarchy
 is to create the following script (called 'show'):
 \begin{verbatim}
@@ -480,7 +478,7 @@ digraph pic {
 
 #+end_src
 
-\subsubsection{Completed spad files}
+**** Completed spad files
 Note well that none of the algebra stanzas should include these
 files in the preconditions otherwise we have an infinite compile
 loop. These files are originally bootstrapped from lisp code
@@ -565,7 +563,7 @@ LAYER0COPY=\
   layer0copy
 
 #+end_src
-\subsection{Layer 0}
+*** Layer 0
 Depends on: Category Domain Package Bootstrap\\
 Used by next layer: BASTYPE CFCAT KOERCE KONVERT TYPE
 #+NAME: layer0
@@ -746,7 +744,7 @@ LAYER0=\
 "TYPE"  -> "Category"
 
 #+end_src
-\subsection{Layer 1}
+*** Layer 1
 Depends on: BASTYPE CFCAT KOERCE KONVERT TYPE\\
 Used by next layer: AGG ELTAGG FINITE FORTCAT IDPC IEVALAB LMODULE 
 MONAD ORDSET PATMAB RETRACT RMODULE SGROUP 
@@ -1243,7 +1241,7 @@ LAYER1=\
 /*"YSTREAM" -> {"INT"; "SINT"; "NNI"}*/
 
 #+end_src
-\subsection{Layer 2}
+*** Layer 2
 Depends on: AGG ELTAGG FINITE FORTCAT IDPC IEVALAB LMODULE MONAD ORDSET 
 PATMAB RETRACT RMODULE SGROUP SETCATD \\
 Used by next layer: BMODULE CACHSET ELEMFUN EVALAB GROUP IXAGG MONADWU NARNG 
@@ -1705,7 +1703,7 @@ LAYER2=\
 "UP2" -> "LMODULE/SGROUP"
 
 #+end_src
-\subsection{Layer 3}
+*** Layer 3
 Depends on: BMODULE CACHSET ELEMFUN EVALAB GROUP IXAGG MONADWU NARNG 
 OASGP PDRING\\
 Used by next layer: BGAGG BRAGG ELAGG- GRMOD MODULE OAMON 
@@ -1955,7 +1953,7 @@ LAYER3=\
 /*"ZMOD" -> {"PI"; "NNI"; "INS-"; "EUCDOM-"}*/
 
 #+end_src
-\subsection{Layer 4}
+*** Layer 4
 Depends on: BGAGG BRAGG ELAGG- GRMOD MODULE OAMON \\
 Used by next layer: ALGEBRA ALGEBRA- BTCAT OCAMON QUAGG SKAGG
 #+NAME: layer4
@@ -2061,7 +2059,7 @@ LAYER4=\
 /*"SKAGG" -> {"EVALAB"; "IEVALAB"}*/
 
 #+end_src
-\subsection{Layer 5}
+*** Layer 5
 Depends on: ALGEBRA ALGEBRA- BTCAT OCAMON QUAGG SKAGG\\
 Used by next layer: MLO OAGROUP OAMONS PID XALG
 
@@ -2227,7 +2225,7 @@ LAYER5=\
 /*"XALG" -> "MODULE"*/
 
 #+end_src
-\subsection{Layer6}
+*** Layer6
 Depends on: MLO OAGROUP OAMONS PID XALG\\
 Used by next layer: AMR FIELD FIELD- FLAGG FLAGG- FRETRCT PADICCT RADCAT 
 XFALG
@@ -2742,7 +2740,7 @@ LAYER6=\
 /*"ZLINDEP" -> {"PATMAB"; "CFCAT"; "REAL"; "CHARZ"; "STEP"; "OM"}*/
 
 #+end_src
-\subsection{Layer7}
+*** Layer7
 Depends on: AMR FIELD FIELD- FLAGG FLAGG- FRETRCT PADICCT RADCAT XFALG \\
 Used by next layer: A1AGG A1AGG- ARR2CAT FAMR FPC LIECAT LZSTAGG OREPCAT PSCAT 
 TRANFUN VSPACE XPOLYC
@@ -4179,7 +4177,7 @@ LAYER7=\
 /*"XPR" -> "DIVRING"*/
 
 #+end_src
-\subsection{Layer8}
+*** Layer8
 Depends on: A1AGG A1AGG- ARR2CAT FAMR FPC LIECAT LZSTAGG OREPCAT PSCAT 
 TRANFUN VSPACE XPOLYC PACPERC\\
 Used by next layer: BTAGG FLALG MATCAT SRAGG VECTCAT 
@@ -4991,7 +4989,7 @@ LAYER8=\
 /*"XRPOLY" -> {"CLAGG"; "KONVERT"; "FLAGG"; "ELAGG"; "OM"}*/
 
 #+end_src
-\subsection{Layer9}
+*** Layer9
 Depends on: BTAGG FLALG LODOCAT MATCAT SRAGG VECTCAT XF PROJSP PACFFC\\
 Used by next layer: IVECTOR PTCAT STRICAT 
 #+NAME: layer9
@@ -5297,7 +5295,7 @@ LAYER9=\
 /*"U32MAT" -> {"ELTAGG"; "ELTAB"; "CLAGG"; "INT"; "OM"; "FIELD"; "DIVRING"}*/
 
 #+end_src
-\subsection{Layer10}
+*** Layer10
 Depends on: IVECTOR PTCAT STRICAT LOCPOWC\\
 Used by next layer: DIRPCAT FAXF PFECAT STRING
 #+NAME: layer10
@@ -5957,7 +5955,7 @@ LAYER10=\
 /*"VECTOR2" -> {"ELAGG"; "OM"; "ILIST"}*/
 
 #+end_src
-\subsection{Layer11}
+*** Layer11
 Depends on: DIRPCAT FAXF PFECAT STRING LOP\\
 Used by next layer: DIOPS DPOLCAT FINRALG FRAC RMATCAT RRCC UPXSCAT
 #+NAME: layer11
@@ -9693,7 +9691,7 @@ LAYER11=\
 /*"WP" -> {"BASTYPE-"; "NNI"; "BOOLEAN"; "FIELD"; "EUCDOM"; "PID"; "DIVRING"}*/
 
 #+end_src
-\subsection{Layer12}
+*** Layer12
 Depends on: DIOPS DPOLCAT FINRALG FRAC RMATCAT RRCC UPXSCAT FFSQFR PACRATC
 PLPKCRV\\
 Used by next layer: DIAGG FRAMALG MDAGG SMATCAT UPXSCCA
@@ -10088,7 +10086,7 @@ LAYER12=\
 /*"UPXSCCA-" -> {"GCDDOM";  "UFD";  "DIVRING";  "RETRACT";  "ULSCAT"}*/
 
 #+end_src
-\subsection{Layer13}
+*** Layer13
 Depends on: DIAGG FRAMALG MDAGG SMATCAT UPXSCCA RFP\\
 Used by next layer: FSAGG KDAGG MSETAGG MONOGEN
 #+NAME: layer13
@@ -10367,7 +10365,7 @@ LAYER13=\
 /*"NFINTBAS" -> {"CLAGG"; "LIST"; "ILIST"; "PI"; "NNI"; "INS-"; "EUCDOM-"}*/
 
 #+end_src
-\subsection{Layer14}
+*** Layer14
 Depends on: FSAGG KDAGG MSETAGG MONOGEN\\
 Used by next layer: TBAGG
 #+NAME: layer14
@@ -10818,7 +10816,7 @@ LAYER14=\
 "WFFINTBS" -> "MONOGEN"
 
 #+end_src
-\subsection{Layer15}
+*** Layer15
 Depends on: TBAGG\\
 Used by next layer: ALIST
 #+NAME: layer15
@@ -11040,7 +11038,7 @@ LAYER15=\
 /*"TBCMPPK" -> "ELTAB"*/
 
 #+end_src
-\subsection{Layer16}
+*** Layer16
 Depends on: ALIST\\
 Used by next layer: ACF COMPCAT FFCAT FRNAALG FS OC QUATCAT RPOLCAT UTSCAT 
 #+NAME: layer16
@@ -13097,7 +13095,7 @@ LAYER16=\
 /*"VARIABLE" -> "BOOLEAN"*/
 
 #+end_src
-\subsection{Layer17}
+*** Layer17
 Depends on: ACF COMPCAT FFCAT FRNAALG FS OC QUATCAT RPOLCAT UTSCAT NSDPS \\
 Used by next layer: ACFS EXPRSOL FDIVCAT UFPS ULSCCAT UTSSOL 
 
@@ -15892,7 +15890,7 @@ LAYER17=\
 /*"WUTSET" -> {"SETCAT-"; "BASTYPE-"; "FINITE"}*/
 
 #+end_src
-\subsection{Layer18}
+*** Layer18
 Depends on: ACFS EXPRSOL FDIVCAT RSETCAT UFPS ULSCCAT UTSSOL 
 Used in next layer: EXPRSOL SFRTCAT CELL
 #+NAME: layer18
@@ -16744,7 +16742,7 @@ LAYER18=\
 /*"UTSZ" -> {"ACF"; "FS"; "ES"; "FRETRCT"; "GROUP"; "ILIST"; "OAMONS"}*/
 
 #+end_src
-\subsection{Layer19}
+*** Layer19
 Depends on: EXPRSOL SFRTCAT FACTEXT INTDIVP DTP\\
 Next layer depends on: RECOP
 #+NAME: layer19
@@ -17000,7 +16998,7 @@ LAYER19=\
 /*"ZDSOLVE" -> {"ELAGG"; "OM"; "LNAGG-"; "RCAGG-"; "IXAGG-"; "CLAGG-"*/
 
 #+end_src
-\subsection{Layer20}
+*** Layer20
 Depends on: RECOP
 Next layer depends on: GUESS
 #+NAME: layer20
@@ -17067,7 +17065,7 @@ LAYER20=\
 /*"INFCLSPT" -> {"PRIMARR"; "A1AGG-"; "ISTRING"; "SRAGG-"}*/
 
 #+end_src
-\subsection{Layer21}
+*** Layer21
 Depends on: GUESS
 Next layer depends on: GUESSF1 INFCLSPT 
 #+NAME: layer21
@@ -17181,7 +17179,7 @@ LAYER21=\
 /*"ICP" -> {"ELAGG-"; "URAGG-"}*/
 
 #+end_src
-\subsection{Layer22}
+*** Layer22
 Depends on: GUESSF1
 #+NAME: layer22
 #+begin_src common-lisp :noweb yes
@@ -17232,7 +17230,7 @@ LAYER22=\
 /*"INFCLSPS" -> {"FLAGG-"; "LNAGG-"; "LSAGG-"; "STAGG-"; "ELAGG-"; "URAGG-"}*/
 
 #+end_src
-\subsection{Layer23}
+*** Layer23
 Depends on: INFCLSPS
 
 Note that PAFF and PAFFFF form clique2.spad. Each one depends on the other.
@@ -17289,7 +17287,7 @@ LAYER23=\
 /*"PAFF" -> {"STEP"; "PI"; "NNI"; "BOOLEAN"}*/
 
 #+end_src
-\subsection{Order}
+*** Order
 The final order of the layers is determined here. The GUESS package
 is broken so we remove the layers involved until this can be resolved.
 #+NAME: order
@@ -17310,7 +17308,7 @@ ORDER=\
   ${LAYER16}  ${LAYER17} ${LAYER18} ${LAYER19} ${LAYER0COPY}
 
 \end{verbatim}
-\section{Cliques}
+** Cliques
 The algebra code sometimes have circular references. The compiler can
 resolve these references directly if all of the required sources
 are in the same source file.
@@ -17377,7 +17375,7 @@ ${MID}/EXPR.nrlib/code.o: ${MID}/EXPR.spad
 	@ cp ${MID}/EXPR.nrlib/code.o ${OUT}/EXPR.o
 	
 #+end_src
-\section{Broken Files}
+** Broken Files
 These files are Aldor files
 \begin{verbatim}
 axtimer.as Timer
@@ -17399,8 +17397,8 @@ These domains are referenced but don't exist
 OBJECT
 \end{verbatim}
 
-\section{The Environment}
-\subsection{The working directories}
+** The Environment
+*** The working directories
 We define 5 directories for this build. The*IN* directory
 contains the pamphlet files for the algebra. These are expanded
 into the*MID* directory as either .spad or .as files. The
@@ -17433,7 +17431,7 @@ BOOKSRC=${SPD}/books/bookvol5.pamphlet
 BOOKS=${SPD}/books
 
 #+end_src
-\subsection{The depsys variable}
+*** The depsys variable
 The *depsys* image is the compile-time environment for boot and lisp
 files.
 
@@ -17443,7 +17441,7 @@ files.
 DEPSYS=${OBJ}/${SYS}/bin/depsys
 
 #+end_src
-\subsection{The interpsys variable}
+*** The interpsys variable
 The *interpsys* image is the compile-time environment for algebra
 files.
 
@@ -17453,7 +17451,7 @@ files.
 INTERPSYS?=${OBJ}/${SYS}/bin/interpsys
 
 #+end_src
-\subsection{The shell variable}
+*** The shell variable
 We use the ``-e'' flag to echo which is not supported by the ``sh''
 shell but is supported by ``bash''. The ``-e'' flag to echo causes
 it to interpret special characters, in our case newlines.
@@ -17464,7 +17462,7 @@ it to interpret special characters, in our case newlines.
 SHELL=bash
 
 #+end_src
-\section{The Makefile Stanzas}
+** The Makefile Stanzas
 A spad pamphlet can contain many Axiom categories, domains, and
 packages. 
 
@@ -17567,7 +17565,7 @@ IF (you have a default spad domain (it generates ``-'' files)) AND
  THEN use the 9 stanza form explained above (see TSETCAT)
 \end{verbatim}
 
-\section{Generic Make Rules}
+** Generic Make Rules
 The idea is to use generic rules to try to cut down the size of this file.
 
 This Makefile works very hard to cache
@@ -17677,7 +17675,7 @@ ${DOC}/ps: ${SRC}/doc/ps
 
 #+end_src
 
-\section{Pamphlet file structure}
+** Pamphlet file structure
 Because the individual .spad files are grouped into higher-level
 algebra pamphlet files, the rules for extracting them are coded
 below as simple ``awk'' scripts that are called when the Makefile
@@ -17701,7 +17699,7 @@ Second, there are 3 ``types'' of algebra which are all treated
 the same at compile time, namely the ``domain'', ``category'', and
 ``package'' algebra.
 
-\subsection{Finding the algebra code}
+*** Finding the algebra code
 Step 1 is to scan all of the algebra pamphlet files for the
 chunk names which contain the string "domain", "package", or
 "category". This is done using grep -E (same as egrep, which
@@ -17729,7 +17727,7 @@ The results are sorted and made unique.
 
 Step 2 is an awk command line.
 
-\subsection{Write the Makefile stanzas for the algebra files}
+*** Write the Makefile stanzas for the algebra files
 
 #+NAME: findSpadFiles
 #+begin_src common-lisp :noweb yes
@@ -17810,7 +17808,7 @@ ${MID}/LEXTRIPK.spad: ${IN}/bookvol10.3.pamphlet
     echo '(tangle "bookvol10.4.pamphlet" "package LEXTRIPK LexTrianglularPackage" "LEXTRIPK.spad")' | ${LISPTANGLE}
 \end{verbatim}
 
-\subsection{Find the algebra bootstrap code}
+*** Find the algebra bootstrap code
 Step 3 works like step 1 above except that we are looking for
 chunk names that have the "BOOTSTRAP" string. The output will look like:
 \begin{verbatim}
@@ -17819,7 +17817,7 @@ bookvol10.3.pamphlet:begin{chunk}{VECTOR.lsp BOOTSTRAP}
 This output, which can consist of many lines per input file is piped
 into ``awk''.
 
-\subsection{Write the Makefile stanzas for the bootstrap files}
+*** Write the Makefile stanzas for the bootstrap files
 For each of the above output lines we run an ``grep'' command:
 
 #+NAME: findBootstrapFiles
@@ -17870,7 +17868,7 @@ the input file src/algebra/vector.spad.pamphlet
 The second line calls the lisp ``tangle'' to extract the required chunk
 from the source file.
 
-\section{Stage markers}
+** Stage markers
 We output these as each stage completes.
 #+NAME: stages
 #+begin_src common-lisp :noweb yes
@@ -18011,7 +18009,7 @@ layer24done:
 	@ echo =======================================
 
 #+end_src
-\subsection{Regression testing}
+*** Regression testing
 
 There is a Makefile variable called REGRESS in the algebra Makefile:
 \begin{verbatim}
@@ -19252,7 +19250,7 @@ finish:
 	@ echo =================================================
 
 #+end_src
-\section{The Makefile}
+** The Makefile
 
 #+NAME: Makefile
 #+begin_src common-lisp :noweb yes
@@ -19376,13 +19374,13 @@ clean:
 
 #+end_src
 
-\chapter{Algebra Background}
+* Algebra Background
 \begin{center}
 [[ps/sweeney.eps]]\\
 "source: Kaisler[cite:@Kais09] Complex Adaptive Systems"
 \end{center}
 
-\section{How NAG Libraries were used}
+** How NAG Libraries were used
 
 Based on our experiences with IRENA, we decided to use generic
 inter-process communication tools for the link to AXIOM. This has the
@@ -19435,11 +19433,11 @@ By transmitting source code for ASPs we allow the remote Fortran
 compiler to take care of low-level portability problems.
 
 
-\section{Algebraic Function Fields and Algebraic Geometry}
+** Algebraic Function Fields and Algebraic Geometry
 Axiom implements the PAFF package by Hache[cite:@Hach95] which deals
 with algebraic geometry codes.
 
-\subsection{The Genus of a Plane Curve}
+*** The Genus of a Plane Curve
 From Doctor Vogler[cite:@Vogl07] and Walker[cite:@Walk78]:
 
 Computing the genus of a curve defined by one equation is a
@@ -19806,7 +19804,7 @@ rational maps when you get zeros in the denominator (that is, in
 describing the ``funny things'' that happen).  But I won't get into this
 here, and will instead only recommend that you read Walker's book.
 
-\subsection{Algebraic Curves with PAFF}
+*** Algebraic Curves with PAFF
 
 This example compute the genus of the projective plane curve defined by
 \begin{verbatim}
@@ -20112,7 +20110,7 @@ we should have
                                                                 Type: Boolean
 \end{verbatim}
 
-\subsection{Algebraic Curves with PAFFFF}
+*** Algebraic Curves with PAFFFF
 
 This example is to show how to compute the generator matrix
 of an algebraic geometric code (AG-codes, or geometric Goppa code).
@@ -20692,12 +20690,12 @@ intersectionDivisor(g1)$P - intersectionDivisor(g0)$P + D
 
 \end{verbatim}
 
-\section{Groebner Basis}
+** Groebner Basis
 Given a set of polynomials we'd like to find a 'basis set' (think
 of the $x-y$ axis in some polynomial space) that is, in some sense,
 an easier set to use.
 
-\subsection{How To Compute A Groebner Basis}
+*** How To Compute A Groebner Basis
 
 From Verschelde[cite:@Vers16] and Norman[cite:@Normxx] we have the
 algorithm for computing a Groebner Basis.
@@ -20782,7 +20780,7 @@ same operation. Once all of the elements are processed the Groebner
 basis is minimal (but not unique). Fixing the monomial order will
 guarantee a unique reduced Groebner basis.
 
-\subsection{Monomial Ordering}
+*** Monomial Ordering
 Four common monomial orderings are Lexicographic (dictionary),
 Degree Lexicographic, Reverse Lexicographic, and
 Degree Reverse Lexicographic.[cite:@Coxx07]
@@ -20823,7 +20821,7 @@ with respect to Revlex.
 Sorting $f$ in Degree Reverse Lexicographic order (Degrevlex) we see
 \[f = 4xy^2z + 7x^2z^2 = 5x^3 +4z^2\]
 
-\subsection{Variable Ordering}
+*** Variable Ordering
 Each monomial ordering depends *on the ordering of the variables*.
 For instance, Lex with the ordering $x > y > z$ is a different ordering
 than Lex with $y > x > z$. In the above examples, we order
@@ -20850,12 +20848,12 @@ So in Axiom, we can specify the order of the variables:
                      Type: DistributedMultivariatePolynomial([z,y,x],Integer)
 \end{verbatim}
 
-\subsection{Combined Ordering}
+*** Combined Ordering
 \begin{verbatim}
 
 \end{verbatim}
 
-\subsection{An Example Computation}
+*** An Example Computation
 
 Suppose we are given a set of polynomials. We choose a variable ordering
 (in this case $w<p<z<t<s<b$) and a coefficient field (in this case
@@ -21018,8 +21016,8 @@ groebner(sn7,"redcrit","info")
 
 \end{verbatim}
 
-\section{Elementary Functions}
-\subsection{Rationale for Branch Cuts and Identities}
+** Elementary Functions
+*** Rationale for Branch Cuts and Identities
 
 Perhaps one of the most vexing problems to be addressed when
 attempting to determine a set of mathematical function definitions is
@@ -21095,129 +21093,127 @@ Using the principal expressions for each of the 12 inverse
 trigonometric and hyperbolic functions as given in this Standard, we
 have the following relations and identities:
 
-\subsection{Inverse trigonometric functions}
-\begin{tabular}{|c|l|}
-\hline
-$\arcsin(z)$ &
-$\begin{array}{l} 
+*** Inverse trigonometric functions
+|---+---|
+| $\arcsin(z)$ |  |
+| $\begin{array}{l} |
 \\
-= -\arcsin(-z) \\ 
-= \displaystyle\frac{\pi}{2} - \arccos(z) \\ 
-= -i arcsinh(iz) \\ 
-\\
-\end{array}$ \\
-\hline
-$\arccos(z)$ &
-$\begin{array}{l} 
-\\
-= \pi - \arccos(-z) \\ 
-= \displaystyle\frac{\pi}{2} - \arcsin(z) \\
-= i csgn(i(z-1)) arccosh(z) \\ 
-\\
-\end{array}$\\
-\hline
-$\arctan(z)$ &
-$\begin{array}{l} 
-\\
-= -\arctan(-z) \\
-= \displaystyle\frac{\pi}{2} - arccot(z) \\
-= -i arctanh(iz) \\ 
-= -i \displaystyle\ln\left(\frac{1+iz}{\sqrt{z^2+1}}\right) \\
+| = -\arcsin(-z) \\ |
+| = \displaystyle\frac{\pi}{2} - \arccos(z) \\ |
+| = -i arcsinh(iz) \\ |
 \\
 \end{array}$ \\
-\hline
-$arccot(z)$ &
-$\begin{array}{l}
+|---+---|
+| $\arccos(z)$ |  |
+| $\begin{array}{l} |
 \\
-= \pi - arccot(-z) \\
-= \displaystyle\frac{\pi}{2} - \arctan(z) \\
-= i arccoth(iz)+\displaystyle\frac{\pi}{2}(1-csgn(z+i)) \\ 
-= -i \displaystyle\ln\left(\frac{z+i}{\sqrt{z^2+1}}\right) \\
+| = \pi - \arccos(-z) \\ |
+| = \displaystyle\frac{\pi}{2} - \arcsin(z) \\ |
+| = i csgn(i(z-1)) arccosh(z) \\ |
 \\
 \end{array}$\\
-\hline
-$arccsc(z)$ &
-$\begin{array}{l} 
+|---+---|
+| $\arctan(z)$ |  |
+| $\begin{array}{l} |
 \\
-= - arccsc(-z) \\
-= \displaystyle\arcsin(\frac{1}{z}) \\
-= \displaystyle\frac{\pi}{2} - arcsec(z) \\
-= i\ arccsch(iz) \\
+| = -\arctan(-z) \\ |
+| = \displaystyle\frac{\pi}{2} - arccot(z) \\ |
+| = -i arctanh(iz) \\ |
+| = -i \displaystyle\ln\left(\frac{1+iz}{\sqrt{z^2+1}}\right) \\ |
 \\
 \end{array}$ \\
-\hline
-$arcsec(z)$ &
-$\begin{array}{l}
+|---+---|
+| $arccot(z)$ |  |
+| $\begin{array}{l} |
 \\
-= \pi - arcsec(-z) \\
-= \arccos(\displaystyle\frac{1}{z}) \\
-= \displaystyle\frac{\pi}{2} - arccsc(z) \\
-= i \displaystylecsgn(i(\frac{1}{z}-1)) arcsech(z) \\
+| = \pi - arccot(-z) \\ |
+| = \displaystyle\frac{\pi}{2} - \arctan(z) \\ |
+| = i arccoth(iz)+\displaystyle\frac{\pi}{2}(1-csgn(z+i)) \\ |
+| = -i \displaystyle\ln\left(\frac{z+i}{\sqrt{z^2+1}}\right) \\ |
 \\
 \end{array}$\\
-\hline
-\end{tabular}
+|---+---|
+| $arccsc(z)$ |  |
+| $\begin{array}{l} |
+\\
+| = - arccsc(-z) \\ |
+| = \displaystyle\arcsin(\frac{1}{z}) \\ |
+| = \displaystyle\frac{\pi}{2} - arcsec(z) \\ |
+| = i\ arccsch(iz) \\ |
+\\
+\end{array}$ \\
+|---+---|
+| $arcsec(z)$ |  |
+| $\begin{array}{l} |
+\\
+| = \pi - arcsec(-z) \\ |
+| = \arccos(\displaystyle\frac{1}{z}) \\ |
+| = \displaystyle\frac{\pi}{2} - arccsc(z) \\ |
+| = i \displaystylecsgn(i(\frac{1}{z}-1)) arcsech(z) \\ |
+\\
+\end{array}$\\
+|---+---|
 
-\subsection{Inverse hyperbolic functions}
 
-\begin{tabular}{|c|l|}
-\hline
-$arcsinh(z)$ &
-$\begin{array}{l}
+*** Inverse hyperbolic functions
+
+|---+---|
+| $arcsinh(z)$ |  |
+| $\begin{array}{l} |
 \\
-= -arcsinh(-z) \\ 
-= \displaystyle\frac{\pi}{2}i - csgn(i-z)arccosh(-iz) \\ 
-= -i arcsin(iz) \\ 
-\\
-\end{array}$ \\
-\hline
-$arccosh(z)$ &
-$\begin{array}{l}
-\\
-= i csgn(i(1-z))arccos(z) \\
-= \displaystylecsgn(i(1-z))(\frac{\pi}{2}i - arcsinh(iz)) \\
+| = -arcsinh(-z) \\ |
+| = \displaystyle\frac{\pi}{2}i - csgn(i-z)arccosh(-iz) \\ |
+| = -i arcsin(iz) \\ |
 \\
 \end{array}$ \\
-\hline
-$arctanh(z)$ &
-$\begin{array}{l}
+|---+---|
+| $arccosh(z)$ |  |
+| $\begin{array}{l} |
 \\
-= -arctanh(-z) \\
-= \displaystylearccoth(z) -\frac{\pi}{2}i csgn(i(z-1)) \\
-= -i arctan(iz) \\
-= -\displaystyle\ln\left(\frac{1-z}{\sqrt{1-z^2}}\right) \\
+| = i csgn(i(1-z))arccos(z) \\ |
+| = \displaystylecsgn(i(1-z))(\frac{\pi}{2}i - arcsinh(iz)) \\ |
+\\
+\end{array}$ \\
+|---+---|
+| $arctanh(z)$ |  |
+| $\begin{array}{l} |
+\\
+| = -arctanh(-z) \\ |
+| = \displaystylearccoth(z) -\frac{\pi}{2}i csgn(i(z-1)) \\ |
+| = -i arctan(iz) \\ |
+| = -\displaystyle\ln\left(\frac{1-z}{\sqrt{1-z^2}}\right) \\ |
 \\
 \end{array}$\\
-\hline
-$arccoth(z)$ &
-$\begin{array}{l}
+|---+---|
+| $arccoth(z)$ |  |
+| $\begin{array}{l} |
 \\
-= \displaystylearctanh(z)+\frac{\pi}{2}i csgn(i(z-1)) \\
-= i \displaystylearccot(iz)+\frac{\pi}{2}i (csgn(i(z-1))-1) \\
-= i \displaystylearctan(-iz)+\frac{\pi}{2}i csgn(i(z-1)) \\
-\\
-\end{array}$ \\
-\hline
-$arccsch(z) $ &
-$\begin{array}{l}
-\\
-= -arccscn(-z) \\
-= \displaystylearcsinn(\frac{1}{z}) \\
-= \displaystylecsgn(i+\frac{1}{z})arcsech(-iz)-\frac{\pi}{2}i \\ 
-= i arccsc(iz) \\
+| = \displaystylearctanh(z)+\frac{\pi}{2}i csgn(i(z-1)) \\ |
+| = i \displaystylearccot(iz)+\frac{\pi}{2}i (csgn(i(z-1))-1) \\ |
+| = i \displaystylearctan(-iz)+\frac{\pi}{2}i csgn(i(z-1)) \\ |
 \\
 \end{array}$ \\
-\hline
-$arcsech(z)$ &
-$\begin{array}{l}
+|---+---|
+| $arccsch(z) $ |  |
+| $\begin{array}{l} |
 \\
-= \displaystylearccosh(\frac{1}{z}) \\
-= i \displaystylecsgn(i(1-\frac{1}{z})) arcsec(z) \\
-= \displaystylecsgn(i(1-\frac{1}{z}))(\frac{\pi}{2}i+arccsch(iz) \\
+| = -arccscn(-z) \\ |
+| = \displaystylearcsinn(\frac{1}{z}) \\ |
+| = \displaystylecsgn(i+\frac{1}{z})arcsech(-iz)-\frac{\pi}{2}i \\ |
+| = i arccsc(iz) \\ |
 \\
 \end{array}$ \\
-\hline
-\end{tabular}
+|---+---|
+| $arcsech(z)$ |  |
+| $\begin{array}{l} |
+\\
+| = \displaystylearccosh(\frac{1}{z}) \\ |
+| = i \displaystylecsgn(i(1-\frac{1}{z})) arcsec(z) \\ |
+| = \displaystylecsgn(i(1-\frac{1}{z}))(\frac{\pi}{2}i+arccsch(iz) \\ |
+\\
+\end{array}$ \\
+|---+---|
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage

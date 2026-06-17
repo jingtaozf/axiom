@@ -5,7 +5,7 @@
 \chapter[A Language for Computational Algebra]
 {A Language for Computational Algebra by Jenks and Trager}
 
-\section{Introduction}
+** Introduction
 
 Jenks and Trager[cite:@Jenk81] describe a language with parameterized
 types and generic operators particularly suited to computational algebra.
@@ -133,31 +133,30 @@ converted to objects of other domains.
 
 \begin{center} 
 Figure 1: Algebraic Categories\\
-\begin{tabular}{|l|l|l|}
-\hline
-*category*            & *extends*    & *operations*\\
-\hline
-Set                       &                  & $=$\\
-AbelianGroup              & Set              & $0,+,-$\\
-OrderedSet                & Set              & $<$\\
-QuotientObject(S:Set)     & Set              & reduce,lift\\
-SemiGroup                 & Set              & $\times$\\
-Finite                    & Set              & size,random\\
-Monoid                    & SemiGroup        & 1\\
-Group                     & Monoid           & inv\\
-Ring                      & (Monoid,AG)      & characteristic, recip\\
-Module(R:Ring)            & AbelianGroup     & scalar$\times$\\
-Algebra(R:Ring)           & (Ring,Module(R)) &\\
-DifferentialRing          & Ring             & deriv\\
-IntegralDomain            & Ring             & isAssociate./ /\\
-SkewField                 & Ring             & /\\
-UniqueFactorizationDomain & IntegralDomain   & gcd, factor, isPrime\\
-EuclideanDomain           & UFD              & size<, quo, rem\\
-Field                     & (ED, SkewField)  &\\
-GaloisField               & (Field, Finite)  &\\
-VectorSpace(S:Field)      & Module(S)        &\\
-\hline
-\end{tabular}
+|---+---+---|
+| *category* | *extends* | *operations* |
+|---+---+---|
+| Set |  | $=$ |
+| AbelianGroup | Set | $0,+,-$ |
+| OrderedSet | Set | $<$ |
+| QuotientObject(S:Set) | Set | reduce,lift |
+| SemiGroup | Set | $\times$ |
+| Finite | Set | size,random |
+| Monoid | SemiGroup | 1 |
+| Group | Monoid | inv |
+| Ring | (Monoid,AG) | characteristic, recip |
+| Module(R:Ring) | AbelianGroup | scalar$\times$ |
+| Algebra(R:Ring) | (Ring,Module(R)) |  |
+| DifferentialRing | Ring | deriv |
+| IntegralDomain | Ring | isAssociate./ / |
+| SkewField | Ring | / |
+| UniqueFactorizationDomain | IntegralDomain | gcd, factor, isPrime |
+| EuclideanDomain | UFD | size<, quo, rem |
+| Field | (ED, SkewField) |  |
+| GaloisField | (Field, Finite) |  |
+| VectorSpace(S:Field) | Module(S) |  |
+|---+---+---|
+
 \end{center}
 
 Both categories and domains may be organized into hierarchies. Figure 1
@@ -199,22 +198,21 @@ functions can require that their arguments have certain operations available
 to them. For related work in computer algebra, see [cite:@Ausi79], 
 [cite:@Gris76], [cite:@Jenk74], and [cite:@Loos74].
 
-\section{Concepts}
+** Concepts
 
 In this section, we give precise definitions and examples of the concepts
 of domain, category, and functor.
 
 *Domain*. By a /domain of computation/, or, simply, *domain*,
 we mean:
-\begin{enumerate}
-\item a set of generic *operations*
-\item a *representation*
-\item a set of *functions* which implement the operations in terms
-of the representation
-\item a set of *attributes*, which designate useful facts such as
-axioms and mathematical theorems which are true for the operations as
-implemented by the functions.
-\end{enumerate}
+1. a set of generic *operations*
+2. a *representation*
+3. a set of *functions* which implement the operations in terms
+  of the representation
+4. a set of *attributes*, which designate useful facts such as
+  axioms and mathematical theorems which are true for the operations as
+  implemented by the functions.
+
 
 The simplest examples of domains are those corresponding to the basic
 data-types offered by the underlying system, such as Integer (``the
@@ -258,11 +256,10 @@ as Ring (``the class of all rings''), Field (``the class of all fields''),
 and Set (``the class of all sets'').
 
 By a *category* we mean:
-\begin{enumerate}
-\item a set of generic *operations*
-\item a set of *attributes*, which designate facts which must be
-true for any implementation of the operations.
-\end{enumerate}
+1. a set of generic *operations*
+2. a set of *attributes*, which designate facts which must be
+  true for any implementation of the operations.
+
 
 As with domains, the generic operations of categories are given by
 signatures, consisting of an operation name, a source, and a target.
@@ -558,11 +555,11 @@ RationalNumber == QuotientField(Integer)
 \hrulefill
 
 
-\chapter{Details for Programmers}
+* Details for Programmers
 Axiom maintains internal representations for domains.
 There are functions for examining the internals of objects of
 a particular domain. 
-\section{Examining Internals}
+** Examining Internals
 One useful function is *devaluate* which takes an object
 and returns a Lisp pair. The CAR of the pair is the Axiom type.
 The CDR of the pair is the object representation.
@@ -711,7 +708,7 @@ IndexedDirectProductObject(A:SetCategory,S:OrderedSet):
 \end{verbatim}
 
 
-\section{Makefile}
+** Makefile
 This book is actually a literate program[cite:@Knut92] and can contain 
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 

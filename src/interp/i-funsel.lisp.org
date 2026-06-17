@@ -5,7 +5,7 @@
 #+AUTHOR: The Axiom Team
 #+BEGIN_abstract
 #+END_abstract
-\section{Functions}
+** Functions
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -2085,20 +2085,19 @@ formula:
   10000*n + 1000*domainDepth(res) + hitListOfTargets(res)
 \end{verbatim}
 where:
-\begin{itemize}
-\item *n* is a penalty taking into account the number of coercions
-necessary to coerce the types of the given arguments to those of the
-signature under consideration.
-\item *res* is the codomain of the signature
-\item *hitListOfTarget* assigns a penalty between 1 and 1600 using
-a short list of constructors: Polynomial (300), List (400), 500 is the
-default, UniversalSegment (501), RationalFunction (900), Matrix (910),
-Union (999), Expression (1600). Note that RationalFunction is actually
-not a domain, so it should never happen.
-\item *domainDepth* calculates the maximal depth of the type
-\item *finally* the preference order of PI, NNI, and DFLOAT as
-targets is done at the very end.
-\end{itemize}
+- *n* is a penalty taking into account the number of coercions
+  necessary to coerce the types of the given arguments to those of the
+  signature under consideration.
+- *res* is the codomain of the signature
+- *hitListOfTarget* assigns a penalty between 1 and 1600 using
+  a short list of constructors: Polynomial (300), List (400), 500 is the
+  default, UniversalSegment (501), RationalFunction (900), Matrix (910),
+  Union (999), Expression (1600). Note that RationalFunction is actually
+  not a domain, so it should never happen.
+- *domainDepth* calculates the maximal depth of the type
+- *finally* the preference order of PI, NNI, and DFLOAT as
+  targets is done at the very end.
+
 In particular, note that if we have two signatures taking types A and B,
 and the given argument does not match exactly but has to be coerced, then
 the types A and B themselves are not sorted by preference. 

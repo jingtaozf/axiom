@@ -161,6 +161,12 @@ modern =*X*= and old-style =*X*= forms.
 def convert_inline_formatting(line):
     """Convert LaTeX inline formatting to org markup in prose text."""
     result = line
+    # Heading conversion: \chapter{X} → * X, \section{X} → ** X, etc.
+    m = re.match(r'\\(chapter|section|subsection|subsubsection)\{([^}]+)\}\s*$', result.strip())
+    if m:
+        level = {'chapter': '*', 'section': '**', 'subsection': '***',
+                 'subsubsection': '****'}[m.group(1)]
+        return level + ' ' + m.group(2) + chr(10)
     changed = True
     iterations = 0
     # Quick skip: no LaTeX markers means no work needed
@@ -503,7 +509,7 @@ def convert_index(line):
 def process_file(filepath, dry_run=False, phases=None):
     """Process a single .org file through cleanup phases."""
     if phases is None:
-        phases = {1, 2, 3, 4, 5, 6}
+        phases = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
     # Read in binary mode to preserve original bytes and line endings
     with open(filepath, 'rb') as f:
         raw = f.read()
@@ -623,7 +629,7 @@ def main():
     parser.add_argument('--phase', type=int, help='Run only this phase (1-6)')
     parser.add_argument('files', nargs='*', help='Specific files (default: all)')
     args = parser.parse_args()
-    phases = set(args.phase) if isinstance(args.phase, list) else {args.phase} if args.phase else {1, 2, 3, 4, 5, 6}
+    phases = set(args.phase) if isinstance(args.phase, list) else {args.phase} if args.phase else {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
     files = args.files if args.files else sorted(find_org_files('.'))
     total_changes = 0
     total_files_changed = 0
