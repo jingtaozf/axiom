@@ -14231,6 +14231,9 @@ unbound''), a private interned symbol serves; host-level quit on SBCL
 unwinds by its own means and never needed this tag.
 #+NAME: initvars
 #+begin_src common-lisp :noweb yes
+#+:GCL
+(defvar |$quitTag| system::*quit-tag*)
+#-:GCL
 (defvar |$quitTag| '|spadQuitTag|)
 
 #+end_src
@@ -14851,6 +14854,19 @@ This function performs those setup commands.
                            (rpages 1000)
                            (hole 2000) )
   ;; initialize AKCL memory allocation parameters
+  #+:AKCL
+  (progn
+    (system:allocate 'cons cons)
+    (system:allocate 'fixnum fixnum)
+    (system:allocate 'symbol symbol)
+    (system:allocate 'package package)
+    (system:allocate 'array array)
+    (system:allocate 'string string)
+    (system:allocate 'cfun cfun)
+    (system:allocate-contiguous-pages cpages)
+    (system:allocate-relocatable-pages rpages)
+    (system:set-hole-size hole))
+  #-:AKCL
   nil)
 
 #+end_src
@@ -47309,9 +47325,11 @@ printLoadMessages, which gets called with =%describe%=
             (set (fifth setdata) 
               (|translateYesNo2TrueFalse| (seventh setdata))))
            (t
-            (cond ((eq arg2 '|nobreak|) nil)
+            (cond ((eq arg2 '|nobreak|) 
+              #+:GCL (si::use-fast-links t)))
             (cond 
              ((eq arg2 '|fastlinks|)
+              #+:GCL (si::use-fast-links nil)
               (setq arg2 '|break|)))
             (set (fifth setdata) (|translateYesNo2TrueFalse| arg2))))))
         (when (or |$displaySetValue| (null arg2))
