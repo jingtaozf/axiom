@@ -6,7 +6,7 @@
 #+AUTHOR: The Axiom Team
 #+BEGIN_abstract
 #+END_abstract
-** License
+\section{License}
 Copyright The Numerical Algorithms Group Limited 1996.
 
 daly/10/06/92
@@ -195,14 +195,14 @@ integrate(exp(x^2),x)
 themos/11/06/92 integration bug
 
 I suggest changing line 11 of limitedLogs in INTTR from:
-#+begin_example
+\begin{verbatim}
   rows := max(degree den, 1 + "max"/[degree(u.contrib) for u in l1])
-#+end_example
+\end{verbatim}
 to
-#+begin_example
+\begin{verbatim}
   rows := max(degree den,
            1 + reduce(max,[degree(u.contrib) for u in l1],0)$List(N))
-#+end_example
+\end{verbatim}
 Do you agree, thus max/ empty list would return 0.
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -296,11 +296,11 @@ msq := Matrix SquareMatrix(2,POLY INT)
 #+end_src
 tpd/09/24/92 matrix multiplication appears broken in the product.\\
 fails with
-#+begin_example
+\begin{verbatim}
    >> System error:
    The function |deleteAssoc| is undefined.
    You are being returned to the top level of the interpreter.
-#+end_example
+\end{verbatim}
 comment: (barry)\\
 This bug is due to the new autoloading scheme for the compiler, the
 function deleteAssoc needs to be moved into the in core system.
@@ -308,9 +308,9 @@ function deleteAssoc needs to be moved into the in core system.
 As a work around, 
 if you compile a non existent file, the apropriate files will be loaded,
 e.g.:
-#+begin_example
+\begin{verbatim}
 )co foo
-#+end_example
+\end{verbatim}
 comment: this works in version 2
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -640,22 +640,22 @@ t8:=inv (eq :: EQ FRAC POLY INT)
 #+end_src
 bmt/09/29/92 coercion bug\\
 fails with:
-#+begin_example
+\begin{verbatim}
  failed cannot be coerced to mode 
  (Record (: coef1 (Integer)) (: coef2 (Integer)))
-#+end_example
+\end{verbatim}
 fixed on 09/29/92
 
 Another subtle bug exists as of Nov 2008 release.
 The expression
-#+begin_example
+\begin{verbatim}
   (p,q):UP(x,INT)
-#+end_example
+\end{verbatim}
 generates the error
-#+begin_example 
+\begin{verbatim} 
 Daly Bug
    Category, domain or package constructor : is not available.
-#+end_example
+\end{verbatim}
 works fine at the top of this file but not here. Which means that
 some property is not being cleared properly. The symbol ``p'' does get
 properly declared despite the error message. --Tim
@@ -934,12 +934,12 @@ henderson/10/08/92
 TextFile cliams that the operator readLineIfCan! returns ``failed'' when
 the end of the file is reached.  In fact, I get a system error, which is
 not very useful:
-#+begin_example
+\begin{verbatim}
 (16) ->readLineIfCan!(fp)
    >> System error:
    Unexpected end of #<input stream "/home/mcd/work/work">.
    You are being returned to the top level of the interpreter.
-#+end_example
+\end{verbatim}
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1132,11 +1132,11 @@ A: SquareMatrix(m, S2) := diagonalMatrix(l)
 
 #+end_src
 load definition of deleteAssoc
-#+begin_example
+\begin{verbatim}
 )li (load "/spad/obj/rios/interp/c-util")
 
 A: SquareMatrix(m, S2) := diagonalMatrix(l)
-#+end_example
+\end{verbatim}
 now , can print.
 
 bmt/10/19/92 squareFree bug
@@ -2483,9 +2483,9 @@ fix was to function prootintegrate in INTPAF in intaf.spad
 james/02/11/93 integrate
 
 used to give error:
-#+begin_example
+\begin{verbatim}
   No identity element for reduce of empty list using operation max
-#+end_example
+\end{verbatim}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -2503,11 +2503,11 @@ integrate(((-x-1)*log((x^2+x))^2+2*log(x))/(x+1),x)
 #+end_src
 dewar/02/15/93
 
-#+begin_example
+\begin{verbatim}
   i::Polynomial(Integer)
   %::Union(Symbol,Polynomial Integer)
   list %
-#+end_example
+\end{verbatim}
 This is a bug in old style union handling, this style of unions
 will become obsolete, so the suggested fix is to use tagged unions instead:
 
@@ -2538,13 +2538,13 @@ list t2
 
 #+end_src
 grabm/03/04/93 parser bug? not for system commands
-#+begin_example
+\begin{verbatim}
 )clear all
 -- gives error: Sorry, but no option begins with upd;
 )load /spad/mnt/rios/algebra/EQ )upd; a:=1
 -- works
 )load /spad/mnt/rios/algebra/EQ )upd ; a:=1
-#+end_example
+\end{verbatim}
 
 bronstein/03/08/93 wrong particular solution
 #+NAME: *
@@ -2601,9 +2601,9 @@ item back in from the file, the correct string is reconstituted.
 
 If you want to create a text file which simply contains lines of text
 instead of lines of lisp strings, use:
-#+begin_example
+\begin{verbatim}
   ofile : TextFile := open("test","output")  ...
-#+end_example
+\end{verbatim}
 then you will get a file of literal strings with no string delimiters and
 no escape characters.
 #+NAME: *
@@ -2743,9 +2743,9 @@ grabm/04/30/93
 
 This bug has been fixed at yorktown, in radix.spad, change line 163, the
 third line of intgroup to be:
-#+begin_example
+\begin{verbatim}
   empty? rest li => intToExpr first(li)
-#+end_example
+\end{verbatim}
 and then recompile RADIX
 
 Results in 10 and not A
@@ -2830,7 +2830,7 @@ The code for leftProductBy is correct but the code for rightProductBy
 troubles the compiler !!!! It seems to compile a LOCAL function with
 ANOTHER signature.
 
-#+begin_example
+\begin{verbatim}
    initializing nrlib TEST for Test
    compiling into nrlib TEST
    compiling exported leftProductBy : Integer -> Integer -> Integer
@@ -2850,7 +2850,7 @@ $f:=
    no mode found for
    #1
    You are being returned to the top level of the interpreter.
-#+end_example
+\end{verbatim}
 answer (barry):
 
 Your problem in TEST about specifying target types which are Mapping's
@@ -2941,9 +2941,9 @@ real abs(4 + %i * 5)
 bronstei@inf.ethz.ch/10/5/93 (Manuel Bronstein)
 
 Here is again an enhanced elemntry.spad. What happens now is that
-#+begin_example
+\begin{verbatim}
   exp(q * %i * %pi)
-#+end_example
+\end{verbatim}
 gets automatically simplifed whenever q is a rational number whose
 denominator is one of  \{1,2,3,4,6\}.
 #+NAME: *
@@ -3080,19 +3080,19 @@ imag x
 
 #+end_src
 bronstei@inf.ethz.ch/9/22/93 (Manuel Bronstein)
-#+begin_example
+\begin{verbatim}
   haha := rule x*x == z
   haha(a*a + b*b + c^2)        -->  3z
   haha(a*a + b*b + c^2 + d*d)  -->  z
-#+end_example
+\end{verbatim}
 
 The bug is that the last line returns z instead of 4z.
 
 Sorry guys, this is not a bug: haha is so general a rule that it matches
 the integer 4 (as 2 squared), so the rewrite chain for the last example is:
-#+begin_example
+\begin{verbatim}
  a*a + b*b + c^2 + d*d  --->  z + z + z + z  = 4 * z ---> z * z ---> z
-#+end_example
+\end{verbatim}
 Here is a console showing what exactly happens:
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -3332,13 +3332,13 @@ UPXS if over a coefficient domain which supports the symbol of expansion,
 should be able to truncate a series to an EXPR.
 
 I thought I had you on this one!  The signature is there (in pscat.spad):
-#+begin_example
+\begin{verbatim}
     if Coef has coerce: Symbol -> Coef then
       if Coef has "^":(Coef,Expon) -> Coef then
         approximate: ($,Expon) -> Coef
           ++ \spad{approximate(f)} returns a truncated power series with the
           ++ series variable viewed as an element of the coefficient domain.
-#+end_example
+\end{verbatim}
 It certainly works for Laurent series:
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -3489,7 +3489,7 @@ $?^2$ when expr involved a parameter. This is fixed now.
 
 jhd@maths.bath.ac.uk/8/15/93 James Davenport
 
-#+begin_example
+\begin{verbatim}
    (1)
    VCONCAT
                              log(x)
@@ -3521,7 +3521,7 @@ jhd@maths.bath.ac.uk/8/15/93 James Davenport
       ( Or (a - 1=0) -> - ------)
            (a + 1=0)      log(x)
 
-#+end_example
+\end{verbatim}
 is still fairly ugly.
 
 #+NAME: *
@@ -5836,7 +5836,7 @@ ll 3
 
 #+end_src
 bronstei@inf.ethz.ch/11/24/93 Manuel Bronstein
-#+begin_example
+\begin{verbatim}
 --)clear all
 --Here's a bug that appears with the )math option only.
 --
@@ -5850,16 +5850,16 @@ bronstei@inf.ethz.ch/11/24/93 Manuel Bronstein
 --
 -- Internal system problem in function appInfix :
 -- fewer than 2 arguments to an infix function
-#+end_example
+\end{verbatim}
 
 copper@yktvmv/12/1/93 Don Coppersmith
 
 Attached is the list of integers n such that $2^512-n$ is prime
 and n is between 0 and 5000:
-#+begin_example
+\begin{verbatim}
    4893,4653,4475,4005,3893,3669,3459,3143,2967,
    2807,2529,1827,1695,975,875,629,569
-#+end_example
+\end{verbatim}
 
 It was gotten from Axiom by issuing the commands
 #+NAME: *
@@ -5958,12 +5958,12 @@ miker@num-alg-grp.co.uk/12/13/93 (Mike Richardson)
 This is fixed now. You get an Expression Float.
 
 I suspect that this is an example of the same thing - but it looks worse:
-#+begin_example 
+\begin{verbatim} 
   (145) ->X := log(0.7*%i*x)
  
     >> Error detected within library code:
     negative root
-#+end_example
+\end{verbatim}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -5978,10 +5978,12 @@ X := log(0.7*%i*x)
 #+end_src
 
 sutor@yktpub.watson.ibm.com/12/15/93 (Robert S. Sutor)
-- enter Integer in input box
-- choose domains
-- choose Description
-- click on Convertible(String)
+\begin{itemize}
+\item enter Integer in input box
+\item choose domains
+\item choose Description
+\item click on Convertible(String)
+\end{itemize}
 page cannot be formatted
 
 bmt@posso.dm.unipi.it12/15/93 (barry trager)
@@ -6017,7 +6019,7 @@ But for n = 1, the argument L is not MODIFIED !!! (exactly for n =
 minIndex(L)). An extract of the package ListAggregate (abbreviation LSAGG,
 file aggcat.spad).
 
-#+begin_example
+\begin{verbatim}
 ListAggregate(S:Object): Category == Join(StreamAggregate S,
    FiniteLinearAggregate S, ExtensibleLinearAggregate S) with
       list: S -> $
@@ -6033,7 +6035,7 @@ ListAggregate(S:Object): Category == Join(StreamAggregate S,
      x
 
 A little session :
-#+end_example
+\end{verbatim}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all
@@ -6074,9 +6076,9 @@ L
 --E 253
 
 #+end_src
-#+begin_example
+\begin{verbatim}
    (5)  ["There is","a real bug","here"]
-#+end_example
+\end{verbatim}
 Is there a way to fix this bug quickly ?? (I am ready to modify the source
 Axiom aggcat.spad).
 
@@ -6152,14 +6154,14 @@ minimalPolynomial(y)$E
 --E 260
 
 #+end_src
-#+begin_example
+\begin{verbatim}
 Internal Error
 The function minimalPolynomial with signature SimpleAlgebraicExtension(
 Fraction Integer,UnivariatePolynomial(X,Fraction Integer),X^15+X^12-1)
  UnivariatePolynomial(X,Fraction Integer) is missing from domain
 SimpleAlgebraicExtension(Fraction (Integer))
 (UnivariatePolynomial X (Fraction (Integer)))((15 1 . 1) (12 1 . 1) (0 -1 . 1))
-#+end_example
+\end{verbatim}
 
 luczak@nag.com/02/20/94 (Richard Luczak)
 
@@ -6181,7 +6183,7 @@ tr := rule cos(x)^(n | integer? n and even? n)==(1-sin(x)^2)^(n/2)
 
 #+end_src
 Axiom returns
-#+begin_example
+\begin{verbatim}
   Cannot find a definition or library operation named even? with argument
   types
                             Expression Integer
@@ -6192,7 +6194,7 @@ Axiom returns
    (2)  cos(x)  == (- sin(x)  + 1)
 
 
-#+end_example
+\end{verbatim}
 and henceforth the rule does not work as desired. Variations on the same bug
 occur involving positive?. Of course, I get what I want using integer?(n/2)
 but ... Is this a bug?
@@ -6202,10 +6204,10 @@ from barry:
 Should use integer? n and even? integer n  instead.
 
 I toyed with the idea of implementing:
-#+begin_example
+\begin{verbatim}
     even? x == integer? x and even? integer x
     odd? x == integer? x and odd? integer x
-#+end_example
+\end{verbatim}
 in EXPR, but this would mean that   (x +-> even? x or odd? x)  is not always
 true anymore and I'm not sure it's a good idea. If you guys don't think it's
 a problem, it takes 2 minutes to add it to EXPR R when R has RETRACT INT
@@ -6220,20 +6222,20 @@ pade(y,2,2)  Pade(2,2,y)  PadeApproximation(2,2,y)
 (where y is a series in x) to no avail.
 
 Complaint: The error message
-#+begin_example
+\begin{verbatim}
     Could not find library function "pade" with arguments
          (integer, integer, series).
-#+end_example
+\end{verbatim}
 is misleading.  If it can't find any "pade", then say
-#+begin_example
+\begin{verbatim}
     Could not find library function "pade".
-#+end_example
+\end{verbatim}
 If there is such a function, but I've got the arguments wrong,
 why not say
-#+begin_example
+\begin{verbatim}
     The library function "pade" takes arguments
           (series, integer, integer)
-#+end_example
+\end{verbatim}
 or at least make that information available somehow.
 
 from bob sutor:
@@ -6242,7 +6244,7 @@ Don,
 
 Try using )what op pade  to see what is available. This will give
 you all operations with "pade" in their names. You can also search for
-,*pade* via the HyperDoc Browse utility. If you don't use Browse, following
+*pade* via the HyperDoc Browse utility. If you don't use Browse, following
 up with, say, )display op pade, will give you a more information, though
 it is badly formatted (I will look at that).
 
@@ -6258,13 +6260,13 @@ from bob sutor:
 
 The pade operation requires a taylor series as its third object while
 ``series'' returns a UnivariatePuiseuxSeries. If you set
-#+begin_example
+\begin{verbatim}
   y := taylor(1+x)^(1/5)
-#+end_example
+\end{verbatim}
 then things work. You can also do
-#+begin_example
+\begin{verbatim}
   pade(1,1,y :: UTS(EXPR INT, x, 0) )
-#+end_example
+\end{verbatim}
 but this is more work if you really have a Taylor series.
 
 This is unintuitive and there should be a ``pade'' for Puiseux series that
@@ -6335,11 +6337,11 @@ f := exp(exp(x)*exp(1/exp(x))) / exp exp x
 --E 264
 
 #+end_src
-#+begin_example
+\begin{verbatim}
  )tr LIMITPS )math
  )tr DFINTTLS )math
  )tr DFINTTLS_;findLimit
-#+end_example
+\end{verbatim}
 the following exits back to the shell after limit returns ``failed'':
 computeInt(first tower f, f, 0, \%plusInfinity, false)\$DFINTTLS(INT, EXPR INT)
 
@@ -6399,10 +6401,10 @@ Just comment out the first line of intCodeGenCoerce1 in i-code.boot
 (the one with the explicit THROW). Bothe the riemannSphereDraw and JHD's
 original example will then work. -- bob sutor
 
-#+begin_example
+\begin{verbatim}
 )read conformal
 riemannSphereDraw(1..2,0..%pi,4,4,"polar")
-#+end_example
+\end{verbatim}
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes

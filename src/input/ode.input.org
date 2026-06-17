@@ -6,7 +6,7 @@
 #+AUTHOR: Timothy Daly
 #+BEGIN_abstract
 #+END_abstract
-** License
+\section{License}
 #+NAME: license
 #+begin_src common-lisp :noweb yes
 --Copyright The Numerical Algorithms Group Limited 1991.
@@ -136,23 +136,23 @@ solve(deqz,y,z=0,[1]) -- BUG!
 
 #+end_src
 I think the bug is in
-#+begin_example
+\begin{verbatim}
    file odeef.spad
    constructor ODEEF
    function solve(diffeq:F,y:OP,center:EQ,y0:List F)
-#+end_example
+\end{verbatim}
 
 the second line of the body was
 
-#+begin_example
+\begin{verbatim}
    kx:K:=kernel x
-#+end_example
+\end{verbatim}
 
 which uses uninitialised x. I think it should be
 
-#+begin_example
+\begin{verbatim}
    kx:K:=kernel(retract(lhs(center))@SY)
-#+end_example
+\end{verbatim}
 
 as the line immediately below it. That change certainly fixes THIS bug!
 

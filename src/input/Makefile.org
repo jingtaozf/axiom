@@ -6,13 +6,13 @@
 #+AUTHOR: The Axiom Team
 #+BEGIN_abstract
 #+END_abstract
-** Introduction
+\section{Introduction}
 This creates the mnt/sys/input subdirectory. The files are known
 as ``input'' files which are a list of Axiom commands. Each file
 (say ``foo.input'') can run in an Axiom system with the command:
-#+begin_example
+\begin{verbatim}
 )read foo.input
-#+end_example
+\end{verbatim}
 
 Each of the files in this subdirectory is intended to achieve a 
 three goals. First, the file shows examples of how to use Axiom
@@ -41,7 +41,7 @@ be moved to the ``regress'' status, new working examples are built
 and the system should be built using ``regress'' to check that the
 build did not break anything.
 
-*** genericRules
+\subsection{genericRules}
 We use the special .PRECIOUS target to prevent deletion of the
 intermediate .input files which are needed during the processing of
 regress target.
@@ -82,7 +82,7 @@ ${DOC}/%.input.dvi: ${IN}/%.input.org ${DOC}/axiom.sty
 	rm -f ${DOC}/$*.input.toc ) ; fi
 
 #+end_src
-** Testing stanzas (to be added)
+\section{Testing stanzas (to be added)}
 #+NAME: testing
 #+begin_src common-lisp :noweb yes
 
@@ -150,7 +150,7 @@ all:	${OUTS}
 
 
 #+end_src
-** The regression testing Makefile
+\section{The regression testing Makefile}
 This Makefile will be notangled into the int/input subdirectory.
 It will run regression tests over all of the input files.
 This will catch things we break but won't catch wrong results
@@ -595,7 +595,7 @@ the built-in gclweb function (see src/interp/gclweb.lisp)
 
 #+end_src
 
-** The Makefile
+\section{The Makefile}
 This Makefile will be notangled into the src/input subdirectory.
 #+NAME: *
 #+begin_src common-lisp :noweb yes

@@ -122,9 +122,15 @@ static void emit_prose(char *s, long len) {
   fwrite(s, 1, (size_t) len, stdout);   /* identity */
 }
 
-/* a list-item line: "- " + at least one char of content */
+/* a list-item line: optional indent + "- " + at least one char of content.
+   Returns indent level (number of leading spaces), or -1 if not a list item.
+   0 = top-level, 2 = nested once, 4 = nested twice, etc. */
 static int is_dash_item(const char *s, long len) {
-  return len >= 3 && s[0] == '-' && s[1] == ' ';
+  long indent = 0;
+  while (indent < len && s[indent] == ' ') indent++;
+  if (indent + 2 < len && s[indent] == '-' && s[indent + 1] == ' ')
+    return (int) indent;
+  return -1;
 }
 
 /* a numbered-item line: "1. " + at least one char of content */
@@ -386,28 +392,41 @@ int main(int argc, char *argv[]) {
 
     /* --- List environments --- */
 
-    /* Itemize: "- X" lines */
-    if (is_dash_item(s, slen)) {
-      if (!first) putchar('\n'); first = 0;
-      fputs("\\begin{itemize}", stdout);
-      for (;;) {
-        putchar('\n');
-        fputs("\\item ", stdout);
-        fwrite(s + 2, 1, (size_t) (len - 2), stdout);
-        if (i + 1 < nspans) {
-          char *ns = buf + sp[i + 1].start;
-          long nlen = sp[i + 1].len;
-          long nslen = nlen;
-          while (nslen > 0 && ns[nslen - 1] == '\r') nslen--;
-          if (is_dash_item(ns, nslen)) { i++; s = ns; len = nlen; continue; }
+    /* Itemize: "- X" lines (possibly nested via indentation) */
+    {
+      int dash_indent = is_dash_item(s, slen);
+      if (dash_indent >= 0) {
+        if (!first) putchar('\n'); first = 0;
+        int cur_indent = dash_indent;
+        { int k; for (k = 0; k <= cur_indent / 2; k++) fputs("\\begin{itemize}", stdout); }
+        for (;;) {
+          putchar('\n');
+          fputs("\\item ", stdout);
+          fwrite(s + cur_indent + 2, 1, (size_t)(len - cur_indent - 2), stdout);
+          if (i + 1 < nspans) {
+            char *ns = buf + sp[i + 1].start;
+            long nlen = sp[i + 1].len;
+            long nslen = nlen;
+            while (nslen > 0 && ns[nslen - 1] == '\r') nslen--;
+            int next_indent = is_dash_item(ns, nslen);
+            if (next_indent >= 0) {
+              i++; s = ns; len = nlen;
+              if (next_indent > cur_indent) {
+                int k; for (k = 0; k < (next_indent - cur_indent) / 2; k++) fputs("\\begin{itemize}", stdout);
+                cur_indent = next_indent;
+              } else if (next_indent < cur_indent) {
+                int k; for (k = 0; k < (cur_indent - next_indent) / 2; k++) { putchar('\n'); fputs("\\end{itemize}", stdout); }
+                cur_indent = next_indent;
+              }
+              continue;
+            }
+          }
+          break;
         }
-        break;
+        { int k; for (k = 0; k <= cur_indent / 2; k++) { putchar('\n'); fputs("\\end{itemize}", stdout); } }
+        continue;
       }
-      putchar('\n');
-      fputs("\\end{itemize}", stdout);
-      continue;
     }
-
     /* Enumerate: "1. X" lines */
     if (is_num_item(s, slen)) {
       if (!first) putchar('\n'); first = 0;

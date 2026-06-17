@@ -12,30 +12,30 @@ The bug exists in the =intef.spad=, in ElementaryIntegration (INTEF),
 in the routines =lfextendedint= and =lflimitedint=.
 
 The input
-#+begin_example
+\begin{verbatim}
   integrate((z^a+1)^b,z)
-#+end_example
+\end{verbatim}
 triggers the bug because of line 2 of each function.
 Line 2 of these functions used to read:
-#+begin_example
+\begin{verbatim}
       symbolIfCan(k := kmax(l := union(l, varselect(kernels g, x))))
-#+end_example
+\end{verbatim}
 
 The loop occurs when the call to union causes 
-#+begin_example
+\begin{verbatim}
                      a log(z)
                    %e        
-#+end_example
+\end{verbatim}
 to get added to the list every time. This gives the argument to kmax 
-#+begin_example
+\begin{verbatim}
                  a log(z)
       arg1= [z,%e        ]
-#+end_example
+\end{verbatim}
 and the result being
-#+begin_example
+\begin{verbatim}
         a log(z)
       %e
-#+end_example
+\end{verbatim}
 We keep coming back to process this term, which ends up 
 putting the same term back on the list and we loop.
 Waldek's solution is to remove the union call. 
@@ -59,13 +59,13 @@ integrate((z^a+1)^b,z)
 --E 1
 #+end_src
 If we substitute z for %I we get:
-#+begin_example
+\begin{verbatim}
            z
          ++    a     b
          |   (z  + 1) dz
         ++
 
-#+end_example
+\end{verbatim}
 which is the original input integral.
 #+NAME: *
 #+begin_src common-lisp :noweb yes

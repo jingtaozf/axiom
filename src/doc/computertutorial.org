@@ -7,7 +7,7 @@
 We build a couple domains from scratch in order to demonstrate how to build
 Axiom domains using the Axiom compiler.
 #+END_abstract
-** Overview
+\section{Overview}
 
 There are several sections in this tutorial, which is written
 to introduce concepts in Axiom programming, using a step-by-step
@@ -53,13 +53,13 @@ As this is a tutorial, the reader should be aware that we are making
 design choices motivated by simplicity or clarity rather than issues
 of efficiency or generality.
 
-** A trivial Axiom program
+\section{A trivial Axiom program}
 
 We will develop a simple polynomial manipulation program and
 illustrate the various features of the language. By the end of
 this tutorial you should be able to write your own Axiom programs.
 
-*** Some discussion of the Axiom language for the programmer
+\subsection{Some discussion of the Axiom language for the programmer}
 
 These initial comments are intended to give those who are skilled in C
 and C++ an idea of the Axiom language, based on analogy. Those who are
@@ -68,24 +68,25 @@ not C programmers should ignore this section.
 Axiom is a block structured language that is strongly typed. It follows
 a syntactic style similar to C. It has the following simple characteristics:
 
-- Printing is done using the *output*.  For example:\\
+\begin{itemize}
+\item Printing is done using the *output*.  For example:\\
 \begin{verbatim}
 output "this is a number: "
 \end{verbatim}
 
-- Printing several items on the same line can by done with the
+\item Printing several items on the same line can by done with the
 *outputList* function. This function takes a list of objects
 and prints them. For example:\\
 \begin{verbatim}
 outputList(["this is a number: ",3])
 \end{verbatim}
 
-- Assignment uses =:==.  For example:\\
+\item Assignment uses =:==.  For example:\\
 \begin{verbatim}
 a := 3
 \end{verbatim}
 
-- The conditional statement has the form: \\
+\item The conditional statement has the form: \\
 =if= /condition/ =then= /statement/
 =else= /statement/ \\
 For example: 
@@ -106,7 +107,7 @@ This is the equivalent of the C/C++ expression:
 x = (a == 0 ? 1 : 2)
 \end{verbatim}
 
-- Iteration may be performed with the =repeat= statement. For
+\item Iteration may be performed with the =repeat= statement. For
 example: 
 \begin{verbatim}
 for i in 1..10 repeat output(i)
@@ -126,7 +127,7 @@ for elem in ls repeat output(elem)
 \end{verbatim}
 \end{small}
 
-- Sequences of statements may be surrounded by braces. For example:
+\item Sequences of statements may be surrounded by braces. For example:
 \begin{small}
 \begin{verbatim}
 {
@@ -139,7 +140,7 @@ for elem in ls repeat output(elem)
 \end{verbatim}
 \end{small}
 
-- There is no =main= (unless you want one).
+\item There is no =main= (unless you want one).
 Programs are compiled as files. Top level forms (such as *print*)
 that occur in the file are executed when the (compiled) file is run. The
 executable version of a file which contains:
@@ -156,25 +157,25 @@ executable version of a file which contains:
      This is similar to a ``compiled interpretation language'' like
      several new versions of Basic.
 
-- Integers, strings and floating point numbers
+\item Integers, strings and floating point numbers
 are not built into the language, but need to be explicitly imported.
 See the language description for details.
 
-- domains and categories are similar to the C++ concept of
+\item domains and categories are similar to the C++ concept of
      classes and abstract classes.
      However, functions match /both\// on the types of their arguments
      and the on types of the results. C++ ignores result types when trying 
      to match function signatures.
 
-- In contrast to C and C++, which are never indentation sensitive,
+\item In contrast to C and C++, which are never indentation sensitive,
 the Axiom compiler can optionally take account of indentation.
 Using the =#pile= directive at the top of a file instructs
 Axiom to consider sequences of statements at the same indentation
 level as belonging to the same block, when braces are omitted.
 
+\end{itemize}
 
-
-*** Signum - a first function
+\subsection{Signum - a first function}
 
 For the first example we will construct a trivial program to determine
 the sign of its argument (called the *signum* function).
@@ -182,7 +183,7 @@ the sign of its argument (called the *signum* function).
 The entire function looks like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 #include "axllib"
 
 signum(number: SingleInteger): String == {
@@ -195,7 +196,7 @@ import from SingleInteger;
 print \<\< signum 10 \<\< newline;
 print \<\< signum 0  \<\< newline;
 print \<\< signum(-10) \<\< newline;
-#+end_example
+\end{verbatim}
 \end{small}
 
 Axiom is a strongly typed language but, initially, the compiler does
@@ -206,15 +207,15 @@ at the top of each file to allow access to these types. The first line
 of our example program is:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   #include "axllib"
-#+end_example
+\end{verbatim}
 \end{small}
 
 which gives us access to the types *SingleInteger* and *String*, 
 both of which are *Type*s (with a capital *T*).
 
-*** What is a Type?
+\subsection{What is a Type?}
 
 *Type*s (with a capital *T*) are a way to create special kinds
 of new things in the world. Suppose we want a special kind of
@@ -251,13 +252,13 @@ functions).
 Our simple signum function is:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 signum(number: SingleInteger): String == {
         number > 0 => "Positive"; 
         number = 0 => "Zero";
         "Negative"
 }
-#+end_example
+\end{verbatim}
 \end{small}
 
 Let's look at the parts.
@@ -265,9 +266,9 @@ Let's look at the parts.
 The first line of this form begins:
 
 \begin{small}
-#+begin_example 
+\begin{verbatim} 
         signum(number: SingleInteger): String ==
-#+end_example
+\end{verbatim}
 \end{small}
 
 which is the function header (the rest of the definition
@@ -301,9 +302,9 @@ print the resulting value. Printing is done by the ``*\<\<*'' operator.
 The ``*\<\<*'' operator has the function header:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (stream: TextWriter) \<\< (thing: String): TextWriter ==
-#+end_example
+\end{verbatim}
 \end{small}
 
 This operator takes a *TextWriter* on its left hand side and
@@ -315,17 +316,17 @@ the =+= function rather than being written before the arguments like
 most functions.) Printing is thus done by:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
  print \<\< "first thing" \<\< "second thing" \<\< ... \<\< newline;
-#+end_example
+\end{verbatim}
 \end{small}
 
 This line is executed left to right as though it had been parenthesized:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
  ((((print \<\< "first thing") \<\< "second thing") \<\< ...) \<\< newline);
-#+end_example
+\end{verbatim}
 \end{small}
 
 An important thing to remember is that the compiler does not know 
@@ -336,9 +337,9 @@ things are. We intend them to be =SingleInteger=s (because that's what
 our program takes) so we have to add the line:
 
 \begin{small}%
-#+begin_example
+\begin{verbatim}
  import from SingleInteger;
-#+end_example
+\end{verbatim}
 \end{small}
 
 in our program to tell the compiler that *SingleInteger*
@@ -354,16 +355,16 @@ the result. There are three lines in the example which test all
 possible cases. They look like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   print \<\< signum(10) \<\< newline;
   print \<\< signum(0) \<\< newline;
   print \<\< signum(-10) \<\< newline;
-#+end_example
+\end{verbatim}
 \end{small}
 
-** Building an Axiom type
+\section{Building an Axiom type}
 
-***  Properties --- a first domain
+\subsection{ Properties --- a first domain}
 
 Axiom programs, like C++ programs, are normally developed as objects.
 The idea of an object in these languages is that there exist
@@ -375,7 +376,7 @@ For instance, we know we can add two =SingleInteger=s
 because the *Type* =SingleInteger= exports the function =+=.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 
 #include "axllib"
 
@@ -397,7 +398,7 @@ print \<\< signum(10) \<\< newline;
 print \<\< signum(0) \<\< newline;
 print \<\< signum(-10) \<\< newline;
 
-#+end_example
+\end{verbatim}
 \end{small}
 
 We would like to define a new *Type* --- let's call it =Properties=
@@ -409,7 +410,7 @@ So, how do we define a class (um, ... domain)? Each domain has the following
 (simplified) form:
 
 \begin{small}%
-#+begin_example
+\begin{verbatim}
 DomainName: with {
         exported list of function signatures
 }
@@ -417,7 +418,7 @@ DomainName: with {
         representation
         implementations of exported functions
 }
-#+end_example
+\end{verbatim}
 \end{small}
 
 Remember that we said there are three parts to a domain. The first
@@ -426,12 +427,12 @@ domain. This is the ``exported list of function signatures''. For our
 example they look like:
 
 \begin{small}%
-#+begin_example
+\begin{verbatim}
 Properties: with {
         signum: SingleInteger -> String;
                 ++ signum will return the sign of a number as a String
 }
-#+end_example
+\end{verbatim}
 \end{small}
 
 =Properties= is the name that we give to the domain. The
@@ -440,9 +441,9 @@ list is surrounded by braces. The *signum* line is slightly
 different from what we have seen before, and now reads:
 
 \begin{small}%
-#+begin_example
+\begin{verbatim}
         signum: SingleInteger -> String;
-#+end_example
+\end{verbatim}
 \end{small}
 
 The line is a ``function signature''. The signature line is read as:
@@ -455,9 +456,9 @@ The line is a ``function signature''. The signature line is read as:
 In order to define this function we use:
 
 \begin{small}%
-#+begin_example
+\begin{verbatim}
         signum(number: SingleInteger): String == 
-#+end_example
+\end{verbatim}
 \end{small}
 
 This line is the ``function header''. In the body of the domain we use function
@@ -485,7 +486,7 @@ with the === add= clause and is surrounded by braces. The
 information. The *add* body for our example looks like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 == add {
         signum(number: SingleInteger): String == {
                 number > 0 => "Positive";
@@ -493,7 +494,7 @@ information. The *add* body for our example looks like:
                 "Negative"
         }
 }
-#+end_example
+\end{verbatim}
 \end{small}
 
 This is the same function definition we had earlier, except that it is
@@ -510,7 +511,7 @@ that the functions from *Properties* are in scope. Import allows
 control over which domains we wish to use. There might be many domains
 with the same signature and we wish to choose only one.
 
-** A new type: Term - a first representation
+\section{A new type: Term - a first representation}
 
 {\bf The complete listing for this section is at page 
 [[#FirstTermRepListing][FirstTermRepListing]].}
@@ -533,9 +534,9 @@ are, of course, simplifying the issues but we'll come back to this
 later).  So a term should look like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   3*x
-#+end_example
+\end{verbatim}
 \end{small}
 
 We need a representation of a symbol. Usually a symbol is just a
@@ -544,9 +545,9 @@ of ascii letters as our representation of symbols. Note that this will
 /not\// allow us to write terms like:
 
 \begin{small}
-#+begin_example  
+\begin{verbatim}  
   3*x*y
-#+end_example
+\end{verbatim}
 \end{small}
 
 This assumes that a term can contain more than one symbol (or, in
@@ -560,24 +561,24 @@ and choose =SingleInteger=s (machine integers) as our coefficients.
 Note that this will /not\// allow us to write the polynomial:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (2/3)*x
-#+end_example
+\end{verbatim}
 \end{small}
 
 as (2/3) is not a *SingleInteger*. Thus we will need to revisit
 this design decision if we need to divide polynomials.
 
-*** Rep, the representation domain
+\subsection{Rep, the representation domain}
 
 Now that we have made those decisions we need a representation for
 terms.  A *Term* can be stored as a record composed of a
 coefficient and a symbol.  This is written in Axiom as:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
  Rep == Record(coef:SingleInteger, var:Character);
-#+end_example
+\end{verbatim}
 \end{small}
 
 This is a new construct for several reasons. The ``*==>*''
@@ -610,10 +611,10 @@ a domain type (a *Term*) and views it as a *Rep* (a
 *Record*). So:
 
 \begin{small}%
-#+begin_example
+\begin{verbatim}
   per: Record(coef: SingleInteger, var: Character) -> Term;
   rep: Term -> Record(coef: SingleInteger, var: Character);
-#+end_example
+\end{verbatim}
 \end{small}
 
 Sometimes we have a *Record* and we need a *Term* (such as when we
@@ -633,7 +634,7 @@ to get the parts. So the correct form is:
 
 This will (hopefully) become clear as we progress with the example.
 
-*** Importing the Rep
+\subsection{Importing the Rep}
 
 Once we have chosen the representation we must tell the compiler to
 bring the functions related to that representation into the world
@@ -642,31 +643,31 @@ on our representation.  The most common method of doing this is to
 follow the =Rep= macro definition with the line:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   import from Rep;
-#+end_example
+\end{verbatim}
 \end{small}
 
 Since =Rep= is a macro that expands into 
  
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Record(coef: SingleInteger, var: Character)
-#+end_example
+\end{verbatim}
 \end{small}
 
 this line /really\// reads (after macro expansion in the compiler):
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   import from Record(coef: SingleInteger, var: Character);
-#+end_example
+\end{verbatim}
 \end{small}
 
 This will import operations from the value of =Rep=, which allows
 access to the interior of the object.
 
-***  Choosing our export list
+\subsection{ Choosing our export list}
 
 Another early step in developing a new domain is the choice of
 functions to export. These define the *Type* the user sees. 
@@ -696,7 +697,7 @@ which refers to ``the type being defined''.
 
 Starting with these as the primitive functions we'll develop them one by one.
 
-*** New --- the constructor function
+\subsection{New --- the constructor function}
 
 The function =new= should take the parts of a domain
 representation and construct a new instance of the domain from those
@@ -710,9 +711,9 @@ var: Character))} and returns an instance of the type *Term*. The
 signature of the =new= function is:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new: (SingleInteger, Character) -> %;
-#+end_example
+\end{verbatim}
 \end{small}
 
 That is, the function =new= takes two arguments, a 
@@ -721,9 +722,9 @@ this domain (in this case, the domain *Term*). Note that we are
 using =\%= to mean ``this domain''.  So, for example:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new(10, char "x") 
-#+end_example
+\end{verbatim}
 \end{small}
 
 returns a new *Term*. Since we haven't decided how to print 
@@ -734,10 +735,10 @@ Now that we know the signature, let's look at the implementation. In the
 *add* body we have the following code:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 new(number: SingleInteger, variable: Character): % ==
         per([number, variable]);
-#+end_example
+\end{verbatim}
 \end{small}
 
 This says that we are implementing the function =new=. It takes
@@ -753,16 +754,16 @@ The magic macro that changes a =Rep= to a =\%= is
 =per=. So the final result of =per([number,variable])= is a 
 *Term*.
 
-*** Dispose! --- destroying an instance 
+\subsection{Dispose! --- destroying an instance }
 
 The function =dispose!= frees up the storage taken up by instances
 of this domain. In this case, we will ignore the storage issues
 and return nothing, which is written as =()=. So the signature is:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   dispose!: % -> ();
-#+end_example
+\end{verbatim}
 \end{small}
 
 Axiom, by default, includes a ``garbage collector'' which reclaims storage
@@ -785,9 +786,9 @@ If we look in the *add* body, we will find the code that
 implements the =dispose!= function. It looks like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
    dispose!(ignore: %): () == {}
-#+end_example
+\end{verbatim}
 \end{small}
 
 That is, it takes a =\%= (in this case, a *Term*) as an
@@ -798,18 +799,18 @@ argument and returns no result.
 Above, we constructed an instance of term. It looked like:
  
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new(10, char "x") 
-#+end_example
+\end{verbatim}
 \end{small}
 
 Now we will walk through the steps of printing this term.
 To print this term we would make the call:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   print \<\< new(10, char "x")
-#+end_example
+\end{verbatim}
 \end{small}
 
 Printing is done using ``*\<\<*'', similar to the C++ convention.
@@ -825,9 +826,9 @@ above call is a *TextWriter*.
 So our signature is:
  
 \begin{small}
-#+begin_example
+\begin{verbatim}
  \<\<: (TextWriter, %) -> TextWriter;
-#+end_example
+\end{verbatim}
 \end{small}
 
 (Notice the =\%=. This is a shorthand meaning ``the current
@@ -841,28 +842,28 @@ very careful about the meaning of this symbol.)
 If we look in the *add* body for the implementation we find:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (port: TextWriter) \<\< (term1: %): TextWriter == {
            port \<\< rep(term1).coef;
            port \<\< "*";
            port \<\< rep(term1).var
    }
-#+end_example
+\end{verbatim}
 \end{small}
 
 This says that we have a function ``*\<\<*'' that takes a 
 *TextWriter* and a =\%= (in this case, a *Term*) and returns a
 *TextWriter*.
 
-**** The second line
+\subsubsection{The second line}
 
 We start out with our hands on a *Term* (in the variable called
 *term1*) which we want to print. First we use the form:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   rep(term1)
-#+end_example
+\end{verbatim}
 \end{small}
 
 to view the *term1* variable as our =Rep= (in this case, a
@@ -870,9 +871,9 @@ to view the *term1* variable as our =Rep= (in this case, a
 information with:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   rep(term1).coef
-#+end_example
+\end{verbatim}
 \end{small}
 
 This is a *SingleInteger* (because that's what we said we would
@@ -880,89 +881,89 @@ put into our *Record*). Now we call a function to print the
 *SingleInteger*:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   port \<\< rep(term1).coef;
-#+end_example
+\end{verbatim}
 \end{small}
 
 This uses the ``*\<\<*'' function from *SingleInteger* which has
 the signature:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   \<\<: (TextWriter, SingleInteger) -> TextWriter
-#+end_example
+\end{verbatim}
 \end{small}
 
 After all of this the first line of the program prints:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   10
-#+end_example
+\end{verbatim}
 \end{small}
 
-**** The third line
+\subsubsection{The third line}
 
 The third line of the program calls 
  
 \begin{small}
-#+begin_example
+\begin{verbatim}
  \<\<: (TextWriter, String) -> TextWriter
-#+end_example
+\end{verbatim}
 \end{small}
 
 and prints a =*= string. The printed line /now\// looks like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
  10*
-#+end_example
+\end{verbatim}
 \end{small}
 
-**** The fourth line
+\subsubsection{The fourth line}
 
 Again we need to use
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   rep(term1)
-#+end_example
+\end{verbatim}
 \end{small}
 
 to view the term1 variable as our =Rep= (in this case, a *Record*). 
 Then we reach into the record to get the var information with:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   rep(term1).var
-#+end_example
+\end{verbatim}
 \end{small}
 
 This is a *Character* (because that's what we said we would put into 
 our *Record*). Now we call a function to print the *Character*:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   port \<\< rep(term1).var;
-#+end_example
+\end{verbatim}
 \end{small}
 
 This uses the ``*\<\<*'' function from *Character* which has the
 signature:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   \<\<: (TextWriter, Character) -> TextWriter
-#+end_example
+\end{verbatim}
 \end{small}
 
 After all of this the line /now\// looks like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   10*x
-#+end_example
+\end{verbatim}
 \end{small}
 
 Notice that we have /not\// put a newline character in our
@@ -977,7 +978,7 @@ the above signature to the export list and a ``*\<\<*'' function to
 our ``*add* body'' then we can control the way a *Term* is
 printed.
 
-*** Name overloading
+\subsection{Name overloading}
 
 Whew! That is harder to explain than it is to program. However, we are
 using many different ``*\<\<*'' functions and they all have the same
@@ -986,12 +987,12 @@ that doesn't support name overloading we would have to have named the
 functions with different names like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   printTerm
   printSingleInteger
   printCharacter
   printString
-#+end_example
+\end{verbatim}
 \end{small}
 
 We /could\// do that here but it is much more natural to use a
@@ -1003,14 +1004,15 @@ small number of names, or have predefined overloaded operations, but
 do not allow the addition of new operations.  For example, it is
 usually the case that you can write:
 
-| \ | y=3*4 | which uses | **:(Integer,Integer) -> Integer;* |
-| and | y=3.0*4.0 | which uses | **:(Float, Float)     -> Float;* |
-| and | y=3*4.0 | which uses | **:(Integer, Float)   -> Float;* |
-
+\begin{tabular}{llll}
+ \    & y=3*4     & which uses & **:(Integer,Integer) -> Integer;* \\
+ and  & y=3.0*4.0 & which uses & **:(Float, Float)     -> Float;*   \\
+ and  & y=3*4.0   & which uses & **:(Integer, Float)   -> Float;*
+\end{tabular}
 
 but you cannot overload most other function names in other languages.
 
-*** Accessing the representation
+\subsection{Accessing the representation}
 
 Since we have a record of two fields, =coef= and =var=, we'd
 like the world to be able to look inside and access the fields without
@@ -1021,18 +1023,18 @@ each accessor takes a *Term* as its argument and return the part
 as its result.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   coef: Term -> SingleInteger;
   var:  Term -> Character;
-#+end_example
+\end{verbatim}
 \end{small}
 
 In the ``*add* body'' we find the implementations:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   coef(term1: %): SingleInteger == rep(term1).coef;
-#+end_example
+\end{verbatim}
 \end{small}
 
 that is, =coef= takes a *Term* (verb"term1"), pretends it is a
@@ -1040,16 +1042,16 @@ that is, =coef= takes a *Term* (verb"term1"), pretends it is a
 (which is a *SingleInteger*) and returns it;
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   var(term1: %): Character == rep(term1).var;
-#+end_example
+\end{verbatim}
 \end{small}
 
 =var= takes a *Term* (*term1*), pretends it is a 
 *Record*, reaches into the record to get the *var* field (which is
 a *Character*) and returns it.
 
-*** A word about testing
+\subsection{A word about testing}
 
 Every exported function should be tested.  You will notice in the
 examples that follow we try to find boundary cases for all of the
@@ -1062,13 +1064,13 @@ cases and commenting them out is to surround them with the compiler
 directive:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 #if TEST
         testcase1
         testcase2
         ...
 #endif
-#+end_example
+\end{verbatim}
 \end{small}
 
 If you compile the file and use the compiler switch *-DTEST* you will
@@ -1080,12 +1082,12 @@ If you compile the file without this compiler switch, you will compile
 the file without the test cases. Running the file will not run the tests.
 Everything between the compiler directives will be commented out.
 
-*** Listing
+\subsection{Listing}
 
-# label: FirstTermRepListing
+\label{FirstTermRepListing}
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 #include "axllib"
 
 Term: with {
@@ -1124,15 +1126,15 @@ print \<\< coef term1 \<\< newline;
 print \<\< var term1 \<\< newline;
 dispose! term1;
 
-#+end_example
+\end{verbatim}
 \end{small}
 
-** A new Type: Polynomial
+\section{A new Type: Polynomial}
 
 {\bf The complete listing for this section is at page
 [[#PolynomialListing][PolynomialListing]].}
 
-*** Deciding on a representation
+\subsection{Deciding on a representation}
 
 We plan to construct our first polynomial. It will consist of *Term*s
 added together (we will ignore the signs of the terms for now). Since
@@ -1161,26 +1163,26 @@ highest power in the polynomial.
 So we need the lines:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Rep == Array Term;
   import from Rep;
-#+end_example
+\end{verbatim}
 \end{small}
 
-*** The type tower --- \\ a closer look at Term
+\subsection{The type tower --- \\ a closer look at Term}
 
 Another important fact is that we've chosen *Array(Term)* as our
 representation.  This assumes that the *Type* constructor 
 =Array= will accept *Term* as a type it can use for elements of
 arrays. However, when we look at the definition of the *Array* (in
 *array.as*, in your Axiom *samples/libaxllib* directory
---- see [[#asugManifest][asugManifest]]) we see the following domain
+--- see \ref{asugManifest}) we see the following domain
 definition:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Array(S: BasicType): ExtensibleArrayCategory S
-#+end_example
+\end{verbatim}
 \end{small}
 
 This definition tells us that the argument to *Array* must be of
@@ -1190,9 +1192,9 @@ build arrays of things that do not satisfy the definition of
 definition:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Array Term
-#+end_example
+\end{verbatim}
 \end{small}
 
 and complain that *Term* is not of *Type* ``*BasicType*''.
@@ -1201,28 +1203,28 @@ So we have to change the domain header for *Term* to declare that
 *Term* is a *BasicType*. Our old domain header said:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term: with {
-#+end_example
+\end{verbatim}
 \end{small}
 
 and we change it to read:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term: BasicType with {
-#+end_example
+\end{verbatim}
 \end{small}
 
 which says that *Term* is a *BasicType* with some additional
 functions.  Now when we try to compile it the compiler says:
 
 \begin{small}%
-#+begin_example
+\begin{verbatim}
   Term is missing the following exports:
         =: (%, %) -> Boolean;   ++ Equality test.
         sample: %;              ++ Example element.
-#+end_example
+\end{verbatim}
 \end{small}
 
 Oh, bother. The compiler is unable to accept that *Term* is a 
@@ -1242,15 +1244,15 @@ element. All it has to do is get the two array elements and call
 *Term*, as we have defined it so far, does /not\// implement
 an === function.
 
-*** BasicType
+\subsection{BasicType}
 
 Let's look at *BasicType* for a moment (in *axlcat.as* in
 theAxiom \linebreak *samples/libaxllib* directory --- see
-[[#asugManifest][asugManifest]]).  *BasicType* has the following
+\ref{asugManifest}).  *BasicType* has the following
 definition:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 define BasicType: Category == with {
         =:      (%, %) -> Boolean;              ++ Equality test.
         ~=:     (%, %) -> Boolean;              ++ Inequality test.
@@ -1263,7 +1265,7 @@ define BasicType: Category == with {
         default hash(x: %): SingleInteger == (0$Machine)::SingleInteger;
         default (\<\<)(x: %)(p: TextWriter): TextWriter == p \<\< x;
 }
-#+end_example
+\end{verbatim}
 \end{small}
 
 n*BasicType* is a type called a *Category*, or metaclass. For
@@ -1289,7 +1291,7 @@ argument /and/ the type of the result are the same.  So, even if
 we have two functions with the same name, it is clear that the rest of
 the signature is different and so they are different.
 
-*** Implementing equality (=) in Term
+\subsection{Implementing equality (=) in Term}
 
 Ultimately, we need to do several things: we need to implement the
 === function for the domain *Term*; we need to define 
@@ -1301,9 +1303,9 @@ Let's do them one at a time. The signature that we need to export for the
 function === looks like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   =: (%, %) -> Boolean;
-#+end_example
+\end{verbatim}
 \end{small}
 
 We need to be able to compare two *Term* objects to decide whether
@@ -1317,13 +1319,13 @@ This function implementation needs to be put in the *add* body
 of *Term*:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (term1: %) = (term2: %): Boolean == {
           coef term1 ~= coef term2 => false;
           var  term1 ~= var term2  => false;
           true
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 This says that we have an infix function === which takes two
@@ -1334,9 +1336,9 @@ arguments: =term1= of *Type* =\%= (in this case,
 The second line calls the function with signature:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   ~=: (SingleInteger, SingleInteger) -> Boolean
-#+end_example
+\end{verbatim}
 \end{small}
 
 because =coef(term1)= and =coef(term2)= both return 
@@ -1347,9 +1349,9 @@ be equal and we return *false*.
 The third line says call the function with signature:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   ~=: (Character, Character) -> Boolean
-#+end_example
+\end{verbatim}
 \end{small}
 
 because =var(term1)= and =var(term2)= both return *Character*
@@ -1360,14 +1362,14 @@ they are /not/ equal then the terms cannot be equal and we return
 The fourth line (if we get to it) says that we have passed all of the
 tests so the terms must be equal and we return *true*.
 
-*** Implementing sample in Term
+\subsection{Implementing sample in Term}
 
 The second signature we need to implement is:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   sample: %;
-#+end_example
+\end{verbatim}
 \end{small}
 
 That is, we need to return a sample element of the domain. A
@@ -1380,7 +1382,7 @@ the domain can rely on specialised properties of the sample, such as
 one-ness or emptyness.  For now, let's return the 0 element. Since the
 variable doesn't matter, we'll use =x=.
 
-*** Fulfilling the contract
+\subsection{Fulfilling the contract}
 
 The next step would be to add both signatures to the export list of
 *Term* --- but it turns out that we don't have to do this. Look
@@ -1388,10 +1390,10 @@ carefully at the definition of === and =sample= in
 *BasicType*. The signatures read:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   =: (%, %) -> Boolean;
   sample: %;
-#+end_example
+\end{verbatim}
 \end{small}
 
 Notice that they use =\%=, not *BasicType*. Remember that 
@@ -1405,7 +1407,7 @@ constructed.
 The new definition line and exports for the *Term* domain look like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term: BasicType with {
           new: (SingleInteger, Character) -> %;
           dispose!: % -> ();
@@ -1413,7 +1415,7 @@ The new definition line and exports for the *Term* domain look like:
           coef: % -> SingleInteger;
           var:  % -> Character;
    }
-#+end_example
+\end{verbatim}
 \end{small}
 
 But we get all of the signatures exported from *BasicType* in
@@ -1423,7 +1425,7 @@ addition so the /real/ exports are those from *BasicType*
 *Term*):
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
         =:      (%, %) -> Boolean;              ++ Equality test.
         ~=:     (%, %) -> Boolean;              ++ Inequality test.
         \<\<:     (TextWriter, %) -> TextWriter;  ++ Basic output.
@@ -1435,7 +1437,7 @@ addition so the /real/ exports are those from *BasicType*
         \<\<:     (TextWriter, %) -> TextWriter;
         coef:   % -> SingleInteger;
         var:    % -> Character;
-#+end_example
+\end{verbatim}
 \end{small}
 
 Notice that we also get {\tt \~{}=}, =hash= and ``*\<\<*''
@@ -1445,9 +1447,9 @@ definition, but we do not need to do this at the moment.  That is, we
 can say:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new(10, char "x") ~= new(10, char "x")
-#+end_example
+\end{verbatim}
 \end{small}
 
 (which is false, by our definition) but we /don't/ have to
@@ -1456,9 +1458,9 @@ implement this function in the *add* body of *Term*. It is
 we said
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term: BasicType with {
-#+end_example
+\end{verbatim}
 \end{small}
 
 We are saying that we want all of the signatures from *BasicType*
@@ -1472,7 +1474,7 @@ particular, we know that we can compare any two *Term*s for
 equality (because *Term* is a *BasicType* and all 
 *BasicType*s have a definition for equality).
 
-*** Polynomial --- the definition
+\subsection{Polynomial --- the definition}
 
 As usual, we need the minimum functions for a domain:
 
@@ -1487,9 +1489,9 @@ The =new= function takes a list of type *Term*, and returns an
 instance of a *Polynomial*. The signature is:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new: List(Term) -> %;
-#+end_example
+\end{verbatim}
 \end{small}
 
 \vbox{ 
@@ -1502,9 +1504,9 @@ The =dispose!= function does nothing interesting at this time and
 returns nothing.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   dispose!: % -> ();
-#+end_example
+\end{verbatim}
 \end{small}
 
 The ``*\<\<*'' function has the same signature as the ``*\<\<*''
@@ -1512,12 +1514,12 @@ function from the *Term* domain but the =\%= refers to
 *Polynomial*:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   \<\<: (TextWriter, %) -> TextWriter;
-#+end_example
+\end{verbatim}
 \end{small}
 
-*** Printing --- a digression
+\subsection{Printing --- a digression}
 
 Printing polynomials is a mildly interesting issue. Let's do a step by step
 code development of the ``*\<\<*'' function. 
@@ -1526,9 +1528,9 @@ We need to understand the requirements of the ``*\<\<*'' function a little
 better. The standard function header is:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
    (stream: TextWriter) \<\< (poly: %): TextWriter 
-#+end_example
+\end{verbatim}
 \end{small}
 
 which means that we expect a =stream= as our left hand argument
@@ -1537,9 +1539,9 @@ right hand object. Within the body of the function, printing is done
 by referring to the *stream*:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
    stream \<\< poly \<\< newline;
-#+end_example
+\end{verbatim}
 \end{small}
 
 this will print the *poly* on the *stream*, followed by a
@@ -1550,22 +1552,22 @@ A first cut is to just print each term of the polynomial (except
 the last) followed by a =+= sign, thus:
  
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (stream: TextWriter) \<\< (poly: %): TextWriter == {
           size: SingleInteger := #(rep(poly));
           for i in 1..(size-1) repeat 
                   stream \<\< poly.i \<\< "^" \<\< (size - i) \<\< " + ";
           stream \<\< poly.size
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 When we do this our polynomial will look something like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   3*x^2 + 2*x^1 + 1*x^0
-#+end_example
+\end{verbatim}
 \end{small}
 
 which is correct but somewhat ugly. 
@@ -1578,21 +1580,21 @@ term. Since =poly.size= is of type *Term* we can use the function
 =coef= from *Term* directly:
      
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (stream: TextWriter) \<\< (poly: %): TextWriter == {
           size: SingleInteger := #(rep(poly));
           for i in 1..(size-1) repeat
                   stream \<\< poly.i \<\< "^" \<\< (size - i) \<\< " + ";
           stream \<\< coef(poly.size)
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 Next we note that the *$x^1$* notation is unnecessary, so we change
 the index and print this term as =x=:
      
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (stream: TextWriter) \<\< (poly: %): TextWriter == {
           size: SingleInteger := #(rep(poly));
           for i in 1..(size-2) repeat 
@@ -1600,7 +1602,7 @@ the index and print this term as =x=:
           stream \<\< poly.(size-1) \<\< " + "
           stream \<\< coef(poly.size)
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 A third change is that we do not want to print terms of the form 
@@ -1613,16 +1615,16 @@ but a better programming choice. So, the following signature gets
 added to *Term*:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   zero? % -> Boolean;
-#+end_example
+\end{verbatim}
 \end{small}
 
 and we can now use it in *Polynomial*'s implementation of 
 ``*\<\<*'' thus:
      
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (stream: TextWriter) \<\< (poly: %): TextWriter == {
           size: SingleInteger := #(rep(poly));
 
@@ -1637,7 +1639,7 @@ and we can now use it in *Polynomial*'s implementation of
           else
                 stream \<\< coef(poly.size)
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 This will now skip printing terms whose coefficient is zero. However,
@@ -1655,7 +1657,7 @@ print a prefix =+= whenever we print a term (except the first, of
 course). So, another shot at it follows:
      
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (stream: TextWriter) \<\< (poly: %): TextWriter == {
           size: SingleInteger := #(rep(poly));
           prefix: String := "";
@@ -1672,7 +1674,7 @@ course). So, another shot at it follows:
                   stream \<\< prefix \<\< coef(poly.size);
          stream
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 And now, another problem ... (these all fall under the universal law:
@@ -1695,9 +1697,9 @@ polynomial, so we should adopt the same approach we used with
 *Term* and export a =zero?= function.  The signature looks like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   zero?: % -> Boolean;
-#+end_example
+\end{verbatim}
 \end{small}
 
 (Notice again that we have the same signature as the =zero?= from
@@ -1728,7 +1730,7 @@ are many tradeoffs but no one correct solution.
 So, we add the =zero? poly= test early in the printing:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   (stream: TextWriter) \<\< (poly: %): TextWriter == {
           zero? poly => stream \<\< 0;
 
@@ -1748,7 +1750,7 @@ So, we add the =zero? poly= test early in the printing:
                   stream \<\< prefix \<\< coef(poly.size);
           stream
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 Still another problem. We print =1*x=. Normal mathematical
@@ -1760,9 +1762,9 @@ One more problem, while we are at it. What happens if the term has a
 negative coefficient? Well we print something like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   -3*x^2 + -2*x + -1
-#+end_example
+\end{verbatim}
 \end{small}
 
 which is certainly correct but really ugly. Let's fix that with another pass.
@@ -1770,19 +1772,19 @@ We need to be able to negate a term so that we can flip the sign of a
 negative term. So we add the signature:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   -: % -> %;
-#+end_example
+\end{verbatim}
 \end{small}
  
 to *Term*. This is unary negation. We also need predicates that tell 
 whether a term is positive or negative:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   positive? % -> Boolean;
   negative? % -> Boolean;
-#+end_example
+\end{verbatim}
 \end{small}
 
 We might as well add the ability to add and subtract terms while we
@@ -1791,10 +1793,10 @@ polynomials. These signatures need to be added to *Term*'s export
 list: 
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   -:(%,%) -> %;
   +:(%,%) -> %;
-#+end_example
+\end{verbatim}
 \end{small}
 
 Now, back to printing the polynomial with negative terms. Let's make
@@ -1809,7 +1811,7 @@ particularly general or interesting, but make the code (slightly)
 clearer.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   prefix(term: Term): String ==
           if negative? term then " - " else " + ";
 
@@ -1836,12 +1838,12 @@ clearer.
                   stream \<\< prefix \<\< abs(coef(poly.size));
           stream
   }
-#+end_example
+\end{verbatim}
 \end{small}
 
 Remember: There is no such thing as a simple job.
 
-*** Polynomial --- a return from printing
+\subsection{Polynomial --- a return from printing}
 
 The accessor functions for a *Polynomial* fall into several cases.
 We would like to be able to access the leading term of the polynomial
@@ -1849,10 +1851,10 @@ and each term of the polynomial. A single term is referred to as a
 /monomial/.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   leadingMonomial: % -> Term;
   apply: (%, SingleInteger) -> Term;
-#+end_example
+\end{verbatim}
 \end{small}
   
 Notice that our representation of polynomials does not provide the
@@ -1862,19 +1864,19 @@ term should be. In general, the $i$-th term from the polynomial will be
 the polynomial (referred to as the =degree=):
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   degree: % -> SingleInteger;
-#+end_example
+\end{verbatim}
 \end{small}
 
 This is good enough for a first try at a *Polynomial* type. The
 next example is an implementation of this type.
 
-*** Listing
-# label: PolynomialListing
+\subsection{Listing}
+\label{PolynomialListing}
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 
 #include "axllib"
 
@@ -2035,10 +2037,10 @@ print \<\< new(list())@Polynomial \<\< newline; -- true zero polynomial
 
 #endif -- TEST
 
-#+end_example
+\end{verbatim}
 \end{small}
 
-** Operations in the Type ``Polynomial''
+\section{Operations in the Type ``Polynomial''}
 
 {\bf The complete listing for this section is at page
 [[#OpsInPolynomialListing][OpsInPolynomialListing]].}
@@ -2050,12 +2052,12 @@ operations are addition (=+=) and subtraction (=-=). These are
 infix operations.  Their signatures look like:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 
         +: (%,%) -> %;
         -: (%,%) -> %;
 
-#+end_example
+\end{verbatim}
 \end{small}
 
 That is, they take two objects, both of the current *Type* (in
@@ -2073,7 +2075,7 @@ taking the sum or difference only for terms which exist in both
 polynomials.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 
         (poly1: %) + (poly2: %): % == {
                 zero? poly1 => poly2;
@@ -2130,7 +2132,7 @@ polynomials.
 
                 per result
         }
-#+end_example
+\end{verbatim}
 \end{small}
 
 This is not strictly correct, however, since the subtraction can
@@ -2142,20 +2144,20 @@ and printing polynomials. First we need to bring the domains we
 will use into scope.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 
 import from Character;
 import from SingleInteger;
 import from List Term;
 import from Polynomial;
-#+end_example
+\end{verbatim}
 \end{small}
 
 Since polynomials are lists of terms we create a few terms in the
 variable =x=, which we can use to construct polynomials.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 var: Character := char "x";
 term1 := new(3, var);
 term2 := new(2, var);
@@ -2163,29 +2165,29 @@ term3 := new(1, var);
 term4 := new(0, var);
 term5 := new(-3, var);
 --   term6 := -term5;
-#+end_example
+\end{verbatim}
 \end{small}
 
 We need to check the handling of leading negative signs:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 print \<\< new(list(term5,term5,term5)) \<\< newline; -- negative signs
-#+end_example
+\end{verbatim}
 \end{small}
 
 We need to check that we print =1*x= as =x=.
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 print \<\< new(list(term3,term2,term1)) \<\< newline; -- 1 elision
-#+end_example
+\end{verbatim}
 \end{small}
 
 We need to check that =0*x= is skipped properly:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 print \<\< new(list(term1,term2,term3)) \<\< newline;
 print \<\< new(list(term4,term2,term3)) \<\< newline;
 print \<\< new(list(term1,term4,term3)) \<\< newline;
@@ -2194,36 +2196,36 @@ print \<\< new(list(term1,term2,term4)) \<\< newline; -- bad leading term
 print \<\< new(list(term4,term2,term4)) \<\< newline; -- bad leading term
 print \<\< new(list(term1,term4,term4)) \<\< newline; -- bad leading term
 print \<\< new(list(term4,term4,term4)) \<\< newline; -- bad leading term
-#+end_example
+\end{verbatim}
 \end{small}
 
 We need to check that we print the zero polynomial properly:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 print \<\< new(list())@Polynomial \<\< newline; -- true zero polynomial
 print \<\< 0@Polynomial \<\< newline; -- true zero polynomial
-#+end_example
+\end{verbatim}
 \end{small}
 
 We need to check that term arithmetic is properly implemented:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 print \<\< term1 + term2 \<\< newline;
 print \<\< term1 - term2 \<\< newline;
 print \<\< term2 - term1 \<\< newline;
 print \<\< term1 - term1 \<\< newline;
-#+end_example
+\end{verbatim}
 \end{small}
 %#endif --example5
 
-*** Listing
+\subsection{Listing}
 
-# label: OpsInPolynomialListing
+\label{OpsInPolynomialListing}
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 
 #include "axllib"
 
@@ -2420,10 +2422,10 @@ Polynomial: with {
         }
  }
 
-#+end_example
+\end{verbatim}
 \end{small}
 
-** Parameterized types
+\section{Parameterized types}
 
 {\bf The complete listing for this section is at page
 [[#ParamTypesListing][ParamTypesListing]].}
@@ -2437,7 +2439,7 @@ different types of coefficients. We could have polynomials of the
 form:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   3*x^2 + 2*x + 1
 
 or 
@@ -2448,7 +2450,7 @@ or
 
   (3/5)*x^2 + (2/5)*x + (1/5)
 
-#+end_example
+\end{verbatim}
 \end{small}
 
 The first polynomial has integer coefficients. The second has real
@@ -2475,17 +2477,17 @@ tells us the *Type* of a coefficient.
 The previous *Type* definition line for *Term* was:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term: BasicType with {
-#+end_example
+\end{verbatim}
 \end{small}
 
 which has been changed to:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term(CoefType: OrderedRing): BasicType with {          
-#+end_example
+\end{verbatim}
 \end{small}
 
 There is much to say about this change. The first and most notable
@@ -2504,9 +2506,9 @@ meaning for our program (what would it mean to add two things of
 A reasonable initial guess for a declaration line might be:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term(CoefType: BasicType): BasicType with {          
-#+end_example
+\end{verbatim}
 \end{small}
 
 but this fails, because the code that follows assumes that we can
@@ -2516,13 +2518,13 @@ are *BasicType*s only have the operations: (===, {\tt \~{}=},
 ``*\<\<*, =sample=, =hash=) and are not required to have the
 constant *1*.  The guarantee that a *Type* has the constant
 *1* first appears in the (very primitive) type *Monoid* (see
-[[#axlcatFigure][axlcatFigure]] on pageref{axlcatFigure}).  So we could satisfy
+\ref{axlcatFigure} on pageref{axlcatFigure}).  So we could satisfy
 this requirement with the definition line:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term(CoefType: Monoid): BasicType with {          
-#+end_example
+\end{verbatim}
 \end{small}
 
 Again we run into a problem: some of the operations we have
@@ -2539,9 +2541,9 @@ something that is at least an *OrderedRing*. This gives us the
 required function definition line:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Term(CoefType: OrderedRing): BasicType with {          
-#+end_example
+\end{verbatim}
 \end{small}
 
 We originally wrote the =Rep= so that it assumed that the 
@@ -2550,17 +2552,17 @@ internally) would be of *Type* =SingleInteger=.  We must
 change this. The old =Rep= read: 
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Rep == Record(coef: SingleInteger, var: Character);       
-#+end_example
+\end{verbatim}
 \end{small}
 
 and now it reads:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   Rep == Record(coef: CoefType, var: Character);       
-#+end_example
+\end{verbatim}
 \end{small}
 
 This tells us that we can store anything that satisfies our =CoefType=
@@ -2570,17 +2572,17 @@ The next change we need to make is in the signature lines of certain
 functions. The old signature for the function =new= was:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new: (SingleInteger, Character) -> %;
-#+end_example
+\end{verbatim}
 \end{small}
 
 which has been changed to:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new: (CoefType, Character) -> %;                    
-#+end_example
+\end{verbatim}
 \end{small}
 
 so that we used to require a *SingleInteger* as the coefficient
@@ -2593,27 +2595,27 @@ corresponding change in the function header line. It used to
 read:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new(number: SingleInteger, variable: Character): % ==
-#+end_example
+\end{verbatim}
 \end{small}
 
 and now it reads:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   new(number: CoefType, variable: Character): % ==
-#+end_example
+\end{verbatim}
 \end{small}
 
 Similarly, we assumed that =coef= would return a *SingleInteger*:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   coef: % -> SingleInteger;
 
   coef: % -> CoefType;                                     
-#+end_example
+\end{verbatim}
 \end{small}
 
 and now it returns anything that is stored in the *Term*.
@@ -2623,25 +2625,25 @@ corresponding change in the function header line. It used to
 read:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   coef(term: %): SingleInteger ==                         
-#+end_example
+\end{verbatim}
 \end{small}
 
 and now it reads:
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
   coef(term: %): CoefType ==                         
-#+end_example
+\end{verbatim}
 \end{small}
 
-*** Listing
+\subsection{Listing}
 
-# label: ParamTypesListing
+\label{ParamTypesListing}
 
 \begin{small}
-#+begin_example
+\begin{verbatim}
 #include "axllib"
 
 Term(CoefType: OrderedRing): BasicType with {          
@@ -2717,7 +2719,7 @@ print \<\< new(0$Float,char "x") \<\< newline;
 
 #endif -- TEST
 
-#+end_example
+\end{verbatim}
 \end{small}
 
 Many thanks to the reviewers:

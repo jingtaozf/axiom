@@ -5,7 +5,7 @@
 #+AUTHOR: The Axiom Team
 #+BEGIN_abstract
 #+END_abstract
-** Internal Interpreter Facilities
+\section{Internal Interpreter Facilities}
 Vectorized Attributed Trees
 
 The interpreter translates parse forms into vats for analysis.
@@ -19,14 +19,15 @@ that if it is not a vector it is a subtree.
 
 attributed tree nodes have the following form:
 
-| slot | description |
-| ---- | ------------------------- |
-| 0 | operation name or literal |
-| 1 | declared mode of variable |
-| 2 | computed value of subtree from this node |
-| 3 | modeset: list of single computed mode of subtree |
-| 4 | prop list for extra things |
-
+\begin{tabular}{cl}
+slot & description\\
+---- & ------------------------- \\
+ 0   & operation name or literal\\
+ 1   & declared mode of variable\\
+ 2   & computed value of subtree from this node\\
+ 3   & modeset: list of single computed mode of subtree\\
+ 4   & prop list for extra things\\
+\end{tabular}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -41,9 +42,9 @@ attributed tree nodes have the following form:
 
 #+end_src
 
-** Making trees
+\section{Making trees}
 
-*** mkAtreeNode
+\subsection{mkAtreeNode}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAtreeNode x ==
@@ -60,7 +61,7 @@ attributed tree nodes have the following form:
 
 #+end_src
 
-*** mkAtree
+\subsection{mkAtree}
 Maker of attrib tree from parser form
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -72,7 +73,7 @@ Maker of attrib tree from parser form
 
 #+end_src
 
-*** mkAtreeWithSrcPos
+\subsection{mkAtreeWithSrcPos}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAtreeWithSrcPos(form, posnForm) ==
@@ -87,7 +88,7 @@ Maker of attrib tree from parser form
 
 #+end_src
 
-*** mkAtree1WithSrcPos
+\subsection{mkAtree1WithSrcPos}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAtree1WithSrcPos(form, posnForm) ==
@@ -98,7 +99,7 @@ Maker of attrib tree from parser form
 
 #+end_src
 
-*** mkAtreeNodeWithSrcPos
+\subsection{mkAtreeNodeWithSrcPos}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAtreeNodeWithSrcPos(form, posnForm) ==
@@ -109,7 +110,7 @@ Maker of attrib tree from parser form
 
 #+end_src
 
-*** transferSrcPosInfo
+\subsection{transferSrcPosInfo}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;transferSrcPosInfo(pf, atree) ==
@@ -147,7 +148,7 @@ Maker of attrib tree from parser form
 
 #+end_src
 
-*** mkAtreeExpandMacros
+\subsection{mkAtreeExpandMacros}
 Handle macro expansion. if the macros have args we require that
 we match the correct number of args
 #+NAME: *
@@ -251,7 +252,7 @@ we match the correct number of args
      x))
  
 #+end_src
-*** mkAtree1
+\subsection{mkAtree1}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAtree1 x ==
@@ -306,7 +307,7 @@ we match the correct number of args
 
 #+end_src
 
-*** mkAtree2
+\subsection{mkAtree2}
 mkAtree2 and mkAtree3 were created because mkAtree1 got so big
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -633,7 +634,7 @@ mkAtree2 and mkAtree3 were created because mkAtree1 got so big
 
 #+end_src
 
-*** mkAtree3
+\subsection{mkAtree3}
 mkAtree2 and mkAtree3 were created because mkAtree1 got so big
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1099,12 +1100,14 @@ mkAtree2 and mkAtree3 were created because mkAtree1 got so big
           (setq g12 (cons (|mkAtree1| y) g12)))))))))
 
 #+end_src
-*** collectDefTypesAndPreds
+\subsection{collectDefTypesAndPreds}
 Given an arglist to a DEF-like form, this function returns
 a vector of three things:
-- slot 0: just the variables
-- slot 1: the type declarations on the variables
-- slot 2: a predicate for all arguments
+\begin{itemize}
+\item slot 0: just the variables
+\item slot 1: the type declarations on the variables
+\item slot 2: a predicate for all arguments
+\end{itemize}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;collectDefTypesAndPreds args ==
@@ -1250,7 +1253,7 @@ a vector of three things:
 
 #+end_src
 
-*** mkAtreeValueOf
+\subsection{mkAtreeValueOf}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAtreeValueOf l ==
@@ -1265,7 +1268,7 @@ a vector of three things:
 
 #+end_src
 
-*** mkAtreeValueOf1
+\subsection{mkAtreeValueOf1}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkAtreeValueOf1 l ==
@@ -1305,7 +1308,7 @@ a vector of three things:
        (setq g0 (cons (|mkAtreeValueOf1| x) g0))))))))
 
 #+end_src
-*** mkLessOrEqual
+\subsection{mkLessOrEqual}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;mkLessOrEqual(lhs,rhs) == ['not,['_<,rhs,lhs]]
@@ -1315,7 +1318,7 @@ a vector of three things:
 
 #+end_src
 
-*** emptyAtree
+\subsection{emptyAtree}
 Remove mode, value, and misc. info from attrib tree
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1344,7 +1347,7 @@ Remove mode, value, and misc. info from attrib tree
 
 #+end_src
 
-*** unVectorize
+\subsection{unVectorize}
 Transforms from an atree back into a tree
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1393,9 +1396,9 @@ Transforms from an atree back into a tree
 
 #+end_src
 
-** Stuffing and Getting Info
+\section{Stuffing and Getting Info}
 
-*** putAtree
+\subsection{putAtree}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putAtree(x,prop,val) ==
@@ -1423,7 +1426,7 @@ Transforms from an atree back into a tree
 
 #+end_src
 
-*** getAtree
+\subsection{getAtree}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getAtree(x,prop) ==
@@ -1449,7 +1452,7 @@ Transforms from an atree back into a tree
 
 #+end_src
 
-*** putTarget
+\subsection{putTarget}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putTarget(x, targ) ==
@@ -1464,7 +1467,7 @@ Transforms from an atree back into a tree
 
 #+end_src
 
-*** getTarget
+\subsection{getTarget}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getTarget(x) == getAtree(x,'target)
@@ -1474,7 +1477,7 @@ Transforms from an atree back into a tree
 
 #+end_src
 
-*** insertShortAlist
+\subsection{insertShortAlist}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;insertShortAlist(prop,val,al) ==
@@ -1491,7 +1494,7 @@ Transforms from an atree back into a tree
 
 #+end_src
 
-*** transferPropsToNode
+\subsection{transferPropsToNode}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;transferPropsToNode(x,t) ==
@@ -1544,7 +1547,7 @@ Transforms from an atree back into a tree
 
 #+end_src
 
-*** isLeaf
+\subsection{isLeaf}
 May be a number or a vector
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1555,7 +1558,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getMode
+\subsection{getMode}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getMode x ==
@@ -1576,7 +1579,7 @@ May be a number or a vector
 
 #+end_src
 
-*** putMode
+\subsection{putMode}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putMode(x,y) ==
@@ -1596,7 +1599,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getValue
+\subsection{getValue}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getValue x ==
@@ -1620,7 +1623,7 @@ May be a number or a vector
 
 #+end_src
 
-*** putValue
+\subsection{putValue}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putValue(x,y) ==
@@ -1640,7 +1643,7 @@ May be a number or a vector
 
 #+end_src
 
-*** putValueValue
+\subsection{putValueValue}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putValueValue(vec,val) ==
@@ -1653,7 +1656,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getUnnameIfCan
+\subsection{getUnnameIfCan}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getUnnameIfCan x ==
@@ -1672,7 +1675,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getUnname
+\subsection{getUnname}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getUnname x ==
@@ -1687,7 +1690,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getUnname1
+\subsection{getUnname1}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getUnname1 x ==
@@ -1705,7 +1708,7 @@ May be a number or a vector
   (t x)))
 
 #+end_src
-*** computedMode
+\subsection{computedMode}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;computedMode t ==
@@ -1729,7 +1732,7 @@ May be a number or a vector
 
 #+end_src
 
-*** putModeSet
+\subsection{putModeSet}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putModeSet(x,y) ==
@@ -1750,7 +1753,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getModeOrFirstModeSetIfThere
+\subsection{getModeOrFirstModeSetIfThere}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getModeOrFirstModeSetIfThere x ==
@@ -1788,7 +1791,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getModeSet
+\subsection{getModeSet}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getModeSet x ==
@@ -1834,7 +1837,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getModeSetUseSubdomain
+\subsection{getModeSetUseSubdomain}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getModeSetUseSubdomain x ==
@@ -1908,7 +1911,7 @@ May be a number or a vector
 
 #+end_src
 
-*** atree2EvaluatedTree
+\subsection{atree2EvaluatedTree}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;atree2EvaluatedTree x == atree2Tree1(x,true)
@@ -1918,7 +1921,7 @@ May be a number or a vector
 
 #+end_src
 
-*** atree2Tree1
+\subsection{atree2Tree1}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;atree2Tree1(x,evalIfTrue) ==
@@ -1945,9 +1948,9 @@ May be a number or a vector
 
 #+end_src
 
-** Environment Utilities
+\section{Environment Utilities}
 
-*** getValueFromEnvironment
+\subsection{getValueFromEnvironment}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getValueFromEnvironment(x,mode) ==
@@ -1979,7 +1982,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getValueFromSpecificEnvironment
+\subsection{getValueFromSpecificEnvironment}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getValueFromSpecificEnvironment(id,mode,e) ==
@@ -2060,7 +2063,7 @@ May be a number or a vector
 
 #+end_src
 
-*** augProplistInteractive
+\subsection{augProplistInteractive}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;augProplistInteractive(proplist,prop,val) ==
@@ -2077,7 +2080,7 @@ May be a number or a vector
 
 #+end_src
 
-*** getFlag
+\subsection{getFlag}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getFlag x == get("--flags--",x,$e)
@@ -2088,7 +2091,7 @@ May be a number or a vector
 
 #+end_src
 
-*** putFlag
+\subsection{putFlag}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putFlag(flag,value) ==
@@ -2100,7 +2103,7 @@ May be a number or a vector
 
 #+end_src
 
-*** get
+\subsection{get}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;get(x,prop,e) ==
@@ -2115,7 +2118,7 @@ May be a number or a vector
 
 #+end_src
 
-*** get0
+\subsection{get0}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;get0(x,prop,e) ==
@@ -2137,7 +2140,7 @@ May be a number or a vector
 
 #+end_src
 
-*** get1
+\subsection{get1}
 We try to avoid lookups in the environment if it is clear that
 the lookup will fail. The =$envHashTable= was populated in
 addBinding (see g-util.boot.pamphlet).
@@ -2192,7 +2195,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** get2
+\subsection{get2}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;get2(x,prop,e) ==
@@ -2213,7 +2216,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** getI
+\subsection{getI}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getI(x,prop) == get(x,prop,$InteractiveFrame)
@@ -2224,7 +2227,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** putI
+\subsection{putI}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putI(x,prop,val) == ($InteractiveFrame := put(x,prop,val,$InteractiveFrame))
@@ -2235,7 +2238,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** getIProplist
+\subsection{getIProplist}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getIProplist x == getProplist(x,$InteractiveFrame)
@@ -2246,7 +2249,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** removeBindingI
+\subsection{removeBindingI}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;removeBindingI x ==
@@ -2259,7 +2262,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** rempropI
+\subsection{rempropI}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;rempropI(x,prop) ==
@@ -2283,7 +2286,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** remprop
+\subsection{remprop}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;remprop(x,prop,e) ==
@@ -2302,7 +2305,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** fastSearchCurrentEnv
+\subsection{fastSearchCurrentEnv}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;fastSearchCurrentEnv(x,currentEnv) ==
@@ -2324,7 +2327,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** put
+\subsection{put}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;put(x,prop,val,e) ==
@@ -2364,7 +2367,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** putIntSymTab
+\subsection{putIntSymTab}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putIntSymTab(x,prop,val,e) ==
@@ -2402,7 +2405,7 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-*** addIntSymTabBinding
+\subsection{addIntSymTabBinding}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;addIntSymTabBinding(var,proplist,e is [[curContour,:.],:.]) ==
@@ -2422,13 +2425,13 @@ addBinding (see g-util.boot.pamphlet).
 
 #+end_src
 
-** Source and position information
+\section{Source and position information}
 In the following, src is a string containing an original input line,
 line is the line number of the string within the source file,
 and col is the index within src of the start of the form represented
 by x. x is a VAT.
 
-*** putSrcPos
+\subsection{putSrcPos}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;putSrcPos(x, file, src, line, col) ==
@@ -2439,7 +2442,7 @@ by x. x is a VAT.
 
 #+end_src
 
-*** getSrcPos
+\subsection{getSrcPos}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;getSrcPos(x) == getAtree(x, 'srcAndPos)
@@ -2449,7 +2452,7 @@ by x. x is a VAT.
 
 #+end_src
 
-*** srcPosNew
+\subsection{srcPosNew}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;srcPosNew(file, src, line, col) == LIST2VEC [file, src, line, col]
@@ -2459,7 +2462,7 @@ by x. x is a VAT.
 
 #+end_src
 
-*** srcPosFile
+\subsection{srcPosFile}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;srcPosFile(sp) ==
@@ -2472,7 +2475,7 @@ by x. x is a VAT.
 
 #+end_src
 
-*** srcPosSource
+\subsection{srcPosSource}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;srcPosSource(sp) ==
@@ -2485,7 +2488,7 @@ by x. x is a VAT.
 
 #+end_src
 
-*** srcPosLine
+\subsection{srcPosLine}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;srcPosLine(sp) ==
@@ -2498,7 +2501,7 @@ by x. x is a VAT.
 
 #+end_src
 
-*** srcPosColumn
+\subsection{srcPosColumn}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;srcPosColumn(sp) ==
@@ -2511,7 +2514,7 @@ by x. x is a VAT.
 
 #+end_src
 
-*** srcPosDisplay
+\subsection{srcPosDisplay}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;srcPosDisplay(sp) ==
@@ -2545,9 +2548,9 @@ by x. x is a VAT.
 
 #+end_src
 
-** Library compiler structures needed by the interpreter
+\section{Library compiler structures needed by the interpreter}
 Tuples and Crosses
-*** asTupleNew
+\subsection{asTupleNew}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;asTupleNew(size, listOfElts) == CONS(size, LIST2VEC listOfElts)
@@ -2557,7 +2560,7 @@ Tuples and Crosses
 
 #+end_src
 
-*** asTupleNew0
+\subsection{asTupleNew0}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;asTupleNew0(listOfElts) == CONS(#listOfElts, LIST2VEC listOfElts)
@@ -2567,7 +2570,7 @@ Tuples and Crosses
 
 #+end_src
 
-*** asTupleNewCode
+\subsection{asTupleNewCode}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;asTupleNewCode(size, listOfElts) == ["asTupleNew", size, ['LIST, :listOfElts]]
@@ -2577,7 +2580,7 @@ Tuples and Crosses
 
 #+end_src
 
-*** asTupleNewCode0
+\subsection{asTupleNewCode0}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;asTupleNewCode0(listForm) == ["asTupleNew0", listForm]
@@ -2587,7 +2590,7 @@ Tuples and Crosses
 
 #+end_src
 
-*** asTupleSize
+\subsection{asTupleSize}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;asTupleSize(at) == CAR at
@@ -2597,7 +2600,7 @@ Tuples and Crosses
 
 #+end_src
 
-*** asTupleAsVector
+\subsection{asTupleAsVector}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;asTupleAsVector(at) == CDR at
@@ -2607,7 +2610,7 @@ Tuples and Crosses
 
 #+end_src
 
-*** asTupleAsList
+\subsection{asTupleAsList}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;asTupleAsList(at) == VEC2LIST asTupleAsVector at

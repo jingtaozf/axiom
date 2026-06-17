@@ -5,24 +5,24 @@
 #+AUTHOR: Timothy Daly
 #+BEGIN_abstract
 #+END_abstract
-** Non-portable code
-*** GCL only code
+\section{Non-portable code}
+\subsection{GCL only code}
 This section contains code that will only work in Gnu Common Lisp
 (GCL). These tagged symbols are split out so we can find suitable
 replacements in other common lisps.
-**** GETENV
+\subsubsection{GETENV}
 GETENV is a GCL function to return the value of shell variables
 from the environment.
 #+NAME: GCL.GETENV
 #+begin_src common-lisp :noweb yes
 #+:GCL   SYSTEM:GETENV
 #+end_src
-**** PNAME
+\subsubsection{PNAME}
 #+NAME: GCL.PNAME
 #+begin_src common-lisp :noweb yes
 #+:GCL    SYSTEM:PNAME
 #+end_src
-*** SBCL host bridge
+\subsection{SBCL host bridge}
 The package definitions below speak the CLtL1 dialect of their AKCL
 origin: they say =lisp::use-package=, import symbols with a
 =LISP:= or =user::= prefix, and use-package the GCL-internal
@@ -130,8 +130,8 @@ into the depsys image, and the image's reader interns that
 it where the pipes will find it. Exit code zero by default ---
 make treats the recipe as succeeded exactly when the compile before
 it did not abort.
-** New Common Lisp Changes
-*** in-package change
+\section{New Common Lisp Changes}
+\subsection{in-package change}
 Common lisp has changed in-package to require a string-designator which
 is a character, string, or symbol. Further, if the package does not exist
 then in-package will throw an error. We fix this by using defpackage.
@@ -1147,8 +1147,8 @@ FOAM::|BIntTimesPlus|
 FOAM::|BIntNext|
 ))
 #+end_src
-** License
-#+begin_example
+\section{License}
+\begin{verbatim}
 ;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
 ;; All rights reserved.
 ;;
@@ -1180,7 +1180,7 @@ FOAM::|BIntNext|
 ;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#+end_example
+\end{verbatim}
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}

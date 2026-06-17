@@ -5,7 +5,7 @@
 #+AUTHOR: Timothy Daly
 #+BEGIN_abstract
 #+END_abstract
-** The databases
+\section{The databases}
 The databases are built in this Makefile even though the prerequisites
 are actually made during the previous step in the algebra directory.
 This allows us to use a simple wildcard to express the fact that
@@ -26,7 +26,7 @@ ${MNT}/${SYS}/algebra/*.daase: ${INT}/algebra/*.nrlib/code.o
 	@ cp -pr ${INT}/algebra/*.daase ${MNT}/${SYS}/algebra
 
 #+end_src
-** summary
+\section{summary}
 #+NAME: summary
 #+begin_src common-lisp :noweb yes
 ${LIB}/summary: ${IN}/summary
@@ -34,7 +34,7 @@ ${LIB}/summary: ${IN}/summary
 	@cp ${IN}/summary ${LIB}/summary
 
 #+end_src
-** copyright
+\section{copyright}
 #+NAME: copyright
 #+begin_src common-lisp :noweb yes
 ${LIB}/copyright: ${IN}/copyright
@@ -42,11 +42,11 @@ ${LIB}/copyright: ${IN}/copyright
 	@cp ${IN}/copyright ${LIB}/copyright
 
 #+end_src
-** asq
+\section{asq}
 asq is a command line tool to ask questions about Axiom's domains,
 packages, and categories.
 
-#+begin_example
+\begin{verbatim}
 asq -property searchkey
  property is one of the following flags: (all is the default)
   (ab)    abbreviation          (an)    ancestors
@@ -61,7 +61,7 @@ asq -property searchkey
 searchkey can be either a domain or its abbreviation.
  e.g. %s -so Integer
  will give the source file name written to stdout
-#+end_example
+\end{verbatim}
 #+NAME: asq
 #+begin_src common-lisp :noweb yes
 ${OUT}/asq: ${MID}/asq.c

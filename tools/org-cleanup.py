@@ -173,7 +173,7 @@ def convert_inline_formatting(line):
     return result
 
 def convert_annotations(line):
-    """Convert annotation macros to org comments."""
+    """Convert annotation macros to org comments. Handles multiple per line."""
     for macro, tag in [
         ('calls', 'calls'), ('usesdollar', 'usesdollar'),
         ('callsdollar', 'callsdollar'), ('defdollar', 'defdollar'),
@@ -182,10 +182,12 @@ def convert_annotations(line):
         ('catches', 'catches'), ('throws', 'throws'),
     ]:
         pat = r'\\' + macro + r'\{([^{}]+)\}\{([^{}]+)\}'
-        m = re.search(pat, line)
-        if m:
-            line = (line[:m.start()] + '# ' + tag + ': ' +
-                    m.group(1) + ' -> ' + m.group(2) + line[m.end():])
+        # Use re.sub with loop to handle multiple instances
+        prev = None
+        while prev != line:
+            prev = line
+            line = re.sub(pat, lambda m: '# ' + tag + ': ' +
+                          m.group(1) + ' -> ' + m.group(2), line)
     return line
 
 def convert_crossrefs(line):
@@ -395,8 +397,17 @@ def process_file(filepath, dry_run=False, phases=None):
     """Process a single .org file through cleanup phases."""
     if phases is None:
         phases = {1, 2, 3, 4, 5, 6}
-    with open(filepath, 'r', errors='replace') as f:
-        original_lines = f.readlines()
+    # Read in binary mode to preserve original bytes and line endings
+    with open(filepath, 'rb') as f:
+        raw = f.read()
+    # Detect encoding
+    try:
+        raw.decode('utf-8')
+        encoding = 'utf-8'
+    except UnicodeDecodeError:
+        encoding = 'latin-1'
+    text = raw.decode(encoding)
+    original_lines = text.splitlines(True)
     lines = list(original_lines)
     changes = {'total': 0, 'by_phase': {}}
 
@@ -479,8 +490,10 @@ def process_file(filepath, dry_run=False, phases=None):
             changes['total'] += c
 
     if not dry_run and lines != original_lines:
-        with open(filepath, 'w') as f:
-            f.writelines(lines)
+        new_text = ''.join(lines)
+        new_bytes = new_text.encode(encoding)
+        with open(filepath, 'wb') as f:
+            f.write(new_bytes)
     return changes
 
 def find_org_files(root):

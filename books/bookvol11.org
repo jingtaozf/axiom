@@ -3,11 +3,11 @@
 #+LATEX: \input{bookheader.tex}
 #+LATEX: \setcounter{chapter}{0} % Chapter 1
 #+LATEX: \setcounter{secnumdepth}{0} % override the one in bookheader.tex
-* Overview
+\chapter{Overview}
 This book contains the Firefox browser AJAX routines.
 
-** Build Instructions
-#+begin_example
+\section{Build Instructions}
+\begin{verbatim}
   mkdir -p /home/silver/bitmaps
   cp bookvol11.pamphlet /home/silver
   cd /home/silver
@@ -30,9 +30,9 @@ This book contains the Firefox browser AJAX routines.
  You should see the result of the differentiate appear inline in the
  page. You can change the values in the text areas, click continue,
  and see the new result.
-#+end_example
+\end{verbatim}
 
-** The Makefile
+\section{The Makefile}
 This Makefile assumes that it is being run in the final target
 directory of the build system. We walk the list of PAGES and
 untangle them from this file, along with any support files
@@ -70,12 +70,12 @@ finish:
 
 #+end_src
 
-** Building new pages
+\section{Building new pages}
 To add a new page you need to create a page with the default layout below
 and add the name of the page to the PAGES variable below.
 
 Most of the pages have a default layout of the form:
-#+begin_example
+\begin{verbatim}
 \subsection{pagename.xhtml}
 \begin{chunk}{pagename.xhtml}
 \getchunk{standard head}
@@ -87,7 +87,7 @@ Most of the pages have a default layout of the form:
 your basic page text goes here.
 \getchunk{page foot}
 \end{chunk}
-#+end_example
+\end{verbatim}
 There are several things to observe here:
 <ol>
  <li>Each page lives in its own subsection and its own chunk.</li>
@@ -98,11 +98,11 @@ There are several things to observe here:
 </ol>
 The default page layout cannot communicate with Axiom.
 
-*** Communicating with Axiom
+\subsection{Communicating with Axiom}
 If your page needs to communicate with Axiom you need to add some
 information in the header of the page.
 The default page that talks to Axiom has the form:
-#+begin_example
+\begin{verbatim}
 \subsection{pagename.xhtml}
 <<pagename.xhtml>>=
 <<standard head>>
@@ -118,22 +118,22 @@ The default page that talks to Axiom has the form:
 your text goes here
 your communication blocks go here
 <<page foot>>
-#+end_example
+\end{verbatim}
 
-*** Handling statements with no free variables
+\subsection{Handling statements with no free variables}
 Use a makeRequest call with a parameter of the id.
 Note that the div with id of ``ansXX'' will get replaced
 automatically and the ``ans'' prefix is required.
-#+begin_example
+\begin{verbatim}
  <li>
   <input type="submit" id="p3" class="subbut" 
     onclick="makeRequest('p3');"
     value="sin(x)" />
   <div id="ansp3"><div></div></div>
  </li>
-#+end_example
+\end{verbatim}
 
-*** Handling statements with free variables
+\subsection{Handling statements with free variables}
 Free variables exist are used in statements but they are defined in
 other statements. To make sure the free variables have the correct
 values you need to include an explicit list of the other ids that
@@ -141,39 +141,39 @@ need to be executed /before/ this statement. You do this with
 a call to ``handleFree''. It expects a list, enclosed in brackets,
 of the ids to execute in order. Be certain that the current id is
 at the end of the list.
-#+begin_example
+\begin{verbatim}
  <li>
   <input type="submit" id="p10" class="subbut" 
     onclick="handleFree(['p9','p10']);"
     value="roman y" />
   <div id="ansp10"><div></div></div>
  </li>
-#+end_example
+\end{verbatim}
 
-*** Handling domain database lookups
+\subsection{Handling domain database lookups}
 Use an anchor tag of the form:
-#+begin_example
+\begin{verbatim}
 <a href="db.xhtml?Vector">Vector</a>
-#+end_example
+\end{verbatim}
 This will be interpreted by Axiom to mean that you want to do a
 lookup on a domain, category, or package whose name follows the 
 question mark. Note that the domain name should NOT be an abbreviation.
 
-*** Handling )show domain
+\subsection{Handling )show domain}
 Use a block containing a showcall of the form:
-#+begin_example
+\begin{verbatim}
  <li>
   <input type="submit" id="p17" class="subbut" 
     onclick="showcall('p17');"
    value=")show DoubleFloat"/>
   <div id="ansp17"><div></div></div>
  </li>
-#+end_example
+\end{verbatim}
 Note that the ``)show'' must be at the beginning of the line
 and that there can only be one space between the word show and
 the following argument.
 
-*** Handling lisp expressions
+\subsection{Handling lisp expressions}
 Use a block containing a lispcall of the form:
  <li>
   <input type="submit" id="p2" class="subbut" 
@@ -184,24 +184,24 @@ Use a block containing a lispcall of the form:
 Note that this works but you can easily blow away your Axiom 
 session with random statements. Let the coder beware.
 
-*** Handling expressions that have no output
+\subsection{Handling expressions that have no output}
 Use the CSS class=``noresult'' tag on the input form.
 This causes the item to show up in black text. It is
 still executable and is generally executed by handleFree
 calls because it contains definitions. However, things like
 function definitions in Axiom return no interesting output
 so there is no point in clicking on them.
-#+begin_example
+\begin{verbatim}
  <li>
   <input type="submit" id="p5" class="noresult" 
     onclick="makeRequest('p5');"
     value=")set streams calculate 5" />
   <div id="ansp5"><div></div></div>
  </li>
-#+end_example
+\end{verbatim}
 
 
-** Defined Pages
+\section{Defined Pages}
 Every page in this file is extracted by the Makefile. This is the list
 of pages that will be extracted. It is organized roughly in the hierarchy
 that you see in the browser pages. This is convention and is not required.
@@ -775,17 +775,18 @@ PAGES=rootpage.xhtml \
 
 #+end_src
 
-** The Standard Layout
+\section{The Standard Layout}
 Generally a page has a standard layout using a couple of chunks
 to minimize the typing. The defined chunks are:
-- ``standard head'' which includes the head element, xmlns, meta, and
+\begin{itemize}
+\item ``standard head'' which includes the head element, xmlns, meta, and
 title element. It also contains the ``style'' element for CSS information.
-- ``page head'' contains the banner information
-- ``page foot'' contains the trailing page information and the
+\item ``page head'' contains the banner information
+\item ``page foot'' contains the trailing page information and the
 body-end and html-end tags
-
+\end{itemize}
 So the basic layout looks like
-#+begin_example
+\begin{verbatim}
 <<standard head>>
     (local and general javascript goes here)
  </head>
@@ -793,7 +794,7 @@ So the basic layout looks like
 <<page head>>
     (local page definition goes here)
 <<page foot>>
-#+end_example
+\end{verbatim}
 So all you need to worry about are the actual page forms and the
 javascript to fetch those forms.
 
@@ -804,7 +805,7 @@ include the ``axiom talker'' chunk. Note that ``axiom talker''
 expects the ``commandline'' function to exist and calls it. Thus,
 for the page that handles differentiation calls to Axiom we add 
 the local javascript:
-#+begin_example
+\begin{verbatim}
 
   <script type="text/javascript">
    function commandline(arg) {
@@ -813,13 +814,13 @@ the local javascript:
 <<axiom talker>>
   </script>
 
-#+end_example
+\end{verbatim}
 This defined the ``commandline'' function and embeds the ``axiom talker''.
 The ``commandline'' function knows how to fetch fields from the rest of
 the page and format them into a single Axiom string. This is page
 specific code. For example, this shows a single input line which
 will be sent to the host when the ``Continue'' is pressed:
-#+begin_example
+\begin{verbatim}
   <form id="commreq">
     <p>
       Type an input command line to Axiom:<br/>
@@ -828,7 +829,7 @@ will be sent to the host when the ``Continue'' is pressed:
     </p>
   </form>
  <<answer field>>
-#+end_example
+\end{verbatim}
 
 Note that the commandline function takes an argument which it gets
 from the caller, makeRequest. This argument can be used to distinguish
@@ -837,8 +838,8 @@ which button was pressed.
 The *div* section with *id=``mathAns''* is replaced by the
 result sent from the server.
 
-** Cascading Style Sheet
-*** Standard Style Sheet
+\section{Cascading Style Sheet}
+\subsection{Standard Style Sheet}
 This is the standard CSS style section that gets included with every
 page. We do this here but it could be a separate style sheet. It 
 hardly matters either way as the style sheet is trivial.
@@ -906,7 +907,7 @@ hardly matters either way as the style sheet is trivial.
 <<standard background>>
   </style>
 #+end_src
-*** Menu style sheet
+\subsection{Menu style sheet}
 #+NAME: menu style
 #+begin_src common-lisp :noweb yes
  <style>
@@ -1096,7 +1097,7 @@ hardly matters either way as the style sheet is trivial.
 
  </style>
 #+end_src
-** standard head
+\section{standard head}
 This is the standard head section. It is used on pages that do not
 include javascript. Note that it does NOT include the </head> so
 the javascript can be added easily.
@@ -1143,8 +1144,8 @@ This is where to place the math answer
   <div id="mathAns"><div></div></div>
 #+end_src
 
-** Javascript functions
-*** Show only mathml
+\section{Javascript functions}
+\subsection{Show only mathml}
 This function will show only the mathml result in the response.
 It is useful for particular pages that have lists of equations
 where all you care about are the answers.
@@ -1176,7 +1177,7 @@ where all you care about are the answers.
 ]]>
 #+end_src
 
-*** Show Full Answer
+\subsection{Show Full Answer}
 This function will show the full answer in the response including the
 step number, the command, the mathml and the type. The algebra portion
 is currently ignored.
@@ -1221,7 +1222,7 @@ is currently ignored.
 ]]>
 #+end_src
 
-*** Handle Free Variables
+\subsection{Handle Free Variables}
 #+NAME: handlefreevars
 #+begin_src common-lisp :noweb yes
 <![CDATA[
@@ -1291,7 +1292,7 @@ is currently ignored.
    }
 ]]>
 #+end_src
-*** axiom talker
+\subsection{axiom talker}
 #+NAME: axiom talker
 #+begin_src common-lisp :noweb yes
 <![CDATA[
@@ -1360,7 +1361,7 @@ is currently ignored.
 
 #+end_src
 
-** Pages
+\section{Pages}
 #+NAME: testpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -2013,7 +2014,7 @@ is currently ignored.
 <<page foot>>
 #+end_src
 %%A
-*** axiomfonts.xhtml
+\subsection{axiomfonts.xhtml}
 #+NAME: axiomfonts.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -4353,7 +4354,7 @@ is currently ignored.
 <<page foot>>
 #+end_src
 
-*** algebrapage.xhtml
+\subsection{algebrapage.xhtml}
 #+NAME: algebrapage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -4383,7 +4384,7 @@ abstract algebra
 <<page foot>>
 #+end_src
 
-*** alggrouptheory.xhtml
+\subsection{alggrouptheory.xhtml}
 #+NAME: alggrouptheory.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -4405,7 +4406,7 @@ do representation theory.
 <<page foot>>
 #+end_src
 
-*** alggrouptheorygroup.xhtml
+\subsection{alggrouptheorygroup.xhtml}
 #+NAME: alggrouptheorygroup.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -4439,7 +4440,7 @@ groups are constructed. Some algorithms are implemented in Axiom.
 <<page foot>>
 #+end_src
 
-*** alggrouptheoryrepa6.xhtml
+\subsection{alggrouptheoryrepa6.xhtml}
 #+NAME: alggrouptheoryrepa6.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -4640,7 +4641,7 @@ representations of A6 over GF 2.
 <<page foot>>
 #+end_src
 
-*** alggrouptheoryreptheory.xhtml
+\subsection{alggrouptheoryreptheory.xhtml}
 #+NAME: alggrouptheoryreptheory.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -4664,7 +4665,7 @@ said to be 'reducible'.
 <<page foot>>
 #+end_src
 
-*** algnumbertheory.xhtml
+\subsection{algnumbertheory.xhtml}
 #+NAME: algnumbertheory.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -4685,7 +4686,7 @@ Here are some sample computations using Axiom's algebraic number facilities.
 <<page foot>>
 #+end_src
 
-*** algnumbertheorygalois.xhtml
+\subsection{algnumbertheorygalois.xhtml}
 #+NAME: algnumbertheorygalois.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5039,7 +5040,7 @@ Here are two other problems that you may attack in a similar fashion:
 #+end_src
 
 %%B
-*** basiccommand.xhtml
+\subsection{basiccommand.xhtml}
 #+NAME: basiccommand.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5095,7 +5096,7 @@ Here are two other problems that you may attack in a similar fashion:
 <<page foot>>
 #+end_src
 
-*** basiclimit.xhtml
+\subsection{basiclimit.xhtml}
 #+NAME: basiclimit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5116,7 +5117,7 @@ Here are two other problems that you may attack in a similar fashion:
 <<page foot>>
 #+end_src
 
-*** bcexpand.xhtml
+\subsection{bcexpand.xhtml}
 #+NAME: bcexpand.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5198,7 +5199,7 @@ Data Structures
 <<page foot>>
 #+end_src
 
-*** bcmatrix.xhtml
+\subsection{bcmatrix.xhtml}
 #+NAME: bcmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5413,7 +5414,7 @@ Enter the size of the matrix:
 #+end_src
 
 %%C
-*** calculus.xhtml
+\subsection{calculus.xhtml}
 #+NAME: calculus.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5452,7 +5453,7 @@ Enter the size of the matrix:
 <<page foot>>
 #+end_src
 
-*** calculuspage.xhtml
+\subsection{calculuspage.xhtml}
 #+NAME: calculuspage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5520,7 +5521,7 @@ Enter the size of the matrix:
 <<page foot>>
 #+end_src
 
-*** calderivatives.xhtml
+\subsection{calderivatives.xhtml}
 #+NAME: calderivatives.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5657,7 +5658,7 @@ You obtain the same result by first evaluating a and then differentiating.
 <<page foot>>
 #+end_src
 
-*** calintegrals.xhtml
+\subsection{calintegrals.xhtml}
 #+NAME: calintegrals.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5823,7 +5824,7 @@ More examples of Axiom's integration capabilities are discussed in
 <<page foot>>
 #+end_src
 
-*** callaplace.xhtml
+\subsection{callaplace.xhtml}
 #+NAME: callaplace.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -5903,7 +5904,7 @@ formal transform in the answer.
 <<page foot>>
 #+end_src
 
-*** callimits.xhtml
+\subsection{callimits.xhtml}
 #+NAME: callimits.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6068,7 +6069,7 @@ But this limit does not.
 <<page foot>>
 #+end_src
 
-*** calmoreintegrals.xhtml
+\subsection{calmoreintegrals.xhtml}
 #+NAME: calmoreintegrals.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6233,7 +6234,7 @@ The value here is, of course, incorrect if sqrt(a) is between 1 and 2.
 <<page foot>>
 #+end_src
 
-*** calseries.xhtml
+\subsection{calseries.xhtml}
 #+NAME: calseries.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6309,7 +6310,7 @@ Power Series Solutions of Differential Equations</a>
 <<page foot>>
 #+end_src
 
-*** calseries1.xhtml
+\subsection{calseries1.xhtml}
 #+NAME: calseries1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6426,7 +6427,7 @@ evaluate this expression. This is the Taylor expansion of exp(w) at w=0.
 <<page foot>>
 #+end_src
 
-*** calseries2.xhtml
+\subsection{calseries2.xhtml}
 #+NAME: calseries2.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6494,7 +6495,7 @@ all been computed.
 <<page foot>>
 #+end_src
 
-*** calseries3.xhtml
+\subsection{calseries3.xhtml}
 #+NAME: calseries3.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6552,7 +6553,7 @@ You can also compute f(x)^g(x), where f(x) and g(x) are two power series.
 <<page foot>>
 #+end_src
 
-*** calseries4.xhtml
+\subsection{calseries4.xhtml}
 #+NAME: calseries4.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6704,7 +6705,7 @@ instead of z.
 <<page foot>>
 #+end_src
 
-*** calseries5.xhtml
+\subsection{calseries5.xhtml}
 #+NAME: calseries5.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6838,7 +6839,7 @@ exclusively.
 <<page foot>>
 #+end_src
 
-*** calseries6.xhtml
+\subsection{calseries6.xhtml}
 #+NAME: calseries6.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -6979,7 +6980,7 @@ kind of exponents a series has. You can't go wrong with
 <<page foot>>
 #+end_src
 
-*** calseries7.xhtml
+\subsection{calseries7.xhtml}
 #+NAME: calseries7.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -7018,7 +7019,7 @@ of the partial sums.
 <<page foot>>
 #+end_src
 
-*** calseries8.xhtml
+\subsection{calseries8.xhtml}
 #+NAME: calseries8.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -7220,7 +7221,7 @@ the first k 20th powers.
 <<page foot>>
 #+end_src
 
-*** cats.xhtml
+\subsection{cats.xhtml}
 #+NAME: cats.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -7246,7 +7247,7 @@ The available test suites are:
 <<page foot>>
 #+end_src
 
-*** commandline.xhtml
+\subsection{commandline.xhtml}
 #+NAME: commandline.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -7999,7 +8000,7 @@ The available test suites are:
 #+end_src
 
 
-*** complexlimit.xhtml
+\subsection{complexlimit.xhtml}
 #+NAME: complexlimit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -8059,7 +8060,7 @@ The available test suites are:
 <<page foot>>
 #+end_src
 
-*** conversionfunctions.xhtml
+\subsection{conversionfunctions.xhtml}
 #+NAME: conversionfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -8224,7 +8225,7 @@ can not, in general, be represented exactly.
 <<page foot>>
 #+end_src
 
-*** crytopage.xhtml
+\subsection{crytopage.xhtml}
 #+NAME: cryptopage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -8276,7 +8277,7 @@ can not, in general, be represented exactly.
 <<page foot>>
 #+end_src
 
-*** crytoclass1.xhtml
+\subsection{crytoclass1.xhtml}
 #+NAME: cryptoclass1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -8493,7 +8494,7 @@ environment; such commands are all prefixed with a right parenthesis.
 <<page foot>>
 #+end_src
 
-*** crytoclass2.xhtml
+\subsection{crytoclass2.xhtml}
 #+NAME: cryptoclass2.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -8662,7 +8663,7 @@ environment; such commands are all prefixed with a right parenthesis.
 <<page foot>>
 #+end_src
 
-*** crytoclass3.xhtml
+\subsection{crytoclass3.xhtml}
 #+NAME: cryptoclass3.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -8830,7 +8831,7 @@ environment; such commands are all prefixed with a right parenthesis.
 <<page foot>>
 #+end_src
 
-*** crytoclass4.xhtml
+\subsection{crytoclass4.xhtml}
 #+NAME: cryptoclass4.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -9016,7 +9017,7 @@ with <i>n</i> being the length of the key.
 <<page foot>>
 #+end_src
 
-*** crytoclass5.xhtml
+\subsection{crytoclass5.xhtml}
 #+NAME: cryptoclass5.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -9178,7 +9179,7 @@ with <i>n</i> being the length of the key.
 <<page foot>>
 #+end_src
 
-*** crytoclass6.xhtml
+\subsection{crytoclass6.xhtml}
 #+NAME: cryptoclass6.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -9296,7 +9297,7 @@ numbers, just copy them from <a href="signatures.txt">signatures.txt</a>
 <<page foot>>
 #+end_src
 
-*** crytoclass7.xhtml
+\subsection{crytoclass7.xhtml}
 #+NAME: cryptoclass7.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -9333,7 +9334,7 @@ up elements from them.
       arbitrary list.
  </li>
  <li> Try the above commands, but starting with a length <tt>ln</tt> of
-      1. You should find the command is a bit slower this time.  
+      12. You should find the command is a bit slower this time.  
       Use this command to time it:
   <ul>
    <li> <span class="cmd">)set messages time on</span></li>
@@ -9455,7 +9456,7 @@ up elements from them.
 <<page foot>>
 #+end_src
 
-*** crytoclass8.xhtml
+\subsection{crytoclass8.xhtml}
 #+NAME: cryptoclass8.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -9661,7 +9662,7 @@ and then
 <<page foot>>
 #+end_src
 
-*** crytoclass9.xhtml
+\subsection{crytoclass9.xhtml}
 #+NAME: cryptoclass9.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -9819,7 +9820,7 @@ We shall experiment with a simplified version of the MASH hash function:
 <<page foot>>
 #+end_src
 
-*** crytoclass10.xhtml
+\subsection{crytoclass10.xhtml}
 #+NAME: cryptoclass10.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -9896,7 +9897,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** crytoclass11.xhtml
+\subsection{crytoclass11.xhtml}
 #+NAME: cryptoclass11.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10068,7 +10069,7 @@ the operations will have extra ones added at some stage.
 #+end_src
 
 %%D
-*** dbopbinary.xhtml
+\subsection{dbopbinary.xhtml}
 #+NAME: dbopbinary.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10079,7 +10080,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcharacteristic.xhtml
+\subsection{dbcharacteristic.xhtml}
 #+NAME: dbcharacteristic.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10090,7 +10091,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexcomplex.xhtml
+\subsection{dbcomplexcomplex.xhtml}
 #+NAME: dbcomplexcomplex.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10101,7 +10102,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexconjugate.xhtml
+\subsection{dbcomplexconjugate.xhtml}
 #+NAME: dbcomplexconjugate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10112,7 +10113,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexfactor.xhtml
+\subsection{dbcomplexfactor.xhtml}
 #+NAME: dbcomplexfactor.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10123,7 +10124,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexdoublefloat.xhtml
+\subsection{dbcomplexdoublefloat.xhtml}
 #+NAME: dbcomplexdoublefloat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10134,7 +10135,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexfloat.xhtml
+\subsection{dbcomplexfloat.xhtml}
 #+NAME: dbcomplexfloat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10145,7 +10146,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcompleximag.xhtml
+\subsection{dbcompleximag.xhtml}
 #+NAME: dbcompleximag.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10156,7 +10157,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexnorm.xhtml
+\subsection{dbcomplexnorm.xhtml}
 #+NAME: dbcomplexnorm.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10167,7 +10168,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexreal.xhtml
+\subsection{dbcomplexreal.xhtml}
 #+NAME: dbcomplexreal.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10178,7 +10179,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbcomplexinteger.xhtml
+\subsection{dbcomplexinteger.xhtml}
 #+NAME: dbcomplexinteger.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10189,7 +10190,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbexpressioninteger.xhtml
+\subsection{dbexpressioninteger.xhtml}
 #+NAME: dbexpressioninteger.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10200,7 +10201,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbfractioninteger.xhtml
+\subsection{dbfractioninteger.xhtml}
 #+NAME: dbfractioninteger.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10211,7 +10212,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbfractionpolynomialinteger.xhtml
+\subsection{dbfractionpolynomialinteger.xhtml}
 #+NAME: dbfractionpolynomialinteger.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10222,7 +10223,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dblookup.xhtml
+\subsection{dblookup.xhtml}
 #+NAME: dblookup.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10233,7 +10234,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopacos.xhtml
+\subsection{dbopacos.xhtml}
 #+NAME: dbopacos.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10244,7 +10245,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopacosh.xhtml
+\subsection{dbopacosh.xhtml}
 #+NAME: dbopacosh.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10255,7 +10256,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopacot.xhtml
+\subsection{dbopacot.xhtml}
 #+NAME: dbopacot.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10266,7 +10267,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopacoth.xhtml
+\subsection{dbopacoth.xhtml}
 #+NAME: dbopacoth.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10277,7 +10278,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopacsc.xhtml
+\subsection{dbopacsc.xhtml}
 #+NAME: dbopacsc.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10288,7 +10289,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopacsch.xhtml
+\subsection{dbopacsch.xhtml}
 #+NAME: dbopacsch.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10299,7 +10300,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopaddmod.xhtml
+\subsection{dbopaddmod.xhtml}
 #+NAME: dbopaddmod.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10310,7 +10311,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopairyai.xhtml
+\subsection{dbopairyai.xhtml}
 #+NAME: dbopairyai.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10321,7 +10322,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopairybi.xhtml
+\subsection{dbopairybi.xhtml}
 #+NAME: dbopairybi.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10332,7 +10333,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopapproximants.xhtml
+\subsection{dbopapproximants.xhtml}
 #+NAME: dbopapproximants.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10343,7 +10344,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopasin.xhtml
+\subsection{dbopasin.xhtml}
 #+NAME: dbopasin.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10354,7 +10355,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopasinh.xhtml
+\subsection{dbopasinh.xhtml}
 #+NAME: dbopasinh.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10365,7 +10366,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopasec.xhtml
+\subsection{dbopasec.xhtml}
 #+NAME: dbopasec.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10376,7 +10377,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopasech.xhtml
+\subsection{dbopasech.xhtml}
 #+NAME: dbopasech.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10387,7 +10388,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopatan.xhtml
+\subsection{dbopatan.xhtml}
 #+NAME: dbopatan.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10398,7 +10399,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopatanh.xhtml
+\subsection{dbopatanh.xhtml}
 #+NAME: dbopatanh.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10409,7 +10410,7 @@ the operations will have extra ones added at some stage.
 <<page foot>>
 #+end_src
 
-*** dbopbernoullib.xhtml
+\subsection{dbopbernoullib.xhtml}
 #+NAME: dbopbernoullib.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10420,7 +10421,7 @@ dbopbernoullib not implemented
 <<page foot>>
 #+end_src
 
-*** dbopbesseli.xhtml
+\subsection{dbopbesseli.xhtml}
 #+NAME: dbopbesseli.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10431,7 +10432,7 @@ dbopbernoullib not implemented
 <<page foot>>
 #+end_src
 
-*** dbopbesselj.xhtml
+\subsection{dbopbesselj.xhtml}
 #+NAME: dbopbesselj.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10442,7 +10443,7 @@ dbopbernoullib not implemented
 <<page foot>>
 #+end_src
 
-*** dbopbesselk.xhtml
+\subsection{dbopbesselk.xhtml}
 #+NAME: dbopbesselk.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10453,7 +10454,7 @@ dbopbernoullib not implemented
 <<page foot>>
 #+end_src
 
-*** dbopbessely.xhtml
+\subsection{dbopbessely.xhtml}
 #+NAME: dbopbessely.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10464,7 +10465,7 @@ dbopbernoullib not implemented
 <<page foot>>
 #+end_src
 
-*** dbopbeta.xhtml
+\subsection{dbopbeta.xhtml}
 #+NAME: dbopbeta.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10475,7 +10476,7 @@ dbopbernoullib not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcardinalnumber.xhtml
+\subsection{dbopcardinalnumber.xhtml}
 #+NAME: dbopcardinalnumber.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10486,7 +10487,7 @@ dbopbernoullib not implemented
 <<page foot>>
 #+end_src
 
-*** dbopchebyshevt.xhtml
+\subsection{dbopchebyshevt.xhtml}
 #+NAME: dbopchebyshevt.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10497,7 +10498,7 @@ dbopchebyshevt not implemented
 <<page foot>>
 #+end_src
 
-*** dbopchebyshevu.xhtml
+\subsection{dbopchebyshevu.xhtml}
 #+NAME: dbopchebyshevu.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10508,7 +10509,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcoefficient.xhtml
+\subsection{dbopcoefficient.xhtml}
 #+NAME: dbopcoefficient.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10519,7 +10520,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcoefficients.xhtml
+\subsection{dbopcoefficients.xhtml}
 #+NAME: dbopcoefficients.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10530,7 +10531,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcoerce.xhtml
+\subsection{dbopcoerce.xhtml}
 #+NAME: dbopcoerce.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10541,7 +10542,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcolumn.xhtml
+\subsection{dbopcolumn.xhtml}
 #+NAME: dbopcolumn.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10552,7 +10553,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcompactfraction.xhtml
+\subsection{dbopcompactfraction.xhtml}
 #+NAME: dbopcompactfraction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10563,7 +10564,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcomplexeigenvectors.xhtml
+\subsection{dbopcomplexeigenvectors.xhtml}
 #+NAME: dbopcomplexeigenvectors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10574,7 +10575,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcomplexelementary.xhtml
+\subsection{dbopcomplexelementary.xhtml}
 #+NAME: dbopcomplexelementary.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10585,7 +10586,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcomplexintegrate.xhtml
+\subsection{dbopcomplexintegrate.xhtml}
 #+NAME: dbopcomplexintegrate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10596,7 +10597,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcomplexlimit.xhtml
+\subsection{dbopcomplexlimit.xhtml}
 #+NAME: dbopcomplexlimit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10607,7 +10608,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcomplexsolve.xhtml
+\subsection{dbopcomplexsolve.xhtml}
 #+NAME: dbopcomplexsolve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10618,7 +10619,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcontent.xhtml
+\subsection{dbopcontent.xhtml}
 #+NAME: dbopcontent.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10629,7 +10630,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcontinuedfraction.xhtml
+\subsection{dbopcontinuedfraction.xhtml}
 #+NAME: dbopcontinuedfraction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10640,7 +10641,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopconvergents.xhtml
+\subsection{dbopconvergents.xhtml}
 #+NAME: dbopconvergents.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10651,7 +10652,7 @@ dbopchebyshevu not implemented
 <<page foot>>
 #+end_src
 
-*** dbopconvert.xhtml
+\subsection{dbopconvert.xhtml}
 #+NAME: dbopconvert.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10662,7 +10663,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcopy.xhtml
+\subsection{dbopcopy.xhtml}
 #+NAME: dbopcopy.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10673,7 +10674,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcos.xhtml
+\subsection{dbopcos.xhtml}
 #+NAME: dbopcos.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10684,7 +10685,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcosh.xhtml
+\subsection{dbopcosh.xhtml}
 #+NAME: dbopcosh.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10695,7 +10696,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcot.xhtml
+\subsection{dbopcot.xhtml}
 #+NAME: dbopcot.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10706,7 +10707,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcoth.xhtml
+\subsection{dbopcoth.xhtml}
 #+NAME: dbopcoth.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10717,7 +10718,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcount.xhtml
+\subsection{dbopcount.xhtml}
 #+NAME: dbopcount.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10728,7 +10729,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcountableq.xhtml
+\subsection{dbopcountableq.xhtml}
 #+NAME: dbopcountableq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10739,7 +10740,7 @@ dbopconvert not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcreate3space.xhtml
+\subsection{dbopcreate3space.xhtml}
 #+NAME: dbopcreate3space.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10749,7 +10750,7 @@ dbopconvert not implemented
 dbopcreate3space not implemented
 <<page foot>>
 #+end_src
-*** dbopcsc.xhtml
+\subsection{dbopcsc.xhtml}
 #+NAME: dbopcsc.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10760,7 +10761,7 @@ dbopcreate3space not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcsch.xhtml
+\subsection{dbopcsch.xhtml}
 #+NAME: dbopcsch.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10771,7 +10772,7 @@ dbopcreate3space not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcurve.xhtml
+\subsection{dbopcurve.xhtml}
 #+NAME: dbopcurve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10781,7 +10782,7 @@ dbopcreate3space not implemented
 dbopcurve not implemented
 <<page foot>>
 #+end_src
-*** dbopcycleragits.xhtml
+\subsection{dbopcycleragits.xhtml}
 #+NAME: dbopcycleragits.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10792,7 +10793,7 @@ dbopcurve not implemented
 <<page foot>>
 #+end_src
 
-*** dbopcyclotomic.xhtml
+\subsection{dbopcyclotomic.xhtml}
 #+NAME: dbopcyclotomic.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10803,7 +10804,7 @@ dbopcyclotomic not implemented
 <<page foot>>
 #+end_src
 
-*** dbopd.xhtml
+\subsection{dbopd.xhtml}
 #+NAME: dbopd.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10814,7 +10815,7 @@ dbopcyclotomic not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdecimal.xhtml
+\subsection{dbopdecimal.xhtml}
 #+NAME: dbopdecimal.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10825,7 +10826,7 @@ dbopcyclotomic not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdefiningpolynomial.xhtml
+\subsection{dbopdefiningpolynomial.xhtml}
 #+NAME: dbopdefiningpolynomial.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10836,7 +10837,7 @@ dbopcyclotomic not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdegree.xhtml
+\subsection{dbopdegree.xhtml}
 #+NAME: dbopdegree.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10847,7 +10848,7 @@ dbopcyclotomic not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdenom.xhtml
+\subsection{dbopdenom.xhtml}
 #+NAME: dbopdenom.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10858,7 +10859,7 @@ dbopcyclotomic not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdraw.xhtml
+\subsection{dbopdraw.xhtml}
 #+NAME: dbopdraw.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10869,7 +10870,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdeterminant.xhtml
+\subsection{dbopdeterminant.xhtml}
 #+NAME: dbopdeterminant.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10880,7 +10881,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdiagonalmatrix.xhtml
+\subsection{dbopdiagonalmatrix.xhtml}
 #+NAME: dbopdiagonalmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10891,7 +10892,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdigamma.xhtml
+\subsection{dbopdigamma.xhtml}
 #+NAME: dbopdigamma.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10902,7 +10903,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdigits.xhtml
+\subsection{dbopdigits.xhtml}
 #+NAME: dbopdigits.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10913,7 +10914,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdimension.xhtml
+\subsection{dbopdimension.xhtml}
 #+NAME: dbopdimension.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10924,7 +10925,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdivide.xhtml
+\subsection{dbopdivide.xhtml}
 #+NAME: dbopdivide.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10935,7 +10936,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopdivisors.xhtml
+\subsection{dbopdivisors.xhtml}
 #+NAME: dbopdivisors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10946,7 +10947,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopei.xhtml
+\subsection{dbopei.xhtml}
 #+NAME: dbopei.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10957,7 +10958,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopeigenmatrix.xhtml
+\subsection{dbopeigenmatrix.xhtml}
 #+NAME: dbopeigenmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10968,7 +10969,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopeigenvalues.xhtml
+\subsection{dbopeigenvalues.xhtml}
 #+NAME: dbopeigenvalues.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10979,7 +10980,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopeigenvector.xhtml
+\subsection{dbopeigenvector.xhtml}
 #+NAME: dbopeigenvector.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -10990,7 +10991,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopeigenvectors.xhtml
+\subsection{dbopeigenvectors.xhtml}
 #+NAME: dbopeigenvectors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11001,7 +11002,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopelt.xhtml
+\subsection{dbopelt.xhtml}
 #+NAME: dbopelt.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11012,7 +11013,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopequal.xhtml
+\subsection{dbopequal.xhtml}
 #+NAME: dbopequal.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11023,7 +11024,7 @@ dbopdraw not implemented
 <<page foot>>
 #+end_src
 
-*** dbopeulere.xhtml
+\subsection{dbopeulere.xhtml}
 #+NAME: dbopeulere.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11034,7 +11035,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopeulerphi.xhtml
+\subsection{dbopeulerphi.xhtml}
 #+NAME: dbopeulerphi.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11045,7 +11046,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopeval.xhtml
+\subsection{dbopeval.xhtml}
 #+NAME: dbopeval.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11056,7 +11057,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopevenq.xhtml
+\subsection{dbopevenq.xhtml}
 #+NAME: dbopevenq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11067,7 +11068,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopexp.xhtml
+\subsection{dbopexp.xhtml}
 #+NAME: dbopexp.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11078,7 +11079,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopexquo.xhtml
+\subsection{dbopexquo.xhtml}
 #+NAME: dbopexquo.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11089,7 +11090,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfactor.xhtml
+\subsection{dbopfactor.xhtml}
 #+NAME: dbopfactor.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11100,7 +11101,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfactorfraction.xhtml
+\subsection{dbopfactorfraction.xhtml}
 #+NAME: dbopfactorfraction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11111,7 +11112,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfibonacci.xhtml
+\subsection{dbopfibonacci.xhtml}
 #+NAME: dbopfibonacci.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11122,7 +11123,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfiniteq.xhtml
+\subsection{dbopfiniteq.xhtml}
 #+NAME: dbopfiniteq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11133,7 +11134,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfirstdenom.xhtml
+\subsection{dbopfirstdenom.xhtml}
 #+NAME: dbopfirstdenom.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11144,7 +11145,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfirstnumer.xhtml
+\subsection{dbopfirstnumer.xhtml}
 #+NAME: dbopfirstnumer.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11155,7 +11156,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfractragits.xhtml
+\subsection{dbopfractragits.xhtml}
 #+NAME: dbopfractragits.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11166,7 +11167,7 @@ dbopeulere not implemented
 <<page foot>>
 #+end_src
 
-*** dbopfractionpart.xhtml
+\subsection{dbopfractionpart.xhtml}
 #+NAME: dbopfractionpart.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11177,7 +11178,7 @@ dbopfractionpart not implemented
 <<page foot>>
 #+end_src
 
-*** dbopgamma.xhtml
+\subsection{dbopgamma.xhtml}
 #+NAME: dbopgamma.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11188,7 +11189,7 @@ dbopfractionpart not implemented
 <<page foot>>
 #+end_src
 
-*** dbopgcd.xhtml
+\subsection{dbopgcd.xhtml}
 #+NAME: dbopgcd.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11199,7 +11200,7 @@ dbopfractionpart not implemented
 <<page foot>>
 #+end_src
 
-*** dbophermiteh.xhtml
+\subsection{dbophermiteh.xhtml}
 #+NAME: dbophermiteh.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11210,7 +11211,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbophex.xhtml
+\subsection{dbophex.xhtml}
 #+NAME: dbophex.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11221,7 +11222,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbophorizconcat.xhtml
+\subsection{dbophorizconcat.xhtml}
 #+NAME: dbophorizconcat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11232,7 +11233,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbophtrigs.xhtml
+\subsection{dbophtrigs.xhtml}
 #+NAME: dbophtrigs.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11243,7 +11244,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbophypergeometric0f1.xhtml
+\subsection{dbophypergeometric0f1.xhtml}
 #+NAME: dbophypergeometric0f1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11254,7 +11255,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbopinteger.xhtml
+\subsection{dbopinteger.xhtml}
 #+NAME: dbopinteger.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11265,7 +11266,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbopintegrate.xhtml
+\subsection{dbopintegrate.xhtml}
 #+NAME: dbopintegrate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11276,7 +11277,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbopinverse.xhtml
+\subsection{dbopinverse.xhtml}
 #+NAME: dbopinverse.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11287,7 +11288,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dbopinvmod.xhtml
+\subsection{dbopinvmod.xhtml}
 #+NAME: dbopinvmod.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11299,7 +11300,7 @@ dbophermiteh not implemented
 #+end_src
 
 
-*** dbopjacobi.xhtml
+\subsection{dbopjacobi.xhtml}
 #+NAME: dbopjacobi.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11310,7 +11311,7 @@ dbophermiteh not implemented
 <<page foot>>
 #+end_src
 
-*** dboplaguerrel.xhtml
+\subsection{dboplaguerrel.xhtml}
 #+NAME: dboplaguerrel.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11321,7 +11322,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dboplaurent.xhtml
+\subsection{dboplaurent.xhtml}
 #+NAME: dboplaurent.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11332,7 +11333,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dboplcm.xhtml
+\subsection{dboplcm.xhtml}
 #+NAME: dboplcm.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11343,7 +11344,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dbopleadingcoefficient.xhtml
+\subsection{dbopleadingcoefficient.xhtml}
 #+NAME: dbopleadingcoefficient.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11354,7 +11355,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dbopleadingmonomial.xhtml
+\subsection{dbopleadingmonomial.xhtml}
 #+NAME: dbopleadingmonomial.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11366,7 +11367,7 @@ dboplaguerrel not implemented
 #+end_src
 
 
-*** dboplegendre.xhtml
+\subsection{dboplegendre.xhtml}
 #+NAME: dboplegendre.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11377,7 +11378,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dboplength.xhtml
+\subsection{dboplength.xhtml}
 #+NAME: dboplength.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11388,7 +11389,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dboplimit.xhtml
+\subsection{dboplimit.xhtml}
 #+NAME: dboplimit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11399,7 +11400,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dboplog.xhtml
+\subsection{dboplog.xhtml}
 #+NAME: dboplog.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11410,7 +11411,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dboploggamma.xhtml
+\subsection{dboploggamma.xhtml}
 #+NAME: dboploggamma.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11421,7 +11422,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmainvariable.xhtml
+\subsection{dbopmainvariable.xhtml}
 #+NAME: dbopmainvariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11432,7 +11433,7 @@ dboplaguerrel not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmakegraphimage.xhtml
+\subsection{dbopmakegraphimage.xhtml}
 #+NAME: dbopmakegraphimage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11443,7 +11444,7 @@ dbopmakegraphimage not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmakeobject.xhtml
+\subsection{dbopmakeobject.xhtml}
 #+NAME: dbopmakeobject.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11454,7 +11455,7 @@ dbopmakeobject not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmakeviewport3d.xhtml
+\subsection{dbopmakeviewport3d.xhtml}
 #+NAME: dbopmakeviewport3d.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11464,7 +11465,7 @@ dbopmakeobject not implemented
 dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
-*** dbopmap.xhtml
+\subsection{dbopmap.xhtml}
 #+NAME: dbopmap.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11475,7 +11476,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmapbang.xhtml
+\subsection{dbopmapbang.xhtml}
 #+NAME: dbopmapbang.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11486,7 +11487,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmatrix.xhtml
+\subsection{dbopmatrix.xhtml}
 #+NAME: dbopmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11497,7 +11498,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmax.xhtml
+\subsection{dbopmax.xhtml}
 #+NAME: dbopmax.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11508,7 +11509,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmemberq.xhtml
+\subsection{dbopmemberq.xhtml}
 #+NAME: dbopmemberq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11519,7 +11520,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmin.xhtml
+\subsection{dbopmin.xhtml}
 #+NAME: dbopmin.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11530,7 +11531,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopminimumdegree.xhtml
+\subsection{dbopminimumdegree.xhtml}
 #+NAME: dbopminimumdegree.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11541,7 +11542,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopminus.xhtml
+\subsection{dbopminus.xhtml}
 #+NAME: dbopminus.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11552,7 +11553,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmoebiusmu.xhtml
+\subsection{dbopmoebiusmu.xhtml}
 #+NAME: dbopmoebiusmu.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11563,7 +11564,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmonicdivide.xhtml
+\subsection{dbopmonicdivide.xhtml}
 #+NAME: dbopmonicdivide.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11574,7 +11575,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopmulmod.xhtml
+\subsection{dbopmulmod.xhtml}
 #+NAME: dbopmulmod.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11585,7 +11586,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopncols.xhtml
+\subsection{dbopncols.xhtml}
 #+NAME: dbopncols.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11596,7 +11597,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnegativeq.xhtml
+\subsection{dbopnegativeq.xhtml}
 #+NAME: dbopnegativeq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11607,7 +11608,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnew.xhtml
+\subsection{dbopnew.xhtml}
 #+NAME: dbopnew.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11618,7 +11619,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnextprime.xhtml
+\subsection{dbopnextprime.xhtml}
 #+NAME: dbopnextprime.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11629,7 +11630,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnorm.xhtml
+\subsection{dbopnorm.xhtml}
 #+NAME: dbopnorm.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11640,7 +11641,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnrows.xhtml
+\subsection{dbopnrows.xhtml}
 #+NAME: dbopnrows.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11651,7 +11652,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnthfractionalterm.xhtml
+\subsection{dbopnthfractionalterm.xhtml}
 #+NAME: dbopnthfractionalterm.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11662,7 +11663,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnthroot.xhtml
+\subsection{dbopnthroot.xhtml}
 #+NAME: dbopnthroot.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11673,7 +11674,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnumer.xhtml
+\subsection{dbopnumer.xhtml}
 #+NAME: dbopnumer.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11684,7 +11685,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnumeric.xhtml
+\subsection{dbopnumeric.xhtml}
 #+NAME: dbopnumeric.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11695,7 +11696,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dbopoddq.xhtml
+\subsection{dbopoddq.xhtml}
 #+NAME: dbopoddq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11706,7 +11707,7 @@ dbopmakeviewport3d not implemented
 <<page foot>>
 #+end_src
 
-*** dboponedimensionalarray.xhtml
+\subsection{dboponedimensionalarray.xhtml}
 #+NAME: dboponedimensionalarray.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11717,7 +11718,7 @@ dboponedimensionalarray not implemented
 <<page foot>>
 #+end_src
 
-*** dbopoperator.xhtml
+\subsection{dbopoperator.xhtml}
 #+NAME: dbopoperator.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11728,7 +11729,7 @@ dboponedimensionalarray not implemented
 <<page foot>>
 #+end_src
 
-*** dboporthonormalbasis.xhtml
+\subsection{dboporthonormalbasis.xhtml}
 #+NAME: dboporthonormalbasis.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11739,7 +11740,7 @@ dboponedimensionalarray not implemented
 <<page foot>>
 #+end_src
 
-*** dbopoutputfixed.xhtml
+\subsection{dbopoutputfixed.xhtml}
 #+NAME: dbopoutputfixed.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11750,7 +11751,7 @@ dbopoutputfixed not implemented
 <<page foot>>
 #+end_src
 
-*** dbopoutputfloating.xhtml
+\subsection{dbopoutputfloating.xhtml}
 #+NAME: dbopoutputfloating.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11761,7 +11762,7 @@ dbopoutputfloating not implemented
 <<page foot>>
 #+end_src
 
-*** dbopoutputgeneral.xhtml
+\subsection{dbopoutputgeneral.xhtml}
 #+NAME: dbopoutputgeneral.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11772,7 +11773,7 @@ dbopoutputgeneral not implemented
 <<page foot>>
 #+end_src
 
-*** dbopoutputspacing.xhtml
+\subsection{dbopoutputspacing.xhtml}
 #+NAME: dbopoutputspacing.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11783,7 +11784,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppadicfraction.xhtml
+\subsection{dboppadicfraction.xhtml}
 #+NAME: dboppadicfraction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11794,7 +11795,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnullity.xhtml
+\subsection{dbopnullity.xhtml}
 #+NAME: dbopnullity.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11805,7 +11806,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnullspace.xhtml
+\subsection{dbopnullspace.xhtml}
 #+NAME: dbopnullspace.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11816,7 +11817,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopnumberoffractionalterms.xhtml
+\subsection{dbopnumberoffractionalterms.xhtml}
 #+NAME: dbopnumberoffractionalterms.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11827,7 +11828,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppartialfraction.xhtml
+\subsection{dboppartialfraction.xhtml}
 #+NAME: dboppartialfraction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11838,7 +11839,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppartialquotients.xhtml
+\subsection{dboppartialquotients.xhtml}
 #+NAME: dboppartialquotients.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11849,7 +11850,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopplus.xhtml
+\subsection{dbopplus.xhtml}
 #+NAME: dbopplus.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11860,7 +11861,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppattern.xhtml
+\subsection{dboppattern.xhtml}
 #+NAME: dboppattern.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11871,7 +11872,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppermanent.xhtml
+\subsection{dboppermanent.xhtml}
 #+NAME: dboppermanent.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11882,7 +11883,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppi.xhtml
+\subsection{dboppi.xhtml}
 #+NAME: dboppi.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11893,7 +11894,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppolygamma.xhtml
+\subsection{dboppolygamma.xhtml}
 #+NAME: dboppolygamma.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11904,7 +11905,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppositiveq.xhtml
+\subsection{dboppositiveq.xhtml}
 #+NAME: dboppositiveq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11915,7 +11916,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppositiveremainder.xhtml
+\subsection{dboppositiveremainder.xhtml}
 #+NAME: dboppositiveremainder.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11926,7 +11927,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopprefixragits.xhtml
+\subsection{dbopprefixragits.xhtml}
 #+NAME: dbopprefixragits.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11937,7 +11938,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopprevprime.xhtml
+\subsection{dbopprevprime.xhtml}
 #+NAME: dbopprevprime.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11948,7 +11949,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopprimefactor.xhtml
+\subsection{dbopprimefactor.xhtml}
 #+NAME: dbopprimefactor.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11959,7 +11960,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopprimeq.xhtml
+\subsection{dbopprimeq.xhtml}
 #+NAME: dbopprimeq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11970,7 +11971,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopprimes.xhtml
+\subsection{dbopprimes.xhtml}
 #+NAME: dbopprimes.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11981,7 +11982,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboppuiseux.xhtml
+\subsection{dboppuiseux.xhtml}
 #+NAME: dboppuiseux.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -11992,7 +11993,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopqelt.xhtml
+\subsection{dbopqelt.xhtml}
 #+NAME: dbopqelt.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12003,7 +12004,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopqseteltbang.xhtml
+\subsection{dbopqseteltbang.xhtml}
 #+NAME: dbopqseteltbang.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12014,7 +12015,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopquatern.xhtml
+\subsection{dbopquatern.xhtml}
 #+NAME: dbopquatern.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12025,7 +12026,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopradicaleigenvectors.xhtml
+\subsection{dbopradicaleigenvectors.xhtml}
 #+NAME: dbopradicaleigenvectors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12036,7 +12037,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopradicalsolve.xhtml
+\subsection{dbopradicalsolve.xhtml}
 #+NAME: dbopradicalsolve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12047,7 +12048,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboprank.xhtml
+\subsection{dboprank.xhtml}
 #+NAME: dboprank.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12058,7 +12059,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopratdenom.xhtml
+\subsection{dbopratdenom.xhtml}
 #+NAME: dbopratdenom.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12069,7 +12070,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboprealeigenvectors.xhtml
+\subsection{dboprealeigenvectors.xhtml}
 #+NAME: dboprealeigenvectors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12080,7 +12081,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboprealelementary.xhtml
+\subsection{dboprealelementary.xhtml}
 #+NAME: dboprealelementary.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12091,7 +12092,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopreduce.xhtml
+\subsection{dbopreduce.xhtml}
 #+NAME: dbopreduce.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12102,7 +12103,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopreductum.xhtml
+\subsection{dbopreductum.xhtml}
 #+NAME: dbopreductum.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12113,7 +12114,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboprem.xhtml
+\subsection{dboprem.xhtml}
 #+NAME: dboprem.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12124,7 +12125,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopquo.xhtml
+\subsection{dbopquo.xhtml}
 #+NAME: dbopquo.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12135,7 +12136,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopresetvariableorder.xhtml
+\subsection{dbopresetvariableorder.xhtml}
 #+NAME: dbopresetvariableorder.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12146,7 +12147,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopresultant.xhtml
+\subsection{dbopresultant.xhtml}
 #+NAME: dbopresultant.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12157,7 +12158,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboprootof.xhtml
+\subsection{dboprootof.xhtml}
 #+NAME: dboprootof.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12168,7 +12169,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboprootsimp.xhtml
+\subsection{dboprootsimp.xhtml}
 #+NAME: dboprootsimp.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12179,7 +12180,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dboprootsof.xhtml
+\subsection{dboprootsof.xhtml}
 #+NAME: dboprootsof.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12190,7 +12191,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopseries.xhtml
+\subsection{dbopseries.xhtml}
 #+NAME: dbopseries.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12201,7 +12202,7 @@ dbopoutputspacing not implemented
 <<page foot>>
 #+end_src
 
-*** dbopround.xhtml
+\subsection{dbopround.xhtml}
 #+NAME: dbopround.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12212,7 +12213,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dboprow.xhtml
+\subsection{dboprow.xhtml}
 #+NAME: dboprow.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12223,7 +12224,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dboprowechelon.xhtml
+\subsection{dboprowechelon.xhtml}
 #+NAME: dboprowechelon.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12234,7 +12235,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsetcolumnbang.xhtml
+\subsection{dbopsetcolumnbang.xhtml}
 #+NAME: dbopsetcolumnbang.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12245,7 +12246,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopseteltbang.xhtml
+\subsection{dbopseteltbang.xhtml}
 #+NAME: dbopseteltbang.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12256,7 +12257,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsetrowbang.xhtml
+\subsection{dbopsetrowbang.xhtml}
 #+NAME: dbopsetrowbang.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12267,7 +12268,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsetelt.xhtml
+\subsection{dbopsetelt.xhtml}
 #+NAME: dbopsetelt.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12278,7 +12279,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsetsubmatrixbang.xhtml
+\subsection{dbopsetsubmatrixbang.xhtml}
 #+NAME: dbopsetsubmatrixbang.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12289,7 +12290,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsign.xhtml
+\subsection{dbopsign.xhtml}
 #+NAME: dbopsign.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12300,7 +12301,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsimplify.xhtml
+\subsection{dbopsimplify.xhtml}
 #+NAME: dbopsimplify.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12311,7 +12312,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopseriessolve.xhtml
+\subsection{dbopseriessolve.xhtml}
 #+NAME: dbopseriessolve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12322,7 +12323,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsin.xhtml
+\subsection{dbopsin.xhtml}
 #+NAME: dbopsin.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12333,7 +12334,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsingleintegerand.xhtml
+\subsection{dbopsingleintegerand.xhtml}
 #+NAME: dbopsingleintegerand.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12344,7 +12345,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsingleintegernot.xhtml
+\subsection{dbopsingleintegernot.xhtml}
 #+NAME: dbopsingleintegernot.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12355,7 +12356,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsingleintegeror.xhtml
+\subsection{dbopsingleintegeror.xhtml}
 #+NAME: dbopsingleintegeror.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12366,7 +12367,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsingleintegerxor.xhtml
+\subsection{dbopsingleintegerxor.xhtml}
 #+NAME: dbopsingleintegerxor.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12377,7 +12378,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsec.xhtml
+\subsection{dbopsec.xhtml}
 #+NAME: dbopsec.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12388,7 +12389,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsech.xhtml
+\subsection{dbopsech.xhtml}
 #+NAME: dbopsech.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12399,7 +12400,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsetvariableorder.xhtml
+\subsection{dbopsetvariableorder.xhtml}
 #+NAME: dbopsetvariableorder.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12410,7 +12411,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsinh.xhtml
+\subsection{dbopsinh.xhtml}
 #+NAME: dbopsinh.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12421,7 +12422,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsolve.xhtml
+\subsection{dbopsolve.xhtml}
 #+NAME: dbopsolve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12432,7 +12433,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsqrt.xhtml
+\subsection{dbopsqrt.xhtml}
 #+NAME: dbopsqrt.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12443,7 +12444,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopstar.xhtml
+\subsection{dbopstar.xhtml}
 #+NAME: dbopstar.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12454,7 +12455,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopstarstar.xhtml
+\subsection{dbopstarstar.xhtml}
 #+NAME: dbopstarstar.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12465,7 +12466,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsubmatrix.xhtml
+\subsection{dbopsubmatrix.xhtml}
 #+NAME: dbopsubmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12476,7 +12477,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsubmod.xhtml
+\subsection{dbopsubmod.xhtml}
 #+NAME: dbopsubmod.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12487,7 +12488,7 @@ dbopround not implemented
 <<page foot>>
 #+end_src
 
-*** dbopsurface.xhtml
+\subsection{dbopsurface.xhtml}
 #+NAME: dbopsurface.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12497,7 +12498,7 @@ dbopround not implemented
 dbopsurface not implemented
 <<page foot>>
 #+end_src
-*** dbopsumofkthpowerdivisors.xhtml
+\subsection{dbopsumofkthpowerdivisors.xhtml}
 #+NAME: dbopsumofkthpowerdivisors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12508,7 +12509,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptan.xhtml
+\subsection{dboptan.xhtml}
 #+NAME: dboptan.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12519,7 +12520,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptanh.xhtml
+\subsection{dboptanh.xhtml}
 #+NAME: dboptanh.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12530,7 +12531,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptaylor.xhtml
+\subsection{dboptaylor.xhtml}
 #+NAME: dboptaylor.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12541,7 +12542,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptimes.xhtml
+\subsection{dboptimes.xhtml}
 #+NAME: dboptimes.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12552,7 +12553,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptotaldegree.xhtml
+\subsection{dboptotaldegree.xhtml}
 #+NAME: dboptotaldegree.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12563,7 +12564,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptrace.xhtml
+\subsection{dboptrace.xhtml}
 #+NAME: dboptrace.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12574,7 +12575,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptranspose.xhtml
+\subsection{dboptranspose.xhtml}
 #+NAME: dboptranspose.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12585,7 +12586,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptrigs.xhtml
+\subsection{dboptrigs.xhtml}
 #+NAME: dboptrigs.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12596,7 +12597,7 @@ dbopsurface not implemented
 <<page foot>>
 #+end_src
 
-*** dboptruncate.xhtml
+\subsection{dboptruncate.xhtml}
 #+NAME: dboptruncate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12607,7 +12608,7 @@ dboptruncate not implemented
 <<page foot>>
 #+end_src
 
-*** dbopvariables.xhtml
+\subsection{dbopvariables.xhtml}
 #+NAME: dbopvariables.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12618,7 +12619,7 @@ dboptruncate not implemented
 <<page foot>>
 #+end_src
 
-*** dbopvectorise.xhtml
+\subsection{dbopvectorise.xhtml}
 #+NAME: dbopvectorise.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12629,7 +12630,7 @@ dboptruncate not implemented
 <<page foot>>
 #+end_src
 
-*** dbopvectorspace.xhtml
+\subsection{dbopvectorspace.xhtml}
 #+NAME: dbopvectorspace.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12640,7 +12641,7 @@ dboptruncate not implemented
 <<page foot>>
 #+end_src
 
-*** dbopwrite.xhtml
+\subsection{dbopwrite.xhtml}
 #+NAME: dbopwrite.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12650,7 +12651,7 @@ dboptruncate not implemented
 dbopwrite not implemented
 <<page foot>>
 #+end_src
-*** dbopzeroof.xhtml
+\subsection{dbopzeroof.xhtml}
 #+NAME: dbopzeroof.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12661,7 +12662,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** dbopzerosof.xhtml
+\subsection{dbopzerosof.xhtml}
 #+NAME: dbopzerosof.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12672,7 +12673,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** dbopzeroq.xhtml
+\subsection{dbopzeroq.xhtml}
 #+NAME: dbopzeroq.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12683,7 +12684,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** dbopvertconcat.xhtml
+\subsection{dbopvertconcat.xhtml}
 #+NAME: dbopvertconcat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12694,7 +12695,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** dbopwholepart.xhtml
+\subsection{dbopwholepart.xhtml}
 #+NAME: dbopwholepart.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12705,7 +12706,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** dbpolynomialinteger.xhtml
+\subsection{dbpolynomialinteger.xhtml}
 #+NAME: dbpolynomialinteger.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12716,7 +12717,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** dbpolynomialfractioninteger.xhtml
+\subsection{dbpolynomialfractioninteger.xhtml}
 #+NAME: dbpolynomialfractioninteger.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12727,7 +12728,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** dbopwholeragits.xhtml
+\subsection{dbopwholeragits.xhtml}
 #+NAME: dbopwholeragits.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12738,7 +12739,7 @@ dbopwrite not implemented
 <<page foot>>
 #+end_src
 
-*** definiteintegral.xhtml
+\subsection{definiteintegral.xhtml}
 #+NAME: definiteintegral.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12772,7 +12773,7 @@ dbopwrite not implemented
 
 #+end_src
 
-*** determinantofhilbert.xhtml
+\subsection{determinantofhilbert.xhtml}
 #+NAME: determinantofhilbert.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12873,7 +12874,7 @@ Reset <a href="dbopdigits.xhtml">digits</a> to its default value.
 <<page foot>>
 #+end_src
 
-*** differentiate.xhtml
+\subsection{differentiate.xhtml}
 #+NAME: differentiate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12904,7 +12905,7 @@ Reset <a href="dbopdigits.xhtml">digits</a> to its default value.
 <<page foot>>
 #+end_src
 
-*** dlmf.xhtml
+\subsection{dlmf.xhtml}
 #+NAME: dlmf.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -12993,7 +12994,7 @@ In particular we try to show that Axiom conforms to published standards.
 <<page foot>>
 #+end_src
 
-*** dlmfapproximations.xhtml
+\subsection{dlmfapproximations.xhtml}
 #+NAME: dlmfapproximations.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -13457,7 +13458,7 @@ In particular we try to show that Axiom conforms to published standards.
 <<page foot>>
 #+end_src
 
-*** dlmfasymptoticexpansions.xhtml
+\subsection{dlmfasymptoticexpansions.xhtml}
 #+NAME: dlmfasymptoticexpansions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -15859,7 +15860,7 @@ is complex, then the remainder terms are bounded in magnitude by
 <<page foot>>
 #+end_src
 
-*** dlmfbarnesgfunction.xhtml
+\subsection{dlmfbarnesgfunction.xhtml}
 #+NAME: dlmfbarnesgfunction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -16714,7 +16715,7 @@ is complex, then the remainder terms are bounded in magnitude by
 <<page foot>>
 #+end_src
 
-*** dlmfbetafunction.xhtml
+\subsection{dlmfbetafunction.xhtml}
 #+NAME: dlmfbetafunction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -18171,7 +18172,7 @@ where noted otherwise. In the next 4 equations it is assumed
 <<page foot>>
 #+end_src
 
-*** dlmfcontinuedfractions.xhtml
+\subsection{dlmfcontinuedfractions.xhtml}
 #+NAME: dlmfcontinuedfractions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -18510,7 +18511,7 @@ where noted otherwise. In the next 4 equations it is assumed
 <<page foot>>
 #+end_src
 
-*** dlmfdefinitions.xhtml
+\subsection{dlmfdefinitions.xhtml}
 #+NAME: dlmfdefinitions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -18962,7 +18963,7 @@ When
 <<page foot>>
 #+end_src
 
-*** dlmffunctionrelations.xhtml
+\subsection{dlmffunctionrelations.xhtml}
 #+NAME: dlmffunctionrelations.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -19837,7 +19838,7 @@ If a positive function
 <<page foot>>
 #+end_src
 
-*** dlmfgraphics.xhtml
+\subsection{dlmfgraphics.xhtml}
 #+NAME: dlmfgraphics.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -20094,7 +20095,7 @@ allow you to choose "darken only".
 <<page foot>>
 #+end_src
 
-*** dlmfinequalities.xhtml
+\subsection{dlmfinequalities.xhtml}
 #+NAME: dlmfinequalities.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -20818,7 +20819,7 @@ allow you to choose "darken only".
 <<page foot>>
 #+end_src
 
-*** dlmfinfiniteproducts.xhtml
+\subsection{dlmfinfiniteproducts.xhtml}
 #+NAME: dlmfinfiniteproducts.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -21311,7 +21312,7 @@ allow you to choose "darken only".
 <<page foot>>
 #+end_src
 
-*** dlmfintegrals.xhtml
+\subsection{dlmfintegrals.xhtml}
 #+NAME: dlmfintegrals.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -22212,7 +22213,7 @@ allow you to choose "darken only".
 <<page foot>>
 #+end_src
 
-*** dlmfintegralrepresentations.xhtml
+\subsection{dlmfintegralrepresentations.xhtml}
 #+NAME: dlmfintegralrepresentations.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -24127,7 +24128,7 @@ allow you to choose "darken only".
 <<page foot>>
 #+end_src
 
-*** dlmfmathematicalapplications.xhtml
+\subsection{dlmfmathematicalapplications.xhtml}
 #+NAME: dlmfmathematicalapplications.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -24619,7 +24620,7 @@ allow you to choose "darken only".
 <<page foot>>
 #+end_src
 
-*** dlmfmethodsofcomputation.xhtml
+\subsection{dlmfmethodsofcomputation.xhtml}
 #+NAME: dlmfmethodsofcomputation.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -24700,7 +24701,7 @@ make use of the
 <<page foot>>
 #+end_src
 
-*** dlmfmultidimensionalintegral.xhtml
+\subsection{dlmfmultidimensionalintegral.xhtml}
 #+NAME: dlmfmultidimensionalintegral.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -26130,7 +26131,7 @@ make use of the
 <<page foot>>
 #+end_src
 
-*** dlmfnotation.xhtml
+\subsection{dlmfnotation.xhtml}
 #+NAME: dlmfnotation.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -26515,7 +26516,7 @@ make use of the
 <<page foot>>
 #+end_src
 
-*** dlmfphysicalapplications.xhtml
+\subsection{dlmfphysicalapplications.xhtml}
 #+NAME: dlmfphysicalapplications.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -27090,7 +27091,7 @@ make use of the
 <<page foot>>
 #+end_src
 
-*** dlmfpolygammafunctions.xhtml
+\subsection{dlmfpolygammafunctions.xhtml}
 #+NAME: dlmfpolygammafunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -27612,7 +27613,7 @@ make use of the
 <<page foot>>
 #+end_src
 
-*** dlmfqgammaandbetafunctions.xhtml
+\subsection{dlmfqgammaandbetafunctions.xhtml}
 #+NAME: dlmfqgammaandbetafunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -28476,7 +28477,7 @@ make use of the
 <<page foot>>
 #+end_src
 
-*** dlmfseriesexpansions.xhtml
+\subsection{dlmfseriesexpansions.xhtml}
 #+NAME: dlmfseriesexpansions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -29322,7 +29323,7 @@ for 31D values see
 <<page foot>>
 #+end_src
 
-*** dlmfsums.xhtml
+\subsection{dlmfsums.xhtml}
 #+NAME: dlmfsums.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -29484,7 +29485,7 @@ beta functions (Gauss and Jacobi sums) see
 <<page foot>>
 #+end_src
 
-*** dlmfsoftware.xhtml
+\subsection{dlmfsoftware.xhtml}
 #+NAME: dlmfsoftware.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -29501,7 +29502,7 @@ beta functions (Gauss and Jacobi sums) see
 <<page foot>>
 #+end_src
 
-*** dlmfspecialvaluesandextrema.xhtml
+\subsection{dlmfspecialvaluesandextrema.xhtml}
 #+NAME: dlmfspecialvaluesandextrema.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -30802,7 +30803,7 @@ beta functions (Gauss and Jacobi sums) see
 <<page foot>>
 #+end_src
 
-*** dlmftables.xhtml
+\subsection{dlmftables.xhtml}
 #+NAME: dlmftables.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33284,7 +33285,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 <<page foot>>
 #+end_src
 
-*** draw.xhtml
+\subsection{draw.xhtml}
 #+NAME: draw.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33383,7 +33384,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 <<page foot>>
 #+end_src
 
-*** draw2donevariable.xhtml
+\subsection{draw2donevariable.xhtml}
 #+NAME: draw2donevariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33450,7 +33451,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 <<page foot>>
 #+end_src
 
-*** draw2ddefinedcurve.xhtml
+\subsection{draw2ddefinedcurve.xhtml}
 #+NAME: draw2ddefinedcurve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33521,7 +33522,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 <<page foot>>
 #+end_src
 
-*** draw2dpolynomialequation.xhtml
+\subsection{draw2dpolynomialequation.xhtml}
 #+NAME: draw2dpolynomialequation.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33594,7 +33595,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 <<page foot>>
 #+end_src
 
-*** draw3dtwovariable.xhtml
+\subsection{draw3dtwovariable.xhtml}
 #+NAME: draw3dtwovariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33669,7 +33670,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 <<page foot>>
 #+end_src
 
-*** draw3ddefinedtube.xhtml
+\subsection{draw3ddefinedtube.xhtml}
 #+NAME: draw3ddefinedtube.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33744,7 +33745,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 <<page foot>>
 #+end_src
 
-*** draw3ddefinedsurface.xhtml
+\subsection{draw3ddefinedsurface.xhtml}
 #+NAME: draw3ddefinedsurface.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33832,7 +33833,7 @@ The fourth column is the difference of Axiom's value and the Handbook value.
 #+end_src
 
 %%E
-*** equdifferential.xhtml
+\subsection{equdifferential.xhtml}
 #+NAME: equdifferential.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -33881,7 +33882,7 @@ and Polynomial Equations</a>.
 <<page foot>>
 #+end_src
 
-*** equdifferentiallinear.xhtml
+\subsection{equdifferentiallinear.xhtml}
 #+NAME: equdifferentiallinear.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34036,7 +34037,7 @@ where all the algebraic solutions are found.
 <<page foot>>
 #+end_src
 
-*** equdifferentialnonlinear.xhtml
+\subsection{equdifferentialnonlinear.xhtml}
 #+NAME: equdifferentialnonlinear.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34252,7 +34253,7 @@ Finally, we solve it.
 <<page foot>>
 #+end_src
 
-*** equdifferentialpowerseries.xhtml
+\subsection{equdifferentialpowerseries.xhtml}
 #+NAME: equdifferentialpowerseries.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34358,7 +34359,7 @@ effect on the order of the solution.
 <<page foot>>
 #+end_src
 
-*** equationpage.xhtml
+\subsection{equationpage.xhtml}
 #+NAME: equationpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34411,7 +34412,7 @@ Axiom lets you solve equations of various types:
 <<page foot>>
 #+end_src
 
-*** equsystemlinear.xhtml
+\subsection{equsystemlinear.xhtml}
 #+NAME: equsystemlinear.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34545,7 +34546,7 @@ the solution space.
 <<page foot>>
 #+end_src
 
-*** examplesexposedpage.xhtml
+\subsection{examplesexposedpage.xhtml}
 #+NAME: examplesexposedpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34558,7 +34559,7 @@ the solution space.
 
 
 %%F
-*** factored.xhtml
+\subsection{factored.xhtml}
 #+NAME: factored.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34569,7 +34570,7 @@ factored not implemented
 <<page foot>>
 #+end_src
 
-*** foundationlibrarydocpage.xhtml
+\subsection{foundationlibrarydocpage.xhtml}
 #+NAME: foundationlibrarydocpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34580,7 +34581,7 @@ factored not implemented
 <<page foot>>
 #+end_src
 
-*** funalgebraicfunctions.xhtml
+\subsection{funalgebraicfunctions.xhtml}
 #+NAME: funalgebraicfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34662,7 +34663,7 @@ quantities from the denominator.
 <<page foot>>
 #+end_src
 
-*** funelementaryfunctions.xhtml
+\subsection{funelementaryfunctions.xhtml}
 #+NAME: funelementaryfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34708,7 +34709,7 @@ instead of variables.
 <<page foot>>
 #+end_src
 
-*** funoperatoralgebra.xhtml
+\subsection{funoperatoralgebra.xhtml}
 #+NAME: funoperatoralgebra.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34931,7 +34932,7 @@ Here is the evaluation.
 <<page foot>>
 #+end_src
 
-*** functionpage.xhtml
+\subsection{functionpage.xhtml}
 #+NAME: functionpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -34997,7 +34998,7 @@ you convert expressions to compiled functions.
 <<page foot>>
 #+end_src
 
-*** funpatternmatching.xhtml
+\subsection{funpatternmatching.xhtml}
 #+NAME: funpatternmatching.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -35382,7 +35383,7 @@ of objects for your application.
 <<page foot>>
 #+end_src
 
-*** funrationalfunctions.xhtml
+\subsection{funrationalfunctions.xhtml}
 #+NAME: funrationalfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -35445,7 +35446,7 @@ using the function <a href="dbopeval.xhtml">eval</a>. The syntax for
 <<page foot>>
 #+end_src
 
-*** funsimplification.xhtml
+\subsection{funsimplification.xhtml}
 #+NAME: funsimplification.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -35579,7 +35580,7 @@ rule not built into the system you can use Axiom's
 
 
 %%G
-*** glossarypage.xhtml
+\subsection{glossarypage.xhtml}
 #+NAME: glossarypage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -36119,7 +36120,7 @@ rule not built into the system you can use Axiom's
   application. If <div class="gspad">u</div> is the list 
   <div class="gspad">[7, 4, -11]</div> then both 
   <div class="gspad">u(2)</div> and <div class="gspad">u.2</div> return
-  1. Dot notation nests to left. Thus <div class="gspad">f . g . h</div>
+  4. Dot notation nests to left. Thus <div class="gspad">f . g . h</div>
   is equivalent to <div class="gspad">(f . g) . h</div>.
  </li>
  <li><a name="p17507" class="glabel"/><b>dynamic</b>
@@ -37260,7 +37261,7 @@ rule not built into the system you can use Axiom's
 <<page foot>>
 #+end_src
 
-*** graphexamples.xhtml
+\subsection{graphexamples.xhtml}
 #+NAME: graphexamples.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37297,7 +37298,7 @@ Here are some examples of Axiom graphics.
 <<page foot>>
 #+end_src
 
-*** graphexamplesassorted.xhtml
+\subsection{graphexamplesassorted.xhtml}
 #+NAME: graphexamplesassorted.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37368,7 +37369,7 @@ Implicit curves: p(x,y)=0
 #+end_src
 
 
-*** graphexamplesimplicit.xhtml
+\subsection{graphexamplesimplicit.xhtml}
 #+NAME: graphexamplesimplicit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37433,7 +37434,7 @@ Cassinian Ovals: two loops
 #+end_src
 
 
-*** graphexampleslistofpoints.xhtml
+\subsection{graphexampleslistofpoints.xhtml}
 #+NAME: graphexampleslistofpoints.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37515,7 +37516,7 @@ designated as the viewport's title.
 #+end_src
 
 
-*** graphexamplesonevariable.xhtml
+\subsection{graphexamplesonevariable.xhtml}
 #+NAME: graphexamplesonevariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37558,7 +37559,7 @@ designated as the viewport's title.
 #+end_src
 
 
-*** graphexamplesparametric.xhtml
+\subsection{graphexamplesparametric.xhtml}
 #+NAME: graphexamplesparametric.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37611,7 +37612,7 @@ Another closed curve
 #+end_src
 
 
-*** graphexamplespolar.xhtml
+\subsection{graphexamplespolar.xhtml}
 #+NAME: graphexamplespolar.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37663,7 +37664,7 @@ A Limacon
 <<page foot>>
 #+end_src
 
-*** graphexamplesthreed.xhtml
+\subsection{graphexamplesthreed.xhtml}
 #+NAME: graphexamplesthreed.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37757,7 +37758,7 @@ Banchoff Klein Bottle
 <<page foot>>
 #+end_src
 
-*** graphicspage.xhtml
+\subsection{graphicspage.xhtml}
 #+NAME: graphicspage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37803,7 +37804,7 @@ lists of points in the plane.
 <<page foot>>
 #+end_src
 
-*** graphviewports.xhtml
+\subsection{graphviewports.xhtml}
 #+NAME: graphviewports.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37861,7 +37862,7 @@ image should start a "live graphics copy" so you can manipulate the image.
 <<page foot>>
 #+end_src
 
-*** graph2d.xhtml
+\subsection{graph2d.xhtml}
 #+NAME: graph2d.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37894,7 +37895,7 @@ image should start a "live graphics copy" so you can manipulate the image.
 <<page foot>>
 #+end_src
 
-*** graph2dimplicit.xhtml
+\subsection{graph2dimplicit.xhtml}
 #+NAME: graph2dimplicit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -37935,7 +37936,7 @@ curve equation.
 <<page foot>>
 #+end_src
 
-*** graph2dlistsofpoints.xhtml
+\subsection{graph2dlistsofpoints.xhtml}
 #+NAME: graph2dlistsofpoints.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38046,7 +38047,7 @@ designated as the viewport's title.
 <<page foot>>
 #+end_src
 
-*** graph2donevariable.xhtml
+\subsection{graph2donevariable.xhtml}
 #+NAME: graph2donevariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38116,7 +38117,7 @@ within the viewport title window will be clipped.
 <<page foot>>
 #+end_src
 
-*** graph2dparametric.xhtml
+\subsection{graph2dparametric.xhtml}
 #+NAME: graph2dparametric.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38193,7 +38194,7 @@ t varies.
 <<page foot>>
 #+end_src
 
-*** graph2dpolar.xhtml
+\subsection{graph2dpolar.xhtml}
 #+NAME: graph2dpolar.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38256,7 +38257,7 @@ domain.
 #+end_src
 
 
-*** graph3d.xhtml
+\subsection{graph3d.xhtml}
 #+NAME: graph3d.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38285,7 +38286,7 @@ domain.
 <<page foot>>
 #+end_src
 
-*** graph3dobjects.xhtml
+\subsection{graph3dobjects.xhtml}
 #+NAME: graph3dobjects.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38458,7 +38459,7 @@ Create and display the viewport.
 <<page foot>>
 #+end_src
 
-*** graph3dparametric.xhtml
+\subsection{graph3dparametric.xhtml}
 #+NAME: graph3dparametric.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38534,7 +38535,7 @@ applies to the parameter of the functions, which in this case is t.
 <<page foot>>
 #+end_src
 
-*** graph3dsurfaces.xhtml
+\subsection{graph3dsurfaces.xhtml}
 #+NAME: graph3dsurfaces.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38613,7 +38614,7 @@ range specifies the u-variable and the second range specifies the v-variable.
 <<page foot>>
 #+end_src
 
-*** graph3dtubeplots.xhtml
+\subsection{graph3dtubeplots.xhtml}
 #+NAME: graph3dtubeplots.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38697,7 +38698,7 @@ than one cause self-intersection.
 <<page foot>>
 #+end_src
 
-*** graph3dtwovariables.xhtml
+\subsection{graph3dtwovariables.xhtml}
 #+NAME: graph3dtwovariables.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38761,7 +38762,7 @@ y-variable.
 #+end_src
 
 %%H
-*** htxtoppage.xhtml
+\subsection{htxtoppage.xhtml}
 #+NAME: htxtoppage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38774,7 +38775,7 @@ y-variable.
 
 
 %%I
-*** indefiniteintegral.xhtml
+\subsection{indefiniteintegral.xhtml}
 #+NAME: indefiniteintegral.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38801,7 +38802,7 @@ y-variable.
 <<page foot>>
 #+end_src
 
-*** introtofloat.xhtml
+\subsection{introtofloat.xhtml}
 #+NAME: introtofloat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38851,7 +38852,7 @@ The normal arithmetic operations are available for floating point numbers.
 #+end_src
 
 %%J
-*** jenks.xhtml
+\subsection{jenks.xhtml}
 #+NAME: jenks.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -38950,7 +38951,7 @@ The normal arithmetic operations are available for floating point numbers.
 %%K
 %%L
 
-*** laurentseries.xhtml
+\subsection{laurentseries.xhtml}
 #+NAME: laurentseries.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -39027,7 +39028,7 @@ infinity; the step size is any positive integer.
 
 #+end_src
 
-*** linalgpage.xhtml
+\subsection{linalgpage.xhtml}
 #+NAME: linalgpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -39122,7 +39123,7 @@ infinity; the step size is any positive integer.
 <<page foot>>
 #+end_src
 
-*** linconversion.xhtml
+\subsection{linconversion.xhtml}
 #+NAME: linconversion.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -39294,7 +39295,7 @@ to be fractions.
 <<page foot>>
 #+end_src
 
-*** lincreate.xhtml
+\subsection{lincreate.xhtml}
 #+NAME: lincreate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -39511,7 +39512,7 @@ a new matrix by reflection across the main diagonal.
 <<page foot>>
 #+end_src
 
-*** lineigen.xhtml
+\subsection{lineigen.xhtml}
 #+NAME: lineigen.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -39653,7 +39654,7 @@ of these vectors.
 <<page foot>>
 #+end_src
 
-*** linhilbert.xhtml
+\subsection{linhilbert.xhtml}
 #+NAME: linhilbert.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -39742,7 +39743,7 @@ Reset <a href="dbopdigits.xhtml">digits</a> to its default value.
 <<page foot>>
 #+end_src
 
-*** linintro.xhtml
+\subsection{linintro.xhtml}
 #+NAME: linintro.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -39855,7 +39856,7 @@ You can perform operations such as
 <<page foot>>
 #+end_src
 
-*** linoperations.xhtml
+\subsection{linoperations.xhtml}
 #+NAME: linoperations.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40046,7 +40047,7 @@ to display the full ist of operations defined by
 <<page foot>>
 #+end_src
 
-*** linpermaent.xhtml
+\subsection{linpermaent.xhtml}
 #+NAME: linpermaent.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40100,7 +40101,7 @@ Here are some derangement numbers, which you see grow quite fast.
 <<page foot>>
 #+end_src
 
-*** linsquarematrices.xhtml
+\subsection{linsquarematrices.xhtml}
 #+NAME: linsquarematrices.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40186,7 +40187,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** linvectors.xhtml
+\subsection{linvectors.xhtml}
 #+NAME: linvectors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40351,7 +40352,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** lin1darrays.xhtml
+\subsection{lin1darrays.xhtml}
 #+NAME: lin1darrays.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40461,7 +40462,7 @@ Replace the first 5 elements of a with those of b.
 <<page foot>>
 #+end_src
 
-*** lin2darrays.xhtml
+\subsection{lin2darrays.xhtml}
 #+NAME: lin2darrays.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40696,7 +40697,7 @@ For more information on related topics, see
 #+end_src
 
 %%M
-*** man0page.xhtml
+\subsection{man0page.xhtml}
 #+NAME: man0page.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40803,7 +40804,7 @@ Enter search string (use <b>*</b> for wild card unless counter-indicated):
 <<page foot>>
 #+end_src
 
-*** menualgebraadjointmatrix.xhtml
+\subsection{menualgebraadjointmatrix.xhtml}
 #+NAME: menualgebraadjointmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40814,7 +40815,7 @@ menualgebraadjointmatrix not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebraapplytolist.xhtml
+\subsection{menualgebraapplytolist.xhtml}
 #+NAME: menualgebraapplytolist.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40825,7 +40826,7 @@ menualgebraapplytolist not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebracharacteristicpolynomial.xhtml
+\subsection{menualgebracharacteristicpolynomial.xhtml}
 #+NAME: menualgebracharacteristicpolynomial.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40836,7 +40837,7 @@ menualgebracharacteristicpolynomial not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebradeterminant.xhtml
+\subsection{menualgebradeterminant.xhtml}
 #+NAME: menualgebradeterminant.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40847,7 +40848,7 @@ menualgebradeterminant not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebraeigenvalues.xhtml
+\subsection{menualgebraeigenvalues.xhtml}
 #+NAME: menualgebraeigenvalues.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40858,7 +40859,7 @@ menualgebraeigenvalues not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebraeigenvectors.xhtml
+\subsection{menualgebraeigenvectors.xhtml}
 #+NAME: menualgebraeigenvectors.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40869,7 +40870,7 @@ menualgebraeigenvectors not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebraentermatrix.xhtml
+\subsection{menualgebraentermatrix.xhtml}
 #+NAME: menualgebraentermatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40880,7 +40881,7 @@ menualgebraentermatrix not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebrainvertmatrix.xhtml
+\subsection{menualgebrainvertmatrix.xhtml}
 #+NAME: menualgebrainvertmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40891,7 +40892,7 @@ menualgebrainvertmatrix not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebrageneratematrix.xhtml
+\subsection{menualgebrageneratematrix.xhtml}
 #+NAME: menualgebrageneratematrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40902,7 +40903,7 @@ menualgebrageneratematrix not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebramakelist.xhtml
+\subsection{menualgebramakelist.xhtml}
 #+NAME: menualgebramakelist.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40913,7 +40914,7 @@ menualgebramakelist not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebramaptolist.xhtml
+\subsection{menualgebramaptolist.xhtml}
 #+NAME: menualgebramaptolist.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40924,7 +40925,7 @@ menualgebramaptolist not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebramaptomatrix.xhtml
+\subsection{menualgebramaptomatrix.xhtml}
 #+NAME: menualgebramaptomatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40935,7 +40936,7 @@ menualgebramaptomatrix not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebrareducelist.xhtml
+\subsection{menualgebrareducelist.xhtml}
 #+NAME: menualgebrareducelist.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40946,7 +40947,7 @@ menualgebrareducelist not implemented
 <<page foot>>
 #+end_src
 
-*** menualgebratransposematrix.xhtml
+\subsection{menualgebratransposematrix.xhtml}
 #+NAME: menualgebratransposematrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40957,7 +40958,7 @@ menualgebratransposematrix not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomaddtopath.xhtml
+\subsection{menuaxiomaddtopath.xhtml}
 #+NAME: menuaxiomaddtopath.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40968,7 +40969,7 @@ menuaxiomaddtopath not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomclearmemory.xhtml
+\subsection{menuaxiomclearmemory.xhtml}
 #+NAME: menuaxiomclearmemory.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40979,7 +40980,7 @@ menuaxiomclearmemory not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomdeletefunction.xhtml
+\subsection{menuaxiomdeletefunction.xhtml}
 #+NAME: menuaxiomdeletefunction.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -40990,7 +40991,7 @@ menuaxiomdeletefunction not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomdeletevariable.xhtml
+\subsection{menuaxiomdeletevariable.xhtml}
 #+NAME: menuaxiomdeletevariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41001,7 +41002,7 @@ menuaxiomdeletevariable not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiominterrupt.xhtml
+\subsection{menuaxiominterrupt.xhtml}
 #+NAME: menuaxiominterrupt.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41012,7 +41013,7 @@ menuaxiominterrupt not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomrestart.xhtml
+\subsection{menuaxiomrestart.xhtml}
 #+NAME: menuaxiomrestart.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41023,7 +41024,7 @@ menuaxiomrestart not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomshowdefinition.xhtml
+\subsection{menuaxiomshowdefinition.xhtml}
 #+NAME: menuaxiomshowdefinition.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41034,7 +41035,7 @@ menuaxiomshowdefinition not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomdisplay.xhtml
+\subsection{menuaxiomdisplay.xhtml}
 #+NAME: menuaxiomdisplay.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41045,7 +41046,7 @@ menuaxiomdisplay not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomset.xhtml
+\subsection{menuaxiomset.xhtml}
 #+NAME: menuaxiomset.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41056,7 +41057,7 @@ menuaxiomset not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomshowfunctions.xhtml
+\subsection{menuaxiomshowfunctions.xhtml}
 #+NAME: menuaxiomshowfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41067,7 +41068,7 @@ menuaxiomshowfunctions not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomshowvariables.xhtml
+\subsection{menuaxiomshowvariables.xhtml}
 #+NAME: menuaxiomshowvariables.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41078,7 +41079,7 @@ menuaxiomshowvariables not implemented
 <<page foot>>
 #+end_src
 
-*** menuaxiomtoggletimedisplay.xhtml
+\subsection{menuaxiomtoggletimedisplay.xhtml}
 #+NAME: menuaxiomtoggletimedisplay.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41089,7 +41090,7 @@ menuaxiomtoggletimedisplay not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuscalculussum.xhtml
+\subsection{menucalculuscalculussum.xhtml}
 #+NAME: menucalculuscalculussum.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41100,7 +41101,7 @@ menucalculuscalculussum not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuscalculusproduct.xhtml
+\subsection{menucalculuscalculusproduct.xhtml}
 #+NAME: menucalculuscalculusproduct.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41111,7 +41112,7 @@ menucalculuscalculusproduct not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuschangevariable.xhtml
+\subsection{menucalculuschangevariable.xhtml}
 #+NAME: menucalculuschangevariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41122,7 +41123,7 @@ menucalculuschangevariable not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuscontinuedfractions.xhtml
+\subsection{menucalculuscontinuedfractions.xhtml}
 #+NAME: menucalculuscontinuedfractions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41133,7 +41134,7 @@ menucalculuscontinuedfractions not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusdifferentiate.xhtml
+\subsection{menucalculusdifferentiate.xhtml}
 #+NAME: menucalculusdifferentiate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41144,7 +41145,7 @@ menucalculusdifferentiate not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusdividepolynomials.xhtml
+\subsection{menucalculusdividepolynomials.xhtml}
 #+NAME: menucalculusdividepolynomials.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41155,7 +41156,7 @@ menucalculusdividepolynomials not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusfindlimit.xhtml
+\subsection{menucalculusfindlimit.xhtml}
 #+NAME: menucalculusfindlimit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41166,7 +41167,7 @@ menucalculusfindlimit not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusgetseries.xhtml
+\subsection{menucalculusgetseries.xhtml}
 #+NAME: menucalculusgetseries.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41177,7 +41178,7 @@ menucalculusgetseries not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusgreatestcommondivisor.xhtml
+\subsection{menucalculusgreatestcommondivisor.xhtml}
 #+NAME: menucalculusgreatestcommondivisor.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41188,7 +41189,7 @@ menucalculusgreatestcommondivisor not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusleastcommonmultiple.xhtml
+\subsection{menucalculusleastcommonmultiple.xhtml}
 #+NAME: menucalculusleastcommonmultiple.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41199,7 +41200,7 @@ menucalculusleastcommonmultiple not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusintegrate.xhtml
+\subsection{menucalculusintegrate.xhtml}
 #+NAME: menucalculusintegrate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41210,7 +41211,7 @@ menucalculusintegrate not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusinverselaplacetransform.xhtml
+\subsection{menucalculusinverselaplacetransform.xhtml}
 #+NAME: menucalculusinverselaplacetransform.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41221,7 +41222,7 @@ menucalculusinverselaplacetransform not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuslaplacetransform.xhtml
+\subsection{menucalculuslaplacetransform.xhtml}
 #+NAME: menucalculuslaplacetransform.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41232,7 +41233,7 @@ menucalculuslaplacetransform not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuslevel3.xhtml
+\subsection{menucalculuslevel3.xhtml}
 #+NAME: menucalculuslevel3.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41243,7 +41244,7 @@ menucalculuslevel3 not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuslevel3a.xhtml
+\subsection{menucalculuslevel3a.xhtml}
 #+NAME: menucalculuslevel3a.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41254,7 +41255,7 @@ menucalculuslevel3a not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuslevel3b.xhtml
+\subsection{menucalculuslevel3b.xhtml}
 #+NAME: menucalculuslevel3b.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41265,7 +41266,7 @@ menucalculuslevel3b not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuslevel3c.xhtml
+\subsection{menucalculuslevel3c.xhtml}
 #+NAME: menucalculuslevel3c.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41276,7 +41277,7 @@ menucalculuslevel3c not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuspadeapproximation.xhtml
+\subsection{menucalculuspadeapproximation.xhtml}
 #+NAME: menucalculuspadeapproximation.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41287,7 +41288,7 @@ menucalculuspadeapproximation not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculuspartialfractions.xhtml
+\subsection{menucalculuspartialfractions.xhtml}
 #+NAME: menucalculuspartialfractions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41298,7 +41299,7 @@ menucalculuspartialfractions not implemented
 <<page foot>>
 #+end_src
 
-*** menucalculusrischintegrate.xhtml
+\subsection{menucalculusrischintegrate.xhtml}
 #+NAME: menucalculusrischintegrate.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41309,7 +41310,7 @@ menucalculusrischintegrate not implemented
 <<page foot>>
 #+end_src
 
-*** menueditcopy.xhtml
+\subsection{menueditcopy.xhtml}
 #+NAME: menueditcopy.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41320,7 +41321,7 @@ menueditcopy not implemented
 <<page foot>>
 #+end_src
 
-*** menueditcopyasimage.xhtml
+\subsection{menueditcopyasimage.xhtml}
 #+NAME: menueditcopyasimage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41331,7 +41332,7 @@ menueditcopyasimage not implemented
 <<page foot>>
 #+end_src
 
-*** menueditcopytex.xhtml
+\subsection{menueditcopytex.xhtml}
 #+NAME: menueditcopytex.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41342,7 +41343,7 @@ menueditcopytex not implemented
 <<page foot>>
 #+end_src
 
-*** menueditcopytext.xhtml
+\subsection{menueditcopytext.xhtml}
 #+NAME: menueditcopytext.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41353,7 +41354,7 @@ menueditcopytext not implemented
 <<page foot>>
 #+end_src
 
-*** menueditcut.xhtml
+\subsection{menueditcut.xhtml}
 #+NAME: menueditcut.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41364,7 +41365,7 @@ menueditcut not implemented
 <<page foot>>
 #+end_src
 
-*** menueditpaste.xhtml
+\subsection{menueditpaste.xhtml}
 #+NAME: menueditpaste.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41375,7 +41376,7 @@ menueditpaste not implemented
 <<page foot>>
 #+end_src
 
-*** menueditdeleteselection.xhtml
+\subsection{menueditdeleteselection.xhtml}
 #+NAME: menueditdeleteselection.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41386,7 +41387,7 @@ menueditdeleteselection not implemented
 <<page foot>>
 #+end_src
 
-*** menueditselectiontoimage.xhtml
+\subsection{menueditselectiontoimage.xhtml}
 #+NAME: menueditselectiontoimage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41397,7 +41398,7 @@ menueditselectiontoimage not implemented
 <<page foot>>
 #+end_src
 
-*** menueditselectiontoinput.xhtml
+\subsection{menueditselectiontoinput.xhtml}
 #+NAME: menueditselectiontoinput.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41408,7 +41409,7 @@ menueditselectiontoinput not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationsrealrootsofpolynmial.xhtml
+\subsection{menuequationsrealrootsofpolynmial.xhtml}
 #+NAME: menuequationsrealrootsofpolynmial.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41419,7 +41420,7 @@ menuequationsrealrootsofpolynmial not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationsatvalue.xhtml
+\subsection{menuequationsatvalue.xhtml}
 #+NAME: menuequationsatvalue.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41430,7 +41431,7 @@ menuequationsatvalue not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationsboundaryvalueproblem.xhtml
+\subsection{menuequationsboundaryvalueproblem.xhtml}
 #+NAME: menuequationsboundaryvalueproblem.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41441,7 +41442,7 @@ menuequationsboundaryvalueproblem not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationsinitialvalueproblem1.xhtml
+\subsection{menuequationsinitialvalueproblem1.xhtml}
 #+NAME: menuequationsinitialvalueproblem1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41452,7 +41453,7 @@ menuequationsinitialvalueproblem1 not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationsinitialvalueproblem2.xhtml
+\subsection{menuequationsinitialvalueproblem2.xhtml}
 #+NAME: menuequationsinitialvalueproblem2.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41463,7 +41464,7 @@ menuequationsinitialvalueproblem2 not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationssolvealgebraicsystem.xhtml
+\subsection{menuequationssolvealgebraicsystem.xhtml}
 #+NAME: menuequationssolvealgebraicsystem.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41474,7 +41475,7 @@ menuequationssolvealgebraicsystem not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationseliminatevariable.xhtml
+\subsection{menuequationseliminatevariable.xhtml}
 #+NAME: menuequationseliminatevariable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41485,7 +41486,7 @@ menuequationseliminatevariable not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationssolvelinearsystem.xhtml
+\subsection{menuequationssolvelinearsystem.xhtml}
 #+NAME: menuequationssolvelinearsystem.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41496,7 +41497,7 @@ menuequationssolvelinearsystem not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationssolveode.xhtml
+\subsection{menuequationssolveode.xhtml}
 #+NAME: menuequationssolveode.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41507,7 +41508,7 @@ menuequationssolveode not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationssolveodewithlaplace.xhtml
+\subsection{menuequationssolveodewithlaplace.xhtml}
 #+NAME: menuequationssolveodewithlaplace.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41518,7 +41519,7 @@ menuequationssolveodewithlaplace not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationsrootsofpolynomial.xhtml
+\subsection{menuequationsrootsofpolynomial.xhtml}
 #+NAME: menuequationsrootsofpolynomial.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41529,7 +41530,7 @@ menuequationsrootsofpolynomial not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationssolve.xhtml
+\subsection{menuequationssolve.xhtml}
 #+NAME: menuequationssolve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41540,7 +41541,7 @@ menuequationssolve not implemented
 <<page foot>>
 #+end_src
 
-*** menuequationssolvenumerically.xhtml
+\subsection{menuequationssolvenumerically.xhtml}
 #+NAME: menuequationssolvenumerically.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41551,7 +41552,7 @@ menuequationssolvenumerically not implemented
 <<page foot>>
 #+end_src
 
-*** menufileexit.xhtml
+\subsection{menufileexit.xhtml}
 #+NAME: menufileexit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41562,7 +41563,7 @@ menufileexit not implemented
 <<page foot>>
 #+end_src
 
-*** menufileinputfile.xhtml
+\subsection{menufileinputfile.xhtml}
 #+NAME: menufileinputfile.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41573,7 +41574,7 @@ menufileinputfile not implemented
 <<page foot>>
 #+end_src
 
-*** menufileloadlibrary.xhtml
+\subsection{menufileloadlibrary.xhtml}
 #+NAME: menufileloadlibrary.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41584,7 +41585,7 @@ menufileloadlibrary not implemented
 <<page foot>>
 #+end_src
 
-*** menufileopen.xhtml
+\subsection{menufileopen.xhtml}
 #+NAME: menufileopen.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41595,7 +41596,7 @@ menufileopen not implemented
 <<page foot>>
 #+end_src
 
-*** menufileprint.xhtml
+\subsection{menufileprint.xhtml}
 #+NAME: menufileprint.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41606,7 +41607,7 @@ menufileprint not implemented
 <<page foot>>
 #+end_src
 
-*** menufileread.xhtml
+\subsection{menufileread.xhtml}
 #+NAME: menufileread.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41617,7 +41618,7 @@ menufileread not implemented
 <<page foot>>
 #+end_src
 
-*** menufilesave.xhtml
+\subsection{menufilesave.xhtml}
 #+NAME: menufilesave.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41628,7 +41629,7 @@ menufilesave not implemented
 <<page foot>>
 #+end_src
 
-*** menufilesaveas.xhtml
+\subsection{menufilesaveas.xhtml}
 #+NAME: menufilesaveas.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41639,7 +41640,7 @@ menufilesaveas not implemented
 <<page foot>>
 #+end_src
 
-*** menufiletogglespool.xhtml
+\subsection{menufiletogglespool.xhtml}
 #+NAME: menufiletogglespool.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41650,7 +41651,7 @@ menufiletogglespool not implemented
 <<page foot>>
 #+end_src
 
-*** menunumericsetprecision.xhtml
+\subsection{menunumericsetprecision.xhtml}
 #+NAME: menunumericsetprecision.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41661,7 +41662,7 @@ menunumericsetprecision not implemented
 <<page foot>>
 #+end_src
 
-*** menunumerictobigfloat.xhtml
+\subsection{menunumerictobigfloat.xhtml}
 #+NAME: menunumerictobigfloat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41672,7 +41673,7 @@ menunumerictobigfloat not implemented
 <<page foot>>
 #+end_src
 
-*** menunumerictofloat.xhtml
+\subsection{menunumerictofloat.xhtml}
 #+NAME: menunumerictofloat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41683,7 +41684,7 @@ menunumerictofloat not implemented
 <<page foot>>
 #+end_src
 
-*** menunumerictogglenumericoutput.xhtml
+\subsection{menunumerictogglenumericoutput.xhtml}
 #+NAME: menunumerictogglenumericoutput.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41694,7 +41695,7 @@ menunumerictogglenumericoutput not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifyaddalgebraicequality.xhtml
+\subsection{menusimplifyaddalgebraicequality.xhtml}
 #+NAME: menusimplifyaddalgebraicequality.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41705,7 +41706,7 @@ menusimplifyaddalgebraicequality not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifycomplexsimplification.xhtml
+\subsection{menusimplifycomplexsimplification.xhtml}
 #+NAME: menusimplifycomplexsimplification.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41716,7 +41717,7 @@ menusimplifycomplexsimplification not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifycontractlogarithms.xhtml
+\subsection{menusimplifycontractlogarithms.xhtml}
 #+NAME: menusimplifycontractlogarithms.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41727,7 +41728,7 @@ menusimplifycontractlogarithms not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifyevaluatenounform.xhtml
+\subsection{menusimplifyevaluatenounform.xhtml}
 #+NAME: menusimplifyevaluatenounform.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41738,7 +41739,7 @@ menusimplifyevaluatenounform not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifyexpandexpression.xhtml
+\subsection{menusimplifyexpandexpression.xhtml}
 #+NAME: menusimplifyexpandexpression.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41749,7 +41750,7 @@ menusimplifyexpandexpression not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifyexpandlogarithms.xhtml
+\subsection{menusimplifyexpandlogarithms.xhtml}
 #+NAME: menusimplifyexpandlogarithms.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41760,7 +41761,7 @@ menusimplifyexpandlogarithms not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifyfactorialsandgamma.xhtml
+\subsection{menusimplifyfactorialsandgamma.xhtml}
 #+NAME: menusimplifyfactorialsandgamma.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41771,7 +41772,7 @@ menusimplifyfactorialsandgamma not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifyfactorcomplex.xhtml
+\subsection{menusimplifyfactorcomplex.xhtml}
 #+NAME: menusimplifyfactorcomplex.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41782,7 +41783,7 @@ menusimplifyfactorcomplex not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifyfactorexpression.xhtml
+\subsection{menusimplifyfactorexpression.xhtml}
 #+NAME: menusimplifyfactorexpression.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41793,7 +41794,7 @@ menusimplifyfactorexpression not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifymoduluscomputation.xhtml
+\subsection{menusimplifymoduluscomputation.xhtml}
 #+NAME: menusimplifymoduluscomputation.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41804,7 +41805,7 @@ menusimplifymoduluscomputation not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifysimplifyexpression.xhtml
+\subsection{menusimplifysimplifyexpression.xhtml}
 #+NAME: menusimplifysimplifyexpression.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41815,7 +41816,7 @@ menusimplifysimplifyexpression not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifysubtitute.xhtml
+\subsection{menusimplifysubtitute.xhtml}
 #+NAME: menusimplifysubtitute.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41826,7 +41827,7 @@ menusimplifysubtitute not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifysimplifyradicals.xhtml
+\subsection{menusimplifysimplifyradicals.xhtml}
 #+NAME: menusimplifysimplifyradicals.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41837,7 +41838,7 @@ menusimplifysimplifyradicals not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifytogglealgebraicflag.xhtml
+\subsection{menusimplifytogglealgebraicflag.xhtml}
 #+NAME: menusimplifytogglealgebraicflag.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41848,7 +41849,7 @@ menusimplifytogglealgebraicflag not implemented
 <<page foot>>
 #+end_src
 
-*** menusimplifytrigsimplification.xhtml
+\subsection{menusimplifytrigsimplification.xhtml}
 #+NAME: menusimplifytrigsimplification.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -41860,7 +41861,7 @@ menusimplifytrigsimplification not implemented
 #+end_src
 
 %%N
-*** numbasicfunctions.xhtml
+\subsection{numbasicfunctions.xhtml}
 #+NAME: numbasicfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -42150,7 +42151,7 @@ Records are discussed in detail in
 <<page foot>>
 #+end_src
 
-*** numberspage.xhtml
+\subsection{numberspage.xhtml}
 #+NAME: numberspage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -42233,7 +42234,7 @@ Addtional topics
 <<page foot>>
 #+end_src
 
-*** numcardinalnumbers.xhtml
+\subsection{numcardinalnumbers.xhtml}
 #+NAME: numcardinalnumbers.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -42458,7 +42459,7 @@ hypothesis in this way:
 <<page foot>>
 #+end_src
 
-*** numcomplexnumbers.xhtml
+\subsection{numcomplexnumbers.xhtml}
 #+NAME: numcomplexnumbers.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -42624,7 +42625,7 @@ You can <a href="dbcomplexfactor.xhtml">factor</a> Gaussian integers.
 <<page foot>>
 #+end_src
 
-*** numcontinuedfractions.xhtml
+\subsection{numcontinuedfractions.xhtml}
 #+NAME: numcontinuedfractions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -42940,7 +42941,7 @@ is the expansion of the square root of 11.
 <<page foot>>
 #+end_src
 
-*** numexamples.xhtml
+\subsection{numexamples.xhtml}
 #+NAME: numexamples.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -42995,7 +42996,7 @@ Obviously, Fermat didn't have access to Axiom.
 <<page foot>>
 #+end_src
 
-*** numfactorization.xhtml
+\subsection{numfactorization.xhtml}
 #+NAME: numfactorization.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43080,7 +43081,7 @@ when it is considered a Gaussian (that is, complex) integer. See
 <<page foot>>
 #+end_src
 
-*** numfinitefields.xhtml
+\subsection{numfinitefields.xhtml}
 #+NAME: numfinitefields.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43158,7 +43159,7 @@ in section 2.9 for more information on package calling.
 <<page foot>>
 #+end_src
 
-*** numfloat.xhtml
+\subsection{numfloat.xhtml}
 #+NAME: numfloat.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43219,7 +43220,7 @@ in section 8.1, and <a href="nummachinefloats.xhtml">DoubleFloat</a>
 <<page foot>>
 #+end_src
 
-*** numfractions.xhtml
+\subsection{numfractions.xhtml}
 #+NAME: numfractions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43276,7 +43277,7 @@ Additional Topics:
 <<page foot>>
 #+end_src
 
-*** numfunctions.xhtml
+\subsection{numfunctions.xhtml}
 #+NAME: numfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43558,7 +43559,7 @@ discriminant d.
 <<page foot>>
 #+end_src
 
-*** numgeneralinfo.xhtml
+\subsection{numgeneralinfo.xhtml}
 #+NAME: numgeneralinfo.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43586,7 +43587,7 @@ in other packages. More examples of integers are in the following sections:
 <<page foot>>
 #+end_src
 
-*** numintegerfractions.xhtml
+\subsection{numintegerfractions.xhtml}
 #+NAME: numintegerfractions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43597,7 +43598,7 @@ in other packages. More examples of integers are in the following sections:
 <<page foot>>
 #+end_src
 
-*** numintegers.xhtml
+\subsection{numintegers.xhtml}
 #+NAME: numintegers.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43699,7 +43700,7 @@ Additional topics
 <<page foot>>
 #+end_src
 
-*** nummachinefloats.xhtml
+\subsection{nummachinefloats.xhtml}
 #+NAME: nummachinefloats.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43845,7 +43846,7 @@ to get a list of operations.
 <<page foot>>
 #+end_src
 
-*** nummachinesizedintegers.xhtml
+\subsection{nummachinesizedintegers.xhtml}
 #+NAME: nummachinesizedintegers.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -43984,7 +43985,7 @@ To see other operations use the system command
 <<page foot>>
 #+end_src
 
-*** numnumbertheoreticfunctions.xhtml
+\subsection{numnumbertheoreticfunctions.xhtml}
 #+NAME: numnumbertheoreticfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -44093,7 +44094,7 @@ Although they have somewhat limited utility, Axiom provides Roman numerals.
 <<page foot>>
 #+end_src
 
-*** numnumericfunctions.xhtml
+\subsection{numnumericfunctions.xhtml}
 #+NAME: numnumericfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -44613,7 +44614,7 @@ values in a 6x6 rectangle centered on the origin.
 <<page foot>>
 #+end_src
 
-*** numoctonions.xhtml
+\subsection{numoctonions.xhtml}
 #+NAME: numoctonions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -44764,7 +44765,7 @@ to display the list of operations defined by
 <<page foot>>
 #+end_src
 
-*** numotherbases.xhtml
+\subsection{numotherbases.xhtml}
 #+NAME: numotherbases.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -44933,7 +44934,7 @@ expansions are available in
 <<page foot>>
 #+end_src
 
-*** numpartialfractions.xhtml
+\subsection{numpartialfractions.xhtml}
 #+NAME: numpartialfractions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45105,7 +45106,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** numproblems.xhtml
+\subsection{numproblems.xhtml}
 #+NAME: numproblems.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45241,7 +45242,7 @@ n**2-n+41 is not prime.
 <<page foot>>
 #+end_src
 
-*** numquaternions.xhtml
+\subsection{numquaternions.xhtml}
 #+NAME: numquaternions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45381,7 +45382,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** numquotientfields.xhtml
+\subsection{numquotientfields.xhtml}
 #+NAME: numquotientfields.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45533,7 +45534,7 @@ Conversion is discussed in detail in
 <<page foot>>
 #+end_src
 
-*** numrationalnumbers.xhtml
+\subsection{numrationalnumbers.xhtml}
 #+NAME: numrationalnumbers.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45602,7 +45603,7 @@ command:
 <<page foot>>
 #+end_src
 
-*** numrepeatingbinaryexpansions.xhtml
+\subsection{numrepeatingbinaryexpansions.xhtml}
 #+NAME: numrepeatingbinaryexpansions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45683,7 +45684,7 @@ These numbers are bona fide algebraic objects.
 <<page foot>>
 #+end_src
 
-*** numrepeatingdecimals.xhtml
+\subsection{numrepeatingdecimals.xhtml}
 #+NAME: numrepeatingdecimals.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45773,7 +45774,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** numrepeatinghexexpansions.xhtml
+\subsection{numrepeatinghexexpansions.xhtml}
 #+NAME: numrepeatinghexexpansions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45865,7 +45866,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** numromannumerals.xhtml
+\subsection{numromannumerals.xhtml}
 #+NAME: numromannumerals.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -45989,7 +45990,7 @@ to display the full list of operations defined by
 #+end_src
 
 %%O
-*** ocwmit18085.xhtml
+\subsection{ocwmit18085.xhtml}
 #+NAME: ocwmit18085.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46017,7 +46018,7 @@ These are course notes based on the
 <<page foot>>
 #+end_src
 
-*** ocwmit18085lecture1.xhtml
+\subsection{ocwmit18085lecture1.xhtml}
 #+NAME: ocwmit18085lecture1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46424,7 +46425,7 @@ X transpose is just a row and X is just a column.
 <<page foot>>
 #+end_src
 
-*** ocwmit18085lecture2.xhtml
+\subsection{ocwmit18085lecture2.xhtml}
 #+NAME: ocwmit18085lecture2.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46443,7 +46444,7 @@ X transpose is just a row and X is just a column.
 <<page foot>>
 #+end_src
 
-*** operations.xhtml
+\subsection{operations.xhtml}
 #+NAME: operations.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46454,7 +46455,7 @@ X transpose is just a row and X is just a column.
 <<page foot>>
 #+end_src
 
-*** outputfunctions.xhtml
+\subsection{outputfunctions.xhtml}
 #+NAME: outputfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46550,7 +46551,7 @@ the output printing to the default behavior.
 #+end_src
 
 %%P
-*** pagelist.xhtml
+\subsection{pagelist.xhtml}
 #+NAME: pagelist.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46561,7 +46562,7 @@ the output printing to the default behavior.
 <<page foot>>
 #+end_src
 
-*** pagematrix.xhtml
+\subsection{pagematrix.xhtml}
 #+NAME: pagematrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46572,7 +46573,7 @@ the output printing to the default behavior.
 <<page foot>>
 #+end_src
 
-*** pageonedimensionalarray.xhtml
+\subsection{pageonedimensionalarray.xhtml}
 #+NAME: pageonedimensionalarray.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46583,7 +46584,7 @@ the output printing to the default behavior.
 <<page foot>>
 #+end_src
 
-*** pageset.xhtml
+\subsection{pageset.xhtml}
 #+NAME: pageset.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46594,7 +46595,7 @@ the output printing to the default behavior.
 <<page foot>>
 #+end_src
 
-*** pagetable.xhtml
+\subsection{pagetable.xhtml}
 #+NAME: pagetable.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46605,7 +46606,7 @@ the output printing to the default behavior.
 <<page foot>>
 #+end_src
 
-*** pagepermanent.xhtml
+\subsection{pagepermanent.xhtml}
 #+NAME: pagepermanent.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46616,7 +46617,7 @@ the output printing to the default behavior.
 <<page foot>>
 #+end_src
 
-*** pagesquarematrix.xhtml
+\subsection{pagesquarematrix.xhtml}
 #+NAME: pagesquarematrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46627,7 +46628,7 @@ the output printing to the default behavior.
 <<page foot>>
 #+end_src
 
-*** pagetwodimensionalarray.xhtml
+\subsection{pagetwodimensionalarray.xhtml}
 #+NAME: pagetwodimensionalarray.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46862,7 +46863,7 @@ For more information on related topics, see
 <<page foot>>
 #+end_src
 
-*** pagevector.xhtml
+\subsection{pagevector.xhtml}
 #+NAME: pagevector.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -46874,7 +46875,7 @@ For more information on related topics, see
 #+end_src
 
 
-*** polybasicfunctions.xhtml
+\subsection{polybasicfunctions.xhtml}
 #+NAME: polybasicfunctions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47042,7 +47043,7 @@ will return the coefficient of x**2*y**2 in the polynomial r(x,y).
 <<page foot>>
 #+end_src
 
-*** polyfactorization.xhtml
+\subsection{polyfactorization.xhtml}
 #+NAME: polyfactorization.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47079,7 +47080,7 @@ some examples.
 <<page foot>>
 #+end_src
 
-*** polyfactorization1.xhtml
+\subsection{polyfactorization1.xhtml}
 #+NAME: polyfactorization1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47125,7 +47126,7 @@ Also, Axiom can factor polynomials with rational number coefficients
 <<page foot>>
 #+end_src
 
-*** polyfactorization2.xhtml
+\subsection{polyfactorization2.xhtml}
 #+NAME: polyfactorization2.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47172,7 +47173,7 @@ about finite fields.
 <<page foot>>
 #+end_src
 
-*** polyfactorization3.xhtml
+\subsection{polyfactorization3.xhtml}
 #+NAME: polyfactorization3.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47266,7 +47267,7 @@ rational numbers.
 <<page foot>>
 #+end_src
 
-*** polyfactorization4.xhtml
+\subsection{polyfactorization4.xhtml}
 #+NAME: polyfactorization4.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47310,7 +47311,7 @@ denominator.
 <<page foot>>
 #+end_src
 
-*** polygcdandfriends.xhtml
+\subsection{polygcdandfriends.xhtml}
 #+NAME: polygcdandfriends.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47364,7 +47365,7 @@ involved variables other than x.)
 <<page foot>>
 #+end_src
 
-*** polynomialpage.xhtml
+\subsection{polynomialpage.xhtml}
 #+NAME: polynomialpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47426,7 +47427,7 @@ involved variables other than x.)
 <<page foot>>
 #+end_src
 
-*** polyroots.xhtml
+\subsection{polyroots.xhtml}
 #+NAME: polyroots.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47480,7 +47481,7 @@ involved variables other than x.)
 <<page foot>>
 #+end_src
 
-*** polyroots1.xhtml
+\subsection{polyroots1.xhtml}
 #+NAME: polyroots1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47573,7 +47574,7 @@ root using radicals in some cases.
 <<page foot>>
 #+end_src
 
-*** polyroots2.xhtml
+\subsection{polyroots2.xhtml}
 #+NAME: polyroots2.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47684,7 +47685,7 @@ defining equation is this. The other three roots are expressed in radicals.
 <<page foot>>
 #+end_src
 
-*** polyroots3.xhtml
+\subsection{polyroots3.xhtml}
 #+NAME: polyroots3.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47788,7 +47789,7 @@ where the denominator vanishes are discarded.
 <<page foot>>
 #+end_src
 
-*** polyroots4.xhtml
+\subsection{polyroots4.xhtml}
 #+NAME: polyroots4.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47907,7 +47908,7 @@ denominator vanishes are discarded.
 <<page foot>>
 #+end_src
 
-*** polyspecifictypes.xhtml
+\subsection{polyspecifictypes.xhtml}
 #+NAME: polyspecifictypes.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -47961,7 +47962,7 @@ denominator vanishes are discarded.
 <<page foot>>
 #+end_src
 
-*** polyspecifictypes1.xhtml
+\subsection{polyspecifictypes1.xhtml}
 #+NAME: polyspecifictypes1.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -48476,7 +48477,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** polyspecifictypes2.xhtml
+\subsection{polyspecifictypes2.xhtml}
 #+NAME: polyspecifictypes2.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -48867,7 +48868,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** polyspecifictypes3.xhtml
+\subsection{polyspecifictypes3.xhtml}
 #+NAME: polyspecifictypes3.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49019,7 +49020,7 @@ to display the full list of operations defined by
 <<page foot>>
 #+end_src
 
-*** polyspecifictypes4.xhtml
+\subsection{polyspecifictypes4.xhtml}
 #+NAME: polyspecifictypes4.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49136,7 +49137,7 @@ DistributedMultivariatePolynomial</a> and
 <<page foot>>
 #+end_src
 
-*** polysubstitutions.xhtml
+\subsection{polysubstitutions.xhtml}
 #+NAME: polysubstitutions.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49217,7 +49218,7 @@ You can also substitute numerical values for some or all of the variables.
 #+end_src
 
 
-*** puiseuxseries.xhtml
+\subsection{puiseuxseries.xhtml}
 #+NAME: puiseuxseries.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49296,7 +49297,7 @@ infinity; the step size is any positive rational number.
 
 %%Q
 %%R
-*** reallimit.xhtml
+\subsection{reallimit.xhtml}
 #+NAME: reallimit.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49369,7 +49370,7 @@ infinity; the step size is any positive rational number.
 <<page foot>>
 
 #+end_src
-*** refsearchpage.xhtml
+\subsection{refsearchpage.xhtml}
 #+NAME: refsearchpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49380,7 +49381,7 @@ infinity; the step size is any positive rational number.
 <<page foot>>
 #+end_src
 
-*** releasenotes.xhtml
+\subsection{releasenotes.xhtml}
 #+NAME: releasenotes.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49442,10 +49443,10 @@ Additional information sources:
 <<page foot>>
 #+end_src
 
-*** rootpage.xhtml
-#+begin_example
+\subsection{rootpage.xhtml}
+\begin{verbatim}
   books/tanglec books/bookvol11.pamphlet rootpage.xhtml > rootpage.xhtml
-#+end_example
+\end{verbatim}
 #+NAME: rootpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49547,7 +49548,7 @@ Additional information sources:
 #+end_src
 
 %%S
-*** series.xhtml
+\subsection{series.xhtml}
 #+NAME: series.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49604,7 +49605,7 @@ Additional information sources:
 <<page foot>>
 #+end_src
 
-*** seriesexpand.xhtml
+\subsection{seriesexpand.xhtml}
 #+NAME: seriesexpand.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49654,7 +49655,7 @@ Additional information sources:
 
 #+end_src
 
-*** solve.xhtml
+\subsection{solve.xhtml}
 #+NAME: solve.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49696,7 +49697,7 @@ Additional information sources:
 #+end_src
 
 
-*** solvelinearequations.xhtml
+\subsection{solvelinearequations.xhtml}
 #+NAME: solvelinearequations.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -49830,7 +49831,7 @@ Additional information sources:
 <<page foot>>
 #+end_src
 
-*** solvelinearmatrix.xhtml
+\subsection{solvelinearmatrix.xhtml}
 #+NAME: solvelinearmatrix.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50093,7 +50094,7 @@ Enter the size of the matrix:
 <<page foot>>
 #+end_src
 
-*** solvesinglepolynomial.xhtml
+\subsection{solvesinglepolynomial.xhtml}
 #+NAME: solvesinglepolynomial.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50105,7 +50106,7 @@ Enter the size of the matrix:
 
 #+end_src
 
-*** solvesystempolynomials.xhtml
+\subsection{solvesystempolynomials.xhtml}
 #+NAME: solvesystempolynomials.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50117,7 +50118,7 @@ Enter the size of the matrix:
 
 #+end_src
 
-*** summation.xhtml
+\subsection{summation.xhtml}
 #+NAME: summation.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50148,7 +50149,7 @@ Enter the size of the matrix:
 <<page foot>>
 #+end_src
 
-*** systemvariables.xhtml
+\subsection{systemvariables.xhtml}
 #+NAME: systemvariables.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50162,7 +50163,7 @@ Enter the size of the matrix:
 
 %%T
 
-*** taylorseries.xhtml
+\subsection{taylorseries.xhtml}
 #+NAME: taylorseries.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50239,7 +50240,7 @@ infinity; the step size is any positive integer.
 
 #+end_src
 
-*** topexamplepage.xhtml
+\subsection{topexamplepage.xhtml}
 #+NAME: topexamplepage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50263,7 +50264,7 @@ infinity; the step size is any positive integer.
 <<page foot>>
 #+end_src
 
-*** topicspage.xhtml
+\subsection{topicspage.xhtml}
 #+NAME: topicspage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50319,7 +50320,7 @@ infinity; the step size is any positive integer.
 <<page foot>>
 #+end_src
 
-*** topreferencepage.xhtml
+\subsection{topreferencepage.xhtml}
 #+NAME: topreferencepage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50375,7 +50376,7 @@ infinity; the step size is any positive integer.
 <<page foot>>
 #+end_src
 
-*** topsettingspage.xhtml
+\subsection{topsettingspage.xhtml}
 #+NAME: topsettingspage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50398,7 +50399,7 @@ management and change Axiom system variables.
 <<page foot>>
 #+end_src
 
-*** tutorial.xhtml
+\subsection{tutorial.xhtml}
 #+NAME: tutorial.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50410,7 +50411,7 @@ management and change Axiom system variables.
 #+end_src
 
 %%U
-*** uglangpage.xhtml
+\subsection{uglangpage.xhtml}
 #+NAME: uglangpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50421,7 +50422,7 @@ management and change Axiom system variables.
 <<page foot>>
 #+end_src
 
-*** ugsyscmdpage.xhtml
+\subsection{ugsyscmdpage.xhtml}
 #+NAME: ugsyscmdpage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50433,7 +50434,7 @@ management and change Axiom system variables.
 #+end_src
 
 
-*** usersguidepage.xhtml
+\subsection{usersguidepage.xhtml}
 #+NAME: usersguidepage.xhtml
 #+begin_src common-lisp :noweb yes
 <<standard head>>
@@ -50450,7 +50451,7 @@ management and change Axiom system variables.
 %%X
 %%Y
 %%Z
-*** rcm3720.input
+\subsection{rcm3720.input}
 #+NAME: rcm3720.input
 #+begin_src axiom-input :noweb yes
 str2lst(str) == [ord(str.i)-65 for i in 1..#str]
@@ -50494,7 +50495,7 @@ subsetsum(L:List(INT),N:INT):List(INT) ==
     return([-1])
 #+end_src
 
-*** signatures.txt
+\subsection{signatures.txt}
 #+NAME: signatures.txt
 #+begin_src common-lisp :noweb yes
 RSA --- 
@@ -50531,7 +50532,7 @@ signature r = 64609209464638355801
 s = 13824808741200493330 
 #+end_src
 
-*** strang.input
+\subsection{strang.input}
 #+NAME: strang.input
 #+begin_src axiom-input :noweb yes
 rowmatrix(r:List(Fraction(Integer))):Matrix(Fraction(Integer)) ==
@@ -50565,7 +50566,7 @@ B:=b(3)
 
 
 #+end_src
-*** bitmaps/axiom1.bitmap
+\subsection{bitmaps/axiom1.bitmap}
 #+NAME: axiom1.bitmap
 #+begin_src common-lisp :noweb yes
 #define axiom_width 270
@@ -50857,8 +50858,8 @@ static char axiom_bits[] = {
    0x00, 0x00, 0x00, 0x00};
 #+end_src
 
-** License
-#+begin_example
+\section{License}
+\begin{verbatim}
 --Copyright (c) 2007 Arthur C. Ralfs
 --All rights reserved.
 --
@@ -50890,7 +50891,7 @@ static char axiom_bits[] = {
 --NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 --SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#+end_example
+\end{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \cleardoublepage

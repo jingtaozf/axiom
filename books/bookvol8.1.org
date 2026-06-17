@@ -2,55 +2,55 @@
 #+LATEX: \newcommand{\VolumeName}{Volume 8.1: Axiom Gallery}
 #+LATEX: \input{bookheader.tex}
 #+LATEX: \setcounter{chapter}{0} % Chapter 1
-* General examples
+\chapter{General examples}
 These examples come from code that ships with Axiom in various
 input files.
 
-** Two dimensional functions
+\section{Two dimensional functions}
 
-*** A Simple Sine Function
+\subsection{A Simple Sine Function}
 {[[ps/v81equation123.eps]]}
 #+NAME: equation123
 #+begin_src common-lisp :noweb yes
 draw(sin(11*x),x = 0..2*%pi)
 #+end_src
 
-*** A Simple Sine Function, Non-adaptive plot
+\subsection{A Simple Sine Function, Non-adaptive plot}
 {[[ps/v81equation124.eps]]}
 #+NAME: equation124
 #+begin_src common-lisp :noweb yes
 draw(sin(11*x),x = 0..2*%pi,adaptive == false,title == "Non-adaptive plot")
 #+end_src
 
-*** A Simple Sine Function, Drawn to Scale
+\subsection{A Simple Sine Function, Drawn to Scale}
 {[[ps/v81equation125.eps]]}
 #+NAME: equation125
 #+begin_src common-lisp :noweb yes
 draw(sin(11*x),x = 0..2*%pi,toScale == true,title == "Drawn to scale")
 #+end_src
 
-*** A Simple Sine Function, Polar Plot
+\subsection{A Simple Sine Function, Polar Plot}
 {[[ps/v81equation126.eps]]}
 #+NAME: equation126
 #+begin_src common-lisp :noweb yes
 draw(sin(11*x),x = 0..2*%pi,coordinates == polar,title == "Polar plot")
 #+end_src
 
-*** A Simple Tangent Function, Clipping On
+\subsection{A Simple Tangent Function, Clipping On}
 {[[ps/v81equation127.eps]]}
 #+NAME: equation127
 #+begin_src common-lisp :noweb yes
 draw(tan x,x = -6..6,title == "Clipping on")
 #+end_src
 
-*** A Simple Tangent Function, Clipping On
+\subsection{A Simple Tangent Function, Clipping On}
 {[[ps/v81equation128.eps]]}
 #+NAME: equation128
 #+begin_src common-lisp :noweb yes
 draw(tan x,x = -6..6,clip == false,title == "Clipping off")
 #+end_src
 
-*** Tangent and Sine
+\subsection{Tangent and Sine}
 {[[ps/v81equation101.eps]]}
 #+NAME: equation101
 #+begin_src common-lisp :noweb yes
@@ -58,30 +58,30 @@ f(x:DFLOAT):DFLOAT == sin(tan(x))-tan(sin(x))
 draw(f,0..6)
 #+end_src
 
-*** A 2D Sine Function in BiPolar Coordinates
+\subsection{A 2D Sine Function in BiPolar Coordinates}
 {[[ps/v81equation107.eps]]}
 #+NAME: equation107
 #+begin_src common-lisp :noweb yes
 draw(sin(x),x=0.5..%pi,coordinates == bipolar(1$DFLOAT))
 #+end_src
 
-*** A 2D Sine Function in Elliptic Coordinates
+\subsection{A 2D Sine Function in Elliptic Coordinates}
 {[[ps/v81equation110.eps]]}
 #+NAME: equation110
 #+begin_src common-lisp :noweb yes
 draw(sin(4*t/7),t=0..14*%pi,coordinates == elliptic(1$DFLOAT))
 #+end_src
 
-*** A 2D Sine Wave in Polar Coordinates
+\subsection{A 2D Sine Wave in Polar Coordinates}
 {[[ps/v81equation118.eps]]}
 #+NAME: equation118
 #+begin_src common-lisp :noweb yes
 draw(sin(4*t/7),t=0..14*%pi,coordinates == polar)
 #+end_src
 
-** Two dimensional curves
+\section{Two dimensional curves}
 
-*** A Line in Parabolic Coordinates
+\subsection{A Line in Parabolic Coordinates}
 {[[ps/v81equation114.eps]]}
 #+NAME: equation114
 #+begin_src common-lisp :noweb yes
@@ -90,7 +90,7 @@ h2(t:DFLOAT):DFLOAT == 2
 draw(curve(h1,h2),-3..3,coordinates == parabolic)
 #+end_src
 
-*** Lissajous Curve
+\subsection{Lissajous Curve}
 {[[ps/v81equation102.eps]]}
 #+NAME: equation102
 #+begin_src common-lisp :noweb yes
@@ -99,14 +99,14 @@ i2(t:DFLOAT):DFLOAT == 8*sin(t)
 draw(curve(i1,i2),-4*%pi..4*%pi,toScale == true, title == "Lissajous Curve")
 #+end_src
 
-*** A Parametric Curve
+\subsection{A Parametric Curve}
 {[[ps/v81equation129.eps]]}
 #+NAME: equation129
 #+begin_src common-lisp :noweb yes
 draw(curve(sin(5*t),t),t = 0..2*%pi,title == "Parametric curve")
 #+end_src
 
-*** A Parametric Curve in Polar Coordinates
+\subsection{A Parametric Curve in Polar Coordinates}
 {[[ps/v81equation130.eps]]}
 #+NAME: equation130
 #+begin_src common-lisp :noweb yes
@@ -114,9 +114,9 @@ draw(curve(sin(5*t),t),t = 0..2*%pi,_
            coordinates == polar,title == "Parametric polar curve")
 #+end_src
 
-** Three dimensional functions
+\section{Three dimensional functions}
 
-*** A 3D Constant Function in Elliptic Coordinates
+\subsection{A 3D Constant Function in Elliptic Coordinates}
 {[[ps/v81equation111.eps]]}
 #+NAME: equation111
 #+begin_src common-lisp :noweb yes
@@ -124,7 +124,7 @@ m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
 draw(m,0..2*%pi,0..%pi,coordinates == elliptic(1$DFLOAT))
 #+end_src
 
-*** A 3D Constant Function in Oblate Spheroidal
+\subsection{A 3D Constant Function in Oblate Spheroidal}
 {[[ps/v81equation113.eps]]}
 #+NAME: equation113
 #+begin_src common-lisp :noweb yes
@@ -132,7 +132,7 @@ m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
 draw(m,-%pi/2..%pi/2,0..2*%pi,coordinates == oblateSpheroidal(1$DFLOAT))
 #+end_src
 
-*** A 3D Constant in Polar Coordinates
+\subsection{A 3D Constant in Polar Coordinates}
 {[[ps/v81equation119.eps]]}
 #+NAME: equation119
 #+begin_src common-lisp :noweb yes
@@ -140,7 +140,7 @@ m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
 draw(m,0..2*%pi, 0..%pi,coordinates == polar)
 #+end_src
 
-*** A 3D Constant in Prolate Spheroidal Coordinates
+\subsection{A 3D Constant in Prolate Spheroidal Coordinates}
 {[[ps/v81equation120.eps]]}
 #+NAME: equation120
 #+begin_src common-lisp :noweb yes
@@ -148,7 +148,7 @@ m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
 draw(m,-%pi/2..%pi/2,0..2*%pi,coordinates == prolateSpheroidal(1$DFLOAT))
 #+end_src
 
-*** A 3D Constant in Spherical Coordinates
+\subsection{A 3D Constant in Spherical Coordinates}
 {[[ps/v81equation121.eps]]}
 #+NAME: equation121
 #+begin_src common-lisp :noweb yes
@@ -156,7 +156,7 @@ m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
 draw(m,0..2*%pi,0..%pi,coordinates == spherical)
 #+end_src
 
-*** A 2-Equation Space Function
+\subsection{A 2-Equation Space Function}
 {[[ps/v81equation104.eps]]}
 #+NAME: equation104
 #+begin_src common-lisp :noweb yes
@@ -165,9 +165,9 @@ colorFxn(x:DFLOAT,y:DFLOAT):DFLOAT == 1/(x**2 + y**2 + 1)
 draw(f,-3..3,-3..3, colorFunction == colorFxn,title=="2-Equation Space Curve")
 #+end_src
 
-** Three dimensional curves
+\section{Three dimensional curves}
 
-*** A Parametric Space Curve
+\subsection{A Parametric Space Curve}
 {[[ps/v81equation131.eps]]}
 #+NAME: equation131
 #+begin_src common-lisp :noweb yes
@@ -175,7 +175,7 @@ draw(curve(sin(t)*cos(3*t/5),cos(t)*cos(3*t/5),cos(t)*sin(3*t/5)),_
            t = 0..15*%pi,title == "Parametric curve")
 #+end_src
 
-*** A Tube around a Parametric Space Curve
+\subsection{A Tube around a Parametric Space Curve}
 {[[ps/v81equation132.eps]]}
 #+NAME: equation132
 #+begin_src common-lisp :noweb yes
@@ -183,7 +183,7 @@ draw(curve(sin(t)*cos(3*t/5),cos(t)*cos(3*t/5),cos(t)*sin(3*t/5)),_
            t = 0..15*%pi,tubeRadius == .15,title == "Tube around curve")
 #+end_src
 
-*** A 2-Equation Cylindrical Curve
+\subsection{A 2-Equation Cylindrical Curve}
 {[[ps/v81equation109.eps]]}
 #+NAME: equation109
 #+begin_src common-lisp :noweb yes
@@ -192,9 +192,9 @@ j2(t:DFLOAT):DFLOAT == t
 draw(curve(j1,j2,j2),-9..9,coordinates == cylindrical)
 #+end_src
 
-** Three dimensional surfaces
+\section{Three dimensional surfaces}
 
-*** A Icosahedron
+\subsection{A Icosahedron}
 {[[ps/v81icosahedron.eps]]}
 #+NAME: Icosahedron
 #+begin_src common-lisp :noweb yes
@@ -264,7 +264,7 @@ polygon(space,[p10,p11,p6])
 makeViewport3D(space,title=="Icosahedron",style=="smooth")
 #+end_src
 
-*** A 3D figure 8 immersion (Klein bagel)
+\subsection{A 3D figure 8 immersion (Klein bagel)}
 {[[ps/v81kleinbagel.eps]]}
 #+NAME: kleinbagel
 #+begin_src common-lisp :noweb yes
@@ -286,7 +286,7 @@ circle. The parameter $u$ gives the angle in the x-y plane, and $v$ specifies
 the position around the 8-shaped cross section. With the above parameterization
 the cross section is a 2:1 Lissajous curve.
 
-*** A 2-Equation bipolarCylindrical Surface
+\subsection{A 2-Equation bipolarCylindrical Surface}
 {[[ps/v81equation108.eps]]}
 #+NAME: equation108
 #+begin_src common-lisp :noweb yes
@@ -294,7 +294,7 @@ draw(surface(u*cos(v),u*sin(v),u),u=1..4,v=1..2*%pi,_
      coordinates == bipolarCylindrical(1$DFLOAT))
 #+end_src
 
-*** A 3-Equation Parametric Space Surface
+\subsection{A 3-Equation Parametric Space Surface}
 {[[ps/v81equation105.eps]]}
 #+NAME: equation105
 #+begin_src common-lisp :noweb yes
@@ -305,7 +305,7 @@ colorFxn(x:DFLOAT,y:DFLOAT):DFLOAT == 1/(x**2 + y**2 + 1)
 draw(surface(n1,n2,n3),-4..4,0..2*%pi, colorFunction == colorFxn)
 #+end_src
 
-*** A 3D Vector of Points in Elliptic Cylindrical
+\subsection{A 3D Vector of Points in Elliptic Cylindrical}
 {[[ps/v81equation112.eps]]}
 #+NAME: equation112
 #+begin_src common-lisp :noweb yes
@@ -320,7 +320,7 @@ draw(surface(vec.1,vec.2,vec.3),v=-0.5..0.5,u=0..2*%pi,_
 #+end_src
 
 
-*** A 3D Constant Function in BiPolar Coordinates
+\subsection{A 3D Constant Function in BiPolar Coordinates}
 {[[ps/v81equation106.eps]]}
 #+NAME: equation106
 #+begin_src common-lisp :noweb yes
@@ -328,14 +328,14 @@ m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
 draw(m,0..2*%pi, 0..%pi,coordinates == bipolar(1$DFLOAT))
 #+end_src
 
-*** A Swept in Parabolic Coordinates
+\subsection{A Swept in Parabolic Coordinates}
 {[[ps/v81equation115.eps]]}
 #+NAME: equation115
 #+begin_src common-lisp :noweb yes
 draw(surface(u*cos(v),u*sin(v),2*u),u=0..4,v=0..2*%pi,coordinates==parabolic)
 #+end_src
 
-*** A Swept Cone in Parabolic Cylindrical Coordinates
+\subsection{A Swept Cone in Parabolic Cylindrical Coordinates}
 {[[ps/v81equation116.eps]]}
 #+NAME: equation116
 #+begin_src common-lisp :noweb yes
@@ -343,7 +343,7 @@ draw(surface(u*cos(v),u*sin(v),v*cos(u)),u=0..4,v=0..2*%pi,_
      coordinates == parabolicCylindrical)
 #+end_src
 
-*** A Truncated Cone in Toroidal Coordinates
+\subsection{A Truncated Cone in Toroidal Coordinates}
 {[[ps/v81equation122.eps]]}
 #+NAME: equation122
 #+begin_src common-lisp :noweb yes
@@ -351,7 +351,7 @@ draw(surface(u*cos(v),u*sin(v),u),u=1..4,v=1..4*%pi,_
      coordinates == toroidal(1$DFLOAT))
 #+end_src
 
-*** A Swept Surface in Paraboloidal Coordinates
+\subsection{A Swept Surface in Paraboloidal Coordinates}
 {[[ps/v81equation117.eps]]}
 #+NAME: equation117
 #+begin_src common-lisp :noweb yes
@@ -359,8 +359,8 @@ draw(surface(u*cos(v),u*sin(v),u*v),u=0..4,v=0..2*%pi,_
      coordinates==paraboloidal,var1Steps == 50, var2Steps == 50)
 #+end_src
 
-* Jenks Book images
-*** The Complex Gamma Function
+\chapter{Jenks Book images}
+\subsection{The Complex Gamma Function}
 {[[ps/v81complexgamma.eps]]}
 #+NAME: complexgamma
 #+begin_src common-lisp :noweb yes
@@ -373,7 +373,7 @@ v3d:=draw(gam, -%pi..%pi, -%pi..%pi, title == "Gamma(x + %i*y)", _
 A 3-d surface whose height is the real part of the Gamma function,
 and whose color is the argument of the Gamma function.
 
-*** The Complex Arctangent Function
+\subsection{The Complex Arctangent Function}
 {[[ps/v81complexarctangent.eps]]}
 #+NAME: complexarctangent
 #+begin_src common-lisp :noweb yes
@@ -387,13 +387,13 @@ The complex arctangent function. The height is the real part and
 the color is the argument.
 
 
-* Hyperdoc examples
+\chapter{Hyperdoc examples}
 Examples in this section come from the Hyperdoc documentation tool.
 These examples are accessed from the Basic Examples Draw section.
 
-** Two dimensional examples
+\section{Two dimensional examples}
 
-*** A function of one variable
+\subsection{A function of one variable}
 {[[ps/v81equation001.eps]]}
 #+NAME: equation001
 #+begin_src common-lisp :noweb yes
@@ -404,7 +404,7 @@ It demonstrates a function of one variable. It draws
 \[y = f(x) \]
 where $y$ is the dependent variable and $x$ is the independent variable.
 
-*** A Parametric function
+\subsection{A Parametric function}
 {[[ps/v81equation002.eps]]}
 #+NAME: equation002
 #+begin_src common-lisp :noweb yes
@@ -415,7 +415,7 @@ It draw a parametrically defined curve
 \[f1(t), f2(t)\]
 in terms of two functions $f1$ and $f2$ and an independent variable t.
 
-*** A Polynomial in 2 variables
+\subsection{A Polynomial in 2 variables}
 {[[ps/v81equation003.eps]]}
 #+NAME: equation003
 #+begin_src common-lisp :noweb yes
@@ -426,9 +426,9 @@ Plotting the solution to
 \[p(x,y) = 0\]
 where p is a polynomial in two variables $x$ and $y$.
 
-** Three dimensional examples
+\section{Three dimensional examples}
 
-*** A function of two variables
+\subsection{A function of two variables}
 {[[ps/v81equation004.eps]]}
 #+NAME: equation004
 #+begin_src common-lisp :noweb yes
@@ -442,7 +442,7 @@ A function of two variables
 where $z$ is the dependent variable and where $x$ and $y$ are the
 dependent variables.
 
-*** A parametrically defined curve
+\subsection{A parametrically defined curve}
 {[[ps/v81equation005.eps]]}
 #+NAME: equation005
 #+begin_src common-lisp :noweb yes
@@ -459,7 +459,7 @@ This ia parametrically defined curve
 in terms of three functions $f1$, $f2$, and $f3$ and an independent
 variable $t$.
 
-*** A parametrically defined surface
+\subsection{A parametrically defined surface}
 {[[ps/v81equation006.eps]]}
 #+NAME: equation006
 #+begin_src common-lisp :noweb yes
@@ -476,8 +476,8 @@ This ia parametrically defined curve
 in terms of three functions $f1$, $f2$, and $f3$ and an independent
 variable $t$.
 
-* CRC Standard Curves and Surfaces
-** Standard Curves and Surfaces
+\chapter{CRC Standard Curves and Surfaces}
+\section{Standard Curves and Surfaces}
 In order to have an organized and thorough evaluation of the Axiom
 graphics code we turn to the CRC Standard Curves and Surfaces [cite:@Segg93] 
 (SCC).
@@ -487,54 +487,69 @@ will give us a solid foundation to both evaluate the features of the
 current code and suggest future directions.
 
 According to the SCC we can organize the various curves by the taxonomy:
-1. [1] *random*
-  1. [1.1] *fractal*
-  2. [1.2] *gaussian*
-  3. [1.3] *non-gaussian*
-2. [2] *determinate*
-  4. [2.1] *algebraic* -- A polynomial is defined as a summation of terms
+\begin{enumerate}
+\item[1] *random*
+\begin{enumerate}
+\item[1.1] *fractal*
+\item[1.2] *gaussian*
+\item[1.3] *non-gaussian*
+\end{enumerate}
+\item[2] *determinate*
+\begin{enumerate}
+\item[2.1] *algebraic* -- A polynomial is defined as a summation of terms
 composed of integral powers of $x$ and $y$. An algebraic curve is one whose
 implicit function 
 \[f(x,y)=0\] is a polynomial in $x$ and $y$ (after rationalization, if
 necessary). Because a curve is often defined in the explicit form
 \[y=f(x)\] there is a need to distinguish rational and irrational 
 functions of $x$. 
-    1. [2.1.1] *irrational* -- An irrational function of $x$ is a quotient
+\begin{enumerate}
+\item[2.1.1] *irrational* -- An irrational function of $x$ is a quotient
 of two polynomials, one or both of which has a term (or terms) with power
 $p/q$, where $p$ and $q$ are integers.
-    2. [2.1.2] *rational* -- A rational function of $x$ is a quotient of two
+\item[2.1.2] *rational* -- A rational function of $x$ is a quotient of two
 polynomials in $x$, both having only integer powers.
-      1. [2.1.2.1] *polynomial*
-      2. [2.1.2.2] *non-polynomial*
-  5. [2.2] *integral* -- Certain continuous functions are not expressible
+\begin{enumerate}
+\item[2.1.2.1] *polynomial*
+\item[2.1.2.2] *non-polynomial*
+\end{enumerate}
+\end{enumerate}
+\item[2.2] *integral* -- Certain continuous functions are not expressible 
 in algebraic or transcendental forms but are familiar mathematical tools. 
 These curves are equal to the integrals of algebraic or transcendental 
 curves by definition; examples include Bessel functions, Airy integrals, 
 Fresnel integrals, and the error function.
-  6. [2.3] *transcendental* -- The transcendental curves cannot be
+\item[2.3] *transcendental* -- The transcendental curves cannot be 
 expressed as polynomials in $x$ and $y$. These are curves containing one 
 or more of the following forms: exponential ($e^x$), 
 logarithmic ($\log(x)$), or trigonometric ($\sin(x)$, $\cos(x)$). 
-    3. [2.3.1] *exponential*
-    4. [2.3.2] *logarithmic*
-    5. [2.3.3] *trigonometric*
-  7. [2.4] *piecewise continuous* -- Other curves, except at a few
+\begin{enumerate}
+\item[2.3.1] *exponential*
+\item[2.3.2] *logarithmic*
+\item[2.3.3] *trigonometric*
+\end{enumerate}
+\item[2.4] *piecewise continuous* -- Other curves, except at a few 
 singular points, are smooth and differentiable. The class of 
 nondifferentiable curves have discontinuity of the first derivative as a 
 basic attribute. They are often composed of straight-line segments. 
 Simple polygonal forms, regular fractal curves, and turtle tracks are 
 examples.
-    6. [2.4.1] *periodic*
-    7. [2.4.2] *non-periodic*
-    8. [2.4.3] *polygonal*
-      3. [2.4.3.1] *regular*
-      4. [2.4.3.2] *irregular*
-      5. [2.4.3.3] *fractal*
+\begin{enumerate}
+\item[2.4.1] *periodic*
+\item[2.4.2] *non-periodic*
+\item[2.4.3] *polygonal*
+\begin{enumerate}
+\item[2.4.3.1] *regular*
+\item[2.4.3.2] *irregular*
+\item[2.4.3.3] *fractal*
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
 
-
-** CRC graphs
+\section{CRC graphs}
 \subsection{Functions with $x^{n/m}$}
-**** Page 26 2.1.1
+\subsubsection{Page 26 2.1.1}
 \[y=cx^n\]
 \[y-cx^n=0\]
 #+NAME: p26-2.1.1.1-3
@@ -565,8 +580,8 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp26-2.1.1.1-3.eps]]}
-# label: CRCp26-2.1.1.1-3
-#+INDEX: figures!CRCp26-2.1.1.1-3
+\label{CRCp26-2.1.1.1-3}
+\index{figures!CRCp26-2.1.1.1-3}
 
 #+NAME: p26-2.1.1.4-6
 #+begin_src common-lisp :noweb yes
@@ -598,10 +613,10 @@ makeViewport2D(viewport1)
 #+end_src
 
 {[[ps/v81crcp26-2.1.1.4-6.eps]]}
-# label: CRCp26-2.1.1.4-6
-#+INDEX: figures!CRCp26-2.1.1.4-6
+\label{CRCp26-2.1.1.4-6}
+\index{figures!CRCp26-2.1.1.4-6}
 
-**** Page 26 2.1.2
+\subsubsection{Page 26 2.1.2}
 \[\displaystyle y=\frac{c}{x^n}\]
 \[yx^n-c=0\]
 #+NAME: p26-2.1.2.1-3
@@ -628,8 +643,8 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp26-2.1.2.1-3.eps]]}
-# label: CRCp26-2.1.2.1-3
-#+INDEX: figures!CRCp26-2.1.2.1-3
+\label{CRCp26-2.1.2.1-3}
+\index{figures!CRCp26-2.1.2.1-3}
 
 Note that Axiom's plot of viewport2 disagrees with CRC
 #+NAME: p26-2.1.2.4-6
@@ -656,10 +671,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp26-2.1.2.4-6.eps]]}
-# label: CRCp26-2.1.2.4-6
-#+INDEX: figures!CRCp26-2.1.2.4-6
+\label{CRCp26-2.1.2.4-6}
+\index{figures!CRCp26-2.1.2.4-6}
 
-**** Page 28 2.1.3
+\subsubsection{Page 28 2.1.3}
 \[\displaystyle y=cx^{n/m}\]
 \[\displaystyle y-cx^{n/m}=0\]
 #+NAME: p28-2.1.3.1-6
@@ -705,8 +720,8 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp28-2.1.3.1-6.eps]]}
-# label: CRCp28-2.1.3.1-6
-#+INDEX: figures!CRCp28-2.1.3.1-6
+\label{CRCp28-2.1.3.1-6}
+\index{figures!CRCp28-2.1.3.1-6}
 
 #+NAME: p28-2.1.3.7-10
 #+begin_src common-lisp :noweb yes
@@ -741,10 +756,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp28-2.1.3.7-10.eps]]}
-# label: CRCp28-2.1.3.7-10
-#+INDEX: figures!CRCp28-2.1.3.7-10
+\label{CRCp28-2.1.3.7-10}
+\index{figures!CRCp28-2.1.3.7-10}
 
-**** Page 28 2.1.4
+\subsubsection{Page 28 2.1.4}
 \[\displaystyle y=\frac{c}{x^{n/m}}\]
 \[\displaystyle yx^{n/m}-c=0\]
 #+NAME: p28-2.1.4.1-6
@@ -790,8 +805,8 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp28-2.1.4.1-6.eps]]}
-# label: CRCp28-2.1.4.1-6
-#+INDEX: figures!CRCp28-2.1.4.1-6
+\label{CRCp28-2.1.4.1-6}
+\index{figures!CRCp28-2.1.4.1-6}
 
 #+NAME: p28-2.1.4.7-10
 #+begin_src common-lisp :noweb yes
@@ -826,11 +841,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp28-2.1.4.7-10.eps]]}
-# label: CRCp28-2.1.4.7-10
-#+INDEX: figures!CRCp28-2.1.4.7-10
+\label{CRCp28-2.1.4.7-10}
+\index{figures!CRCp28-2.1.4.7-10}
 
-*** Functions with $x^n$ and $(a+bx)^m$
-**** Page 30 2.2.1
+\subsection{Functions with $x^n$ and $(a+bx)^m$}
+\subsubsection{Page 30 2.2.1}
 \[y=c(a+bx)\]
 \[y-bcx-ac=0\]
 #+NAME: p30-2.2.1.1-3
@@ -861,10 +876,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp30-2.2.1.1-3.eps]]}
-# label: CRCp30-2.2.1.1-3
-#+INDEX: figures!CRCp30-2.2.1.1-3
+\label{CRCp30-2.2.1.1-3}
+\index{figures!CRCp30-2.2.1.1-3}
 
-**** Page 30 2.2.2
+\subsubsection{Page 30 2.2.2}
 \[y=c(a+bx)^2\]
 \[y - cb^2x^2 - 2abcx - a^2c = 0\]
 #+NAME: p30-2.2.2.1-3
@@ -895,10 +910,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp30-2.2.2.1-3.eps]]}
-# label: CRCp30-2.2.2.1-3
-#+INDEX: figures!CRCp30-2.2.2.1-3
+\label{CRCp30-2.2.2.1-3}
+\index{figures!CRCp30-2.2.2.1-3}
 
-**** Page 30 2.2.3
+\subsubsection{Page 30 2.2.3}
 \[y=c(a+bx)^3\]
 \[y - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0 \]
 #+NAME: p30-2.2.3.1-3
@@ -929,10 +944,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp30-2.2.3.1-3.eps]]}
-# label: CRCp30-2.2.3.1-3
-#+INDEX: figures!CRCp30-2.2.3.1-3
+\label{CRCp30-2.2.3.1-3}
+\index{figures!CRCp30-2.2.3.1-3}
 
-**** Page 30 2.2.4
+\subsubsection{Page 30 2.2.4}
 \[y=cx(a+bx)\]
 \[y - bcx^2 - acx = 0\]
 #+NAME: p30-2.2.4.1-3
@@ -963,10 +978,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp30-2.2.4.1-3.eps]]}
-# label: CRCp30-2.2.4.1-3
-#+INDEX: figures!CRCp30-2.2.4.1-3
+\label{CRCp30-2.2.4.1-3}
+\index{figures!CRCp30-2.2.4.1-3}
 
-**** Page 30 2.2.5
+\subsubsection{Page 30 2.2.5}
 \[y=cx(a+bx)^2\]
 \[y - b^2cx^3 - 2abcx^2 - a^2cx = 0\]
 #+NAME: p30-2.2.5.1-3
@@ -997,10 +1012,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp30-2.2.5.1-3.eps]]}
-# label: CRCp30-2.2.5.1-3
-#+INDEX: figures!CRCp30-2.2.5.1-3
+\label{CRCp30-2.2.5.1-3}
+\index{figures!CRCp30-2.2.5.1-3}
 
-**** Page 30 2.2.6
+\subsubsection{Page 30 2.2.6}
 \[y=cx(a+bx)^3\]
 \[y - b^3cx^4 - 3ab^2cx^3 - 3a^2bcx^2 - a^3cx = 0\]
 #+NAME: p30-2.2.6.1-3
@@ -1031,10 +1046,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp30-2.2.6.1-3.eps]]}
-# label: CRCp30-2.2.6.1-3
-#+INDEX: figures!CRCp30-2.2.6.1-3
+\label{CRCp30-2.2.6.1-3}
+\index{figures!CRCp30-2.2.6.1-3}
 
-**** Page 32 2.2.7
+\subsubsection{Page 32 2.2.7}
 \[y=cx^2(a+bx)\]
 \[y - bcx^3 - acx^2 = 0\]
 #+NAME: p32-2.2.7.1-3
@@ -1065,10 +1080,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp32-2.2.7.1-3.eps]]}
-# label: CRCp32-2.2.7.1-3
-#+INDEX: figures!CRCp32-2.2.7.1-3
+\label{CRCp32-2.2.7.1-3}
+\index{figures!CRCp32-2.2.7.1-3}
 
-**** Page 32 2.2.8
+\subsubsection{Page 32 2.2.8}
 \[y = cx^2(a+bx)^2\]
 \[y - b^2cx^4 - 2abcx^3 - a^2cx^2 = 0\]
 #+NAME: p32-2.2.8.1-3
@@ -1099,10 +1114,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp32-2.2.8.1-3.eps]]}
-# label: CRCp32-2.2.8.1-3
-#+INDEX: figures!CRCp32-2.2.8.1-3
+\label{CRCp32-2.2.8.1-3}
+\index{figures!CRCp32-2.2.8.1-3}
 
-**** Page 32 2.2.9
+\subsubsection{Page 32 2.2.9}
 \[y = cx^2(a+bx)^3\]
 \[y - b^3cx^5 - 3ab^2cx^4 - 3a^2bcx^3 - a^3cx^2 = 0\]
 #+NAME: p32-2.2.9.1-3
@@ -1133,10 +1148,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp32-2.2.9.1-3.eps]]}
-# label: CRCp32-2.2.9.1-3
-#+INDEX: figures!CRCp32-2.2.9.1-3
+\label{CRCp32-2.2.9.1-3}
+\index{figures!CRCp32-2.2.9.1-3}
 
-**** Page 32 2.2.10
+\subsubsection{Page 32 2.2.10}
 \[y = cx^3(a+bx)\]
 \[y - bcx^4 - acx^3 = 0\]
 #+NAME: p32-2.2.10.1-3
@@ -1167,10 +1182,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp32-2.2.10.1-3.eps]]}
-# label: CRCp32-2.2.10.1-3
-#+INDEX: figures!CRCp32-2.2.10.1-3
+\label{CRCp32-2.2.10.1-3}
+\index{figures!CRCp32-2.2.10.1-3}
 
-**** Page 32 2.2.11
+\subsubsection{Page 32 2.2.11}
 \[y = cx^3(a+bx)^2\]
 \[y - b^2cx^5 - 2abcx^4 - a^2cx^3 = 0\]
 #+NAME: p32-2.2.11.1-3
@@ -1201,10 +1216,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp32-2.2.11.1-3.eps]]}
-# label: CRCp32-2.2.11.1-3
-#+INDEX: figures!CRCp32-2.2.11.1-3
+\label{CRCp32-2.2.11.1-3}
+\index{figures!CRCp32-2.2.11.1-3}
 
-**** Page 32 2.2.12
+\subsubsection{Page 32 2.2.12}
 \[y = cx^3(a+bx)^3\]
 \[y - b^3cx^6 - 3ab^2cx^5 - 3a^2bcx^4 - a^3cx^3 = 0\]
 #+NAME: p32-2.2.12.1-3
@@ -1235,10 +1250,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp32-2.2.12.1-3.eps]]}
-# label: CRCp32-2.2.12.1-3
-#+INDEX: figures!CRCp32-2.2.12.1-3
+\label{CRCp32-2.2.12.1-3}
+\index{figures!CRCp32-2.2.12.1-3}
 
-**** Page 34 2.2.13
+\subsubsection{Page 34 2.2.13}
 \[\displaystyle y = \frac{c}{(a+bx)}\]
 \[ay + bxy - c = 0\]
 #+NAME: p34-2.2.13.1-3
@@ -1269,10 +1284,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp34-2.2.13.1-3.eps]]}
-# label: CRCp34-2.2.13.1-3
-#+INDEX: figures!CRCp34-2.2.13.1-3
+\label{CRCp34-2.2.13.1-3}
+\index{figures!CRCp34-2.2.13.1-3}
 
-**** Page 34 2.2.14
+\subsubsection{Page 34 2.2.14}
 \[\displaystyle y = \frac{c}{(a+bx)^2}\]
 \[a^2y + 2abxy + b^2x^2y - c = 0\]
 #+NAME: p34-2.2.14.1-3
@@ -1303,10 +1318,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp34-2.2.14.1-3.eps]]}
-# label: CRCp34-2.2.14.1-3
-#+INDEX: figures!CRCp34-2.2.14.1-3
+\label{CRCp34-2.2.14.1-3}
+\index{figures!CRCp34-2.2.14.1-3}
 
-**** Page 34 2.2.15
+\subsubsection{Page 34 2.2.15}
 \[\displaystyle y = \frac{c}{(a+bx)^3}\]
 \[a^3y + 2a^2bxy + 2ab^2x^2y + b^3x^3y - c = 0\]
 #+NAME: p34-2.2.15.1-3
@@ -1337,10 +1352,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp34-2.2.15.1-3.eps]]}
-# label: CRCp34-2.2.15.1-3
-#+INDEX: figures!CRCp34-2.2.15.1-3
+\label{CRCp34-2.2.15.1-3}
+\index{figures!CRCp34-2.2.15.1-3}
 
-**** Page 34 2.2.16
+\subsubsection{Page 34 2.2.16}
 \[\displaystyle y = \frac{cx}{(a+bx)}\]
 \[ay + bxy - cx = 0\]
 #+NAME: p34-2.2.16.1-3
@@ -1371,10 +1386,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp34-2.2.16.1-3.eps]]}
-# label: CRCp34-2.2.16.1-3
-#+INDEX: figures!CRCp34-2.2.16.1-3
+\label{CRCp34-2.2.16.1-3}
+\index{figures!CRCp34-2.2.16.1-3}
 
-**** Page 34 2.2.17
+\subsubsection{Page 34 2.2.17}
 \[\displaystyle y = \frac{cx}{(a+bx)^2}\]
 \[a^2y + 2abxy + b^2x^2y - cx = 0\]
 #+NAME: p34-2.2.17.1-3
@@ -1405,10 +1420,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp34-2.2.17.1-3.eps]]}
-# label: CRCp34-2.2.17.1-3
-#+INDEX: figures!CRCp34-2.2.17.1-3
+\label{CRCp34-2.2.17.1-3}
+\index{figures!CRCp34-2.2.17.1-3}
 
-**** Page 34 2.2.18
+\subsubsection{Page 34 2.2.18}
 \[\displaystyle y = \frac{cx}{(a+bx)^3}\]
 \[a^3y + 3a^2bxy + 3ab^2x^2y + b^3x^3y - cx = 0\]
 #+NAME: p34-2.2.18.1-3
@@ -1439,10 +1454,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp34-2.2.18.1-3.eps]]}
-# label: CRCp34-2.2.18.1-3
-#+INDEX: figures!CRCp34-2.2.18.1-3
+\label{CRCp34-2.2.18.1-3}
+\index{figures!CRCp34-2.2.18.1-3}
 
-**** Page 36 2.2.19
+\subsubsection{Page 36 2.2.19}
 \[\displaystyle y = \frac{cx^2}{(a+bx)}\]
 \[ay + bxy - cx^2 = 0\]
 #+NAME: p36-2.2.19.1-3
@@ -1473,10 +1488,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp36-2.2.19.1-3.eps]]}
-# label: CRCp36-2.2.19.1-3
-#+INDEX: figures!CRCp36-2.2.19.1-3
+\label{CRCp36-2.2.19.1-3}
+\index{figures!CRCp36-2.2.19.1-3}
 
-**** Page 36 2.2.20
+\subsubsection{Page 36 2.2.20}
 \[\displaystyle y = \frac{cx^2}{(a+bx)^2}\]
 \[a^2y + 2abxy + b^2x^2y - cx^2 = 0\]
 #+NAME: p36-2.2.20.1-3
@@ -1507,10 +1522,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp36-2.2.20.1-3.eps]]}
-# label: CRCp36-2.2.20.1-3
-#+INDEX: figures!CRCp36-2.2.20.1-3
+\label{CRCp36-2.2.20.1-3}
+\index{figures!CRCp36-2.2.20.1-3}
 
-**** Page 36 2.2.21
+\subsubsection{Page 36 2.2.21}
 \[\displaystyle y = \frac{cx^2}{(a+bx)^3}\]
 \[a^3y + 3a^2bxy + 3ab^2x^2y + b^3x^3y - cx^2 = 0\]
 #+NAME: p36-2.2.21.1-3
@@ -1541,10 +1556,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp36-2.2.21.1-3.eps]]}
-# label: CRCp36-2.2.21.1-3
-#+INDEX: figures!CRCp36-2.2.21.1-3
+\label{CRCp36-2.2.21.1-3}
+\index{figures!CRCp36-2.2.21.1-3}
 
-**** Page 36 2.2.22
+\subsubsection{Page 36 2.2.22}
 \[\displaystyle y = \frac{cx^3}{(a+bx)}\]
 \[ay + bxy - cx^3 = 0\]
 #+NAME: p36-2.2.22.1-3
@@ -1575,10 +1590,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp36-2.2.22.1-3.eps]]}
-# label: CRCp36-2.2.22.1-3
-#+INDEX: figures!CRCp36-2.2.22.1-3
+\label{CRCp36-2.2.22.1-3}
+\index{figures!CRCp36-2.2.22.1-3}
 
-**** Page 36 2.2.23
+\subsubsection{Page 36 2.2.23}
 \[\displaystyle y = \frac{cx^3}{(a+bx)^2}\]
 \[a^2y + 2abxy + b^2x^2y - cx^3 = 0\]
 #+NAME: p36-2.2.23.1-3
@@ -1609,10 +1624,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp36-2.2.23.1-3.eps]]}
-# label: CRCp36-2.2.23.1-3
-#+INDEX: figures!CRCp36-2.2.23.1-3
+\label{CRCp36-2.2.23.1-3}
+\index{figures!CRCp36-2.2.23.1-3}
 
-**** Page 36 2.2.24
+\subsubsection{Page 36 2.2.24}
 \[\displaystyle y = \frac{cx^3}{(a+bx)^3}\]
 \[a^3y + 3a^2bxy + 3ab^2x^2y + b^3x^3y - cx^3 = 0\]
 #+NAME: p36-2.2.24.1-3
@@ -1643,10 +1658,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp36-2.2.24.1-3.eps]]}
-# label: CRCp36-2.2.24.1-3
-#+INDEX: figures!CRCp36-2.2.24.1-3
+\label{CRCp36-2.2.24.1-3}
+\index{figures!CRCp36-2.2.24.1-3}
 
-**** Page 38 2.2.25
+\subsubsection{Page 38 2.2.25}
 \[\displaystyle y = \frac{c(a+bx)}{x}\]
 \[xy - bcx - ca = 0\]
 #+NAME: p38-2.2.25.1-3
@@ -1677,10 +1692,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp38-2.2.25.1-3.eps]]}
-# label: CRCp38-2.2.25.1-3
-#+INDEX: figures!CRCp38-2.2.25.1-3
+\label{CRCp38-2.2.25.1-3}
+\index{figures!CRCp38-2.2.25.1-3}
 
-**** Page 38 2.2.26
+\subsubsection{Page 38 2.2.26}
 \[\displaystyle y = \frac{c(a+bx)^2}{x}\]
 \[xy - b^2cx^2 - 2abcx - a^2c = 0\]
 #+NAME: p38-2.2.26.1-3
@@ -1711,10 +1726,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp38-2.2.26.1-3.eps]]}
-# label: CRCp38-2.2.26.1-3
-#+INDEX: figures!CRCp38-2.2.26.1-3
+\label{CRCp38-2.2.26.1-3}
+\index{figures!CRCp38-2.2.26.1-3}
 
-**** Page 38 2.2.27
+\subsubsection{Page 38 2.2.27}
 \[\displaystyle y = \frac{c(a+bx)^3}{x}\]
 \[xy - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0\]
 #+NAME: p38-2.2.27.1-3
@@ -1745,10 +1760,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp38-2.2.27.1-3.eps]]}
-# label: CRCp38-2.2.27.1-3
-#+INDEX: figures!CRCp38-2.2.27.1-3
+\label{CRCp38-2.2.27.1-3}
+\index{figures!CRCp38-2.2.27.1-3}
 
-**** Page 38 2.2.28
+\subsubsection{Page 38 2.2.28}
 \[\displaystyle y = \frac{c(a+bx)}{x^2}\]
 \[x^2y - bcx - ca = 0\]
 #+NAME: p38-2.2.28.1-3
@@ -1779,10 +1794,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp38-2.2.28.1-3.eps]]}
-# label: CRCp38-2.2.28.1-3
-#+INDEX: figures!CRCp38-2.2.28.1-3
+\label{CRCp38-2.2.28.1-3}
+\index{figures!CRCp38-2.2.28.1-3}
 
-**** Page 38 2.2.29
+\subsubsection{Page 38 2.2.29}
 \[\displaystyle y = \frac{c(a+bx)^2}{x^2}\]
 \[x^2y - b^2cx^2 - 2abcx - a^2c = 0\]
 #+NAME: p38-2.2.29.1-3
@@ -1813,10 +1828,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp38-2.2.29.1-3.eps]]}
-# label: CRCp38-2.2.29.1-3
-#+INDEX: figures!CRCp38-2.2.29.1-3
+\label{CRCp38-2.2.29.1-3}
+\index{figures!CRCp38-2.2.29.1-3}
 
-**** Page 38 2.2.30
+\subsubsection{Page 38 2.2.30}
 \[\displaystyle y = \frac{c(a+bx)^3}{x^2}\]
 \[x^2y - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0\]
 #+NAME: p38-2.2.30.1-3
@@ -1847,10 +1862,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp38-2.2.30.1-3.eps]]}
-# label: CRCp38-2.2.30.1-3
-#+INDEX: figures!CRCp38-2.2.30.1-3
+\label{CRCp38-2.2.30.1-3}
+\index{figures!CRCp38-2.2.30.1-3}
 
-**** Page 40 2.2.31
+\subsubsection{Page 40 2.2.31}
 \[\displaystyle y = \frac{c(a+bx)}{x^3}\]
 \[x^3y - bcx - ca = 0\]
 #+NAME: p40-2.2.31.1-3
@@ -1881,10 +1896,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp40-2.2.31.1-3.eps]]}
-# label: CRCp40-2.2.31.1-3
-#+INDEX: figures!CRCp40-2.2.31.1-3
+\label{CRCp40-2.2.31.1-3}
+\index{figures!CRCp40-2.2.31.1-3}
 
-**** Page 40 2.2.32
+\subsubsection{Page 40 2.2.32}
 \[\displaystyle y = \frac{c(a+bx)^2}{x^3}\]
 \[x^3y - b^2cx^2 - 2abcx - a^2c = 0\]
 #+NAME: p40-2.2.32.1-3
@@ -1915,10 +1930,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp40-2.2.32.1-3.eps]]}
-# label: CRCp40-2.2.32.1-3
-#+INDEX: figures!CRCp40-2.2.32.1-3
+\label{CRCp40-2.2.32.1-3}
+\index{figures!CRCp40-2.2.32.1-3}
 
-**** Page 40 2.2.33
+\subsubsection{Page 40 2.2.33}
 \[\displaystyle y = \frac{c(a+bx)^3}{x^3}\]
 \[x^3y - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0\]
 #+NAME: p40-2.2.33.1-3
@@ -1949,11 +1964,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp40-2.2.33.1-3.eps]]}
-# label: CRCp40-2.2.33.1-3
-#+INDEX: figures!CRCp40-2.2.33.1-3
+\label{CRCp40-2.2.33.1-3}
+\index{figures!CRCp40-2.2.33.1-3}
 
-*** Functions with $a^2+x^2$ and $x^m$
-**** Page 42 2.3.1
+\subsection{Functions with $a^2+x^2$ and $x^m$}
+\subsubsection{Page 42 2.3.1}
 \[\displaystyle y=\frac{c}{(a^2+b^2)}\]
 \[a^2y + x^2y - c = 0\]
 #+NAME: p42-2.3.1.1-3
@@ -1984,10 +1999,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp42-2.3.1.1-3.eps]]}
-# label: CRCp42-2.3.1.1-3
-#+INDEX: figures!CRCp42-2.3.1.1-3
+\label{CRCp42-2.3.1.1-3}
+\index{figures!CRCp42-2.3.1.1-3}
 
-**** Page 42 2.3.2
+\subsubsection{Page 42 2.3.2}
 \[\displaystyle y=\frac{cx}{(a^2+b^2)}\]
 \[a^2y + x^2y - cx = 0\]
 #+NAME: p42-2.3.2.1-3
@@ -2018,10 +2033,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp42-2.3.2.1-3.eps]]}
-# label: CRCp42-2.3.2.1-3
-#+INDEX: figures!CRCp42-2.3.2.1-3
+\label{CRCp42-2.3.2.1-3}
+\index{figures!CRCp42-2.3.2.1-3}
 
-**** Page 42 2.3.3
+\subsubsection{Page 42 2.3.3}
 \[\displaystyle y=\frac{cx^2}{(a^2+b^2)}\]
 \[a^2y + x^2y - cx^2 = 0\]
 #+NAME: p42-2.3.3.1-3
@@ -2052,10 +2067,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp42-2.3.3.1-3.eps]]}
-# label: CRCp42-2.3.3.1-3
-#+INDEX: figures!CRCp42-2.3.3.1-3
+\label{CRCp42-2.3.3.1-3}
+\index{figures!CRCp42-2.3.3.1-3}
 
-**** Page 42 2.3.4
+\subsubsection{Page 42 2.3.4}
 \[\displaystyle y=\frac{cx^3}{(a^2+b^2)}\]
 \[a^2y + x^2y - cx^3 = 0\]
 #+NAME: p42-2.3.4.1-3
@@ -2086,10 +2101,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp42-2.3.4.1-3.eps]]}
-# label: CRCp42-2.3.4.1-3
-#+INDEX: figures!CRCp42-2.3.4.1-3
+\label{CRCp42-2.3.4.1-3}
+\index{figures!CRCp42-2.3.4.1-3}
 
-**** Page 44 2.3.5
+\subsubsection{Page 44 2.3.5}
 \[\displaystyle y=\frac{c}{x(a^2+b^2)}\]
 \[a^2xy + x^3y - c = 0\]
 #+NAME: p44-2.3.5.1-3
@@ -2120,10 +2135,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp44-2.3.5.1-3.eps]]}
-# label: CRCp44-2.3.5.1-3
-#+INDEX: figures!CRCp44-2.3.5.1-3
+\label{CRCp44-2.3.5.1-3}
+\index{figures!CRCp44-2.3.5.1-3}
 
-**** Page 44 2.3.6
+\subsubsection{Page 44 2.3.6}
 \[\displaystyle y=\frac{c}{x^2(a^2+b^2)}\]
 \[a^2x^2y + x^4y - c = 0\]
 #+NAME: p44-2.3.6.1-3
@@ -2154,10 +2169,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp44-2.3.6.1-3.eps]]}
-# label: CRCp44-2.3.6.1-3
-#+INDEX: figures!CRCp44-2.3.6.1-3
+\label{CRCp44-2.3.6.1-3}
+\index{figures!CRCp44-2.3.6.1-3}
 
-**** Page 44 2.3.7
+\subsubsection{Page 44 2.3.7}
 \[\displaystyle y=cx(a^2+x^2)\]
 \[y - a^2cx - cx^3 = 0\]
 #+NAME: p44-2.3.7.1-3
@@ -2188,10 +2203,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp44-2.3.7.1-3.eps]]}
-# label: CRCp44-2.3.7.1-3
-#+INDEX: figures!CRCp44-2.3.7.1-3
+\label{CRCp44-2.3.7.1-3}
+\index{figures!CRCp44-2.3.7.1-3}
 
-**** Page 44 2.3.8
+\subsubsection{Page 44 2.3.8}
 \[\displaystyle y=cx^2(a^2+x^2)\]
 \[y - a^2cx^2 - cx^4 = 0\]
 #+NAME: p44-2.3.8.1-3
@@ -2222,11 +2237,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp44-2.3.8.1-3.eps]]}
-# label: CRCp44-2.3.8.1-3
-#+INDEX: figures!CRCp44-2.3.8.1-3
+\label{CRCp44-2.3.8.1-3}
+\index{figures!CRCp44-2.3.8.1-3}
 
-*** Functions with $a^2-x^2$ and $x^m$
-**** Page 46 2.4.1
+\subsection{Functions with $a^2-x^2$ and $x^m$}
+\subsubsection{Page 46 2.4.1}
 \[\displaystyle y=\frac{c}{(a^2-x^2)}\]
 \[a^2y - x^2y - c = 0\]
 #+NAME: p46-2.4.1.1-3
@@ -2257,10 +2272,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp46-2.4.1.1-3.eps]]}
-# label: CRCp46-2.4.1.1-3
-#+INDEX: figures!CRCp46-2.4.1.1-3
+\label{CRCp46-2.4.1.1-3}
+\index{figures!CRCp46-2.4.1.1-3}
 
-**** Page 46 2.4.2
+\subsubsection{Page 46 2.4.2}
 \[\displaystyle y=\frac{cx}{(a^2-x^2)}\]
 \[a^2y - x^2y - cx = 0\]
 #+NAME: p46-2.4.2.1-3
@@ -2291,10 +2306,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp46-2.4.2.1-3.eps]]}
-# label: CRCp46-2.4.2.1-3
-#+INDEX: figures!CRCp46-2.4.2.1-3
+\label{CRCp46-2.4.2.1-3}
+\index{figures!CRCp46-2.4.2.1-3}
 
-**** Page 46 2.4.3
+\subsubsection{Page 46 2.4.3}
 \[\displaystyle y=\frac{cx^2}{(a^2-x^2)}\]
 \[a^2y - x^2y - cx^2 = 0\]
 #+NAME: p46-2.4.3.1-3
@@ -2325,10 +2340,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp46-2.4.3.1-3.eps]]}
-# label: CRCp46-2.4.3.1-3
-#+INDEX: figures!CRCp46-2.4.3.1-3
+\label{CRCp46-2.4.3.1-3}
+\index{figures!CRCp46-2.4.3.1-3}
 
-**** Page 46 2.4.4
+\subsubsection{Page 46 2.4.4}
 \[\displaystyle y=\frac{cx^3}{(a^2-x^2)}\]
 \[a^2y - x^2y - cx^3 = 0\]
 #+NAME: p46-2.4.4.1-3
@@ -2359,10 +2374,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp46-2.4.4.1-3.eps]]}
-# label: CRCp46-2.4.4.1-3
-#+INDEX: figures!CRCp46-2.4.4.1-3
+\label{CRCp46-2.4.4.1-3}
+\index{figures!CRCp46-2.4.4.1-3}
 
-**** Page 48 2.4.5
+\subsubsection{Page 48 2.4.5}
 \[\displaystyle y=\frac{c}{x(a^2-x^2)}\]
 \[a^2xy - x^3y - c = 0\]
 #+NAME: p48-2.4.5.1-3
@@ -2393,10 +2408,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp48-2.4.5.1-3.eps]]}
-# label: CRCp48-2.4.5.1-3
-#+INDEX: figures!CRCp48-2.4.5.1-3
+\label{CRCp48-2.4.5.1-3}
+\index{figures!CRCp48-2.4.5.1-3}
 
-**** Page 48 2.4.6
+\subsubsection{Page 48 2.4.6}
 \[\displaystyle y=\frac{c}{x^2(a^2-x^2)}\]
 \[a^2x^2y - x^4y - c = 0\]
 #+NAME: p48-2.4.6.1-3
@@ -2427,10 +2442,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp48-2.4.6.1-3.eps]]}
-# label: CRCp48-2.4.6.1-3
-#+INDEX: figures!CRCp48-2.4.6.1-3
+\label{CRCp48-2.4.6.1-3}
+\index{figures!CRCp48-2.4.6.1-3}
 
-**** Page 48 2.4.7
+\subsubsection{Page 48 2.4.7}
 \[\displaystyle y=cx(a^2-x^2)\]
 \[y - a^2cx + cx^3 = 0\]
 #+NAME: p48-2.4.7.1-3
@@ -2461,10 +2476,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp48-2.4.7.1-3.eps]]}
-# label: CRCp48-2.4.7.1-3
-#+INDEX: figures!CRCp48-2.4.7.1-3
+\label{CRCp48-2.4.7.1-3}
+\index{figures!CRCp48-2.4.7.1-3}
 
-**** Page 48 2.4.8
+\subsubsection{Page 48 2.4.8}
 \[\displaystyle y=cx^2(a^2-x^2)\]
 \[y - a^2cx^2 + cx^4 = 0\]
 #+NAME: p48-2.4.8.1-3
@@ -2495,11 +2510,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp48-2.4.8.1-3.eps]]}
-# label: CRCp48-2.4.8.1-3
-#+INDEX: figures!CRCp48-2.4.8.1-3
+\label{CRCp48-2.4.8.1-3}
+\index{figures!CRCp48-2.4.8.1-3}
 
-*** Functions with $a^3+x^3$ and $x^m$
-**** Page 50 2.5.1
+\subsection{Functions with $a^3+x^3$ and $x^m$}
+\subsubsection{Page 50 2.5.1}
 \[\displaystyle y=\frac{c}{(a^3+x^3)}\]
 \[a^3y + x^3y - c = 0\]
 #+NAME: p50-2.5.1.1-3
@@ -2530,10 +2545,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp50-2.5.1.1-3.eps]]}
-# label: CRCp50-2.5.1.1-3
-#+INDEX: figures!CRCp50-2.5.1.1-3
+\label{CRCp50-2.5.1.1-3}
+\index{figures!CRCp50-2.5.1.1-3}
 
-**** Page 50 2.5.2
+\subsubsection{Page 50 2.5.2}
 \[\displaystyle y=\frac{cx}{(a^3+x^3)}\]
 \[a^3y + x^3y - cx = 0\]
 #+NAME: p50-2.5.2.1-3
@@ -2564,10 +2579,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp50-2.5.2.1-3.eps]]}
-# label: CRCp50-2.5.2.1-3
-#+INDEX: figures!CRCp50-2.5.2.1-3
+\label{CRCp50-2.5.2.1-3}
+\index{figures!CRCp50-2.5.2.1-3}
 
-**** Page 50 2.5.3
+\subsubsection{Page 50 2.5.3}
 \[\displaystyle y=\frac{cx^2}{(a^3+x^3)}\]
 \[a^3y + x^3y - cx^2 = 0\]
 #+NAME: p50-2.5.3.1-3
@@ -2598,10 +2613,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp50-2.5.3.1-3.eps]]}
-# label: CRCp50-2.5.3.1-3
-#+INDEX: figures!CRCp50-2.5.3.1-3
+\label{CRCp50-2.5.3.1-3}
+\index{figures!CRCp50-2.5.3.1-3}
 
-**** Page 50 2.5.4
+\subsubsection{Page 50 2.5.4}
 \[\displaystyle y=\frac{cx^3}{(a^3+x^3)}\]
 \[a^3y + x^3y - cx^3 = 0\]
 #+NAME: p50-2.5.4.1-3
@@ -2632,10 +2647,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp50-2.5.4.1-3.eps]]}
-# label: CRCp50-2.5.4.1-3
-#+INDEX: figures!CRCp50-2.5.4.1-3
+\label{CRCp50-2.5.4.1-3}
+\index{figures!CRCp50-2.5.4.1-3}
 
-**** Page 50 2.5.5
+\subsubsection{Page 50 2.5.5}
 \[\displaystyle y=\frac{c}{x(a^3+x^3)}\]
 \[a^3xy + x^4y - c = 0\]
 #+NAME: p50-2.5.5.1-3
@@ -2666,10 +2681,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp50-2.5.5.1-3.eps]]}
-# label: CRCp50-2.5.5.1-3
-#+INDEX: figures!CRCp50-2.5.5.1-3
+\label{CRCp50-2.5.5.1-3}
+\index{figures!CRCp50-2.5.5.1-3}
 
-**** Page 50 2.5.6
+\subsubsection{Page 50 2.5.6}
 \[\displaystyle y=cx(a^3+x^3)\]
 \[y - a^3cx - cx^4 = 0\]
 #+NAME: p50-2.5.6.1-3
@@ -2700,11 +2715,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp50-2.5.6.1-3.eps]]}
-# label: CRCp50-2.5.6.1-3
-#+INDEX: figures!CRCp50-2.5.6.1-3
+\label{CRCp50-2.5.6.1-3}
+\index{figures!CRCp50-2.5.6.1-3}
 
-*** Functions with $a^3-x^3$ and $x^m$
-**** Page 52 2.6.1
+\subsection{Functions with $a^3-x^3$ and $x^m$}
+\subsubsection{Page 52 2.6.1}
 \[\displaystyle y=\frac{c}{(a^3-x^3)}\]
 \[a^3y - x^3y - c = 0\]
 #+NAME: p52-2.6.1.1-3
@@ -2735,10 +2750,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp52-2.6.1.1-3.eps]]}
-# label: CRCp52-2.6.1.1-3
-#+INDEX: figures!CRCp52-2.6.1.1-3
+\label{CRCp52-2.6.1.1-3}
+\index{figures!CRCp52-2.6.1.1-3}
 
-**** Page 52 2.6.2
+\subsubsection{Page 52 2.6.2}
 \[\displaystyle y=\frac{cx}{(a^3-x^3)}\]
 \[a^3y - x^3y - cx = 0\]
 #+NAME: p52-2.6.2.1-3
@@ -2769,10 +2784,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp52-2.6.2.1-3.eps]]}
-# label: CRCp52-2.6.2.1-3
-#+INDEX: figures!CRCp52-2.6.2.1-3
+\label{CRCp52-2.6.2.1-3}
+\index{figures!CRCp52-2.6.2.1-3}
 
-**** Page 52 2.6.3
+\subsubsection{Page 52 2.6.3}
 \[\displaystyle y=\frac{cx^2}{(a^3-x^3)}\]
 \[a^3y - x^3y - cx^2 = 0\]
 #+NAME: p52-2.6.3.1-3
@@ -2803,10 +2818,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp52-2.6.3.1-3.eps]]}
-# label: CRCp52-2.6.3.1-3
-#+INDEX: figures!CRCp52-2.6.3.1-3
+\label{CRCp52-2.6.3.1-3}
+\index{figures!CRCp52-2.6.3.1-3}
 
-**** Page 52 2.6.4
+\subsubsection{Page 52 2.6.4}
 \[\displaystyle y=\frac{cx^3}{(a^3-x^3)}\]
 \[a^3y - x^3y - cx^3 = 0\]
 #+NAME: p52-2.6.4.1-3
@@ -2837,10 +2852,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp52-2.6.4.1-3.eps]]}
-# label: CRCp52-2.6.4.1-3
-#+INDEX: figures!CRCp52-2.6.4.1-3
+\label{CRCp52-2.6.4.1-3}
+\index{figures!CRCp52-2.6.4.1-3}
 
-**** Page 52 2.6.5
+\subsubsection{Page 52 2.6.5}
 \[\displaystyle y=\frac{c}{x(a^3-x^3)}\]
 \[a^3xy - x^4y - c = 0\]
 #+NAME: p52-2.6.5.1-3
@@ -2871,10 +2886,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp52-2.6.5.1-3.eps]]}
-# label: CRCp52-2.6.5.1-3
-#+INDEX: figures!CRCp52-2.6.5.1-3
+\label{CRCp52-2.6.5.1-3}
+\index{figures!CRCp52-2.6.5.1-3}
 
-**** Page 52 2.6.6
+\subsubsection{Page 52 2.6.6}
 \[\displaystyle y=cx(a^3-x^3)\]
 \[y - a^3cx + cx^4 = 0\]
 #+NAME: p52-2.6.6.1-3
@@ -2905,11 +2920,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp52-2.6.6.1-3.eps]]}
-# label: CRCp52-2.6.6.1-3
-#+INDEX: figures!CRCp52-2.6.6.1-3
+\label{CRCp52-2.6.6.1-3}
+\index{figures!CRCp52-2.6.6.1-3}
 
-*** Functions with $a^4+x^4$ and $x^m$
-**** Page 54 2.7.1
+\subsection{Functions with $a^4+x^4$ and $x^m$}
+\subsubsection{Page 54 2.7.1}
 \[\displaystyle y=\frac{c}{(a^4+x^4)}\]
 \[a^4y + x^4y - c = 0\]
 #+NAME: p54-2.7.1.1-3
@@ -2940,10 +2955,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp54-2.7.1.1-3.eps]]}
-# label: CRCp54-2.7.1.1-3
-#+INDEX: figures!CRCp54-2.7.1.1-3
+\label{CRCp54-2.7.1.1-3}
+\index{figures!CRCp54-2.7.1.1-3}
 
-**** Page 54 2.7.2
+\subsubsection{Page 54 2.7.2}
 \[\displaystyle y=\frac{cx}{(a^4+x^4)}\]
 \[a^4y + x^4y - cx = 0\]
 #+NAME: p54-2.7.2.1-3
@@ -2974,10 +2989,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp54-2.7.2.1-3.eps]]}
-# label: CRCp54-2.7.2.1-3
-#+INDEX: figures!CRCp54-2.7.2.1-3
+\label{CRCp54-2.7.2.1-3}
+\index{figures!CRCp54-2.7.2.1-3}
 
-**** Page 54 2.7.3
+\subsubsection{Page 54 2.7.3}
 \[\displaystyle y=\frac{cx^2}{(a^4+x^4)}\]
 \[a^4y + x^4y - cx^2 = 0\]
 #+NAME: p54-2.7.3.1-3
@@ -3008,10 +3023,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp54-2.7.3.1-3.eps]]}
-# label: CRCp54-2.7.3.1-3
-#+INDEX: figures!CRCp54-2.7.3.1-3
+\label{CRCp54-2.7.3.1-3}
+\index{figures!CRCp54-2.7.3.1-3}
 
-**** Page 54 2.7.4
+\subsubsection{Page 54 2.7.4}
 \[\displaystyle y=\frac{cx^3}{(a^4+x^4)}\]
 \[a^4y + x^4y - cx^3 = 0\]
 #+NAME: p54-2.7.4.1-3
@@ -3042,10 +3057,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp54-2.7.4.1-3.eps]]}
-# label: CRCp54-2.7.4.1-3
-#+INDEX: figures!CRCp54-2.7.4.1-3
+\label{CRCp54-2.7.4.1-3}
+\index{figures!CRCp54-2.7.4.1-3}
 
-**** Page 54 2.7.5
+\subsubsection{Page 54 2.7.5}
 \[\displaystyle y=\frac{cx^4}{(a^4+x^4)}\]
 \[a^4y + x^4y - cx^4 = 0\]
 #+NAME: p54-2.7.5.1-3
@@ -3076,10 +3091,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp54-2.7.5.1-3.eps]]}
-# label: CRCp54-2.7.5.1-3
-#+INDEX: figures!CRCp54-2.7.5.1-3
+\label{CRCp54-2.7.5.1-3}
+\index{figures!CRCp54-2.7.5.1-3}
 
-**** Page 54 2.7.6
+\subsubsection{Page 54 2.7.6}
 \[\displaystyle y=cx(a^4+x^4)\]
 \[y - a^4cx - cx^5 = 0\]
 #+NAME: p54-2.7.6.1-3
@@ -3110,11 +3125,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp54-2.7.6.1-3.eps]]}
-# label: CRCp54-2.7.6.1-3
-#+INDEX: figures!CRCp54-2.7.6.1-3
+\label{CRCp54-2.7.6.1-3}
+\index{figures!CRCp54-2.7.6.1-3}
 
-*** Functions with $a^4-x^4$ and $x^m$
-**** Page 56 2.8.1
+\subsection{Functions with $a^4-x^4$ and $x^m$}
+\subsubsection{Page 56 2.8.1}
 \[\displaystyle y=\frac{c}{(a^4-x^4)}\]
 \[a^4y - x^4y - c = 0\]
 #+NAME: p56-2.8.1.1-3
@@ -3145,10 +3160,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp56-2.8.1.1-3.eps]]}
-# label: CRCp56-2.8.1.1-3
-#+INDEX: figures!CRCp56-2.8.1.1-3
+\label{CRCp56-2.8.1.1-3}
+\index{figures!CRCp56-2.8.1.1-3}
 
-**** Page 56 2.8.2
+\subsubsection{Page 56 2.8.2}
 \[\displaystyle y=\frac{cx}{(a^4-x^4)}\]
 \[a^4y - x^4y - cx = 0\]
 #+NAME: p56-2.8.2.1-3
@@ -3179,10 +3194,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp56-2.8.2.1-3.eps]]}
-# label: CRCp56-2.8.2.1-3
-#+INDEX: figures!CRCp56-2.8.2.1-3
+\label{CRCp56-2.8.2.1-3}
+\index{figures!CRCp56-2.8.2.1-3}
 
-**** Page 56 2.8.3
+\subsubsection{Page 56 2.8.3}
 \[\displaystyle y=\frac{cx^2}{(a^4-x^4)}\]
 \[a^4y - x^4y - cx^2 = 0\]
 #+NAME: p56-2.8.3.1-3
@@ -3213,10 +3228,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp56-2.8.3.1-3.eps]]}
-# label: CRCp56-2.8.3.1-3
-#+INDEX: figures!CRCp56-2.8.3.1-3
+\label{CRCp56-2.8.3.1-3}
+\index{figures!CRCp56-2.8.3.1-3}
 
-**** Page 56 2.8.4
+\subsubsection{Page 56 2.8.4}
 \[\displaystyle y=\frac{cx^3}{(a^4-x^4)}\]
 \[a^4y - x^4y - cx^3 = 0\]
 #+NAME: p56-2.8.4.1-3
@@ -3247,10 +3262,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp56-2.8.4.1-3.eps]]}
-# label: CRCp56-2.8.4.1-3
-#+INDEX: figures!CRCp56-2.8.4.1-3
+\label{CRCp56-2.8.4.1-3}
+\index{figures!CRCp56-2.8.4.1-3}
 
-**** Page 56 2.8.5
+\subsubsection{Page 56 2.8.5}
 \[\displaystyle y=\frac{cx^4}{(a^4-x^4)}\]
 \[a^4y - x^4y - cx^4 = 0\]
 #+NAME: p56-2.8.5.1-3
@@ -3281,10 +3296,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp56-2.8.5.1-3.eps]]}
-# label: CRCp56-2.8.5.1-3
-#+INDEX: figures!CRCp56-2.8.5.1-3
+\label{CRCp56-2.8.5.1-3}
+\index{figures!CRCp56-2.8.5.1-3}
 
-**** Page 56 2.8.6
+\subsubsection{Page 56 2.8.6}
 \[\displaystyle y=cx(a^4-x^4)\]
 \[y - a^4cx + cx^5 = 0\]
 #+NAME: p56-2.8.6.1-3
@@ -3315,11 +3330,11 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp56-2.8.6.1-3.eps]]}
-# label: CRCp56-2.8.6.1-3
-#+INDEX: figures!CRCp56-2.8.6.1-3
+\label{CRCp56-2.8.6.1-3}
+\index{figures!CRCp56-2.8.6.1-3}
 
 \subsection{Functions with $(a+bx)^{1/2}$ and $x^m$}
-**** Page 58 2.9.1
+\subsubsection{Page 58 2.9.1}
 Parabola
 \[\displaystyle y=c(a+bx)^{1/2}\]
 \[y^2 - bc^2x - ac^2 = 0\]
@@ -3357,10 +3372,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp58-2.9.1.1-3.eps]]}
-# label: CRCp58-2.9.1.1-3
-#+INDEX: figures!CRCp58-2.9.1.1-3
+\label{CRCp58-2.9.1.1-3}
+\index{figures!CRCp58-2.9.1.1-3}
 
-**** Page 58 2.9.2
+\subsubsection{Page 58 2.9.2}
 Trisectrix of Catalan... fails "singular pts in region of sketch"
 \[\displaystyle y=cx(a+bx)^{1/2}\]
 \[y^2 - bc^2x^3 - ac^2x^2 = 0\]
@@ -3398,10 +3413,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 %{[[ps/v81crcp58-2.9.2.1-3.eps]]}
-# label: CRCp58-2.9.2.1-3
-#+INDEX: figures!CRCp58-2.9.2.1-3
+\label{CRCp58-2.9.2.1-3}
+\index{figures!CRCp58-2.9.2.1-3}
 
-**** Page 58 2.9.3
+\subsubsection{Page 58 2.9.3}
 fails with "singular pts in region of sketch"
 \[\displaystyle y=cx^2(a+bx)^{1/2}\]
 \[y^2 - bc^2x^5 - ac^2x^4 = 0\]
@@ -3439,10 +3454,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 %{[[ps/v81crcp58-2.9.3.1-3.eps]]}
-# label: CRCp58-2.9.3.1-3
-#+INDEX: figures!CRCp58-2.9.3.1-3
+\label{CRCp58-2.9.3.1-3}
+\index{figures!CRCp58-2.9.3.1-3}
 
-**** Page 58 2.9.4
+\subsubsection{Page 58 2.9.4}
 \[\displaystyle y=c(a+bx)^{1/2}/x\]
 \[x^2y^2 - c^2bx - c^2a = 0\]
 #+NAME: p58-2.9.4.1-3
@@ -3479,10 +3494,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp58-2.9.4.1-3.eps]]}
-# label: CRCp58-2.9.4.1-3
-#+INDEX: figures!CRCp58-2.9.4.1-3
+\label{CRCp58-2.9.4.1-3}
+\index{figures!CRCp58-2.9.4.1-3}
 
-**** Page 58 2.9.5
+\subsubsection{Page 58 2.9.5}
 \[\displaystyle y=c(a+bx)^{1/2}/x^2\]
 \[x^4y^2 - c^2bx - c^2a = 0\]
 #+NAME: p58-2.9.5.1-3
@@ -3518,10 +3533,10 @@ points(viewport1,3,"off")
 makeViewport2D(viewport1)
 #+end_src
 {[[ps/v81crcp58-2.9.5.1-3.eps]]}
-# label: CRCp58-2.9.5.1-3
-#+INDEX: figures!CRCp58-2.9.5.1-3
+\label{CRCp58-2.9.5.1-3}
+\index{figures!CRCp58-2.9.5.1-3}
 
-**** Page 58 2.9.6
+\subsubsection{Page 58 2.9.6}
 \[\displaystyle y=c/(a+bx)^{1/2}\]
 \[ay^2 + bxy^2 - c^2 = 0\]
 #+NAME: p58-2.9.6.1-3
@@ -3558,10 +3573,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp58-2.9.6.1-3.eps]]}
-# label: CRCp58-2.9.6.1-3
-#+INDEX: figures!CRCp58-2.9.6.1-3
+\label{CRCp58-2.9.6.1-3}
+\index{figures!CRCp58-2.9.6.1-3}
 
-**** Page 60 2.9.7
+\subsubsection{Page 60 2.9.7}
 singular pts in region of sketch
 \[\displaystyle y=\frac{cx}{(a+bx)^{1/2}}\]
 \[ay^2 + bxy^2 - c^2x^2 = 0\]
@@ -3599,10 +3614,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 %{[[ps/v81crcp60-2.9.7.1-3.eps]]}
-# label: CRCp60-2.9.7.1-3
-#+INDEX: figures!CRCp60-2.9.7.1-3
+\label{CRCp60-2.9.7.1-3}
+\index{figures!CRCp60-2.9.7.1-3}
 
-**** Page 60 2.9.8
+\subsubsection{Page 60 2.9.8}
 singular pts in region of sketch
 \[\displaystyle y=\frac{cx^2}{(a+bx)^{1/2}}\]
 \[ay^2 + bxy^2 - c^2x^4 = 0\]
@@ -3640,10 +3655,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 %{[[ps/v81crcp60-2.9.8.1-3.eps]]}
-# label: CRCp60-2.9.8.1-3
-#+INDEX: figures!CRCp60-2.9.8.1-3
+\label{CRCp60-2.9.8.1-3}
+\index{figures!CRCp60-2.9.8.1-3}
 
-**** Page 60 2.9.9
+\subsubsection{Page 60 2.9.9}
 \[\displaystyle y=\frac{c}{x(a+bx)^{1/2}}\]
 \[ax^2y^2 + bx^3y^2 - c^2 = 0\]
 #+NAME: p60-2.9.9.1-3
@@ -3680,10 +3695,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp60-2.9.9.1-3.eps]]}
-# label: CRCp60-2.9.9.1-3
-#+INDEX: figures!CRCp60-2.9.9.1-3
+\label{CRCp60-2.9.9.1-3}
+\index{figures!CRCp60-2.9.9.1-3}
 
-**** Page 60 2.9.10
+\subsubsection{Page 60 2.9.10}
 \[\displaystyle y=\frac{c}{x^2(a+bx)^{1/2}}\]
 \[ax^4y^2 + bx^5y^2 - c^2 = 0\]
 #+NAME: p60-2.9.10.1-3
@@ -3720,10 +3735,10 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp60-2.9.10.1-3.eps]]}
-# label: CRCp60-2.9.10.1-3
-#+INDEX: figures!CRCp60-2.9.10.1-3
+\label{CRCp60-2.9.10.1-3}
+\index{figures!CRCp60-2.9.10.1-3}
 
-**** Page 60 2.9.11
+\subsubsection{Page 60 2.9.11}
 \[\displaystyle y=\frac{cx^{1/2}}{(a+bx)^{1/2}}\]
 \[y^2 - ac^2x - bc^2x^2 = 0\]
 #+NAME: p60-2.9.11.1-6
@@ -3784,15 +3799,15 @@ makeViewport2D(viewport1)
 
 #+end_src
 {[[ps/v81crcp60-2.9.11.1-6.eps]]}
-# label: CRCp60-2.9.11.1-6
-#+INDEX: figures!CRCp60-2.9.11.1-6
+\label{CRCp60-2.9.11.1-6}
+\index{figures!CRCp60-2.9.11.1-6}
 
-* Pasta by Design
+\chapter{Pasta by Design}
 This is a book[cite:@Lege11] that combines a taxonomy of pasta shapes with the
 Mathematica equations that realize those shapes in three dimensions.
 We implemented examples from this book as a graphics test suite for Axiom.
 
-** Acini Di Pepe
+\section{Acini Di Pepe}
 {[[ps/v81acinidipepe.eps]]}
 #+NAME: Acini Di Pepe
 #+begin_src common-lisp :noweb yes
@@ -3811,7 +3826,7 @@ soups), with the occasional addition of croutons and diced greens.
 Made of durum wheat flour and eggs, acini di pepe are commonly used 
 in the Italian-American ``wedding soup'', a broth of vegetables and meat.
 
-** Agnolotti
+\section{Agnolotti}
 {[[ps/v81agnolotti.eps]]}
 #+NAME: Agnolotti
 #+begin_src common-lisp :noweb yes
@@ -3836,7 +3851,7 @@ are often filled with braised veal, port, vegetables or cheese. The
 true agnolotto should feature a crinkled edge, cut using a fluted
 pasta wheel. Recommended with melted butter and sage
 
-** Anellini
+\section{Anellini}
 {[[ps/v81anellini.eps]]}
 #+NAME: Anellini
 #+begin_src common-lisp :noweb yes
@@ -3860,7 +3875,7 @@ only 1.15 and 1.20 mm, and the are therefore usually found in light
 soups together with croutons and thinly sliced vegetables. This pasta
 may also be found served in a /timballo/ (baked pasta dish).
 
-** Bucatini
+\section{Bucatini}
 {[[ps/v81bucatini.eps]]}
 #+NAME: Bucatini
 #+begin_src common-lisp :noweb yes
@@ -3885,7 +3900,7 @@ amatriciana}: a hearty traditional sauce made with dried port,
 Pecorino Romano and tomato sauce, and named after the medieval town of
 Amatrice in central Italy.
 
-** Buccoli
+\section{Buccoli}
 {[[ps/v81buccoli.eps]]}
 #+NAME: Buccoli
 #+begin_src common-lisp :noweb yes
@@ -3904,7 +3919,7 @@ family, and of rather uncertain pedigree, /buccoli/ are suitable
 in a mushroom and sausage dish. They are also excellent with a tomato
 aubergine, pesto, and ricotta salad.
 
-** Calamaretti
+\section{Calamaretti}
 {[[ps/v81calamaretti.eps]]}
 #+NAME: Calamaretti
 #+begin_src common-lisp :noweb yes
@@ -3924,7 +3939,7 @@ dished up with a tomato-, egg-, or cheese-based sauce. Their shape
 means that /calamaretti/ hold both chunky and thin sauces equally
 well. Fittingly, they are often served with seafood.
 
-** Cannelloni
+\section{Cannelloni}
 {[[ps/v81cannelloni.eps]]}
 #+NAME: Cannelloni
 #+begin_src common-lisp :noweb yes
@@ -3945,7 +3960,7 @@ which can be stuffed with meat, vegetables, or ricotta. The stuffed
 /cannelloni/ are covered with a creamy {besciamella} sauce, a
 sprinkling of Parmigiano-Reggiano cheese and then oven-baked.
 
-** Cannolicchi Rigati
+\section{Cannolicchi Rigati}
 {[[ps/v81cannolicchirigati.eps]]}
 #+NAME: Cannolicchi Rigati
 #+begin_src common-lisp :noweb yes
@@ -3965,7 +3980,7 @@ rigati} (grooved) and /lisci/ (smooth) form. These hollow {\sl
 pasta corta} (short pasta) come in various diameters and are often
 served with seafood. /Cannolicchi/ hail from Campania in southern Italy.
 
-** Capellini
+\section{Capellini}
 {[[ps/v81capellini.eps]]}
 #+NAME: Capellini
 #+begin_src common-lisp :noweb yes
@@ -3986,7 +4001,7 @@ d'angelo} (angel hair) is sometimes used to form the basis of an
 unusual sweet pasta dish, made with lemons and almonds, called {\sl
 torta ricciolina}.
 
-** Cappelletti
+\section{Cappelletti}
 {[[ps/v81cappelletti.eps]]}
 #+NAME: Cappelletti
 #+begin_src common-lisp :noweb yes
@@ -4007,7 +4022,7 @@ cappelletti (little hats) on Christmas Eve, filling the pasta parcels
 (made from wheat flour and fresh eggs) with mixed meats or soft
 cheeses, such as ricotta.
 
-** Casarecce
+\section{Casarecce}
 {[[ps/v81casarecce.eps]]}
 #+NAME: Casarecce
 #+begin_src common-lisp :noweb yes
@@ -4033,7 +4048,7 @@ boiled, drained and dished up with a sauce). Often /casarecce/ are
 served with a classic /ragu/ and topped with a sprinkle of pepper
 and Parmigiano-Reggiano cheese.
 
-** Castellane
+\section{Castellane}
 {[[ps/v81castellane.eps]]}
 #+NAME: Castellane
 #+begin_src common-lisp :noweb yes
@@ -4057,7 +4072,7 @@ paguri} (hermit crabs) but renamed /castellane/ (castle
 dwellers). The sturdy form and rich nutty taste of /castellane/
 stand up to hearty meals and full-flavoured sauces.
 
-** Cavatappi
+\section{Cavatappi}
 {[[ps/v81cavatappi.eps]]}
 #+NAME: Cavatappi
 #+begin_src common-lisp :noweb yes
@@ -4076,7 +4091,7 @@ accompaniment to creamy sauces, such as /boscaiola/ (woodsman's)
 sauce, they are also often used in oven-baked cheese-topped dishes, or
 in salads with pesto.
 
-** Cavatelli
+\section{Cavatelli}
 {[[ps/v81cavatelli.eps]]}
 #+NAME: Cavatelli
 #+begin_src common-lisp :noweb yes
@@ -4098,7 +4113,7 @@ puttanesca} (with a sauce containing chilli, garlic, capers, and
 anchovies). They can also be added to a salad with olive oil, sauteed
 crushed garlic and a dusting of soft cheese.
 
-** Chifferi Rigati
+\section{Chifferi Rigati}
 {[[ps/v81chifferirigati.eps]]}
 #+NAME: Chifferi Rigati
 #+begin_src common-lisp :noweb yes
@@ -4119,7 +4134,7 @@ addition to salads with carrot, red pepper and courgette. {\sl
 Chifferi rigoti} bear a resemblance to, and the term is a
 transliteration of, the Austrian 'kipfel' sweet.
 
-** Colonne Pompeii
+\section{Colonne Pompeii}
 {[[ps/v81colonnepompeii.eps]]}
 #+NAME: Colonne Pompeii
 #+begin_src common-lisp :noweb yes
@@ -4171,7 +4186,7 @@ best served with a seasoning of fresh basil, pine nuts, finely sliced
 garlic and olive oil, topped with a sprinkling of freshly grated
 Parmigiano-Reggiano.
 
-** Conchiglie Rigate
+\section{Conchiglie Rigate}
 {[[ps/v81conchiglierigate.eps]]}
 #+NAME: Conchiglie Rigate
 #+begin_src common-lisp :noweb yes
@@ -4198,7 +4213,7 @@ conchiglie} hold flavourings in their grooves and cunningly designed
 shell. Smaller versions are used in soups, while larger shells are
 more commonly served with a sauce.
 
-** Conchigliette Lisce
+\section{Conchigliette Lisce}
 {[[ps/v81conchigliettelisce.eps]]}
 #+NAME: Conchigliette Lisce
 #+begin_src common-lisp :noweb yes
@@ -4221,7 +4236,7 @@ conchigliette lisce} (small smooth shells) can be served in soups such
 as /minestrone/. Alternatively, these shells can accompany a meat-
 or vegetable-based sauce.
 
-** Conchiglioni Rigate
+\section{Conchiglioni Rigate}
 {[[ps/v81conchiglionirigate.eps]]}
 #+NAME: Conchiglioni Rigate
 #+begin_src common-lisp :noweb yes
@@ -4250,7 +4265,7 @@ a gratin. /Conchiglioni rigati/ are often served in the
 Italian-American dish /pasta primavera/ (pasta in spring sauce)
 alongside crisp spring vegetables.
 
-** Corallini Lisci
+\section{Corallini Lisci}
 {[[ps/v81corallinilisci.eps]]}
 #+NAME: Corallini Lisci
 #+begin_src common-lisp :noweb yes
@@ -4271,7 +4286,7 @@ appearance resembles the coral beads worn as jewelry in Italy. Their
 small size (no larger than 3.5 mm in diameter) means that {\sl
 corallini} are best cooked in broths, such as Tuscan white bean soup.
 
-** Creste Di Galli
+\section{Creste Di Galli}
 {[[ps/v81crestedigalli.eps]]}
 #+NAME: Creste Di Galli
 #+begin_src common-lisp :noweb yes
@@ -4294,7 +4309,7 @@ crest, which is smooth rather than crimped. They may be stuffed,
 cooked and served in a simple /marinara/ (mariner's) sauce, which
 contains tomato, garlic, and basil.
 
-** Couretti
+\section{Couretti}
 {[[ps/v81couretti.eps]]}
 #+NAME: Couretti
 #+begin_src common-lisp :noweb yes
@@ -4312,7 +4327,7 @@ clan, /cuoretti/ (tiny hearts) are minuscule. In fact, along with
 /acini di pepe/, they are one of the smallest forms of pasta. Like
 all /postine/ they may be served in soup, such as cream of chicken.
 
-** Ditali Rigati
+\section{Ditali Rigati}
 {[[ps/v81ditalirigati.eps]]}
 #+NAME: Ditali Rigati
 #+begin_src common-lisp :noweb yes
@@ -4331,7 +4346,7 @@ ditali rigati} (grooved thimbles) are compact and typically less than
 such as /pasta e patate/. Their stocky shape makes them a
 sustaining winter snack, as well as an excellent addition to salads.
 
-** Fagottini
+\section{Fagottini}
 {[[ps/v81fagottini.eps]]}
 #+NAME: Fagottini
 #+begin_src common-lisp :noweb yes
@@ -4360,7 +4375,7 @@ of ricotta, steamed vegetables or even stewed fruit is placed on the
 dough, and the corners are then pinched together to form a bundle. 
 These packed dumplings are similar to ravioli, only larger.
 
-** Farfalle
+\section{Farfalle}
 {[[ps/v81farfalle.eps]]}
 #+NAME: Farfalle
 #+begin_src common-lisp :noweb yes
@@ -4397,7 +4412,7 @@ northern Italy. They are best served in a rich /carbonara/ sauce
 (made with cream, eggs, and bacon). Depending on se, /farfalle/
 might be accompanied by green peas and chicken or ham.
 
-** Farfalline
+\section{Farfalline}
 {[[ps/v81farfalline.eps]]}
 #+NAME: Farfalline
 #+begin_src common-lisp :noweb yes
@@ -4419,7 +4434,7 @@ are suitable for light soups, such as /pomodori e robiolo/ (a
 mixture of tomato and soft cheese). A crimped pasta cutter and a
 central pinch create the iconic shape.
 
-** Farfalloni
+\section{Farfalloni}
 {[[ps/v81farfalloni.eps]]}
 #+NAME: Farfalloni
 #+begin_src common-lisp :noweb yes
@@ -4453,7 +4468,7 @@ also perfect with marrow vegetables such as roast courgette or pureed
 pumpkin, topped with Parmigiano-Reggiano and a sprinkling of {\sl noce
 moscata} (nutmeg).
 
-** Festonati
+\section{Festonati}
 {[[ps/v81festonati.eps]]}
 #+NAME: Festonati
 #+begin_src common-lisp :noweb yes
@@ -4474,7 +4489,7 @@ profile of a garland). /Festonati/ can be served with grilled
 aubergine or home-grown tomatoes, topped with grated scamorza, fresh
 basil, olive oil, garlic, and red chilli flakes.
 
-** Fettuccine
+\section{Fettuccine}
 {[[ps/v81fettuccine.eps]]}
 #+NAME: Fettuccine
 #+begin_src common-lisp :noweb yes
@@ -4493,7 +4508,7 @@ from the Lazio region. Popular in many dishes, they are an ideal
 accompaniment to /Alfredo/ sauce, a rich mix of cream, parmesan,
 garlic, and parsley.
 
-** Fiocchi Rigati
+\section{Fiocchi Rigati}
 {[[ps/v81fiocchirigati.eps]]}
 #+NAME: Fiocchi Rigati
 #+begin_src common-lisp :noweb yes
@@ -4517,7 +4532,7 @@ farfalle}, but larger than /farfalline/. Their corrugated surface
 collects more sauce than a typical /farfalle/. For a more unusual
 disk, /fiocchi rigati/ can be served in a tomato and vodka sauce.
 
-** Fisarmoniche
+\section{Fisarmoniche}
 {[[ps/v81fisarmoniche.eps]]}
 #+NAME: Fisarmoniche
 #+begin_src common-lisp :noweb yes
@@ -4536,7 +4551,7 @@ which cling to their folds. This sturdy pasta is said to have been
 invented in the fifteenth century, in the Italian town of Loreto in
 the Marche, east central Italy.
 
-** Funghini
+\section{Funghini}
 {[[ps/v81funghini.eps]]}
 #+NAME: Funghini
 #+begin_src common-lisp :noweb yes
@@ -4561,7 +4576,7 @@ The modest dimensions of this /pastine minute/ (tiny pasta) make
 /funghini/ (little mushrooms) especially suitable for soups, such
 as a /minestrone/ made from chopped and sauteed celeriac.
 
-** Fusilli
+\section{Fusilli}
 {[[ps/v81fusilli.eps]]}
 #+NAME: Fusilli
 #+begin_src common-lisp :noweb yes
@@ -4602,7 +4617,7 @@ between the hands to create a thick irregular twist of dough. The
 shape is removed and left to dry on a wicker tray known as a {\sl
 spasa}. /Fusilli al ferretto/ are best dished up with a lamb /ragu/.
 
-** Fusilli Capri
+\section{Fusilli Capri}
 {[[ps/v81fusillicapri.eps]]}
 #+NAME: Fusilli Capri
 #+begin_src common-lisp :noweb yes
@@ -4619,7 +4634,7 @@ A longer and more compact regional adaptation of /fusilli/, {\sl
 fusilli Capri} are suited to a hearty /ragu/ of lamb or por sausages,
 or may also be combined with rocket and lemon to form a lighter dish.
 
-** Fusilli Lunghi Bucati
+\section{Fusilli Lunghi Bucati}
 {[[ps/v81fusillilunghibucati.eps]]}
 #+NAME: Fusilli Lunghi Bucati
 #+begin_src common-lisp :noweb yes
@@ -4657,7 +4672,7 @@ southern Italy, and have a spring-like profile. Like all /fusilli/
 they are traditionally consumed with a meat-based /ragu/, but may
 also be combined with thick vegetable sauces and baked in an oven.
 
-** Galletti
+\section{Galletti}
 {[[ps/v81galletti.eps]]}
 #+NAME: Galletti
 #+begin_src common-lisp :noweb yes
@@ -4681,7 +4696,7 @@ chifferi} with the addtion of an undulating crest. /Galletti/ are
 usually served in tomato sauces, but combine wqually well with a {\sl
 boscaiola} (woodsman's) sauce of mushrooms.
 
-** Garganelli
+\section{Garganelli}
 {[[ps/v81garganelli.eps]]}
 #+NAME: Garganelli
 #+begin_src common-lisp :noweb yes
@@ -4711,7 +4726,7 @@ gullet of a chicken ('/garganel/' in the northern Italian
 Emiliano-Romagnolo dialect). Traditionally cooked in broth, {\sl
 garganelli} are also sometimes served in hare sauce with chopped bacon.
 
-** Gemelli
+\section{Gemelli}
 {[[ps/v81gemelli.eps]]}
 #+NAME: Gemelli
 #+begin_src common-lisp :noweb yes
@@ -4730,7 +4745,7 @@ gemelli} (twins) are served with tomato, mozzarella, and basil, while
 in the northwest they are preferred with pesto and green beans, or in
 salads.
 
-** Gigli
+\section{Gigli}
 {[[ps/v81gigli.eps]]}
 #+NAME: Gigli
 #+begin_src common-lisp :noweb yes
@@ -4748,7 +4763,7 @@ small bells (/campanelle/) or lilies (/gigli/), after which
 they are named. Another more recent design, /gigli/ are shaped to
 capture thick meaty sauces.
 
-** Giglio Ondulato
+\section{Giglio Ondulato}
 {[[ps/v81giglioondulato.eps]]}
 #+NAME: Giglio Ondulato
 #+begin_src common-lisp :noweb yes
@@ -4769,7 +4784,7 @@ zoom(v3d,2.0,2.0,2.0)
 Identical to /gigli/ but with crenellated edges, {\sl giglio
 ondulato} are made of durum-wheat flour and water.
 
-** Gnocchetti Sardi
+\section{Gnocchetti Sardi}
 {[[ps/v81gnocchettisardi.eps]]}
 #+NAME: Gnocchetti Sardi
 #+begin_src common-lisp :noweb yes
@@ -4790,7 +4805,7 @@ Romano cheese, or served with thick sauces such as a veal {\sl
 ragu}. /Gnocchetti/ originated in Sardinia, a Mediterranean island
 to the west of Italy.
 
-** Gnocchi
+\section{Gnocchi}
 {[[ps/v81gnocchi.eps]]}
 #+NAME: Gnocchi
 #+begin_src common-lisp :noweb yes
@@ -4812,7 +4827,7 @@ resemble a semi-open grooved shell. Their preparation and ingredients
 (including potato, durum wheat, buckwheat and semolina) vary according
 to type. /Gnocchi/ are often added to a sauce made from fontina cheese.
 
-** Gramigna
+\section{Gramigna}
 {[[ps/v81gramigna.eps]]}
 #+NAME: Gramigna
 #+begin_src common-lisp :noweb yes
@@ -4831,7 +4846,7 @@ of sausages, or accompanied by the world-famous {\sl ragu alla
 bolognese}. Alternatively, /gramigna/ are sometimes presented {\sl
 alla pomodoro} (with a light tomato sauce).
 
-** Lancette
+\section{Lancette}
 {[[ps/v81lancette.eps]]}
 #+NAME: Lancette
 #+begin_src common-lisp :noweb yes
@@ -4856,7 +4871,7 @@ the /postine minute/ (tiny pasta) clan. They are delicious in
 consommes with a sprinkling of croutons and chopped greens. {\sl
 Lancette} are also an excellent addition to mushroom or chicken soups.
 
-** Lasagna Larga Doppia Riccia
+\section{Lasagna Larga Doppia Riccia}
 {[[ps/v81lasagnalargadoppiariccia.eps]]}
 #+NAME: Lasagna Larga Doppia Riccia
 #+begin_src common-lisp :noweb yes
@@ -4886,7 +4901,7 @@ sauce. /Lasagne/ are excellent with ricotta and a {\sl ragu
 napoletano}, or cooked /al forno/ (at the oven) with a creamy {\sl
 besciamella} sauce.
 
-** Linguine
+\section{Linguine}
 {[[ps/v81linguine.eps]]}
 #+NAME: Linguine
 #+begin_src common-lisp :noweb yes
@@ -4905,7 +4920,7 @@ herbs, a drop of olive oil, garlic, anchovies, and hot peppers. {\sl
 Linguine} may also be served with shellfish sauces, or white sauces of
 cream and soft cheese, flavoured with lemon, saffron, or ginger.
 
-** Lumaconi Rigati
+\section{Lumaconi Rigati}
 {[[ps/v81lumaconirigati.eps]]}
 #+NAME: Lumaconi Rigati
 #+begin_src common-lisp :noweb yes
@@ -4928,7 +4943,7 @@ spinach and ricotta cheese. Like cannelloni, they can then be covered
 in /besciamella/ and cooked in the oven. Smaller members of the
 family (/lumache/) are also available.
 
-** Maccheroni
+\section{Maccheroni}
 {[[ps/v81maccheroni.eps]]}
 #+NAME: Maccheroni
 #+begin_src common-lisp :noweb yes
@@ -4947,7 +4962,7 @@ is moade of durum-wheat flour and perhasp eggs. The pasta can be
 served /con le sarde/ (with sardines) - a dish enhanced by a touch
 of fennel.
 
-** Maccheroni Alla Chitarra
+\section{Maccheroni Alla Chitarra}
 {[[ps/v81maccheroniallachitarra.eps]]}
 #+NAME: Maccheroni Alla Chitarra
 #+begin_src common-lisp :noweb yes
@@ -4967,7 +4982,7 @@ closely ranged wires (or /chitarra/) that lends the pasta its
 name. Usually seved with a mutton /ragu/, or /pallottelle/
 (veal meatballs).
 
-** Mafaldine
+\section{Mafaldine}
 {[[ps/v81mafaldine.eps]]}
 #+NAME: Mafaldine
 #+begin_src common-lisp :noweb yes
@@ -4991,7 +5006,7 @@ durum-wheat flour pasta with a rippled finish on each long edge. They
 are generally served with meaty sauces such as /ragu napoletano/
 or in seafood dishes.
 
-** Manicotti
+\section{Manicotti}
 {[[ps/v81manicotti.eps]]}
 #+NAME: Manicotti
 #+begin_src common-lisp :noweb yes
@@ -5022,7 +5037,7 @@ which were topped with stuffing, rolled and finally baked {\sl al
 forno} (at the oven). Today they are served containing a variety of
 cheeses and covered in a savoury sauce, like filled dinner crepes.
 
-** Orecchiette
+\section{Orecchiette}
 {[[ps/v81orecchiette.eps]]}
 #+NAME: Orecchiette
 #+begin_src common-lisp :noweb yes
@@ -5041,7 +5056,7 @@ relative of broccoli that grows plentifully in the area. {\sl
 Orecchiette} (litte ears) also pair well with other vegetables such as
 beans, and with salty seasonings such as anchovies, capers, or olives.
 
-** Paccheri
+\section{Paccheri}
 {[[ps/v81paccheri.eps]]}
 #+NAME: Paccheri
 #+begin_src common-lisp :noweb yes
@@ -5060,7 +5075,7 @@ with aubergine, seafood, or indeed any chunky sauce. It is thought the
 name stems from the term /paccare/, which means 'to smack' in the
 southern Italian region of Campania.
 
-** Pappardelle
+\section{Pappardelle}
 {[[ps/v81pappardelle.eps]]}
 #+NAME: Pappardelle
 #+begin_src common-lisp :noweb yes
@@ -5084,7 +5099,7 @@ Italy hold festivals in their honour, such as the {\sl Sagra delle
 Pappardelle al Cinghiale} (Feast of the /Pappardelle/ and Boar) in
 Torre Alfina, central Italy.
 
-** Penne Rigate
+\section{Penne Rigate}
 {[[ps/v81pennerigate.eps]]}
 #+NAME: Penne Rigate
 #+begin_src common-lisp :noweb yes
@@ -5112,7 +5127,7 @@ Campania, in southern Italy, and belong to the /pasta corta/
 (angry) sauce, which gets its name from the chillies and red peppers
 it contains.
 
-** Pennoni Lisci
+\section{Pennoni Lisci}
 {[[ps/v81pennonilisci.eps]]}
 #+NAME: Pennoni Lisci
 #+begin_src common-lisp :noweb yes
@@ -5138,7 +5153,7 @@ Similar in appearance to /penne rigate/, but larger and without
 the grooves, /pennoni/ (large quills) require a more oily sauce
 (perhaps containing sliced chorizo) to cling to their smooth surface.
 
-** Pennoni Rigati
+\section{Pennoni Rigati}
 {[[ps/v81pennonirigati.eps]]}
 #+NAME: Pennoni Rigati
 #+begin_src common-lisp :noweb yes
@@ -5167,7 +5182,7 @@ The angled trim of the /penne/ pasta family makes its members easy
 to recognize. /Pennoni rigati/ (large grooved quills) are the
 ridged version of /pennoni/, and can be stuffed and cooked.
 
-** Puntalette
+\section{Puntalette}
 {[[ps/v81puntalette.eps]]}
 #+NAME: Puntalette
 #+begin_src common-lisp :noweb yes
@@ -5185,7 +5200,7 @@ puntalette} (tiny tips) are about 9 mm long, and no thicker than 3
 mm. Like most /pastine/, they are best consumed in creamy soups,
 or perhaps in a salad.
 
-** Quadrefiore
+\section{Quadrefiore}
 {[[ps/v81quadrefiore.eps]]}
 #+NAME: Quadrefiore
 #+begin_src common-lisp :noweb yes
@@ -5206,7 +5221,7 @@ down their lengths. Francis Ford Coppola, the maker and distributor,
 uses antique bronze moulds and wooden drying racks to achieve an
 authentic form and consistency.
 
-** Quadretti
+\section{Quadretti}
 {[[ps/v81quadretti.eps]]}
 #+NAME: Quadretti
 #+begin_src common-lisp :noweb yes
@@ -5226,7 +5241,7 @@ as part of a traditional fish broth, or in soups containing fava
 beans. Their small shape means that they need only be cooked for a
 short time.
 
-** Racchette
+\section{Racchette}
 {[[ps/v81racchette.eps]]}
 #+NAME: Racchette
 #+begin_src common-lisp :noweb yes
@@ -5257,7 +5272,7 @@ Usually served in salads, /racchette/ (rackets) suit crunchy pine
 nuts, sliced asparagus and fresh peas. Alternatively, the addition of
 diced watermelon or pomegranate seeds can create a light-tasking snack.
 
-** Radiatori
+\section{Radiatori}
 {[[ps/v81radiatori.eps]]}
 #+NAME: Radiatori
 #+begin_src common-lisp :noweb yes
@@ -5276,7 +5291,7 @@ their open centre and large surface area holds thick sauces well,
 while the flaps sweep up and trap smaller morsels of food. This pasta
 is often accompanied by a lamb-, veal-, rabbit-, or pork-based /ragu/.
 
-** Ravioli Quadrati
+\section{Ravioli Quadrati}
 {[[ps/v81ravioliquadrati.eps]]}
 #+NAME: Ravioli Quadrati
 #+begin_src common-lisp :noweb yes
@@ -5303,7 +5318,7 @@ and hearts. Some suggest the name /ravioli/ derives from the verb
 meaning 'to wrap', others link it with /rapa/, the Italian word
 for turnip.
 
-** Ravioli Tondi
+\section{Ravioli Tondi}
 {[[ps/v81raviolitondi.eps]]}
 #+NAME: Ravioli Tondi
 #+begin_src common-lisp :noweb yes
@@ -5327,7 +5342,7 @@ layers of dough made from wheat flour and egg. Fillings vary
 enormously, from lavish pairings of meat and cheese, to more deleicate
 centres of mushrooms, spinach, or even nettle.
 
-** Riccioli
+\section{Riccioli}
 {[[ps/v81riccioli.eps]]}
 #+NAME: Riccioli
 #+begin_src common-lisp :noweb yes
@@ -5345,7 +5360,7 @@ originated in the Emilia-Romagna region of northern Italy. Their
 ribbed exterior and hollow shape mean /riccioli/ can retain a
 large quantity of sauce.
 
-** Riccioli al Cinque Sapori
+\section{Riccioli al Cinque Sapori}
 {[[ps/v81ricciolialcinquesapori.eps]]}
 #+NAME: Riccioli al Cinque Sapori
 #+begin_src common-lisp :noweb yes
@@ -5366,7 +5381,7 @@ durum-wheat flour, /riccioli al cinque sapori/ get their color
 from the addition of spinach, tomato, beetroot, and turmeric, and are
 usually served in broth.
 
-** Rigatoni
+\section{Rigatoni}
 {[[ps/v81rigatoni.eps]]}
 #+NAME: Rigatoni
 #+begin_src common-lisp :noweb yes
@@ -5387,7 +5402,7 @@ versitile. Their robust shape holds cream or tomato sauces well, but
 /rigatoni/ are best eaten with sausages or game meat, mushrooms,
 and black pepper.
 
-** Rombi
+\section{Rombi}
 {[[ps/v81rombi.eps]]}
 #+NAME: Rombi
 #+begin_src common-lisp :noweb yes
@@ -5415,7 +5430,7 @@ curled edges like /lasagna doppia riccia/, however, they are
 smaller and sheared on the diagonal. Generally served with sauce and
 /pastasciutta/ or in /brodo/ (in broth), according to size.
 
-** Rotelle
+\section{Rotelle}
 {[[ps/v81rotelle.eps]]}
 #+NAME: Rotelle
 #+begin_src common-lisp :noweb yes
@@ -5443,7 +5458,7 @@ with spokes that help trap various flavors, making the pasta a good
 companion for a variety of sauces. Smaller versions can be served in
 salads or cooked in soups.
 
-** Saccottini
+\section{Saccottini}
 {[[ps/v81saccottini.eps]]}
 #+NAME: Saccottini
 #+begin_src common-lisp :noweb yes
@@ -5464,7 +5479,7 @@ related - are made of a durum-wheat circle of dough gathered into an
 irregular ball-shaped bundle. /Saccottini/ are usually stuffed
 with ricotta, meat, or steamed greens.
 
-** Sagnarelli
+\section{Sagnarelli}
 {[[ps/v81sagnarelli.eps]]}
 #+NAME: Sagnarelli
 #+begin_src common-lisp :noweb yes
@@ -5485,7 +5500,7 @@ sometimes made with eggs and are generally served as {\sl
 pastasciutta} with a meat /ragu/, or alongside vegetables such as
 wild asparagus.
 
-** Sagne Incannulate
+\section{Sagne Incannulate}
 {[[ps/v81sagneincannulate.eps]]}
 #+NAME: Sagne Incannulate
 #+begin_src common-lisp :noweb yes
@@ -5511,7 +5526,7 @@ rolls the rest of the /pasta lunga/ (long pasta) to form the
 distinctive curl. /Sagne/ are best consumed with a thick sauce or
 a traditional /ragu/.
 
-** Scialatielli
+\section{Scialatielli}
 {[[ps/v81scialatielli.eps]]}
 /ragu/ of pork or veal.
 #+NAME: Scialatielli
@@ -5531,7 +5546,7 @@ appearance to /fettuccine/ and /tagliotelle/. When they are
 made, milk and eggs can be added to the durum-wheat flour to lend it a
 golden color, /Scialatielli/ are best paired with seafood, or a
 
-** Spaccatelle
+\section{Spaccatelle}
 {[[ps/v81spaccatelle.eps]]}
 #+NAME: Spaccatelle
 #+begin_src common-lisp :noweb yes
@@ -5549,7 +5564,7 @@ This noted speciality of Sicily belongs to the /pasta corta/
 with a concave centre, and are served as a /pastasciutta/ (pasta
 boiled and drained) with a light tomato sauce or a thick meaty /ragu/.
 
-** Spaghetti
+\section{Spaghetti}
 {[[ps/v81spaghetti.eps]]}
 #+NAME: Spaghetti
 #+begin_src common-lisp :noweb yes
@@ -5568,7 +5583,7 @@ they are known for accompanying /ragu bolognese/, a mixture
 containing beef, tomato, cream, onions, and pancetta. More recently,
 /spaghetti/ have become popular in a creamy /carbonara/.
 
-** Spiralli
+\section{Spiralli}
 {[[ps/v81spiralli.eps]]}
 #+NAME: Spiralli
 #+begin_src common-lisp :noweb yes
@@ -5586,7 +5601,7 @@ to /cavatappi/, but are slightly larger. /Spirali/ may be
 served with chunky sauces as /pastasciutta/, baked /al forno/
 (at the oven) with a thick cheese topping or added to salads.
 
-** Stellette
+\section{Stellette}
 {[[ps/v81stellette.eps]]}
 #+NAME: Stellette
 #+begin_src common-lisp :noweb yes
@@ -5604,7 +5619,7 @@ acini di pepe} and /cuoretti/. Like all /pastine/, they are
 best served in a light soup, perhaps flavored with portobello
 mushrooms or peas.
 
-** Stortini
+\section{Stortini}
 {[[ps/v81stortini.eps]]}
 #+NAME: Stortini
 #+begin_src common-lisp :noweb yes
@@ -5635,7 +5650,7 @@ crooked pieces) are consumed in creamy soups with mushroom and
 celery. As a rule of thumb, smaller pasta is best in thinner soups,
 while larger /pastina minute/ can be served with thicker varieties.
 
-** Strozzapreti
+\section{Strozzapreti}
 {[[ps/v81strozzapreti.eps]]}
 #+NAME: Strozzapreti
 #+begin_src common-lisp :noweb yes
@@ -5664,7 +5679,7 @@ flours, eggs, and even potato. /Strozzapreti/ are an ideal {\sl
 pastasciutta}, and can be served with a traditional meat sauce, topped
 with Parmigiano-Reggiano.
 
-** Tagliatelle
+\section{Tagliatelle}
 {[[ps/v81tagliatelle.eps]]}
 #+NAME: Tagliatelle
 #+begin_src common-lisp :noweb yes
@@ -5691,7 +5706,7 @@ tagliatelle} are frequently served in /carbonara/ sauce, but can
 also accompany seafood, or alternatively may form the basis of a {\sl
 timballo} (baked pasta dish).
 
-** Taglierini
+\section{Taglierini}
 {[[ps/v81taglierini.eps]]}
 #+NAME: Taglierini
 #+begin_src common-lisp :noweb yes
@@ -5720,7 +5735,7 @@ Another coiling /pasta lunga/ (long pasta), /taglierini/ are
 of the same lineage as /tagliatelle/, but are substantially
 narrower - almost hair-like.
 
-** Tagliolini
+\section{Tagliolini}
 {[[ps/v81tagliolini.eps]]}
 #+NAME: Tagliolini
 #+begin_src common-lisp :noweb yes
@@ -5752,7 +5767,7 @@ broth. A versatile pasta, /tagliolini/ are also the main
 ingredient for a variety of /timballo/ dishes baked /al forno/
 (at the oven).
 
-** Torchietti
+\section{Torchietti}
 {[[ps/v81torchietti.eps]]}
 #+NAME: Torchietti
 #+begin_src common-lisp :noweb yes
@@ -5783,7 +5798,7 @@ will. Also known as /maccheroni al torchio/, they are best eaten
 in a tomato sauce with larger, coarsely chopped vegetables such as
 carrots, broccoli, and cauliflower.
 
-** Tortellini
+\section{Tortellini}
 {[[ps/v81tortellini.eps]]}
 #+NAME: Tortellini
 #+begin_src common-lisp :noweb yes
@@ -5807,7 +5822,7 @@ of the /pasta ripiena/ (filled pasta) family are traditionally
 eaten in steaming soups, but are also drained and served with a local
 sauce as /pastasciutta/.
 
-** Tortiglioni
+\section{Tortiglioni}
 {[[ps/v81tortiglioni.eps]]}
 #+NAME: Tortiglioni
 #+begin_src common-lisp :noweb yes
@@ -5828,7 +5843,7 @@ often baked in a /timballo/ or boiled, drained and served as a
 /pastasciutta/ coupled with a strong sauce of tomato, chorizo, and
 black pepper.
 
-** Trenne
+\section{Trenne}
 {[[ps/v81trenne.eps]]}
 #+NAME: Trenne
 #+begin_src common-lisp :noweb yes
@@ -5862,7 +5877,7 @@ sturdy. They are best served with mushrooms, tomato, and spinach - or
 in any sauce that would normally accompany their close cousins: {\sl
 penne}, /trennette/, and /ziti/.
 
-** Tripoline
+\section{Tripoline}
 {[[ps/v81tripoline.eps]]}
 #+NAME: Tripoline
 #+begin_src common-lisp :noweb yes
@@ -5887,7 +5902,7 @@ sauce. Originally from southern Italy, they are often served with
 tomato and basil, or /ragu alla napoletana/ and a sprinkling of
 Pecorino Romano.
 
-** Trofie
+\section{Trofie}
 {[[ps/v81trofie.eps]]}
 #+NAME: Trofie
 #+begin_src common-lisp :noweb yes
@@ -5909,7 +5924,7 @@ served boiled with green beans and more potatoes, they may also be
 paired with a simple mix of /pesto genovese/, pine nuts, salt, and
 olive oil.
 
-** Trottole
+\section{Trottole}
 {[[ps/v81trottole.eps]]}
 #+NAME: Trottole
 #+begin_src common-lisp :noweb yes
@@ -5940,7 +5955,7 @@ curl up about a central stalk, /trottole/ are ideal for
 salads. They are also delicious with pumpkin or courgette, leek, pine
 nuts, and a few shavings of Parmigiano-Reggiano.
 
-** Tubetti Rigati
+\section{Tubetti Rigati}
 {[[ps/v81tubettirigati.eps]]}
 #+NAME: Tubetti Rigati
 #+begin_src common-lisp :noweb yes
@@ -5959,7 +5974,7 @@ southern Italy. When served /e fagioli/ (with beans) they create
 very filling soups, but can also be served in a light /marinara/
 (mariner's) sauce of tomato, basil, and onions.
 
-** Ziti
+\section{Ziti}
 {[[ps/v81ziti.eps]]}
 #+NAME: Ziti
 #+begin_src common-lisp :noweb yes

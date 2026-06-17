@@ -27,7 +27,7 @@ Geddes(): Exports == Implementation where
 <<Geddes:ExtendedEuclidean>>
 
 #+end_src
-* Euclidean Algorithm
+\chapter{Euclidean Algorithm}
 
 [cite:@Gedd92] p 34\\
 *procedure* Euclid($a$,$b$)
@@ -46,7 +46,7 @@ $g \leftarrow n(c)$\\
 \end{addmargin}
 *end*
 
-*** Geddes:Euclid
+\subsection{Geddes:Euclid}
 #+NAME: Geddes:Euclid
 #+begin_src common-lisp :noweb yes
   Euclid(a:Integer,b:Integer):Integer ==
@@ -60,7 +60,7 @@ $g \leftarrow n(c)$\\
 
 #+end_src
 
-*** Background
+\subsection{Background}
 
 The Euclidean GCD function tries to compute the largest number that
 divides both arguments. This isn't unique since $30=5\times 6=-5\times -6$.
@@ -74,11 +74,11 @@ value so 6 is the canonical element for the associates $\{6, -6\}$.
 We call this function *unitCanonical* although it is simply
 the absolute value function in the domain Integer. Indeed, in 
 *Volume 10.3: Domains* we find this line in the domain *Integer*:
-#+begin_example
+\begin{verbatim}
       unitCanonical x == abs x
-#+end_example
+\end{verbatim}
 
-*** Example
+\subsection{Example}
 
 Euclid's algorithm collects the largest set of common factors. So for
 18 and 30 we see:
@@ -91,7 +91,7 @@ and the common set of factors is
 Rather than factor the numbers it is more efficient to divide the
 two numbers which will yield a quotient and a remainder. So
 in this case:
-#+begin_example
+\begin{verbatim}
 c:=18
 d:=30
   r:= c rem d -> 18 rem 30 -> 18
@@ -107,7 +107,7 @@ d:=30
   c:= 6
   d:= 0
 result is c -> 6
-#+end_example
+\end{verbatim}
 
 Since the quotient and remainder will share the same common factors
 as the original numbers we can continue this division loop until
@@ -115,7 +115,7 @@ the result of the remainder is 0. If the only factor in common is 1
 then the numbers are called ``relatively prime''. Otherwise, as
 above, we end up with the largest number composed of the common factors.
 
-* Extended Euclidean
+\chapter{Extended Euclidean}
 
 [cite:@Gedd92] p 36\\
 *procedure* ExtendedEuclidean$(a,b; s,t)$
@@ -140,7 +140,7 @@ $s \leftarrow c_1 / (u(a)\cdot u(c)); t \leftarrow c_2 / (u(b)\cdot u(c))$\\
 \end{addmargin}
 *end*
 
-*** Geddes:ExtendedEuclidean
+\subsection{Geddes:ExtendedEuclidean}
 #+NAME: Geddes:ExtendedEuclidean
 #+begin_src common-lisp :noweb yes
   ExtendedEuclidean(a:Integer,b:Integer):EEA ==
@@ -169,7 +169,7 @@ $s \leftarrow c_1 / (u(a)\cdot u(c)); t \leftarrow c_2 / (u(b)\cdot u(c))$\\
 
 #+end_src
 
-*** Background
+\subsection{Background}
 
 Since we are doing simple assignments the ExtendedEuclidean
 algorithm simply computes the $s$ and $t$ coefficients such that
@@ -184,46 +184,46 @@ Here we introduce two functions, *quo* and *unitNormal*.
 
 The *quo* function is defined in *Volume 10.2: Domains* in
 the domain *Integer* as
-#+begin_example
+\begin{verbatim}
    x quo y == QUOTIENT2(x,y)$Lisp
-#+end_example
+\end{verbatim}
 which resolves to the Lisp function in *Volume 5: Interpreter*
-#+begin_example
+\begin{verbatim}
    (defun quotient2 (x y)
      (values (truncate x y)))
-#+end_example
+\end{verbatim}
 which will return the integer portion of an integer division,
 ignoring the fractional portion.
 
 The *unitNormal* function in *Volume 10.2: Categories*
 in the category *IntegralDomain* returns a portion of a Record.
 The Record is defined as:
-#+begin_example
+\begin{verbatim}
    Record(unit:%,canonical:%,associate:%)
-#+end_example
+\end{verbatim}
 holding three pieces of information, the unit, the canonical element,
 and the set of associates. We only need the unit information so we
 access the record structure using the unit selector thus:
-#+begin_example
+\begin{verbatim}
    resultRecord.unit
-#+end_example
+\end{verbatim}
 
 The actual definition of *unitNormal* used here comes from 
 *Volume 10.3: Domains* in domain *Integer* which defines it as
-#+begin_example
+\begin{verbatim}
    UCA ==> Record(unit:%,canonical:%,associate:%)
    unitNormal x ==
      x < 0 => [-1,-x,-1]$UCA
      [1,x,1]$UCA
-#+end_example
+\end{verbatim}
 which for the value $-6$ would resolve to 
-#+begin_example
+\begin{verbatim}
    [unit= - 1,canonical= 6,associate= - 1]
-#+end_example
+\end{verbatim}
 giving
-#+begin_example
+\begin{verbatim}
    unitNormal(-6).unit -> -1
-#+end_example
+\end{verbatim}
 and, as above, the *unitCanonical* function is just the absolute
 value.
 
@@ -231,19 +231,19 @@ We use the *quo* operation at the final step rather than division.
 Integer is not a Field so the operation isn't available. The division
 operator would come from the domain *Fraction(Integer)* with the
 signature
-#+begin_example
+\begin{verbatim}
    ?/? : (Integer,Integer) -> %
-#+end_example
+\end{verbatim}
 which takes two integers and returns an element of Fraction(Integer)
 which is not what we want at the result. We know that the Integer
 unit can only be $\pm 1$ so we use the *quo* operation from
 *Integer*  to form the quotient we need, with the signature
-#+begin_example
+\begin{verbatim}
    ?quo? : (%,%) -> % 
-#+end_example
+\end{verbatim}
 
-*** Example
-#+begin_example
+\subsection{Example}
+\begin{verbatim}
 ExtendedEuclidean(18,30)
   c   d  c1  d1  c2  d2   q   r  r1  r2   c   c1  c2   d  d1  d2
  18  30   1   0   0   1   0  18   1   0   30   0   1  18   1   0
@@ -257,10 +257,10 @@ ExtendedEuclidean(18,30)
  t2:=c1 quo (unitNormal(a).unit*unitNormal(c).unit) -> 2/1 -> 2
  t3:Integer:= c2 quo (unitNormal(b).unit*unitNormal(c).unit) -> -1/1 -> -1
  [gcd= 6,s= 2,t= - 1]
-#+end_example
+\end{verbatim}
 
 
-* Primitive Euclidean
+\chapter{Primitive Euclidean}
 
 [cite:@Gedd92] p 57\\
 *procedure* PrimitiveEuclidean$(a(x),b(x))$
@@ -281,11 +281,11 @@ $g(x) \leftarrow \gamma c(x)$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Multiprecision Integer Multiplication
+\chapter{Multiprecision Integer Multiplication}
 
 [cite:@Gedd92] p 113\\
 *procedure* BigIntegerMultiply($a$,$b$,$B$)
@@ -309,11 +309,11 @@ $c_{k+m} \leftarrow carry$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Karatsuba's Multiplication
+\chapter{Karatsuba's Multiplication}
 
 [cite:@Gedd92] p 113\\
 *procedure* Karatsuba$(a,b,n)$
@@ -339,11 +339,11 @@ $c \leftarrow c\cdot (m1\cdot B^n+(m1+m2+m3)\cdot B^{n/2}+m3)$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Polynomial Trial Division
+\chapter{Polynomial Trial Division}
 
 [cite:@Gedd92] p 122\\
 *procedure* TrialDivision$(a(x),b(x),m,n)$
@@ -358,12 +358,12 @@ $c(x) \leftarrow PolyInterp(\xi_0,...,\xi_m)$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
 Ordinary multiplication of 25 x 63:
-#+begin_example
+\begin{verbatim}
      
      25
   x  63
@@ -382,9 +382,9 @@ and then
 So we have 4 multiplications and 3 additions
 
 
-#+end_example
+\end{verbatim}
 
-* Fast Fourier Transform
+\chapter{Fast Fourier Transform}
 
 [cite:@Gedd92] p 128\\
 *procedure* FFT$(N,\varpi,a(x))$
@@ -407,11 +407,11 @@ $A_{N/2+i} \leftarrow B_i-\omega^i \cdot C_i$ \}\}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Fast Fourier Polynomial Multiplication
+\chapter{Fast Fourier Polynomial Multiplication}
 
 [cite:@Gedd92] p 132\\
 *procedure* FFTMultiply$(a(x),b(x),m,n)$
@@ -429,11 +429,11 @@ $c(x) \leftarrow \sum_{i=0}^{N-1} c_ix^i$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Newton's Method for Power Series Inversion
+\chapter{Newton's Method for Power Series Inversion}
 
 [cite:@Gedd92] p 140\\
 *procedure* FastNewtonInversion$(a(x),n)$\\
@@ -449,11 +449,11 @@ $y \leftarrow y\cdot (2-y\cdot a(x))  mod  x^{2^{k+1}}$
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Newton's Method for Solving $P(y)=0$
+\chapter{Newton's Method for Solving $P(y)=0$}
 [cite:@Gedd92] p 144\\
 *procedure* NewtonSolve$(P(y),y_0,n)$
 \begin{addmargin}{1em}
@@ -469,11 +469,11 @@ $y \leftarrow y-(P(y)\cdot P^\prime(y)^-1 mod x^{2^{k+1}}$
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Garner's Chinese Remainder
+\chapter{Garner's Chinese Remainder}
 [cite:@Gedd92] p 180\\
 *procedure* IntegerCRA$((m_0,...,m_n),(u_0,...,u_n))$\\
 \begin{addmargin}{1em}
@@ -517,11 +517,11 @@ $u \leftarrow u\cdot m_k+v_k$
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Newton Interpolation
+\chapter{Newton Interpolation}
 [cite:@Gedd92] p 188\\
 *procedure* NewtonInterp$((\alpha_0,...,\alpha_v)(u_0,...,u_v))$
 \begin{addmargin}{1em}
@@ -567,11 +567,11 @@ $u \leftarrow \phi_p(u \cdot (x-\alpha_k)+v_k)$
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Univariate Hensel Lifting
+\chapter{Univariate Hensel Lifting}
 [cite:@Gedd92] p 233\\
 *procedure* UnivariateHensel$(a,p,u^{(1)},w^{(1)},B,\gamma)$
 \begin{addmargin}{1em}
@@ -655,11 +655,11 @@ would restore $a(x)$ to its input value \}\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Multivariate Polynomial Diophantine Equations
+\chapter{Multivariate Polynomial Diophantine Equations}
 [cite:@Gedd92] p 268\\
 *procedure* MultivariateDiophant$(a,c,I,d,p,k)$\\
 \begin{addmargin}{1em}
@@ -859,11 +859,11 @@ $modulus \leftarrow modulus\times p$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Multivariate Hensel Lifting
+\chapter{Multivariate Hensel Lifting}
 [cite:@Gedd92] p 272\\
 *procedure* MultivariateHensel$(a,I,p,l,u,lcU)$
 \begin{addmargin}{1em} %1
@@ -958,11 +958,11 @@ $e \leftarrow (A_j-product(U_i,i=1,...,n)) mod p^l$
 \end{addmargin} %1
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Modular GCD
+\chapter{Modular GCD}
 [cite:@Gedd92] p 307\\
 *procedure* MGCD(A,B)\\
 \begin{addmargin}{1em}
@@ -1024,11 +1024,11 @@ $C \leftarrow pp(H)$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Multivariate GCD Reduction
+\chapter{Multivariate GCD Reduction}
 [cite:@Gedd92] p 309\\
 *procedure* PGCD$(A,B,p)$
 \begin{addmargin}{1em}
@@ -1087,11 +1087,11 @@ $C \leftarrow pp(H)$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Extended Zassenhaus GCD
+\chapter{Extended Zassenhaus GCD}
 [cite:@Gedd92] p 316\\
 *procedure* EX-GCD$(A,B)$
 \begin{addmargin}{1em}
@@ -1183,11 +1183,11 @@ $(<a\cdot A/C,b\cdot B/C,g\cdot C>)$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* GCD Heuristic
+\chapter{GCD Heuristic}
 [cite:@Gedd92] p 330\\
 *procedure* GCDHEU$(A,B)$
 \begin{addmargin}{1em} %1
@@ -1225,11 +1225,11 @@ $\eta \leftarrow iquo(\xi\times 73794, 27011)$ \}
 \end{addmargin} %1
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Square-Free Factorization
+\chapter{Square-Free Factorization}
 [cite:@Gedd92] p 340\\
 *procedure* SquareFree($a(x)$)
 \begin{addmargin}{1em}
@@ -1255,11 +1255,11 @@ Output $\leftarrow$ Output$\cdot w(x)^i$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Yun's Square-Free Factorization
+\chapter{Yun's Square-Free Factorization}
 [cite:@Gedd92] p 342\\
 *procedure* SquareFree2($a(x)$)
 \begin{addmargin}{1em}
@@ -1291,11 +1291,11 @@ Output $\leftarrow$ Output$\cdot w(x)^i$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Finite Field Square-Free Factorization
+\chapter{Finite Field Square-Free Factorization}
 [cite:@Gedd92] p 345\\
 *procedure* SquareFreeFF$(a(x),q)$
 \begin{addmargin}{1em}
@@ -1333,11 +1333,11 @@ Output $\leftarrow (SquareFreeFF(a(x)))^p$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Berlekamp's Factoring
+\chapter{Berlekamp's Factoring}
 [cite:@Gedd92] p 352\\
 *procedure* Berlekamp$(a(x),q)$
 \begin{addmargin}{1em}
@@ -1370,11 +1370,11 @@ $r \leftarrow r+1$ \} \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Form Q Matrix
+\chapter{Form Q Matrix}
 [cite:@Gedd92] p 353\\
 *procedure* FormMatrixQ$(a(x),q)$
 \begin{addmargin}{1em}
@@ -1396,11 +1396,11 @@ Row$(m/q,Q) \leftarrow *r*$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Null Space Basis
+\chapter{Null Space Basis}
 [cite:@Gedd92] p 356\\
 *procedure* NullSpaceBasis$(M)$
 \begin{addmargin}{1em}
@@ -1445,11 +1445,11 @@ $v^{[i]} \leftarrow Row(j,M)$ \} \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Big Prime Berlekamp Factoring
+\chapter{Big Prime Berlekamp Factoring}
 [cite:@Gedd92] p 367\\
 *procedure* BigPrimeBerlekamp$(a(x),p^m)$
 \begin{addmargin}{1em}
@@ -1486,11 +1486,11 @@ Add$(\{u(x),g(x)\},factors)$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Partial Distinct Degree Factorization
+\chapter{Partial Distinct Degree Factorization}
 [cite:@Gedd92] p 371\\
 *procedure* PartialFactorDD$(a(x),q)$
 \begin{addmargin}{1em}
@@ -1515,11 +1515,11 @@ $i \leftarrow i+1$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Splitting Distinct Degree Factorization
+\chapter{Splitting Distinct Degree Factorization}
 [cite:@Gedd92] p 373\\
 *procedure* SplitDD$(a(x),n,p^m)$
 \begin{addmargin}{1em}
@@ -1550,11 +1550,11 @@ SplitDD(a(x)/g(x),n,p^m)$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Factorization over Algebraic Number Fields
+\chapter{Factorization over Algebraic Number Fields}
 [cite:@Gedd92] p 383\\
 *procedure* AlgebraicFactorization$(a(z),m(x),\alpha)$
 \begin{addmargin}{1em}
@@ -1589,11 +1589,11 @@ substitute$(a_i(x) \leftarrow a_i(\alpha,z),b)$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Fraction-Free Gaussian Elimination
+\chapter{Fraction-Free Gaussian Elimination}
 [cite:@Gedd92] p 398\\
 *procedure* FractionFreeElim$(A)$
 \begin{addmargin}{1em}
@@ -1635,11 +1635,11 @@ $r \leftarrow r+1$ \} \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Nonlinear Elimination
+\chapter{Nonlinear Elimination}
 [cite:@Gedd92] p 417\\
 *procedure* NonlinearElim$(P)$
 \begin{addmargin}{1em}
@@ -1689,11 +1689,11 @@ $E_j\leftarrow E_j\cup \{p\}\}\}\}$
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Solution of a Nonlinear System of Equations
+\chapter{Solution of a Nonlinear System of Equations}
 [cite:@Gedd92] p 421\\
 *procedure* NonlinearSolve$(P)$
 \begin{addmargin}{1em}
@@ -1728,11 +1728,11 @@ $roots \leftarrow R$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Full Reduction
+\chapter{Full Reduction}
 [cite:@Gedd92] p 436\\
 *procedure* Reduce$(p,Q)$
 \begin{addmargin}{1em}
@@ -1757,11 +1757,11 @@ $r \leftarrow r-M(r)$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Buchberger's Algorithm for Gr\"obner Bases
+\chapter{Buchberger's Algorithm for Gr\"obner Bases}
 [cite:@Gedd92] p 446\\
 *procedure* Gbasis$(P)$
 \begin{addmargin}{1em}
@@ -1787,11 +1787,11 @@ $B \leftarrow B \cup \{[i,k]:1\le i < k\} \}\}$
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Consruction of a Reduced Ideal Basis
+\chapter{Consruction of a Reduced Ideal Basis}
 [cite:@Gedd92] p 448\\
 *procedure* ReduceSet$(E)$
 \begin{addmargin}{1em}
@@ -1825,11 +1825,11 @@ $\tilde{E} \leftarrow \tilde{E} \cup \{h\}$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Improved Construction of Reduced Gr\"obner Basis
+\chapter{Improved Construction of Reduced Gr\"obner Basis}
 [cite:@Gedd92] p 450\\
 *procedure* Gbasis$(P)$
 \begin{addmargin}{1em}
@@ -1862,11 +1862,11 @@ $R \leftarrow \{ g\in G  such that  R_{g,G}-\{g\}\ne \emptyset\}$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Solution of Systems for One Variable
+\chapter{Solution of Systems for One Variable}
 [cite:@Gedd92] p 457\\
 *procedure* Solve1$(P,\tilde{x})$
 \begin{addmargin}{1em}
@@ -1892,11 +1892,11 @@ such that $\sum_{j=0}^k{a_jp_j}=0$ *then*
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Complete Solutions of a System
+\chapter{Complete Solutions of a System}
 [cite:@Gedd92] p 458\\
 *procedure* Gr\"obnerSolve$(P)$
 \begin{addmargin}{1em}
@@ -1932,11 +1932,11 @@ $roots \leftarrow roots \cup \{ (\alpha_1,...,\alpha_n)\}$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Solution using Lexicographic Gr\"obner Basis
+\chapter{Solution using Lexicographic Gr\"obner Basis}
 [cite:@Gedd92] p 461\\
 *procedure* LexSolve$(P)$
 \begin{addmargin}{1em}
@@ -1969,11 +1969,11 @@ $roots \leftarrow S$ \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Hermite's Method for Rational Functions
+\chapter{Hermite's Method for Rational Functions}
 [cite:@Gedd92] p 485\\
 *procedure* HermiteReduction$(p,q,x)$
 \begin{addmargin}{1em}
@@ -2010,11 +2010,11 @@ integral\_part $\leftarrow$ integral\_part+$r[i,1]/q[i]$ \} \}
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Horowitz Reduction for Rational Functions
+\chapter{Horowitz Reduction for Rational Functions}
 [cite:@Gedd92] p 490\\
 *procedure* HorowitzReduction$(p,q,x)$
 \begin{addmargin}{1em}
@@ -2040,11 +2040,11 @@ solve$(eqns,\{a[0],...,a[m-1],c[0],...,c[n-1]\})$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Rothstein/Trager Method
+\chapter{Rothstein/Trager Method}
 [cite:@Gedd92] p 499\\
 *procedure* LogarithmicPartIntegral$(a,b,x)$
 \begin{addmargin}{1em}
@@ -2095,11 +2095,11 @@ integral $\leftarrow$ integral$+ c[j]\cdotlog(v[j])$\\
 \end{addmargin}
 *end*
 
-*** Background
+\subsection{Background}
 
-*** Example
+\subsection{Example}
 
-* Lazard/Rioboo/Trager Improvement
+\chapter{Lazard/Rioboo/Trager Improvement}
 [cite:@Gedd92] p 506\\
 *procedure* LogarithmicPartIntegral$(a,b,x)$
 \begin{addmargin}{1em}

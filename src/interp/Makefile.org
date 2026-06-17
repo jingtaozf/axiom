@@ -5,14 +5,14 @@
 #+AUTHOR: Timothy Daly
 #+BEGIN_abstract
 #+END_abstract
-** Notes
+\section{Notes}
 Notes for understanding this makefile:
 
 IMPORTANT: all source file names in this Makefile must be lowercase
 This is for cross-platform compatibility and also makes getting
 them into Lisp much easier at the Makefile level.
 
-** The Environment
+\section{The Environment}
 We define 4 directories for this build. The first three are
 the traditional *IN*, which is where the source pamphlets are,
 *MID* which is where we will put the compiled intermediates and
@@ -196,9 +196,9 @@ OBJS= ${OUT}/vmlisp.${O}      \
 
 #+end_src
 
-#+begin_example
+\begin{verbatim}
       sfsfun.lisp.pamphlet contains 0F1 code
-#+end_example
+\end{verbatim}
 
 Before we save the *SAVESYS* image we need to run some
 initialization code. These files perform initialization
@@ -303,7 +303,7 @@ exist.
 .PRECIOUS:	${AXIOMSYS}
 
 #+end_src
-** Proclaim optimization
+\section{Proclaim optimization}
 GCL, and possibly other common lisps, can generate much better
 code if the function argument types and return values are proclaimed.
 
@@ -334,7 +334,7 @@ interp (interp-proclaims.lisp), and
 algebra (algebra-proclaims.lisp).
 
 To build the proclaims file (e.g. for interp) we:
-#+begin_example
+\begin{verbatim}
 (a) cd to obj/linux/interp
 (b) (yourpath)/axiom/obj/linux/bin/lisp
 (c) (load "sys-pkg.lsp") 
@@ -342,7 +342,7 @@ To build the proclaims file (e.g. for interp) we:
 (e) (with-open-file 
      (out "interp-proclaims.lisp" :direction :output) 
       (compiler::make-proclaims out))
-#+end_example
+\end{verbatim}
 Note that step (c) is only used for interp, not for boot.
 
 The fifth step is to copy the newly constructed proclaims file back
@@ -371,7 +371,7 @@ endif
 
 #+end_src
 
-** The warm.data file
+\section{The warm.data file}
 This is a file of commands that will be loaded into interpsys
 at the last minute. It execute functions that will likely be
 used in a running system so all of the required routines will
@@ -402,7 +402,7 @@ ${INT}/algebra/warm.data:
 (setf (gethash '|trignometric| |$topicHash|) 11)
 
 #+end_src
-** Building DEPSYS
+\section{Building DEPSYS}
 The depsys image proceeds all else. it is the compile-time environment
 for all interpreter code. 
 
@@ -426,36 +426,36 @@ file lookup is in conditional lisp code so other lisps will not
 see the file load. The collectfn.lsp code is used by GCL to generate
 the ``.fn'' files which are used to optimize function calling.
 
-*** save depsys image
+\subsection{save depsys image}
 Once the appropriate commands are in the =${OUT}/makedep.lisp= file
 we can load the file into a fresh image and save it. At least that's
 how it used to work. In freebsd we cannot do this so we have to use
 a much more complicated procedure.
 This code used to read:
-#+begin_example
+\begin{verbatim}
 \begin{chunk}{save depsys image}
 	@ (cd ${MNT}/${SYS}/bin ; \
 	   echo '(progn (load "${OUT}/makedep.lisp")' \
 		'(spad-save "${DEPSYS}"))' | ${LISPSYS})
 \end{chunk}
-#+end_example
+\end{verbatim}
 
 Now game is much more difficult. 
-#+begin_example
+\begin{verbatim}
 
  '(progn \
 
-#+end_example
+\end{verbatim}
 
 =si::*collect-binary-modules*= instructs GCL to build a list of 
 binary object modules loaded into the current session with (load ...)
 The list will be stored in =si::*binary-modules*=.
-#+begin_example
+\begin{verbatim}
 
 	       (setq si::*collect-binary-modules* t) \
 	       (load "${OUT}/makedep.lisp") \
 
-#+end_example
+\end{verbatim}
 
 =compiler::link= is a lisp interface to the ``ld'' C-based system linker.
 The first argumet is a list of .o binary object modules to link into a
@@ -473,46 +473,46 @@ Some lisp systems, such as acl2, have a complex heap initialization,
 in which load calls must be interspersed with other form evaluation
 comprising the logic of the heap construction.  Others, such as
 maxima, have no such complex initialization sequence.
-#+begin_example
+\begin{verbatim}
   (compiler::link \
-#+end_example
+\end{verbatim}
 =si::*binary-modules*= here has the list of compiled lisp binary module
 .o files loaded by makedep.lsp above.
-#+begin_example
+\begin{verbatim}
    (remove-duplicates si::*binary-modules* \
 		      :test (quote equal)) \
-#+end_example
+\end{verbatim}
 
 The name of the output image.
-#+begin_example
+\begin{verbatim}
    "$(DEPSYS)" \
-#+end_example
+\end{verbatim}
 
 This will be run in the newly linked sub-image.
-#+begin_example
+\begin{verbatim}
     (format nil "\
-#+end_example
+\end{verbatim}
 
 Collect loaded binary modules again to make sure that there are none,
 as all should be already linked in via ld.  For error checking
 purposes.
-#+begin_example
+\begin{verbatim}
      (setq si::*collect-binary-modules* t) \
-#+end_example
+\end{verbatim}
 
 We need to find =gcl_collectfn.lsp=, so set the *load-path*, and make
 sure the source, not the binary, form is loaded here, as we're only
 using this entire sequence on machines which cannot load binary object
 modules and preserve them in saved images.
-#+begin_example
+\begin{verbatim}
      (let ((si::*load-path* (cons ~S si::*load-path*))\
 	   (si::*load-types* ~S))\
-#+end_example
+\end{verbatim}
 
 Turn on function analyzation and autoload thereby =gcl_collectfn.lsp=.
-#+begin_example
+\begin{verbatim}
       (compiler::emit-fn t))\
-#+end_example
+\end{verbatim}
 
 Load the heap creation sequence again in the fresh new image, this
 time transparently redirecting all calls to load of binary modules
@@ -522,31 +522,31 @@ module.
 Load has code in it to recognize when a module is already linked in,
 and to forgo in this case the actual load and replace with a mere
 initialization call instead.
-#+begin_example
+\begin{verbatim}
       (load \"$(OUT)/makedep.lisp\")\
       (gbc t)\
-#+end_example
+\end{verbatim}
 
 It is an error to load a binary module. Calling load will not
 reload them but only run initialization.
 Throw an error if we've actually loaded any binary modules.
-#+begin_example
+\begin{verbatim}
      (when si::*binary-modules* \
        (error si::*binary-modules*))\
-#+end_example
+\end{verbatim}
 
 Unset the binary module collection flags.
-#+begin_example
+\begin{verbatim}
     (setq si::collect-binary-modules* nil \xo
 	  si::*binary-modules* nil)\
     (gbc t)\
-#+end_example
+\end{verbatim}
 
 We need to forget the build time system paths per Camm Maguire's email
 on July 14th, 2011
-#+begin_example
+\begin{verbatim}
      (si::reset-sys-paths)
-#+end_example
+\end{verbatim}
 
 Turn on SGC (Stratified Garbage Collection) in the final image.  This
 is a optional gbc algorithm which is suitable for images which will
@@ -555,35 +555,35 @@ read-only, eliminating such pages from the time-consuming gbc
 processing.  When writes are actually made to such pages, a segfault
 is triggered which is handled by a function which remarks the pages
 read-write and continues.
-#+begin_example
+\begin{verbatim}
    (when (fboundp (quote si::sgc-on)) (si::sgc-on t))\
-#+end_example
+\end{verbatim}
 
 This is a flag which instructs the GCL compiler to make unique
 initialzation function C names.  This is necessary when using ld, as
 all function names must be unique.
-#+begin_example
+\begin{verbatim}
    (setq compiler::*default-system-p* t)\
-#+end_example
+\end{verbatim}
 si::*system-directory* goes into the *load-path*, and .lsp in the *load-types*.
-#+begin_example
+\begin{verbatim}
  " si::*system-directory* (quote (list ".lsp")))\
-#+end_example
+\end{verbatim}
 No C libraries to link in here.
-#+begin_example
+\begin{verbatim}
    "" \
-#+end_example
+\end{verbatim}
 
 Do not run the initialization code for the newly linked in lisp
 modules ``by hand'', but rather rely on the transparent load redirection
 described above to initialize at the proper moment in the heap
 initialization sequence.
-#+begin_example
+\begin{verbatim}
      nil))' | $(LISPSYS))
-#+end_example
+\end{verbatim}
 
 The save depsys image was supposed to read:
-#+begin_example
+\begin{verbatim}
  @ (cd ${OBJ}/${SYS}/bin ; \
    echo '(progn' \
     '(setq si::*collect-binary-modules* t)' \
@@ -610,17 +610,17 @@ The save depsys image was supposed to read:
 	 'si::*system-directory* (quote (list ".lsp")))'\
        '""' \
        'nil))' | $(LISPSYS))
-#+end_example
+\end{verbatim}
 
 This scheme does not work. It fails during loading with multiple messages
 of the form:
-#+begin_example
+\begin{verbatim}
 /home/axiom33/obj/linux/interp/parse.o(.text+0x5660): 
  In function `init_code':
   : multiple definition of `init_code'
 /home/axiom33/obj/linux/interp/postpar.o(.text+0x4e78): 
   first defined here
-#+end_example
+\end{verbatim}
 #+NAME: depsys
 #+begin_src common-lisp :noweb yes
 ${DEPSYS}:	${DEP} ${OUT}/sys-pkg.${LISP} ${OUT}/nocompil.${LISP} \
@@ -676,7 +676,7 @@ ${DEPSYS}:	${DEP} ${OUT}/sys-pkg.${LISP} ${OUT}/nocompil.${LISP} \
 	@ echo si003 ${DEPSYS} created
 
 #+end_src
-** Building SAVESYS and AXIOMSYS
+\section{Building SAVESYS and AXIOMSYS}
 GCL likes to tell you when it has replaced a function call by a 
 tail-recursive call. This happens when the last form in a function
 is a call to the same function. In general, we don't care so we set
@@ -766,7 +766,7 @@ endif
 
 #+end_src
 
-** Building debugsys
+\section{Building debugsys}
 Note that we assume you've already built interpsys so all of the
 files are known to exist and be up to date. We don't list any of
 the preconditions here. 
@@ -781,7 +781,7 @@ ${DEBUGSYS}: ${MID}/debugsys.lisp
 
 #+end_src
 
-** The Interpreter files
+\section{The Interpreter files}
 
 \subsection{debugsys.lisp [cite:@14]}
 The *debugsys.lisp* file is used to create a *debugsys* runnable image.
@@ -805,24 +805,27 @@ ${MID}/debugsys.lisp: ${IN}/debugsys.lisp.org
 
 #+end_src
 
-** The databases
-*** autoload dependencies
+\section{The databases}
+\subsection{autoload dependencies}
 If you are adding a file which is to be autoloaded the following step
 information is useful. There are 2 cases:
-1. adding files to currently autoloaded parts\\
+\begin{enumerate}
+\item adding files to currently autoloaded parts\\
 (as of 2/92: browser old parser and old compiler)
-2. adding new files
-  - case 1:
-  - [(a)] you have to add the file to the list of files currently there
+\item adding new files
+\begin{itemize}
+\item case 1:
+\item [(a)] you have to add the file to the list of files currently there
 (e.g. see BROBJS above)
-  - [(b)] add an autolaod rule
+\item [(b)] add an autolaod rule
 (e.g. ${AUTO}/parsing.${O}: ${OUT}/parsing.${O})
-  - [(c)] edit util.lisp to add the 'external' function (those that
+\item [(c)] edit util.lisp to add the 'external' function (those that
 should trigger the autoload
-3. case 2:\\
+\end{itemize}
+\item case 2:\\
      build-interpsys (in util.lisp) needs an extra argument for the
      new autoload things and several functions in util.lisp need hacking.
-
+\end{enumerate}
 database.date is a marker file used to force a rebuild of interpsys if the
 database is rebuilt (src/algebra/Makefile).
 #+NAME: databases
@@ -833,7 +836,7 @@ ${OUT}/database.date:
 
 #+end_src
 
-** The Makefile
+\section{The Makefile}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 

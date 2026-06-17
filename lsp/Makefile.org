@@ -5,12 +5,12 @@
 #+AUTHOR: The Axiom Team
 #+BEGIN_abstract
 #+END_abstract
-** The Makefile
+\section{The Makefile}
 We create a dummy file *gcldir* after gcl has been built so
 it is not rebuilt. We need to do this because we have no control
 over the gcl Makefiles.
 
-** Gnu Common Lisp 2.6.7
+\section{Gnu Common Lisp 2.6.7}
 There is a typo in configure.in that is only detected under some
 versions of bash. The problem is a missing single-quote mark.
 #+NAME: gcl-2.6.7.configure.in.patch
@@ -19,13 +19,13 @@ versions of bash. The problem is a missing single-quote mark.
 	  echo 28a applying configure.in patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.configure.in.patch )
 #+end_src
-** Gnu Common Lisp 2.6.7pre
-*** run-process patch
+\section{Gnu Common Lisp 2.6.7pre}
+\subsection{run-process patch}
 The gcl-2.6.6.h.linux.h.patch has been accepted into the mainline lisp
 code and is no longer needed.
-** Gnu Common Lisp 2.6.6
+\section{Gnu Common Lisp 2.6.6}
 We need run-process to handle the new browser and graphics direction.
-*** run-process patch
+\subsection{run-process patch}
 #+NAME: gcl-2.6.6.h.linux.h.patch
 #+begin_src common-lisp :noweb yes
 	@(cd ${GCLVERSION}/h ; \
@@ -41,10 +41,10 @@ into the CVS HEAD for 2.6.6.
 	  echo 1 applying cmpnew/gcl_cmpmain.lsp.patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.cmpnew.gcl_cmpmain.lsp.patch )
 #+end_src
-** Gnu Common Lisp 2.6.5w
+\section{Gnu Common Lisp 2.6.5w}
 This is a Windows port of GCL. We run under MSYS and have to make
 a few Windows specific changes.
-*** mingw.defs
+\subsection{mingw.defs}
 This patch adds the necessary .o files to the EXTRAS variable
 so they are available at link time.
 #+NAME: gcl-2.6.5w.h.mingw.defs.patch
@@ -53,7 +53,7 @@ so they are available at link time.
 	  echo 1 applying gcl-2.6.5.h.mingw.defs.patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.h.mingw.defs.patch )
 #+end_src
-*** alloc.c
+\subsection{alloc.c}
 If malloc() gets called by the C runtime before
 main starts and the shared memory is not yet
 initialised causing failure. We set
@@ -64,7 +64,7 @@ initialised causing failure. We set
 	  echo 2 applying gcl-2.6.5w.o.alloc.c.patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.o.alloc.c.patch )
 #+end_src
-*** mingfile.c
+\subsection{mingfile.c}
 We do not need to call truename. In fact, truename does not seem
 to be expanding pathnames properly.
 #+NAME: gcl-2.6.5w.o.mingfile.c.patch
@@ -73,7 +73,7 @@ to be expanding pathnames properly.
 	  echo 3 applying gcl-2.6.5w.o.mingfile.c.patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.o.mingfile.c.patch )
 #+end_src
-*** unixfsys.c
+\subsection{unixfsys.c}
 We have to do conversions of Windows filenames.
 #+NAME: gcl-2.6.5w.o.unixfsys.c.patch
 #+begin_src common-lisp :noweb yes
@@ -81,8 +81,8 @@ We have to do conversions of Windows filenames.
 	  echo 4 applying gcl-2.6.5w.o.unixfsys.c.patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.o.unixfsys.c.patch )
 #+end_src
-** Gnu Common Lisp 2.6.5
-*** gmp wrappers patch
+\section{Gnu Common Lisp 2.6.5}
+\subsection{gmp wrappers patch}
 The file =gmp_wrappers.h= has the declaration of the integer $j$
 out of order. This causes the compiler to complain. This patch puts
 the declaration at the beginning of the function.
@@ -98,14 +98,14 @@ the declaration at the beginning of the function.
 	  echo 6 applying gmp_wrappers patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.h.gmp_wrappers.h.patch )
 #+end_src
-** Gnu Common Lisp 2.5.2
-**** socket patch
+\section{Gnu Common Lisp 2.5.2}
+\subsubsection{socket patch}
 This patch is to *h/386-linux.defs* to include two 
 global variables, *EXTRAS* and *EXTRA\_LIB*
-#+begin_example
+\begin{verbatim}
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
-#+end_example
+\end{verbatim}
 The *EXTRAS* variable is used to include two files into the
 running image. The *cfuns-c* file contains low-level directory
 manipulation routines. The *sockio-c* file contains low level
@@ -302,9 +302,9 @@ This has been changed to use the SYSTEM\_OBJS variable, per Camm (Apr 6,2012)
 #+end_src
 
 If we build on the MAC we need a BSD patch. GCL seems to do
-#+begin_example
+\begin{verbatim}
    add-defs1 386-macosx
-#+end_example
+\end{verbatim}
 this patch links the cfuns-c and sockio-c files into GCL.
 #+NAME: gcl-2.6.12.h.386-macosx.defs.patch
 #+begin_src common-lisp :noweb yes
@@ -325,7 +325,7 @@ this patch links the cfuns-c and sockio-c files into GCL.
 	  touch ${OBJ}/${SYS}/lib/sockio-c.ini )
 #+end_src
 
-**** read.d patch
+\subsubsection{read.d patch}
 The new read-char-no-hang change no longer returns EOF so we have
 no way to know when the browser is finished talking. This causes 
 AXSERV to hang waiting for more input which never comes. The browser
@@ -379,7 +379,7 @@ hangs waiting for a response.
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.o.read.d.patch )
 #+end_src
 
-**** fortran patch
+\subsubsection{fortran patch}
 Communication over sockets (basically to the NAG fortran library)
 requires us to have XDR enabled.
 #+NAME: gcl-2.5.2.fortran.patch
@@ -390,7 +390,7 @@ requires us to have XDR enabled.
 #+end_src
 This patch is no longer necessary as of GCL-2.6.1 because the 
 C preparser symbol HAVE\_XDR is now the default in GCL.
-**** libspad patch
+\subsubsection{libspad patch}
 The second patch changes the *unixport/makefile* to reference
 the *libspad.a* library when building the raw system image.
 References from *cfuns-c* and *sockio-c* are resolved 
@@ -522,7 +522,7 @@ The for-loop change has been included in the sources.
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.unixport.makefile.patch )
 #+end_src
 
-**** Temporary File msg fix
+\subsubsection{Temporary File msg fix}
 #+NAME: gcl-2.6.12.lsp.gcltop.lsp.patch
 #+begin_src common-lisp :noweb yes
 	@(cd ${GCLVERSION}/lsp ; \
@@ -536,7 +536,7 @@ The for-loop change has been included in the sources.
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.lsp.gcl_top.lsp.patch )
 #+end_src
 
-**** toploop patch
+\subsubsection{toploop patch}
 This patch turns off the banner display every time GCL starts.
 We could use the -batch flag but that would be a pervasive change.
 It isn't critical to the system builds but we will later be 
@@ -661,7 +661,7 @@ We no-op this (per William Schelter's permission)
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.lsp.gcl_mislib.lsp.patch )
 #+end_src
 
-**** object to float patch
+\subsubsection{object to float patch}
 GCL 2.5.2 contains no reference to this function and it was removed.
 Axiom uses this function so we re-implement it here.
 #+NAME: gcl-2.5.2.objecttofloat.patch
@@ -672,7 +672,7 @@ Axiom uses this function so we re-implement it here.
 #+end_src
 This patch is no longer necessary as of GCL-2.6.1 because object\_to\_float
 is now defined by default.
-**** in-package patch
+\subsubsection{in-package patch}
 This changes the common lisp 2.0 defined behavior of in-package
 (throw an error if the package does not exist) so that it mirrors
 the 1.0 defined behavior (create the package if it does not exist).
@@ -686,7 +686,7 @@ should be fixed and this patch removed before shipment.
 #+end_src
 I believe that all instances of in-package have been fixed and 
 that this patch is no longer necessary.
-**** EXIT and MAX\_STACK\_SIZE patchs
+\subsubsection{EXIT and MAX\_STACK\_SIZE patchs}
 Axiom uses EXIT as a function. GCL 2.5.2 decided to make it a 
 synonym to the BYE function. We fix this for Axiom.
 We also patch the MAX\_STACK\_SIZE to be 16Mb.
@@ -711,7 +711,7 @@ As of GCL-2.6.1 EXIT is no longer defined.
 	  echo 18 applying MAX_STACK_SIZE patch ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.o.main.c.patch )
 #+end_src
-**** tail-recursive patch
+\subsubsection{tail-recursive patch}
 Bill Schelter added tail recursion for Axiom. In order to test it
 he left code in the system to print a message when the code was
 executed. We no longer care but it is still in GCL. We patch the
@@ -795,7 +795,7 @@ GCL 2.6.1 renamed the files.
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.cmpnew.gcl_cmpcall.lsp.patch )
 #+end_src
 
-**** collectfn fix
+\subsubsection{collectfn fix}
 GCL-2.6.1 renamed collectfn.lsp to gcl\_collectfn.lsp.
 We rename it back into place because we have later Makefiles
 that depend on it. The alternative is to propagate the name changes thru
@@ -1020,8 +1020,8 @@ so they do not show up during compiles, especially in a running Axiom.
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.cmpnew.gcl_cmpmain.lsp.patch )
 #+end_src
 
-*** The GCL-2.5.2 stanza
-**** Configure and Make GCL
+\subsection{The GCL-2.5.2 stanza}
+\subsubsection{Configure and Make GCL}
 We enable several features of GCL. 
 The --enable-readline uses GNU readline for the prompts. It has been
 removed and replaced with clef which is Axiom's version of readline.
@@ -1130,7 +1130,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.1 stanza
+\subsection{The GCL-2.6.1 stanza}
 GCL 2.6.1 has support for --enable-static for static linking.
 Axiom will eventually support static images.
 
@@ -1181,7 +1181,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.2 stanza
+\subsection{The GCL-2.6.2 stanza}
 GCL 2.6.2 has support for --enable-static for static linking.
 Axiom will eventually support static images.
 
@@ -1232,7 +1232,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** Directory move
+\subsection{Directory move}
 The latest version of GCL no longer uses the version number in the
 directory name. We fix that here.
 #+NAME: gcl-2.6.2a-mvdir
@@ -1241,7 +1241,7 @@ directory name. We fix that here.
 	@mv gcl gcl-2.6.2a
 #+end_src
 
-*** The GCL-2.6.2a stanza
+\subsection{The GCL-2.6.2a stanza}
 
 GCL-2.6.2a has a variable si::*optimize-maximum-pages* which defaults
 to t which eliminates an old problem of spinning the gc for temporary
@@ -1289,7 +1289,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** Directory move
+\subsection{Directory move}
 The latest version of GCL no longer uses the version number in the
 directory name. We fix that here.
 #+NAME: gcl-2.6.3-mvdir
@@ -1297,7 +1297,7 @@ directory name. We fix that here.
 	@echo 27 renaming gcl to ${GCLVERSION}
 	@mv gcl gcl-2.6.3
 #+end_src
-*** The GCL-2.6.3 stanza
+\subsection{The GCL-2.6.3 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.3''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1338,7 +1338,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.5 stanza
+\subsection{The GCL-2.6.5 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.5''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1379,7 +1379,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.5w stanza
+\subsection{The GCL-2.6.5w stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.5w''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1431,7 +1431,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.6 stanza
+\subsection{The GCL-2.6.6 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.6''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1472,7 +1472,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.7pre stanza
+\subsection{The GCL-2.6.7pre stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.7pre''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1511,7 +1511,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.7 stanza
+\subsection{The GCL-2.6.7 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.7''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1551,7 +1551,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.8pre stanza
+\subsection{The GCL-2.6.8pre stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.8pre''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1590,7 +1590,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.8pre2 stanza
+\subsection{The GCL-2.6.8pre2 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.8pre2''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1629,7 +1629,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.8pre3 stanza
+\subsection{The GCL-2.6.8pre3 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.8pre3''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1669,7 +1669,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.8pre4 stanza
+\subsection{The GCL-2.6.8pre4 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.8pre4''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1709,7 +1709,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.8pre7 stanza
+\subsection{The GCL-2.6.8pre7 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.8pre7''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1749,7 +1749,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.9 stanza
+\subsection{The GCL-2.6.9 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.9''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1789,7 +1789,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.10 stanza
+\subsection{The GCL-2.6.10 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.10''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1829,7 +1829,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-*** The GCL-2.6.11 stanza
+\subsection{The GCL-2.6.11 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.11''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1870,7 +1870,7 @@ clean:
 
 #+end_src
 
-*** The GCL-2.6.12 stanza
+\subsection{The GCL-2.6.12 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.12''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1916,7 +1916,7 @@ clean:
 
 #+end_src
 
-*** The GCL-2.6.13pre stanza
+\subsection{The GCL-2.6.13pre stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.6.13pre''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -1962,19 +1962,19 @@ clean:
 
 #+end_src
 
-** Gnu Common Lisp 2.5
+\section{Gnu Common Lisp 2.5}
 GCL 2.5 requires a different Makefile. In particular, GCL 2.5
 has a different method of building the lisp image. And, just to
 keep us on our toes, they've renamed the files we need to patch.
 The new patches are in the zips directory. Patches now are prefixed
 by GCLVERSION. 
-**** socket patch
+\subsubsection{socket patch}
 This patch is to *h/386-linux.defs* to include two 
 global variables, *EXTRAS* and *EXTRA\_LIB*
-#+begin_example
+\begin{verbatim}
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
-#+end_example
+\end{verbatim}
 The *EXTRAS* variable is used to include two files into the
 running image. The *cfuns-c* file contains low-level directory
 manipulation routines. The *sockio-c* file contains low level
@@ -1994,7 +1994,7 @@ but, since no initialization is needed, we simply create empty files.
 	  touch ${OBJ}/${SYS}/lib/cfuns-c.ini ; \
 	  touch ${OBJ}/${SYS}/lib/sockio-c.ini )
 #+end_src 
-**** fortran patch
+\subsubsection{fortran patch}
 Communication over sockets (basically to the NAG fortran library)
 requires us to have XDR enabled.
 #+NAME: gcl-2.5.fortran.patch
@@ -2003,7 +2003,7 @@ requires us to have XDR enabled.
 	  echo 5 applying HAVE_XDR patch to h/linux.h ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.h.linux.h.patch )
 #+end_src
-**** libspad patch
+\subsubsection{libspad patch}
 The second patch changes the *unixport/makefile* to reference
 the *libspad.a* library when building the raw system image.
 References from *cfuns-c* and *sockio-c* are resolved 
@@ -2014,7 +2014,7 @@ from *libspad.a*
 	  echo 6 applying libspad.a patch to unixport/makefile ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.unixport.makefile.patch )
 #+end_src
-**** toploop patch
+\subsubsection{toploop patch}
 This patch turns off the banner display every time GCL starts.
 We could use the -batch flag but that would be a pervasive change.
 It isn't critical to the system builds but we will later be 
@@ -2026,7 +2026,7 @@ printed.
 	  echo 7 applying toploop patch to unixport/init_gcl.lsp ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.unixport.init_gcl.lsp.in.patch )
 #+end_src
-**** xdrfuns bug patch
+\subsubsection{xdrfuns bug patch}
 We enabled XDR only to find out that there is a missing argument
 in the call to FEerror from xdrstdio\_create. We fix this here and
 send a patch to the GCL people. It should be fixed in future releases
@@ -2037,7 +2037,7 @@ and this patch should die.
 	  echo 8 applying XDR patch to o/xdrfuns.c ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.o.xdrfuns.c.patch )
 #+end_src 
-*** The GCL-2.5 stanza
+\subsection{The GCL-2.5 stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-2.5''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -2081,14 +2081,14 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 
 #+end_src
-** Gnu Common Lisp 2.4.1 (The default build)
-**** socket patch
+\section{Gnu Common Lisp 2.4.1 (The default build)}
+\subsubsection{socket patch}
 This patch is to *h/386-linux.defs* to include two 
 global variables, *EXTRAS* and *EXTRA\_LIB*
-#+begin_example
+\begin{verbatim}
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
-#+end_example
+\end{verbatim}
 The *EXTRAS* variable is used to include two files into the
 running image. The *cfuns-c* file contains low-level directory
 manipulation routines. The *sockio-c* file contains low level
@@ -2108,7 +2108,7 @@ but, since no initialization is needed, we simply create empty files.
 	  touch ${OBJ}/${SYS}/lib/cfuns-c.ini ; \
 	  touch ${OBJ}/${SYS}/lib/sockio-c.ini )
 #+end_src 
-**** fortran patch
+\subsubsection{fortran patch}
 Communication over sockets (basically to the NAG fortran library)
 requires us to have XDR enabled.
 #+NAME: gcl-2.4.1.fortran.patch
@@ -2117,7 +2117,7 @@ requires us to have XDR enabled.
 	  echo 18 applying HAVE_XDR patch to h/386-linux.h ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.h.386-linux.h.patch )
 #+end_src 
-**** libspad patch
+\subsubsection{libspad patch}
 The second patch changes the *unixport/makefile* to reference
 the *libspad.a* library when building the raw system image.
 References from *cfuns-c* and *sockio-c* are resolved 
@@ -2128,7 +2128,7 @@ from *libspad.a*
 	  echo 19 applying libspad.a patch to unixport/makefile ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.unixport.makefile.patch )
 #+end_src 
-**** toploop patch
+\subsubsection{toploop patch}
 This patch turns off the banner display every time GCL starts.
 We could use the -batch flag but that would be a pervasive change.
 It isn't critical to the system builds but we will later be 
@@ -2140,8 +2140,8 @@ printed.
 	  echo 20 applying toploop patch to unixport/init_gcl.lsp ; \
 	  ${PATCH} <${SPD}/zips/${GCLVERSION}.unixport.init_gcl.lsp.patch )
 #+end_src 
-** The Makefile
-*** GCL already installed
+\section{The Makefile}
+\subsection{GCL already installed}
 On some systems, notably freebsd, we assume that GCL is already 
 installed and available using the command gcl. In that case
 we need to extract this Makefile instead of the standard one.
@@ -2221,7 +2221,7 @@ clean:
 	@( cd ccl ; ${ENV} ${MAKE} clean )
 #+end_src
 
-*** The GCL-cygwin stanza
+\subsection{The GCL-cygwin stanza}
 This stanza will be written when the GCLVERSION variable is
 ``gcl-cygwin''. It will overwrite the default version. See the 
 top level Makefile.pamphlet.
@@ -2229,20 +2229,20 @@ top level Makefile.pamphlet.
 The compiler::link function call was suggested by Camm as a
 way around patching the lisp system. The function creates a
 new lisp image ld and C objects prior to save-system. 
-#+begin_example
+\begin{verbatim}
 	echo '(compiler::link \
-#+end_example
+\end{verbatim}
 The first argument can be used to compile and load lisp code.
-#+begin_example
+\begin{verbatim}
                (list (compile-file "${BOOKS}/tangle.lisp")) \
-#+end_example
+\end{verbatim}
 The second argument gives the file location for the save-system
-#+begin_example
+\begin{verbatim}
                "${OUT}/lisp" \
-#+end_example
+\end{verbatim}
 The third argument sets up various internal variables, including
 the 
-#+begin_example
+\begin{verbatim}
                (format nil \
                 "(progn \
                   (let ((*load-path* (cons ~S *load-path*)) \
@@ -2254,17 +2254,17 @@ the
                   #-native-reloc (setq compiler::*default-system-p* t))" \
                 si::*system-directory* \
                 (quote (list #+native-reloc".o" ".lsp"))) \
-#+end_example
+\end{verbatim}
 The fourth argument is a list of binaries to link
-#+begin_example
+\begin{verbatim}
                "${OBJ}/${SYS}/lib/cfuns-c.o \
                 ${OBJ}/${SYS}/lib/sockio-c.o \
                 ${OBJ}/${SYS}/lib/libspad.a")' \
-#+end_example
+\end{verbatim}
 and the compiler::link command is piped into the lisp image.
-#+begin_example
+\begin{verbatim}
            | unixport/saved_gcl )
-#+end_example
+\end{verbatim}
 
 #+NAME: gcl-cygwin
 #+begin_src common-lisp :noweb yes

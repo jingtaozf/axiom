@@ -2,7 +2,7 @@
 #+LATEX: \newcommand{\VolumeName}{Volume 6: Axiom Command}
 #+LATEX: \input{bookheader.tex}
 #+LATEX: \setcounter{chapter}{0} % Chapter 1
-* Overview
+\chapter{Overview}
 The axiom system consists of a set of processes managed by the
 superman process.  The superman process, called sman, is normally
 invoked from the axiom shell script in order to start a tree of
@@ -13,19 +13,19 @@ command line options for the =sman= process, sets some shell
 variables, and then invokes =sman=. 
 
 The =sman= process starts the following tree of processes:
-#+begin_example
+\begin{verbatim}
      --xterm---bash---sman-|-AXIOMsys
                            |-clef---spadclient
                            |-hypertex
                            |-session
                            |-sman
                            |-viewman
-#+end_example
+\end{verbatim}
 
-* The axiom Command
+\chapter{The axiom Command}
 The =axiom= command starts everything for Axiom. The options
 for the =axiom= command are:
-#+begin_example
+\begin{verbatim}
 axiom
   [-ht    |-noht]      whether to use HyperDoc
   [-gr    |-nogr]      whether to use Graphics
@@ -42,250 +42,252 @@ axiom
   [-sessionprog fname] use named program for session
   [-clientprog fname]  use named program for spadclient
   [-h]                 show usage
-#+end_example
+\end{verbatim}
 
 In detail, the command options are:
-*** [-ht $\vert$ -noht]
-#+begin_example
+\subsection{[-ht $\vert$ -noht]}
+\begin{verbatim}
   [-ht    |-noht]      whether to use HyperDoc
-#+end_example
+\end{verbatim}
 =Hyperdoc= is the documentation tool for Axiom. The
 =-ht= option, enabled by default, will start this tool.
 See Jenks[cite:@Jenk92] Chapter 3 for further information on the 
 =hyperdoc= subsystem.
 
-*** [-gr $\vert$ -nogr]
-#+begin_example
+\subsection{[-gr $\vert$ -nogr]}
+\begin{verbatim}
   [-gr    |-nogr]      whether to use Graphics
-#+end_example
+\end{verbatim}
 The =graphics= subsystem is enabled using the 
 =-gr= option, enabled by default. Graphics will appear as a
 result of a draw command, such as
-#+begin_example
+\begin{verbatim}
  draw(sin(x),x=0..1)
-#+end_example
+\end{verbatim}
 Note that attempting to use draw commands when the graphics is
 disabled will simply hang the interpreter waiting for a response.
 See Jenks[cite:@Jenk92] Chapter 7 for further information on the 
 =graphics= subsystem.
 
-*** [-clef $\vert$ -noclef]
-#+begin_example
+\subsection{[-clef $\vert$ -noclef]}
+\begin{verbatim}
   [-clef  |-noclef]    whether to use Clef
-#+end_example
+\end{verbatim}
 The =clef= (Command Line Edit Facility) allows for command completion.
 The list of command completion strings is in the last chapter of this
 document. If =clef=, enabled by default, is running then you can type:
-#+begin_example
+\begin{verbatim}
  x:Dena<tab>
-#+end_example
+\end{verbatim}
 and this will automatically be expanded to:
-#+begin_example
+\begin{verbatim}
  x:DenavitHartenbergMatrix
-#+end_example
+\end{verbatim}
 
 The =clef= program also allows command line editing. The commands are
 special keyboard keys.
-- HOME move to beginning of the line
-- END move to the end of the line
-- CTRL-END delete to end of the line
-- TAB command completion (multiple tabs give new choices)
-- UPARROW move back thru commands
-- DOWNARROW move forward thru commands
-- LEFTARROW move left on the line
-- RIGHTARROW move right on the line
-- INSERT toggle insert/overstrike
+\begin{itemize}
+\item HOME move to beginning of the line
+\item END move to the end of the line
+\item CTRL-END delete to end of the line
+\item TAB command completion (multiple tabs give new choices)
+\item UPARROW move back thru commands
+\item DOWNARROW move forward thru commands
+\item LEFTARROW move left on the line
+\item RIGHTARROW move right on the line
+\item INSERT toggle insert/overstrike
+\end{itemize}
 See Jenks[cite:@Jenk92] page 21 for 
 further information on the =clef= command.
 
-*** [-noiw $\vert$ -iw]
-#+begin_example
+\subsection{[-noiw $\vert$ -iw]}
+\begin{verbatim}
   [-noiw  |-iw]        start in interpreter in a separate window
-#+end_example
+\end{verbatim}
 The =iw= option, disabled by default, will start a second
 interpreter in its own window with its own frame. The fact that
 the second interpreter is in its own frame can be seen using the
 =)frame= command. For instance, if you type
-#+begin_example
+\begin{verbatim}
  axiom -iw
-#+end_example
+\end{verbatim}
 there will be two interpreter windows available, one in the current
 window and one in a new window. In the current window if you type:
-#+begin_example
+\begin{verbatim}
  )frame names
-#+end_example
+\end{verbatim}
 you will see:
-#+begin_example
+\begin{verbatim}
    The names of the existing frames are:
             frame0 
             frame1 
             initial 
       The current frame is the first one listed.
-#+end_example
+\end{verbatim}
 
 In the second window, if you type
-#+begin_example
+\begin{verbatim}
  )frame names
-#+end_example
+\end{verbatim}
 you will see:
-#+begin_example
+\begin{verbatim}
    The names of the existing frames are:
             frame1 
             frame0 
             initial 
       The current frame is the first one listed.
-#+end_example
+\end{verbatim}
 Setting
-#+begin_example
+\begin{verbatim}
  x:=3
-#+end_example
+\end{verbatim}
 in the second window will set the variable $x$ in the frame =frame1=.
 Switching to the first window and typing:
-#+begin_example
+\begin{verbatim}
  x
-#+end_example
+\end{verbatim}
 gives:
-#+begin_example
+\begin{verbatim}
 
    (1)  x
                              Type: Variable x
-#+end_example
+\end{verbatim}
 since the first window is in =frame0= and the variable $x$ is
 defined in =frame1=.
 But we can switch frames in the first window using
-#+begin_example
+\begin{verbatim}
  )frame next
-#+end_example
+\end{verbatim}
 and then
-#+begin_example
+\begin{verbatim}
  x
-#+end_example
+\end{verbatim}
 gives:
-#+begin_example
+\begin{verbatim}
 
    (2)  3
                              Type: PositiveInteger
-#+end_example
+\end{verbatim}
 and now the two windows share the same frame space. 
 See Jenks[cite:@Jenk92] page 579 for further 
 information on the =frame= command.
 
-*** [-ihere $\vert$ -noihere]
-#+begin_example
+\subsection{[-ihere $\vert$ -noihere]}
+\begin{verbatim}
   [-ihere |-noihere]   start an interpreter in this window
-#+end_example
+\end{verbatim}
 This option determines whether Axiom will start in the current window.
 Using this option alone is not particularly useful and it is generally
 used in combination with the =-iw= option:
-#+begin_example
+\begin{verbatim}
  axiom -noihere -iw &
-#+end_example
+\end{verbatim}
 
 However, used alone, as in:
-#+begin_example
+\begin{verbatim}
  axiom -noihere &
-#+end_example
+\end{verbatim}
 it will start Axiom and show the Hyperdoc window. Graphics will also
 work from the Hyperdoc pages.
 
-*** [-nox]
-#+begin_example
+\subsection{[-nox]}
+\begin{verbatim}
   [-nox]               don't use X Windows
-#+end_example
+\end{verbatim}
 allows Axiom to start the interpreter without Hyperdoc or the graphics
 subsystem. This is useful for starting Axiom in an emacs buffer.
 
-*** [-go $\vert$ -nogo]
-#+begin_example
+\subsection{[-go $\vert$ -nogo]}
+\begin{verbatim}
   [-go  |-nogo]        whether to start system
-#+end_example
+\end{verbatim}
 uses the =-go= option, enabled by default, controls whether
 the system starts from the command line. If the =-nogo=
 option is chosen the system prints the command line that would
 have been issued. This is useful for finding out what the command
 line options to =sman= will be. For instance:
-#+begin_example
+\begin{verbatim}
  axiom -nogo -iw
-#+end_example
+\end{verbatim}
 does not start Axiom but types out:
-#+begin_example
+\begin{verbatim}
 Would now start the processes.
 exec ~/mnt/linux/bin/sman -iw -ws ~/mnt/linux/bin/AXIOMsys
-#+end_example
+\end{verbatim}
 
-*** [-ws wsname]
-#+begin_example
+\subsection{[-ws wsname]}
+\begin{verbatim}
   [-ws wsname]         use named workspace
-#+end_example
+\end{verbatim}
 In the =-nogo= command above you can see that the default
 workspace name is 
-#+begin_example
+\begin{verbatim}
 -ws ~/mnt/linux/bin/AXIOMsys
-#+end_example
+\end{verbatim}
 This option allows you to change that. This is useful for
 debugging new system builds. During build a debugging version
 of Axiom is created in the =obj/linux/bin= directory. The
 =debugsys= image uses interpreted lisp code rather than
 compiled code. This makes it possible to do deep debugging. To
 use this workspace you would incant:
-#+begin_example
+\begin{verbatim}
  cd youraxiombuild
  export AXIOM=`pwd`/mnt/linux
  export PATH=$AXIOM/bin:$PATH
  axiom -ws obj/linux/bin/debugsys
-#+end_example
+\end{verbatim}
 
 
-*** [-list]
-#+begin_example
+\subsection{[-list]}
+\begin{verbatim}
   [-list]              list workspaces only
-#+end_example
+\end{verbatim}
 shows you the executable workspaces. Generally in a built system
 there is only one, called\\
 =\$AXIOM/bin/AXIOMsys=.
 
-*** [-grprog fname]
-#+begin_example
+\subsection{[-grprog fname]}
+\begin{verbatim}
   [-grprog fname]      use named program for Graphics
-#+end_example
+\end{verbatim}
 allows you to specify which program to use for the graphics.
 By default this is\\
 =\$AXIOM/lib/viewman=.
 
-*** [-htprog fname]
-#+begin_example
+\subsection{[-htprog fname]}
+\begin{verbatim}
   [-htprog fname]      use named program for Hyperdoc
-#+end_example
+\end{verbatim}
 allows you tp specify which program to use for Hyperdoc. By
 default it is\\
 =\$AXIOM/bin/hypertex -s=.
 
-*** [-clefprog fname]
-#+begin_example
+\subsection{[-clefprog fname]}
+\begin{verbatim}
   [-clefprog fname]    use named program for Clef
-#+end_example
+\end{verbatim}
 allows you to specify which program to use for clef. By default
 it is\\ 
 =\$AXIOM/bin/clef -f \$AXIOM/lib/command.list -e=.
 
-*** [-sessionprog fname]
-#+begin_example
+\subsection{[-sessionprog fname]}
+\begin{verbatim}
   [-sessionprog fname] use named program for session
-#+end_example
+\end{verbatim}
 allows you to specify the session manager program. By default it is\\
 =\$AXIOM/lib/session=.
 
-*** [-clientprog fname]
-#+begin_example
+\subsection{[-clientprog fname]}
+\begin{verbatim}
   [-clientprog fname]  use named program for spadclient
-#+end_example
+\end{verbatim}
 allows you to specify the spadclient program. By default it is\\
 =\$AXIOM/lib/spadclient=.
 
-*** [-h]
-#+begin_example
+\subsection{[-h]}
+\begin{verbatim}
   [-h]                 show usage
-#+end_example
+\end{verbatim}
 
 #+NAME: axiomcmd
 #+begin_src common-lisp :noweb yes
@@ -600,7 +602,7 @@ exec $SPAD/bin/sman $otheropts -ws $serverws
 #+end_src
 
 \chapter{The =sman= program}
-** include files
+\section{include files}
 #+NAME: include/sockio-c.h1
 #+begin_src common-lisp :noweb yes
 /* from bookvol6 chunk include/sockio-c.h1 */
@@ -670,7 +672,7 @@ extern void flush_stdout(void );
 extern void print_line(char * );
 #+end_src
 
-*** include/sman.h
+\subsection{include/sman.h}
 The spad\_proc structure holds information about the process id
 of a child process, what to do when it dies, and the shell command
 line necessary to restart the process. There is a linked list of
@@ -698,7 +700,7 @@ typedef struct spad_proc {
 
 #+end_src
 
-*** include/com.h
+\subsection{include/com.h}
 #+NAME: include/com.h
 #+begin_src c :noweb yes
 /* from bookvol6 chunk include/com.h */
@@ -794,7 +796,7 @@ extern fd_set server_mask;
 #endif
 #+end_src
 
-*** include/bsdsignal.h
+\subsection{include/bsdsignal.h}
 #+NAME: include/bsdsignal.h
 #+begin_src c :noweb yes
 /* from bookvol6 chunk include/bsdsignal.h */
@@ -809,14 +811,14 @@ typedef void (* SignalHandlerFunc)(int);
 #endif	    /* _BSDSIGNAL */
 #+end_src
 
-*** include/bsdsignal.h1
+\subsection{include/bsdsignal.h1}
 #+NAME: include/bsdsignal.h1
 #+begin_src common-lisp :noweb yes
 /* from bookvol6 chunk include/bsdsignal.h1 */
 extern SignalHandlerFunc bsdSignal(int  , SignalHandlerFunc  , int );
 #+end_src
 
-*** include/openpty.h1
+\subsection{include/openpty.h1}
 #+NAME: include/openpty.h1
 #+begin_src common-lisp :noweb yes
 /* from bookvol6 chunk include/openpty.h1 */
@@ -824,7 +826,7 @@ extern void makeNextPtyNames(char *  , char * );
 extern int ptyopen(int *  , int *  , char *  , char * );
 #+end_src
 
-*** include/sman.h1
+\subsection{include/sman.h1}
 #+NAME: include/sman.h1
 #+begin_src common-lisp :noweb yes
 /* from bookvol6 chunk include/sman.h1 */
@@ -865,7 +867,7 @@ static void monitor_children(void);
 #endif
 #+end_src
 
-*** include/session.h1
+\subsection{include/session.h1}
 #+NAME: include/session.h1
 #+begin_src common-lisp :noweb yes
 /* from bookvol6 chunk include/session.h1 */
@@ -895,8 +897,8 @@ static void inter_handler(int sig);
 #endif
 #+end_src
 
-** sman.c
-*** includes
+\section{sman.c}
+\subsection{includes}
 #+NAME: sman.includes
 #+begin_src common-lisp :noweb yes
 #include <stdlib.h>
@@ -924,7 +926,7 @@ static void inter_handler(int sig);
 <<include/sman.h1>>
 
 #+end_src
-*** variables
+\subsection{variables}
 #+NAME: sman.variables
 #+begin_src common-lisp :noweb yes
 char *ws_path;                  /* location of the AXIOM executable */
@@ -991,7 +993,7 @@ struct termios childbuf;         /* terminal structure for user i/o */
 int death_signal = 0;
 
 #+end_src
-*** process\_arguments
+\subsection{process\_arguments}
 #+NAME: sman.processarguments
 #+begin_src common-lisp :noweb yes
 static void
@@ -1114,7 +1116,7 @@ process_arguments(int argc,char ** argv)
 }
 
 #+end_src
-*** should\_I\_clef
+\subsection{should\_I\_clef}
 #+NAME: sman.shouldIclef
 #+begin_src common-lisp :noweb yes
 static int 
@@ -1124,7 +1126,7 @@ should_I_clef(void)
 }
 
 #+end_src
-*** in\_X
+\subsection{in\_X}
 #+NAME: sman.inX
 #+begin_src common-lisp :noweb yes
 static int 
@@ -1135,7 +1137,7 @@ in_X(void)
 }
 
 #+end_src
-*** set\_up\_defaults
+\subsection{set\_up\_defaults}
 These are the default values for sman. A '1' value means that
 sman will try to start the given process, a '0' value means not
 starting the process.
@@ -1157,7 +1159,7 @@ set_up_defaults(void)
 }
 
 #+end_src
-*** process\_options
+\subsection{process\_options}
 #+NAME: sman.processoptions
 #+begin_src common-lisp :noweb yes
 static void
@@ -1170,7 +1172,7 @@ process_options(int argc, char **argv)
 }
 
 #+end_src
-*** death\_handler
+\subsection{death\_handler}
 #+NAME: sman.deathhandler
 #+begin_src common-lisp :noweb yes
 static void
@@ -1181,7 +1183,7 @@ death_handler(int sig)
 
 #+end_src
 
-*** sman\_catch\_signals
+\subsection{sman\_catch\_signals}
 #+NAME: sman.smancatchsignals
 #+begin_src common-lisp :noweb yes
 static void
@@ -1203,7 +1205,7 @@ sman_catch_signals(void)
 }
 
 #+end_src
-*** fix\_env
+\subsection{fix\_env}
 insert SPADSERVER and SPADNUM variables into the environemnt
 #+NAME: sman.fixenv
 #+begin_src common-lisp :noweb yes
@@ -1223,7 +1225,7 @@ fix_env(char **envp, int spadnum)
 }
 
 #+end_src
-*** init\_term\_io
+\subsection{init\_term\_io}
 #+NAME: sman.inittermio
 #+begin_src common-lisp :noweb yes
 static void
@@ -1247,7 +1249,7 @@ init_term_io(void)
 }
 
 #+end_src
-*** strPrefix
+\subsection{strPrefix}
 #+NAME: sman.strPrefix
 #+begin_src common-lisp :noweb yes
 static char *
@@ -1262,7 +1264,7 @@ strPrefix(char *prefix,char * s)
 }
 
 #+end_src
-*** check\_spad\_proc
+\subsection{check\_spad\_proc}
 #+NAME: sman.checkspadproc
 #+begin_src common-lisp :noweb yes
 static void
@@ -1282,7 +1284,7 @@ check_spad_proc(char *file, char *prefix)
 }
 
 #+end_src
-*** clean\_up\_old\_sockets
+\subsection{clean\_up\_old\_sockets}
 #+NAME: sman.cleanupoldsockets
 #+begin_src common-lisp :noweb yes
 static void
@@ -1314,7 +1316,7 @@ clean_up_old_sockets(void)
 }
 
 #+end_src
-*** fork\_you
+\subsection{fork\_you}
 #+NAME: sman.forkyou
 #+begin_src common-lisp :noweb yes
 static SpadProcess *
@@ -1335,7 +1337,7 @@ fork_you(int death_action)
 }
 
 #+end_src
-*** exec\_command\_env
+\subsection{exec\_command\_env}
 Note that the next-to-last argument of =execle= must be an
 explicit NULL pointer. The previous naked 0 value was not correct.
 #+NAME: sman.execcommandenv
@@ -1349,7 +1351,7 @@ exec_command_env(char *command,char ** env)
 }
 
 #+end_src
-*** spawn\_of\_hell
+\subsection{spawn\_of\_hell}
 #+NAME: sman.spawnofhell
 #+begin_src common-lisp :noweb yes
 static SpadProcess *
@@ -1365,7 +1367,7 @@ spawn_of_hell(char *command, int death_action)
 }
 
 #+end_src
-*** start\_the\_spadclient
+\subsection{start\_the\_spadclient}
 run a AXIOM client in the main process
 #+NAME: sman.startthespadclient
 #+begin_src common-lisp :noweb yes
@@ -1399,7 +1401,7 @@ start_the_spadclient(void)
 }
 
 #+end_src
-*** start\_the\_local\_spadclient
+\subsection{start\_the\_local\_spadclient}
 #+NAME: sman.startthelocalspadclient
 #+begin_src common-lisp :noweb yes
 static void
@@ -1417,7 +1419,7 @@ start_the_local_spadclient(void)
 
 #+end_src
 
-*** start\_the\_session\_manager
+\subsection{start\_the\_session\_manager}
 #+NAME: sman.startthesessionmanager
 #+begin_src common-lisp :noweb yes
 static void
@@ -1427,7 +1429,7 @@ start_the_session_manager(void)
 }
 
 #+end_src
-*** start\_the\_hypertex
+\subsection{start\_the\_hypertex}
 #+NAME: sman.startthehypertex
 #+begin_src common-lisp :noweb yes
 static void
@@ -1452,7 +1454,7 @@ start_the_hypertex(void)
 }
 
 #+end_src
-*** start\_the\_graphics
+\subsection{start\_the\_graphics}
 #+NAME: sman.startthegraphics
 #+begin_src common-lisp :noweb yes
 static void
@@ -1462,7 +1464,7 @@ start_the_graphics(void)
 }
 
 #+end_src
-*** fork\_Axiom
+\subsection{fork\_Axiom}
 #+NAME: sman.forkAxiom
 #+begin_src common-lisp :noweb yes
 /* Start the AXIOM session in a separate process, */
@@ -1538,7 +1540,7 @@ fork_Axiom(void)
 }
 
 #+end_src
-*** start\_the\_Axiom
+\subsection{start\_the\_Axiom}
 #+NAME: sman.starttheAxiom
 #+begin_src common-lisp :noweb yes
 static void
@@ -1560,7 +1562,7 @@ start_the_Axiom(char **envp)
 }
 
 #+end_src
-*** clean\_up\_sockets
+\subsection{clean\_up\_sockets}
 In order to be able to restart hyperdoc from the axiom command prompt
 we need to remove the socket for this server.
 #+NAME: sman.cleanupsockets
@@ -1587,7 +1589,7 @@ clean_up_sockets(void)
 }
 
 #+end_src
-*** read\_from\_spad\_io
+\subsection{read\_from\_spad\_io}
 #+NAME: sman.readfromspadio
 #+begin_src common-lisp :noweb yes
 static void
@@ -1624,7 +1626,7 @@ read_from_spad_io(int ptcNum)
 }
 
 #+end_src
-*** read\_from\_manager
+\subsection{read\_from\_manager}
 #+NAME: sman.readfrommanager
 #+begin_src common-lisp :noweb yes
 static void
@@ -1642,7 +1644,7 @@ read_from_manager(int ptcNum)
 }
 
 #+end_src
-*** manage\_spad\_io
+\subsection{manage\_spad\_io}
 #+NAME: sman.managespadio
 #+begin_src common-lisp :noweb yes
 static void
@@ -1686,7 +1688,7 @@ manage_spad_io(int ptcNum)
 }
 
 #+end_src
-*** init\_spad\_process\_list
+\subsection{init\_spad\_process\_list}
 #+NAME: sman.initspadprocesslist
 #+begin_src common-lisp :noweb yes
 static void
@@ -1696,7 +1698,7 @@ init_spad_process_list(void)
 }
 
 #+end_src
-*** print\_spad\_process\_list
+\subsection{print\_spad\_process\_list}
 #+NAME: sman.printspadprocesslist
 #+begin_src common-lisp :noweb yes
 #if 0
@@ -1711,7 +1713,7 @@ print_spad_process_list()
 #endif
 
 #+end_src
-*** find\_child
+\subsection{find\_child}
 #+NAME: sman.findchild
 #+begin_src common-lisp :noweb yes
 static SpadProcess *
@@ -1724,7 +1726,7 @@ find_child(int proc_id)
 }
 
 #+end_src
-*** kill\_all\_children
+\subsection{kill\_all\_children}
 #+NAME: sman.killallchildren
 #+begin_src common-lisp :noweb yes
 static void
@@ -1743,7 +1745,7 @@ kill_all_children(void)
 }
 
 #+end_src
-*** clean\_up\_terminal
+\subsection{clean\_up\_terminal}
 #+NAME: sman.cleanupterminal
 #+begin_src common-lisp :noweb yes
 static void
@@ -1753,7 +1755,7 @@ clean_up_terminal(void)
 }
 
 #+end_src
-*** monitor\_children
+\subsection{monitor\_children}
 #+NAME: sman.monitorchildren
 #+begin_src common-lisp :noweb yes
 static void
@@ -1807,7 +1809,7 @@ monitor_children(void)
 }
 
 #+end_src
-*** main sman
+\subsection{main sman}
 The main procedure should return an int. We change the return value
 here and in src/include/sman.h1.
 #+NAME: sman.result
@@ -1849,7 +1851,7 @@ main(int argc, char *argv[],char *envp[])
 }
 
 #+end_src
-*** sman.c
+\subsection{sman.c}
 #+NAME: sman.c
 #+begin_src c :noweb yes
 #define _SMAN_C
@@ -1891,8 +1893,8 @@ main(int argc, char *argv[],char *envp[])
 <<sman.main>>
 
 #+end_src
-* Support Routines
-** Command Completion
+\chapter{Support Routines}
+\section{Command Completion}
 Hyperdoc has the ability to do command completion. The known commands
 are listed, one entry per line, in a file called command.list. 
 \chapter{The =viewman= program}
@@ -1916,8 +1918,8 @@ char *ClefProgram = "$AXIOM/bin/clef -f $AXIOM/lib/command.list -e ";
 #+begin_src common-lisp :noweb yes
 char *SessionManagerProgram = "$AXIOM/lib/session";
 #+end_src
-** session
-*** includes
+\section{session}
+\subsection{includes}
 #+NAME: ses.includes
 #+begin_src common-lisp :noweb yes
 #include <stdlib.h>
@@ -1935,7 +1937,7 @@ char *SessionManagerProgram = "$AXIOM/lib/session";
 <<include/session.h1>>
 
 #+end_src
-*** variables
+\subsection{variables}
 #+NAME: ses.variables
 #+begin_src common-lisp :noweb yes
 #define BufSize		4096	/* size of communication buffer */
@@ -1958,7 +1960,7 @@ int reading_output = 0;
 fd_set session_socket_mask;
 
 #+end_src
-*** usr1\_handler
+\subsection{usr1\_handler}
 #+NAME: ses.usr1handler
 #+begin_src common-lisp :noweb yes
 static void 
@@ -1968,7 +1970,7 @@ usr1_handler(int sig)
 }
 
 #+end_src
-*** usr2\_handler
+\subsection{usr2\_handler}
 SIGUSR2 is generated by spadclients.
 We interpret it as an interrupt for the Lisp.
 #+NAME: ses.usr2handler
@@ -1981,7 +1983,7 @@ usr2_handler(int sig)
 }
 
 #+end_src
-*** term\_handler
+\subsection{term\_handler}
 #+NAME: ses.termhandler
 #+begin_src common-lisp :noweb yes
 static void 
@@ -1991,7 +1993,7 @@ term_handler(int sig)
 }
 
 #+end_src
-*** pr
+\subsection{pr}
 #+NAME: ses.pr
 #+begin_src common-lisp :noweb yes
 static void
@@ -2008,7 +2010,7 @@ pr()
 }
 
 #+end_src
-*** close\_client
+\subsection{close\_client}
 #+NAME: ses.closeclient
 #+begin_src common-lisp :noweb yes
 static void
@@ -2084,7 +2086,7 @@ pr();
 }
 
 #+end_src
-*** read\_SpadServer\_command
+\subsection{read\_SpadServer\_command}
 #+NAME: ses.readSpadServercommand
 #+begin_src common-lisp :noweb yes
 static void 
@@ -2115,7 +2117,7 @@ read_SpadServer_command(void)
 }
 
 #+end_src
-*** test\_sock\_for\_process
+\subsection{test\_sock\_for\_process}
 #+NAME: ses.testsockforprocess
 #+begin_src common-lisp :noweb yes
 static int
@@ -2126,7 +2128,7 @@ test_sock_for_process(Sock *sock)
 }
 
 #+end_src
-*** read\_menu\_client\_command
+\subsection{read\_menu\_client\_command}
 #+NAME: ses.readmenuclientcommand
 #+begin_src common-lisp :noweb yes
 static void
@@ -2182,7 +2184,7 @@ fprintf(stderr,"menu:QuerySpad\n");
 }
 
 #+end_src
-*** read\_from\_spad\_io
+\subsection{read\_from\_spad\_io}
 #+NAME: ses.readfromspadio
 #+begin_src common-lisp :noweb yes
 static void
@@ -2198,7 +2200,7 @@ read_from_spad_io(void)
 }
 
 #+end_src
-*** kill\_spad
+\subsection{kill\_spad}
 #+NAME: ses.killspad
 #+begin_src common-lisp :noweb yes
 static void
@@ -2219,7 +2221,7 @@ kill_spad(void)
 }
 
 #+end_src
-*** accept\_session\_connection
+\subsection{accept\_session\_connection}
 #+NAME: ses.acceptsessionconnection
 #+begin_src common-lisp :noweb yes
 static int
@@ -2298,7 +2300,7 @@ pr();
 }
 
 #+end_src
-*** read\_from\_session
+\subsection{read\_from\_session}
 #+NAME: ses.readfromsession
 #+begin_src common-lisp :noweb yes
 static void
@@ -2328,7 +2330,7 @@ read_from_session(Sock *sock)
 }
 
 #+end_src
-*** manage\_sessions
+\subsection{manage\_sessions}
 #+NAME: ses.managesessions
 #+begin_src common-lisp :noweb yes
 static void
@@ -2398,7 +2400,7 @@ fprintf(stderr,"rd=%u]\n",*((long *)rd.fds_bits));
 }
 
 #+end_src
-*** main sessionmanager
+\subsection{main sessionmanager}
 #+NAME: ses.main
 #+begin_src common-lisp :noweb yes
 int
@@ -2465,7 +2467,7 @@ main(void)
 }
 
 #+end_src
-*** session
+\subsection{session}
 #+NAME: session.c
 #+begin_src c :noweb yes
 /* #define DEBUG */
@@ -2494,7 +2496,7 @@ main(void)
 #+begin_src common-lisp :noweb yes
 char *SpadClientProgram = "$AXIOM/lib/spadclient";
 #+end_src
-** spadclient
+\section{spadclient}
 #+NAME: spadclient.c
 #+begin_src c :noweb yes
 #define _SPADCLIENT_C
@@ -2528,7 +2530,7 @@ main(void)
 }
 
 #+end_src
-* The Command Completion List
+\chapter{The Command Completion List}
 #+NAME: command.list
 #+begin_src common-lisp :noweb yes
 -
@@ -6655,9 +6657,9 @@ WildFunctionFieldIntegralBasis
 XExponentialPackage
 ZeroDimensionalSolvePackage
 #+end_src
-* Research Topics
+\chapter{Research Topics}
 These are included here as ideas that may get expanded in more detail later.
-** Proofs
+\section{Proofs}
 The goal would be to prove that Axiom's algorithms are correct.
 
 For instance, show that the GCD algorithm is correct. This involves several
@@ -6674,14 +6676,14 @@ semantics of the common lisp implementation. This involves using something
 like Function Extraction (FX) [LMW79] to extract the machine-level behavior of
 the program and comparing it to the specification.
 
-** Indefinites
+\section{Indefinites}
 There are times when it would be convenient to write algorithms in terms
 of indefinite values. For instance, we would like to be able to declare
 that X and Y are matrices and compute X*Y symbolically. We would like to
 be able to do the same with arbitrary integers, I and J. In general, for
 a given domain we would like to create domain elements that are not fully
 specified but have the computation proceed with these ``indefinite'' values.
-** Provisos
+\section{Provisos}
 We would like to create ``provisos'' on statements such as:
 \[\frac{1}{x} {\rm\ provided\ } x \ne 0\]
 
@@ -6720,7 +6722,7 @@ real line in general but could, for instance, range over the complex plane.
 
 Note that the provisos need not be an interval. They could be anything
 such as a polynomial or a property like ``$f(x)$ is entire''.
-* Makefile
+\chapter{Makefile}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 

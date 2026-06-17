@@ -4,14 +4,16 @@
 #+LATEX: \setcounter{chapter}{0} % Chapter 1
 \begin{quote}
 Confronting every new programmer learning a new language are
-- The Cave of Artifacts
-- The Forest of Tooling
-- The Mountain of Language
-- The Cloud Castle of Mindset
+\begin{itemize}
+\item The Cave of Artifacts
+\item The Forest of Tooling
+\item The Mountain of Language
+\item The Cloud Castle of Mindset
+\end{itemize}
 -- Daniel Higginbotham in Clojure for the Brave and True
 \end{quote}
 
-** MODLISP by James Davenport
+\section{MODLISP by James Davenport}
 This is based on a paper by Davenport and Jenks [cite:@Dave80a].
 
 It provides historical details of the original SCRATCHPAD II design.
@@ -36,7 +38,7 @@ parameterised data types and possesses a unified semantics covering
 interpreted and compiled code, which can call one another at will. In
 short, it is LISP-like.
 
-*** Introduction
+\subsection{Introduction}
 
 MODLISP is a system developed from LISP with the primary aim of
 supporting research in computer algebra. It has been realised for some
@@ -52,7 +54,7 @@ However, MODLISP is more than just an implementation vehicle. It
 is an interesting language in its own right, with powerful features
 for the manipulation of abstract and parameterised data types.
 
-*** Interpretive Structure
+\subsection{Interpretive Structure}
 
 The evaluator is the key to any LISP system, and so it is to MODLISP. 
 The quintessential difference between MODLISP and LISP 1.5 can be
@@ -118,18 +120,18 @@ A) runs down the list of arguments, evaluating them in the mode given
 by the corresponding entry of the map. An example of a case where this
 complexity is needed is given by the (admittedly artificial, but
 realistic examples are more complex) construct:
-#+begin_example
+\begin{verbatim}
    (TIMES (ZERO) (RATIONAL 1 2))
-#+end_example
+\end{verbatim}
 where RATIONAL is a function which takes two Integer arguments and
 returns a Rational result. ZERO is a function which returns the zero
 element of whatever type is required (and, of course, the Integer zero
 may well be different from the Rational zero or the Matrix zero). 
 TIMES might have a (simplified) modemap-list such as:
-#+begin_example
+\begin{verbatim}
    ( ((Integer Integer Integer) IntegerTimes)
      ((Rational Rational Rational) RationalTimes) )
-#+end_example
+\end{verbatim}
 Then (assuming for the sake of simplicity that there is no particular
 mode for the result) the evaluator would first try to apply the first
 modemap (which states that TIMES can yield an Integer result from two
@@ -159,7 +161,7 @@ obvious that a modemap which lists simple domains and the associated
 functions is insufficient for our purposes -- and that is why we need
 the concept of a /mode/.
 
-*** What is a MODE?
+\subsection{What is a MODE?}
 
 In order to discuss MODLISP, we need to define what is meant by the
 term 'mode'. The terminology in this area is sufficiently confused,
@@ -236,29 +238,29 @@ entry inthe modemap for a particular operator, for all the various
 parameterisations of one type, e.g. one entry for Vector, and not one
 for Vector(3,Rational), another for Vector(2,Complex) etc. This is
 made possible by the use of pattern-matching variables (denoted by
-,*1, *2, ...) in modemaps. For example, the map for 'scalar product of
+*1, *2, ...) in modemaps. For example, the map for 'scalar product of
 vectors' might look like\footnote{The internal representation is
 actually somewhat different, since we distinguish between parameters
 which are types, and those which are expressions (e.g. between
 ``Rational'' and ``3''), and there is also space to record whether or
 not that part of the map is obligatory or optional (see below under
 ``Partial Declarations'').}
-#+begin_example
+\begin{verbatim}
    (*2 (Vector *1 *2) (Vector *1 *2))
-#+end_example
+\end{verbatim}
 which could be applied with *1=3 and *2=Rational, or with *1=2 and
-,*2=Complex. If pattern matching alone is unable to express the precise
+*2=Complex. If pattern matching alone is unable to express the precise
 nature of an operation, then the conditional-part of the modemap
 (mentioned in the prior footnote) can be used to add extra
 restrictions to the applicability of a particular function
 definitions. For example we could have a map of (*2 *3 *3) and a
 conditional expression of the form
-#+begin_example
+\begin{verbatim}
    (EQUAL *3 '(VECTOR *1 *2))
-#+end_example
+\end{verbatim}
 which would have the same overall effects as the previous map.
 
-*** Compilation
+\subsection{Compilation}
 
 While such a system may appear laudable, it will not make progress in
 computer algebra unless efficient compilation is available. Many of
@@ -285,10 +287,11 @@ MODLISP [cite:@Jenk79] is based on such a concept, but, as it is
 independent of the ideas considered in this paper, we shall not
 discuss it further.} As an example of this, let us consider the
 compilation of (PLUS X Y) in three cases:
-1. X is 2 of mode Integer, Y is 3 of mode Integer. Then the modemap
+\begin{enumerate}
+\item X is 2 of mode Integer, Y is 3 of mode Integer. Then the modemap
 for PLUS tells us to apply the function IntegerPlus, and the evaluator
 does so, returning the answer 5.
-2. X and Y are known to be of mode Integer, but their values are
+\item X and Y are known to be of mode Integer, but their values are
 not known. For example, they might be the formal parameters of a
 function. In this case, we can still select a function from the
 modemap for PLUS, since we do know the modes of X and Y. We cannot
@@ -296,9 +299,9 @@ apply the function IntegerPlus that is produced, but we can compile
 code to produce it, so the compiled code\footnote{The current MODLISP
 implementation compiles into LISP370[cite:@IBMx78], which is compiled
 into machine code by the LISP370 compiler.} is (IntegerPlus X Y).
-3. Nothing is known about X and Y. In this case, we have no idea
+\item Nothing is known about X and Y. In this case, we have no idea
 how to apply the modemap for PLUS, and we must compile a call to eval.
-
+\end{enumerate}
 
 These additions to the evaluator, to allow it to function as a
 compiler as well, while requiring significant changes to the treatment
@@ -314,7 +317,7 @@ be converted from Integer to Rational for the multiplication to be
 performed. This conversion would automatically be done at compile time
 rather than run time.
 
-*** Compilation for Arbitrary Domains
+\subsection{Compilation for Arbitrary Domains}
 
 A significant problem is how to compile code (not just calls to the
 evaluator) for parameterised data types, so that, for example, the
@@ -396,12 +399,12 @@ isomorphic.} with operators
 \end{array}\]
 Here $C_S$ is the carrier indexed by S and $C_i$ is the carrier
 indexed by I. These operations must satify certain axioms, such as
-#+begin_example
+\begin{verbatim}
              Top(Push(x,s)) = x;
              Pop(Push(x,s)) = s;
              Empty(Create()) = True;
              Empty(Push(x,s)) = False;
-#+end_example
+\end{verbatim}
 
 We can also abstractly define other structures, corresponding not to
 one concrete implementation (such as Stack), but to whole
@@ -409,19 +412,19 @@ families. One example is Collection, which consists of two carriers I
 and S (or, more precisely, each element of the category Collection
 consists of two carriers indexed by I and S) with the following
 operations: 
-#+begin_example
+\begin{verbatim}
              New:    () -> S;
              Add:    (I,S) -> S;
              Empty:  (S) -> Boolean;
              Member: (I,S) -> Boolean
-#+end_example
+\end{verbatim}
 and the following axioms:
-#+begin_example
+\begin{verbatim}
              Empty(New())       = True;
              Empty(Add(x,s))    = False;
              Member(x,New())    = False;
              Member(x,Add(y,s)) = if x=y then True else Member(x,s)
-#+end_example
+\end{verbatim}
 This represents any collection to which we can add things, and can
 test whether or not an item is in the collection. The concrete
 representation of this abstract category includes lists, lists without
@@ -460,9 +463,9 @@ etc. are needed in computer algebra) defines the layout of a vector
 which is to represent the operations defined on any domain lying in
 that category. The modemaps for these operations are updated to
 include appropriate entries, for example PLUS has an entry of
-#+begin_example
+\begin{verbatim}
    ((*1 *1 *1) ( (OF *1 Monoid) (Elt *1 5)))
-#+end_example
+\end{verbatim}
 meaning that PLUS is a function valid in all Monoids (the clause
 starting OF is the conditional part of the modemap) and that its
 definition is to be found as element 5 of the vector representing the
@@ -473,7 +476,7 @@ parameterised types (i.e. not knowing at compile time what the types
 of the operands were) is the cost of the element extraction --
 typically two machine instructions.
 
-*** Partial Declaration
+\subsection{Partial Declaration}
 
 We have seen in the previous section that, if we can declare, for
 example, that X and Y belong to some unspecified domain G which is a
@@ -495,7 +498,7 @@ irrelevant since all the necessary information (functions to
 manipulate them, etc.) will be contained in the vector implementing
 the particular polynomial domain.
 
-*** Status of the Project
+\subsection{Status of the Project}
 
 The MODLISP system is currently implemented above LISP/370[cite:@IBMx78],
 and is being used to develop an experimental computer algebra system
@@ -505,7 +508,7 @@ which takes a ring, and yields another one (i.e. a vector of
 operations which can be accessed by a MODLISP program compiled knowing
 that its arguments came from a ring).
 
-*** Acknowledgments
+\subsection{Acknowledgments}
 
 We are grateful to J.W. Thatcher and E.G. Wagner for many useful
 discussions about abstract parameterised data types, and to
@@ -514,7 +517,7 @@ on MODLISP. Earlier drafts of this paper were read by F.W. Blair,
 R.W. Ryniker II and J.W. Thatcher, and we are grateful to them for
 many helpful comments and criticisms.
 
-*** Appendix A: Description of MODLISP Evaluator
+\subsection{Appendix A: Description of MODLISP Evaluator}
 
 This appendix first gives a formal description of a simplified MODLISP
 evaluator, one which does not provide for partial compilation or
@@ -539,7 +542,7 @@ but its value is a list of the successive values of X (thus, (COLLECT
 REPEAT do not generate PROGs, so that (RETURN X) always causes an exit
 from the function containing it with value X.
 
-#+begin_example
+\begin{verbatim}
 (EVAL (LAMBDA ((: T <X M E>)) (COND
   ((ATOM X) (PROGN
     (LET TP (COND
@@ -558,20 +561,20 @@ from the function containing it with value X.
   ("T (EVAL <(S:EXPR (EVAL <OP "SEXPR E>))
              M
              E>)) )))
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
 (EVSYMBOL (LAMBDA (S E) (COND
   ((LET V (GET S "VALUE E)) V)
   ((GET S "MODE E) NIL)
   ("T <S "SYMBOL E>) )))
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
 (EVCONVERT (LAMBDA (T M) (COERCE T M)))
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
 (EVFORM (LAMBDA ((: T <(OP . ARGL) TM E>)
                 (: MAP (SIG . CEXPR))) (PROGN
   (LET MAP (SUBLIS (OR (MATCH TM (CAR SIG))
@@ -585,9 +588,9 @@ from the function containing it with value X.
              (S:EXPR (EVAL <(CAR X) "Boolean E>)))
           (RETURN <(LISPAPPLY (CADR X) L) MD E>))))
   (RETURN NIL) )))
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
 (EVLAPPLY (LAMBDA (VL B ARGL M E) (PROGN
   (LET XE (EXTEND E))
   (REPEAT ((IN A ARGL) (IN X VL))
@@ -595,9 +598,9 @@ from the function containing it with value X.
              (CONS "MODE (CDR X))
              (CONS "VALUE (EVAL <A (CDR X) E>))))))
   (EVAL <B M XE>) )))
-#+end_example
+\end{verbatim}
 
-*** Explanation
+\subsection{Explanation}
 
 EVAL takes a triple T consisting of an expression X, a ``target'' mode
 M, and an environment E, and returns either a triple or else NIL
@@ -712,7 +715,7 @@ FN is called.
 (COMPILEDP X) test if X represents a piece of compiled code, rather
 than a value.
 
-*** On Extensions for Partial Compilation
+\subsection{On Extensions for Partial Compilation}
 
 In order to cope with partial compilation, several modifications to
 the evaluator must be made. The first, and easiest, is that the fourth
@@ -735,14 +738,14 @@ values are known, then we can proceed by calling LISPEVAL, just as in
 the case of the basic evaluator without the additions for partial
 compilation.
 
-*** On Extensions for Partial Declarations
+\subsection{On Extensions for Partial Declarations}
 
 In the general case where partial declarations are allowed [cite:@Cohe80],
 the definition of EVCONVERT must be replaced by:
-#+begin_example
+\begin{verbatim}
 (EVCONVERT (LAMBDA ((: T <X M E>) MP)
   (COERCE T (OR (RESOLVE M MP) (RETURN NIL))) ))
-#+end_example
+\end{verbatim}
 Here, the mode M of T is RESOLVEd with MP to produce a third mode M'
 (if no such mode can be found, EVCONVERT returns NIL immediately). The
 expression X of T is then COERCEd to M' producing a final triple, or
@@ -754,7 +757,7 @@ SIG to match successfully the target mode TM of the triple. As a
 result SIG will generally contain free variables throughout the
 process of left-to-right argument evaluation. This process has the
 following alternative code replacing the loop in lines 5-8 of EVFORM:
-#+begin_example
+\begin{verbatim}
 (LET LT (COLLECT ((IN A ARGL) (IN P (CDR SIG)))
   (PROGN
     (LET MD (PATTERN_TO_MODE (SUBLIS LS P)))
@@ -762,12 +765,12 @@ following alternative code replacing the loop in lines 5-8 of EVFORM:
     (LET E (S:ENV T))
     (LET LS (NCONC (MATCH (S:MODE T) P) LS))
     T)))
-#+end_example
-#+begin_example
+\end{verbatim}
+\begin{verbatim}
 (LET L (COLLECT ((IN T TL)
                  (IN MD (SUBLIS LS (CDR SIG))))
   (S:EXPR (OR (COERCE T MD) (RETURN NIL)))))
-#+end_example
+\end{verbatim}
 
 This is described as follows. First, a list LT of triples is
 produced. The first argument A of ARGL is evaluated in the initial
@@ -796,7 +799,7 @@ in LS) taking precedence. A final signature is determined therefore by
 SUBLISting LS into (CDAR MAP). A pass over TL is then made to COERCE
 all expressions to the appropriate domain.
 
-*** Appendix B: Sample Compilation by the MODLISP Evaluator
+\subsection{Appendix B: Sample Compilation by the MODLISP Evaluator}
 
 The following illustrates a sample source language function definition
 and corresponding compilation by the current MODLISP evaluator into
@@ -806,7 +809,7 @@ expression, r, is assumed to be in the category Ring, the power
 assumed to be a NonNegativeInteger. The example is taken from the
 context of the definition of the category Ring in our experimental
 computer algebra system.
-#+begin_example
+\begin{verbatim}
 Source language:
   given
     x: r
@@ -817,9 +820,9 @@ Source language:
         else if n = 1 then x
 	  else if oddp(n) then x*((x*x)**((n-1)/2))
 	    else (x*x)**(n/2).
-#+end_example
+\end{verbatim}
 Compilation into LISP:
-#+begin_example
+\begin{verbatim}
 (LAMBDA (x n r) ((LAMBDA (G4 G1 G2 G0 G3)
   (COND
     ((EQUAL n 0) (ELT r 10))
@@ -837,12 +840,12 @@ Compilation into LISP:
         (QUOTIENT n 2)
         (QCDR G4))) ))
   NIL NIL NIL NIL NIL ))
-#+end_example
+\end{verbatim}
 Explanation. A representation of the ring r is passed as a third
 argument to the function. Rings are represented by vectors of length
 11 (or more, if they are of a more restrictive category). Elements 5
 through 11 are allocated as follows:
-#+begin_example
+\begin{verbatim}
    (5) the zero element of the ring
    (6) dyadic +
    (7) monadic -
@@ -850,7 +853,7 @@ through 11 are allocated as follows:
    (9) dyadic *
    (10) the multiplicative identity (1)
    (11) dyadic **
-#+end_example
+\end{verbatim}
 Each of the slots 6-9 and 11 are pairs consisting of a code pointer in
 its CAR and a pointer to the vector representing r in its CDR. In
 particular, the CAR of the contents of slot 11 in the vector is a
@@ -872,9 +875,9 @@ by (QELT r 9). These optimisations which are planned, are global in
 nature. The evaluator already performs several local optimisations,
 such as the use of QCDR.
 
-** Tedious Maintainer Tasks
+\section{Tedious Maintainer Tasks}
 
-*** Maintaining the credits list
+\subsection{Maintaining the credits list}
 
 Asiom tried hard to maintain a list of credits for people who
 contribute to the effort. The contributions range from people
@@ -897,7 +900,7 @@ embedding in the source code.
 
 4) src/input/unittest1.input tests the )credits command
 
-** What is the purpose of the HACKPI domain?
+\section{What is the purpose of the HACKPI domain?}
 
 HACKPI is a hack provided for the benefit of the axiom interpreter.
 As a mathematical type, it is the simple transcendental extension
@@ -915,8 +918,8 @@ non-interactive environment (library), HACKPI would not exist.
 
 (Manuel Bronstein)
 
-** How Axiom Builds
-*** The environment variables
+\section{How Axiom Builds}
+\subsection{The environment variables}
 Axiom uses a tree of Makefiles to build the system. Each Makefile
 is created from the literate file (Makefile.pamphlet) and then executed.
 
@@ -929,20 +932,20 @@ variable. This variable controls whether we see the full output or just
 the echo of each individual step. Sometimes a build fails at a step and
 we would like to know the details. By default they are written to 
 =$TMP/trace= but we can watch every detail with the command line:
-#+begin_example
+\begin{verbatim}
   make NOISE=
-#+end_example
+\end{verbatim}
 This overrides the output file and writes everything to the console.
 
 Another common usage pattern is to override the tests that are run.
 By default, all tests are run. This can be very time consuming. 
 A particular subset can be run or, using the option ``notests'', none
 will be run:
-#+begin_example
+\begin{verbatim}
   make TESTSET=notests
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
 AWK=gawk 
 BOOKS=/research/test/books 
 BYE=bye 
@@ -990,18 +993,18 @@ VERSION=Axiom (May 2010)
 WEAVE=/research/test/mnt/ubuntu/bin/lib/noweave 
 XLIB=/usr/X11R6/lib 
 ZIPS=/research/test/zips
-#+end_example
+\end{verbatim}
 
-** The runtime structure of Axiom
+\section{The runtime structure of Axiom}
 \begin{center}
 [[ps/v4architecture.eps]]\\
-*Runtime Structure [cite:@Bake14]*
+{\bf Runtime Structure [cite:@Bake14]}
 \end{center}
 
-*** The build step
+\subsection{The build step}
 This shows the steps taken to build Axiom in the sequence they happen.
 Each level of indentation is another level of Makefile being executed.
-#+begin_example
+\begin{verbatim}
 
 Makefile
   1 noweb
@@ -1194,14 +1197,14 @@ Makefile
                 8g1k2d5 extract INT/input/Makefile.algebra 
                            from SRC/algebra/Makefile.pamphlet
                 8g1k2d6 make INT/input/Makefile.algebra 
-#+end_example
+\end{verbatim}
 
-*** Where each output file is created
+\subsection{Where each output file is created}
 Here we show which step in the above set of actions creates the file
 that ends up in the final ship directory. We break it down by subdirectory
 in the final image.
-**** AXIOM/algebra
-#+begin_example
+\subsubsection{AXIOM/algebra}
+\begin{verbatim}
 in AXIOM/algebra:
   *.o
   browse.daase
@@ -1212,9 +1215,9 @@ in AXIOM/algebra:
   operation.daase
   users.daase
 
-#+end_example
-**** AXIOM/autoload
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/autoload}
+\begin{verbatim}
 in AXIOM/autoload:
   ax.o
   bc-matrix.o
@@ -1247,9 +1250,9 @@ in AXIOM/autoload:
   wi2.fn
   wi2.o
 
-#+end_example
-**** AXIOM/bin
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/bin}
+\begin{verbatim}
 in AXIOM/bin:
   asq            8g1d2f  copy OBJ/SYS/etc/asq AXIOM/bin
   axiom          8g1h2k  chmod axiom shell script to be executable
@@ -1322,9 +1325,9 @@ in AXIOM/bin:
     nwmac.tex        1       noweb
 ? viewalone          8g1g2d  compile and link AXIOM/lib/viewalone
 
-#+end_example
-**** AXIOM/doc
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/doc}
+\begin{verbatim}
 AXIOM/doc:
   axbook
     *.xhtml
@@ -1438,23 +1441,23 @@ AXIOM/doc:
       image.bm
       image.xpm
 
-#+end_example
-**** AXIOM/graph
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/graph}
+\begin{verbatim}
 AXIOM/graph
   parabola.view:     8g1g2e extract AXIOM/graph/parabola.view from bookvol8
     data
     graph0
 
-#+end_example
-**** AXIOM/input
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/input}
+\begin{verbatim}
 AXIOM/input:
   *.input files
 
-#+end_example
-**** AXIOM/lib
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/lib}
+\begin{verbatim}
 AXIOM/lib:
   command.list       8g1b1a copy SRC/share/algebra/command.list to AXIOM/lib
   copyright          8g1d2h copy SRC/etc/copyright AXIOM/lib
@@ -1489,37 +1492,37 @@ AXIOM/lib:
   view3d         8g1g2c compile and link AXIOM/lib/view3d
   viewman        8g1g2a compile and link AXIOM/lib/viewman
 
-#+end_example
-**** AXIOM/src
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/src}
+\begin{verbatim}
 AXIOM/src:
 ? algebra
 
-#+end_example
-**** AXIOM/timestamp
-#+begin_example
+\end{verbatim}
+\subsubsection{AXIOM/timestamp}
+\begin{verbatim}
 AXIOM/timestamp
-#+end_example
+\end{verbatim}
 
-** How Axiom Works
-*** Input and Type Selection
+\section{How Axiom Works}
+\subsection{Input and Type Selection}
 First we change the default setting for autoload messages to
 turn off the noise of file loading from the library:
-#+begin_example
+\begin{verbatim}
 (1) -> )set mes auto off
-#+end_example
+\end{verbatim}
 
 Next we tell the interpreter to show us the modemaps used to
 classify input and select types. This is known as ``bottomup''
 messages. We can watch the interpreter ponder the input.
-#+begin_example
+\begin{verbatim}
 (1) -> )set mes bot on
-#+end_example
+\end{verbatim}
 
 Now we give it something nontrivial to ponder.
-#+begin_example
+\begin{verbatim}
 (1) -> f:=1/(a*x+b)
-#+end_example
+\end{verbatim}
 
 After parsing the input Axiom begins to figure out the type
 of the expression. In this case it starts with the multiply 
@@ -1527,9 +1530,9 @@ operator in the denominator.
 
 Axiom has determined that ``a'' is of type VARIABLE and ``x''
 is of type VARIABLE. It is looking for function of the form
-#+begin_example
+\begin{verbatim}
     VARIABLE * VARIABLE
-#+end_example
+\end{verbatim}
 so it looks in the domain of the left argument ``a'' which is
 VARIABLE and does not find the required function. Similarly
 it looks in the domain of the right argument ``x'' which is
@@ -1538,7 +1541,7 @@ VARIABLE and, not surprisingly, does not find the required function.
 It tried to promote each VARIABLE to SYMBOL and looks for a way
 to mulitply VARIABLES and SYMBOLS or SYMBOLS and SYMBOLS. Neither
 succeeds.
-#+begin_example
+\begin{verbatim}
 
  Function Selection for *
       Arguments: (VARIABLE a,VARIABLE x) 
@@ -1551,29 +1554,29 @@ succeeds.
 
  Modemaps from Associated Packages 
    no modemaps
-#+end_example
+\end{verbatim}
 
 Since it cannot find a specific modemap that uses the exact types
 it now expands the search to look for the general modemaps. It
 searches these modemaps in order to try to find one that fits.
-#+begin_example
+\begin{verbatim}
 
  Remaining General Modemaps 
    [1] (D,D1) -> D from D
             if D has XFALG(D2,D1) and D2 has ORDSET and D1 has RING
-#+end_example
+\end{verbatim}
 
 The first match will fail because Symbol does not have RING. We can
 determine this by asking the interpreter:
-#+begin_example
+\begin{verbatim}
 SYMBOL has RING
 
    (1)  false
                                                        Type: Boolean
-#+end_example
+\end{verbatim}
 
 The following modemaps will fail for various similar reasons:
-#+begin_example
+\begin{verbatim}
    [2] (D1,D) -> D from D
             if D has XFALG(D1,D2) and D1 has ORDSET and D2 has RING
    [3] (Integer,D) -> D from D
@@ -1652,29 +1655,29 @@ The following modemaps will fail for various similar reasons:
    [33] (NonNegativeInteger,D) -> D from D if D has ABELMON
    [34] (Integer,D) -> D from D if D has ABELGRP
 
-#+end_example
+\end{verbatim}
 
 Eventually the interpreter decides that it can coerce Symbol to
 Polynomial(Integer). We can do this in the interpreter also:
-#+begin_example
+\begin{verbatim}
 a::Symbol::POLY(INT)
 
    (1)  a
                                                      Type: Polynomial Integer
-#+end_example
+\end{verbatim}
 
 And the interpreter can find multiply in POLY(INT):
-#+begin_example
+\begin{verbatim}
  
  [1]  signature:   (POLY INT,POLY INT) -> POLY INT
       implemented: slot $$$ from POLY INT
  [2]  signature:   (POLY INT,POLY INT) -> POLY INT
       implemented: slot $$$ from POLY INT
-#+end_example
+\end{verbatim}
 
 We can see this signature exists by asking the interpreter to show
 us the domain POLY(INT) (truncated here for brevity):
-#+begin_example
+\begin{verbatim}
 
 )show POLY(INT)
  Polynomial Integer is a domain constructor.
@@ -1688,15 +1691,15 @@ us the domain POLY(INT) (truncated here for brevity):
  ?*? : (PositiveInteger,%) -> %        ?*? : (%,Fraction Integer) -> %
  ?*? : (%,Integer) -> %                ?*? : (%,%) -> %
 
-#+end_example
+\end{verbatim}
 
 Having found multipy the interpreter now starts a search for the operation
-#+begin_example
+\begin{verbatim}
      (POLY(INT)) + (VARIABLE)
-#+end_example
+\end{verbatim}
 
 It cannot find this modemap 
-#+begin_example
+\begin{verbatim}
 
  Function Selection for +
       Arguments: (POLY INT,VARIABLE b) 
@@ -1704,27 +1707,27 @@ It cannot find this modemap
    -> no appropriate + found in Variable b 
    -> no appropriate + found in Variable b 
  
-#+end_example
+\end{verbatim}
 so it promotes VARIABLE to POLY(INT) and finds the operation:
-#+begin_example
+\begin{verbatim}
    (POLY(INT)) + (POLY(INT))
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
  [1]  signature:   (POLY INT,POLY INT) -> POLY INT
       implemented: slot $$$ from POLY INT
  
-#+end_example
+\end{verbatim}
 
 Next it tackles the division operation where the numerator is
 PI (PositiveInteger) and the denominator is POLY(INT). It tries 
 to find
-#+begin_example
+\begin{verbatim}
     (PI) / (POLY(INT))
-#+end_example
+\end{verbatim}
 
 in PositiveInteger, Polynomial Integer and Integer. All attempts fail.
-#+begin_example
+\begin{verbatim}
 
  Function Selection for /
       Arguments: (PI,POLY INT) 
@@ -1738,10 +1741,10 @@ in PositiveInteger, Polynomial Integer and Integer. All attempts fail.
  Modemaps from Associated Packages 
    no modemaps
 
-#+end_example
+\end{verbatim}
 
 So now it turns to the general modemaps:
-#+begin_example
+\begin{verbatim}
  Remaining General Modemaps 
    [1] (D,D1) -> D from D if D has VSPACE D1 and D1 has FIELD
    [2] (D,D1) -> D from D
@@ -1769,16 +1772,16 @@ So now it turns to the general modemaps:
             if D has AMR(D1,D2) and D1 has RING and D2 has OAMON and D1
             has FIELD
  
-#+end_example
+\end{verbatim}
 it eventually promotes PI to FRAC(POLY(INT)) and
 POLY(INT) to FRAC(POLY(INT)) and finds the match:
-#+begin_example
+\begin{verbatim}
     (FRAC(POLY(INT))) / (FRAC(POLY(INT)))
-#+end_example
+\end{verbatim}
 
 We can ask the intepreter to show us this operation (again, the
 output is truncated for brevity):
-#+begin_example
+\begin{verbatim}
  )show FRAC(POLY(INT))
  Fraction Polynomial Integer is a domain constructor.
  Abbreviation for Fraction is FRAC 
@@ -1793,30 +1796,30 @@ output is truncated for brevity):
  ?**? : (%,PositiveInteger) -> %       ?+? : (%,%) -> %
  ?-? : (%,%) -> %                      -? : % -> %
  ?/? : (%,%) -> %                      ?<? : (%,%) -> Boolean
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
  [1]  signature:   (FRAC POLY INT,FRAC POLY INT) -> FRAC POLY INT
       implemented: slot $$$ from FRAC POLY INT
  
-#+end_example
+\end{verbatim}
 
 At this point the interpreter has succeeded in finding a type for
 the expression and eventually returns the result badged with the
 appropriate type:
-#+begin_example
+\begin{verbatim}
 
            1
    (1)  -------
         a x + b
                                             Type: Fraction Polynomial Integer
 
-#+end_example
-*** A simple integral
+\end{verbatim}
+\subsection{A simple integral}
 
 Now we will show an integration with successive levels of expansion
 of explanation. We will use the expression above:
-#+begin_example
+\begin{verbatim}
 (1) -> f:=1/(a*x+b)
 
            1
@@ -1830,24 +1833,24 @@ of explanation. We will use the expression above:
               a
                                           Type: Union(Expression Integer,...)
 
-#+end_example
-*** A simple integral, expansion 1 interpreter
+\end{verbatim}
+\subsection{A simple integral, expansion 1 interpreter}
 
-#+begin_example
+\begin{verbatim}
 (2) -> integrate(f,x)
-#+end_example
+\end{verbatim}
 
 Here we assume the previous discussion of modemap handling for the
 expression f and we only look at the modemap handling for the integrate
 function. We are looking for a modemap of the form:
 
-#+begin_example
+\begin{verbatim}
       integrate(FRAC(POLY(INT)),VARIABLE x)
-#+end_example
+\end{verbatim}
 
 So first we look in the domains of the arguments, that is, in
 Fraction Polynomial Integer, and Variable. Neither one succeeds:
-#+begin_example
+\begin{verbatim}
 
  Function Selection for integrate
       Arguments: (FRAC POLY INT,VARIABLE x) 
@@ -1859,10 +1862,10 @@ Fraction Polynomial Integer, and Variable. Neither one succeeds:
  Modemaps from Associated Packages 
    no modemaps
 
-#+end_example
+\end{verbatim}
 
 Next we look at the general modemaps to find one that might work:
-#+begin_example
+\begin{verbatim}
  Remaining General Modemaps 
    [1] (D,D1) -> D from D
             if D1 = SYMBOL and D has UTSCAT D2 and D2 has RING and D2 
@@ -1936,18 +1939,18 @@ Next we look at the general modemaps to find one that might work:
             CharacteristicZero,RetractableTo Integer,
             LinearlyExplicitRingOver Integer)
 
-#+end_example
+\end{verbatim}
 Modemap [6] wins because we can construct the first argument
 by matching 
-#+begin_example
+\begin{verbatim}
   Fraction Polynomial Integer
-#+end_example
+\end{verbatim}
 to
-#+begin_example
+\begin{verbatim}
   Fraction Polynomial D4
-#+end_example
+\end{verbatim}
 so we can infer that D4 == Integer
-#+begin_example
+\begin{verbatim}
 
    [6] (Fraction Polynomial D4,Symbol) -> Union(Expression D4,List 
             Expression D4)
@@ -1955,12 +1958,12 @@ so we can infer that D4 == Integer
             if D4 has CHARZ and D4 has Join(GcdDomain,RetractableTo 
             Integer,OrderedSet,LinearlyExplicitRingOver Integer)
 
-#+end_example
+\end{verbatim}
 
 Given that match we have two requirements on Integer, both of which
 we can check with the interpreter:
 
-#+begin_example
+\begin{verbatim}
 INT has CHARZ
 
    (3)  true
@@ -1970,10 +1973,10 @@ INT has CHARZ
 
    (4)  true
                                                     Type: Boolean
-#+end_example
+\end{verbatim}
 
 So we have a match
-#+begin_example
+\begin{verbatim}
  
  [1]  signature:   (FRAC POLY INT,SYMBOL) -> Union(EXPR INT,LIST EXPR INT)
       implemented: slot (Union (Expression (Integer))
@@ -1986,26 +1989,26 @@ So we have a match
                          (Expression (Integer))(Symbol) 
                    from FSINT(INT,EXPR INT)
  
-#+end_example
+\end{verbatim}
 
 Now we invoke 
-#+begin_example
+\begin{verbatim}
     integrate(FRAC(POLY(INT)),SYMBOL) -> Union(EXPR INT,LIST EXPR INT)
       from IRRF2F(INT)
 
     integrate(1/(a*x+b),x)
 
-#+end_example
+\end{verbatim}
 can print the result:
-#+begin_example
+\begin{verbatim}
 
         log(a x + b)
    (2)  ------------
               a
                                           Type: Union(Expression Integer,...)
 
-#+end_example
-*** A simple integral, expansion 2 integrate
+\end{verbatim}
+\subsection{A simple integral, expansion 2 integrate}
 Now that we know how the interpreter has matched the input and called
 the function we need to follow the first level call into the function.
 
@@ -2017,7 +2020,7 @@ information as we do.
 For now, we look at the domain IRRF2F from irexpand.spad.
 The categorical definition of this domain reads (we remove parts
 of the definition for brevity):
-#+begin_example
+\begin{verbatim}
 IntegrationResultRFToFunction(R): Exports == Implementation where
   R: Join(GcdDomain, RetractableTo Integer, OrderedSet,
            LinearlyExplicitRingOver Integer)
@@ -2059,42 +2062,42 @@ IntegrationResultRFToFunction(R): Exports == Implementation where
           l
 
 @
-#+end_example
+\end{verbatim}
 
 We can see that this domain constructor takes one argument which, in
 this case, is Integer. We've already determined that Integer has the
 required Joins:
-#+begin_example
+\begin{verbatim}
 (4) -> INT has Join(GcdDomain,RetractableTo Integer,OrderedSet,_
                      LinearlyExplicitRingOver Integer)
 
    (4)  true
                                                     Type: Boolean
-#+end_example
+\end{verbatim}
 and we can see that:
-#+begin_example
+\begin{verbatim}
 (5) -> INT has CharacteristicZero
 
    (5)  true
                                                                 Type: Boolean
-#+end_example
+\end{verbatim}
 so we can match the signature of integrate:
-#+begin_example
+\begin{verbatim}
   integrate(Fraction Polynomial Integer, Symbol) -> 
        Union(Expression Integer, List Expression Integer)
-#+end_example
+\end{verbatim}
 
 We can trace this domain and ask to see the output in math form:
-#+begin_example
+\begin{verbatim}
 (6) -> )trace IRRF2F )math
  
    Packages traced: 
       IntegrationResultRFToFunction Integer
    Parameterized constructors traced:
       IRRF2F
-#+end_example
+\end{verbatim}
 and now, when we do the integration, we see the output of the trace:
-#+begin_example
+\begin{verbatim}
 integrate(1/(a*x+b),x)
 1<enter IntegrationResultRFToFunction.integrate,32 : 
           1
@@ -2120,12 +2123,12 @@ integrate(1/(a*x+b),x)
    (6)  ------------
               a
                                           Type: Union(Expression Integer,...)
-#+end_example
+\end{verbatim}
 
 From this we learn that the arguments to integrate are exactly the
 arguments we supplied and we know the exact types of the arguments
 because they have to match the signature of the function:
-#+begin_example
+\begin{verbatim}
 1<enter IntegrationResultRFToFunction.integrate,32 : 
   integrate(, Symbol) -> 
           1
@@ -2133,50 +2136,50 @@ because they have to match the signature of the function:
        a x + b
  arg2= x          <== Symbol
 
-#+end_example
+\end{verbatim}
 and returns the result
-#+begin_example
+\begin{verbatim}
 1>exit  IntegrationResultRFToFunction.integrate,32 : 
  log(a x + b)
  ------------     <== Union(Expression Integer, List Expression Integer)
        a
-#+end_example
-*** A simple integral, expansion 2 internalIntegrate
+\end{verbatim}
+\subsection{A simple integral, expansion 2 internalIntegrate}
 If we look at the function definition for integrate:
-#+begin_example
+\begin{verbatim}
         integrate(f, x) ==
           l := [mkPrim(real g, x) for g in expand internalIntegrate(f, x)]
           empty? rest l => first l
           l
-#+end_example
+\end{verbatim}
 we can see that there is a call to the function 
-#+begin_example
+\begin{verbatim}
   internalIntegrate(f, x)
-#+end_example
+\end{verbatim}
 and we can compute the types of the arguments since they are exactly
 the types of the integrate function itself:
-#+begin_example
+\begin{verbatim}
   internalIntegrate(Fraction Polynomial Integer, Symbol) 
-#+end_example
+\end{verbatim}
 and since the return value will be fed to the expand function we
 can look at the signature of expand:
-#+begin_example
+\begin{verbatim}
     expand: IntegrationResult Fraction Polynomial Integer ->
                List Expression Integer
-#+end_example
+\end{verbatim}
 and we can get the full signature for internalIntegrate:
-#+begin_example
+\begin{verbatim}
   internalIntegrate(Fraction Polynomial Integer, Symbol) ->
     IntegrationResult Fraction Polynomial Integer
-#+end_example
+\end{verbatim}
 
 This comes from the domain
-#+begin_example
+\begin{verbatim}
  RationalFunctionIntegration(F): Exports == Implementation where
    F: Join(IntegralDomain, RetractableTo Integer, CharacteristicZero)
-#+end_example
+\end{verbatim}
 where F is Integer.
-#+begin_example
+\begin{verbatim}
   SE  ==> Symbol
   P   ==> Polynomial F
   Q   ==> Fraction P
@@ -2197,22 +2200,22 @@ where F is Integer.
     internalIntegrate(f, x) ==
       map(multivariate(#1, x), integrate univariate(f, x))
 
-#+end_example
+\end{verbatim}
 If we look the signature for internalIntegrate and expand it we see:
-#+begin_example
+\begin{verbatim}
     internalIntegrate: (Q, SE) -> IntegrationResult Q
 
     internalIntegrate: ( Fraction Polynomial Integer, Symbol) ->
       IntegrationResult Fraction Polynomial Integer
 
-#+end_example
+\end{verbatim}
 which is exactly what we need. When we look at the function we see:
-#+begin_example
+\begin{verbatim}
     internalIntegrate(f, x) ==
       map(multivariate(#1, x), integrate univariate(f, x))
-#+end_example
+\end{verbatim}
 We can watch the function call by tracing INTRF:
-#+begin_example
+\begin{verbatim}
 (7) -> )trace INTRF )math
  
    Packages traced: 
@@ -2220,9 +2223,9 @@ We can watch the function call by tracing INTRF:
             RationalFunctionIntegration Integer
    Parameterized constructors traced:
       IRRF2F, INTRF
-#+end_example
+\end{verbatim}
 and we see:
-#+begin_example
+\begin{verbatim}
 (7) -> integrate(1/(a*x+b),x)
 1<enter IntegrationResultRFToFunction.integrate,32 : 
           1
@@ -2257,41 +2260,41 @@ and we see:
    (7)  ------------
               a
                                           Type: Union(Expression Integer,...)
-#+end_example
+\end{verbatim}
 Now we see that internalIntegrate was called with the arguments
-#+begin_example
+\begin{verbatim}
  1<enter RationalFunctionIntegration.internalIntegrate,25 : 
            1
   arg1= -------      <== Fraction Polynomial Integer
         a x + b
   arg2= x            <== Symbol
-#+end_example
+\end{verbatim}
 and returned the values:
-#+begin_example
+\begin{verbatim}
  1>exit  RationalFunctionIntegration.internalIntegrate,25 : 
   1     a x + b
   - log(-------)     <== IntegrationResult Fraction Polynomial Integer
   a        a
-#+end_example
-*** A simple integral, expansion 3 univariate
+\end{verbatim}
+\subsection{A simple integral, expansion 3 univariate}
 But the internalIntegrate function does its work by calling yet
 other functions, the deepest of which is univariate:
-#+begin_example
+\begin{verbatim}
     internalIntegrate(f, x) ==
       map(multivariate(#1, x), integrate univariate(f, x))
-#+end_example
+\end{verbatim}
 Since univariate uses the arguments to the internalIntegrate function
 which has the signature:
-#+begin_example
+\begin{verbatim}
     internalIntegrate: ( Fraction Polynomial Integer, Symbol) ->
-#+end_example
+\end{verbatim}
 we can determine that we need a univariate function with the signature:
-#+begin_example
+\begin{verbatim}
     univariate: ( Fraction Polynomial Integer, Symbol) ->
-#+end_example
+\end{verbatim}
 This function is found in PolynomialCategoryQuotientFunctions, POLYCATQ
 which has the form:
-#+begin_example
+\begin{verbatim}
 PolynomialCategoryQuotientFunctions(E, V, R, P, F):
  Exports == Implementation where
   E: OrderedAbelianMonoidSup
@@ -2325,18 +2328,18 @@ PolynomialCategoryQuotientFunctions(E, V, R, P, F):
     P2UP(p, x) ==
       map(#1::F,
           univariate(p, x))$SparseUnivariatePolynomialFunctions2(P, F)
-#+end_example
+\end{verbatim}
 
 So we are calling the function:
-#+begin_example
+\begin{verbatim}
  univariate: ( Fraction Polynomial Integer, Symbol) ->
   Fraction SparseUnivariatePolynomial Field with
    coerce: PolynomialCategory(Ring, OrderedAbelianMonoidSup, OrderedSet) -> %
    numer: % -> PolynomialCategory(Ring, OrderedAbelianMonoidSup, OrderedSet)
    denom: % -> PolynomialCategory(Ring, OrderedAbelianMonoidSup, OrderedSet)
-#+end_example
+\end{verbatim}
 which we can see by tracing that domain:
-#+begin_example
+\begin{verbatim}
 (8) -> )trace POLYCATQ )math
  
    Packages traced: 
@@ -2351,17 +2354,17 @@ which we can see by tracing that domain:
             Polynomial Integer)
    Parameterized constructors traced:
       IRRF2F, INTRF, POLYCATQ
-#+end_example
+\end{verbatim}
 which gives the input:
-#+begin_example
+\begin{verbatim}
   1<enter PolynomialCategoryQuotientFunctions.univariate,16 : 
             1
    arg1= -------  <== Fraction Polynomial Integer
          a x + b
    arg2= x        <== Symbol
-#+end_example
+\end{verbatim}
 and the output
-#+begin_example
+\begin{verbatim}
   1>exit  PolynomialCategoryQuotientFunctions.univariate,16 : 
      1
      -
@@ -2370,15 +2373,15 @@ and the output
        b                   coerce: P -> % 
    ? + -                   numer:  % -> P
        a                   denom:  % -> P
-#+end_example
+\end{verbatim}
 
 It should be clear that univariate divided the numerator and
 denominator by the leading coefficient of the polynomial in
 the denominator. It also replaced ``x'' with the variable ``?''.
-*** A simple integral, expansion 4 integrate
+\subsection{A simple integral, expansion 4 integrate}
 When univariate returns, the results are fed to another integrate,
 this time from RationalIntegration (INTRAT). This domain looks like:
-#+begin_example
+\begin{verbatim}
 RationalIntegration(F, UP): Exports == Implementation where
   F : Join(Field, CharacteristicZero, RetractableTo Integer)
   UP: UnivariatePolynomialCategory F
@@ -2401,22 +2404,22 @@ RationalIntegration(F, UP): Exports == Implementation where
       rec := monomialIntegrate(f, differentiate)
       integrate(rec.polypart)::RF::IR + rec.ir
 
-#+end_example
+\end{verbatim}
 
 This domain was constructed and ``brought into scope'' in
 RationalFunctionIntegration(F) with the statement
-#+begin_example
+\begin{verbatim}
  import RationalIntegration(Fraction Polynomial Integer,
          SparseUnivariatePolynomial Fraction Polynomial Integer)
-#+end_example
+\end{verbatim}
 and the function has the signature
-#+begin_example
+\begin{verbatim}
  integrate:
    Fraction SparseUnivariatePolynomial Fraction Polynomial Integer ->
     IntegrationResult Fraction 
                       Fraction Polynomial Integer
-#+end_example
-#+begin_example
+\end{verbatim}
+\begin{verbatim}
   1<enter RationalIntegration.integrate,32 : 
            1
            -
@@ -2429,25 +2432,25 @@ and the function has the signature
    1         b
    - log(? + -) <== IntegrationResult Fraction SparseUnivariatePolynomial
    a         a                 Fraction Polynomial Integer
-#+end_example
+\end{verbatim}
 
-*** A simple integral, expansion 5 monomialIntegrate
+\subsection{A simple integral, expansion 5 monomialIntegrate}
 The integrate function is defined as:
-#+begin_example
+\begin{verbatim}
  integrate f ==
    print(outputForm("tpdhere INTRAT 1")@OF)$OF
    rec := monomialIntegrate(f, differentiate)
    integrate(rec.polypart)::RF::IR + rec.ir
-#+end_example
+\end{verbatim}
 Notice that while ``f'' is an argument to integrate, the ``differentiate''
 function is a free variable. The Axiom compiler will look at all of the
 symbols ``in scope'' to find its meaning. This code does an import:
-#+begin_example
+\begin{verbatim}
   import TranscendentalIntegration(Fraction Polynomial Integer,
           SparseUnivariatePolynomial Fraction Polynomial Integer)
-#+end_example
+\end{verbatim}
 which exports monomialIntegrate
-#+begin_example
+\begin{verbatim}
 TranscendentalIntegration(F, UP): Exports == Implementation where
   F  : Field
   UP : UnivariatePolynomialCategory F
@@ -2493,9 +2496,9 @@ TranscendentalIntegration(F, UP): Exports == Implementation where
       [mkAnswer(r.answer, logs, empty), r.specpart, r.polypart + u::UP]
     [mkAnswer(r.answer, logs, [[p, dummy]]), r.specpart, r.polypart]
 
-#+end_example
+\end{verbatim}
 which expands into the type signature:
-#+begin_example
+\begin{verbatim}
 
   monomialIntegrate:
   (Fraction SparseUnivariatePolynomial Fraction Polynomial Integer,
@@ -2509,9 +2512,9 @@ which expands into the type signature:
       ++ monomialIntegrate(f, ') returns \spad{[ir, s, p]} such that
       ++ \spad{f = ir' + s + p} and all the squarefree factors of the
       ++ denominator of s are special w.r.t the derivation '.
-#+end_example
+\end{verbatim}
 we can watch this happen:
-#+begin_example
+\begin{verbatim}
 )trace INTTR )math
  
    Function traced: UnivariatePolynomialCategory 
@@ -2533,9 +2536,9 @@ we can watch this happen:
             Integer)
    Parameterized constructors traced:
       IRRF2F, INTRF, INTRAT, POLYCATQ, INTTR
-#+end_example
+\end{verbatim}
 and we can watch the monomialIntegrate function call
-#+begin_example
+\begin{verbatim}
 (34) -> integrate(1/(a*x+b),x)
 1<enter IntegrationResultRFToFunction.integrate,32 : 
           1
@@ -2600,11 +2603,11 @@ and we can watch the monomialIntegrate function call
                a
                                           Type: Union(Expression Integer,...)
 (35) -> 
-#+end_example
-*** A simple integral, expansion 6 HermiteIntegrate
+\end{verbatim}
+\subsection{A simple integral, expansion 6 HermiteIntegrate}
 Since ``f'' is not zero we invoke HermiteIntegrate from the domain
 TranscendentalHermiteIntegration which looks like:
-#+begin_example
+\begin{verbatim}
 TranscendentalHermiteIntegration(F, UP): Exports == Implementation where
   F  : Field
   UP : UnivariatePolynomialCategory F
@@ -2631,10 +2634,10 @@ TranscendentalHermiteIntegration(F, UP): Exports == Implementation where
       hi  := normalHermiteIntegrate(rec.normal, derivation)
       qr  := divide(hi.lognum, hi.logden)
       [hi.answer, qr.remainder / hi.logden, rec.special, qr.quotient + rec.poly]
-#+end_example
+\end{verbatim}
 The function has the same input signature as monomialIntegrate but a 
 different return signature.
-#+begin_example
+\begin{verbatim}
   HermiteIntegrate:
   (Fraction SparseUnivariatePolynomial Fraction Polynomial Integer,
      SparseUnivariatePolynomial Fraction Polynomial Integer ->
@@ -2646,9 +2649,9 @@ different return signature.
           specpart:Fraction SparseUnivariatePolynomial 
                                                  Fraction Polynomial Integer, 
           polypart:SparseUnivariatePolynomial Fraction Polynomial Integer)
-#+end_example
+\end{verbatim}
 so we trace this domain
-#+begin_example
+\begin{verbatim}
 (37) -> )trace INTHERTR )math
  
    Function traced: UnivariatePolynomialCategory 
@@ -2672,9 +2675,9 @@ so we trace this domain
             Fraction Polynomial Integer)
    Parameterized constructors traced:
       IRRF2F, INTRF, INTRAT, POLYCATQ, INTTR, INTHERTR
-#+end_example
+\end{verbatim}
 and now we see
-#+begin_example
+\begin{verbatim}
 (38) -> integrate(1/(a*x+b),x)
 1<enter IntegrationResultRFToFunction.integrate,32 : 
           1
@@ -2754,38 +2757,39 @@ and now we see
    (38)  ------------
                a
                                           Type: Union(Expression Integer,...)
-#+end_example
+\end{verbatim}
 so HermiteIntegrate did nothing to the input.
 Next we call normalHermiteIntegrate which is a local function
 
-** Tools
-*** svn
+\section{Tools}
+\subsection{svn}
 SVN is a source control system on all platforms. Axiom 'silver' is
 maintained in an SVN archive on sourceforge. This can be pulled from:
-#+begin_example
+\begin{verbatim}
 svn co https://axiom.svn.sf.net/svnroot/axiom/trunk/axiom axiom
-#+end_example
-*** git
+\end{verbatim}
+\subsection{git}
 Git is a unix-based source code control system. Axiom 'silver' is 
 maintained in a git archive. This can be pulled from:
-#+begin_example
+\begin{verbatim}
 git-clone ssh://git@axiom-developer.org/home/git/silver
-#+end_example
+\end{verbatim}
 the password for the userid git is linus.
 
-*** cvs
+\subsection{cvs}
 This assumes that you have set up ssh on the Savannah site.
 CVS does not use a password. You have to log onto the Savannah
 site and set up a public key. This requires you to:
-- set up a local public key:
+\begin{itemize}
+\item set up a local public key:
 ssh-keygen -b 1024 -t rsa1
-- open a browser
-- nagivate to the savannah page that has your personal keys
-- open .ssh/identity.pub
-- cut .ssh/identity.pub
-- paste it into your personal key list on savannah
-- go have a beer (the page takes an hour or two to update)
-
+\item open a browser
+\item nagivate to the savannah page that has your personal keys
+\item open .ssh/identity.pub
+\item cut .ssh/identity.pub
+\item paste it into your personal key list on savannah
+\item go have a beer (the page takes an hour or two to update)
+\end{itemize}
 
 Once you have a working key you can do the cvs login.
 If it prompts you for a password then the key is not working.
@@ -2793,18 +2797,18 @@ If it prompts you to ``Enter the passphrase for RSA key'' then
 cvs login will work.
 
 I maintain a directory where I work (call this WORK)
-#+begin_example
+\begin{verbatim}
   /home/axiomgnu/new
-#+end_example
+\end{verbatim}
 and a directory for CVS (call this GOLD)
-#+begin_example
+\begin{verbatim}
   /axiom
-#+end_example
+\end{verbatim}
 
 When I want to export a set of changes I do the following steps:
 
 0) MAKE SURE THE ~/.ssh/config FILE IS CORRECT:
-#+begin_example
+\begin{verbatim}
     (you should only need to do this once. 
      you need to change the User= field)
 
@@ -2816,28 +2820,28 @@ Host *.gnu.org
   StrictHostKeyChecking=no
   PreferredAuthentications=publickey,password
   NumberOfPasswordPrompts=2
-#+end_example
+\end{verbatim}
 
 1) MAKE SURE THE SHELL VARIABLES ARE OK: 
-#+begin_example
+\begin{verbatim}
     (normally set in .bashrc)
 
 export CVS_RSH=ssh
 export CVSROOT=:pserver:axiom@subversions.gnu.org:/cvsroot/axiom
                         ^^^^^
                         change this to your id
-#+end_example
+\end{verbatim}
 
 2) MAKE SURE YOU'RE LOGGED IN:
-#+begin_example
+\begin{verbatim}
  (I keep a session open all the time but it doesn't seem to care
   if you login again. i'm not sure what login does, actually)
 
 cvs login
-#+end_example
+\end{verbatim}
 
 3) GET A FRESH COPY FOR THE FIRST TIME OR AT ANY TIME:
-#+begin_example
+\begin{verbatim}
  (you only need to do this the first time but you can erase
   your whole axiom subtree and refresh it again doing this.
  
@@ -2847,10 +2851,10 @@ cvs login
 
 cd /
 cvs co axiom
-#+end_example
+\end{verbatim}
 
 4) MAKE SURE THAT GOLD,	MY LOCAL CVS COPY, IS UP TO DATE:
-#+begin_example
+\begin{verbatim}
  (I maintain an exact copy of the CVS repository and only make
   changes to it when i want to export the changes. that way I
   won't export my working tree by accident. my working tree is
@@ -2863,20 +2867,20 @@ cvs co axiom
 
 cd /axiom
 cvs update
-#+end_example
+\end{verbatim}
 
 5) COPY CHANGED FILES FROM WORK TO THE GOLD TREE:
-#+begin_example
+\begin{verbatim}
  (This is an example for updating the *.daase files.
   You basically are changing your GOLD tree to reflect the
   way you want CVS to look once you check in all of the files.)
 
 cd /home/axiomgnu/new
 cp src/share/algebra/*.daase /axiom/src/share/algebra
-#+end_example
+\end{verbatim}
 
 6) IF A FILE IS NEW (e.g. src/interp/foo.lisp.pamphlet) THEN:
-#+begin_example
+\begin{verbatim}
  (If you create a file you need to "put it under CVS control"
   CVS only cares about files you explicitly add or delete.
   If you make a new file and copy it to GOLD you need to do this.
@@ -2891,10 +2895,10 @@ cp src/share/algebra/*.daase /axiom/src/share/algebra
 cd /axiom/src/interp
 cvs add -m"some pithy comment" foo.lisp.pamphlet
 cd /axiom
-#+end_example
+\end{verbatim}
 
 7) IF A FILE IS DELETED (e.g. src/interp/foo.lisp.pamphlet) THEN:
-#+begin_example
+\begin{verbatim}
  (you have to delete the file from the GOLD directory BEFORE you
   do a "cvs remove". The "cvs remove" will update the files in
   the CVS directory
@@ -2906,10 +2910,10 @@ cd /axiom/src/interp
 rm foo.lisp.pamphlet
 cvs remove foo.lisp.pamphlet
 cd /axiom
-#+end_example
+\end{verbatim}
 
 8) IF A DIRECTORY IS NEW (e.g. foodir) THEN:
-#+begin_example
+\begin{verbatim}
  (this will put "foodir" under CVS control. It will also create
   foodir/CVS as a directory with a bunch of control files in the
   foodir/CVS directory. Don't mess with the control files.
@@ -2923,20 +2927,20 @@ cd /axiom/src
 mkdir foodir
 cvs add -m "pithy comment" foodir
 cd /axiom
-#+end_example
+\end{verbatim}
 
 9) EDIT CHANGELOG:
-#+begin_example
+\begin{verbatim}
   changelog is already under CVS control so it will get uploaded
   when you do the checkin.)
 
 cd /axiom
 emacs -nw changelog
  (add a date, initials, and pithy comment, save it, and exit)
-#+end_example
+\end{verbatim}
 
 10) CHECK IN THE CHANGES
-#+begin_example
+\begin{verbatim}
  (This will actually change the savannah CVS repository.
 
   The "cvs ci" command will recurse thru all of the lower
@@ -2948,15 +2952,15 @@ emacs -nw changelog
 
 cd /axiom
 cvs ci -m"pithy comment"
-#+end_example
+\end{verbatim}
 
 Congrats. You've now done your first change to the production
 image. Please be very careful as this is a world readable copy.
 We don't want to ship nonsense. Test everything. Even trivial
 changes before you upload.
 
-** Common Lisps
-*** GCL
+\section{Common Lisps}
+\subsection{GCL}
 Axiom was ported to run under AKCL which was a common lisp 
 developed by Bill Schelter. He started with KCL (Kyoto Common
 Lisp) and, since he lived and worked in Austin, Texas, named
@@ -3008,7 +3012,7 @@ spent a lot of time and effort making this work for each port.
 The magic knowledge is not written down anywhere and I no longer
 remember the details.
 
-*** CCL
+\subsection{CCL}
 When Axiom was sold to NAG it was ported to CCL (Codemist Common
 Lisp) which is not, strictly speaking, a common lisp implementation.
 It contains just enough common lisp to support Axiom and, as I'm
@@ -3038,175 +3042,191 @@ because I could not understand how to build a CCL system. I plan
 to revisit this in the future and document the process so others
 can follow it as well as build Makefiles to automate it.
 
-*** CMU CL
+\subsection{CMU CL}
 CMU CL grew out of the Carnegie-Mellon University SPICE project.
 That project studied the issues involved in building an optimizing
 compiler for common lisp. Axiom, back when it was Scratchpad at IBM,
 ran on CMU CL. Indeed, a lot of the lisp-level optimizations are 
 due to use of the CMU CL compiler and the disassemble function.
 
-*** Franz Lisp
+\subsection{Franz Lisp}
 Axiom, as Scratchpad, ran on Franz Lisp.
 
-*** Lucid Common Lisp
+\subsection{Lucid Common Lisp}
 Axiom, as Scratchpad, ran on Lucid Common Lisp.
 
-*** Symbolics Common Lisp
+\subsection{Symbolics Common Lisp}
 Axiom, as Scratchpad, ran on Symbolics Common Lisp.
 
-*** Golden Common Lisp
+\subsection{Golden Common Lisp}
 Axiom, as Scratchpad, ran on Golden Common Lisp.
 This was a PC version of Common Lisp which appears to have died.
 
-*** VM/LISP 370
+\subsection{VM/LISP 370}
 Axiom, as Scratchpad, ran on VM/Lisp 370. This was an IBM version
 of lisp and was not a common lisp. The .daase random access
 file format is an artifact of running on this lisp.
 
-*** Maclisp
+\subsection{Maclisp}
 Axiom, as Scratchpad, ran on Maclisp. This was an early MIT version
 of lisp and is not common lisp. Many of the funny function names
 that have slightly different semantics than their common lisp
 counterparts still exist in the system as macros due to this
 lisp. 
 
-** Changing GCL versions
+\section{Changing GCL versions}
 
 Axiom lives on GNU Common Lisp. Axiom adds C code to the lisp image.
 Axiom caches versions to ensure that nothing breaks. Changing GCL
 versions has introduced subtle bugs at various times. The steps
 necessary to introduce a new version are
 
-4. Add the latest GCL sources to Axiom
-5. Update the patches to the new version
-6. create diff -Naur patches to the gcl sources
-7. update lsp/Makefile.pamphlet to apply the patch at build
-8. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-9. Change the GCLVERSION to point at the new sources
-10. change the Makefile to match Makefile.pamphlet
-
+\begin{enumerate}
+\item Add the latest GCL sources to Axiom
+\item Update the patches to the new version
+\item create diff -Naur patches to the gcl sources
+\item update lsp/Makefile.pamphlet to apply the patch at build
+\item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+\item Change the GCLVERSION to point at the new sources
+\item change the Makefile to match Makefile.pamphlet
+\end{enumerate}
 
 We assume in the following that =$AXHOME= is the home directory and that
 Axiom lives in the silver subdirectory.
 
 In more detail these steps are:
 
-11. Add the lateset GCL sources to Axiom
-  1. Download the latest GCL from gnu.org\\
+\begin{enumerate}
+\item Add the lateset GCL sources to Axiom
+\begin{enumerate}
+\item Download the latest GCL from gnu.org\\
       For these instructions assume the file is 
-#+begin_example
+\begin{verbatim}
       gcl-Version_2_6_10.tar.gz
-#+end_example
-  2. move the tar file into /tmp\\
+\end{verbatim}
+\item move the tar file into /tmp\\
       We are going to make changes to the distribution via patches
-  3. untar the file
-#+begin_example
+\item untar the file
+\begin{verbatim}
       tar -zxf gcl-Version_2_6_10.tar.gz
-#+end_example
-  4. cd to the untarred directory
-#+begin_example
+\end{verbatim}
+\item cd to the untarred directory
+\begin{verbatim}
       cd gcl-Version_2_6_10
-#+end_example
-  5. rename the gcl directory\\
+\end{verbatim}
+\item rename the gcl directory\\
       Camm follows a convention that the top level directory in the
       tar file is called gcl. Since we maintain several past versions
       we need to rename this and re-tar it
-#+begin_example
+\begin{verbatim}
       mv gcl gcl-2.6.10
-#+end_example
-  6. rename gcl to use our naming convention
-#+begin_example
+\end{verbatim}
+\item rename gcl to use our naming convention
+\begin{verbatim}
       tar -zcf gcl-2.6.10.tgz gcl-2.6.10
-#+end_example
-  7. We move the original, renamed, retarred file to the zip directory
-#+begin_example
+\end{verbatim}
+\item We move the original, renamed, retarred file to the zip directory
+\begin{verbatim}
       mv gcl-2.6.10.tgz $AXHOME/silver/zips
-#+end_example      
-  8. We have to make sure to include the new file in the git commit
-#+begin_example
+\end{verbatim}      
+\item We have to make sure to include the new file in the git commit
+\begin{verbatim}
      cd $AXHOME/silver
-#+end_example      
-  9. Tell git we care about the file
-#+begin_example
+\end{verbatim}      
+\item Tell git we care about the file
+\begin{verbatim}
      git add zips/gcl-2.6.10.tgz
-#+end_example
-2. Update the patches to the new version
-  10. find the previous patches
-#+begin_example
+\end{verbatim}
+\end{enumerate}
+\item Update the patches to the new version
+\begin{enumerate}
+\item find the previous patches
+\begin{verbatim}
      ls $AXHOME/silver/zips/gcl-2.6.8pre7*patch
-#+end_example
-  11. for each patch do ( Step 3 ; Step 4 )
-3. create diff -Naur patches to the gcl sources
-  12. assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
+\end{verbatim}
+\item for each patch do ( Step 3 ; Step 4 )
+\end{enumerate}
+\item create diff -Naur patches to the gcl sources
+\begin{enumerate}
+\item assume we are looking at gcl-2.6.8pre7.h.linux.defs.patch\\
      The name tells us what file to patch. From the above we can see
      that when Axiom builds GCL it will
-#+begin_example
+\begin{verbatim}
         cd lsp/gcl-2.6.8pre7
-#+end_example
+\end{verbatim}
      because GCL is built by the lsp/Makefile.pamphlet. That Makefile
      will do a
-#+begin_example
+\begin{verbatim}
         cd h
         patch <gcl-2.6.8pre7.h.linux.defs.patch
-#+end_example
+\end{verbatim}
      which will apply the patch .... So we need to make a patch
-  13. move to the subdirectory containing the file
-#+begin_example
+\item move to the subdirectory containing the file
+\begin{verbatim}
       cd /tmp/gcl-Version_2_6_10/gcl-2.6.10/h
-#+end_example
-  14. edit the 'linux.defs' file to create the proper patch
-  15. save the changed file as linux.defs.tpd
-  16. in a shell, create a diff -Naur patch by
-#+begin_example
+\end{verbatim}
+\item edit the 'linux.defs' file to create the proper patch
+\item save the changed file as linux.defs.tpd
+\item in a shell, create a diff -Naur patch by 
+\begin{verbatim}
       diff -Naur linux.defs linux.defs.tpd >gcl-2.6.10.h.linux.defs.patch
-#+end_example
-  17. move it to the zips directory
-#+begin_example
+\end{verbatim}
+\item move it to the zips directory
+\begin{verbatim}
       mv gcl-2.6.10.h.linux.defs.patch $AXHOME/silver/zips
       cd $AXHOME/silver
       git add zips/gcl-2.6.10.h.linux.defs.patch
-#+end_example
-4. update lsp/Makefile.pamphlet to apply the patch at build
-  18. edit lsp/Makefile.pamphlet
-  19. search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
-  20. copy the chunk and name the new chunk
+\end{verbatim}
+\end{enumerate}
+\item update lsp/Makefile.pamphlet to apply the patch at build
+\begin{enumerate}
+\item edit lsp/Makefile.pamphlet
+\item search for chunk =gcl-2.6.8pre7.h.linux.defs.patch=
+\item copy the chunk and name the new chunk 
 =gcl-2.6.10.h.linux.defs.patch=
-5. add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
-  21. find the subsection ``The GCL-2.6.8pre7 stanza''
-  22. make a copy named ``The GCL-2.6.10 stanza''
-  23. add the new patches
-  24. tell git we care
-#+begin_example
+\end{enumerate}
+\item add a new chunk to lsp/Makefile.pamphlet to build gcl-2.6.10
+\begin{enumerate}
+\item find the subsection ``The GCL-2.6.8pre7 stanza''
+\item make a copy named ``The GCL-2.6.10 stanza''
+\item add the new patches
+\item tell git we care
+\begin{verbatim}
       cd $AXHOME/silver
       git add lsp/Makefile.pamphlet
-#+end_example
-6. Change the GCLVERSION to point at the new sources
-  25. emacs =$AXHOME/silver/Makefile.pamphlet=
-  26. search for =#GCLVERSION=, a Makefile comment line
-  27. the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
+\end{verbatim}
+\end{enumerate}
+\item Change the GCLVERSION to point at the new sources
+\begin{enumerate}
+\item emacs =$AXHOME/silver/Makefile.pamphlet=
+\item search for =#GCLVERSION=, a Makefile comment line
+\item the last line is uncommented. Assume it reads GCLVERSION=gcl-2.6.8pre7\\
       gcl-2.6.8pre7 was is the name of the current version we are
       replacing. We will use this name in the next step
-  28. put a # in front of the GCLVERSION variable to comment it out\\
+\item put a # in front of the GCLVERSION variable to comment it out\\
       We maintain the list of old, working patches. We also remember the
       names of the prior GCLVERSIONS in case we have to back up
-  29. Add a new line reading:
-#+begin_example
+\item Add a new line reading:
+\begin{verbatim}
          GCLVERSION=gcl-2.6.10
-#+end_example
+\end{verbatim}
       This will cause Axiom to untar this tgz file to get the sources
       and apply the corresponding patches
-7. change the Makefile to match Makefile.pamphlet
-  - compile the tangle program
+\end{enumerate}
+\item change the Makefile to match Makefile.pamphlet
+\begin{itemize}
+\item compile the tangle program
 \begin{verbatim}
       ( cd books ; gcc -o tangle tangle.c )
 \end{verbatim}
-  - use books/tangle to extract the new Makefile
+\item use books/tangle to extract the new Makefile
 \begin{verbatim}
       books/tangle Makefile.pamphlet >Makefile
 \end{verbatim}
+\end{itemize}
+\end{enumerate}
 
-
-** Literate Programming
+\section{Literate Programming}
 The Axiom source code was originally developed at IBM Research.
 It was sold to The Numerical Algorithms Group (NAG) and was on
 the market as a commercial competitor to Mathematica and Maple.
@@ -3217,7 +3237,7 @@ started on savannah, the GNU Free Software Foundation site the
 source code had been rewritten into ``pamphlet'' files. The reasons
 for this are twofold.
 
-*** Pamphlet files
+\subsection{Pamphlet files}
 
 When the Axiom code was released it contained few comments. That made
 it very difficult to understand what the code actually did. Unlike
@@ -3244,7 +3264,7 @@ weave. The tangle command would be run against a literate document and
 extract the source code, the weave command would be run against the
 literate document and extract the TeX. 
 
-*** noweb
+\subsection{noweb}
 
 Knuth's Web tool was specifically designed to use Pascal code. The
 ``tangle'' operation would prettyprint the output according to the
@@ -3263,9 +3283,9 @@ tangle operation can be built into the system and hidden.
 
 To support extracting chunks from pamphlet files Axiom now has a
 new top level command. At the top level one can write:
-#+begin_example
+\begin{verbatim}
   )tangle filename
-#+end_example
+\end{verbatim}
 This will look for ``filename.pamphlet'' and extract the top level
 chunk which has the name ``*''.
 
@@ -3284,10 +3304,10 @@ understanding of pamphlet files. Future work involves integrating it
 into commands like )compile and adding commands like )tangle. 
 
 Tangle can also be called directly from lisp on a file from within Axiom:
-#+begin_example
+\begin{verbatim}
   )lisp (tangle "filename.pamphlet" "chunkname")
   )lisp (tangle "filename.pamphlet" "chunkname" "filename.spad")
-#+end_example
+\end{verbatim}
 
 gclweb distinguishes the input syntax by looking at the first character
 of the chunkname. If it is a '$<$' then noweb is used, otherwise latex.
@@ -3298,23 +3318,23 @@ pamphlets. The new syntax makes pamphlet files = tex files so there is
 no need to use weave. The gclweb change has a compatible tangle
 function which can be invoked from inside Axiom.
 
-#+begin_example
+\begin{verbatim}
   \begin{chunk}{chunkname}
     your code goes here
   \end{chunk}
-#+end_example
+\end{verbatim}
 
 One feature of the latex chunk style is that latex commands
 work within the chunk. To get typeset mathematics use 
 =\(= and =\)=
 
-#+begin_example
+\begin{verbatim}
 -- This will typeset in a chunk \( x^2+\epsilon \)
--- And you can format things {\bf bold}
-#+end_example
+-- And you can format things *bold*
+\end{verbatim}
 
-** Databases
-*** libcheck
+\section{Databases}
+\subsection{libcheck}
 The databases are built from the .kaf files in the .nrlib directories.
 (.kaf files are random access files).
 
@@ -3330,9 +3350,9 @@ this function.
 
 The libcheck function requires an absolute pathname to the int directory
 so call it thus:
-#+begin_example
+\begin{verbatim}
  --> )lisp (libcheck "/axiom/int/algebra")
-#+end_example
+\end{verbatim}
 The main reason this function is broken is that the system now gets
 exposure information from src/algebra/exposed.lsp.pamphlet. It appears
 that interp.exposed.pamphlet is no longer used (although I made sure
@@ -3345,7 +3365,7 @@ It used to be run during system build because I frequently ran into
 database problems and this function would alert me to that fact.
 I'll add it back into the Makefile once I elide interp.exposed.
 
-*** asq
+\subsection{asq}
 Axiom has several databases which contain information about domains,
 categories, and packages. The databases are in a compressed format and
 are organized as random-access files using numeric index values so it
@@ -3354,14 +3374,14 @@ command-line query function called asq (pronounced ask) that knows the
 format of the files and can be used for stand-alone queries. For
 instance, if you know the abbreviation for a domain but want to know
 what source file generated that domain you can say:
-#+begin_example
+\begin{verbatim}
 asq -so FOOBAR
-#+end_example
+\end{verbatim}
 and it will tell you the name of the algebra source file that
 defines FOOBAR.
 
-** Axiom internal representations
-#+begin_example
+\section{Axiom internal representations}
+\begin{verbatim}
 PRIMITIVE REPRESENTATIONS OF AXIOM OBJECTS
 
 
@@ -3482,17 +3502,17 @@ as the internal representation of
  x**2 + 1
 
 what could be easier?
-#+end_example
+\end{verbatim}
 
-** Spad to internal function calling
+\section{Spad to internal function calling}
 
-*** getdatabse output
-#+begin_example
+\subsection{getdatabse output}
+\begin{verbatim}
    GETDATABASE('Permutation, 'OPERATIONALIST)$Lisp
-#+end_example
+\end{verbatim}
 
 generates the output
-#+begin_example
+\begin{verbatim}
    (($unique)  
     (~= (((Boolean) $ $) () T ELT))
     (sort (((List $) (List $)) 76 T ELT))
@@ -3539,21 +3559,21 @@ generates the output
     (**  (($ $ (PositiveInteger)) () T ELT)
       (($ $ (NonNegativeInteger)) () T ELT)  (($ $ (Integer)) () T ELT))
     (* (($ $ $) 22 T ELT)))
-#+end_example
+\end{verbatim}
 
 Sometimes in a getdatabase expression you will see:
 
-#+begin_example
+\begin{verbatim}
 (~= (((Boolean) $ $) () T ELT))
 ---------------------^^
-#+end_example
+\end{verbatim}
 
 and in other places there is a number
 
-#+begin_example
+\begin{verbatim}
       (sign (((Integer) $) 59 T ELT))
 ---------------------------^^
-#+end_example
+\end{verbatim}
 
 In general, when a large number appears it is a byte index into
 the compress.daase file. 
@@ -3575,78 +3595,81 @@ which I will talk about below.
 
 In summary, this shows what the following incantation means:
 
-#+begin_example
+\begin{verbatim}
   (sign (((Integer) $) () (has #1 (OrderedIntegralDomain))))
-#+end_example
+\end{verbatim}
 
-#+begin_example
+\begin{verbatim}
 INTEGER inherits sign from OINTDOM (OrderedIntegralDomain)
 OINTDOM inherits sign from ORDRING (OrderedRing)
 ORDRING implements sign
    since ORDRING is a category, the actual code lives in
    ORDRING-.nrlib/code.lsp
-#+end_example
+\end{verbatim}
 
 The code for sign in ORDRING-.nrlib/code.lsp has the signature:
-#+begin_example
+\begin{verbatim}
    (DEFUN |ORDRING-;sign;SI;3| (|x| $) ....)
-#+end_example
+\end{verbatim}
 
 We can "decode" the meaning of the function name as
-- *ORDRING-* the implementing file
-- *sign* the function name
-- *SI* returns SingleInteger (an old domain name)
-- *3* the third function in the file
+\begin{itemize}
+\item *ORDRING-* the implementing file
+\item *sign* the function name
+\item *SI* returns SingleInteger (an old domain name)
+\item *3* the third function in the file
 (unique, to distinguish multiple functions with the same name)
-
+\end{itemize}
 
 It takes 2 arguments, 
-- *=|x|=* which should be a SingleInteger
-- *=$=* which is the current domain (ORDRING-)
+\begin{itemize}
+\item *=|x|=* which should be a SingleInteger
+\item *=$=* which is the current domain (ORDRING-)
+\end{itemize}
 
 So it looks like I have the following structure
-#+begin_example
+\begin{verbatim}
   (NAME ((TARGETTYPE SOURCETYPE) ?1 CONDITION ?2))
-#+end_example
+\end{verbatim}
 
 but we are looking up 'sign' in INTEGER so there is
 a condition on sign
 
-#+begin_example
+\begin{verbatim}
    Integer has OrderedRing  ==> true
-#+end_example
+\end{verbatim}
 
 so that explains the condition field.
 
 Here we show how Axiom finds the function implementation, looks up the
 function ``in the domain'', and calls it.
 
-#+begin_example
+\begin{verbatim}
     (sign (((Integer) $) 59 T ELT))
-#+end_example
+\end{verbatim}
 
 Now you've asked for 'sign' from domain Permutation
 
-#+begin_example
+\begin{verbatim}
   (sign (((Integer) $) 59 T ELT))
-#+end_example
+\end{verbatim}
 
 The implementation for 'sign' is in PERM.nrlib/code.lsp. It reads:
 
-#+begin_example
+\begin{verbatim}
  (defun |PERM;sign;$I;17| (|p| $)
   (cond
    ((spadcall |p| (qrefelt $ 58)) 1)
    ('t -1)))
-#+end_example
+\end{verbatim}
 
 which you would read as
 
-#+begin_example
+\begin{verbatim}
   if (calling function in position 58 of myself) is true
     then return 1
     else return -1
-#+end_example
+\end{verbatim}
 
 How does Axiom find the function? It is in the infovec which
 is the ``information vector'' containing information about the
@@ -3655,40 +3678,40 @@ domain.
 First we must make sure that PERM has the necessary domain
 information loaded (the 'infovec').
 
-#+begin_example
+\begin{verbatim}
 -> [1,2,3]::PERM(INT)
-#+end_example
+\end{verbatim}
 
 Now, back to the 'sign' function. You saw this:
 
-#+begin_example
+\begin{verbatim}
    (sign (((Integer) $) 59 T ELT))  (sample (($) () T CONST))
-#+end_example
+\end{verbatim}
 which is asking you to look up element 59 from the domain (=$=)
 
 Note that =$= /actually/ means the infovec. So we are asking:
 
-#+begin_example
+\begin{verbatim}
    (elt (elt (getf (symbol-plist '|Permutation|) '|infovec|) 0) 59)
-#+end_example
+\end{verbatim}
 which results in:
 
-#+begin_example
+\begin{verbatim}
    |PERM;sign;$I;17|
-#+end_example
+\end{verbatim}
 so we ``looked up'' the function sign in the domain PERM.
 
 Explaining in more detail, from the inside out by walking the
 runtime data structures we see
 
-#+begin_example
+\begin{verbatim}
    (symbol-plist '|Permutation|)
-#+end_example
+\end{verbatim}
 returns the property list on the symbol *Permutation* which is where
 Axiom caches domain information. Almost everything of interest about a
 domain resides on the property list, shown here in all its glory.
 
-#+begin_example
+\begin{verbatim}
 (LOADED "/research/test/mnt/ubuntu/algebra/PERM.o" 
  SYSTEM:DEBUG (#:G1567 #:G1568)
  |infovec| (
@@ -3897,21 +3920,21 @@ domain resides on the property list, shown here in all its glory.
        USERS NIL 
        DEPENDENTS NIL 
        SPARE NIL))
-#+end_example
+\end{verbatim}
 
 There are many things on the property list which looks like
 
-#+begin_example
+\begin{verbatim}
    (symbol1 thing1 symbol2 thing2 ... symboln thingn)
-#+end_example
+\end{verbatim}
 
 In the PERM case we see
   
-#+begin_example
+\begin{verbatim}
   (LOADED "/research/silver/mnt/algebra/PERM.o"
    |infovec| (#<vector> #<vector>...)
    ....)
-#+end_example
+\end{verbatim}
 
 We can get the =|infovec|= off the property list with the call
 
@@ -3923,16 +3946,16 @@ and return the value, which is the domain "information vector".
 You can see this vector if you look in PERM.nrlib/code.lsp.
 At the bottom of that file you'll see:
 
-#+begin_example
+\begin{verbatim}
   (SETF (GET (QUOTE |Permutation|) (QUOTE |infovec|) ....)
-#+end_example
+\end{verbatim}
 
 which uses SETF to put the infovec on the property list of PERM.
 This information vector contains information for function lookup.
 This vector gets created when we "instantiate" PERM.
 
 The *infovec* is a list with the structure
-#+begin_example
+\begin{verbatim}
   (#<vector 08ea516c> 
    #<vector 08ea5150>
    ((|unitsKnown| . 0))
@@ -3940,43 +3963,43 @@ The *infovec* is a list with the structure
     #<vector 08ea5134>
     #<vector 08ea5118> . #<vector 08ea50e0>)
   |lookupComplete|)
-#+end_example
+\end{verbatim}
 
 So, now that we have the infovec, back to the game...
 
-#+begin_example
+\begin{verbatim}
    (elt (getf (symbol-plist '|Permutation|) '|infovec|) 0)
-#+end_example
+\end{verbatim}
 
 This gets the 0th element out of the infovec list which is a
 vector of the name of every function Permutation implements.
 We look up function names in this list, in particular, 59:
 
-#+begin_example
+\begin{verbatim}
   (elt (elt (getf (symbol-plist '|Permutation|) '|infovec|) 0) 59)
-#+end_example
+\end{verbatim}
 looks into this vector of names at the 59th element which returns
 
-#+begin_example
+\begin{verbatim}
   |PERM;sign;$I;17|
-#+end_example
+\end{verbatim}
 
 The SPAD form of this function reads:
 
-#+begin_example
+\begin{verbatim}
   sign(p) ==
     even? p => 1
     -1
-#+end_example
+\end{verbatim}
 
 The lisp form (see PERM.nrlib/code.lsp) reads:
 
-#+begin_example
+\begin{verbatim}
 (defun |PERM;sign;$I;17| (|p| $)
  (cond
   ((spadcall |p| (qrefelt $ 58)) 1)
   ('t -1)))
-#+end_example
+\end{verbatim}
 
 We call the =|PERM;sign;$I;17|= which takes 2 arguments
 
@@ -3986,34 +4009,34 @@ for the PERM domain.
 The =(qrefelt $ 58)= uses the above dance to look up a function
 in the infovec at the 58th position... which returns
 
-#+begin_example
+\begin{verbatim}
   |PERM;even?;$B;18|
-#+end_example
+\end{verbatim}
 
 The spadcall calls =|PERM;even?;$B;18|= with the value of =|p|=.
 
 If we look in the domain Permutation for the implementation of even?
 
-#+begin_example
+\begin{verbatim}
   even?(p) == even?(#(p.1) - numberOfCycles p)
-#+end_example
+\end{verbatim}
 
 which in PERM.nrlib/code.lsp we see
 
-#+begin_example
+\begin{verbatim}
   (defun |PERM;even?;$b;18|
    (spadcall 
     (- (length (spadcall |p| 1 (qrefelt $ 25)))
        (spadcall |p| (qrefelt $ 60)))
     (qrefelt % 61)))
-#+end_example
+\end{verbatim}
 
 where
-#+begin_example
+\begin{verbatim}
   (qrefelt $ 25) ==> (52 . |elt|)
   (qrefelt $ 60) ==> |PERM;numberOfCycles;$Nni;33|
   (qrefelt $ 61) ==> (145. |even?|)
-#+end_example
+\end{verbatim}
 
 So, to summarize, the small magic numbers you see in the results
 are indexes into the infovec, which is where Axiom stores things
@@ -4030,23 +4053,23 @@ function which results in .....
 spadcall is a wrapper macro which takes the arguments and a
 function to call. qrefelt does the infovec lookup.
 
-** axiom command
+\section{axiom command}
 The axiom command will eventually be a shell script. At the moment
 it is just a copy of the interpsys image. However the whole Axiom
 system consists of several processes and the axiom command starts
 these processes. The shell script will transparently replace the
 axiom executable image which will be renamed to spadsys.
 
-** help command documentation
+\section{help command documentation}
 Axiom supports a )help command that takes a single argument.
 This argument is interpreted as the name of a flat ascii file
 which should live in \$AXIOM/doc/src/spadhelp.
 
-*** help documentation for algebra
+\subsection{help documentation for algebra}
 The help documentation for algebra files lives within the algebra
 pamphlet. The help chunk contains the name of the domain, thus:
 
-#+begin_example
+\begin{verbatim}
   \begin{chunk}{thisdomain.help}
   ====================================================================
   thisdomain examples
@@ -4063,7 +4086,7 @@ pamphlet. The help chunk contains the name of the domain, thus:
   o $AXIOM/bin/src/doc/algebra/thisfile.spad.dvi
   
   \end{chunk}
-#+end_example
+\end{verbatim}
 
 The documentation starts off with the domain enclosed in two lines
 of equal signs. The documentation is free format. Generally the
@@ -4073,17 +4096,17 @@ and the Type field has been moved toward the center of the line.
 The ``See Also:'' section lists the domain with the ``show'' command
 and the path to the source file in dvi format.
 
-*** Adding help documentation in Makefile
+\subsection{Adding help documentation in Makefile}
 
 There is a section in the src/algebra/Makefile.pamphlet that reads:
-#+begin_example
+\begin{verbatim}
 SPADHELP=\
  ${HELP}/AssociationList.help  ${HELP}/BalancedBinaryTree.help \
-#+end_example
+\end{verbatim}
 which is essentially a list of all of the algebra help files. Each item
 in this list refers to a stanza that looks like:
 
-#+begin_example
+\begin{verbatim}
 ${HELP}/AssociationList.help: ${BOOKS}/bookvol10.3.pamphlet
 	@echo 7000 create AssociationList.help from \
            ${BOOKS}/bookvol10.3.pamphlet
@@ -4093,7 +4116,7 @@ ${HELP}/AssociationList.help: ${BOOKS}/bookvol10.3.pamphlet
 	@${TANGLE} -R"AssociationList.input" ${BOOKS}/bookvol10.3.pamphlet \
             >${INPUT}/AssociationList.input
 	@echo "AssociationList (ALIST)" >>${HELPFILE}
-#+end_example
+\end{verbatim}
 
 Notice that the first line has an connection between the help file and 
 the spad file that contains it. 
@@ -4120,16 +4143,16 @@ final help.help file in the MNT/doc/spadhelp directory. Thus, when
 a user types )help with no argument they see a list of domains which
 contain help information.
 
-*** Using help documentation for regression testing
+\subsection{Using help documentation for regression testing}
 
 The fifth line extracts an input test file for the algebra. In general
 each help file is used to create an input test file for regression testing.
 
 There is a Makefile variable called REGRESS in the algebra Makefile:
-#+begin_example
+\begin{verbatim}
 REGRESS=\
  AssociationList.regress  BalancedBinaryTree.regress \
-#+end_example
+\end{verbatim}
 
 This is part of a Makefile that structure within the algebra Makefile.
 This Makefile gets extracted by the Makefile in the input subdirectory.
@@ -4137,75 +4160,76 @@ Thus there is a connection between the two Makefiles (algebra and input).
 This algebra regression Makefile goes by the chunk name 
 *algebra.regress*. It contains a list of regression files and a 
 single stanza:
-#+begin_example
+\begin{verbatim}
 %.regress: %.input
 	@ echo algebra regression testing $*
 	@ rm -f $*.output
 	@ echo ')read $*.input' | ${TESTSYS} 
 	@ echo ')lisp (regress "$*.output")' | ${TESTSYS} \
                 | egrep -v '(Timestamp|Version)' | tee $*.regress
-#+end_example
+\end{verbatim}
 The input Makefile extracts *algebra.regress* and then calls 
 make to process this file.
 
 This keeps the regression test list in the algebra Makefile.
 
-*** help documentation as algebra test files
+\subsection{help documentation as algebra test files}
 
 
-** debugsys
+\section{debugsys}
 The ``debugsys'' executable is the ``interpsys'' image but it is
 built using the interpreted lisp code rather than using compiled
 lisp code. This will make it slower but may, in certain cases,
 give much better feedback in case of errors. If you find you need
 to use debugsys you're really doing deep debugging. It isn't useful
 for much else. It can be started by typing:
-#+begin_example
+\begin{verbatim}
 export AXIOM=/home/axiomgnu/new/mnt/linux
 /home/axiomgnu/new/obj/linux/bin/debugpsys
-#+end_example
+\end{verbatim}
 Notice that this image lives in the ``obj'' subtree. It is not
 shipped with the ``final'' system image as only developers could
 find it useful.
-*** debugging hyperdoc
+\subsection{debugging hyperdoc}
 Hyperdoc will sometimes exit and also kill the AXIOMsys image with
 no error message. One way to get around this is to replace the 
 AXIOMsys image with the debugsys image:
-12. mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
+\begin{enumerate}
+\item mv \$AXIOM/bin/AXIOMsys \$AXIOM/bin/AXIOMsys.backup\\
 This keeps the failing axiomsys image around for later restoration.
-13. cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
+\item cp obj/sys/bin/debugsys \$AXIOM/bin/AXIOMsys\\
 This puts an interpreted version of axiom in place of the compiled form
-14. axiom\\
+\item axiom\\
 Now we are running a fully interpreted form and the error messages are
 much more informative.
-
-** Understanding a compiled function
+\end{enumerate}
+\section{Understanding a compiled function}
 Suppose we stop a program at a function call to some low level lisp function,
 say ONEP. We can do that by entering
-#+begin_example
+\begin{verbatim}
 )trace ONEP )break
-#+end_example
+\end{verbatim}
 at the Axiom command prompt. Or at the lisp prompt:
-#+begin_example
+\begin{verbatim}
 (trace (ONEP :entry (break)))
-#+end_example
+\end{verbatim}
 Next we execute some function that will 
 eventually call ONEP thus:
-#+begin_example
+\begin{verbatim}
 p := numeric %pi
 
 Break: onep
 Broken at ONEP.  Type :H for Help.
 BOOT>>
-#+end_example
+\end{verbatim}
 We have stopped and entered a lisp command prompt. We can enter any
 lisp expression here and there are commands that begin with a ``:''
 character. ``:b'' requests a backtrace of the call stack, thus:
-#+begin_example
+\begin{verbatim}
 BOOT>>:b
 Backtrace: funcall > system:top-level > restart > /read > 
       |upLET| > eval > |Pi| > |newGoGet| > |newGoGet| > ONEP
-#+end_example
+\end{verbatim}
 Here we see that the function ONEP was called by the function newGoGet.
 Notice that the name is surrounded by vertical bars. Vertical bars are
 a common lisp escape sequence used to allow non-standard characters to
@@ -4217,7 +4241,7 @@ Now that we see the simple backtrace we can ask for a more complex one.
 The command is ``:bt''. It shows more detail about each level of call
 on the invocation history stack (ihs) including the function name, its
 arguments and the depth of the invocation history stack ([ihs=13]):
-#+begin_example
+\begin{verbatim}
 BOOT>>:bt
 
 #0   ONEP {1=nil,} [ihs=13]
@@ -4243,23 +4267,23 @@ BOOT>>:bl
 >> (LAMBDA-BLOCK ONEP (&REST X) ...)():
 X        : (1)
 NIL
-#+end_example
+\end{verbatim}
 We can ask to see the local variables that are used at the current 
 level of the invocation history stack. The command is ``:bl'' thus:
-#+begin_example
+\begin{verbatim}
 BOOT>>:bl
 >> (LAMBDA-BLOCK ONEP (&REST X) ...)():
 X        : (1)
 NIL
-#+end_example
+\end{verbatim}
 We can move up the stack one level at a time looking at the function
 that called the current function (the previous function) using ``:p'' thus:
-#+begin_example
+\begin{verbatim}
 BOOT>>:p
 Broken at |NEWGOGET|.
-#+end_example
+\end{verbatim}
 And again, we can look at the variables that can be accessed locally:
-#+begin_example
+\begin{verbatim}
 BOOT>>:bl
 >> newGoGet():
 Local0(G3629): (0 (#<vector 08b34bb4> 45 . char))
@@ -4268,7 +4292,7 @@ Local(2): 0
 Local(3): #<vector 08b233f0>
 Local(4): 1
 NIL
-#+end_example
+\end{verbatim}
 Here we see that the function newGoGet is calling 
 CHAR;char;S\$;20 which is a mangled form of 
 the name of the original spad function. To decode this name 
@@ -4278,33 +4302,33 @@ from the source file ``string.spad'' which lives in
 ``src/algebra/string.spad.pamphlet''. To discover this we use 
 the Axiom ``asq'' command with the ``-so'' (sourcefile) option 
 at a standard shell prompt (NOT in the lisp prompt) thus:
-#+begin_example
+\begin{verbatim}
 asq -so CHAR
 string.spad
-#+end_example
+\end{verbatim}
 If we look at the code in the string.spad.pamphlet file we find 
 the following code signature:
-#+begin_example
+\begin{verbatim}
  char: String   -> %
   ++ char(s) provides a character from a string s of length one.
-#+end_example
+\end{verbatim}
 and it's implementation code:
-#+begin_example
+\begin{verbatim}
  char(s:String) ==
   (#s) = 1 => s(minIndex s) pretend %
   error "String is not a single character"
-#+end_example
+\end{verbatim}
 The string.spad file can be compiled at the command prompt. 
 In particular, we can compile only the CHAR domain out of this 
 file thus:
-#+begin_example
+\begin{verbatim}
 )co string.spad )con CHAR
-#+end_example
+\end{verbatim}
 This will produce a directory called CHAR.NRLIB containing 3 files:
-#+begin_example
+\begin{verbatim}
 ls CHAR.NRLIB
 code.lsp index.kaf info
-#+end_example
+\end{verbatim}
 The info file contains information used by the spad compiler. We can
 ignore it for now.
 
@@ -4314,7 +4338,7 @@ file. The first entry is an integer that will be an index into the
 file that can be used in an operating system call to seek. In this
 case it will be an index which is the last used byte in the file.
 Go to the last expression in the file and we find:
-#+begin_example
+\begin{verbatim}
 (
  ("slot1Info" 0 11302)
  ("documentation" 0 9179)
@@ -4335,15 +4359,15 @@ Go to the last expression in the file and we find:
  ("NILADIC" 0 4768)
  ("compilerInfo" 0 2093)
  ("loadTimeStuff" 0 20))
-#+end_example
+\end{verbatim}
 This is a list of triples. Each triple has two interesting parts, the
 name of the data and the seek index of the data in the index.kaf file.
 So, for instance, if you want to know what source file contains this
 domain you can start at the top of the index.kaf file, move ahead 5994
 bytes and you will be at the start of the string:
-#+begin_example
+\begin{verbatim}
 "/usr/local/axiom/src/algebra/string.spad"
-#+end_example
+\end{verbatim}
 The information in the index.kaf files are collected into the
 special databases (the .daase files). The stand-alone ``asq'' function
 can query these databases and answer questions. The kind of questions
@@ -4353,13 +4377,13 @@ The third file in the CHAR.NRLIB directory is the code.lsp file. This
 is the actual common lisp code that will be executed as a result of
 calling the various spad functions. The spad code from the char command
 was:
-#+begin_example
+\begin{verbatim}
 	char(s:String) ==
 	  (#s) = 1 => s(minIndex s) pretend %
 	  error "String is not a single character"
-#+end_example
+\end{verbatim}
 which got compiled into the common lisp code:
-#+begin_example
+\begin{verbatim}
 (DEFUN |CHAR;char;S$;20| (|s| |$|)
  (COND
   ((EQL (QCSIZE |s|) 1)
@@ -4368,32 +4392,32 @@ which got compiled into the common lisp code:
       (QREFELT |$| 48)))
   ((QUOTE T)
     (|error| "String is not a single character")))) 
-#+end_example
+\end{verbatim}
 To understand what is going on here we need to understand the low level
 details of Axiom's interface to Common Lisp. The ``Q'' functions are
 strongly typed (Quick) versions of standard common lisp functions.
 QCSIZE is defined in src/interp/vmlisp.lisp.pamphlet thus:
-#+begin_example
+\begin{verbatim}
 (defmacro qcsize (x)
  `(the fixnum (length (the simple-string ,x))))
-#+end_example
+\end{verbatim}
 This macro will compute the length of a string.
 
 QREFELT is defined in the same file as:
-#+begin_example
+\begin{verbatim}
 (defmacro qrefelt (vec ind)
  `(svref ,vec ,ind))
-#+end_example
+\end{verbatim}
 This macro will return the element of a vector.
 
 SPADCALL is defined in src/interp/macros.lisp.pamphlet as:
-#+begin_example
+\begin{verbatim}
 (defmacro SPADCALL (&rest L)
   (let ((args (butlast l)) (fn (car (last l))) (gi (gensym)))
    `(let ((,gi ,fn)) 
      (the (values t) (funcall (car ,gi) ,@args (cdr ,gi))))
    ))
-#+end_example
+\end{verbatim}
 This macro will call the last value of the argument list as a function
 and give it everything but the last argument as arguments to the function.
 There are confusing historical reasons for this I won't go into here.
@@ -4407,16 +4431,16 @@ is 1 then we call the minIndex function from string on s. The minIndex
 function is found by looking ``in the domain''. The compiler changes the
 minIndex function call into a reference into a vector. The 47th element
 of the vector contains the function minIndex. 
-#+begin_example
+\begin{verbatim}
       (SPADCALL |s| (QREFELT |$| 47))
-#+end_example
+\end{verbatim}
 This code is equivalent (ignoring the gensyms) to the call
-#+begin_example
+\begin{verbatim}
 (minIndex s)
-#+end_example
+\end{verbatim}
 The \$ symbol refers to the domain. At runtime this amounts to a lookup
 of the ``infovec''. The compile-time infovec shown here:
-#+begin_example
+\begin{verbatim}
 (setf (get
  (QUOTE |Character|)
  (QUOTE |infovec|))
@@ -4510,20 +4534,20 @@ of the ``infovec''. The compile-time infovec shown here:
              0 12 0 42 2 0 12 0 0 1 2 0 12 0 0 1 2 0 12 0 0 13 
              2 0 12 0 0 1 2 0 12 0 0 14))))))
     (QUOTE |lookupComplete|)))
-#+end_example
+\end{verbatim}
 Which is a 5 element list. This contains all kinds of information used at
 runtime by the compiled routines. In particular, functions are looked up
 at runtime in the first element of the infovec list. This first element
 contains 53 items (in this domain). Item 47 is
-#+begin_example
+\begin{verbatim}
      (40 . |minIndex|)
-#+end_example
+\end{verbatim}
 which is the minIndex function we seek. 
 
 At runtime this infovec lives on the property list of the domain name.
 The domain name of CHAR is Character. So we look on the property list
 (a lisp a-list) thus:
-#+begin_example
+\begin{verbatim}
 BOOT>>(symbol-plist '|Character|)
 
 (SYSTEM:DEBUG (#:G85875)
@@ -4559,14 +4583,14 @@ BOOT>>(symbol-plist '|Character|)
              USERS NIL 
              DEPENDENTS NIL 
              SPARE NIL))
-#+end_example
+\end{verbatim}
 This list is organized contains many runtime lookup items (notice the 
 PNAME entry is ``Character'', the LOADED entry says where the file came
 from, the DATABASE structure entry has database indicies
 (see daase.lisp.pamphlet for the structure definition), etc).
 
 Lets get the property list
-#+begin_example
+\begin{verbatim}
 BOOT>>(setq a (symbol-plist '|Character|))
 
 (SYSTEM:DEBUG (#:G85875)
@@ -4602,9 +4626,9 @@ BOOT>>(setq a (symbol-plist '|Character|))
              USERS NIL 
              DEPENDENTS NIL 
              SPARE NIL))
-#+end_example
+\end{verbatim}
 Next we get the infovec value
-#+begin_example
+\begin{verbatim}
 BOOT>>(setq b (fourth a))
 
 (#<vector 08b34380>
@@ -4614,58 +4638,58 @@ BOOT>>(setq b (fourth a))
   #<vector 08b34348>
   #<vector 08b3432c> . #<vector 08b342f4>)
  |lookupComplete|)
-#+end_example
+\end{verbatim}
 Then we get the function table
-#+begin_example
+\begin{verbatim}
 BOOT>>(setq c (car b))
 
 #<vector 08b34380>
-#+end_example
+\end{verbatim}
 In this common lisp (GCL) the array is identified by it's memory address.
 
 Notice that it has the right number of entries:
-#+begin_example
+\begin{verbatim}
 BOOT>>(length c)
 
 53
-#+end_example
+\end{verbatim}
 And we  can ask for the 47th entry thus:
-#+begin_example
+\begin{verbatim}
 BOOT>>(elt c 47)
 
 (40 . |minIndex|)
-#+end_example
+\end{verbatim}
 Later we end up calling the 48th function (which is elt and
 returns the actual character in the string). We ask for it:
-#+begin_example
+\begin{verbatim}
 BOOT>>(elt c 48)
 
 (45 . |elt|)
-#+end_example
+\end{verbatim}
 At this point we've reached the metal. Common lisp will evaluate
 the macro-expanded functions and execute the proper code. Essentially
 the compiler has changed all of our spad code into runtime table lookups.
 
-** The axiom.input startup file
+\section{The axiom.input startup file}
 If you add a file in your home directory called ``.axiom.input'' it will
 be read and executed when Axiom starts. This is useful for various
 reasons including setting various switches. Mine reads:
-#+begin_example
+\begin{verbatim}
 )lisp (pprint ``running /root/.axiom.input'')
 )set quit unprotected
 )set message autoload off
 )set message startup off
-#+end_example
+\end{verbatim}
 You can execute any command in .axiom.input. Be aware that this will
 ALSO be run while you are doing a ``make'' so be careful what you ask to do.
 
-** Where are Axiom symbols stored?
+\section{Where are Axiom symbols stored?}
 
 You'd think that your question about where the symbol is interned
 would be easy to answer but it is not. The top level loop uses Bill
 Burge's dreaded zipper parser. You can see it in action by executing
 the following sequence:
-#+begin_example
+\begin{verbatim}
 
 )lisp (setq $DALYMODE t)    
   ; this is a special mode of the top level interpreter. If 
@@ -4692,7 +4716,7 @@ the following sequence:
 (trace |processInteractive1|)  
   ; from i-toplev.boot.pamphlet
 
-#+end_example
+\end{verbatim}
 ah HA! I remember now. There is the notion of a ``frame'' which is
 basically a namespace in Axiom or an alist in Common Lisp. It is
 possible to maintain different ``frames'' and move among them. There
@@ -4700,25 +4724,25 @@ is the notion of the current frame and it contains all the defined
 variables. At any given time the current frame is available as
 \$InteractiveFrame. This variable is used in processInteractive1.
 If you do:
-#+begin_example
+\begin{verbatim}
 
 a:=7
 (pprint |$InteractiveFrame|)
 
-#+end_example
+\end{verbatim}
 you'll see |a| show up on the alist. When you do the 
-#+begin_example
+\begin{verbatim}
 
 pgr:=MonoidRing(Polynomial PrimeField 5, Permutation Integer)
 p:pgr:=1
 
-#+end_example
+\end{verbatim}
 you'll see |p| show up with 2 other things: (|p| mode value)
 where mode is the ``type'' of the variable. The value is the
 internal value. In this case MonoidRing has an internal
 representation. You can find out what the internal representation
 of a MonoidRing is by first asking where the source file is:
-#+begin_example
+\begin{verbatim}
 
 (do this at a shell prompt, not in axiom)
 asq -so MonoidRing ==> mring.spad
@@ -4727,56 +4751,56 @@ asq -so MonoidRing ==> mring.spad
 
 )show MonoidRing
 
-#+end_example
+\end{verbatim}
 and you'll see a line that reads: 
-#+begin_example
+\begin{verbatim}
 
 Issue )edit (yourpath)/../../src/algebra/mring.spad
 
-#+end_example
+\end{verbatim}
 
 If you look in mring.spad.pamphlet you'll see line 91 that reads:
-#+begin_example
+\begin{verbatim}
 
    Rep := List Term
 
-#+end_example
+\end{verbatim}
 which says that we will store elements of type MonoidRing as a list
 of Term objects. Term is defined in the same file (as a macro, which
 is what '$==>$' means in spad files) on line 43:
-#+begin_example
+\begin{verbatim}
 
    Term ==> Record(coef: R, monom: M)
 
-#+end_example
+\end{verbatim}
 which means that elements of a MonoidRing are Lists of Records.
 The 'R' is defined on line 42 as the first argument to MonoidRing
 which in this case is ``Polynomial PrimeField 5''. The ``M'' is also
 defined on line 42 as the second argument to MonoidRing and in this
 case is ``Permutation Integer''. So the real representation is
-#+begin_example
+\begin{verbatim}
 
   List Record(coef: Polynomial PrimeField 5, 
               monom: Permutation Integer)
 
-#+end_example
+\end{verbatim}
 In the \$InteractiveFrame we printed out you can see in the value
 field that the value is:
-#+begin_example
+\begin{verbatim}
 
 (|value| 
   (|MonoidRing| (|Polynomial| (|PrimeField| 5))
                 (|Permutation| (|Integer|)))
    WRAPPED ((0 . 1) . #<vector 08af33d4>))
 
-#+end_example
+\end{verbatim}
 which basically means that we know how the MonoidRing was constructed and
 what it's current value is. The (0 . 1) likely means that this is the
 zeroth (constant) term with a leading coefficient of 1. This is just a
 guess as I haven't decoded the representation of either Polynomial PrimeField 
 or Permutation Integer. You can do the same deconstruction of these two
 domains by setting
-#+begin_example
+\begin{verbatim}
 
 pi:=Permutation Integer
 z:pi:=1
@@ -4795,38 +4819,38 @@ and following the same steps as above:
  (find the source file)
  (find the representation and decode it)
 
-#+end_example
+\end{verbatim}
 Be sure to set \$DALYMODE to nil if you plan to use Axiom for any
 real computation. Otherwise every expression that begins with an
 open-paren will go directly to lisp.
-** Translating individual boot files to common lisp
+\section{Translating individual boot files to common lisp}
 
 If you are making changes to boot code it is sometimes helpful to
 check the generated lisp code to ensure it does what you want.
 You can convert an individual boot file to common lisp using the
 boottran::boottocl function:
-#+begin_example
+\begin{verbatim}
 )fin       -- drop into common lisp
 (boottran::boottocl "foo.boot") 
-#+end_example
+\end{verbatim}
 when you do this it creates a foo.clisp file in ../../int/interp
 
 Alternatively if you work from the pamphlet file the process is
 more painful as you have to do
-#+begin_example
+\begin{verbatim}
 )cd (yourpath)/int/interp
 )sys tangle ../../src/interp/foo.boot.pamphlet >foo.boot
 )fin
 (boottran::boottocl "foo.boot") 
 (restart)
-#+end_example
+\end{verbatim}
 The )cd step tells axiom to cd to the int/interp subdirectory.
 The )sys tangle... extracts the boot file from the pamphlet file
 The )fin step drops into common lisp
 The (bootran... converts the foo.boot file to foo.clisp
 The (restart) re-enters the top level loop
 
-** Directories
+\section{Directories}
 For this discussion I assume that you have your system rooted
 at /spad and was build to run on linux. These directories
 may not yet be in the CVS tree but are documented here so they
@@ -4859,7 +4883,7 @@ the linux system. This is the 'mount point' of the system.
 Executable systems (for RedHat) are shipped relative to this
 point. In what follows, the ./ refers to /spad/mnt/linux.
 
-#+begin_example
+\begin{verbatim}
 ********************************************************
 There are several directories explained below. They are:
 
@@ -4869,9 +4893,9 @@ There are several directories explained below. They are:
 ./lib     -- system executables
 ./etc     -- I haven't a clue....
 ********************************************************
-#+end_example
+\end{verbatim}
 
-*** The mnt/linux/bin directory
+\subsection{The mnt/linux/bin directory}
 ./bin
 
 This is a directory of user executable commands, either at the top
@@ -4950,7 +4974,7 @@ name in her home directory and it will get loaded at startup with
 the probable effect of injecting luser errors into the running system.
 sigh.
 
-*** The mnt/linux/doc directory
+\subsection{The mnt/linux/doc directory}
 ./doc
 
 The doc subdirectory contains system documentation.
@@ -5104,7 +5128,7 @@ This one is here because it is here. Existentially speaking, of course.
 This was what the htex files said before history was rewritten...
 (and renamed?)
 
-*** The mnt/linux/algebra directory
+\subsection{The mnt/linux/algebra directory}
 ./algebra
 
 This is where all of the interesting action lives.
@@ -5127,9 +5151,9 @@ and kept open.
 This is a control file for the interpeter that limits the number
 of places to search for function names. 
 
-,*********************************************
+*********************************************
 
-*** The mnt/linux/etc directory
+\subsection{The mnt/linux/etc directory}
 ./lib
 
 This directory contains functions that get loaded by the system.
@@ -5226,16 +5250,16 @@ just the historian).
 
 I've drawn a blank; intentionally.
 
-*** The mnt/linux/lib directory
+\subsection{The mnt/linux/lib directory}
 ./etc
 
 This directory intentionally left blank.
 We just can't figure out WHY we intended to leave it blank.
 Historical reasons, no doubt.
 
-** The )set command
+\section{The )set command}
 The *)set* command contains many possible options such as:
-#+begin_example
+\begin{verbatim}
                      Current Values of )set Variables                      
 
 Variable  Description                              Current Value
@@ -5262,7 +5286,7 @@ Variables with current values of ... have further
 sub-options. For example, 
 issue )set  system to see what the options are for system .
 For more information, issue )help set .
-#+end_example
+\end{verbatim}
 The table that contains these options lives in setvart.boot.pamphlet.
 The actual code that implements these options is sprinkled around
 but most of the first-level calls resolve to functions in 
@@ -5273,19 +5297,19 @@ broken, these two files are the place to start.
 A new )set breakmode command has been implemented to handle the
 case that you might want an error message or an error return code
 from AXIOMsys. You can set this option with 
-#+begin_example
+\begin{verbatim}
   )set breakmode quit
-#+end_example
+\end{verbatim}
 This will cause AXIOMsys to exit with the return code of 1.
 Note that if you invoke the ``axiom'' shell script to start
 AXIOMsys you will not see this return code (sman swallows it).
 
-** Special Output Formats
+\section{Special Output Formats}
 The first level of special output formatting is handled by
 functions in setvart.boot.pamphlet. This handles the options
 given to the )set command.
 
-** Hand creating the hyperdoc binary
+\section{Hand creating the hyperdoc binary}
 
 First we need *tanglec* which is used to extract the required chunks.
 
@@ -5295,7 +5319,7 @@ path. Now you can modify the source code to debug.
 
 We use the 
 
-#+begin_example
+\begin{verbatim}
 gcc -o tanglec books/tanglec.c
 tanglec books/bookvol7.pamphlet hypertex >hypertex.c
 tanglec books/bookvol8.pamphlet sockio-c.c >sockio-c.c
@@ -5314,21 +5338,21 @@ gcc -O2 -fno-strength-reduce -Wall -D_GNU_SOURCE -DLINUXplatform
    util.o -lXpm -lX11 -lm
 cp hypertex mnt/ubuntu/bin
 axiom
-#+end_example
+\end{verbatim}
 
-** Low Level Debugging Techniques
+\section{Low Level Debugging Techniques}
 It should be observed that Axiom is basically Common Lisp and 
 some very low level techniques can be used to find where problems
 occur in algebra code. This section walks thru a small problem and
 illustrates some techniques that can be used to find bugs. The 
 point of this exercise is to show a few techniques, not to show a
 general method.
-*** Finding Anonymous Function Signatures
+\subsection{Finding Anonymous Function Signatures}
 This is a technique, adapted from Waldek Hebisch, 
 for asking the interpreter to reveal the actual
 function that will be called in a given circumstance. Here we have a
 function tanint from the domain ElementaryIntegration. 
-#+begin_example
+\begin{verbatim}
      tanint(f, x, k) ==
        eta' := differentiate(eta := first argument k, x)
        r1  := tanintegrate(univariate(f, k), differentiate(#1,
@@ -5336,13 +5360,13 @@ function tanint from the domain ElementaryIntegration.
                  rischDEsys(#1, 2 * eta, #2, #3, x, lflimitedint(#1, x, #2),
                     lfextendedint(#1, x, #2)))
        map(multivariate(#1, k), r1.answer) + lfintegrate(r1.a0, x)
-#+end_example
+\end{verbatim}
 
 We would like to know the type signature of the first argument to the 
 inner call to the differentiate function:
-#+begin_example
+\begin{verbatim}
                differentiate(#1, x), monomial(eta', 2) + eta'::UP),
-#+end_example
+\end{verbatim}
 
 We see that differentiate is called with =#1=, which is Axiom's
 notation for an anonymous function. How can we determine the signature?
@@ -5355,10 +5379,10 @@ type information. In the above code, we would like to replace the
 The first step is to look at the output of the Spad compiler. 
 The abbreviation for ElementaryIntegration can be found from the 
 interpreter by:
-#+begin_example
+\begin{verbatim}
   )show ElementaryIntegration
     Abbreviation for ElementaryIntegration is INTEF 
-#+end_example
+\end{verbatim}
 
 So the compiler output is in the int/algebra/INTEF.nrlib/code.lsp file.
 
@@ -5367,7 +5391,7 @@ There we see the definition of the lisp tanint function. Notice that the
 function. This is the vector of the current domain containing slots where
 we can look up information, called the domain vector.
 
-#+begin_example
+\begin{verbatim}
 (DEFUN |INTEF;tanint| (|f| |x| |k| $)
  (PROG (|eta| |eta'| |r1|)
   (RETURN
@@ -5398,14 +5422,14 @@ we can look up information, called the domain vector.
         (QREFELT $ 57))
       (SPADCALL (QCDR |r1|) |x| (QREFELT $ 58))
       (QREFELT $ 59))))))) 
-#+end_example
+\end{verbatim}
 
 The assignment line for =eta'= is:
-#+begin_example
+\begin{verbatim}
        eta' := differentiate(eta := first argument k, x)
-#+end_example
+\end{verbatim}
 which is implemented by the code:
-#+begin_example
+\begin{verbatim}
     (LETT |eta'|
      (SPADCALL
        (LETT |eta|
@@ -5415,7 +5439,7 @@ which is implemented by the code:
        |x|
        (QREFELT $ 19))
      |INTEF;tanint|)
-#+end_example
+\end{verbatim}
 from which we see that the inner differentiate is slot 19 in
 the domain vector. Every domain has an associated domain vector
 which contains references to other functions from other domains,
@@ -5426,14 +5450,14 @@ The SPADCALL macro uses the last argument, in this case the result
 of =(QREFELT $ 19)= to find the function to call.
 
 The function from slot 19 can be found with:
-#+begin_example
+\begin{verbatim}
 )lisp (setq $dalymode t)
 (setf *print-circle* t)
 (setf *print-array* nil)
 (setf dv (|ElementaryIntegration| (|Integer|) (|Expression| (|Integer|))))
 (|replaceGoGetSlot| (cdr (aref dv 19)))
 Value = (#<compiled-function |FS-;differentiate;SSS;99|> . #<vector 090cbccc>)
-#+end_example
+\end{verbatim}
 
 The call of =(setq $dalymode t)= changes the Axiom top level
 loop to interpret any input that begins with an open parenthesis to
@@ -5453,45 +5477,45 @@ In Axiom, the names of types are case-sensitive symbols. These are
 represented in lisp surrounded by vertical bars because lisp is not
 case sensitive. The dv variable is essentially being set to the Axiom
 equivalent of:
-#+begin_example
+\begin{verbatim}
   dv:=ElementaryIntegration(Integer,Expression(Integer))
-#+end_example
+\end{verbatim}
 except we do this in lisp. The end result is that dv will contain the
 domain vector for the newly constructed domain. From the lisp code
 
 Consider the call of the form:
-#+begin_example
+\begin{verbatim}
   (SPADCALL A B '(C . D))
-#+end_example
+\end{verbatim}
 
 The SPADCALL macro takes a set of arguments, the last of which is 
 a pair where C is the function to call and D is the domain vector. 
 So if we do:
-#+begin_example
+\begin{verbatim}
 (macroexpand-1 '(spadcall a b '(c . d)))
 Value =
   (LET ((#0=#:G1417 (QUOTE (C . D))))
    (THE (VALUES T) (FUNCALL (CAR #0#) A B (CDR #0#))))
-#+end_example
+\end{verbatim}
 Note that =#0= is a ``pointer'', in this case to the list '(c)
 and =#0#= is a use of that pointer. This is done to make sure that
 you reference the exact cons cell of the argument.
 
 In Axiom compiler output
-#+begin_example
+\begin{verbatim}
   (SPADCALL eta k (QREFELT $ 19))
-#+end_example
+\end{verbatim}
 approximately translates to
-#+begin_example
+\begin{verbatim}
   (FUNCALL (CAR (QREFELT $ 19)) eta k (CDR (QREFELT $ 19)))
-#+end_example
+\end{verbatim}
 which calls the function from the domain slot 19 on the value
 assigned to eta and the variable k and the domain. 
 Thus, the full expansion becomes
-#+begin_example
+\begin{verbatim}
   (FUNCALL #<compiled-function |FS-;differentiate;SSS;99|>
     eta k #<vector 090cbccc>)
-#+end_example
+\end{verbatim}
 
 From this we can see a reference to =FS-;differentiate;SSS;99=
 which is the internal name of the differentiate function from the 
@@ -5504,7 +5528,7 @@ code for =FS-;differentiate;SSS;99= lives in
 int/algebra/FS-.nrlib/code.lsp
 
 We can see that the differentiate function is coming from the category
-#+begin_example
+\begin{verbatim}
 )show FS
  FunctionSpace R: OrderedSet  is a category constructor
  Abbreviation for FunctionSpace is FS 
@@ -5515,48 +5539,48 @@ We can see that the differentiate function is coming from the category
  differentiate : (%,List Symbol) -> % if R has RING
  differentiate : (%,Symbol,NonNegativeInteger) -> % if R has RING
  differentiate : (%,List Symbol,List NonNegativeInteger) -> % if R has RING
-#+end_example
+\end{verbatim}
 
 From the above signatures we know there is only one differentiate that
 is a two argument form so the call 
-#+begin_example
+\begin{verbatim}
                differentiate(#1, x), monomial(eta', 2) + eta'::UP),
-#+end_example
+\end{verbatim}
 must be the first instance.
 
 From the sources (bookvol10.4) we see that the tanint function has 
 the signature:
-#+begin_example
+\begin{verbatim}
     tanint      : (F, SE, K) -> IR
-#+end_example
+\end{verbatim}
 and that 
-#+begin_example
+\begin{verbatim}
   SE  ==> Symbol
   F : Join(AlgebraicallyClosedField, TranscendentalFunctionCategory,
            FunctionSpace R)
   K   ==> Kernel F
-#+end_example
+\end{verbatim}
 
 The differentiate function takes something of type F and a Symbol
 and returns something of type F. If we write this as an anonymous
 function it becomes:
-#+begin_example
+\begin{verbatim}
    (x2 : F) : F +-> differentiate(x2, x)
-#+end_example
+\end{verbatim}
 
 Thus, we can rewrite the differentiate call as:
-#+begin_example
+\begin{verbatim}
                differentiate(#1, x), monomial(eta', 2) + eta'::UP),
-#+end_example
+\end{verbatim}
 as
-#+begin_example
+\begin{verbatim}
                    (x2 : F) : F +-> differentiate(x2, x),
                    monomial(eta', 2) + eta'::UP),
-#+end_example
+\end{verbatim}
 
 
 Continuing in this way we can fully rewrite the assignments as:
-#+begin_example
+\begin{verbatim}
        r1  := tanintegrate(univariate(f, k),
                 (x1 : UP) : UP +-> differentiate(x1,
                    (x2 : F) : F +-> differentiate(x2, x),
@@ -5567,18 +5591,18 @@ Continuing in this way we can fully rewrite the assignments as:
                      (x4 : F, x5 : F) : U2 +-> lfextendedint(x4, x, x5)))
        map((x1 : RF) : F +-> multivariate(x1, k), r1.answer) + _
              lfintegrate(r1.a0, x)
-#+end_example
+\end{verbatim}
 
 Note that rischDEsys is tricky, because rischDEsys returns only List F,
 but tanintegrate expects union. 
-*** The example bug
+\subsection{The example bug}
 Axiom can generate TeX output by typing:
-#+begin_example
+\begin{verbatim}
 )set output tex on
-#+end_example
+\end{verbatim}
 
 Here we give an example of TeX output that contains a bug:
-#+begin_example
+\begin{verbatim}
 (1) -> )set output tex on
 (1) -> radix(10**10,32)
    Loading /axiom/mnt/linux/algebra/RADUTIL.o for package 
@@ -5610,14 +5634,14 @@ $$
    Loading /axiom/mnt/linux/algebra/VOID.o for domain Void 
 
                                       Type: RadixExpansion 32
-#+end_example
+\end{verbatim}
 The correct output should be:
-#+begin_example
+\begin{verbatim}
 $$
 9A0NP00 
 \leqno(1)
 $$
-#+end_example
+\end{verbatim}
 So we need to figure out where the #  prefixes are being generated.
 In the above code we can see various domains being loaded. These domains
 are lisp code. Each domain lives in a subdirectory of its own. For example,
@@ -5625,7 +5649,7 @@ the ANY domain lives in ANY.NRLIB. The ANY.NRLIB directory contains a
 common lisp file named code.lsp. The compiled form of this code ANY.o
 is loaded whenever the domain Any is referenced. We can look at the lisp 
 code:
-#+begin_example
+\begin{verbatim}
 
 (/VERSIONCHECK 2) 
 
@@ -5804,27 +5828,27 @@ code:
   (QUOTE |lookupComplete|))) 
 
 (setf (get (QUOTE |Any|) (QUOTE NILADIC)) T) 
-#+end_example
+\end{verbatim}
 We can ignore this information and focus on the functions that are 
 defined in this file. These functions can be traced with the usual
 common lisp tracing facility. So lets create a file /tmp/debug.lisp
 that contains a trace statement for each DEFUN in ANY.NRLIB/code.lsp.
 It looks like:
-#+begin_example
+\begin{verbatim}
 (trace |ANY1;retractable?;AB;1|)
 (trace |ANY1;coerce;SA;2|)
 (trace |ANY1;retractIfCan;AU;3|)
 (trace |ANY1;retract;AS;4|)
 (trace |AnyFunctions1|)
 (trace |AnyFunctions1;|)
-#+end_example
+\end{verbatim}
 We can now restart the axiom system, rerun the failing expression
 (this will autoload ANY.o; alternatively we could hand-load the
 ANY.NRLIB/code.lsp file), and then load our /tmp/debug.lisp file.
 Now all of the functions in the ANY domain are traced and we can
 watch the trace occur while the expression is evaluated. In this example
 I've created a larger file that traces all of the loaded domains:
-#+begin_example
+\begin{verbatim}
 (trace |RADUTIL;radix;FIA;1|)
 (trace |RadixUtilities|)
 (trace |RadixUtilities;|)
@@ -6005,9 +6029,9 @@ I've created a larger file that traces all of the loaded domains:
 (trace |UniversalSegment|)
 (trace |UniversalSegment;|)
 
-#+end_example
+\end{verbatim}
 Now we rerun the function and get the trace output
-#+begin_example
+\begin{verbatim}
 (2) -> )lisp (load "/axiom/debug.lisp")
 
 Value = T
@@ -6130,19 +6154,19 @@ $$
 $$
 
                                       Type: RadixExpansion 32
-#+end_example
+\end{verbatim}
 Notice the call that reads:
-#+begin_example
+\begin{verbatim}
     2> (|RADIX;intToExpr| 10 #<vector 08b8cc94>)
     <2 (|RADIX;intToExpr| #\A)
-#+end_example
+\end{verbatim}
 This means that calling |RADIX;intToExpr| with the number 10
 and ``the domain vector'' generates the character #\\A which fails.
 If we had the domain vector in a variable we could hand-execute this
 algebra function directly and watch it fail. So we go to the file
 RADIX.NRLIB/code.lsp which contains the definition of RADIX;intToExpr.
 The definition is:
-#+begin_example
+\begin{verbatim}
 (DEFUN |RADIX;intToExpr| (|i| $) 
  (COND 
   ((< |i| 10) 
@@ -6154,10 +6178,10 @@ The definition is:
        (+ (- |i| 10) (SPADCALL (QREFELT $ 64) (QREFELT $ 68)))
        (QREFELT $ 70))
      (QREFELT $ 71))))) 
-#+end_example
+\end{verbatim}
 We can put this definition into our /tmp/debug.lisp file and modify
 it to capture the domain vector passed in the \$ variable thus:
-#+begin_example
+\begin{verbatim}
 (DEFUN |RADIX;intToExpr| (|i| $) 
  (setq tpd $) 
  (COND 
@@ -6170,19 +6194,19 @@ it to capture the domain vector passed in the \$ variable thus:
        (+ (- |i| 10) (SPADCALL (QREFELT $ 64) (QREFELT $ 68)))
        (QREFELT $ 70))
      (QREFELT $ 71))))) 
-#+end_example
+\end{verbatim}
 Now when this function is executed the tpd variable will contain the
 value of \$, the domain vector. So we load debug.lisp again
 to redefine RADIX;intToExpr and re-execute the function. The trace
 results will be the same but now the global variable tpd will have
 the domain vector:
-#+begin_example
+\begin{verbatim}
 (4) -> (identity tpd)
 
 Value = #<vector 08b8cc94>
-#+end_example
+\end{verbatim}
 Now we can use common lisp to step the RADIX;intToExpr function:
-#+begin_example
+\begin{verbatim}
 (4) -> (step (|RADIX;intToExpr| 10 tpd))
 
 Type ? and a newline for help.
@@ -6364,10 +6388,10 @@ VALUES
   = #\A
 Value = #\A
 (4) -> 
-#+end_example
+\end{verbatim}
 If we examine the source code for this function in int/algebra/radix.spad
 we find:
-#+begin_example
+\begin{verbatim}
 
     ALPHAS : String := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -6376,16 +6400,16 @@ we find:
       i < 10 => i :: OUT
       elt(ALPHAS,(i-10) + minIndex(ALPHAS)) :: OUT
 
-#+end_example
+\end{verbatim}
 We do some lookups by hand to find out what functions are being called
 from the domain vectors thus:
-#+begin_example
+\begin{verbatim}
 (4) -> )lisp (qrefelt tpd 68)
 
 Value = (#<compiled-function 
          |ISTRING;minIndex;$I;11|> . #<vector 08b26850>)
 
-#+end_example
+\end{verbatim}
 
 
 
@@ -6394,11 +6418,11 @@ The #\\A value appears from a call to
 CHAR;coerce;\$Of;12. We can look in CHAR.NRLIB/code.lsp
 for this function and continue our descent into the code. The 
 function looks like:
-#+begin_example
+\begin{verbatim}
 (DEFUN |CHAR;coerce;$Of;12| (|c| $) 
   (ELT (QREFELT $ 10)
        (+ (QREFELT $ 11) (SPADCALL |c| (QREFELT $ 21))))) 
-#+end_example
+\end{verbatim}
 Again we need to get the domain vector, this time from the CHAR domain.
 The domain vector has all of the information about a domain including
 what functions are referenced and what data values are used. The 
@@ -6406,40 +6430,41 @@ QREFELT is a ``quick elt'' function which resolved to a highly
 type optimized function call. The SPADCALL function funcalls the
 second argument to SPADCALL with the first argument to SPADCALL
 effectively giving: 
-#+begin_example
+\begin{verbatim}
 (funcall (qrefelt $ 21) |c|)
-#+end_example
+\end{verbatim}
 So we modify the CHAR;coerce;\$Of;12 function to capture the domain
 vector thus:
-#+begin_example
+\begin{verbatim}
 (DEFUN |CHAR;coerce;$Of;12| (|c| $)
    (format t "|CHAR;coerce;$Of;12| called")
    (setq tpd1 $)
   (ELT (QREFELT $ 10)
        (+ (QREFELT $ 11) (SPADCALL |c| (QREFELT $ 21))))) 
-#+end_example
+\end{verbatim}
 Again we rerun the failing function and now tpd1 contains the
 domain vector for the domain CHAR:
 
-*** Operating system level I/O trace (strace)
+\subsection{Operating system level I/O trace (strace)}
 If the bug seems to happen during startup the only method of 
 debugging might be to use strace. To do this, replace the 
 \$AXIOM/bin/AXIOMsys binary with a shell script. You should:
 
-15. rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
-16. create the shell script shown below
-17. copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will
+\begin{enumerate}
+\item rename \$AXIOM/bin/AXIOMsys to \$AXIOM/bin/AXIOMsys.bin
+\item create the shell script shown below
+\item copy the shell script to the file \$AXIOM/bin/AXIOMsys so it will 
 execute in place of the normal Axiom image
-18. chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
-19. start axiom normally
-
+\item chmod +x \$AXIOM/bin/AXIOMsys to make the script executable
+\item start axiom normally
+\end{enumerate}
 
 The script reads:
-#+begin_example
+\begin{verbatim}
 #!/bin/sh
 exec strace -o /tmp/str.$$ /research/test/mnt/ubuntu/bin/AXIOMsys.bin "$@" 
       | tee /tmp/tee.$$
-#+end_example
+\end{verbatim}
 
 The script will create 2 files in the tmp directory, ``str.NNNNN'' and
 ``tee.NNNNN'' where NNNNN is the process id assigned to axiom at runtime.
@@ -6448,12 +6473,12 @@ The tee.NNNNN file contains the console output you saw.
 The str.NNNNN contains the output of strace which is a list of all of
 the system calls and their result.
 
-** How to make graphs in algebra books
+\section{How to make graphs in algebra books}
 dot -Tps <pic >books/ps/domain.ps
 
 where file pic contains something like:
 
-#+begin_example
+\begin{verbatim}
 digraph pic {
  fontsize=10;
  bgcolor="#ECEA81";
@@ -6463,7 +6488,7 @@ digraph pic {
  [color=lightblue,href="bookvol10.3.pdf#nameddest=ODVAR"];
 
 }
-#+end_example
+\end{verbatim}
 
 In book Volume 10.3 there are .ps files generated for each domain.
 
@@ -6482,11 +6507,11 @@ The graph information at the end of a domain (e.g. UTSZ) contains only
 the uncommented information. It is used to generate the picture. So
 for UTSZ we see:
 
-#+begin_example
+\begin{verbatim}
 "UTSZ" [color="#88FF44",href="bookvol10.3.pdf#nameddest=UTSZ"]
 "ACFS" [color="#4488FF",href="bookvol10.2.pdf#nameddest=ACFS"]
 "UTSZ" -> "ACFS"
-#+end_example
+\end{verbatim}
 
 This tells us several pieces of information. UTSZ depends on ACFS
 as the highest parent. ACFS is in layer 17 so is in layer 18.
@@ -6498,7 +6523,7 @@ The necessary stanzas exist after each algebra domain.
 Copy the stanza into a digraph block and run the dot function.
 So for the UTSZ domain we would create a file (e.g. called 'pic')
 that contains a block that reads:
-#+begin_example
+\begin{verbatim}
 digraph pic {
  fontsize=10;
  bgcolor="#ECEA81";
@@ -6509,16 +6534,16 @@ digraph pic {
 "UTSZ" -> "ACFS"
 
 }
-#+end_example
+\end{verbatim}
 and then run the command:
-#+begin_example
+\begin{verbatim}
   dot -Tps <pic >pic.ps
   cp pic.ps ps/v103univariatetaylorseriesczero.ps
-#+end_example
+\end{verbatim}
 The output file ``ps/v103univariatetaylorseriesczero.ps'' is included
 after the pagepic of each domain in the book.
 
-** Adding or Editing pages in Hyperdoc
+\section{Adding or Editing pages in Hyperdoc}
 In Axiom it is easy to develop new pages in hyperdoc.
 All of the hyperdoc pages live in bookvol7.1.pamphlet.
 
@@ -6527,7 +6552,7 @@ of a few lines of latex followed by a literate chunk. All of the
 hyperdoc page information goes into the literate chunk and will
 be extracted as a hyperdoc page.
 
-#+begin_example
+\begin{verbatim}
  \section{fantastic.ht}  <-- ordinary latex
  \pagehead{FantasticPage}{fantastic.ht}{Fantastic} <-- special latex
  \pageto{.....           <-- for latex (not hyperdoc) links to other pages
@@ -6536,7 +6561,7 @@ be extracted as a hyperdoc page.
    all the documentation for domain Fantastic
 
  @                       <-- this is the end of the page for htadd
-#+end_example
+\end{verbatim}
 
 When you add new pages to bookvol7.1.pamphlet you need to tell the
 system about the changes.  The ``htadd'' function will search the
@@ -6546,15 +6571,15 @@ file ht.db.
 The ht.db file is used by hyperdoc to find pages. 
 Each line in ht.db contains a line that 
 
-#+begin_example
+\begin{verbatim}
 FantasticPage (byteIndex) (lineIndex)
-#+end_example
+\end{verbatim}
 
 So the two critical files, bookvol7.1.pamphlet and ht.db live in \$AXIOM/doc
 
 
 There is a very fast cycle for editing.
-#+begin_example
+\begin{verbatim}
 cd $AXIOM/doc
 
 while (1) do
@@ -6564,15 +6589,15 @@ while (1) do
    (modify bookvol7.1.pamphlet)   <-- change the page
    rm ht.db                       <-- remove the old database
    htadd bookvol7.1.pamphlet      <-- remake the database
-#+end_example
-** Graphviz file creation
+\end{verbatim}
+\section{Graphviz file creation}
 The graphviz output used on the website is a scaled vector graphics
 file (SVG). The dot command to output this file is:
-#+begin_example
+\begin{verbatim}
   dot -Tsvg:cg <pic >pic.svg
-#+end_example
+\end{verbatim}
 The SVG file that gets generated has the following preamble.
-#+begin_example
+\begin{verbatim}
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN"
  "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd" [
@@ -6585,13 +6610,13 @@ The SVG file that gets generated has the following preamble.
  viewBox = "0 0 3960 2312"
  xmlns="http://www.w3.org/2000/svg" 
  xmlns:xlink="http://www.w3.org/1999/xlink">
-#+end_example
+\end{verbatim}
 There are two pieces of information that are important. First,
 we need to add the following text by removing the trailing
 $>$ character from the svg tag and replacing it with the 
 following block. This block exports some javascript functions
 that we use to scale the graphics.
-#+begin_example
+\begin{verbatim}
  onload="RunScript(evt)">
 <script type="text/ecmascript">
 <![CDATA[
@@ -6613,13 +6638,13 @@ function RunScript(LoadEvent) {
 }
 ]]>
 </script>
-#+end_example
+\end{verbatim}
 A second item of interest is the viewbox line which gives us the
 width and height information. We use this information to place
 the graph on the web page. A simple example of the web page
 looks follows. We need to replace the X and Y sizes with the
 sizes from the viewbox above.
-#+begin_example
+\begin{verbatim}
 <html>
 <head>
 <title>Axiom Abbreviated Category and Domain graph</title>
@@ -6657,15 +6682,15 @@ function SVGscale(scale) {
 
 </body>
 </html>
-#+end_example
+\end{verbatim}
 
-** Adding Algebra
-*** Adding algebra to the books
+\section{Adding Algebra}
+\subsection{Adding algebra to the books}
 Assume you have a piece of algebra code that you want to permanently add
 to Axiom. This is a fairly complex process since the system automatically
 runs regression tests, creates help files, etc. and has other standard
 features you need to support. Lets assume your algebra looks like this:
-#+begin_example
+\begin{verbatim}
 )abbreviation package INTERGB InterfaceGroebnerPackage
 InterfaceGroebnerPackage(K,symb,E,OV,R):Exports == Implementation where
   K    : FIELD
@@ -6694,21 +6719,22 @@ InterfaceGroebnerPackage(K,symb,E,OV,R):Exports == Implementation where
         gg:=groebner(ldmp)$GBPack
         [coerceDtoR(pol) for pol in gg]
 
-#+end_example
+\end{verbatim}
 
 There are some things to check and things to change.
-- remove all tabs. Spad is a language that assigns meaning to
+\begin{itemize}
+\item remove all tabs. Spad is a language that assigns meaning to 
 indentation and tabs are not going to survive the build process intact.
-- try to stay within 80 characters. Spad code is printed in the books
+\item try to stay within 80 characters. Spad code is printed in the books
 so it should try to limit line lengths everywhere.
-- change ``)abbreviation'' to ``)abbrev''. The Makefile will search
+\item change ``)abbreviation'' to ``)abbrev''. The Makefile will search
 for the abbrev line and expect this exact text. 
 \begin{verbatim}
 )abbrev package INTERGB InterfaceGroebnerPackage
 \end{verbatim}
-- make sure there is only a single space between the items in the
+\item make sure there is only a single space between the items in the
 abbrev line. The Makefile assumes this.
-- Add the comment header block. The author information is used to
+\item Add the comment header block. The author information is used to
 check that all authors are included in the credits. The description
 tag is used as output by the ``)describe'' command. For example:
 \begin{verbatim}
@@ -6722,26 +6748,29 @@ Other tags can be included but are not used. Do not assume that any
 format information will be correctly translated or preserved. Make the
 description section be simple text with a single character between the
 ``++'' and the first word of the text.
+\end{itemize}
 
-
-20. Choose the right book:
-- Category goes into book bookvol10.2.pamphlet
-- Domain goes into book bookvol10.3.pamphlet
-- Package goes into book bookvol10.4.pamphlet
-- Numerics goes into book bookvol10.5.pamphlet
-21. Find the right chapter. Chapter ordered by name, not abbreviation
-22. Create a new section. The easiest way to do this is to copy another
+\begin{enumerate}
+\item Choose the right book:
+\begin{itemize}
+\item Category goes into book bookvol10.2.pamphlet
+\item Domain goes into book bookvol10.3.pamphlet
+\item Package goes into book bookvol10.4.pamphlet
+\item Numerics goes into book bookvol10.5.pamphlet
+\end{itemize}
+\item Find the right chapter. Chapter ordered by name, not abbreviation
+\item Create a new section. The easiest way to do this is to copy another
 section and change the names. In any case, your new section will need
-23. Create a dividiing line consisting of all \% signs.
+\item Create a dividiing line consisting of all \% signs. 
 Note that this character is the comment character for TeX.
-24. Create the =\section= tag. This tag should contain the exact text of
+\item Create the =\section= tag. This tag should contain the exact text of
 the )abbrev line from your algebra code. It reads:
 =)section{package INTERGB InterfaceGroebnerPackage}=
-25. Create a regression test chunk. This chunk derives its name from the
+\item Create a regression test chunk. This chunk derives its name from the
 algebra name as in ``InterfaceGroebnerPackage.input''. This chunk will
 be automatically extracted and run during regression testing. For the
 moment the chunk should be a simple empty input file as in:
-#+begin_example
+\begin{verbatim}
 )set break resume
 )sys rm -f InterfaceGroebnerPackage.output
 )spool InterfaceGroebnerPackage.output
@@ -6755,12 +6784,12 @@ moment the chunk should be a simple empty input file as in:
 
 )spool
 )lisp (bye)
-#+end_example
-26. Create a help text chunk. This chunk dervies its name from the
+\end{verbatim}
+\item Create a help text chunk. This chunk dervies its name from the
 algebra name as in ``InterfaceGroebnerPackage.help''. This chunk will
 be automatically extracted and used to build help text during build.
 For the moment the chunck should be a simple empty help text file as in:
-#+begin_example
+\begin{verbatim}
 ====================================================================
  examples InterfaceGroebnerPackage
 ====================================================================
@@ -6768,20 +6797,20 @@ For the moment the chunck should be a simple empty help text file as in:
 See Also:
 o )show InterfaceGroebnerPackage
 
-#+end_example
-
+\end{verbatim}
+\end{enumerate}
 
 At this point we need information from the Axiom interpreter to continue.
 Start Axiom and compile your program with ``autoload'' on. For example:
-#+begin_example
+\begin{verbatim}
    axiom -nox
    )set message autoload on
    )co InterfaceGroebnerPackage.spad
-#+end_example
+\end{verbatim}
 
 You will see output containing lines which detail the category, domains,
 and packages needed by your code, for example:
-#+begin_example
+\begin{verbatim}
    Loading /research/test/mnt/ubuntu/algebra/FIELD.o for category Field
       
    Loading /research/test/mnt/ubuntu/algebra/EUCDOM.o for category 
@@ -6884,11 +6913,11 @@ and packages needed by your code, for example:
    Loading /research/test/mnt/ubuntu/algebra/NNI.o for domain 
       NonNegativeInteger 
    Loading /research/test/mnt/ubuntu/algebra/INT.o for domain Integer 
-#+end_example
+\end{verbatim}
 
 These are all of the algebra files on which your algebra depends.
 Collect all of these names into a list:
-#+begin_example
+\begin{verbatim}
 FIELD.o        EUCDOM.o       PID.o          GCDDOM.o       INTDOM.o
 COMRING.o      RING.o         RNG.o          ABELGRP.o      CABMON.o
 ABELMON.o      ABELSG.o       SETCAT.o       BASTYPE.o      KOERCE.o
@@ -6900,7 +6929,7 @@ CHARNZ.o       FRETRCT.o      RETRACT.o      EVALAB.o       IEVALAB.o
 FLINEXP.o      LINEXP.o       KONVERT.o      PATMAB.o       PFECAT.o
 FFIELDC.o      FPC.o          FINITE.o       STEP.o         DIFRING.o
 NNI.o          INT.o
-#+end_example
+\end{verbatim}
 
 The algebra files are arranged into layers. Algebra in a given layer can
 only depend on algebra in lower layers. So algebra in layer 4 can only
@@ -6914,7 +6943,7 @@ To answer that question we need to know the layer of each of the above files.
 This can be determined by searching the Makefile and finding the layer.
 We do this here and annotate the above list, rearranged by layers:
 
-#+begin_example
+\begin{verbatim}
 FIELD.o        EUCDOM.o       PID.o          GCDDOM.o       INTDOM.o
 COMRING.o      RING.o         RNG.o          ABELGRP.o      CABMON.o
 ABELMON.o      ABELSG.o       SETCAT.o       BASTYPE.o      KOERCE.o
@@ -6926,10 +6955,10 @@ CHARNZ.o       FRETRCT.o      RETRACT.o      EVALAB.o       IEVALAB.o
 FLINEXP.o      LINEXP.o       KONVERT.o      PATMAB.o       PFECAT.o
 FFIELDC.o      FPC.o          FINITE.o       STEP.o         DIFRING.o
 NNI.o          INT.o
-#+end_example
+\end{verbatim}
 
 We find that
-#+begin_example
+\begin{verbatim}
 layer 0 
 EUCDOM.o GCDDOM.o INTDOM.o COMRING.o RING.o RNG.o ABELGRP.o CABMON.o ABELMON.o
 ABELSG.o SETCAT.o BASTYPE.o KOERCE.o MONOID.o ENTIRER.o UFD.o DIVRING.o
@@ -6959,29 +6988,31 @@ FAMR.o FPC.o
 
 layer 10
 PFECAT.o
-#+end_example
+\end{verbatim}
 
 So we know that our algebra belongs in layer 11 since it depends on 
 PFECAT which lives in layer 10.
 
 Now we have all of the information needed to add the algebra to the book.
 We create a new section that contains the following parts:
-- the =\section{...}= header
-- the input file
-- the help file
-- the page head markup
-- the pagepic markup
-- the Exports section
-- the theory and discussion section
-- the algebra
-- the dot picture file information
+\begin{itemize}
+\item the =\section{...}= header
+\item the input file
+\item the help file
+\item the page head markup
+\item the pagepic markup
+\item the Exports section
+\item the theory and discussion section
+\item the algebra
+\item the dot picture file information
+\end{itemize}
 
 We've already explained most of the sections. Now we insert a chunk
 for our algebra. The name of this chunk is important because the Makefile
 will look for this exact chunk name. In our example case it looks like:
-#+begin_example
+\begin{verbatim}
    \begin{chunk}{package INTERGB InterfaceGroebnerPackage}
-#+end_example
+\end{verbatim}
 which is followed immediately by the algebra starting with the ``abbrev'' 
 command.
 
@@ -6998,27 +7029,29 @@ We do this using the graphviz dot program.
 We create a file that shows the graph relationship. Since our code
 INTERGB depends on PFECAT we show that here. We create a line for our 
 code that looks like:
-#+begin_example
+\begin{verbatim}
 "INTERGB" [color="#FF4488",href="bookvol10.4.pdf#nameddest=INTERGB"]
-#+end_example
+\end{verbatim}
 
 This tells us the name of the node, the background color where
-- #4488FF is a category
-- #88FF44 is a domain
-- #FF4488 is a package
-- #FF8844 is a numeric
+\begin{itemize}
+\item #4488FF is a category
+\item #88FF44 is a domain
+\item #FF4488 is a package
+\item #FF8844 is a numeric
+\end{itemize}
 (note the rotation of bytes) and the html link from the graph to 
 the position in the document so the user can click on the picture
 and go to the source code. It names the book and the offset.
 
 We have the same information for PFECAT:
-#+begin_example
+\begin{verbatim}
 "PFECAT" [color="#4488FF",href="bookvol10.2.pdf#nameddest=PFECAT"]
-#+end_example
+\end{verbatim}
 
 We combine this information to create a picture file for the graphviz dot
 program:
-#+begin_example
+\begin{verbatim}
 digraph pic {
  fontsize=10;
  bgcolor="#ECEA81";
@@ -7029,12 +7062,12 @@ digraph pic {
 "INTERGB" -> "PFECAT"
 
 }
-#+end_example
+\end{verbatim}
 
 Save this file into =$AXIOM/books/pic=. Then run:
-#+begin_example
+\begin{verbatim}
 dot -Tps <pic >ps/v104interfacegroebnerpackage.ps
-#+end_example
+\end{verbatim}
 
 This will generate a postscript file
 =$AXIOM/books/ps/v104interfacegroebnerpackage.ps=
@@ -7056,17 +7089,17 @@ file will be, and the scale factor to use to display the file (1.00).
 
 We copy the body of the pic file to the book so we can easily
 recreate the graphs:
-#+begin_example
+\begin{verbatim}
   \begin{chunk}{INTERGB.dotabb}
   "INTERGB" [color="#FF4488",href="bookvol10.4.pdf#nameddest=INTERGB"]
   "PFECAT" [color="#4488FF",href="bookvol10.2.pdf#nameddest=PFECAT"]
   "INTERGB" -> "PFECAT"
   \end{chunk}
-#+end_example
+\end{verbatim}
 
 Next we return to the command line and get explicit information about
 our new domain:
-#+begin_example
+\begin{verbatim}
 
 (1) -> )show INTERGB
  InterfaceGroebnerPackage(K: Field,
@@ -7083,7 +7116,7 @@ our new domain:
 ------------------------------- Operations --------------------------------
  groebner : List R -> List R          
 
-#+end_example
+\end{verbatim}
 
 We need to insert the results of this command into the trivial input file
 we have created. The trivial input file will be run during build time and
@@ -7099,16 +7132,16 @@ and ``--E m'' which indicates the start and end of test ``m'' respectively.
 Since we will eventually compile this domain from the book the final 
 output line for the )edit location will be the book. Thus we need to
 change the line:
-#+begin_example
+\begin{verbatim}
 Issue )edit /PAFF/interGBwoGB.spad to see algebra source code for INTERGB 
-#+end_example
+\end{verbatim}
 to read:
-#+begin_example
+\begin{verbatim}
 Issue )edit bookvol10.4.pamphlet to see algebra source code for INTERGB 
-#+end_example
+\end{verbatim}
 
 So we update our input file section to read:
-#+begin_example
+\begin{verbatim}
 )set break resume
 )sys rm -f InterfaceGroebnerPackage.output
 )spool InterfaceGroebnerPackage.output
@@ -7135,7 +7168,7 @@ So we update our input file section to read:
 
 )spool
 )lisp (bye)
-#+end_example
+\end{verbatim}
 
 
 There is another section, Exports, which lists all of the unique function
@@ -7147,10 +7180,10 @@ the ``l'' characters (``l'' means left-justify, ``c'' would be center, and
 overflowing the 80 column limit.
 
 For this domain we see generate we only have a single export.
-#+begin_example
-{\bf Exports:}\\
+\begin{verbatim}
+*Exports:*\\
 \cross{INTERGB}{groebner}
-#+end_example
+\end{verbatim}
 
 The cross function creates a cross-reference entry in the index so you 
 can look up the function and find the domain or look up the domain and
@@ -7164,15 +7197,15 @@ We know from above that the algebra belongs in layer 11 so we find layer 11
 and add this abbreviation in alphabetical order. We can use this order since
 none of the files depend on each other in this layer. 
 The new line looks like:
-#+begin_example
+\begin{verbatim}
   ${OUT}/INMODGCD.o ${OUT}/INNMFACT.o ${OUT}/INPSIGN.o  ${OUT}/INTERGB.o  \
-#+end_example
+\end{verbatim}
 Note that the trailing slash is required by the Makefile in order to continue
 the input line.
 
 Take note of the prior algebra abbreviation INPSIGN. We search for that
 lower down and find the block reading:
-#+begin_example
+\begin{verbatim}
 "INPSIGN" [color="#FF4488",href="bookvol10.4.pdf#nameddest=INPSIGN"]
 /*"INPSIGN" -> {"RING"; "RNG"; "ABELGRP"; "CABMON"; "ABELMON"; "ABELSG"}*/
 /*"INPSIGN" -> {"SETCAT"; "BASTYPE"; "KOERCE"; "SGROUP"; "MONOID"}*/
@@ -7184,7 +7217,7 @@ lower down and find the block reading:
 "INPSIGN" -> "PFECAT"
 /*"INPSIGN" -> {"UFD"; "ELTAB"; "DIFRING"; "DIFEXT"; "STEP"; "EUCDOM"}*/
 /*"INPSIGN" -> {"PID"; "FIELD"; "DIVRING"; "INT"; "INS-"}*/
-#+end_example
+\end{verbatim}
 
 This information is used to create the total graph of the algebra.
 Most of this information is kept for future graph use but commented out.
@@ -7198,7 +7231,7 @@ We also need to create a similar block for our code. We use the list generated
 above, replacing the ``.o'' with semicolons.
 
 The total result is:
-#+begin_example
+\begin{verbatim}
 "INTERGB" [color="#FF4488",href="bookvol10.4.pdf#nameddest=INTERGB"]
 /*"INTERGB" -> {
 /*"INTERGB" -> {"FIELD"; "EUCDOM"; "PID"; "GCDDOM"; "INTDOM"; "COMRING"}*/
@@ -7211,7 +7244,7 @@ The total result is:
 /*"INTERGB" -> {"IEVALAB"; "FLINEXP"; "LINEXP"; "KONVERT"; "PATMAB"}*/
 "INTERGB" -> "PFECAT"
 /*"INTERGB" -> {"FFIELDC"; "FPC"; "FINITE"; "STEP"; "DIFRING"; "NNI"; "INT"}*/
-#+end_example
+\end{verbatim}
 
 Help files are automatically extracted from the books using the
 lisp function ``makeHelpFiles'' which lives in books/tangle.lisp.
@@ -7223,18 +7256,18 @@ somedomain.help containing the chunk value.
 
 Now we create the regression hook. Look for the list REGRESS and add the 
 line containing the algebra thus:
-#+begin_example
+\begin{verbatim}
  InterfaceGroebnerPackage.regress \
-#+end_example
+\end{verbatim}
 
 This will cause regression to be run on the InterfaceGroebnerPackage.input
 file.
 
 We need to modify book volume 5 (the interpreter) to add this algebra
 to the list of exposed algebra. To do this, add the line:
-#+begin_example
+\begin{verbatim}
    (|InterfaceGroebnerPackage| . INTERGB)
-#+end_example
+\end{verbatim}
 to the variable =$globalExposureGroupAlist= under the ``basic''
 sublist. 
 
@@ -7244,37 +7277,38 @@ There are ways this can fail which we will cover in more detail.
 Once the code compiles cleanly there are a few ways to check that it works.
 First, check that the file int/input/InterfaceGroebnerPackage.regress shows
 no failures. Second, run the command
-#+begin_example
+\begin{verbatim}
   )show InterfaceGroebnerPackage
-#+end_example
+\end{verbatim}
 to see if the domain exists. Run the command
-#+begin_example
+\begin{verbatim}
   )help InterfaceGroebnerPackage
-#+end_example
+\end{verbatim}
 to see that the help file exists. Run the command
-#+begin_example
+\begin{verbatim}
   )describe InterfaceGroebnerPackage
-#+end_example
+\end{verbatim}
 to see that the description paragraph exists.
 
-*** Creating a stand-alone pamphlet file
+\subsection{Creating a stand-alone pamphlet file}
 Suppose we want to add a new algebra file from a new pamphlet.
 For example, we want to add BLAS1.spad in books/newbook.pamphlet.
 The explanation for the steps follow. The steps are:
-27. write the algebra code
-28. create the pamphlet file called newbook.pamphlet
-29. create a new section in newbook.pamphlet
-30. create the chunk name stanza in newbook.pamphlet
-31. insert BLAS1.spad into the new stanza
-32. create the dotabb stanza in newbook.pamphlet
-33. update src/algebra/Makefile.pamphlet to insert BLAS1.spad
-34. update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
-35. update the dotabb stanza in newbook.pamphlet
-36. update src/Makefile.pamphlet to copy the newbook file to src/algebra
-37. update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
+\begin{enumerate}
+\item write the algebra code
+\item create the pamphlet file called newbook.pamphlet
+\item create a new section in newbook.pamphlet
+\item create the chunk name stanza in newbook.pamphlet
+\item insert BLAS1.spad into the new stanza
+\item create the dotabb stanza in newbook.pamphlet
+\item update src/algebra/Makefile.pamphlet to insert BLAS1.spad 
+\item update src/algebra/Makefile.pamphlet to insert BLAS1 into graph
+\item update the dotabb stanza in newbook.pamphlet
+\item update src/Makefile.pamphlet to copy the newbook file to src/algebra
+\item update \$globalExposureGroupAlist in bookvol5 to add BLAS1 to basic
+\end{enumerate}
 
-
-** Makefile
+\section{Makefile}
 This book is actually a literate program[cite:@Knut92] and can contain 
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 

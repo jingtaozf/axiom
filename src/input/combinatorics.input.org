@@ -25,7 +25,7 @@ The functions include methods for listing subsets, permutations and
 derangements, and set partitions;
 
 \subsection*{Subsets}
-# label: sec:subsets
+\label{sec:subsets}
 
 #+NAME: powerSet
 #+begin_src common-lisp :noweb yes
@@ -167,7 +167,7 @@ choose(S,2)
 \end{description}
 
 \subsection*{Permutations}
-# label: sec:permutations
+\label{sec:permutations}
 
 #+NAME: nextperm
 #+begin_src common-lisp :noweb yes
@@ -239,11 +239,12 @@ called by Knuth (TAOCP) ``Algorithm L'', and lists all permutations in
 lexicographical order.  The first permutation consists of the list with 
 elements in non-decreasing order, and the steps to move from one permutation 
 $p$ with $n$ elements to the next consist of
-1. find the largest $k$ such that $p.k>p.(k+1)$
-2. find the largest $j$ such that $p.j>p.k$
-3. swap $p.j$ and $p.k$
-4. reverse that part of the list from indices $k+1$ to $n$.
-
+\begin{enumerate}
+\item find the largest $k$ such that $p.k>p.(k+1)$
+\item find the largest $j$ such that $p.j>p.k$
+\item swap $p.j$ and $p.k$
+\item reverse that part of the list from indices $k+1$ to $n$.
+\end{enumerate}
 
 For example:
 #+NAME: input
@@ -303,7 +304,7 @@ randomPermutation(L:List Any):List Any==
 #+end_src
 
 \subsection*{Derangements}
-# label: sec:derangements
+\label{sec:derangements}
 
 A /derangement/ is a permutation where none of the elements are in their
 original place.  For example, here is a listing of the derangements 
@@ -539,7 +540,7 @@ listStringDerangements("banana")
 #+end_src
 
 \subsection*{Set partitions}
-# label: sec:set-partitions
+\label{sec:set-partitions}
 
 A /partition/ of a set $S$ is a splitting of $S$ into a set of 
 subsets $T_i$ of $S$ which are pairwise disjoint, and whose union is $S$.  

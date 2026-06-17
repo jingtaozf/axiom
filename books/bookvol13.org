@@ -246,7 +246,7 @@ math and the code.}\\
 -- Benjamin Pierce [cite:@Pier17]
 \end{quote}
 
-* Why this effort will not succeed
+\chapter{Why this effort will not succeed}
 
 \begin{quote}
 When something is important enough, you do it even if the odds
@@ -307,127 +307,130 @@ That said, we can list quite a few reasons why PAC will not succeed,
 most of which are explained in more detail in [cite:@Cyph17]. We
 provide useful names for the likely criticisms presented there and
 paraphrase those criticisms applied to our context.
-1. *Leap of Faith* All of these efforts either require making a
+\begin{enumerate}
+\item *Leap of Faith* All of these efforts either require making a
 leap of faith to go from verified code to a real-world problem, or
 required the use of an artificially restricted system in order to
 function (the NewSpeak approach, create a language in which it is
 impossible to think bad thoughts), indicating that formal verification
 down to the binary code level is unlikely to be practical in any
 generally accepted formal methods sense.
-2. *Tools for Toy Problems* The tools used to support formal
+\item *Tools for Toy Problems* The tools used to support formal
 methods arose from an academic research envvironment characterised by
 a small number of highly skilled users. The tools were tested on small
 problems (usually referred to somewhat disparagingly as ``toy
 problems'') which were targeted more at exercising the tools than
 exercising the problem.
-3. *Opaque Specifications* Another factor which complicates the
+\item *Opaque Specifications* Another factor which complicates the
 use of formal methods is that the mathematical methods available to
 software engineers are often very difficult to use and plagued by
 notation which is cumbersome and hard to read and understand.
-4. *Too Large a Task* The national technology base for this
+\item *Too Large a Task* The national technology base for this
 level of task is essentially non-existent. There do not appear to be
 even 20 people in the world that have undertaken the essential
 steps. ``In order to get a system with excellent system integrity, you
 must ensure that it is designed and built by geniuses. Geniuses are in
 short supply'' [cite:@Blak96].
-5. *False Axioms* Problems occur when a proof has to be
+\item *False Axioms* Problems occur when a proof has to be
 manually augmented with ``self-vidient'' truths which sometimes turn
 out to be false and end up misguiding the prover.
-6. *Intellectual Cost* Requiring a proof of an algorithm adds to the
+\item *Intellectual Cost* Requiring a proof of an algorithm adds to the
 already outsized cost of creating the algorithm in Axiom, given the
 steep intellectual hill such a system already presents.
-7. *Ripple Cost* Multiple layers of abstraction are required to
+\item *Ripple Cost* Multiple layers of abstraction are required to
 go from a proof to its implementation and a change in any of the
 layers can result in a ripple effect as changes propagate. If a change
 manages to propagate its way into a formally proven section, portions
 of, or possibly all of, the proof might need to be redone.
-8. *Informal Implementation Details* Current techniques rarely
+\item *Informal Implementation Details* Current techniques rarely
 reach down any further than the high-level specificaiton resulting in
 large amounts of time and energy being poured into producing a design
 specification which is void of any implementation details.
-9. *Specification Mismatch* Formal proofs that a specification
+\item *Specification Mismatch* Formal proofs that a specification
 is correct don't show that the assumptions made in the proof are
 correct in the actual physical system. If the code which is supposed
 to implement the formal specification doesn't quite conform to it or
 the compiler can't produce an executable which quite matches what was
 intended in the code then no amount of formal proving will be able to
 guarantee the execution behaviour of the code.
-10. *Natural / Formal Mismatch* Natural language descriptions of
+\item *Natural / Formal Mismatch* Natural language descriptions of
 what is intended may mismatch the formal language descriptions. In
 many cases ``common sense'' assumptions come into play which are never
 formally stated.
-11. *Specification Flaws* The code may implement a specification
+\item *Specification Flaws* The code may implement a specification
 exactly as stated but the specification can be flawed.
-12. *Mis-implemented Specifications* The specification may be
+\item *Mis-implemented Specifications* The specification may be
 correct but the implementation does not match the specification.
-13. *Specification Narrowing* The specification language may not
+\item *Specification Narrowing* The specification language may not
 be sufficient to state all of the required concepts so a ``narrowing''
 of the specification is made to approximate the intent.
-14. *Specification Widening* The specification language may
+\item *Specification Widening* The specification language may
 generalize the required concepts so a ``widening'' of the
 specification is made beyond the required intent.
-15. *Specification Impedence Mismatch* The specification
+\item *Specification Impedence Mismatch* The specification
 language does not cover the concepts in the domain of interest,
 requiring considerable effort to ``model'' the domain.
-16. *Specification Blindness* The specification writers can't
+\item *Specification Blindness* The specification writers can't
 take into account every eventuality which will arise. As a result, an
 implemention of a specification doesn't just implement it, it alters
 it in order to fit real-world constraints which weren't foreseen by
 the original authors of the specification.
-17. *Contradictory Proofs* If the system is inconsistent, it would
+\item *Contradictory Proofs* If the system is inconsistent, it would
 be possible to find two contradictory proofs. It is likely that such
 an inconsistency will not be detected and only one of the proofs will
 be accepted since the other one is never generated.
-18. *Likely to be Ignored* There are thousands of proofs published,
+\item *Likely to be Ignored* There are thousands of proofs published,
 most of which are ``write only'' and are never checked. This is likely
 to be the case with Axiom's proofs.
-19. *Proven Programs are Wrong* It is possible to prove a
+\item *Proven Programs are Wrong* It is possible to prove a
 program correct and still get wrong results. Testing is still
 required.
-20. *Proofs are a Social Process* Axiom's ``social circle'' is
+\item *Proofs are a Social Process* Axiom's ``social circle'' is
 vanishingly small.
-21. *Chicken and Egg* Do proofs follow from programs or programs
+\item *Chicken and Egg* Do proofs follow from programs or programs
 follow from proofs? 
-22. *Boiling the Ocean* The task is much too large.
-23. *MetaTheory Cost* There is a cost to developing theories for
+\item *Boiling the Ocean* The task is much too large.
+\item *MetaTheory Cost* There is a cost to developing theories for
 new data types; these are unnecessary ``meta'' costs.
-24. *Partial Functions* Not all of the functions are total so it
+\item *Partial Functions* Not all of the functions are total so it
 is difficult to prove theorems about them.
-25. *Undecidable Theories* Some theories are known to be
+\item *Undecidable Theories* Some theories are known to be
 undecidable so there will be problems with their proofs.
-
+\end{enumerate}
 
 Fenton [cite:@Fent93] states that there is no hard evidence to show that
-26. formal methods have been used cost effectively on a real
+\begin{enumerate}
+\item formal methods have been used cost effectively on a real
 safety-critical system development
-27. the use of formal methods can deliver reliability more cost
+\item the use of formal methods can deliver reliability more cost
 effectively than traditional structured methods with enhanced testing
-28. sufficient numbers of either developers or users can ever be
+\item sufficient numbers of either developers or users can ever be
 trained to make proper use of formal methods
-
+\end{enumerate}
 
 Calude, et al. [cite:@Calu07] take a quite different attack on the idea
 of proving and programming, specifically
-29. Theorems (in mathematics) correspond to algorithms and not
+\begin{enumerate}
+\item Theorems (in mathematics) correspond to algorithms and not
 programs (in computer science); algorithms are subject to mathematical
 proofs (for example correctness)
-30. The role of proof in mathematical modeling is very small:
+\item The role of proof in mathematical modeling is very small:
 adequacy is the main issue
-31. Programs (in computer science) correspond to mathematical
+\item Programs (in computer science) correspond to mathematical
 models. They are not subject to proofs, but to an adequacy and
 relevance analysis; in this type of analysis, some proofs may
 appear. Correctness proofs in computer science (if any) are not
 cost-effective. 
-32. Rigour in programming is superior to rigour in mathematical
+\item Rigour in programming is superior to rigour in mathematical
 proofs.
-33. Programming gives mathematics a new form of understanding
-34. Although the Hilbertian notion of proof has few chances to
+\item Programming gives mathematics a new form of understanding
+\item Although the Hilbertian notion of proof has few chances to
 change, future proofs will be of various types and will play different
 roles, and their truth will be checked differently.
-35. In general, correctness is undecidable
-36. for most non-trivial cases, correctness is a monumental task
+\item In general, correctness is undecidable
+\item for most non-trivial cases, correctness is a monumental task
 which gives an added confidence at a disproportionate cost.
-
+\end{enumerate}
 
 Still another attack comes from Hoare [cite:@Hoar96] which states that
 "By surveying current software engineering practice, this paper
@@ -500,30 +503,33 @@ will work; he does not know what happens when it exceeds those
 limits. And yet he has that mystical stamp of approval ``VERIFIED.''"
 
 Manna and Waldinger [cite:@Mann78] mentions
-37. We can never be sure that the specifications are correct
-38. No verification system can verify every correct program
-39. We can never be certain that a verification system is correct
-
+\begin{enumerate}
+\item We can never be sure that the specifications are correct
+\item No verification system can verify every correct program
+\item We can never be certain that a verification system is correct
+\end{enumerate}
 
 Hall [cite:@Hall90] presents 7 myths of formal methods.
-40. Formal methods can guarantee that software is perfect.
-41. They work by proving that programs are correct.
-42. Only highly critical systems benefit from their use.
-43. They involve complex mathematics.
-44. They increase the cost of development.
-45. They are incomprehensible to clients.
-46. Nobody uses them for real projects.
-
+\begin{enumerate}
+\item Formal methods can guarantee that software is perfect.
+\item They work by proving that programs are correct.
+\item Only highly critical systems benefit from their use.
+\item They involve complex mathematics.
+\item They increase the cost of development.
+\item They are incomprehensible to clients.
+\item Nobody uses them for real projects.
+\end{enumerate}
 
 Bowen and Hinchey [cite:@Bowe95] follow up with 7 more myths.
-47. Formal methods delay the developent process
-48. Formal methods lack tools
-49. Formal methods replace traditional engineering design methods
-50. Formal methods only apply to software
-51. Formal methods are unnecessary
-52. Formal methods are not supported
-53. Formal methods people always use formal methods
-
+\begin{enumerate}
+\item Formal methods delay the developent process
+\item Formal methods lack tools
+\item Formal methods replace traditional engineering design methods
+\item Formal methods only apply to software
+\item Formal methods are unnecessary
+\item Formal methods are not supported
+\item Formal methods people always use formal methods
+\end{enumerate}
 
 Murray and Oorschot [cite:@Murr18] provide comments that, while they
 are indented for security-related proofs, also apply to proofs in
@@ -633,17 +639,18 @@ a path enabling a proof. A second is /deployment constraints/
 imposed on the system to enforce /environmental assumptions/
 necessary for proofs.
 
-** General problems with formal verification
+\section{General problems with formal verification}
 
 In Moy and Wallenburg [cite:@Moyx10] we find:
-54. Formal verification is not applied to all parts of a
+\begin{enumerate}
+\item Formal verification is not applied to all parts of a
 system. Around a formally verified core, there are usually parts of
 the system that cannot be verified formally, because they deal with
 interfacing with other systems or a user, or because it would be too
 costly to verify them (effort/time/money). The cost/benefit ratio of
 formal verification is parricularly important to take into account for
 those less critical parts.
-55. Formal verification is only as strong as the specification
+\item Formal verification is only as strong as the specification
 is. When formally verifying the absence of run-time errors in
 programs, the specification is given by the semantics of the
 programming language. However, in general there is no way to ``guess''
@@ -653,18 +660,18 @@ error-prone as writing programs. In practice, these specifcations are
 not complete functional specifications, as this would be much too
 costly. Only the properties that a developer specified can be formally
 verified. 
-56. Formal verification techniques do not target all desirable
+\item Formal verification techniques do not target all desirable
 properties of programs. Most formal verification frameworks verify the
 absence of run-time errors, and perperties expressed by developers are
 invariants or function contracts. In particular, formal verification
 techniques are not usually good at detecting dead code and ``strange''
 code (inefficient or unidiomatic code), or covert channels.
-57. The formal verification method itself may be flawed, for example
+\item The formal verification method itself may be flawed, for example
 if the immplementation of the underlying theorem prover or static
 analyzer contains problems.
+\end{enumerate}
 
-
-* Progress Will Occur
+\chapter{Progress Will Occur}
 
 At the very lowest level there have been some truly impressive steps
 toward formal verification of low-level implmentation details.
@@ -739,7 +746,7 @@ Axiom have ``hand waving'' specifications that need to be expanded to
 properly return 'failed' when that is expected. This is a 'good thing'
 and a useful by-product of combining proof and computer algebra.
 
-* Here is a problem
+\chapter{Here is a problem}
 
 \begin{quote}
 The world needs both logicians and verifiers, and we need one
@@ -766,9 +773,9 @@ Gordon [cite:@Myre09a]. They 'forward compile' the code to $f$, collect
 the result as $f^\prime$, and then prove the $f=f^\prime$. This proof
 is sufficient to show that the compile step is correct.
 
-** Proving the Algebra
-*** Defining the Spad syntax
-*** Defining the Spad semantics
+\section{Proving the Algebra}
+\subsection{Defining the Spad syntax}
+\subsection{Defining the Spad semantics}
 
 Gordon [cite:@Gord89] describes formal reasoning about programs that
 can be based directly on the semantics of the programming language, or
@@ -783,7 +790,7 @@ Manna and Waldinger [cite:@Mann78a] introduce the notion of
 Floyd [cite:@Floy67], Back [cite:@Back81], Caldwell [cite:@Cald97],
 Filliatre [cite:@Fill03], Filliatre and Paskevich [cite:@Fill13]
 
-*** Type Resolution
+\subsection{Type Resolution}
 
 In Kaes [cite:@Kaes88] we find that there is a semantical difference
 between overloading and polymorphism: in the case of the overloaded
@@ -810,7 +817,7 @@ subtypes and inheritance. Parametric and inclusion polymorphism are
 classified as the two major subcategories of ``universal
 polymorphism'' which is contrasted with nonuniversal or ad-hoc
 polymorphism. 
-#+begin_example
+\begin{verbatim}
                                |- parametric
                  |- universal -|
                  |             |- inclusion
@@ -818,7 +825,7 @@ polymorphism.
                  |             |- overloading
                  |- ad hoc    -|
                                |- coercion
-#+end_example
+\end{verbatim}
 
 Parametric polymorphism is so called because the uniformity of type
 structure is normally achieved by type parameters, but uniformity can
@@ -837,15 +844,16 @@ classes that need not be disjoint; that is, there may be inclusion of
 classes. 
 
 There are at least 4 kinds of escapes from a monomorphic type.
-- /Overloading/: Integer constants may have both type integer
+\begin{itemize}
+\item /Overloading/: Integer constants may have both type integer
 and real.
-- /Coercion/: An integer value can be used where a real is
+\item /Coercion/: An integer value can be used where a real is
 expected, and vice versa.
-- /Subtyping/: Elements of a subrange type also belong to
+\item /Subtyping/: Elements of a subrange type also belong to
 superrange types. 
-- /Value Sharing/: =nil= in Pascal is a constant that is
+\item /Value Sharing/: =nil= in Pascal is a constant that is
 shared by all the pointer types.
-
+\end{itemize}
 
 Wadler and Blott [cite:@Wadl88] point out that it would be nice if
 polymorphic equality could be extended to include user-defined
@@ -866,7 +874,7 @@ classes and the translation method they describe.
 
 It is natural to think of adding assertions to the class declaration,
 specifying properties that each instance must satisfy:
-#+begin_example
+\begin{verbatim}
    class EQ a where
      (==) :: a -> a -> Bool
      % (==) is an equivalence relation
@@ -877,7 +885,7 @@ specifying properties that each instance must satisfy:
      negate :: a -> a
      % (zero, one, (+), (*), negate) form a ring
 
-#+end_example
+\end{verbatim}
 
 It is valid for any proof to rely on these properties, so long as one
 proves that they hold for each instance declaration. Here the
@@ -886,21 +894,21 @@ system could perhaps verify or use such assertions.
 
 It is reasonable to allow a class to apply to more than one type
 variable. For instance, we might have 
-#+begin_example
+\begin{verbatim}
    class Coerce a b where
      coerce :: a -> b
 
    instance Coerce Int Float where
      coerce - convertIntToFloat
 
-#+end_example
+\end{verbatim}
 
 In this case, the assertion =Coerce a b= might be taken as
 equivalent to the assertion that =a= is a subtype of =b=. This
 suggests a relation between this work and work on bounded
 quantification and on subtypes.
 
-** Proving the Logic
+\section{Proving the Logic}
 
 Soundness has two aspects, closed world and open world. [cite:@Bonn18]
 
@@ -939,21 +947,22 @@ subgoals from a program and its post-condition.
 
 Katz and Manna [cite:@Katz75] look at various methods of proving
 termination including
-- using the 'no-infinitely-descending-chain property of
+\begin{itemize}
+\item using the 'no-infinitely-descending-chain property of
 well-founded sets (Floyd's approach)
-- bounding a counter associated with each loop (/loop/
+\item bounding a counter associated with each loop (/loop/
 approach)
-- showing that some exit of each loop must be taken (/exit/
+\item showing that some exit of each loop must be taken (/exit/
 approach)
-- inducting on the structure of the data domain (Burstall's
+\item inducting on the structure of the data domain (Burstall's
 approach)
-
+\end{itemize}
 
 Davis [cite:@Davi09],
 Myreen and Davis [cite:@Myre11], Myreen and Davis [cite:@Myre14],
 Davis and Myreen [cite:@Davi15]
 
-*** Typing and Subtyping
+\subsection{Typing and Subtyping}
 
 Dolan's PhD Thesis [cite:@Dola16] on Algebraic Subtyping. 
 Henri Tuhola [cite:@Tuho18] notes that
@@ -961,9 +970,9 @@ solving the problem of subtyping does not directly solve the problem
 of coercion. Coercion extends the type and doesn't narrow it. 
 
 Dolan and Mycroft [cite:@Dola17] note that, given
-#+begin_example
+\begin{verbatim}
    select p v d = if (p v) then v else d
-#+end_example
+\end{verbatim}
 only by ignoring the
 orientation of the data flows could we conclude that $d$'s type flows
 to the argument of $p$, even though $p$ never mentions $d$. ML's type
@@ -974,11 +983,11 @@ support for subtyping cares about the direction of data flow. With
 subtyping, a source of data must provide at least the guarantees that
 the destination requires, but is free to provide more.
 
-*** Defining the Algebra specifications
+\subsection{Defining the Algebra specifications}
 
 Talpin and Jouvelot [cite:@Talp92]
 
-*** Termination
+\subsection{Termination}
 
 Hughes [cite:@Hugh90] talks about a lazy approach to termination, while
 gluing programs together. Functional languages allow whole progams to
@@ -1014,7 +1023,7 @@ of programs.
 
 Katz and Manna [cite:@Katz75] take a closer look at termination.
 
-** Proving the Lisp
+\section{Proving the Lisp}
 
 Guttman, et al. [cite:@Gutt95] in the VL!SP project showed how to
 produce a comprehensively verified implementation for a
@@ -1031,11 +1040,11 @@ as most functions are not total.
 
 Myreen [cite:@Myre12]
 
-** Proving the Compiler
+\section{Proving the Compiler}
 
 Myreen [cite:@Myre10]
 
-** Proving to the metal
+\section{Proving to the metal}
 
 Myreen, Slind, and Gordon [cite:@Myre09a] presents a compiler which
 produces machine code from functions defined in the logic of a theorem
@@ -1053,27 +1062,28 @@ Domipheus [cite:@Domi18] provides a VHDL (hardware description language)
 CPU which provides the actual electrical timing of signals all the way
 up to a machine language which consists of
 
-|---+---|
-| OPERATION | FUNCTION |
-|---+---|
-| Add | D = A + B |
-| Substrct | D = A - B |
-| Bitwise Or | D = A or B |
-| Bitwise Xor | D = A xor B |
-| Bitwise And | D = A and B |
-| Bitwise Not | B = not A |
-| Read | D = Memory[A] |
-| Write | Memory[A] = B |
-| Load | D = 8-bit immediate value |
-| Compare | D = cmp(A,B) |
-| Shift Left | D = A $<<$ B |
-| Shift Right | D = A $>>$ B |
-| Jump/Branch | PC = A Register or Immediate Value |
-| Jump/Brance conditionally | PC = Register if (condition) else nop |
-|---+---|
+\begin{tabular}{ll}
+\hline
+OPERATION & FUNCTION\\
+\hline
+Add & D = A + B\\
+Substrct & D = A - B\\
+Bitwise Or & D = A or B\\
+Bitwise Xor & D = A xor B\\
+Bitwise And & D = A and B\\
+Bitwise Not & B = not A\\
+Read & D = Memory[A]\\
+Write & Memory[A] = B\\
+Load & D = 8-bit immediate value\\
+Compare & D = cmp(A,B)\\
+Shift Left & D = A $<<$ B\\
+Shift Right & D = A $>>$ B\\
+Jump/Branch & PC = A Register or Immediate Value\\
+Jump/Brance conditionally & PC = Register if (condition) else nop\\
+\hline
+\end{tabular}
 
-
-** Setting up the problem
+\section{Setting up the problem}
 
 The GCD function will be our first example of a proof.
 
@@ -1082,13 +1092,14 @@ the Euclidean GCD algorithm is correct.
 
 We need to be clear about what is to be proven. In this case, we
 need to show that, given GCD(a,b),
-58. *GCD* is a function from $a\times b \Rightarrow c$
-59. *a* and *b* are elements of the correct type
-60. *c*, the result, is the correct type
-61. the meaning of *divisor*
-62. the meaning of a *common divisor*
-63. *GCD* terminates
-
+\begin{enumerate}
+\item *GCD* is a function from $a\times b \Rightarrow c$
+\item *a* and *b* are elements of the correct type
+\item *c*, the result, is the correct type
+\item the meaning of *divisor*
+\item the meaning of a *common divisor*
+\item *GCD* terminates
+\end{enumerate}
 
 We next need to set up the things we know in "the global environment",
 generally referred to as *E* in Coq.
@@ -1096,12 +1107,14 @@ generally referred to as *E* in Coq.
 Axiom's GCD is categorically defined to work over any Euclidean domain.
 This means that the axioms of a Euclidean domain are globally available.
 In fact, this is stronger than we need since
-- commutative rings $\subset$ integral domains
-- integral domains $\subset$ integrally closed domains
-- integrally closed domains  $\subset$ GCD domains
-- GCD domains $\subset$ unique factorization domains
-- unique factorization domains $\subset$ principal ideal domains
-- principal ideal domains $\subset$ Euclidean domains
+\begin{itemize}
+\item commutative rings $\subset$ integral domains
+\item integral domains $\subset$ integrally closed domains
+\item integrally closed domains  $\subset$ GCD domains
+\item GCD domains $\subset$ unique factorization domains
+\item unique factorization domains $\subset$ principal ideal domains
+\item principal ideal domains $\subset$ Euclidean domains
+\end{itemize}
 
 A Euclidean function on $R$ is a function $f$ from $\mathbb{R}\\\{0\}$
 to the non-negative integers satisfying the following fundamental 
@@ -1112,12 +1125,12 @@ $D(a,b)$ = set of common divisors of $a$ and $b$.
 $\gcd(a,b) = \max{D(a,b)}$
 
 
-** Axiom NNI GCD
+\section{Axiom NNI GCD}
 
 NonNegativeInteger inherits =gcd= from =Integer= up the ``add chain''
 since it is a subtype of =Integer=. =Integer= has =EuclideanDomain=
 as an ancestor [cite:@Book103]:
-#+begin_example
+\begin{verbatim}
 (1) -> getAncestors "Integer"
 
    (1)
@@ -1133,11 +1146,11 @@ as an ancestor [cite:@Book103]:
     RetractableTo, RightModule, Ring, Rng, SemiGroup, SetCategory, StepThrough,
     UniqueFactorizationDomain}
                                                             Type: Set(Symbol)
-#+end_example
+\end{verbatim}
 
 From category =EuclideanDomain= (EUCDOM) we find the implementation of 
 the Euclidean GCD algorithm [cite:@Book102]:
-#+begin_example
+\begin{verbatim}
       gcd(x,y) ==                --Euclidean Algorithm
          x:=unitCanonical x
          y:=unitCanonical y
@@ -1150,10 +1163,10 @@ the Euclidean GCD algorithm [cite:@Book102]:
                                  -- b) ensures gcd(x,y)=gcd(y,x)
                                  --    if canonicalUnitNormal
          x
-#+end_example
+\end{verbatim}
 The =unitCanonical= function comes from the category 
 =IntegralDomain= (INTDOM) where we find:
-#+begin_example
+\begin{verbatim}
     unitNormal: % -> Record(unit:%,canonical:%,associate:%)
         ++ unitNormal(x) tries to choose a canonical element
         ++ from the associate class of x.
@@ -1163,9 +1176,9 @@ The =unitCanonical= function comes from the category
         ++ \spad{u*c = x}, \spad{a*u = 1}.
     unitCanonical: % -> %
         ++ \spad{unitCanonical(x)} returns \spad{unitNormal(x).canonical}.
-#+end_example
+\end{verbatim}
 implemented as
-#+begin_example
+\begin{verbatim}
       UCA ==> Record(unit:%,canonical:%,associate:%)
       if not (% has Field) then
         unitNormal(x) == [1$%,x,1$%]$UCA -- the non-canonical definition
@@ -1182,25 +1195,25 @@ implemented as
            x exquo y case "failed" => false
            y exquo x case "failed" => false
            true
-#+end_example
+\end{verbatim}
 
 Coq proves the following GCD function:
-#+begin_example
+\begin{verbatim}
   Fixpoint gcd a b :=
     match a with
       | 0 => b
       | S a' => gcd (b mod (S a')) (S a')
     end.
-#+end_example
+\end{verbatim}
 
 This can be translated directly to working Spad code:
-#+begin_example
+\begin{verbatim}
   GCD(x:NNI,y:NNI):NNI ==
     zero? x => y
     GCD(y rem x,x)
-#+end_example
+\end{verbatim}
 with the test case results of:
-#+begin_example
+\begin{verbatim}
 (1) -> GCD(2415,945)
    Compiling function mygcd2 with type (NonNegativeInteger,
       NonNegativeInteger) -> NonNegativeInteger 
@@ -1219,9 +1232,9 @@ with the test case results of:
 
    (4)  1
                                                         Type: PositiveInteger
-#+end_example
+\end{verbatim}
 
-** Mathematics
+\section{Mathematics}
 
 From Buchberger [cite:@Buch97],
 
@@ -1245,19 +1258,19 @@ Thus we need to show that
 \[(t\vert a \land t\vert b) \Longleftrightarrow (t\vert (a-b) \land t\vert b)\]
 
 Let $t$ be arbitrary but fixed and assume
-\begin{equation}# label: eq1(t\vert a \land t\vert b)\end{equation}
+\begin{equation}\label{eq1}(t\vert a \land t\vert b)\end{equation}
 
 We have to show
-\begin{equation}# label: eq2t\vert (a-b)\end{equation}
+\begin{equation}\label{eq2}t\vert (a-b)\end{equation}
 
 and
-\begin{equation}# label: eq3t\vert b\end{equation}
+\begin{equation}\label{eq3}t\vert b\end{equation}
 
-Equation [[#eq3][eq3]] follows propositionally. For equation [[#eq2][eq2]],
+Equation \ref{eq3} follows propositionally. For equation \ref{eq2},
 by definition of ``divides'', we have to find a $w$ such that
-\begin{equation}# label: eq4t \cdot w = a-b\end{equation}
+\begin{equation}\label{eq4}t \cdot w = a-b\end{equation}
 
-From [[#eq1][eq1]], by definition of ``divides'', we know that for certain
+From \ref{eq1}, by definition of ``divides'', we know that for certain
 $u$ and $v$
 \[t \cdot u = a\]
 
@@ -1277,7 +1290,7 @@ and
 \[Find w such that t \cdot u - t \cdot v = t \cdot w\]
 
 
-** Approaches
+\section{Approaches}
 There are several systems that could be applied to approach the proof.
 
 The plan is to initially look at Coq and ACL2.  Coq seems to be
@@ -1333,14 +1346,14 @@ to execute test vectors at reasonable speed.
 \end{quote}
 
 Note that you can see the intermediate form from clang with
-#+begin_example
+\begin{verbatim}
 clang -O4 -S -emit-llvm foo.c
-#+end_example
+\end{verbatim}
 
 Both Coq and the Hardin translator use OCAML [cite:@OCAM14] so we will have to
 learn that language.
 
-* Theory
+\chapter{Theory}
 The proof of the Euclidean algorithm has been known since Euclid.
 We need to study an existing proof and use it to guide our use of
 Coq along the same lines, if possible. Some of the ``obvious''
@@ -1351,13 +1364,14 @@ From WikiProof [cite:@Wiki14a] we quote:
 Let \[a, b \in \Z\] and $a \ne 0$ or $b \ne 0$.
 
 The steps of the algorithm are:
-64. Start with $(a,b)$ such that $\abs{a} \ge \abs{b}$.
+\begin{enumerate}
+\item Start with $(a,b)$ such that $\abs{a} \ge \abs{b}$.
 If $b = 0$ then the task is complete and the GCD is $a$.
-65. if $b \ne 0$ then you take the remainder $r$ of $a/b$.
-66. set $a \leftarrow b$, $b \leftarrow r$ (and thus
+\item if $b \ne 0$ then you take the remainder $r$ of $a/b$.
+\item set $a \leftarrow b$, $b \leftarrow r$ (and thus
 $\abs{a} \ge \abs{b}$ again).
-67. repeat these steps until $b = 0$
-
+\item repeat these steps until $b = 0$
+\end{enumerate}
 Thus the GCD of $a$ and $b$ is the value of the variable $a$ 
 at the end of the algorithm.
 
@@ -1383,32 +1397,34 @@ We quote the *Division Theorem* proof [cite:@Wiki14b]:
 For every pair of integers $a$, $b$ where $b \ne 0$, there exist unique
 integers $q,r$ such that $a = qb + r$ and $0 \le r \le \abs{b}$.
 
-*** Hoare's axioms and gcd proof
+\subsection{Hoare's axioms and gcd proof}
 From Hoare [cite:@Hoar69]
 
-| A1 | $x+y = y+x$ | addition is commutative |
-| A2 | $x\times y = y\times x$ | multiplication is commutative |
-| A3 | $(x+y)+z = x+(y+z)$ | addition is associative |
-| A4 | $(x\times y)\times z = x\times (y\times z)$ |  |
-| multiplication is associative\\ |
-| A5 | $x\times (y+z) = x\times y + x\times z$ |  |
-| multiplication distributes through addition\\ |
-| A6 | $y \le x \to (x-y) + y = x$ | addition cancels subtraction |
-| A7 | $x + 0 = x$ |  |
-| A8 | $x\times 0 = 0$ |  |
-| A9 | $x\times 1 = x$ |  |
-
+\begin{tabular}{rll}
+A1 & $x+y = y+x$ & addition is commutative\\
+A2 & $x\times y = y\times x$ & multiplication is commutative\\
+A3 & $(x+y)+z = x+(y+z)$ &  addition is associative\\
+A4 & $(x\times y)\times z = x\times (y\times z)$ &
+multiplication is associative\\
+A5 & $x\times (y+z) = x\times y + x\times z$ &
+multiplication distributes through addition\\
+A6 & $y \le x \to (x-y) + y = x$ & addition cancels subtraction\\
+A7 & $x + 0 = x$ &\\
+A8 & $x\times 0 = 0$ &\\
+A9 & $x\times 1 = x$ &\\
+\end{tabular}
 
 *D0 Axiom of Assignment*
 \[\vdash P_0 \{x:=f\} P\]
 where
-- $x$ is a variable identifier
-- $f$ is an expression
-- $P_0$ is obtained from $P$ by substituting $f$ for all
+\begin{itemize}
+\item $x$ is a variable identifier
+\item $f$ is an expression
+\item $P_0$ is obtained from $P$ by substituting $f$ for all
 occurrences of $x$
+\end{itemize}
 
-
-** The Division Algorithm
+\section{The Division Algorithm}
 From Judson [cite:@Juds15],
 
 An Application of the Principle of Well-Ordering that we will use
@@ -1423,15 +1439,15 @@ where $0 \le r < b$.
 
 Let $a$ and $b$ be integers. If $b = ak$ for some integer $k$, we write
 $a \vert b$. An integer $d$ is called a /common divisor/ of $a$ and
-#+INDEX: common divisor
+\index{common divisor}
 $b$ if $d \vert a$ and $d \vert b$. The /greatest common divisor/
-#+INDEX: greatest common divisor
+\index{greatest common divisor}
 of integers $a$ and $b$ is a positive integer $d$ such that $d$ is
 a common divisor of $a$ and $b$ and if $d^{'}$ is any other common
 divisor of $a$ and $b$, then $d^{'} \vert d$. We write $d=gcd(a,b)$;
 for example, $gcd(24,36)=12$ and $gcd(120,102)=6$. We say that two
 integers $a$ and $b$ are /relatively prime/ if $gcd(a,b)=1$.
-#+INDEX: relatively prime
+\index{relatively prime}
 
 *Theorem 2.10* Let $a$ and $b$ be nonzero integers. Then there
 exist integers $r$ and $s$ such that
@@ -1445,13 +1461,13 @@ prime. Then there exist integers $r$ and $s$ such that
 \[ar+bs=1\]
 
 *The Euclidean Algorithm*
-#+INDEX: The Euclidean Algorithm
+\index{The Euclidean Algorithm}
 
 Among other things, Theorem 2.10 allows us to compute the greatest 
 common divisor of two integers.
 
 *Example 2.1.2* Let us compute the greatest common divisor of 945 and
-68. First observe that
+2415. First observe that
 \[
 \begin{array}{rcl}
 2415 & = & 945 \cdot 2 + 525\\
@@ -1511,32 +1527,33 @@ d & = & ra+sb
 \end{array}
 \]
 
-** Floating Point Proofs
+\section{Floating Point Proofs}
 
 Bagnara, Bagnara, Biselli, Chiara, and Gori [cite:@Bagn19]
 {\bf Correct Approximation of IEEE 754 Floating-Point Arithmetic 
 for Program Verification}
 
-* GCD in Miranda by Broda, et al.
+\chapter{GCD in Miranda by Broda, et al.}
 
 In Broda, et al. \cite[p. 55]{Brod94} they consider the greatest
 common divisor, =gcd=, of two natural numbers:
-#+begin_example
+\begin{verbatim}
    gcd :: num -> num -> num
    ||pre:   nat(x) & nat(y)
    ||post:  nat(z) & z|x & z|y (ie z is a common divisor)
    ||       &(A)n:nat(n|x & n|y -> n|z) 
    ||            (ie any other common divisor divides it)
    ||       where z = (gcd x y)
-#+end_example
+\end{verbatim}
 
 We have introduced some notation in the pre and post-conditions:
-- (A) just means $\forall$, that is 'for all', written in standard
+\begin{itemize}
+\item (A) just means $\forall$, that is 'for all', written in standard
 keyboard characters. $\exists$ would be (E). 
-- $|$ means 'divides', or 'is a factor of'. (Note that it is not
+\item $|$ means 'divides', or 'is a factor of'. (Note that it is not
 the same symbol as the division sign '$/$'.)
 \[z~|~x \Leftrightarrow \exists y: nat. (x=z \times y)\]
-- When we write '$y:nat$', we are using the predicate $nat$ as
+\item When we write '$y:nat$', we are using the predicate $nat$ as
 though it were a Miranda type, though it is not. You can think of 
 '$nat(y)$' and '$y:nat$' as meaning exactly the same, namely that $y$
 is a natural number. But the type-style notation is particularly
@@ -1548,7 +1565,7 @@ P {\rm\ holds}')\\
 \forall y : nat, P & means\\forall y. (nat(y) \implies P)\\
 &('for\ all\ natural\ numbers\ y, P {\rm\ holds}')\\
 \end{array}\]
-
+\end{itemize}
 
 Be sure to understnad these, and in particular why it is that
 $\exists$ goes naturally with $\land$, and $\forall$ with
@@ -1562,9 +1579,9 @@ $z$, rather than dividing it: in other words that $z$ is indeed the
 makes a difference, namely when $x$ and $y$ are both 0. All numbers
 divide 0, so amongst the common divisors of $x$ and $y$ there is no
 greatest one. The specification as given has the effect of specifying
-#+begin_example
+\begin{verbatim}
    gcd 0 0 = 0
-#+end_example
+\end{verbatim}
 
 *Proposition 1*: For any two natural numbers $x$ and $y$, there is
 at most one $z$ satifying the specification for $(gcd x y)$.
@@ -1651,9 +1668,9 @@ work correctly. What might be the smallest bad $y$ for which
 $gcd x y$ may go wrong (for some $x$)? Not 0 -- gcd x 0 always works
 correctly. Suppose $Y$ is the smallest bad $y$, and $gcd X Y$ goes
 wrong. Then $Y > 0$, so
-#+begin_example
+\begin{verbatim}
    gcd X Y = gcd Y (X mod Y)
-#+end_example
+\end{verbatim}
 But $X{\rm\ mod\ }Y$ is good (since $X{\rm\ mod\ }Y < Y$), so the
 recursive call works correctly, so (we have already reasoned) 
 $gcd X Y$ does also -- a contradiction.
@@ -1663,26 +1680,27 @@ definition of =gcd=. It is a rough measure of the depth of
 recursion needed, and always decreases in the recursive calls. 
 
 Let us now state this as a reasoning principle:
-#+begin_example
+\begin{verbatim}
    In proving that a recursive function satisfies its specificaiton,
    you are allowed to assume that the recursive calls work correclty
    -- provided that you can define a recursion variant for the function. 
-#+end_example
+\end{verbatim}
  
 A recursion variant for a function must obey the following rules:
-- It is calculated from the arguments of the function
-- It is a natural number (at least when the pre-conditions of the
+\begin{itemize}
+\item It is calculated from the arguments of the function
+\item It is a natural number (at least when the pre-conditions of the
 function hold). For instances, in =gcd= the recursion variant of $y$. 
-- It is calculated (trivially) from the function's arguments
+\item It is calculated (trivially) from the function's arguments 
 $x$ and $y$)
-- It always decreases in the recursive calls. For the recursive
+\item It always decreases in the recursive calls. For the recursive
 call $gcd y (x{\rm\ mod\ }y)$, the recursion variant $x{\rm\ mod\ }y$
 is less than $y$, the variant for $gcd x y$.
+\end{itemize}
 
+\chapter{GCD in COQ}
 
-* GCD in COQ
-
-#+begin_example
+\begin{verbatim}
 Fixpoint Pgcdn (n: nat) (a b : positive) : positive :=
   match n with
     | O => 1
@@ -1714,9 +1732,9 @@ Definition Zgcd (a b : Z) : Z :=
 
 Lemma Zgcd_is_gcd : forall a b, Zis_gcd a b (Zgcd a b).
 
-#+end_example
+\end{verbatim}
 
-* GCD in Nuprl by Anne Trostle
+\chapter{GCD in Nuprl by Anne Trostle}
 
 Quoted from [cite:@Tros13]:
 
@@ -1767,12 +1785,13 @@ Since the GCD stays the same as you reduce the terms, $z$ is also the GCD
 of the original pair of numbers. This is Euclid's algorithm. Here is an
 example of how it works, using 18 and 12:
 
-| GCD(18;12;g) | = | GCD(12;18 rem 12;g) |
-|  | = | GCD(12;6;g |
-|  | = | GCD(6;12 rem 6;g) |
-|  | = | GCD(6;0;g) |
-|  | $\to$ | g = 6 |
-
+\begin{tabular}{rcl}
+GCD(18;12;g) & = & GCD(12;18 rem 12;g)\\
+             & = & GCD(12;6;g\\
+             & = & GCD(6;12 rem 6;g)\\
+             & = & GCD(6;0;g)\\
+	     & $\to$ & g = 6
+\end{tabular}
 
 Using this idea we can not only prove that the GCD exists but we can also
 construct a method for actually computing the GCD. A great feature of
@@ -1800,24 +1819,24 @@ produces a function of the pair $(m,n)$ would require induction on the
 pair itself which isn't as intuitive or easy to understand as natural
 induction on a single variable.
 
-* Software Details
-** Installed Software
+\chapter{Software Details}
+\section{Installed Software}
 Install CLANG, LLVM
-#+begin_example
+\begin{verbatim}
 http://llvm.org/releases/download.html
-#+end_example
+\end{verbatim}
 Install OCAML
-#+begin_example
+\begin{verbatim}
 sudo apt-get install ocaml
-#+end_example
+\end{verbatim}
 
 An OCAML version of gcd would be written 
-#+begin_example
+\begin{verbatim}
 let rec gcd a b = if b = 0 then a else gcd b (a mod b)
 val gcd : int -> int -> int = <fun>
-#+end_example
+\end{verbatim}
 
-* Temporal Logic of Actions (TLA)
+\chapter{Temporal Logic of Actions (TLA)}
 \begin{quote}
 *Sloppiness is easier than precision and rigor*
 -- Leslie Lamport [cite:@Lamp14a]
@@ -1847,11 +1866,11 @@ justified claim indeed is implied /by/ its cited facts. If a TLA+
 theorem has a proof with no unjustified claims, then, as a result of
 checking the proof, TLAPS verifies the truth of the theorem.
 
-** The algorithm
+\section{The algorithm}
 
 The well-known Euclidean algorithm can be written in the PlusCal 
 language as follows:
-#+begin_example
+\begin{verbatim}
 --algorithm Euclid {
   variables x \in 1..M, y \in 1..N, x0 = x, y0 = y;
   {
@@ -1861,94 +1880,96 @@ language as follows:
     };
     assert x = GCD(x0, y0) /\ y = GCD(x0, y0)
   }
-#+end_example
+\end{verbatim}
 
 The PlusCal translator translates this algorithm into a TLA+ specification
 that we could prove correct. However, in this tutorial, we shall write a
 somewhat simpler specification of Euclid's algorithm directly in TLA+.
 
-*** Creating a new TLA+ module
+\subsection{Creating a new TLA+ module}
 
 In order to get the definitions of arithmetic operators ($+$, $-$, etc.),
 we shall make this specification /extend/ the =Integers= 
 standard module.
 
-#+begin_example
+\begin{verbatim}
 --------------------- Module Euclid ----------------------
 EXTENDS Integers
-#+end_example
+\end{verbatim}
 
-*** Definitions
+\subsection{Definitions}
 
 We shall then define the GCD of two integers. For that purpose, let us
 define the predicate ``p divides q'' as follows: p divides q iff there
 exists some integer d in the interval 1..q such that q is equal to p
 times d.
 
-#+begin_example
+\begin{verbatim}
 p | q == \E d \in 1..q : q = p * d
-#+end_example
+\end{verbatim}
 
 We then define the set of divisors of an integer q as the sets of integers
 which both belong to the interval 1..q and divide q:
-#+begin_example
+\begin{verbatim}
 Divisors(q) == {d \in 1..q : d | q}
-#+end_example
+\end{verbatim}
 
 We define the maximum of a set S as one of the elements of this set which
 is greater than or equal to all the other elements:
-#+begin_example
+\begin{verbatim}
 Maximum(S) == CHOOSE x \in S : \A y \in S : x >= y
-#+end_example
+\end{verbatim}
 
 And finally, we define the GCD of two integers p and q to be the maximum
 of the intersection of Divisors(p) and Divisors(a):
-#+begin_example
+\begin{verbatim}
 GCD(p,q) == Maximum(Divisors(p) \cap Divisors(q))
-#+end_example
+\end{verbatim}
 
 For convenience, we shall also define the set of all positive integers as:
-#+begin_example
+\begin{verbatim}
 Number = Nat \ {0}
-#+end_example
+\end{verbatim}
 
-*** Constants and variables
+\subsection{Constants and variables}
 We then define the two constants and two variables needed to describe
 the Euclidean algorithm, where M and N are the values whose GCD is to
 be computed:
-#+begin_example
+\begin{verbatim}
 CONSTANTS M, N
 VARIABLES x, y
-#+end_example
+\end{verbatim}
 
-*** The specification
+\subsection{The specification}
 We define the initial state of the Euclidean algorithm as follows:
-#+begin_example
+\begin{verbatim}
 Init == (x = M) /\ (y = N)
-#+end_example
+\end{verbatim}
 
 In the Euclidean algorithm, two actions can be performed:
-- set the value of y to y - x if x $<$ y
-- set the value of x to x - y if x $>$ y
+\begin{itemize}
+\item set the value of y to y - x if x $<$ y
+\item set the value of x to x - y if x $>$ y
+\end{itemize}
 
 These actions are again written as a definition of =Next=, which
 specifies the next-state relation. In TLA+, a primed variable refers
 to its value at the next state of the algorithm.
-#+begin_example
+\begin{verbatim}
 Next == \/ /\ x < y
            /\ y' = y - x
            /\ x' = x
         \/ /\ y < x
            /\ x' = x-y
            /\ y' = y
-#+end_example
+\end{verbatim}
 
 The specification of the algorithm asserts that the variables have the
 correct initial values and, in each execution step, either a =Next=
 action is performed or x and y keep the same values:
-#+begin_example
+\begin{verbatim}
 Spec == Init /\ [][Next]_<<x,y>>
-#+end_example
+\end{verbatim}
 
 (For reasons that are irrelevant to this algorithm, TLA specifications
 always allow /stuttering steps/ that leave all the variables
@@ -1956,18 +1977,18 @@ unchanged.)
 
 We want to prove that the algorithm always satisfies the following
 property:
-#+begin_example
+\begin{verbatim}
 ResultCorrect == (x = y) => x = GCD(M, N)
-#+end_example
+\end{verbatim}
 
 Hence we want to prove the following theorem named Correctness:
-#+begin_example
+\begin{verbatim}
 THEOREM Correctness == Spec => []ResultCorrect
-#+end_example
+\end{verbatim}
 
-*** Summary
+\subsection{Summary}
 
-#+begin_example
+\begin{verbatim}
 --------------------- Module Euclid ----------------------
 EXTENDS Integers
 
@@ -1994,41 +2015,41 @@ Spec == Init /\ [][Next]_<<x,y>>
 ResultCorrect == (x = y) => x = GCD(M,N)
 
 THEOREM Correctness == Spec => []ResultCorrect
-#+end_example
+\end{verbatim}
 
-** A simple proof
-*** The invariant
+\section{A simple proof}
+\subsection{The invariant}
 
 Intuitively, the theorem Correctness holds because the implementation
 guarantees the following /invariant/
-#+begin_example
+\begin{verbatim}
 InductiveInvariant == /\ x \in Number
                       /\ y \in Number
                       /\ GCD(x, y) = GCD(M, N)
-#+end_example
+\end{verbatim}
 
 That is, =InductiveInvariant= holds for the initial state (i.e.,
 the state specified by =Init=) and is preserved by the 
 next-state relation =[Next]\_=$<<x,y>>$
 
-*** Checking proofs
+\subsection{Checking proofs}
 
 First we need to assume that constants M and N are not equal to zero
-#+begin_example
+\begin{verbatim}
 ASSUME NumberAssumption == M \in Number /\ N \in Number
-#+end_example
+\end{verbatim}
 
 Let us then prove that =InductiveInvariant= holds for the initial state.
-#+begin_example
+\begin{verbatim}
 THEOREM InitProperty == Init => InductiveInvariant
-#+end_example
+\end{verbatim}
 
 To check whether TLAPS can prove that theorem by itself, we declare
 its proof obvious.
-#+begin_example
+\begin{verbatim}
 THEOREM InitProperty == Init => InductiveInvariant
   OBVIOUS
-#+end_example
+\end{verbatim}
 
 We now ask TLAPS to prove that theorem. But TLAPS does not know how to
 prove the proof obligation corresponding to that proof. It prints
@@ -2037,7 +2058,7 @@ and SMT. The default behavior of TLAPS is to send obligations first to
 an SMT solver (by default CVC3), then if that fails to the automatic
 prover Zenon, then if Zenon fails to Isabelle (with the tactic ``auto'').
 
-*** Using facts and definitions
+\subsection{Using facts and definitions}
 The obligation cannot be proved because TLAPS treats the symbols
 =Init= and =InductiveInvariant= as opaque identifiers unless
 it is explicitly instructed to expand their definitions using the
@@ -2056,10 +2077,10 @@ Unfortunately, none of the back-ends could prove that obligation. As with
 =definitions=, we have to specify which facts are /usable/. In this
 case, we have to make the fact =NumberAssumption= usable by changing
 the proof to
-#+begin_example
+\begin{verbatim}
 THEOREM InitProperty == Init => InductiveInvariant
   BY NumberAssumption DEF Init, InductiveInvariant
-#+end_example
+\end{verbatim}
 
 The general form of a =BY= proof is:
 \[ =BY\= e_1,...,e_m =\ DEF\= d_1,...,d_n\]
@@ -2069,7 +2090,7 @@ to then check this claim, and also to check that the cited facts
 $e_1,...,e_m$ are indeed true. 
 
 Finally, SMT succeeds in proving that obligation.
-#+begin_example
+\begin{verbatim}
 --------------------- Module Euclid ----------------------
 EXTENDS Integers
 
@@ -2105,10 +2126,10 @@ THEOREM InitProperty == Init => InductiveInvariant
   BY NumberAssumption DEF Init, InductiveInvariant
 
 THEOREM Correctness == Spec => []ResultCorrect
-#+end_example
+\end{verbatim}
 
 
-** Divisibility Definition
+\section{Divisibility Definition}
 In Shoup [cite:@Sho08] we find the divisibility definition.
 
 Given the integers, $a$ and $b$
@@ -2128,34 +2149,38 @@ proof: \[ a | b \implies |a| \le |b|; b | a \implies |b| \le |a|;
 \ therefore\ |a|=|b| \implies a = \pm b\]
 \[ a | 1 \iff a = \pm 1\]
 
-* COQ proof of GCD
-** Basics of the Calculus of Constructions
+\chapter{COQ proof of GCD}
+\section{Basics of the Calculus of Constructions}
 Coquand [cite:@Coqu86] [cite:@Wiki17] 
 defines the Calculus of Constructions which can
 be considered an extension of the Curry-Howard Isomorphism. The components
 are
-*** Terms
+\subsection{Terms}
 A /term/ in the calculus of constructions is constructed using the
 following rules:
-- *T* is a term (also called /Type/)
-- *P* is a term (also called /Prop/, the type of all propositions)
-- Variables ($x,y,...$) are terms
-- if *A* and *B* are terms, then so are
-  - *$(A,B)$*
-  - *$(\lambda x: A,B)$*
-  - *$(\forall x: A,B)$*
-
+\begin{itemize}
+\item *T* is a term (also called /Type/)
+\item *P* is a term (also called /Prop/, the type of all propositions)
+\item Variables ($x,y,...$) are terms
+\item if *A* and *B* are terms, then so are
+\begin{itemize}
+\item *$(A,B)$*
+\item *$(\lambda x: A,B)$*
+\item *$(\forall x: A,B)$*
+\end{itemize}
+\end{itemize}
 
 The calculus of constructions has five kinds of objects:
-69. /proofs/, which are terms whose types are /propositions/
-70. /propositions/, which are also known as /small types/
-71. /predicates/, which are functions that return propositions
-72. /large types/, which are the types of predicates. *P* is
+\begin{enumerate}
+\item /proofs/, which are terms whose types are /propositions/
+\item /propositions/, which are also known as /small types/
+\item /predicates/, which are functions that return propositions
+\item /large types/, which are the types of predicates. *P* is
 an example of a large type)
-73. *T* itself, which is the type of large types.
+\item *T* itself, which is the type of large types.
+\end{enumerate}
 
-
-*** Judgements
+\subsection{Judgements}
 
 The calculus of constructions allows proving *typing judgements*
 \[x_1:A_1, x_2:A_2, ... \vdash t:B\]
@@ -2182,7 +2207,7 @@ which means
 {\rm\ is\ a\ valid\ judgement,\ then\ so\ is\ }
 *\Gamma^\prime* \vdash *C : D*\]
 
-*** Inference Rules
+\subsection{Inference Rules}
 
 In Frade [cite:@Frad08] we find:
 
@@ -2227,7 +2252,7 @@ In Frade [cite:@Frad08] we find:
 
 \end{array}\]
 
-*** Defining Logical Operators
+\subsection{Defining Logical Operators}
 
 \[\begin{array}{cccc}
 A\Rightarrow B & \equiv & \forall x:A.B & (x\notin B)\\
@@ -2239,7 +2264,7 @@ A\vee B & \equiv & \forall C:P.(A\Rightarrow C)\Rightarrow(B\Rightarrow C)
 \Rightarrow C &\\
 \end{array}\]
 
-*** Defining Types
+\subsection{Defining Types}
 
 The basic data types used in computer science can be defined within the
 Calculus of Constructions:
@@ -2264,7 +2289,7 @@ Note that Booleans and Naturals are defined in the same way as in
 Church encoding. However additional problems raise from propositional
 extensionality and proof irrelevance.
 
-** Why does COQ have Prop?
+\section{Why does COQ have Prop?}
 
 From a stackexchange post [cite:@Stac17] we find the question:
 
@@ -2279,15 +2304,16 @@ delete parts of code that are useless. For example, to extract a sorting
 algorithm we would prove the statement ``for every list $l$ there
 is a list $k$ such that $k$ is ordered and $k$ is a permutation of $l$''.
 If we write this down in Coq and extract without using Prop, we will get:
-74. ``for all $l$ there is a $k$'' which gives us a map *sort* which
+\begin{enumerate}
+\item ``for all $l$ there is a $k$'' which gives us a map *sort* which
 takes lists to lists,
-75. ``such that $k$ is ordered'' will give a function *verify* which
+\item ``such that $k$ is ordered'' will give a function *verify* which
 runs through $k$ and checks that it is sorted, and
-76. ``$k$ is a permutation of $l$ will give a permutation *p1* which
+\item ``$k$ is a permutation of $l$ will give a permutation *p1* which
 takes $l$ to $k$. Note that *p1* is not just a mapping, but also the
 inverse mapping together with programs verifying that the two maps really
 are inverses.
-
+\end{enumerate}
 
 While the extra stuff is not totally useless, in many applications we want
 to get ride of it and keep just *sort*. This can be accomplished if we
@@ -2328,9 +2354,9 @@ the remaining bits $k$, i.e., it computes everything. If we extract from
 then the program will only compute the lowest bit $b$. The machine cannot
 tell which is the correct one, the user has to tell it what he wants.
 
-** Source code of COQ GCD Proof
+\section{Source code of COQ GCD Proof}
 This is the proof of GCD [cite:@Coqu16a] in the COQ [cite:@Coqu16] sources:
-#+begin_example
+\begin{verbatim}
 Library Coq.ZArith.Znumtheory
 
 Require Import ZArith_base.
@@ -2685,11 +2711,11 @@ Definition prime_dec: forall p, { prime p }+{ ~ prime p }.
 Theorem not_prime_divide:
  forall p, 1 < p -> ~ prime p -> exists n, 1 < n < p /\ (n | p).
  
-#+end_example
+\end{verbatim}
 
-* LEAN proof of GCD
+\chapter{LEAN proof of GCD}
 This is the proof of GCD [cite:@Avig14] in the LEAN [cite:@Avig16] sources:
-#+begin_example
+\begin{verbatim}
 /-
 Copyright (c) 2014 Jeremy Avigad. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
@@ -3062,14 +3088,14 @@ or.elim (eq_zero_or_pos (gcd k m))
 
 end nat
 
-#+end_example
+\end{verbatim}
 
-* Formal Pre- and Post-conditions
+\chapter{Formal Pre- and Post-conditions}
 In Boldo [cite:@Bold11] we find an effort to verify floating point software
 using preconditions, postconditions, and assertions. Quoting:
 
 ``These conjectures can be described formally by annotations as follows.
-#+begin_example
+\begin{verbatim}
 /*@ requires \abs(x) <= 0x1p-5;
   @ ensures \abs(\result - \cos(x)) <= 0x1p-23;
   @*/
@@ -3077,7 +3103,7 @@ float my_cosine(float x) {
   //@ assert \abs(1.0 - x*x*0.5 - \cos(x)) < 0x1p-24;
   return 1.0f - x * x * 0.5f;
 }
-#+end_example
+\end{verbatim}
 The /precondition/, introduced by *requires*, states that we expect
 argument /x/ in the interval [-1/32; 1/32]. The /postcondition/,
 introduced by *ensures*, states that the distance between the value
@@ -3097,7 +3123,7 @@ is thanks to the choice of having exact operations in the annotations that
 we are able to state a property of the method error.''
 
 In Boldo [cite:@Bold07,Bold07a] we find 'search in an array' annotated:
-#+begin_example
+\begin{verbatim}
 /*@ requires \valid_range(t,0,n-1)
   @ ensures
   @  (0 <= \result < n => t[\result] == v) &&
@@ -3114,9 +3140,9 @@ int index(int t[], int n, int v) {
   }
   return i;
 }
-#+end_example
+\end{verbatim}
 
-* Types and Signatures
+\chapter{Types and Signatures}
 
 We need to start from a base of the existing types in Common Lisp,
 eventually providing Axiom combinations or specializations.
@@ -3127,10 +3153,12 @@ Common Lisp has these standard type specifier symbols.
 \end{center}
 
 Axiom adds these types:
-- Command = String
+\begin{itemize}
+\item Command = String
+\end{itemize}
 
 From Carette, et al. [cite:@Care11a] we find:
-#+begin_example
+\begin{verbatim}
 LeftNearSemiRing := Theory {
   U : type;
   * : (U, U) -> U;
@@ -3145,9 +3173,9 @@ LeftNearSemiRing := Theory {
     forall x,y,z : U. (x + y) + z = x + (y + z);
   axiom associative_* :=
     forall x,y,z : U. (x * y) * z = x * (y * z);
-#+end_example
+\end{verbatim}
 
-* COQ nat vs Axiom NNI
+\chapter{COQ nat vs Axiom NNI}
 
 COQ's nat domain includes a proof of GCD.
 
@@ -3161,34 +3189,34 @@ subtraction to Integer whereas Coq will not.
 
 COQ's nat domain [cite:@COQnat] is
 
-*** Library Coq.Init.Nat
+\subsection{Library Coq.Init.Nat}
 
-#+begin_example
+\begin{verbatim}
 Require Import Notations Logic Datatypes.
 
 Local Open Scope nat_scope.
-#+end_example
+\end{verbatim}
 
 *Peano natural numbers, definitions of operations*
 
 This file is meant to be used as a whole module, without importing it,
 leading to qualified definitions (e.g. Nat.pred)
 
-#+begin_example
+\begin{verbatim}
 Definition t := nat.
-#+end_example
+\end{verbatim}
 
 *Constants*
 
-#+begin_example
+\begin{verbatim}
 Definition zero := 0.
 Definition one := 1.
 Definition two := 2.
-#+end_example
+\end{verbatim}
 
 *Basic operations*
 
-#+begin_example
+\begin{verbatim}
 Definition succ := S.
 
 Definition pred n :=
@@ -3215,12 +3243,12 @@ Fixpoint mul n m :=
 
 where "n * m" := (mul n m) : nat_scope.
 
-#+end_example
+\end{verbatim}
 
 Note that Axiom's NNI domain will be automatically promoted to Integer
 when the subtraction result is negative. Coq returns O when this occurs.
 
-#+begin_example
+\begin{verbatim}
 Truncated subtraction: n-m is 0 if n<=m
 
 Fixpoint sub n m :=
@@ -3231,9 +3259,9 @@ Fixpoint sub n m :=
 
 where "n - m" := (sub n m) : nat_scope.
 
-#+end_example
+\end{verbatim}
 *Comparisons*
-#+begin_example
+\begin{verbatim}
 
 Fixpoint eqb n m : bool :=
   match n, m with
@@ -3266,9 +3294,9 @@ Fixpoint compare n m : comparison :=
 
 Infix "?=" := compare (at level 70) : nat_scope.
 
-#+end_example
+\end{verbatim}
 *Minimum, maximum*
-#+begin_example
+\begin{verbatim}
 
 Fixpoint max n m :=
   match n, m with
@@ -3284,9 +3312,9 @@ Fixpoint min n m :=
     | S n', S m' => S (min n' m')
   end.
 
-#+end_example
+\end{verbatim}
 *Parity tests*
-#+begin_example
+\begin{verbatim}
 
 Fixpoint even n : bool :=
   match n with
@@ -3297,9 +3325,9 @@ Fixpoint even n : bool :=
 
 Definition odd n := negb (even n).
 
-#+end_example
+\end{verbatim}
 *Power*
-#+begin_example
+\begin{verbatim}
 
 Fixpoint pow n m :=
   match m with
@@ -3309,9 +3337,9 @@ Fixpoint pow n m :=
 
 where "n ^ m" := (pow n m) : nat_scope.
 
-#+end_example
+\end{verbatim}
 *Euclidean division*
-#+begin_example
+\begin{verbatim}
 This division is linear and tail-recursive. In divmod, y is the 
 predecessor of the actual divisor, and u is y minus the real remainder
 
@@ -3339,9 +3367,9 @@ Definition modulo x y :=
 Infix "/" := div : nat_scope.
 Infix "mod" := modulo (at level 40, no associativity) : nat_scope.
 
-#+end_example
+\end{verbatim}
 *Greatest common divisor* 
-#+begin_example
+\begin{verbatim}
 We use Euclid algorithm, which is normally not structural, but Coq is 
 now clever enough to accept this (behind modulo there is a subtraction, 
 which now preserves being a subterm)
@@ -3352,15 +3380,15 @@ Fixpoint gcd a b :=
    | S a' => gcd (b mod (S a')) (S a')
   end.
 
-#+end_example
+\end{verbatim}
 *Square*
-#+begin_example
+\begin{verbatim}
 
 Definition square n := n * n.
 
-#+end_example
+\end{verbatim}
 *Square root*
-#+begin_example 
+\begin{verbatim} 
 
 The following square root function is linear (and tail-recursive). 
 With Peano representation, we can't do better. For faster algorithm, 
@@ -3383,9 +3411,9 @@ Fixpoint sqrt_iter k p q r :=
 
 Definition sqrt n := sqrt_iter n 0 0 0.
 
-#+end_example
+\end{verbatim}
 *Log2* 
-#+begin_example
+\begin{verbatim}
 This base-2 logarithm is linear and tail-recursive.  In
 log2_iter, we maintain the logarithm p of the counter q, while r is
 the distance between q and the next power of 2, more precisely q + S r
@@ -3460,13 +3488,13 @@ Definition land a b := bitwise andb a a b.
 Definition lor a b := bitwise orb (max a b) a b.
 Definition ldiff a b := bitwise (fun b b' => andb b (negb b')) a a b.
 Definition lxor a b := bitwise xorb (max a b) a b.
-#+end_example
+\end{verbatim}
 
-* Binary Power in COQ by Casteran and Sozeau
+\chapter{Binary Power in COQ by Casteran and Sozeau}
 
 From Casteran and Sozeau [cite:@Cast16]:
 
-#+begin_example
+\begin{verbatim}
 (* About integer powers (monomorphic version) *)
 
 Set Implicit Arguments.
@@ -3474,13 +3502,13 @@ Require Import ZArith.
 Require Import Div2.
 Require Import Program.
 Open Scope Z_scope.
-#+end_example
+\end{verbatim}
 
 Let us consider a simple arithmetic operation: raising some integer $x$
 to the $n$-th power, where $n$ is a natural number. The following
 function definition is a direct translation of the mathematical
 concept:
-#+begin_example
+\begin{verbatim}
 Fixpoint power (a:Z)(n:nat) :=
   match n with 0%nat => 1
              | S p =>  a * power a p
@@ -3488,7 +3516,7 @@ Fixpoint power (a:Z)(n:nat) :=
 
 Eval vm_compute in power 2 40.
  = 1099511627776 : Z
-#+end_example
+\end{verbatim}
 
 This definition can be considered as a very naive way of programming,
 since computing $x^n$ requires $n$ multiplications. Nevertheless, this
@@ -3500,7 +3528,7 @@ by proving in Coq their equivalence with the naive power function.
 
 The following function allows one to compute $x^n$, with a number of
 multiplications proportional to $\log_2(n)$:
-#+begin_example
+\begin{verbatim}
 Program
 Fixpoint binary_power_mult (acc x:Z) (n:nat) {measure (fun i=>i) n} : Z
   (* acc * (power x n) *) :=
@@ -3521,7 +3549,7 @@ Eval vm_compute in binary_power 2 40.
 Goal binary_power 2 234 = power 2 234.
 reflexivity.
 Qed.
-#+end_example
+\end{verbatim}
 
 We want now to /prove/ =binary\_power's= correctness, i.e. that
 this function and the naive =power= function are pointwise equivalent.
@@ -3536,31 +3564,33 @@ matrices using the most efficient of both algorithms.
 Thus, let us throw away our previous definition, and try to define them in
 a more generic framework.
 
-** On Monoids
+\section{On Monoids}
 
 *Definition 2.1* /A monoid is a mathematical structure composed of/
-- /a carrier A/
-- /a binary, associative operation/ $\circ$ /on A/
-- /a neutral element/ $1 \in A$ /for/ $\circ$
+\begin{itemize}
+\item /a carrier A/
+\item /a binary, associative operation/ $\circ$ /on A/
+\item /a neutral element/ $1 \in A$ /for/ $\circ$
+\end{itemize}
 
 Such a mathematical structure can be defined in Coq as a type class.
  [cite:@Soze08]. In the following definition, parameterized by a type $A$
 (implicit), a binary operation =dot= and a neutral element =unit=,
 three fields describe the properties that =dot= and =unit= must
 satisfy.
-#+begin_example
+\begin{verbatim}
 Class Monoid {A:Type}(dot : A -> A -> A)(one : A) : Prop := {
   dot_assoc : forall x y z:A, dot x (dot y z) = dot (dot x y) z;
   unit_left : forall x, dot one x = x;
   unit_right : forall x, dot x one = x }.
-#+end_example
+\end{verbatim}
 
 Note that other definitions could have been given for representing this
 mathematical structure. 
 
 From an implementational point of view, such a type class is just a record
 type, i.e. an inductive type with a single constructor =Build\_Monoid=
-#+begin_example
+\begin{verbatim}
 Print Monoid.
 
 Record Monoid (A:Type)(dot : A -> A -> A)(one : A) : Prop := Build_Monoid
@@ -3572,7 +3602,7 @@ For Monoid: Argument A is implicit and maximally inserted
 For Build_Monoid: Argument A is implicit
 For Monoid: Argument scopes are [type_scope _ _]
 For Build_Monoid: Argument scopes are [type_scope _ _ _ _ _]
-#+end_example
+\end{verbatim}
 
 Nevertheless, implementation of type classes by M. Sozeau provides several
 specific tools --- dedicated tactics for instance --, and we advise the
@@ -3581,7 +3611,7 @@ reader not to replace the =Class= keyword with =Record= or
 
 With the command =About=, we can see the polymorphic type of the 
 fields of the class =Monoid=:
-#+begin_example
+\begin{verbatim}
 About one_left
 
 one_left:
@@ -3591,9 +3621,9 @@ Monoid dot one -> forall x : A, dot one x = x
 Arguments A, dot, one, Monoid are implicit and maximally inserted
 Argument scopes are [type_scope _ _ _ _]
 one_left is transparent
-#+end_example
+\end{verbatim}
 
-*** Classes and Instances
+\subsection{Classes and Instances}
 
 Members of a given class are called /instances/ of this class. 
 Instances are defined to the Coq system through the =Instance=
@@ -3601,15 +3631,15 @@ keyword. Our first example is a definition of the monoid structure
 on the set $\mathbb{Z}$ of integers, provided with integer multiplication,
 with 1 as the neutral element. Thus we give these parameters to the
 =Monoid= class (note that $\mathbb{Z}$ is implicitly given).
-#+begin_example
+\begin{verbatim}
 Instance ZMult : Monoid Zmult 1
-#+end_example
+\end{verbatim}
 
 For this instance to be created, we need to prove that the binary
 operation =Zmult= is associative and admits 1 as the neutral
 element. Applying the constructor =Build\_Monoid= -- for instance
 with the tactic =split= -- generates three subgoals.
-#+begin_example
+\begin{verbatim}
 split.
 3 subgoals
  =================================================
@@ -3619,7 +3649,7 @@ subgoal 2 is:
   forall x : Z, 1 * x = x
 subgoal 3 is:
   forall x : Z, x * 1 = x
-#+end_example
+\end{verbatim}
 
 Each subgoal is easily solved by =intros; ring=.
 
@@ -3628,10 +3658,10 @@ Note that we used =Qed= because we consider a class of sort =Prop=.
 In some cases where instances must store some information constants,
 ending an instance construction with =Defined= may be necessary.
 
-#+begin_example
+\begin{verbatim}
 Check Zmult.
 ZMult : Monoid Zmult 1
-#+end_example
+\end{verbatim}
 
 We explained on the preceding page why it is better to use the =Class=
 keyword than =Record= or =Inductive=. For the same reason, the 
@@ -3645,7 +3675,7 @@ We are now able to give a definition of the function =power= than can
 be applied with any instance of class =Monoid=:
 
 A first definition could be
-#+begin_example
+\begin{verbatim}
 Fixpoint power {A:Type}{dot:A->A->A}{one:A}{M: Monoid dot one}
                (a:A)(n:nat) :=
   match n with 0:nat => one
@@ -3654,11 +3684,11 @@ Fixpoint power {A:Type}{dot:A->A->A}{one:A}{M: Monoid dot one}
 
 Compute power 2 10.
  = 1024 : Z
-#+end_example
+\end{verbatim}
 
 Happily, we can make the declaration of the three first arguments
 implicit, by using the =Generalizable Variables= command:
-#+begin_example
+\begin{verbatim}
 Reset power.
 
 Generalizable Variables A dot one.
@@ -3670,7 +3700,7 @@ Fixpoint power `{M: Monoid A dot one}(a:A)(n:nat) :=
 
 Compute power 2 10.
  = 1024 : Z
-#+end_example
+\end{verbatim}
 
 The variables =A dot one= appearing in the binder for =M= are
 implicitly bound before the binder for =M= and their types are
@@ -3678,7 +3708,7 @@ inferred from the =Monoid A dot one= type. This syntactic sugar
 helps abbreviate bindings for classes with parameters. The resulting
 internal Coq term is exactly the same as the first definition above.
 
-*** Instance Resolution
+\subsection{Instance Resolution}
 
 The attentive reader has certainly noticed that in the last
 computation, the binary operation =Zmult= and the neutral element 1
@@ -3688,7 +3718,7 @@ all the arguments needed by the =power= function to be applied is called
 
 In order to understand how it operates, let's have a look at =power='s
 type:
-#+begin_example
+\begin{verbatim}
 About power.
 power :
 forall (A : Type) (dot : A -> A -> A) (one : A),
@@ -3703,7 +3733,7 @@ Set Printing Implicit.
 Check power 2 100.
 @power Z Zmult 1 Zmult 2 100 : Z
 Unset Printing Implicit.
-#+end_example
+\end{verbatim}
 
 We see that the /instance/ =ZMult= has been inferred from the
 type of 2. We are in the simple case where only one monoid of carrier =Z=
@@ -3713,8 +3743,8 @@ The implementation of type classes in Coq can retrieve the instance
 =ZMult= from the type =Z=, then filling the arguments =ZMult=
 and 1 from =ZMult='s definition.
 
-** More Monoids
-*** Matrices over some ring
+\section{More Monoids}
+\subsection{Matrices over some ring}
 
 We all know that multiplication of square matrices is associative and
 admits identity matrices as neutral elements. For simplicity's sake let us
@@ -3722,7 +3752,7 @@ restrict our study to $2\times 2$ matrices over some ring.
 
 We first load the =Ring= library, then open a section with some useful
 declarations and notations. 
-#+begin_example
+\begin{verbatim}
 Require Import Ring.
 
 Section matrices.
@@ -3738,11 +3768,11 @@ Section matrices.
   Variable rt : ring_theory zero one plus mult minus sym (@eq A).
 
   Add Ring Aring : rt.
-#+end_example
+\end{verbatim}
 
 We can now define a carrier type for $2\times 2$-matrices, as well as
 matrix multiplication and the identity matrix.
-#+begin_example
+\begin{verbatim}
 Structure M2 : Type := {c00 : A; c01 : A; c10 : A; c11 : A}.
 
 Definition Id2 : M2 := Build_M2 1 0 0 1.
@@ -3752,11 +3782,11 @@ Definition M2_mult (m m':M2) : M2 :=
            (c00 m * c01 m' + c01 m * c11 m')
            (c10 m * c00 m' + c11 m * c10 m')
            (c10 m * c01 m' + c11 m * c11 m').
-#+end_example
+\end{verbatim}
 
 As for multiplication of integers, we can now define an instance of
 =Monoid= for the type =M2=.
-#+begin_example
+\begin{verbatim}
 Global Instance M2_Monoid : Monoid (M2_mult plus mult) (Id2 0 1).
 split.
 destruct x; destruct y; destruct z; simpl.
@@ -3768,12 +3798,12 @@ unfold M2_mult; apply M2_eq_intros; simpl; ring.
 Qed.
 
 End matrices.
-#+end_example
+\end{verbatim}
 
 We want now to play with $2\times 2$ matrices over $\mathbb{Z}$.
 We declare an instance *M2Z* for this purpose, and can use directly
 the function =power=.
-#+begin_example
+\begin{verbatim}
 Instance M2Z : Monoid _ _ := M2_Monoid Zth.
 
 Compute power (Build_M2 1 1 1 0) 40.
@@ -3790,9 +3820,9 @@ Definition fibonacci (n:nat) :=
 Compute fibonacci 20.
  = 10946
  :Z
-#+end_example
+\end{verbatim}
 
-** Reasoning within a Type Class
+\section{Reasoning within a Type Class}
 
 We are now able to consider again the equivalence between two functions
 for computing powers. Let use define the binary algorithm for any monoid.
@@ -3801,7 +3831,7 @@ First, we define an auxiliary function. We use the =Program=
 extension to define an efficient version of exponentiation using an
 accumulator. The function is defined by well-founded recursion on 
 the exponent $n$.
-#+begin_example
+\begin{verbatim}
 Function binary_power_mult (A:Type) (dot:A->A->A) (one:A)
      (M: @Monoid A dot one) (acc x:A)(n:nat){measure (fun i=>i) n} : A
   (* acc * (x ** n) *) :=
@@ -3819,9 +3849,9 @@ Definition binary_power `{M:Monoid} x n := binary_power_mult M one x n.
 
 Compute binary_power 2 100.
  = 1267650600228229401496703205376 : Z
-#+end_example
+\end{verbatim}
 
-*** The Equivalence Proof
+\subsection{The Equivalence Proof}
 
 The proof of equivalence between =power= and =binary\_power=
 is quite long, and can be split in several lemmas. Thus, it is useful
@@ -3829,17 +3859,17 @@ to open a section, in which we fix some arbitrary monoid M. Such a
 declaration is made with the =Context= command, which can be 
 considered as a version of =Variables= for declaring arbitrary
 instances of a given class.
-#+begin_example
+\begin{verbatim}
 
 Section About_power.
 
 Require Import Arith.
  Context `(M:Monoid A dot one ).
-#+end_example
+\end{verbatim}
 
 It is good practice to define locally some specialized notations and 
 tactics.
-#+begin_example
+\begin{verbatim}
 
 Ltac monoid_rw :=
     rewrite (@one_left A dot one M) || 
@@ -3851,14 +3881,14 @@ Ltac monoid_simpl := repeat monoid_rw.
 
 Local Infix "*" := dot.
 Local Infix "**" := power (at level 30, no associativity).
-#+end_example
+\end{verbatim}
 
 \subsection{Some Useful Lemmas About =power=}
 
 We start by proving some well-known equalities about powers in a monoid.
 Some of these equalities are integrated later in simplification tactics.
 
-#+begin_example
+\begin{verbatim}
 Lemma power_x_plus : forall x n p, x ** (n + p) =  x ** n *  x ** p.
 Proof.
  induction n as [| p IHp];simpl.
@@ -3906,16 +3936,16 @@ Lemma power_of_square : forall x n, (x * x) ** n = x ** n * x ** n.
   repeat rewrite dot_assoc;rewrite IHn; repeat rewrite dot_assoc.
  factorize; simpl;trivial.
 Qed.
-#+end_example
+\end{verbatim}
 
-*** Final Steps
+\subsection{Final Steps}
 
 We are now able to prove that the auxiliary function
 =binary\_power\_mult= satisfies its intuitive meaning. 
 The proof uses well-founded induction and the lemmas proven in the
 previous section.
 
-#+begin_example
+\begin{verbatim}
 Lemma binary_power_mult_ok :
   forall n a x,  binary_power_mult a x n = a * x ** n.
 Proof.
@@ -3936,24 +3966,24 @@ Proof.
   generalize (odd_double _ o);intro H;auto.
   apply lt_div2;auto with arith.
 Qed.
-#+end_example
+\end{verbatim}
 
 Then the main theorem follows immediately:
-#+begin_example
+\begin{verbatim}
 Lemma binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n.
 Proof.
   intros n x;unfold binary_power;rewrite binary_power_mult_ok;
   monoid_simpl;auto.
 Qed.
-#+end_example
+\end{verbatim}
 
-*** Discharging the Context
+\subsection{Discharging the Context}
 
 It is time to close the section we opened for writing our proof of
 equivalence. The theorem =binary\_power\_ok= is now provided
 with a universal quantification over all the parameters of any monoid.
 
-#+begin_example
+\begin{verbatim}
 End About_power.
 
 About binary_power_ok.
@@ -3976,9 +4006,9 @@ Check  binary_power_ok Mfib 56.
 binary_power_ok Mfib 56
   : binary_power Mfib 56 = power Mfib 56
 
-#+end_example
+\end{verbatim}
 
-*** Subclasses
+\subsection{Subclasses}
 
 We could prove many useful equalities in the section =about\_power=.
 Nevertheless, we couldn't prove the equality $(xy)^n=x^ny^n$ because it
@@ -3996,14 +4026,14 @@ the commutativity of =dot=. Please keep in mind that we declared
 =A=, =dot=, and =one= as /generalizable variables/,
 hence we can use the backquote symbol here.
 
-#+begin_example
+\begin{verbatim}
 Class Abelian_Monoid `(M:Monoid A dot one) := {
   dot_comm : forall x y, dot x y = dot y x}.
-#+end_example
+\end{verbatim}
 
 A quick look at the representation of /Abelian\_Monoid/ as a record
 type helps us understand how this class is implemented.
-#+begin_example
+\begin{verbatim}
 Print Abelian_Monoid.
 Record Abelian_Monoid (A : Type) (dot : A -> A -> A)
   (one : A) (M : Monoid dot one) : Prop := Build_Abelian_Monoid
@@ -4013,24 +4043,24 @@ For Abelian_Monoid: Arguments A, dot, one are implicit and maximally inserted
 For Build_Abelian_Monoid: Arguments A, dot, one are implicit
 For Abelian_Monoid: Arguemnt scopes are [type_scope _ _ _]
 For Build_Abelian_Monoid: Argument scopes are [type_scope _ _ _ _]
-#+end_example
+\end{verbatim}
 
 For building an instance of =Abelian\_Monoid= we can start from
 =ZMult=, the monoid on =Z=, adding a proof that integer
 multiplication is commutative.
-#+begin_example
+\begin{verbatim}
 Instance ZMult_Abelian : Abelian_Monoid ZMult.
 split. 
  exact Zmult_comm.
 Qed.
-#+end_example
+\end{verbatim}
 
 We can now prove our equality by building an appropriate context. Note
 that we can specify just the parameters of the monoid here in the binder
 of the Abelian monoid, an instance of monoid on those same parameters is
 automatically generalized. Superclass parameters are automatically
 generalized inside quote binders. Again, this is simply syntactic sugar.
-#+begin_example
+\begin{verbatim}
 Section Power_of_dot.
  Context `{M: Monoid A} {AM:Abelian_Monoid M}.
  
@@ -4049,9 +4079,9 @@ End Power_of_dot.
 Check power_of_mult 3 4 5.
 power_of_mult 3 4 5
      : power (4 * 5) 3 = power 4 3 * power 5 3
-#+end_example
+\end{verbatim}
 
-* Proof Tower Layer: C11 using CH$_2$O
+\chapter{Proof Tower Layer: C11 using CH$_2$O}
 
 From Krebbers [cite:@Kreb17]
 
@@ -4101,7 +4131,7 @@ Lemma gcd\_correct $\Gamma$ $\delta$ R J T C y z $\mu$1 $\gamma$1 $\mu$2 $\gamma
 Proof.\\
 End gcd.\\
 
-* Other Ideas to Explore
+\chapter{Other Ideas to Explore}
 
 \section{Aczel [cite:@Acze13]} 
 Homotopy Type Theory
@@ -4195,7 +4225,7 @@ gcd(u,v) = gcd(v,u)\\
 gcd(u,v) = gcd(v, u mod v)\\
 gcd(u,0) = u
 
-** Igarashi et al. [Igar75]
+\section{Igarashi et al. [Igar75]}
 
 Igarashi et al. [cite:@Igar75]
 
@@ -4217,17 +4247,18 @@ would be considered natural for human understanding of what the
 program and its sub-programs do. 
 
 In the logic of programs containing assertions they are of three kinds
-77. assertions
-78. statements of the form P\{A\}Q where P, Q are assertions and A
+\begin{enumerate}
+\item assertions
+\item statements of the form P\{A\}Q where P, Q are assertions and A
 is a program or asserted program. P\{A\}Q means ``if P is true of the
 input state and A halts then Q is true of the output state''
-79. procedure declarations of the form $p(x;y)$ PROC K where $p$ is
+\item procedure declarations of the form $p(x;y)$ PROC K where $p$ is
 a procedure name, $x$ and $y$ are lists of variable and value
 parameters respectively, and $K$ is a program or asserted program (the
 procedure body), in which the variables designated by $y$ do not occur
 in the left-hand side of an assignment statement, nor occur as a
 variable parameter in a procedure statement. 
-
+\end{enumerate}
 
 If a primitive procedure name, say $q$, occurs in a program about
 which we are to prove a certain theorem, we have to either give a set
@@ -4243,44 +4274,45 @@ common substitution instances, a property which is true of V.
 
 The core rules:
 
-| /Axioms/ |  |
-| C1. assignment axioms: | $\displaystyle |
-| P\vert_t^x\{x\leftarrow t\}P$\\ |
-|  |  |
-| C2. frame axioms: | $\displaystyle |
-| P\{q(x;t)\}P$ provided $\lnot(x\in VAR(P))$\\ |
-|  |  |
-| C3. procedure declarations: | $\displaystyle |
-| p(x;y)$ PROC K\\ |
-|  |  |
-| C4. logical theorems: | $P$ for all $P$ s.t. $\vdash P$ |
-|  |  |
-| /Rules/ |  |
-| C5. consequence: |  |
-| $\displaystyle\frac{P\supset Q Q\{A\}R}{P\{A\}R} \displaystyle\frac{P\{A\}Q Q\supset R}{P\{A\}R}$\\ |
-|  |  |
-| C6. and/or: |  |
-| $\displaystyle\frac{P\{A\}Q R\{A\}S}{P\land R\{A\}Q\land S} \displaystyle\frac{P\{A\}Q R\{A\}S}{P\lor R\{A\}Q\lor S}$\\ |
-|  |  |
-| C7. composition: |  |
-| $\displaystyle\frac{P\{A\}Q Q\{B\}R}{P\{A;B\}R}$\\ |
-|  |  |
-| C8.conditional: |  |
-| $\displaystyle\frac{P\land R\{A\}Q P\land\lnot R\{B\}Q} |
-| {P\{if\ R\ then\ A\ else\ B\}Q}$\\ |
-|  |  |
-| C9. substitution: |
-|  | $\displaystyle(L) \frac{P(x;y)\{q(x;y)\}Q(x;y)} |
-| {P(z;y)\{q(z;y)\}Q(z;y)}$\\ |
-|  |  |
-|  | $\displaystyle(R) \frac{P(x;y)\{q(x;y)\}Q(x;y)} |
-| {P(x;s)\{q(x;s)\}Q(x;s)}$\\ |
-|  |  |
-| C10. procedure call: |  |
-| $\displaystyle\frac{p(x;y){\rm\ PROC\ }K(p) P\{r(x;y)\}Q |
+\begin{tabular}{ll}
+/Axioms/ &\\
+C1. assignment axioms: & $\displaystyle
+P\vert_t^x\{x\leftarrow t\}P$\\
+&\\
+C2. frame axioms: & $\displaystyle
+P\{q(x;t)\}P$ provided $\lnot(x\in VAR(P))$\\
+&\\
+C3. procedure declarations: & $\displaystyle
+p(x;y)$ PROC K\\
+&\\
+C4. logical theorems: & $P$ for all $P$ s.t. $\vdash P$\\
+&\\
+/Rules/&\\
+C5. consequence: & 
+$\displaystyle\frac{P\supset Q Q\{A\}R}{P\{A\}R} \displaystyle\frac{P\{A\}Q Q\supset R}{P\{A\}R}$\\
+&\\
+C6. and/or: &
+$\displaystyle\frac{P\{A\}Q R\{A\}S}{P\land R\{A\}Q\land S} \displaystyle\frac{P\{A\}Q R\{A\}S}{P\lor R\{A\}Q\lor S}$\\
+&\\
+C7. composition: &
+$\displaystyle\frac{P\{A\}Q Q\{B\}R}{P\{A;B\}R}$\\
+&\\
+C8.conditional: &
+$\displaystyle\frac{P\land R\{A\}Q P\land\lnot R\{B\}Q}
+{P\{if\ R\ then\ A\ else\ B\}Q}$\\
+&\\
+C9. substitution: 
+& $\displaystyle(L) \frac{P(x;y)\{q(x;y)\}Q(x;y)}
+{P(z;y)\{q(z;y)\}Q(z;y)}$\\
+&\\
+& $\displaystyle(R) \frac{P(x;y)\{q(x;y)\}Q(x;y)}
+{P(x;s)\{q(x;s)\}Q(x;s)}$\\
+&\\
+C10. procedure call: &
+$\displaystyle\frac{p(x;y){\rm\ PROC\ }K(p) P\{r(x;y)\}Q 
 \dststile{}{} P\{K(r)\}Q}
-| {P\{p(x;y)\}Q}$\\ |
-
+{P\{p(x;y)\}Q}$\\
+\end{tabular}
 
 Note that in C9 (1) $s$ does not contain members of $x$;
 (ii) members of $x$ must be distinct and $x$ must contain no variable
@@ -4343,7 +4375,7 @@ program. Q(e) denotes the substitution of e for x in Q(x). In V6,
 B[i] denotes the $i^{th}$ element in array B. In each of the rules A
 can be Null. Q-if denotes a 'marked' Boolean assertion Q.
 
-** Kamareddine [Kama15]
+\section{Kamareddine [Kama15]}
 
 Kamareddine [cite:@Kama15]
 Computerising Mathematical Text explores various ways of 
@@ -4374,7 +4406,7 @@ algorithm.
 
 \appendix
 
-* The Global Environment
+\chapter{The Global Environment}
 
 Let $S$ be a set. Let $\circ$ be a binary operation. 
 Let $+$ be an additive operation. Let $*$ be a multiplicative operation.
@@ -4456,9 +4488,9 @@ $q$ and $r$ in $R$ such that $a=bq+r$ and either $r=0$ or
 $f(r)<f(b)$ 
 \end{axiom}
 
-* Related work
+\chapter{Related work}
 
-** Overview of related work
+\section{Overview of related work}
 
 \subsection{Adams [cite:@Adam01]}
 
@@ -4738,16 +4770,17 @@ gcd(P,gcd(\mathcal{P}))
 \]
 
 Note that
-- $x\in C$ is a root of every polynomial in $\mathcal{P}$
+\begin{itemize}
+\item $x\in C$ is a root of every polynomial in $\mathcal{P}$ 
 if and only if it is the root of gcd($\mathcal{P}$)
-- $x\in C$ is not a root of any polynomial in $\mathcal{Q}$
+\item $x\in C$ is not a root of any polynomial in $\mathcal{Q}$ 
 if and only if
 it is not a root of $\prod_{Q\in \mathcal{Q}}Q$ 
 (with the convention that the proeuct of the empy family is 1).
-- every root of $P$ in $C$ is a root of $Q$ if and only if
+\item every root of $P$ in $C$ is a root of $Q$ if and only if 
 $gcd(P,Q^{deg(\mathcal{P})})$ 
 (with the convention that $Q^{deg(0)}=0)$.
-
+\end{itemize}
 
 WIth these observations the following lemma is clear:
 
@@ -4795,7 +4828,7 @@ positive element of the ideal. The number $c\in (a_1,a_2)$ dividing
 $a_1$ and $a_2$ is the greatest common divisor since any common
 divisor of $a_1$ and $a_2$ must also be a divisor of $c$.
 
-#+begin_example
+\begin{verbatim}
 (lambda (a1)
  (lambda (a2)
    ((((((nat-rec-at '(arrow nat (arrow nat (start nat nat))))
@@ -4814,7 +4847,7 @@ divisor of $a_1$ and $a_2$ must also be a divisor of $c$.
            ((plus-nat a2) 1))
          0)
        1)))
-#+end_example
+\end{verbatim}
 
 Here we have manually introduced r1,r2,L11,L12,L21,L22 for somewhat
 lengthy terms corresponding to our abbreviations $r_1$,
@@ -4830,9 +4863,9 @@ one might as well pick the constant 0 (as we did in the text).
 Cardelli states that *coercions* are a 
 form of ad-hoc polymorphism.
 Axiom allows ML-style type inference in the interpreter. Declaring a function
-#+begin_example
+\begin{verbatim}
    f(n) == n + 1
-#+end_example
+\end{verbatim}
 without specifying types is possible. The function types are inferred
 when used and a type-specialized version of the function is
 compiled. If called with different argument types it will compile a
@@ -4841,11 +4874,12 @@ distinction between *equivalence* and *inclusion* as it occurs
 in subtypes (p483). The FUN language defines *Quantified Types* as
 
 QuantifiedType ::=
-- [ ] $\forall$ A, Type $\vert$Universal Quantification
-- [ ] $\exists$ A. Type $\vert$Existential Quantification
-- [ ] $\forall$ A $\subseteq$ Type. Type $\vert$
+\begin{itemize}
+\item[ ] $\forall$ A, Type $\vert$Universal Quantification
+\item[ ] $\exists$ A. Type $\vert$Existential Quantification
+\item[ ] $\forall$ A $\subseteq$ Type. Type $\vert$
 $\exists$ A $\subseteq$ Type. Type  {}Bounded Quantification
-
+\end{itemize}
 
 See p516 for the Classification of Type Systems diagram.
 
@@ -4900,114 +4934,116 @@ Clarke shows several proofs
 *Primary specification constructs*
 \end{center}
 
-|---+---|
-| *pre*(expression-list) | Declares preconditions |
-|---+---|
-| *post*(expression-list) | Declares postconditions |
-|---+---|
-|  | Declares the value returned by a |
-|  | function. Equivalent to *post(result)* == |
-| *returns*(expression) | /expression/ except that recursion is |
-|  | permitted in /expression/ |
-|---+---|
-| *assert*(expression-list) | Asserts conditions |
-|---+---|
-|  | Used in class declarations to declare |
-| *invariant*(expression-list) | class invariants, and in *typedef* |
-|  | declarations to declare constraints |
-|---+---|
-| *keep*(expression-list) | Declares loop invariants |
-|---+---|
-| *decrease*(expression-list) | Declares loop variant or recursion |
-|  | variant expressions |
-|---+---|
-|  | Declares what non-local variables the |
-|  | function modifies. If a function is |
-| *writes*(lvalue-expression-list) |
-|  | declared without a writes-clause, then |
-|  | a default writes-clause is constructed |
-|  | based on the signature of the function |
-|---+---|
-| *assumes*(expression-list) | Declares predicates to be assumed |
-|  | without proof |
-|---+---|
-| *ghost*(expression-list) | Declares ghost variables, functions |
-|  | parameters, etc. |
-|---+---|
-
+\begin{tabular}{|l|l|}
+\hline
+*pre*(expression-list) & Declares preconditions\\
+\hline
+*post*(expression-list) & Declares postconditions\\
+\hline
+& Declares the value returned by a\\
+& function. Equivalent to *post(result)* ==\\
+*returns*(expression) & /expression/ except that recursion is\\
+& permitted in /expression/\\
+\hline
+*assert*(expression-list) & Asserts conditions\\
+\hline
+& Used in class declarations to declare\\
+*invariant*(expression-list) & class invariants, and in *typedef*\\
+& declarations to declare constraints\\
+\hline
+*keep*(expression-list) & Declares loop invariants\\
+\hline
+*decrease*(expression-list) & Declares loop variant or recursion\\
+& variant expressions\\
+\hline
+& Declares what non-local variables the\\
+& function modifies. If a function is\\
+*writes*(lvalue-expression-list) 
+& declared without a writes-clause, then\\
+& a default writes-clause is constructed\\
+& based on the signature of the function\\
+\hline
+*assumes*(expression-list) & Declares predicates to be assumed\\
+& without proof\\
+\hline
+*ghost*(expression-list) & Declares ghost variables, functions\\
+& parameters, etc.\\
+\hline
+\end{tabular}
 
 \begin{center}
 *Additional specification expressions*
 \end{center}
 
-|---+---|
-| *exists* /identifier/ *in* | Existential quantification over the |
-| /expression/ :- /predicate/ |
-|  | elements of /expression/ which must be |
-|  | an array or an abstract collection type |
-|---+---|
-| *exists* /type identifier/ := | Existential quantification over all |
-| /predicate/ | values of type |
-|---+---|
-| *forall* /identifier/ *in* | Universal quantification over the |
-| /expression/ :- /predicate/ |
-|  | elements of /expression/, which must be |
-|  | an array or an abstract collection type |
-|---+---|
-| *forall* /type identifier/ :- | Universal quantification over all |
-| /predicate/ | values of type |
-|---+---|
-|  | Applies the mapping function |
-| *for* /identifier/ *in* /expression1/ |
-|  | /expression2/ to each element of |
-| *yield* /expression2/ |
-|  | collection /expression1/, yielding a new |
-|  | collection |
-|---+---|
-| *those* /identifer/ *in* | Selects those elements of collection |
-| /expression1/ :- /predicate/ |
-|  | /expression1/ for which /predicate/ is |
-|  | true |
-|---+---|
-| *that* /identifier/ *in* | Selects the single element of the |
-| /expression1/ :- /predicate/ |
-|  | collection /expression1/ for which |
-|  | /predicate/ is true |
-|---+---|
-|  | Shorthand for *exists* /id/ *in* /expression2/ |
-| /expression1/ *in* /expression2/ |
-|  | :- /id/ == /expression1/, where /id/ is a new |
-|  | identifier |
-|---+---|
-|  | /expression/ must have union type, and |
-|  | /member/ must be a member of that |
-| /expression/ *holds* /member/ |
-|  | type. Yields true if and only if the |
-|  | value of /expression/ was defined by |
-|  | assignment or initialization through |
-|  | /member/ |
-|---+---|
-|  | Yields true if and only if no two |
-|  | objects in the expression list have |
-| *disjoint*(/lvalue-expression-list/) |
-|  | overlapping storage. Typically used |
-|  | in preconditions to state that parameters |
-|  | passed by pointer or reference refer to |
-|  | distinct objects |
-|---+---|
-|  | Left-fold /operator/ over collection |
-| /operator/ *over* /expression/ |
-|  | /expression/. Used to express e.g. |
-|  | summation of the elements of an array |
-|---+---|
-|  | When used in a postcondition, this |
-|  | referes to the value of /expression/ when |
-|  | the function was entered. When used |
-| *old*/(expreesion)/ | in a loop invariant, it refers to the |
-|  | value of /expression/ just before the |
-|  | first iteration of the loop. |
-|---+---|
-
+\begin{tabular}{|l|l|}
+\hline
+*exists* /identifier/ *in* & Existential quantification over the\\
+/expression/ :- /predicate/ 
+& elements of /expression/ which must be\\
+& an array or an abstract collection type\\
+\hline
+*exists* /type identifier/ := & Existential quantification over all\\
+/predicate/ & values of type\\
+\hline
+*forall* /identifier/ *in* & Universal quantification over the\\
+/expression/ :- /predicate/ 
+& elements of /expression/, which must be \\
+& an array or an abstract collection type\\
+\hline
+*forall* /type identifier/ :- & Universal quantification over all\\
+/predicate/ & values of type\\
+\hline
+& Applies the mapping function\\
+*for* /identifier/ *in* /expression1/ 
+& /expression2/ to each element of\\
+*yield* /expression2/ 
+& collection /expression1/, yielding a new\\
+& collection\\
+\hline
+*those* /identifer/ *in* & Selects those elements of collection\\
+/expression1/ :- /predicate/ 
+& /expression1/ for which /predicate/ is\\
+& true\\
+\hline
+*that* /identifier/ *in* & Selects the single element of the\\
+/expression1/ :- /predicate/
+& collection /expression1/ for which\\
+& /predicate/ is true\\
+\hline
+& Shorthand for *exists* /id/ *in* /expression2/\\
+/expression1/ *in* /expression2/ 
+& :- /id/ == /expression1/, where /id/ is a new\\
+& identifier\\
+\hline
+& /expression/ must have union type, and\\
+& /member/ must be a member of that\\
+/expression/ *holds* /member/ 
+& type. Yields true if and only if the\\
+& value of /expression/ was defined by\\
+& assignment or initialization through\\
+& /member/\\
+\hline
+& Yields true if and only if no two\\
+& objects in the expression list have\\
+*disjoint*(/lvalue-expression-list/) 
+& overlapping storage. Typically used\\
+& in preconditions to state that parameters\\
+& passed by pointer or reference refer to\\
+& distinct objects\\
+\hline
+& Left-fold /operator/ over collection\\
+/operator/ *over* /expression/ 
+& /expression/. Used to express e.g.\\
+& summation of the elements of an array\\
+\hline
+& When used in a postcondition, this\\
+& referes to the value of /expression/ when\\
+& the function was entered. When used\\
+*old*/(expreesion)/ & in a loop invariant, it refers to the\\
+& value of /expression/ just before the\\
+& first iteration of the loop.\\
+\hline
+\end{tabular}
 
 \subsection{Davenport [cite:@Dave85c]}
 
@@ -5026,9 +5062,10 @@ division.
 
 *Definition* {\sl h is said to be a greatest commmon divisor, or
 g.c.d, of f and g if, and only if
-80. h divides both f and g
-81. if h' divides both f and g, then h' divides h
-
+\begin{enumerate}
+\item h divides both f and g
+\item if h' divides both f and g, then h' divides h
+\end{enumerate}
 
 This definition clearly extends to any number of arguments. The g.c.d
 is normally written gcd(f,g).}
@@ -5070,9 +5107,10 @@ positive, but the general case is more difficult.
 
 /Definition/ {\sl h is said to be a least common multiple, or
 l.c.m. of f and g if, and only if
-82. both f and g divide h
-83. if both f and g divide h', the h divides h'
-
+\begin{enumerate}
+\item both f and g divide h
+\item if both f and g divide h', the h divides h'
+\end{enumerate}}
 
 This definition clearly extends to any number of arguments. The
 l.c.m. is normally written lcm(f,g).
@@ -5138,16 +5176,17 @@ The Coq *Correctness* tactic takes an annotated program as
 argument and generates a set of goals, which are logical propositions
 to be proved by the user. Given an annotated program $e$, the tactic 
 *Correctness* applies the following steps:
-84. It determines the type of computation of $\kappa$ of $e$ by the
+\begin{enumerate}
+\item It determines the type of computation of $\kappa$ of $e$ by the
 typing algorithm
-85. proposition $\hat{\kappa}$ is computed and declared as a goal
-86. The partial proof term $\hat{e}$ is computed following
+\item proposition $\hat{\kappa}$ is computed and declared as a goal
+\item The partial proof term $\hat{e}$ is computed following
 Definition 8 and is given to the proof engine, using the =Refine=
 tactic developed on purpose, and each hole in $\hat{e}$ leads to a
 subgoal 
-87. Once the proofs are completed, the program is added to the
+\item Once the proofs are completed, the program is added to the
 environment and may be used in other programs
-
+\end{enumerate}
 
 Some features have been added to simplify the specification of
 programs -- mainly, the possibility of inserting labels in the
@@ -5227,12 +5266,12 @@ Some people think that every computable function, total or partial,
 can be computed by a Turing machine. This is not so, and here are some
 counter-examples. Consider Euclid's algorithm for computing the
 greatest common divisor $d=gcd(a,b)$ of two natural numbers $a,b$.
-#+begin_example
+\begin{verbatim}
    let M = max(a,b), m = min(a,b)
    while M > m do
      M,m := max(M-m,m, min(M-m,m)
    d := M
-#+end_example
+\end{verbatim}
 
 The gcd function on natural numbers is of course Turing computable,
 but the algorithm was also applied -- in theory and in practice -- to
@@ -5261,11 +5300,13 @@ essential mathematical properties of the Euclidean algorithm}.
 
 There are several examples of computer algebra results which may be
 checked relatively easily:
-- factoring polynomials (or numbers)
-- finding GCDs of polynomials (or numbers)
-- solving equations (algebraic, simultaneous, differential,...)
-- finding antiderviatives
-- finding closed forms for summations
+\begin{itemize}
+\item factoring polynomials (or numbers)
+\item finding GCDs of polynomials (or numbers)
+\item solving equations (algebraic, simultaneous, differential,...)
+\item finding antiderviatives
+\item finding closed forms for summations
+\end{itemize}
 
 In most cases the certificate is simply the answer. An exception is
 the GCD, where a slightly more elaborate certificate is better for our
@@ -5322,7 +5363,7 @@ Let us suppose first that they agree to confine attention to positive
 whole numbers (exclusing zero). The required relationship between the
 parameters ($x$,$y$) and the result ($z$) may be formalized as
 follows: 
-#+begin_example
+\begin{verbatim}
   D1.1  z divides x
   D1.2  z divides y
   D1.3  z is the greatest of the set of numbers satisfying both conditions
@@ -5330,12 +5371,12 @@ follows:
         such that pw=q"
   D1.5  "p is the greatest member of the set S" means "p is in S, and no
         member of S is strictly greater than p"
-#+end_example
+\end{verbatim}
 
 We need to check that for every pair of positive numbers $x$ and $y$
 there exists a number $z$ with the properties specified in D1.3. A
 proof of this has three steps.
-#+begin_example
+\begin{verbatim}
   P1.1 The number one is a divisor of every number. So it is a common
        divisor of every pair of numbers. This shows that the set of
        common divisors of two numbers is non-empty.
@@ -5346,7 +5387,7 @@ proof of this has three steps.
   P1.3 Every finite non-empty set of integers has a greatest member.
        So the maximum used to define the greatest common divisor
        always exists.
-#+end_example
+\end{verbatim}
 
 Here is an idealized logic program to compute the greatest common
 divisor of two positive integers. To help in checking its correctness,
@@ -5355,7 +5396,7 @@ clarity of the original requirements. We assume that ``isproduct'' and
 ``differsfrom'' are available as built-in predicates on positive
 integers.
 
-#+begin_example
+\begin{verbatim}
   L2.1 isdivisor(x,z) if there exists a w not greater than x such that
        isproduct(z,w,x) 
   L2.2 iscommutative(x,y,z) if isdivisor(x,z) and isdivisor(y,z)
@@ -5364,7 +5405,7 @@ integers.
   L2.4 isnotcommondiv(x,y,z) if isnotdiv(x,z) or isnotdiv(y,z)
   L2.5 isnotdiv(x,z) if for all w from 1 to x isnotproduct(z,w,x)
   L2.6 isnotproduct(z,w,x) if isproduct(z,w,y) and differsfrom(y,x)
-#+end_example
+\end{verbatim}
 
 This program is a great deal more complicated than the requirements
 specification in the preious section. The obvious reason is that the
@@ -5379,7 +5420,7 @@ number.
 When restricted from using disjunction and negation the algebraic
 equations have to be derived as needed by mathematical reasoning from
 the whole of the original specification. For gcd we see
-#+begin_example
+\begin{verbatim}
   L3.1 The greatest divisor of x is x. So the greatest common divisor
        of x and x is also x.
           x = gcd(x,x) for all x
@@ -5392,7 +5433,7 @@ the whole of the original specification. For gcd we see
   L3.3 Every common divisor of x and y is also a common divisor of
        y and x.
           gcd(x,y) = gcd(y,x) for all x,y
-#+end_example
+\end{verbatim}
 
 But are the laws a /complete/ specification, in the sense that
 there is aonly one function satisfying them? Or do we need to look for
@@ -5407,13 +5448,14 @@ This can be shown by mathematical induction: We assume the result for
 all $p$ and $q$ strictly less than $N$, and prove it for all $p$ and
 $q$ less than or equal to $N$. For such numbers, four cases can be
 distinguished.
-88. Both $p$ and $q$ are strictly less than $N$. In this case, what
+\begin{enumerate}
+\item Both $p$ and $q$ are strictly less than $N$. In this case, what
 we have to prove is the same as the induction hypothesis, which may be
 assumed without proof.
-89. Both $p$ and $q$ are equal to $N$. Then the result
+\item Both $p$ and $q$ are equal to $N$. Then the result
 \[N=gcd(p,q)\] 
 is proved immediately by law L3.1
-90. $p=N$ and $q<N$. It follows that $p-q$ is positive and less than
+\item $p=N$ and $q<N$. It follows that $p-q$ is positive and less than
 $N$. By the induction hypothesis, there is an $r$ such that
 \[r=gcd(p-q,q)\]
 is deducible from the algebraic laws. One application of L3.2 then
@@ -5421,13 +5463,13 @@ gives
 \[r=gcd(p-q)+q,q)\]
 which by the laws of arithmetic leads to the required conclusion
 \[r=gcd(p,q)\]
-91. $p<n$ and $q=N$. Then there is an $r$ such that
+\item $p<n$ and $q=N$. Then there is an $r$ such that
 \[r=gcd(q,p)\]
 is provable in the same way as in case (3) described above. One
 application of L3.3 then gives
 \[r=gcd(p,q)\]
 That concludes the proof that the algebraic specification is complete.
-
+\end{enumerate}
 
 Clearly there is no structural correspondence between the three
 clauses of the algebraic specification and the five clauses expressing
@@ -5457,20 +5499,22 @@ complementary, and the can be used for different purposes.
 Here is a functional program to compute the greatest common divisor of
 positive integers.
 
-| F4.1 | $gcd(x,y)=x$ | if $x=y$ |
-| F4.2 | $gcd(x,y)=gcd(x-y,y)$ | if $x>y$ |
-| F4.3 | $gcd(x,y)=gcd(y,x)$ | if $x<y$ |
-
+\begin{tabular}{lll}
+F4.1 & $gcd(x,y)=x$ & if $x=y$\\
+F4.2 & $gcd(x,y)=gcd(x-y,y)$ & if $x>y$\\
+F4.3 & $gcd(x,y)=gcd(y,x)$ & if $x<y$\\
+\end{tabular}
 
 To compute the greatest common divisor of 10 and 6:
 
-| gcd(10,6) | = | gcd(4,6) | by F4.2 |
-|  | = | gcd(6,4) | by F4.3 |
-|  | = | gcd(2,4) | by F4.2 |
-|  | = | gcd(4,2) | by F4.3 |
-|  | = | gcd(2,2) | by F4.2 |
-|  | = | 2 | by F4.1 |
-
+\begin{tabular}{rclr}
+gcd(10,6) & = & gcd(4,6) & by F4.2\\
+          & = & gcd(6,4) & by F4.3\\
+          & = & gcd(2,4) & by F4.2\\
+          & = & gcd(4,2) & by F4.3\\
+          & = & gcd(2,2) & by F4.2\\
+          & = & 2 & by F4.1\\
+\end{tabular}
 
 However, the responsibility for controlling this goal-directed
 behavior is placed upon the programmer, who has to prove that there is
@@ -5485,7 +5529,8 @@ $x$.
 
 We can optimize the search for the greatest common divisor
 algebraically.
-- L5.1 If $z$ divides $x$, the $2z$ divides $2x$. So if $z$ is the
+\begin{itemize}
+\item L5.1 If $z$ divides $x$, the $2z$ divides $2x$. So if $z$ is the
 greatest common divisor of $x$ and $y$, then $2z$ is a common divisor
 of $2x$ and $2y$. It is therefore not greater than their greatest
 common divisor
@@ -5495,7 +5540,7 @@ then $z$ is even and $z/2$ is a common divisor of $x$ and $y$.
 \[gcd(2x,y2)/2 \le gcd(x,y)\]
 From these two inequalities ti follows that
 \[2 gcd(x,y)=gcd(2x,2y)\]
-- L5.2 All divisors of an odd number are odd, and if an odd number
+\item L5.2 All divisors of an odd number are odd, and if an odd number
 divides $2x$ is also divides $x$. If $y$ is odd, the greatest common
 divisor of $2x$ and $y$ is odd, so it is also a common divisor of $x$
 and $y$
@@ -5504,25 +5549,26 @@ Conversely, every divisor of $x$ divides $2x$
 \[gcd(x,y) \le gcd(2x,y)\]
 From these two inequalities it follows that
 \[gcd(2x,y)=gcd(x,y) if\y{\rm\ is\ odd}\]
-- L5.3 If both $x$ and $y$ are odd, and $x$ is greater than $y$,
+\item L5.3 If both $x$ and $y$ are odd, and $x$ is greater than $y$,
 it follows that $x-y$ is positive and even. So under these conditions
 \[gcd(x,y)=gcd((x-y)/2,x)\]
-
+\end{itemize}
 When these equations are coded as a functional program, it becomes
 clear that the number of operations required when the argument of size
 $2^N$ has been reduced to about $N$.
 
 A Procedural program has some assertions, generally specified as
 preconditions, invariants, and postconditions. 
-- P6.1 $x>0 \land y > 0$ as a precondition
-- P6.2 $Z=gcd(x,y)$ as a postcondition
-- P6.3 $s^N gcd(X,Y)=gcd(x,y)$. The task of the first part is to
+\begin{itemize}
+\item P6.1 $x>0 \land y > 0$ as a precondition
+\item P6.2 $Z=gcd(x,y)$ as a postcondition
+\item P6.3 $s^N gcd(X,Y)=gcd(x,y)$. The task of the first part is to
 make P6.3 true on termination. That is easily accomplished by just one
 multiple assignment
 \[N,Z,Y:=0,x,y\] 
 which can be proven by substitution
 \[2^0 gcd(x,y) = gcd(x,y)\]
-- P6.4 We can show that
+\item P6.4 We can show that
 \[2^N Z=gcd(x,y)\]
 This would be obviously true if $N$ were already zero. If $N$ is
 non-zero, it can be made closer to zero by subtracting one. But ath
@@ -5536,7 +5582,7 @@ loop
 On termination of this loop, the value of $N$ is zero and P6.4 is
 still true. Consequently, the postcondition of the whole program has
 been established.
-
+\end{itemize}
 
 Having completed the first and last of the three tasks, the time has
 come to confess that the middle task is the most difficult. Its
@@ -5544,10 +5590,11 @@ precondition is P6.3 and its postcondition is P6.4. The task can be
 split into four subtasks, in accordance with the following series of
 intermediate assertions.
 
-| P6.3 | $\land$ | (X odd $\lor$ Y odd) |
-| P6.3 | $\land$ | (Y add) |
-| P6.3 | $\land$ | (Y odd) $\land$ X=Y |
-
+\begin{tabular}{rcl}
+P6.3 & $\land$ & (X odd $\lor$ Y odd)\\
+P6.3 & $\land$ & (Y add)\\
+P6.3 & $\land$ & (Y odd) $\land$ X=Y\\
+\end{tabular}
 
 \subsection{Jenks [cite:@Jenk75]}
 
@@ -5619,23 +5666,23 @@ recurssive program for subset. For the Euclidean algorithm, however,
 the program is significantly more efficient than the
 specification. Here we use functional notation for the sake of
 clarity.
-#+begin_example
+\begin{verbatim}
 (a) gcd(x y) = z if z divides x
                  and z divides y
                  and For all u [u <= z if u divides x
                                        and u divides y]
-#+end_example
+\end{verbatim}
 
 Notice that, like the definition of subset, this definition is
 expressed in the extended Horn clause subset of logic. However, the
 Euclidean algorithm for gcd can be expressed in Horn cluase form:
-#+begin_example
+\begin{verbatim}
 (a) gcd(x y) = z if x divides y
     gcd(x y) = z if x <= y
                  and x divides y with remainder r
                  and r != 0
                  and gcd(r x) = z
-#+end_example
+\end{verbatim}
 
 It can be shown that the specification  (in iff form together with
 auxiliary properties of `divides', '<=', and the axioms of equality)
@@ -5644,20 +5691,21 @@ genuine mathematical ingenuity. Although both specification and
 program are executable, the program is significanly more efficient.
 
 Note:
-92. The functional notation gcd(x y) = z an be rewritten in
+\begin{enumerate}
+\item The functional notation gcd(x y) = z an be rewritten in
 relational notation as Gcd(x y z)
-93. By exploiting functional notation, the second clause of the
+\item By exploiting functional notation, the second clause of the
 program can be written more compactly as
-#+begin_example
+\begin{verbatim}
    gcd(x y) = gcd(r x) if x <= y
                        and x divides y with remainder r
                        and r != 0
-#+end_example
-94. For the sake of completeness we need to add a third clause
-#+begin_example
+\end{verbatim}
+\item For the sake of completeness we need to add a third clause
+\begin{verbatim}
    gcd(x y) = gcd(y x) if y <= x
-#+end_example
-
+\end{verbatim}
+\end{enumerate}
 
 (from the questions): In this gcd example Kowalski seemed to
 indicate that the seaarch for gcd(x y) would be limited to numbers
@@ -5878,7 +5926,7 @@ So division is easy, just ``push it'' over the field, like division in
 base, or multi precision division. Algorithm, Knuth ``The Art of
 Computer Programming Vol 4'' and the others.
 
-#+begin_example
+\begin{verbatim}
 # input: coefficients of polynomials as a lists u, v != 0
 # in order u[0] = free coefficient of u(x), ....
 # returns polynomials q, r such that u = vq + r(rest)
@@ -5893,24 +5941,24 @@ def poly_divide(u, v)
     for j in range(n + k - 1, k - 1, -1):
       u[j] = u[j] - q[k] * v[j - k]
   return q, u[:n]
-#+end_example
+\end{verbatim}
 
 Having division, we can compute the Great Common Divisor, showing that
 Euclidean Domain is larger than expected.
 
-#+begin_example
+\begin{verbatim}
 def poly_gcd(u, v):
   if not any(v): return u
   else: return poly_gcd(v,poly_mod(u,v))
-#+end_example
+\end{verbatim}
 
 $poly\_mod$ it's just a rest returned from division algorithm.
 
-#+begin_example
+\begin{verbatim}
 # a polynomial u modulo v
 def poly_mod(u, v):
   return poly_divide(u,v)[1]
-#+end_example
+\end{verbatim}
 
 \subsection{Makkai [cite:@Makk07]}
 
@@ -5932,7 +5980,7 @@ greatest integer that divides both $x$ and $y$, that is
 \[gcd(x,y) = max\{u:u~\vert~x and u~\vert~y\}\]
 
 For instance, $gcd(9,12)=3$ and $gcd(12,25)=1$. The program is
-#+begin_example
+\begin{verbatim}
        input(x,y)
 start:
 more:  if x = y
@@ -5944,7 +5992,7 @@ more:  if x = y
                      then y <- y - x
                           goto reducey
             goto more
-#+end_example
+\end{verbatim}
 
 This program is motivated by the following properties of the $gcd$: 
 \[\begin{array}{l}
@@ -6228,9 +6276,9 @@ will present /dependent types/ which achieve this, while keeping
 the proof-as-program correspondence. For instance the euclidean
 division, which computes the quotient and remainder of two integers is
 usually given the type
-#+begin_example
+\begin{verbatim}
    int -> int -> int * int
-#+end_example
+\end{verbatim}
 stating that it takes two integers as argument and returns a pair of
 integer. This typing is very weak, in the sense that there are many
 different functions which also have this type. With dependent types,
@@ -6303,17 +6351,18 @@ contradiction, while the stronger notion of soundness says that
 everything derived in a system is in some sense true.
 
 Consistency is defined as:
-- Assume that a relation *contradictory($\phi$)* has been
+\begin{itemize}
+\item Assume that a relation *contradictory($\phi$)* has been
 defined on finite sets $\phi$ of formulae in a language so that 
 *contradictory($\phi$)* captures the intuitive notion that the formulae
 in $\phi$ are explicitly contradictory.
-- A logical system of reasoning is *strongly consistent* if it
+\item A logical system of reasoning is *strongly consistent* if it
 is not possible to prove all of the formulae in a set $\phi$ such that
 *contradictory($\phi$)*.
-- A logical system of reasoning is *weakly consistent* if it
+\item A logical system of reasoning is *weakly consistent* if it
 is not possible to prove a single formula $F$ such that
 *contradictory($\phi$)*.
-
+\end{itemize}
 Strong consistency certainly implies weak consistency.
 
 In Hoare logics, two formulae $A\{P\}B$ and $C\{Q\}D$ cannot be
@@ -6326,14 +6375,15 @@ system, but it is not in general a sufficient condition, since a
 system might prove a formula which is false but does not contradict
 any other provable formula.
 
-- A set of formulae $\phi$ *implies* a formula $F$ if $F$ is
+\begin{itemize}
+\item A set of formulae $\phi$ *implies* a formula $F$ if $F$ is
 true in every world in which all the formulae in $\phi$ are true.
-- A logical system is *theorem sound* if every provable
+\item A logical system is *theorem sound* if every provable
 formula is true
-- A logical system is *inferentially sound* if, for every set
+\item A logical system is *inferentially sound* if, for every set
 of formulae $\phi$ and every formulae $F$, if $F$ can be proved from
 assumptions in $\phi$, the $\phi$ implies $F$.
-
+\end{itemize}
 In any system where contradictory formulae cannot all be true, theorem
 soundness implies strong consistency. By letting $\phi$ be the empty
 set, we see that inferential soundness implies theorem soundness.
@@ -6364,15 +6414,15 @@ correctness logics for reasoning about function definitions.
 
 Consider Euclid's Algorithm, which is defined by recursion, for
 computing the Greatest Common Divisor (GCD) of two natural numbers:
-#+begin_example
+\begin{verbatim}
    gcd(0,n) = n
    gcd(m,n) = gcd(n mod m,m)       for m > 0
-#+end_example
+\end{verbatim}
 
 Here it is in Standard ML as a functional program:
-#+begin_example
+\begin{verbatim}
    fun gcd(m,n) = if m=0 then n else gcd(n mod m,m);
-#+end_example
+\end{verbatim}
 
 \subsection{Sanuki, Inaba, and Sasaki [cite:@Sanu15]}
 
@@ -6433,8 +6483,8 @@ with polymorphically order-sorted data types.
 
 Chapter 5
 
-*** Strub, Pierre Yves
-#+begin_example
+\subsection{Strub, Pierre Yves}
+\begin{verbatim}
 Formal Proofs and Decision Procedures  (Strub, Pierre Yves)
 htps://www.youtube.com/watch?v=YgOoDNIT8A8
 year = "2016"
@@ -6547,7 +6597,7 @@ Calculus of Presburger Constructions
 	   
 
 
-#+end_example
+\end{verbatim}
 
 \subsection{Sutor [cite:@Suto87]} 
 
@@ -6576,13 +6626,14 @@ The EEZ-GCD algorithm
     generally faster and is particularly suited for computing gcd of
     sparse multivariate polynomials. The EEZ-GCD algorithm is
     characterized by the following features:
-95. avoiding unlucky evaluations,
-96. predetermining the correct leading coefficient of the
+    \begin{enumerate}
+    \item avoiding unlucky evaluations,
+    \item predetermining the correct leading coefficient of the
     desired gcd,
-97. using the sparsity of the given polynomials to determine
+    \item using the sparsity of the given polynomials to determine
     terms in the gcd and
-98. direct methods for dealing with the ``common divisor problem.''
-
+    \item direct methods for dealing with the ``common divisor problem.''
+    \end{enumerate}
     The common divisor problem occurs when the gcd has a different
     common divisor with each of the cofactors. The EZ-GCD algorithm
     does a square-free decomposition in this case. It can be avoided
@@ -6602,7 +6653,7 @@ for further computation.
 
 \appendix
 
-* Untyped Lambda in Common Lisp
+\chapter{Untyped Lambda in Common Lisp}
 See Garret [cite:@Garr14]
 
 This is a compiler for the untyped lambda calculus.
@@ -6661,7 +6712,7 @@ perform over 5.5 times as fast as the binary GCD on one computer
 architecture having a multiply instruction. Independent research
 by Jebelean points to the same conclusion. 
 
-*** LeanProver
+\subsection{LeanProver}
 
 On the LeanProver chat [cite:@Lean19], agro1986 wrote:
 

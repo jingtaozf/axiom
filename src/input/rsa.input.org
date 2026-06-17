@@ -24,39 +24,48 @@ First we extract the spad code into an input file
 )read rsatest
 #+end_src
 
-** Overview
+\section{Overview}
 RSA is an encryption algorithm that relies on knowing that factoring
 is difficult. RSA stands for Ron Rivest, Adi Shamir, and Leonard Adleman
 who described the algorithm in 1977 [cite:@rsa]. From Wikipedia [cite:@wiki]:
-- Choose two distinct prime numbers $p$ and $q$
-  - For security purposes, the integers $p$ and $q$ should be chosen
+\begin{itemize}
+\item Choose two distinct prime numbers $p$ and $q$
+\begin{itemize}
+\item For security purposes, the integers $p$ and $q$ should be chosen
 at random, and should be of similar bit-length. Prime integers can be
 efficiently found using a primality test.
-- Compute $n=pq$
-  - $n$ is used as the modulus for both thhe public and private keys.
+\end{itemize}
+\item Compute $n=pq$
+\begin{itemize}
+\item $n$ is used as the modulus for both thhe public and private keys.
 Its length, expressed in bits, is the key length.
-- Compute $\phi(n)=(p-1)(q-1)$, where $\phi$ is Euler's totient function
-- Choose an integer $e$ such that $1 < e < \phi(n)$ and
+\end{itemize}
+\item Compute $\phi(n)=(p-1)(q-1)$, where $\phi$ is Euler's totient function
+\item Choose an integer $e$ such that $1 < e < \phi(n)$ and
 $gcd(e,\phi(n))=1$, that is, $e$ and $\phi(n)$ are coprime.
-  - $e$ is released as the public key exponent
-  - $e$ having a short bit-length and small Hamming weight results in more
+\begin{itemize}
+\item $e$ is released as the public key exponent
+\item $e$ having a short bit-length and small Hamming weight results in more
 efficient encryption -- most commonly $2^{16}+1 = 65537$. However, much
 smaller values of $e$ (such as 3) have been shown to be less secure in
 some settings.
-- Determine $d$ as $d \equiv e^{-1}(mod\ \phi(n))$, i.e. $d$ is the
+\end{itemize}
+\item Determine $d$ as $d \equiv e^{-1}(mod\ \phi(n))$, i.e. $d$ is the 
 multiplicitive inverse of $e (modulo\ \phi(n))$
-  - This is more clearly stated as solve for $d$ given
+\begin{itemize}
+\item This is more clearly stated as solve for $d$ given 
 $de \equiv 1\ (mod\ \phi(n))$
-  - This is often computed using the Extended Euclidean algorithm
-  - $d$ is kept as the private key exponent
-
+\item This is often computed using the Extended Euclidean algorithm
+\item $d$ is kept as the private key exponent
+\end{itemize}
+\end{itemize}
 By construction $d*e \equiv 1 (mod\ \phi(n))$. The public key consists of
 the modulus $n$ and the public (or encryption) exponent $e$. The private key
 consists of the modulus $n$ and the private (or decryption) exponent $d$,
 which must be kept secret. $p$, $q$, and $\phi(n)$ must also be kept secret
 because they can be used to calculate $d$.
  
-** Key Generation
+\section{Key Generation}
 
 For the purpose of this example, our public key will consist of two
 values ($N$ and $E$). Our private key will also consist of two values 
@@ -275,7 +284,7 @@ private key ($N$ and $D$).
 --E 10
 #+end_src
 
-** Encryption
+\section{Encryption}
 
 We have completed the key generation phase. We have all the
 components needed to encrypt and decrypt a message. The encryption and
@@ -320,7 +329,7 @@ C := (M^E)::IntegerMod(N)
 --E 12
 #+end_src
 
-** Decryption
+\section{Decryption}
 
 Now, to decrypt this message we will do another modular 
 exponentiation in the form:

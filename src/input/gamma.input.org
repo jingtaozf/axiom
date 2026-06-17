@@ -24,7 +24,7 @@ Dover Publications, Inc. New York 1965. pp267-270
 )clear all
  
 #+end_src
-** Gamma 1.000 to 1.995 by 0.005
+\section{Gamma 1.000 to 1.995 by 0.005}
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -834,7 +834,7 @@ Dover Publications, Inc. New York 1965. pp267-270
 --E 1
 
 #+end_src
-** Psi
+\section{Psi}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 2 of 12
@@ -851,7 +851,7 @@ second column is the reference value of Psi from the book
 Abramowitz and Stegun, ``Handbook of Mathematical Functions'',
 Dover Publications, Inc. New York 1965. pp267-270
 
-** Psi 1.000 to 2.000 by 0.005
+\section{Psi 1.000 to 2.000 by 0.005}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 
@@ -1687,7 +1687,7 @@ Dover Publications, Inc. New York 1965. pp267-270
 --R                                                Type: List(List(DoubleFloat))
 --E 3
 #+end_src
-** log(Gamma) 1+0.0i to 1+10.0i by 0+0.1i
+\section{log(Gamma) 1+0.0i to 1+10.0i by 0+0.1i}
 In the following table there are 4 columns. The first column
 is the argument of complex Gamma, ranging from 1.0 + 0i to 1.0+10i
 second column is the reference value of complex Gamma from the book
@@ -2527,12 +2527,12 @@ log(Gamma(1. + 10.0 * %i))-(- 13.637732188247 + 13.802912974230 * %i)]]
 --E 4
 
 #+end_src
-** log(Gamma) 1+0.0i to 1+10.0i by 0+0.1i
+\section{log(Gamma) 1+0.0i to 1+10.0i by 0+0.1i}
 As you can see from the above, Axiom's value differs from the published
 values in Abramowitz at 1+4.6i and above. Mathematica shows the same
 divergence at the same place.
 
-*** Abramowitz 6.1.40 equation
+\subsection{Abramowitz 6.1.40 equation}
 We can compute the values in Abramowitz from the formula 6.1.40 on
 page 257 which reads:
 \begin{equation}
@@ -5084,14 +5084,14 @@ lng2(1. + 10.0 * %i)-(- 13.637732188247 + 13.802912974230 * %i)]]
  
 #+end_src
 
-*** Gamma
+\subsection{Gamma}
 Because we use this file for regression testing and regression tests
 do not yet allow graphics the rest of this file is commented out.
 
 This is the graph of the gamma and 1/gamma functions.
 We are going to combine two graphs in a single viewport so we enable
 color differences for the two graphs.
-#+begin_example
+\begin{verbatim}
 )clear all
 lineColorDefault(green())
 viewport1:=draw(Gamma(i), i=-4.2..4, adaptive==true, unit==[1.0,1.0])
@@ -5103,18 +5103,18 @@ points(viewport2,2,"off")
 makeViewport2D(viewport2)
 close(viewport1)
 close(viewport2)
-#+end_example
+\end{verbatim}
 
 This is a graph of the log(gamma) function.
-#+begin_example
+\begin{verbatim}
 )clear all
 viewport:=draw(log Gamma(i), i=0..8, adaptive==true, unit==[1.0,1.0])
 points(viewport1,1,"off")
 close(viewport)
-#+end_example
+\end{verbatim}
 
 This is a graph of the Psi function
-#+begin_example
+\begin{verbatim}
 )clear all
 Psi(x)==polygamma(0,x)
 viewport:=draw(Psi(y),y=-3.5..4,adaptive==true)
@@ -5122,7 +5122,7 @@ scale(viewport,1,0.9,22.5)
 translate(viewport,1,0,-0.02)
 points(viewport,1,"off")
 close(viewport)
-#+end_example
+\end{verbatim}
 
 \begin{thebibliography}{99}
 \bibitem{1} *Digital Library of Mathematical Functions*,

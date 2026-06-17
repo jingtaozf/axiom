@@ -8,7 +8,7 @@
 This is from ``A Collection of Algebraic Identities'' 
 by Titus. Piezas III[cite:@1]
 #+END_abstract
-** Part 1. Assorted Identities
+\section{Part 1. Assorted Identities}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -19,7 +19,7 @@ by Titus. Piezas III[cite:@1]
 )clear all
 #+end_src
 
-*** E. Maillet
+\subsection{E. Maillet}
 \[(a+b)^3+(a+c)^3+(a+d)^3+(a-b)^3+(a-c)^3+(a-d)^3 = 6a(a^2+b^2+c^2+d^2)\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes 
@@ -51,7 +51,7 @@ t1a-t1b
 
 #+end_src
 
-*** E. Lucas-Liouville
+\subsection{E. Lucas-Liouville}
 \[\begin{array}{ll}
 (a+b)^k+(a+c)^k+(a+d)^k+(b+c)^k+(b+d)^k+(c+d)^k+\\
 (a-b)^k+(a-c)^k+(a-d)^k+(b-c)^k+(b-d)^k+(c-d)^k
@@ -157,7 +157,7 @@ t2a(4)-t2b(4)
 --E 13
 #+end_src
 
-*** Boutin's Identity
+\subsection{Boutin's Identity}
 \[S\pm(x_1\pm x_2\pm ... \pm x_k)^k = k!\: 2^{k-1} x_1 x_2 ... x_k\]
 where the exterior sign is the product of the interior signs so
 the term is negative if there is an odd number of negative interior signs,
@@ -246,9 +246,9 @@ to form each term. If a term is 4 variables long we need all possible
 combinations of 3 signs. In order to generate this we create a list
 of all possible bit combinations of the numbers from 0 to $2^{n-1}-1$,
 which for the case of 4 would be from 0 to 7:
-#+begin_example
+\begin{verbatim}
    [[0,0,0],[0,0,1],[0,1,0],[0,1,1],[1,0,0],[1,0,1],[1,1,0],[1,1,1]]
-#+end_example
+\end{verbatim}
 We do this using an outer loop to generate the correct number of lists
 and an inner loop to create each list.
 #+NAME: *
@@ -661,7 +661,7 @@ lhs(4)-rhs(4)
 --E 56
 
 #+end_src
-*** Lagrange's Identity
+\subsection{Lagrange's Identity}
 \[\left(\sum a_k^2\right) \left(\sum b_k^2\right) =
 \left(\sum a_k b_k\right)^2 + \sum \left(a_k b_j - a_j b_k\right)^2\]
 
@@ -669,10 +669,10 @@ We need two symbol generation functions. First, we need to generate
 the units for the term
 \[\left(\sum a_k b_k\right)^2\]
 so that =symgen2('a,'b,4)= results in
-#+begin_example
+\begin{verbatim}
  [a b ,a b ,a b ,a b ]
    4 4  3 3  2 2  1 1
-#+end_example
+\end{verbatim}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 57 of 91
@@ -699,12 +699,12 @@ symgen2('a,'b,4)
 Next we need to generate the units for the term
 \[\sum \left(a_k b_j - a_j b_k\right)^2\]
 so that =symgen3('a,'b,4)= results in
-#+begin_example
+\begin{verbatim}
    [0, a b  - a b , a b  - a b , a b  - a b , 0, a b  - a b , a b  - a b , 0,
         3 4    4 3   2 4    4 2   1 4    4 1      2 3    3 2   1 3    3 1
     a b  - a b , 0]
      1 2    2 1
-#+end_example
+\end{verbatim}
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 --S 59 of 91
@@ -835,7 +835,7 @@ lagrange(3)
 --E 63
 
 #+end_src{*}
-** Form: $x^3+y^3+z^3=m$
+\section{Form: $x^3+y^3+z^3=m$}
 *Theorem*: For any constant $m$, there is a rational solution to
 $x^3+y^3+z^3=m$ (S. Ryley)
 \[(p^3+qr)^3 + (-p^3+pr)^3 + (-qr)^3 = m(6mnp^2)^3\]
@@ -906,7 +906,7 @@ lhs-rhs
 --E 69
 
 #+end_src
-** Form: $x^4+y^4-z^4-t^4=a$
+\section{Form: $x^4+y^4-z^4-t^4=a$}
 *Theorem*: For any constant $a$, there is a rational solution to
 $x^4+y^4-z^4-t^4=a$ (R. Norrie)
 \[((2a+b)c^3d)^4+(2ac^4-bd^4)^4-(2ac^4+bd^4)^4-((2a-b)c^3d)^4 = a(2bcd)^4\]
@@ -951,8 +951,8 @@ lhs-rhs
 --E 73
 
 #+end_src
-** Form: $u^2x+x^2y+y^2z+z^2u=0$
-*** C. Hermite
+\section{Form: $u^2x+x^2y+y^2z+z^2u=0$}
+\subsection{C. Hermite}
 \[\{u,x,y,z\}=\{a^2c-b^3, a^2b-ac^2, a^3-b^2c, bc^2-ab^2\}\]
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -1003,7 +1003,7 @@ u^2*x+x^2*y+y^2*z+z^2*u
 --E 78
 
 #+end_src
-*** S.Realis
+\subsection{S.Realis}
 \[\{u,x,y,z\}=\{ab+b^2+c,3(ab-b^2+c),ab-3b^2-c,3(ab-b^2-c)\}\]
 if $c=a^2-2ab+2b^2$
 #+NAME: *
@@ -1064,7 +1064,7 @@ u^2*x+x^2*y+y^2*z+z^2*u
 --E 84
 
 #+end_src
-*** M. Weill
+\subsection{M. Weill}
 \[\{u,x,y,z\} = \{c, a^2d, -abc, ad\}\]
 where $c=a^3b-1$ and $d=ab^2+1$
 #+NAME: *
