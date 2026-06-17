@@ -687,3 +687,35 @@ Of these, ~40 can be simplified to SBCL-only, ~27 must keep both branches
 - =src/interp/vmlisp.lisp.org=: VM Lisp emulation, still used
 - =ext/aldor=: Aldor compiler, separate project
 - GCL references in prose (documentation): Keep as historical context
+
+** Lesson learned: GCL reader conditionals must NOT be removed blindly
+
+The GCL reader conditionals (#+:GCL / #-:GCL) in src/interp/ files are
+tightly coupled to the surrounding Lisp code. Removing them without
+careful analysis of each conditional's context breaks the SBCL build.
+
+Example: removing #+:GCL (si::use-fast-links t) left an empty cond
+clause, which is invalid Lisp. Adding nil as body fixed the syntax but
+there were likely other breakages deeper in the code.
+
+The reader conditionals are safe to keep — SBCL skips #+:GCL blocks
+automatically. They are dead code for SBCL but harmless.
+
+Future work: only remove GCL conditionals after verifying each one
+individually, with a full build test after each removal.
+
+** GCL Reader Conditionals: Final Analysis
+
+| Location              | Count | Action     |
+|------------------------+-------+------------|
+| Inside #+begin_src     |    57 | DO NOT TOUCH |
+| Outside (prose text)   |     5 | Keep as-is (documentation references) |
+
+All 57 GCL/AKCL reader conditionals (#+:GCL / #-:GCL / #+:AKCL / #-:AKCL)
+are inside src blocks. The cleanup script never modifies src block content.
+SBCL handles them via reader conditionals automatically.
+
+The 5 outside references are prose text mentioning GCL features (documentation),
+not actual conditional code.
+
+Conclusion: No GCL conditional removal needed in the cleanup script.
