@@ -517,3 +517,173 @@ For everything else, regex is simpler and more predictable.
 | 11 | \\begin{center} / \\begin{quote} / \\begin{equation} → org equivalents | low |
 | 12 | \\includegraphics → [[file:]] | low |
 | 13 | \\begin{thebibliography} / \\bibitem → org | low |
+
+* Cleanup Proposal: GCL and Dead Code Removal (2026-06-17)
+
+After migrating to SBCL and converting to org-native format, significant
+dead code and artifacts remain. This proposal covers safe removals.
+
+** Guiding principle
+
+Only remove files/code that are provably unused by the current SBCL build
+path. Keep anything that might be referenced by CI, the PDF build, or
+future contributors.
+
+** Category 1: GCL Patches (safe to remove)
+
+zips/ contains 33 GCL patch files and 3 GCL source tarballs:
+
+| File                              | Size  | Purpose              |
+|-----------------------------------+-------+----------------------|
+| gcl-2.6.8pre7.tgz                | 5.4M  | GCL source tarball   |
+| gcl-2.6.12.tgz                   | 7.0M  | GCL source tarball   |
+| gcl-2.6.13pre.tgz                | 6.5M  | GCL source tarball   |
+| gcl-cygwin.tgz                   | 5.9M  | GCL Cygwin build     |
+| gcl-2.6.12.gmp4.mpn.k8.fix      | 12K   | GCL patch            |
+| gcl-2.6.13pre.gmp4.mpn.k8.fix   | 12K   | GCL patch            |
+| + 27 more .patch files           | ~80K  | GCL patches          |
+
+Total: ~25MB. These are only needed for building GCL, which is no longer
+the target Lisp. The SBCL build path does not reference them.
+
+Risk: LOW. If someone wants to build with GCL, they can check out the
+original daly/axiom.
+
+** Category 2: GCL Code in Makefile.org
+
+The Makefile.org contains GCL-specific variables and stanzas:
+
+- =GCLDIR=, =GCLVERSION=, =GCLOPTS= variables
+- =<<GCLVERSION>>= noweb chunk
+- =<<GCLOPTS-LOCBFD>>= noweb chunk
+- =<<LISPFLAVOR>>= chunk (GCL vs SBCL selector)
+- GCL build stanzas in the Makefile
+
+These can be simplified to SBCL-only, or wrapped in conditionals.
+The =LISPFLAVOR= variable already exists for this purpose.
+
+Risk: MEDIUM. Need to verify CI uses SBCL path before removing GCL path.
+
+** Category 3: GCL Code in lsp/Makefile.org
+
+=lsp/Makefile.org= contains GCL-specific build instructions:
+- GCL patching stanzas (gcl-2.6.7, gcl-2.6.6 patches)
+- GCL configure.in fixes
+- GCL-specific Makefile targets
+
+This entire file is GCL-specific. If SBCL is the only target,
+this file can be simplified or removed.
+
+Risk: MEDIUM. Need to verify lsp/ is not used by SBCL build.
+
+** Category 4: GCL Reader Conditionals in Source
+
+src/interp/ files contain =#+:GCL= / =#-:GCL= reader conditionals:
+
+- =bookvol5.org=: ~15 occurrences (error handling, stack limits)
+- =bookvol9.org=: ~5 occurrences (type handling)
+- =category.lisp.org=: ~3 occurrences (array handling)
+
+These can be simplified by keeping only the SBCL branch and removing
+the GCL-specific code.
+
+Risk: LOW. Reader conditionals are well-understood. Just need to verify
+the SBCL branch is correct.
+
+** Category 5: Large Dead Files
+
+| File                   | Size | Status                |
+|------------------------+------+-----------------------|
+| zips/cltl2_latex2e.tgz | 77M  | CLTL2 LaTeX, not used |
+| public/                | 411M | Generated HTML docs   |
+| Dockerfile             | 1K   | References 2014 Ubuntu|
+
+- =cltl2_latex2e.tgz=: Common Lisp the Language 2nd ed LaTeX source.
+  Reference material, not needed for build.
+- =public/=: Generated HTML documentation. Should be in .gitignore,
+  published via CI/CD, not committed.
+- =Dockerfile=: References =ubuntu 12.04= and =axiom-ubuntu-aug2014-bin.tgz=.
+  Completely stale.
+
+Risk: LOW for Dockerfile. MEDIUM for public/ (might be referenced by
+GitHub Pages). LOW for cltl2 (reference material).
+
+** Category 6: Old Migration Tools
+
+tools/ contains migration tools that are no longer needed:
+
+- =pamphlet2org.org=: Original converter (replaced by pamphlet-roundtrip)
+- =migrate-dryrun.org=: Migration verification (migration complete)
+- =test-pamphlet2org.org=: Migration test (migration complete)
+
+These served their purpose during the pamphlet→org migration.
+The migration is complete and verified.
+
+Risk: LOW. Can be archived rather than deleted.
+
+** Proposed Action Plan
+
+| Step | Action                                    | Risk | Files  |
+|------+-------------------------------------------+------+--------|
+|    1 | Remove GCL patches + tarballs from zips/  | low  | 33     |
+|    2 | Add zips/gcl-* to .gitignore              | low  | 1      |
+|    3 | Remove Dockerfile                         | low  | 1      |
+|    4 | Simplify Makefile.org GCL stanzas         | med  | 1      |
+|    5 | Simplify lsp/Makefile.org                 | med  | 1      |
+|    6 | Remove GCL reader conditionals            | low  | ~20    |
+|    7 | Archive old migration tools               | low  | 3      |
+|    8 | Add public/ to .gitignore                 | low  | 1      |
+|    9 | Remove cltl2_latex2e.tgz                  | low  | 1      |
+
+** SBCL Compatibility Analysis
+
+Each GCL removal must verify SBCL has an equivalent or the feature is dead.
+
+| GCL Feature              | SBCL Equivalent                      | Action         |
+|--------------------------+--------------------------------------+----------------|
+| =system::*quit-tag*=     | ='|spadQuitTag|= (already in code)   | Keep SBCL only |
+| =system:reset-stack-limits= | =nil= (already returns nil)       | Keep SBCL only |
+| =si::use-fast-links=     | None (GCL optimization)              | Remove entirely |
+| =system:allocate=        | SBCL auto-manages memory             | Remove entirely |
+| =system::save-system=    | =sb-ext:save-lisp-and-die=           | Keep SBCL only |
+| =gcmsg= / =*gbc-message*= | =sb-ext:*gc-run-time*= (different) | Keep SBCL only |
+| =system:compiled-function-name= | =function-lambda-expression=  | Keep SBCL only |
+| =defentry= / =clines= (FFI) | =sb-alien= (already ported)     | Keep both (23 bindings in cfuns.lisp.org) |
+| =clines "int mem_value..."= | =sb-alien:define-alien-routine= | Keep both |
+
+Key: =defentry= bindings in =src/interp/cfuns.lisp.org= must NOT be removed.
+They are the FFI layer — GCL uses =defentry=, SBCL uses =sb-alien=, both
+paths coexist.
+
+Total GCL/AKCL reader conditionals: 67 (53 in src/interp/, 14 in books/).
+Of these, ~40 can be simplified to SBCL-only, ~27 must keep both branches
+(FFI bindings, image dump, GC control).
+
+** Updated Action Plan
+
+| Step | Action                                    | Risk | SBCL Safe |
+|------+-------------------------------------------+------+-----------|
+|    1 | Remove GCL patches + tarballs from zips/  | low  | yes       |
+|    2 | Simplify Makefile.org GCL stanzas         | med  | yes (LISPFLAVOR=sbcl) |
+|    3 | Simplify lsp/Makefile.org (GCL only)      | med  | yes (SBCL doesn't use lsp/) |
+|    4 | Remove dead GCL code (use-fast-links, allocate) | low | yes |
+|    5 | Simplify GCL conditionals to SBCL-only    | low  | yes (keep FFI bindings) |
+|    6 | Archive old migration tools               | low  | yes       |
+
+** Not proposed for removal
+
+- =Dockerfile=: Keep (user decision)
+- =zips/cltl2_latex2e.tgz=: Keep (user decision)
+- =axiom.sty=: Still needed for PDF build path
+- =tanglec.c= / =untanglec.c= / =orgtangle.c=: Core build tools
+- =src/interp/vmlisp.lisp.org=: VM Lisp emulation, still used
+- =ext/aldor=: Aldor compiler, separate project
+- =src/interp/cfuns.lisp.org=: FFI bindings (defentry + sb-alien coexist)
+- GCL references in prose (documentation): Keep as historical context
+- 
+
+- =axiom.sty=: Still needed for PDF build path
+- =books/tangle.c=, =untanglec.c=, =orgtangle.c=: Core build tools
+- =src/interp/vmlisp.lisp.org=: VM Lisp emulation, still used
+- =ext/aldor=: Aldor compiler, separate project
+- GCL references in prose (documentation): Keep as historical context
