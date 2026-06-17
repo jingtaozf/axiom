@@ -156,6 +156,12 @@ def convert_inline_formatting(line):
         # \verb|X| → =X=
         result = re.sub(r'\\verb(.)(.*?)\1',
                         lambda m: '=' + m.group(2) + '=', result)
+        # \\center{...} → ... (strip wrapper)
+        result = re.sub(r'\\center\{([^}]+)\}', lambda m: m.group(1), result)
+        result = re.sub(r'\{\\center\{([^}]+)\}\}', lambda m: m.group(1), result)
+        # \\includegraphics[opt]{file} → [[file:file]]
+        result = re.sub(r'\\includegraphics(?:\[[^]]*\])?\{([^}]+)\}',
+                        lambda m: '[[' + m.group(1) + ']]', result)
         # Simple replacements
         result = result.replace('\\ldots', '...')
         result = result.replace('\\dots', '...')
