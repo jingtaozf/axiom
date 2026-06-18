@@ -7,6 +7,7 @@
 #+BEGIN_abstract
 #+END_abstract
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 )set break resume
 )sys rm -f rsa.output
@@ -65,6 +66,7 @@ different prime numbers. In our running example, we will choose the
 values $P=61$ and $Q = 53$.
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 1 of 13
 P := 61
@@ -90,6 +92,7 @@ The next step is to calculate $N$ - which is simply just the product of $P*Q$.
 \[N = 61*53 = 3233\]
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 3 of 13
 N := P * Q
@@ -110,6 +113,7 @@ Put more clearly, find the product of $(P-1)*(Q-1)$.
 \[totient(N) = 3120\]
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 4 of 13
 totient := (P-1)*(Q-1)
@@ -128,6 +132,7 @@ In order to be coprime, the greatest common divisor (gcd) of $totient(N)$
 and $E$ must equal one.
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 5 of 13
 t1:=[x for x in 1..totient | gcd(totient,x) = 1]
@@ -205,6 +210,7 @@ both conditions.
 E = 17
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 6 of 13
 E := t1.4
@@ -235,6 +241,7 @@ In our case, 17 will satisfy these conditions.
 \[D = 2753\]
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 7 of 13
 ttn:=IntegerMod(totient)
@@ -257,6 +264,7 @@ We now have our public key ($N$ and $E$) and our
 private key ($N$ and $D$).
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 9 of 13
 [N,E]
@@ -302,6 +310,7 @@ This will give us.
 \[C=2790\]
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 11 of 13
 M := 65
@@ -336,6 +345,7 @@ Again, we just substitute our values. This will give us:
 which is our original message.
 
 #+NAME: rsatest.input
+#+begin_src axiom :noweb yes
 #+begin_src axiom-input :noweb yes
 --S 13 of 13
 (C^D)::IntegerMod(N)

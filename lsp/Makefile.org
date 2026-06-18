@@ -102,10 +102,10 @@ the declaration at the beginning of the function.
 **** socket patch
 This patch is to *h/386-linux.defs* to include two 
 global variables, *EXTRAS* and *EXTRA\_LIB*
-\begin{verbatim}
+#+begin_example
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
-\end{verbatim}
+#+end_example
 The *EXTRAS* variable is used to include two files into the
 running image. The *cfuns-c* file contains low-level directory
 manipulation routines. The *sockio-c* file contains low level
@@ -302,9 +302,9 @@ This has been changed to use the SYSTEM\_OBJS variable, per Camm (Apr 6,2012)
 #+end_src
 
 If we build on the MAC we need a BSD patch. GCL seems to do
-\begin{verbatim}
+#+begin_example
    add-defs1 386-macosx
-\end{verbatim}
+#+end_example
 this patch links the cfuns-c and sockio-c files into GCL.
 #+NAME: gcl-2.6.12.h.386-macosx.defs.patch
 #+begin_src common-lisp :noweb yes
@@ -1971,10 +1971,10 @@ by GCLVERSION.
 **** socket patch
 This patch is to *h/386-linux.defs* to include two 
 global variables, *EXTRAS* and *EXTRA\_LIB*
-\begin{verbatim}
+#+begin_example
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
-\end{verbatim}
+#+end_example
 The *EXTRAS* variable is used to include two files into the
 running image. The *cfuns-c* file contains low-level directory
 manipulation routines. The *sockio-c* file contains low level
@@ -2085,10 +2085,10 @@ clean:
 **** socket patch
 This patch is to *h/386-linux.defs* to include two 
 global variables, *EXTRAS* and *EXTRA\_LIB*
-\begin{verbatim}
+#+begin_example
 EXTRAS = ${OBJ}/${SYS}/lib/cfuns-c.o ${OBJ}/${SYS}/lib/sockio-c.o
 EXTRA_LIB=${OBJ}/${SYS}/lib/libspad.a
-\end{verbatim}
+#+end_example
 The *EXTRAS* variable is used to include two files into the
 running image. The *cfuns-c* file contains low-level directory
 manipulation routines. The *sockio-c* file contains low level
@@ -2229,20 +2229,20 @@ top level Makefile.pamphlet.
 The compiler::link function call was suggested by Camm as a
 way around patching the lisp system. The function creates a
 new lisp image ld and C objects prior to save-system. 
-\begin{verbatim}
+#+begin_example
 	echo '(compiler::link \
-\end{verbatim}
+#+end_example
 The first argument can be used to compile and load lisp code.
-\begin{verbatim}
+#+begin_example
                (list (compile-file "${BOOKS}/tangle.lisp")) \
-\end{verbatim}
+#+end_example
 The second argument gives the file location for the save-system
-\begin{verbatim}
+#+begin_example
                "${OUT}/lisp" \
-\end{verbatim}
+#+end_example
 The third argument sets up various internal variables, including
 the 
-\begin{verbatim}
+#+begin_example
                (format nil \
                 "(progn \
                   (let ((*load-path* (cons ~S *load-path*)) \
@@ -2254,17 +2254,17 @@ the
                   #-native-reloc (setq compiler::*default-system-p* t))" \
                 si::*system-directory* \
                 (quote (list #+native-reloc".o" ".lsp"))) \
-\end{verbatim}
+#+end_example
 The fourth argument is a list of binaries to link
-\begin{verbatim}
+#+begin_example
                "${OBJ}/${SYS}/lib/cfuns-c.o \
                 ${OBJ}/${SYS}/lib/sockio-c.o \
                 ${OBJ}/${SYS}/lib/libspad.a")' \
-\end{verbatim}
+#+end_example
 and the compiler::link command is piped into the lisp image.
-\begin{verbatim}
+#+begin_example
            | unixport/saved_gcl )
-\end{verbatim}
+#+end_example
 
 #+NAME: gcl-cygwin
 #+begin_src common-lisp :noweb yes

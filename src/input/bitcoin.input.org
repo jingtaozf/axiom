@@ -48,9 +48,9 @@ But first, a crash course on elliptic curves and finite fields.
 
 An elliptic curve is represented algebraically as an equation of the form:
 
-\begin{verbatim}
+#+begin_example
     y2 = x3 + ax + b
-\end{verbatim}
+#+end_example
 
 For a = 0 and b = 7 (the version used by Bitcoin), it looks like this:
 
@@ -123,21 +123,21 @@ makeViewport2D(bitcoin3)
 Together, these two operations are used for scalar multiplication, R =
 a P, defined by adding the point P to itself a times.  For example:
 
-\begin{verbatim}
+#+begin_example
     R = 7P
     R = P + (P + (P + (P + (P + (P + P)))))
-\end{verbatim}
+#+end_example
 
 The process of scalar multiplication is normally simplified by using a
 combination of point addition and point doubling operations. For
 example:
 
-\begin{verbatim}
+#+begin_example
     R = 7P
     R = P + 6P
     R = P + 2 (3P)
     R = P + 2 (P + 2P)
-\end{verbatim}
+#+end_example
 
 Here, 7P has been broken down into two point doubling steps and two
 point addition steps.  
@@ -153,9 +153,9 @@ The simplest way to think about this is calculating remainders, as
 represented by the modulus (mod) operator. For example, 9/7 gives 1
 with a remainder of 2:
 
-\begin{verbatim}
+#+begin_example
     9 mod 7 = 2
-\end{verbatim}
+#+end_example
 
 Here our finite field is modulo 7, and all mod operations over this
 field yield a result falling within a range from 0 to 6.  
@@ -290,7 +290,7 @@ makeViewport2D(bitcoin5)
 The third intersecting point is (47, 39) and its reflection point is
 (47, 28). We can see this reflection point by looking that the list
 of points which make up the modular graph
-\begin{verbatim}
+#+begin_example
    [[ 2,22], [ 2,45], [ 4, 2], [4,65],  [ 5,20], [ 5,47], [ 6,25], [ 6,42], 
     [ 7,22], [ 7,45], [11,20], [11,47], [12,23], [12,44], [13,23], [13,44], 
     [14, 2], [14,65], [16, 4], [16,63], [17,30], [17,37], [18,12], [18,55],
@@ -301,7 +301,7 @@ of points which make up the modular graph
     [52, 7], [52,60], [53,12], [53,55], [54,17], [54,50], [55,17], [55,50],
     [56, 4], [56,63], [58,22], [58,45], [61,27], [61,40], [62, 4], [62,63],
     [63,12], [63,55], [64,28], [64,39], [66,26], [66,41]]
-\end{verbatim}
+#+end_example
 
 Notice that the points come in pairs on the vertical axis. So we can
 look for the two points with first component of 47, which are
@@ -329,15 +329,15 @@ In the case of Bitcoin, from the standard we can find the constants used.
 
 The elliptic curve domain parameters over $F_p$ associated with a
 Koblitz curve secp256k1 are specified by the sextuple
-\begin{verbatim}
+#+begin_example
    T = (p,a,b,G,n,h)
-\end{verbatim}
+#+end_example
 
 The bitcoin finite field $F_p$ is defined by the prime modulo $p$
-\begin{verbatim}
+#+begin_example
   p = 2^256 - 2^32 - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1 = 
   p = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE FFFFFC2F
-\end{verbatim}
+#+end_example
 \begin{chunk}
 2^256 - 2^32 - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1
 
@@ -347,18 +347,18 @@ toint("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F") - _
 \end{chunk}
 
 An elliptic curve has the equation $y^2 = x^2 +ax + b$
-\begin{verbatim}
+#+begin_example
  a = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
  b = 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000007
-\end{verbatim}
+#+end_example
 so the bitcoin elliptic curve equation is $y^2 = x^3 + 7$
 
 The base point G is
-\begin{verbatim}
+#+begin_example
  G = 04 79BE667E F9DCBBAC 55A06295 CE870B07 029BFCDB 2DCE28D9 59F2815B
         16F81798 483ADA77 26A3C465 5DA4FBFC 0E1108A8 FD17B448 A6855419
         9C47D08F FB10D4B8
-\end{verbatim}
+#+end_example
 \begin{chunk}
 toint("0479BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F8179848_
 3ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8")-_
@@ -369,10 +369,10 @@ toint("0479BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F8179848_
 \end{chunk}
 
 and the order $n$ of G and the cofactor are:
-\begin{verbatim}
+#+begin_example
  n = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
  h = 01
-\end{verbatim}
+#+end_example
 \begin{chunk}
 toint("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141") -_
 115792089237316195423570985008687907852837564279074904382605163141518161494337
@@ -430,9 +430,9 @@ number between 1 and the order. The public key is derived from the
 private key by scalar multiplication of the base point a number of
 times equal to the value of the private key. Expressed as an equation:
 
-\begin{verbatim}
+#+begin_example
     public key = private key * base point
-\end{verbatim}
+#+end_example
 
 This shows that the maximum possible number of private keys (and thus
 Bitcoin addresses) is equal to the order.
@@ -484,10 +484,10 @@ c &=& 12 / 44 mod 67
 Here we have to pause for a bit of sleight-of-hand: how do we perform
 division in the context of a finite field, where the result must
 always be an integer? We have to multiply by the inverse.
-\begin{verbatim}
+#+begin_example
       -1
     44  = 32
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all 
@@ -498,11 +498,11 @@ inv(44)$FIN
 
 Moving right along:
 
-\begin{verbatim}
+#+begin_example
     c = 12 * 32 mod 67
     c = 384 mod 67
     c = 49
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all 
@@ -511,13 +511,13 @@ inv(12*32)::FIN
 
 #+end_src
 
-\begin{verbatim}
+#+begin_example
             2
     rx = (49  - 2 * 2) mod 67
     rx = (2401 - 4) mod 67
     rx = 2397 mod 67
     rx = 52
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all 
@@ -526,13 +526,13 @@ FIN:=FiniteField(67,1)  -- declare a field p**n, p=67, n=1
 
 #+end_src
 
-\begin{verbatim}
+#+begin_example
     ry = (49 * (2 - 52) - 22) mod 67
     ry = (49 * (-50) - 22) mod 67
     ry = (-2450 - 22) mod 67
     ry = -2472 mod 67
     ry = 7
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )clear all 
@@ -593,59 +593,59 @@ a past exploit of this type[cite:@2].
 
 Let's pick our data to be the number 17, and follow the recipe. Our variables:
 
-\begin{verbatim}
+#+begin_example
     z = 17 (data)
     n = 79 (order)
     G = (2, 22) (base point)
     d = 2 (private key)
-\end{verbatim}
+#+end_example
 
 1. Pick a random number:
 
-\begin{verbatim}
+#+begin_example
     k = rand(1, n - 1)
     k = rand(1, 79 - 1)
     k = 3  (is this really random?  OK you got us, but it will make 
             our example simpler!)
-\end{verbatim}
+#+end_example
 
 2. Calculate the point. This is done in the same manner as determining
 the public key, but for brevity let's omit the arithmetic for point
 addition and point doubling.
 
-\begin{verbatim}
+#+begin_example
     (x, y) = 3G
     (x, y) = G + 2G
     (x, y) = (2, 22) + (52, 7)
     (x, y) = (62, 63)
     x = 62
     y = 63
-\end{verbatim}
+#+end_example
 
 3. Find r:
 
-\begin{verbatim}
+#+begin_example
     r = x mod n
     r = 62 mod 79
     r = 62
-\end{verbatim}
+#+end_example
 
 4. Find s:
 
-\begin{verbatim}
+#+begin_example
     s = (z + r * d) / k mod n
     s = (17 + 62 * 2) / 3 mod 79
     s = (17 + 124) / 3 mod 79
     s = 141 / 3   mod 79
     s = 47 mod 79
     s = 47
-\end{verbatim}
+#+end_example
 
 Note that above we were able to divide by 3 since the result was an
 integer. In real-life cases we would use the inverse of k (like
 before, we have hidden some gory details by computing it elsewhere):
 
-\begin{verbatim}
+#+begin_example
     s = (z + r * d) / k mod n
     s = (17 + 62 * 2) / 3 mod 79
     s = (17 + 124) / 3 mod 79
@@ -655,7 +655,7 @@ before, we have hidden some gory details by computing it elsewhere):
     s = 141 * 53 mod 79
     s = 7473 mod 79
     s = 47
-\end{verbatim}
+#+end_example
 
 5. Our signature is the pair (r, s) = (62, 47).
 
@@ -683,58 +683,58 @@ Why do these steps work? We are skipping the proof, but you can read
 the details here. Let's follow the recipe and see how it works. Our
 variables, once again:
 
-\begin{verbatim}
+#+begin_example
     z = 17 (data)
     (r, s) = (62, 47) (signature)
     n = 79 (order)
     G = (2, 22) (base point)
     Q = (52, 7) (public key)
-\end{verbatim}
+#+end_example
 
 1. Verify that r and s are between 1 and n - 1. Check and check.
 
-\begin{verbatim}
+#+begin_example
     r: 1 <= 62 < 79
     s: 1 <= 47 < 79
-\end{verbatim}
+#+end_example
 
 2. Calculate w:
 
-\begin{verbatim}
+#+begin_example
          -1
     w = s   mod n
           -1
     w = 47   mod 79
     w = 37
-\end{verbatim}
+#+end_example
 
 3. Calculate u:
 
-\begin{verbatim}
+#+begin_example
     u = zw mod n
     u = 17 * 37 mod 79
     u = 629 mod 79
     u = 76
-\end{verbatim}
+#+end_example
 
 4. Calculate v:
 
-\begin{verbatim}
+#+begin_example
     v = rw mod n
     v = 62 * 37 mod 79
     v = 2294 mod 79
     v = 3
-\end{verbatim}
+#+end_example
 
 5. Calculate the point (x, y):
 
-\begin{verbatim}
+#+begin_example
     (x, y) = uG + vQ
-\end{verbatim}
+#+end_example
 
 Let's break down the point doubling and addition in uG and vQ separately.
 
-\begin{verbatim}
+#+begin_example
     uG = 76G
     uG = 2(38G)
     uG = 2( 2(19G) )
@@ -743,7 +743,7 @@ Let's break down the point doubling and addition in uG and vQ separately.
     uG = 2( 2(G + 2(G + 8G) ) )
     uG = 2( 2(G + 2(G + 2(4G) ) ) )
     uG = 2( 2(G + 2(G + 2( 2(2G) ) ) ) )
-\end{verbatim}
+#+end_example
 
 Sit back for a moment to appreciate that by using the grouping trick
 we reduce 75 successive addition operations to just six operations of
@@ -752,7 +752,7 @@ come in handy when the numbers get really large.
 
 Working our way from the inside out:
 
-\begin{verbatim}
+#+begin_example
     uG = 2( 2(G + 2(G + 2( 2( 2(2, 22) ) ) ) ) )
     uG = 2( 2(G + 2(G + 2( 2(52, 7) ) ) ) )
     uG = 2( 2(G + 2(G + 2(25, 17)  ) ) )
@@ -762,35 +762,35 @@ Working our way from the inside out:
     uG = 2( 2(38, 26) )
     uG = 2(27, 40)
     uG = (62, 4)
-\end{verbatim}
+#+end_example
 
 And now for vQ:
 
-\begin{verbatim}
+#+begin_example
     vQ = 3Q
     vQ = Q + 2Q
     vQ = Q + 2(52, 7)
     vQ = (52, 7) + (25, 17)
     vQ = (11, 20)
-\end{verbatim}
+#+end_example
 
 Putting them together:
 
-\begin{verbatim}
+#+begin_example
     (x, y) = uG + vQ
     (x, y) = (62, 4) + (11, 20)
     (x, y) = (62, 63)
-\end{verbatim}
+#+end_example
 
 Clearly step 5 is the bulk of the work. For the final step,
 
 6. Verify that r = x mod n
 
-\begin{verbatim}
+#+begin_example
     r = x mod n
     62 = 62 mod 79
     62 = 62
-\end{verbatim}
+#+end_example
 
 Our signature is valid!
 
@@ -799,7 +799,7 @@ Our signature is valid!
 Bitcoin does not just check the keys. A bitcoin address is not a public
 key. It is the hash of a public key. The relationship is[cite:@11]
 
-\begin{verbatim}
+#+begin_example
 
 private key =
      c4bbcb1fbec99d65b59d85c8cb62ee2db963f0fe106f483d9afa73bd4e39a8a
@@ -827,7 +827,7 @@ public key =                 V
                                    |
                                    V
   bitcoin address = 1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T
-\end{verbatim}
+#+end_example
 
 A bitcoin transaction contains the spender's public key and a signature
 made with the spender's private key. The hash of the public key can
@@ -857,7 +857,7 @@ The bitcoin base58 encoding[cite:@12]
 
 ** Test Vectors
 Bitcoin test examples.[cite:@8]
-\begin{verbatim}
+#+begin_example
 Curve: secp256k1
 -------------
 k = 1
@@ -1062,7 +1062,7 @@ k = 1157920892373161954235709850086879078528375642790749043826051631
     41518161494336
 x = 79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798
 y = B7C52588D95C3B9AA25B0403F1EEF75702E84BB7597AABE663B82F6F04EF2777
-\end{verbatim}
+#+end_example
 
 
 \begin{thebibliography}{99}

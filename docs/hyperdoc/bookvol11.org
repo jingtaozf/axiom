@@ -21,7 +21,7 @@ Stephen\ Watt          & Jim\ Wen         & Clifton\ Williamson
 $$
 \large{VOLUME 11: BROWSER}
 \end{titlepage}
-\begin{verbatim}
+#+begin_example
 Portions Copyright (c) 2007 Timothy Daly
 Portions Copyright (c) 2007 Alfredo Portes
 Portions Copyright (c) 2007 Arthur Ralfs
@@ -54,7 +54,7 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-\end{verbatim}
+#+end_example
 
 Inclusion of names in the list of credits is based on historical
 information and is as accurate as possible. Inclusion of names
@@ -179,7 +179,7 @@ November 10, 2003 ((iHy))
 This book contains the Firefox browser AJAX routines.
 
 ** Build Instructions
-\begin{verbatim}
+#+begin_example
   mkdir -p /home/silver/bitmaps
   cp bookvol11.pamphlet /home/silver
   cd /home/silver
@@ -201,7 +201,7 @@ This book contains the Firefox browser AJAX routines.
  You should see the result of the differentiate appear inline in the
  page. You can change the values in the text areas, click continue,
  and see the new result.
-\end{verbatim}
+#+end_example
 
 ** The Makefile
 <<*>>=
@@ -232,7 +232,7 @@ To add a new page you need to create a page with the default layout below
 and add the name of the page to the PAGES variable below.
 
 Most of the pages have a default layout of the form:
-\begin{verbatim}
+#+begin_example
 *** pagename.xhtml
 <<pagename.xhtml>>=
 <<standard head>>
@@ -244,7 +244,7 @@ Most of the pages have a default layout of the form:
 your basic page text goes here.
 <<page foot>>
 @
-\end{verbatim}
+#+end_example
 There are several things to observe here:
 <ol>
  <li>Each page lives in its own subsection and its own chunk.</li>
@@ -259,7 +259,7 @@ The default page layout cannot communicate with Axiom.
 If your page needs to communicate with Axiom you need to add some
 information in the header of the page.
 The default page that talks to Axiom has the form:
-\begin{verbatim}
+#+begin_example
 *** pagename.xhtml
 @<<pagename.xhtml>>=
 @<<standard head>>
@@ -275,20 +275,20 @@ The default page that talks to Axiom has the form:
 your text goes here
 your communication blocks go here
 @<<page foot>>
-\end{verbatim}
+#+end_example
 
 *** Handling statements with no free variables
 Use a makeRequest call with a parameter of the id.
 Note that the div with id of ``ansXX'' will get replaced
 automatically and the ``ans'' prefix is required.
-\begin{verbatim}
+#+begin_example
  <li>
   <input type="submit" id="p3" class="subbut" 
     onclick="makeRequest('p3');"
     value="sin(x)" />
   <div id="ansp3"><div></div></div>
  </li>
-\end{verbatim}
+#+end_example
 
 *** Handling statements with free variables
 Free variables exist are used in statements but they are defined in
@@ -298,34 +298,34 @@ need to be executed /before/ this statement. You do this with
 a call to ``handleFree''. It expects a list, enclosed in brackets,
 of the ids to execute in order. Be certain that the current id is
 at the end of the list.
-\begin{verbatim}
+#+begin_example
  <li>
   <input type="submit" id="p10" class="subbut" 
     onclick="handleFree(['p9','p10']);"
     value="roman y" />
   <div id="ansp10"><div></div></div>
  </li>
-\end{verbatim}
+#+end_example
 
 *** Handling domain database lookups
 Use an anchor tag of the form:
-\begin{verbatim}
+#+begin_example
 <a href="db.xhtml?Vector">Vector</a>
-\end{verbatim}
+#+end_example
 This will be interpreted by Axiom to mean that you want to do a
 lookup on a domain, category, or package whose name follows the 
 question mark. Note that the domain name should NOT be an abbreviation.
 
 *** Handling )show domain
 Use a block containing a showcall of the form:
-\begin{verbatim}
+#+begin_example
  <li>
   <input type="submit" id="p17" class="subbut" 
     onclick="showcall('p17');"
    value=")show DoubleFloat"/>
   <div id="ansp17"><div></div></div>
  </li>
-\end{verbatim}
+#+end_example
 Note that the ``)show'' must be at the beginning of the line
 and that there can only be one space between the word show and
 the following argument.
@@ -348,14 +348,14 @@ still executable and is generally executed by handleFree
 calls because it contains definitions. However, things like
 function definitions in Axiom return no interesting output
 so there is no point in clicking on them.
-\begin{verbatim}
+#+begin_example
  <li>
   <input type="submit" id="p5" class="noresult" 
     onclick="makeRequest('p5');"
     value=")set streams calculate 5" />
   <div id="ansp5"><div></div></div>
  </li>
-\end{verbatim}
+#+end_example
 
 
 ** Defined Pages
@@ -774,7 +774,7 @@ to minimize the typing. The defined chunks are:
   body-end and html-end tags
 
 So the basic layout looks like
-\begin{verbatim}
+#+begin_example
 @<<standard head>>
     (local and general javascript goes here)
  </head>
@@ -782,7 +782,7 @@ So the basic layout looks like
 @<<page head>>
     (local page definition goes here)
 @<<page foot>>
-\end{verbatim}
+#+end_example
 So all you need to worry about are the actual page forms and the
 javascript to fetch those forms.
 
@@ -793,7 +793,7 @@ include the ``axiom talker'' chunk. Note that ``axiom talker''
 expects the ``commandline'' function to exist and calls it. Thus,
 for the page that handles differentiation calls to Axiom we add 
 the local javascript:
-\begin{verbatim}
+#+begin_example
 
   <script type="text/javascript">
    function commandline(arg) {
@@ -802,13 +802,13 @@ the local javascript:
 @<<axiom talker>>
   </script>
 
-\end{verbatim}
+#+end_example
 This defined the ``commandline'' function and embeds the ``axiom talker''.
 The ``commandline'' function knows how to fetch fields from the rest of
 the page and format them into a single Axiom string. This is page
 specific code. For example, this shows a single input line which
 will be sent to the host when the ``Continue'' is pressed:
-\begin{verbatim}
+#+begin_example
   <form id="commreq">
     <p>
       Type an input command line to Axiom:<br/>
@@ -817,7 +817,7 @@ will be sent to the host when the ``Continue'' is pressed:
     </p>
   </form>
  @<<answer field>>
-\end{verbatim}
+#+end_example
 
 Note that the commandline function takes an argument which it gets
 from the caller, makeRequest. This argument can be used to distinguish
@@ -830,8 +830,8 @@ result sent from the server.
 This is the standard CSS style section that gets included with every
 page. We do this here but it could be a separate style sheet. It 
 hardly matters either way as the style sheet is trivial.
-\begin{verbatim}
-\end{verbatim}
+#+begin_example
+#+end_example
 <<style>>=
   <style>
 
@@ -41590,9 +41590,9 @@ Additional information sources:
 @
 
 *** rootpage.xhtml
-\begin{verbatim}
+#+begin_example
   notangle -R"rootpage.xhtml" bookvol11.pamphlet > rootpage.xhtml
-\end{verbatim}
+#+end_example
 <<rootpage.xhtml>>=
 <<standard head>>
   <style>

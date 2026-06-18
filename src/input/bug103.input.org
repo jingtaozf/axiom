@@ -8,42 +8,42 @@
 #+END_abstract
 
 The call
-\begin{verbatim}
+#+begin_example
   solve(z=z,z)
-\end{verbatim}
+#+end_example
 fails with:
-\begin{verbatim}
+#+begin_example
    >> Error detected within library code:
    (1 . failed) cannot be coerced to mode (Polynomial (Integer))
-\end{verbatim}
+#+end_example
 
 The bug fix, proposed by William, changes =exquo= in EuclideanDomain
 to add the =zero? x= test.
-\begin{verbatim}
+#+begin_example
       x exquo y ==
          zero? x => 0
          zero? y => "failed"
          qr:=divide(x,y)
          zero?(qr.remainder) => qr.quotient
          "failed"
-\end{verbatim}
+#+end_example
 This change was made but does not affect the behavior of the bug.
 
 This fix, proposed by Martin, changes =primitePart= in 
 =PolynomialCategory= to add the =zero?= test.
-\begin{verbatim}
+#+begin_example
       primitivePart p ==
         zero? p => p
         unitNormal((p exquo content p) ::%).canonical
       primitivePart(p,v) ==
         zero? p => p
         unitNormal((p exquo content(p,v)) ::%).canonical
-\end{verbatim}
+#+end_example
 succeeds with:
- \begin{verbatim}
+ #+begin_example
   [0= 0]
                 Type: List Equation Fraction Polynomial Integer
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume
@@ -61,13 +61,13 @@ solve(z=z,z)
 --E 1
 #+end_src
 If we substitute z for %I we get:
-\begin{verbatim}
+#+begin_example
            z
          ++    a     b
          |   (z  + 1) dz
         ++
 
-\end{verbatim}
+#+end_example
 which is the original input integral.
 #+NAME: *
 #+begin_src common-lisp :noweb yes

@@ -66,13 +66,13 @@ annotated with the cross references
 =\\usesdollar\{spad-save\}\{SpadServer\}=. The relevant fragment
 is conditionalised per host:
 
-\begin{verbatim}
+#+begin_example
 (defun user::spad-save (save-file)
   ...
   #+:AKCL   (system::save-system save-file)
   #+:allegro (excl::dumplisp :name save-file ...)
   #+Lucid   ...)
-\end{verbatim}
+#+end_example
 
 There is no =#+:sbcl= branch. This single fact is the heart of
 the port: without an SBCL arm here, the system cannot produce its
@@ -156,7 +156,7 @@ host-abstraction file =src/lisp/core.lisp.in=, whose
 =saveCore= function is the multi-Lisp generalisation of Axiom's
 =spad-save=:
 
-\begin{verbatim}
+#+begin_example
 ;; open-axiom src/lisp/core.lisp.in  (READ-ONLY oracle, not copied)
 (defun |saveCore| (core-image &optional (entry-point nil))
   #+:sbcl    (sb-ext:save-lisp-and-die core-image
@@ -165,7 +165,7 @@ host-abstraction file =src/lisp/core.lisp.in=, whose
   #+:clisp   (ext::saveinitmem core-image :init-function entry-point ...)
   #+:clozure (ccl:save-application core-image
                                    :toplevel-function entry-point ...))
-\end{verbatim}
+#+end_example
 
 The lesson we extract --- and re-author in Axiom's style when we reach
 Stage~2 --- is the SBCL arm and the entry-point handling. We do
@@ -287,9 +287,9 @@ The three images are produced by piping a save form into that Lisp. The
 =save depsys image= chunk of =src/interp/Makefile.pamphlet=
 does, in essence,
 
-\begin{verbatim}
+#+begin_example
   echo '... (spad-save "${DEPSYS}")' | ${LISPSYS}
-\end{verbatim}
+#+end_example
 
 \noindent and =interpsys= and =AXIOMsys= are saved the same
 way. This is the join with Stage~2: the =(spad-save ...)= that the
@@ -336,17 +336,17 @@ to the C =ld= linker, =compiler::emit-fn=, SGC --- and a
 casual reader (this author included, at first) concludes the live recipe
 statically links object modules through =ld=.
 
-It does not. Mapping every =\begin{chunk}= and =\begin{verbatim}=
+It does not. Mapping every =\begin{chunk}= and =#+begin_example=
 marker in the section shows that the elaborate procedure lives entirely
-in =\begin{verbatim}= blocks with /no/ surrounding
+in =#+begin_example= blocks with /no/ surrounding
 =\begin{chunk}=; it is documentation of an approach, not tangled
 code. There is exactly one chunk named =save depsys image=, and it
 is the simple form:
 
-\begin{verbatim}
+#+begin_example
   (progn (load "${OUT}/makedep.lisp")
          (spad-save "${DEPSYS}"))
-\end{verbatim}
+#+end_example
 
 \noindent The =\getchunk{save depsys image}= in the =depsys=
 target therefore tangles /this/, not the =ld= procedure. The

@@ -9,26 +9,26 @@ Equality testing was broken in TableAggregate (TBAGG)
 #+END_abstract
 
 The equality function int TableAggregate used to read:
-\begin{verbatim}
+#+begin_example
      s:% = t:% ==
        eq?(s,t) => true
        #s ^= #t => false
        for k in keys s repeat
 	 (e := search(k, t)) case "failed" or (e::Entry) ^= s.k => false
        true
-\end{verbatim}
+#+end_example
 but this always returns true. Using the ``$=>$'' operator in a loop
 just causes the loop to move to the next iteration. Thus the loop
 will not take an early exit from the function and the code will always
 fall thru to the ``true'' case. This is fixed by calling the return function.
-\begin{verbatim}
+#+begin_example
      s:% = t:% ==
        eq?(s,t) => true
        #s ^= #t => false
        for k in keys s repeat
 	 (e := search(k, t)) case "failed" or (e::Entry) ^= s.k => return false
        true
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 )set break resume

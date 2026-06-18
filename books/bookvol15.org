@@ -222,7 +222,7 @@ $$
 % Use traditional roman numerals in header text
 \pagenumbering{roman}
 
-\begin{verbatim}
+#+begin_example
 Portions Copyright (c) 2005 Timothy Daly
 
 The Blue Bayou image Copyright (c) 2004 Jocelyn Guidry
@@ -272,7 +272,7 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
 SUCH DAMAGE.
 
-\end{verbatim}
+#+end_example
 
 \vfill
 Inclusion of names in the list of credits is based on historical
@@ -1065,13 +1065,13 @@ We need to specify three things:
 See the example code in the appendix \ref{Coq Example Code}.
 
 Given a program
-\begin{verbatim}
+#+begin_example
 sum = 0;
 while (!(n <= 0)) {
   sum = sum + n;
   n = n + -1;
 }
-\end{verbatim}
+#+end_example
 we need to have
 - a formal model of the semantics of the language used
 - a precise specification of the program structure
@@ -1082,26 +1082,26 @@ we need to have
 *** Specification of the example in Coq
 
 In Coq an arithmetic expression can be defined as:
-\begin{verbatim}
+#+begin_example
 Inductive AExp :=
   | var  : string -> AExp
   | con  : Z -> Aexp
   | plus : Aexp -> AExp -> AExp
-\end{verbatim}
+#+end_example
 where variables use constructor *var* applied to a string,
 constants use constructor *con* applied to an integer (Z
 is the set of integers), and the *plus* constructor takes
 2 *AExp* arguments and returns a *AExp* result. 
 
 Programs are defined as
-\begin{verbatim}
+#+begin_example
 Inductive Pgm :=
     pgm : list string -> Stmt -> Pgm.
-\end{verbatim}
+#+end_example
 
 The summation program above become essentially an abstract
 syntax tree
-\begin{verbatim}
+#+begin_example
 Definition sum_pgm N : Pgm :=
  pgm ["n"; "sum"]
 (seq (assign "n" (con N))
@@ -1109,7 +1109,7 @@ Definition sum_pgm N : Pgm :=
      (while (not (le (var "n") (con 0)))
      (seq (assign "sum" (plus (var "sum") (var "n")))
           (assign "n" (plus (var "n") (con (-1)))))))).
-\end{verbatim}
+#+end_example
 
 *** Semantics of the example in Coq
 
@@ -1124,7 +1124,7 @@ evaluated.
 This binary transition relation can be defined in Coq as an
 inductively defined proposition (of type Prop), *step\_e*, that
 tells us whether a given pair of states belongs to the relation.
-\begin{verbatim}
+#+begin_example
 Inductive step_e : (AExp * Env) -> (AExp * Env) -> Prop :=
   | step_var: forall v x env, get v env = Some x ->
       step_e (var v, env) (con x, env)
@@ -1136,7 +1136,7 @@ Inductive step_e : (AExp * Env) -> (AExp * Env) -> Prop :=
   | cong_plus_l: forall e2 e1 e1' env env',
       step_e (e1, env) (e1', env') ->
       step_e (plus e1 e2, env) (plus e1' e2, env')
-\end{verbatim}
+#+end_example
 
 The *step\_var* states that the program variable *var~v*
 evaluates in one step to its value *con~x* in the environment 
@@ -1146,9 +1146,9 @@ the *env*, and this holds for all program variables and
 environments (recall that *con* is the constructor for integer
 constants). Another example is the *step\_plus* case, which states
 that any arithmetic expression of the form 
-\begin{verbatim}
+#+begin_example
    plus (con x) (con y)
-\end{verbatim}, in which the operands of addition have already been
+#+end_example, in which the operands of addition have already been
 evaluated to constant values, evaluates in one step to the value that
 is the sum of the operands, regardless of the current environment 
 (*Z.add* is the integer addition operation). Note how 
@@ -1159,12 +1159,12 @@ collectively specify call-by-value semantics of *plus*.
 
 Using the Coq definition of *sum\_pgm* above, we can test that 
 *sum\_pgm~100* produces the expected result, 5050.
-\begin{verbatim}
+#+begin_example
 Lemma test_execution :
   clos_relf_trans_1n _ step_p
     (sum_pgm 100,[])
     (pgm nil skip, [("sum",5050);("n",0)]).
-\end{verbatim}
+#+end_example
 
 An execution trace is constructed by the reflexive-transitive closure
 of the *step\_p* relation (see \ref{Coq Example Code}.), computed
@@ -1189,7 +1189,7 @@ as a reachability claim on program states of the form
 (recall that the quoted strings ``n'' and ``sum'' are the program
 variables, while *n* is a universally quantified logical name
 denoting a symbolic value)
-\begin{verbatim}
+#+begin_example
 Inductive sum_spec : Spec (Pgm * Env) :=
  | sum_claim: forall n, 0 <= n ->
    sum_spec
@@ -1201,7 +1201,7 @@ Inductive sum_spec : Spec (Pgm * Env) :=
                  (assign "n" (plus (var "n") (con (-1))))))))
      ,[])
      (fun cfg' => cfg' = (pgm [] skip, [("sum",((n + 1) * n)/2);("n",0)]))
-\end{verbatim}
+#+end_example
 
 *Spec* is the general type of (language independent) program
 specifications (reachability claims), instantiated here with states
@@ -1244,7 +1244,7 @@ proof strategy can be found in the appendix (see
 To prove correctness we need to specify and show the loop
 invariant. For that, we introduce another constructor of the type 
 *sum\_spec*
-\begin{verbatim}
+#+begin_example
  | sum_loop_claim : forall env n, get "n" env = Some n -> 0 <= n ->
                     forall s, get "sum" env = Some s ->
       sum_spec
@@ -1255,7 +1255,7 @@ invariant. For that, we introduce another constructor of the type
          ,env)
       (fun cfg' => fst cfg' = pgm [] skip /\
          snd cfg' = set "n" 0 (set "sum" (s + ((n + 1) * n)/2) env)).
-\end{verbatim}
+#+end_example
 
 Note that *get $\times$ env* evaluates to the value to which $x$
 is mapped in *env* (if defined), while *fst* and *snd*
@@ -1267,9 +1267,9 @@ diverges or terminates with the correct value for *sum*, we
 instantiate the general coinductive soundness theorem with the step
 relation *step\_p* defining the semantics, and show the following
 statement: 
-\begin{verbatim}
+#+begin_example
 Lemma sum_ok : sound step_p sum_spec.
-\end{verbatim}
+#+end_example
 
 *sound* is a generic proposition on reachability claims. The proof
 of this instantiation is based on a generalized co-induction theorem
@@ -1376,9 +1376,9 @@ Unusually among languages for computer algebra, but in keeping with
 the functional school, Aldor is strongly typed, and each declaration
 of a binding is accompanied by a declaration of the type of the value
 bound, as in the example
-\begin{verbatim}
+#+begin_example
 a : Integer == 23;
-\end{verbatim}
+#+end_example
 
 This contrasts with languages like Haskell in which types need not be
 declared explicitly since they can be deduced by the
@@ -1405,13 +1405,13 @@ from integers to floating point numbers and so forth.
 
 *Types as values* The type *Type* is itself a type; it is by
 this means that the system supports functions over types, such as
-\begin{verbatim}
+#+begin_example
 idType (ty : Type) : Type == ty;                             (1)
-\end{verbatim}
+#+end_example
 and explicit polymorphism, as in 
-\begin{verbatim}
+#+begin_example
 id (ty : Type, x : ty) : ty == x;                            (2)
-\end{verbatim}
+#+end_example
 
 This resembles the quantification in System F in which functions can
 depend on type parameters, and in $=F=^\omega$ where functions can
@@ -1421,13 +1421,13 @@ Section \ref{poll3.1}
 *Dependent types* Aldor permits functions to have dependent types,
 in which the type of a function result depends upon the value of a
 parameter. An example is the function
-\begin{verbatim}
+#+begin_example
 vectorSum : (n:Integer) -> Vector(n) -> Double
-\end{verbatim}
+#+end_example
 in which the result of a function application, say
-\begin{verbatim}
+#+begin_example
 vectorSum(34)
-\end{verbatim}
+#+end_example
 has the type *Vector(34) =->= Double* because its argument has
 the value 34. In a similar way, when the *id* function of
 definition (2) is applied, its result type is determined by the type
@@ -1463,11 +1463,11 @@ by the Aldor type system. One can specify what it is to be a monoid,
 say, by defining the Category\footnote{There is no relation between
 Axiom's notion of category and the notion from category theory!}
 called *Monoid*, thus
-\begin{verbatim}
+#+begin_example
 Monoid: Category == BasicType with {                         (3)
   * : (%,%) -> %;
   1 : %; }
-\end{verbatim}
+#+end_example
 
 This states that for a structure of a type '\%' to be a monoid it has
 to supply two bindings; in other words a *Category* describes a
@@ -1477,10 +1477,10 @@ operation over the type '\%'; the second is an element of '\%'.
 In fact we have stated slightly more than this, as *Monoid*
 extends the category *BasicType* which requires that the
 underlying type carries an equality operation.
-\begin{verbatim}
+#+begin_example
 BasicType : Category == with {
   = : (%,%) -> Boolean; }
-\end{verbatim}
+#+end_example
 
 We should observe that this *Monoid* category does not impose any
 constraints on bindings to '*' and '1': we shall revisit this example
@@ -1488,22 +1488,22 @@ in Section \ref{poll5.2} below.
 
 Implementations of a category are abstract data types which are known
 in Axiom as domains, and are defined as was the value *a* above
-\begin{verbatim}
+#+begin_example
 IntegerAdditiveMonoid : Monoid == add {                      (4)
   Rep == Integer;
   import from Integer;
 
   (x:%) * (y:%) : % == per((rep x) + (rep y));
   1 : %             == per 0; }
-\end{verbatim}
+#+end_example
 
 The category of the object being defined -- *Monoid* -- is the
 type of the domain we are defining, *IntegerAdditiveMonoid*. The
 definition identifies a representation type, *Rep*, and also uses
 the conversion functions *rep* and *per* which have the types
-\begin{verbatim}
+#+begin_example
 rep : % -> Rep                 per : Rep -> %
-\end{verbatim}
+#+end_example
 
 In fact, *Rep*, *rep* and *per* are implemented using the
 macro mechanism of Aldor, and so are eliminated before type
@@ -1549,24 +1549,24 @@ system.
 The Aldor language contains dependent types, so that one can define
 functions such as *vectorSum* which defines a sum function for
 vectors of arbitrary length, of type
-\begin{verbatim}
+#+begin_example
 vectorSum : (n:Integer) -> Vector(n) -> Double
-\end{verbatim}
+#+end_example
 and a function *append* to join two vectors together
-\begin{verbatim}
+#+begin_example
 append : (n:Integer,m:Integer,Vector(n),Vector(m)) -> Vector(n+m)
-\end{verbatim}
+#+end_example
 
 Given vectors of length two and three, *vec2* and *vec3*, we
 can join them thus
-\begin{verbatim}
+#+begin_example
 append(2,3,vec2,vec3) : Vector(2+3)
-\end{verbatim}
+#+end_example
 and we would expect to be able to find the sum of this vector by
 applying *vectorSum 5*, thus
-\begin{verbatim}
+#+begin_example
 (vectorSum 5) append(2,3,vec2,vec3)
-\end{verbatim}
+#+end_example
 but this will fail to type check, since the argument is of type
 *Vector(2+3)*, which is not equal to the expected type, namely
 *Vector(5)*. This is because no evaluation takes place in type
@@ -1595,31 +1595,31 @@ is a functor from type to itself? It has two components
 (There are also some logical constraints on the behaviour of these
 mappings; we cannot formalise these in Aldor.) How can this be
 formalised in Aldor? We say
-\begin{verbatim}
+#+begin_example
 Functor (F ; Type -> Type) : Category == with {              (5)
   map : (a:Type) -> (b:Type) -> (a->b) -> (F a) -> (F b) };  
-\end{verbatim}
+#+end_example
 and we can show that the *List* functor, which builds the type
 *List(a)* from the type *a*, is an instance of *Functor*
 thus: 
-\begin{verbatim}
+#+begin_example
 listFunctor : Functor(List) == add {                         (6)
   map (a:Type)(b:Type)(f:a->b)(x:List(a)) : List(b)
     == if x=nil then nil
                 else cons ( f (first(x)),
                           (((map a) b) f) rest(x))
 };
-\end{verbatim}
+#+end_example
 which is the standard definition of *map* over lists.
 
 In a similar vein we can try to make *idType* (as defined in
 Section \ref{poll2.1} above) into an instance of *Functor*,
-\begin{verbatim}
+#+begin_example
 Ident : Functor(idType) == add {                             (7)
   map (a:Type)(b:Type)(f:a->b)(x:idType(a)) : idType(b)
     == f x
 };
-\end{verbatim}
+#+end_example
 but this will fail to be type correct since the types *idType(a)*
 and *a* will not be identified as would be required for the
 application of *f* to *x* to be well-typed.
@@ -1644,12 +1644,12 @@ themselves.
   The *pretend* function is used in the definition of
   *rep* and *per* in the current version of Aldor; a more secure
   mechanism would be preferable.}, so that one can rewrite (7) as follows
-  \begin{verbatim}
+  #+begin_example
   Ident : Functor(idType) == add {                             (8)
   map (a:Type)(b:Type)(f:a->b)(x:idType(a)) : idType(b)
   == (f (x pretend a) pretend idType(b))
   };
-  \end{verbatim}
+  #+end_example
   
   This achieves a result, but at some cost. Whenever we expect to need
   some degree of evaluation, that has to be shadowed by a type cast;
@@ -1730,21 +1730,21 @@ different ways. We look at the example of the `less than' predicate
 over the natural numbers.
 - A first approach is to give an explicit (primitive recursive)
   definition of the type, which in Aldor might take the form
-  \begin{verbatim}
+  #+begin_example
   lessThan(n:Nat,m:Nat) : Type ==                              (9)
   if m=0 then Exit
   else (if n=0 then Triv
   else lessThan(n-1,m-1));
-  \end{verbatim}
+  #+end_example
 - A second approach introduces them inductively as a
   generalisation of the algebraic types which appear in Haskell and
   SML. We might define the less than predicate `=<=' of type
   *Nat =->= Nat =->= Type* by saying that there are two constructors for
   the type of the following signature
-  \begin{verbatim}
+  #+begin_example
   ZeroLess : (n:Nat)(0 < S n)
   SuccLess : (m:Nat)(n:Nat)((m < n) -> (S m < S n))
-  \end{verbatim}
+  #+end_example
 
 
 This approach leads to a powerful style of proof in which inductions
@@ -1799,9 +1799,9 @@ already exist, including Nuprl [cite:@Cons85] and Coq [cite:@COQR16].
 A more expressive type system allows programmers to give more accurate
 types to common functions, such as the function which indexes the
 elements of a list
-\begin{verbatim}
+#+begin_example
 index : (l:List(t))(n:Nat)((n < length l) -> t)
-\end{verbatim}
+#+end_example
 
 An application of *index* has /three/ arguments: a list
 *l* and a natural number *n* -- as for the standard index
@@ -1813,9 +1813,9 @@ applied to elements *l* and *n*.
 
 In a similar vein, it is possible to incorporate post-conditions into
 types so that a sorting algorithm over lists might have the type
-\begin{verbatim}
+#+begin_example
 sort : ((l:List(t))(List(t),Sorted(l))
-\end{verbatim}
+#+end_example
 and so return a sorted list together with a proof that the list is
 Sorted. 
 
@@ -2005,14 +2005,14 @@ keywords like =requires= and =ensures=. For example,
 \index[doc]{keyword!requires}
 \index[doc]{ensures!keyword}
 \index[doc]{keyword!ensures}
-\begin{verbatim}
+#+begin_example
 function decrement(int x) -> (int y)
 // Parameter x must be greater than zero
 requires x > 0
 //Return must be greater or equal to zero
 ensures y >= 0:
   return x - 1
-\end{verbatim}
+#+end_example
 
 The associated verification conditions is
 \[\forall x \in int.(x > 0 \Rightarrow x-1 \ge 0\]
@@ -2021,7 +2021,7 @@ Whiley supports loop invariants by decorating loops with a
 =where= clause.
 \index[doc]{where!keyword}
 \index[doc]{keyword!where}
-\begin{verbatim}
+#+begin_example
 Function sum(int[] items) -> (int r)
 // Every item in items is greater or equal to zero
 requires all ( i in 0..|items| | items[i] >= 0
@@ -2033,14 +2033,14 @@ ensures r >= 0:
     r = r + items[i]
     i = i + 1
   return r
-\end{verbatim}
+#+end_example
 
 Whiley has an =assert= and =forall=
 \index[doc]{assert!keyword}
 \index[doc]{keyword!assert}
 \index[doc]{forall!keyword}
 \index[doc]{keyword!forall}
-\begin{verbatim}
+#+begin_example
 assert:
   forall(int x0, int x1):
     if:
@@ -2048,7 +2048,7 @@ assert:
       x1 == -x0
     then:
       x1 >= 0
-\end{verbatim}
+#+end_example
 
 Whiley distinguishes pure code using the keyword =function=
 from impure code using the keyword =method=.
@@ -2260,7 +2260,7 @@ problem we will focus on the GCD algorithm in NonNegativeInteger.
 
 This implies that several other categories have to be handled. In
 particular these are given by the =getAncestors= function.
-\begin{verbatim}
+#+begin_example
 getAncestors 'NonNegativeInteger
 
    (1)
@@ -2269,11 +2269,11 @@ getAncestors 'NonNegativeInteger
     OrderedAbelianSemiGroup, OrderedCancellationAbelianMonoid, OrderedSet,
     SemiGroup, SetCategory}
                                                             Type: Set(Symbol)
-\end{verbatim}
+#+end_example
 
 If we call =getAncestors= on each of the items in the list we can
 find the inheritance order, which is
-\begin{verbatim}
+#+begin_example
 BasicType <- {}
 CoercibleTo <- {}
 SetCategory <- BasicType,CoercibleTo
@@ -2296,7 +2296,7 @@ NonNegativeInteger <- AbelianMonoid, AbelianSemiGroup, BasicType, CancellationAb
     CoercibleTo, Monoid, OrderedAbelianMonoid, OrderedAbelianMonoidSup,
     OrderedAbelianSemiGroup, OrderedCancellationAbelianMonoid, OrderedSet,
     SemiGroup, SetCategory}
-\end{verbatim}
+#+end_example
 
 The sorted order above is not the actual order needed. Let us look at
 each category in more detail.
@@ -2364,7 +2364,7 @@ that support NonNegativeInteger.
 *** BasicType
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 BasicType() : Category == SIG where
 
   SIG ==> with
@@ -2378,10 +2378,10 @@ BasicType() : Category == SIG where
    add
 
      _~_=(x:%,y:%) : Boolean == not(x=y)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  BasicType is a category constructor
  Abbreviation for BasicType is BASTYPE 
  This constructor is exposed in this frame.
@@ -2390,12 +2390,12 @@ BasicType() : Category == SIG where
 ------------------------------- Operations --------------------------------
  ?=? : (%,%) -> Boolean                ?~=? : (%,%) -> Boolean
 
-\end{verbatim}
+#+end_example
 
 *** CoercibleTo
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 CoercibleTo(S) : Category == SIG where
   S : Type
 
@@ -2403,10 +2403,10 @@ CoercibleTo(S) : Category == SIG where
 
     coerce : % -> S
       ++ coerce(a) transforms a into an element of S.
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  CoercibleTo(S: Type) is a category constructor
  Abbreviation for CoercibleTo is KOERCE 
  This constructor is exposed in this frame.
@@ -2415,12 +2415,12 @@ CoercibleTo(S) : Category == SIG where
 ------------------------------- Operations --------------------------------
  coerce : % -> S                      
 
-\end{verbatim}
+#+end_example
 
 *** OutputForm
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 OutputForm() : SIG == CODE where
 
   SIG ==> SetCategory with
@@ -3060,10 +3060,10 @@ OutputForm() : SIG == CODE where
         int(a,b)   == [eform INTSIGN,b, empty(), a]
 
         int(a,b,c) == [eform INTSIGN,b, c, a]
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  OutputForm is a domain constructor
  Abbreviation for OutputForm is OUTFORM 
  This constructor is not exposed in this frame.
@@ -3124,11 +3124,11 @@ OutputForm() : SIG == CODE where
  differentiate : (%,NonNegativeInteger) -> %
  prime : (%,NonNegativeInteger) -> %
 
-\end{verbatim}
+#+end_example
 
 *** SetCategory
 **** The original source code
-\begin{verbatim}
+#+begin_example
 SetCategory() : Category == SIG where
 
   SIG ==> Join(BasicType,CoercibleTo OutputForm) with
@@ -3144,10 +3144,10 @@ SetCategory() : Category == SIG where
       hash(s : %):  SingleInteger == SXHASH(s)$Lisp
 
       latex(s : %): String == "\mbox*Unimplemented*"
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  SetCategory is a category constructor
  Abbreviation for SetCategory is SETCAT 
  This constructor is exposed in this frame.
@@ -3158,12 +3158,12 @@ SetCategory() : Category == SIG where
  hash : % -> SingleInteger             latex : % -> String
  ?~=? : (%,%) -> Boolean              
 
-\end{verbatim}
+#+end_example
 
 *** SemiGroup
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 SemiGroup() : Category == SIG where
 
   SIG ==> SetCategory with
@@ -3184,10 +3184,10 @@ SemiGroup() : Category == SIG where
      x:% ** n:PositiveInteger == expt(x,n)
 
      _^(x:%, n:PositiveInteger):% == x ** n
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  SemiGroup is a category constructor
  Abbreviation for SemiGroup is SGROUP 
  This constructor is exposed in this frame.
@@ -3199,12 +3199,12 @@ SemiGroup() : Category == SIG where
  coerce : % -> OutputForm              hash : % -> SingleInteger
  latex : % -> String                   ?~=? : (%,%) -> Boolean
 
-\end{verbatim}
+#+end_example
 
 *** OrderedSet
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 OrderedSet() : Category == SIG where
 
   SIG ==> SetCategory with
@@ -3246,10 +3246,10 @@ OrderedSet() : Category == SIG where
       ((x: %) >= (y: %)) : Boolean == not (x < y)
   
       ((x: %) <= (y: %)) : Boolean == not (y < x)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  OrderedSet is a category constructor
  Abbreviation for OrderedSet is ORDSET 
  This constructor is exposed in this frame.
@@ -3263,19 +3263,19 @@ OrderedSet() : Category == SIG where
  max : (%,%) -> %                      min : (%,%) -> %
  ?~=? : (%,%) -> Boolean              
 
-\end{verbatim}
+#+end_example
 
 *** OrderedCancellationAbelianMonoid
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 OrderedCancellationAbelianMonoid() : Category == SIG where
 
   SIG ==> Join(OrderedAbelianMonoid, CancellationAbelianMonoid)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  OrderedCancellationAbelianMonoid is a category constructor
  Abbreviation for OrderedCancellationAbelianMonoid is OCAMON 
  This constructor is exposed in this frame.
@@ -3293,19 +3293,19 @@ OrderedCancellationAbelianMonoid() : Category == SIG where
  ?~=? : (%,%) -> Boolean              
  subtractIfCan : (%,%) -> Union(%,"failed")
 
-\end{verbatim}
+#+end_example
 
 *** OrderedAbelianSemiGroup
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 OrderedAbelianSemiGroup() : Category == SIG where
 
   SIG ==> Join(OrderedSet, AbelianSemiGroup)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  OrderedAbelianSemiGroup is a category constructor
  Abbreviation for OrderedAbelianSemiGroup is OASGP 
  This constructor is exposed in this frame.
@@ -3320,12 +3320,12 @@ OrderedAbelianSemiGroup() : Category == SIG where
  max : (%,%) -> %                      min : (%,%) -> %
  ?~=? : (%,%) -> Boolean              
 
-\end{verbatim}
+#+end_example
 
 *** OrderedAbelianMonoidSup
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 OrderedAbelianMonoidSup() : Category == SIG where
 
   SIG ==> OrderedCancellationAbelianMonoid with
@@ -3333,10 +3333,10 @@ OrderedAbelianMonoidSup() : Category == SIG where
     sup : (%,%) -> %
       ++ sup(x,y) returns the least element from which both
       ++ x and y can be subtracted.
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  OrderedAbelianMonoidSup is a category constructor
  Abbreviation for OrderedAbelianMonoidSup is OAMONS 
  This constructor is exposed in this frame.
@@ -3354,19 +3354,19 @@ OrderedAbelianMonoidSup() : Category == SIG where
  zero? : % -> Boolean                  ?~=? : (%,%) -> Boolean
  subtractIfCan : (%,%) -> Union(%,"failed")
 
-\end{verbatim}
+#+end_example
 
 *** OrderedAbelianMonoid
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 OrderedAbelianMonoid() : Category == SIG where
 
   SIG ==> Join(OrderedAbelianSemiGroup, AbelianMonoid)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  OrderedAbelianMonoid is a category constructor
  Abbreviation for OrderedAbelianMonoid is OAMON 
  This constructor is exposed in this frame.
@@ -3383,12 +3383,12 @@ OrderedAbelianMonoid() : Category == SIG where
  sample : () -> %                      zero? : % -> Boolean
  ?~=? : (%,%) -> Boolean              
 
-\end{verbatim}
+#+end_example
 
 *** Monoid
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 Monoid() : Category == SIG where
 
   SIG ==> SemiGroup with
@@ -3431,10 +3431,10 @@ Monoid() : Category == SIG where
       x:% ** n:NonNegativeInteger ==
          zero? n => 1
          expt(x,n pretend PositiveInteger)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  Monoid is a category constructor
  Abbreviation for Monoid is MONOID 
  This constructor is exposed in this frame.
@@ -3449,12 +3449,12 @@ Monoid() : Category == SIG where
  one? : % -> Boolean                   recip : % -> Union(%,"failed")
  sample : () -> %                      ?~=? : (%,%) -> Boolean
 
-\end{verbatim}
+#+end_example
 
 *** CancellationAbelianMonoid
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 CancellationAbelianMonoid() : Category == SIG where
 
   SIG ==> AbelianMonoid with
@@ -3462,10 +3462,10 @@ CancellationAbelianMonoid() : Category == SIG where
     subtractIfCan : (%,%) -> Union(%,"failed")
       ++ subtractIfCan(x, y) returns an element z such that \spad{z+y=x}
       ++ or "failed" if no such element exists.
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  CancellationAbelianMonoid is a category constructor
  Abbreviation for CancellationAbelianMonoid is CABMON 
  This constructor is exposed in this frame.
@@ -3480,12 +3480,12 @@ CancellationAbelianMonoid() : Category == SIG where
  ?~=? : (%,%) -> Boolean              
  subtractIfCan : (%,%) -> Union(%,"failed")
 
-\end{verbatim}
+#+end_example
 
 *** AbelianSemiGroup
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 AbelianSemiGroup() : Category == SIG where
 
   SIG ==> SetCategory with
@@ -3504,10 +3504,10 @@ AbelianSemiGroup() : Category == SIG where
      if not (% has Ring) then
 
         n:PositiveInteger * x:% == double(n,x)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
  AbelianSemiGroup is a category constructor
  Abbreviation for AbelianSemiGroup is ABELSG 
  This constructor is exposed in this frame.
@@ -3519,12 +3519,12 @@ AbelianSemiGroup() : Category == SIG where
  hash : % -> SingleInteger             latex : % -> String
  ?~=? : (%,%) -> Boolean              
 
-\end{verbatim}
+#+end_example
 
 *** AbelianMonoid
 
 **** The original source code
-\begin{verbatim}
+#+begin_example
 AbelianMonoid() : Category == SIG where
 
   SIG ==> AbelianSemiGroup with
@@ -3556,10 +3556,10 @@ AbelianMonoid() : Category == SIG where
         n:NonNegativeInteger * x:% ==
           zero? n => 0
           double(n pretend PositiveInteger,x)
-\end{verbatim}
+#+end_example
 
 **** The operations
-\begin{verbatim}
+#+begin_example
 )show AbelianMonoid
  AbelianMonoid is a category constructor
  Abbreviation for AbelianMonoid is ABELMON 
@@ -3573,7 +3573,7 @@ AbelianMonoid() : Category == SIG where
  hash : % -> SingleInteger             latex : % -> String
  sample : () -> %                      zero? : % -> Boolean
  ?~=? : (%,%) -> Boolean              
-\end{verbatim}
+#+end_example
 
 ** Conventions
 
@@ -3719,7 +3719,7 @@ We can do this because CLOS support inheritance.
 
 Axiom can print the list of ancestors for a given type. For example,
 PolynomialCategory ancestors are:
-\begin{verbatim}
+#+begin_example
 getAncestors 'PolynomialCategory
 
    (3)
@@ -3735,14 +3735,14 @@ getAncestors 'PolynomialCategory
     PolynomialFactorizationExplicit, RetractableTo, RightModule, 
     Ring, Rng, SemiGroup, SetCategory, UniqueFactorizationDomain}
                                                             Type: Set(Symbol)
-\end{verbatim}
+#+end_example
 
 PolynomialCategory is quite high up in the type hierarchy (15 levels up,
 actually) so most of these are already inherited. We provide a program
 (called *leaves*), that given the above list will compute the
 types that are not inherited. For example, given the above Axiom
 output,
-\begin{verbatim}
+#+begin_example
 (leaves '(|AbelianGroup| |AbelianMonoid| |AbelianMonoidRing| 
     |AbelianSemiGroup| |Algebra| |BasicType| |BiModule| 
     |CancellationAbelianMonoid| |CharacteristicNonZero|
@@ -3758,7 +3758,7 @@ output,
 (|ConvertibleTo| |Evalable| |FiniteAbelianMonoidRing|
  |FullyLinearlyExplicitRingOver| |OrderedSet| |PartialDifferentialRing|
  |PatternMatchable| |PolynomialFactorizationExplicit|)
-\end{verbatim}
+#+end_example
 
 The PolynomialCategory class only needs to inherit the types that are
 listed by the leaves program.
@@ -4362,9 +4362,9 @@ variables.
 \index[doc]{showSig}
 The *showSig* method will show a signature of a CategoryClass
 object in abbreviated forms. So, for example,
-\begin{verbatim}
+#+begin_example
    (showSig |PAdicIntegerCategory|) ==> PADICCT(EUCDOM,CHARZ)
-\end{verbatim}
+#+end_example
 \index[code]{defgeneric!showSig}
 \index[code]{showSig!defgeneric}
 #+NAME: defgeneric showSig
@@ -4388,11 +4388,11 @@ object in abbreviated forms. So, for example,
 
 The *defunt* macro allows specifying the type =INT= in
 an argument list. For example, these are all valid:
-\begin{verbatim}
+#+begin_example
    (defunt one (p1 p2) ....)
    (defunt one ((int p1) p2) ...)
    (defunt one ((int p1) (int p2)) ...)
-\end{verbatim}
+#+end_example
 
 \index[code]{defmacro!defunt}
 \index[code]{defunt!defmacro}
@@ -4847,7 +4847,7 @@ they are combined into one operation but with different signatures.
 #+end_src
 
 From OperationAlist to Signatures
-\begin{verbatim}
+#+begin_example
    (* (($ (|PositiveInteger|) $) NIL) (($ (|NonNegativeInteger|) $) NIL) (($ $ $) NIL))
                                         -> ?*? : (%,%) -> %
                                         -> ?*? : (NonNegativeInteger,%) -> %
@@ -4890,7 +4890,7 @@ From OperationAlist to Signatures
                                         -> exquo : (%,%) -> Union(%,"failed")
    (|subtractIfCan| (((|Union| $ "failed") $ $) 10))
                                         -> subtractIfCan : (%,%) -> Union(%,"failed")
-\end{verbatim}
+#+end_example
 
 # sig: operationToSignature -> alistEntry{signature}
 \index[code]{defun!operationToSignature}
@@ -5332,9 +5332,9 @@ on the indentation.
 *** Recognize abbreviation command line
 
 An *)abbrev* line consists of 4 tokens, for example,
-\begin{verbatim}
+#+begin_example
    )abbrev domain BITS Bits
-\end{verbatim}
+#+end_example
 where the domain is one of "category", "domain", or "package",
 which can be of any case. The BITS field must be less than 8
 characters and all uppercase, and the Bits field must be a
@@ -5451,7 +5451,7 @@ a number.
         \chainin (c8) [join=by tip];
   }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 UABBREV ::= UCHAR 
           | UCHAR UCHAR 
           | UCHAR UCHAR UCHAR 
@@ -5460,7 +5460,7 @@ UABBREV ::= UCHAR
           | UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR 
           | UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR
           | UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR UCHAR
-\end{verbatim}
+#+end_example
 \caption{UABBREV syntax}
 \label{UABBREVsyntax}
 \end{figure}
@@ -5505,9 +5505,9 @@ UABBREV ::= UCHAR
         \chainin (cdp)   [join];
   }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 ABBREV ::= ')abbrev' ['category' | 'domain' | 'package'] UABBREV CONSTRUCT
-\end{verbatim}
+#+end_example
 \caption{ABBREV syntax}
 \label{ABBREVsyntax}
 \end{figure}
@@ -5584,22 +5584,22 @@ function creates a pair (name . definition) and puts it on
 an association list. The result is the program text minus the
 macros and the association list of macros. So, for example, a
 source code line that reads
-\begin{verbatim}
+#+begin_example
   SIG ==> BitAggregate() with
-\end{verbatim}
+#+end_example
 will become the pair
-\begin{verbatim}
+#+begin_example
   (SIG . "  BitAggregate() with")
-\end{verbatim}
+#+end_example
 
 A minor wrinkle is that the macro (e.g. SIG) has
 a meaningful indentation. We need to compute the
 indentation, clip out that many spaces, and later
 add it into the first returned line. The actual pair
 created looks like
-\begin{verbatim}
+#+begin_example
   (SIG . "  BitAggregate() with")
-\end{verbatim}
+#+end_example
 
 # sig: FSM-macros -> linelist{(linelist,macroAlist)}
 \index[code]{defun!FSM-macros}
@@ -5821,9 +5821,9 @@ variables could be macros in the body which we have not yet seen.
         \chainin (end)     [join];
   }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 VAR ::= SYMBOL [ [WSPACE]* ':' [WSPACE]* TYPESPEC ]
-\end{verbatim}
+#+end_example
 \caption{VAR syntax}
 \label{VARsyntax}
 \end{figure}
@@ -5928,10 +5928,10 @@ VAR ::= SYMBOL [ [WSPACE]* ':' [WSPACE]* TYPESPEC ]
       \chainin[blue!100] (mid2);
   }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 TYPESPEC ::= CDPNAME [ '(' [ TYPESPEC [ ',' TYPESPEC ]* ] ')']
            | JOIN '(' TYPESPEC [ ',' TYPESPEC ] ')'
-\end{verbatim}
+#+end_example
 \caption{TYPESPEC syntax}
 \label{TYPESPECsyntax}
 \end{figure}
@@ -6002,9 +6002,9 @@ These two functions, *splitchar*
 and *joinsplit*
 \index[doc]{joinsplit}
 are essentiall inverses of each other. So
-\begin{verbatim}
+#+begin_example
    (joinsplit (splitchar somestring #\space) #\space)
-\end{verbatim}
+#+end_example
 should return the original string, without leading or
 trailing spaces.
 
@@ -6032,9 +6032,9 @@ called the *split* and concatenate them, inserting the
 
 Note that this can be used to construct a comma-separated
 list by
-\begin{verbatim}
+#+begin_example
     (joinsplit somestring #\,)
-\end{verbatim}
+#+end_example
 
 # sig: joinsplit -> (list(token),char){string}
 \index[code]{defun!joinsplit}
@@ -6104,9 +6104,9 @@ turns a string into characters.
         \chainin (p6)           [join];
     }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 SYMBOL := letter [ letter | digit ]*
-\end{verbatim}
+#+end_example
 \caption{SYMBOL syntax}
 \label{SYMBOLsyntax}
 \end{figure}
@@ -6137,9 +6137,9 @@ SYMBOL := letter [ letter | digit ]*
         \chainin (p4)     [join];
     }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 UNSIGNED := digit [ digit ]*
-\end{verbatim}
+#+end_example
 \caption{UNSIGNED syntax}
 \label{UNSIGNEDsyntax}
 \end{figure}
@@ -6206,9 +6206,9 @@ UNSIGNED := digit [ digit ]*
         \chainin (p10)   [join=by tip];
   }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 FLOAT ::= 
-\end{verbatim}
+#+end_example
 \caption{FLOAT syntax}
 \label{FLOATsyntax}
 \end{figure}
@@ -6249,9 +6249,9 @@ FLOAT ::=
         \chainin (p8)       [join];
   }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 IF ::= if TEST then BLOCK [else BLOCK]
-\end{verbatim}
+#+end_example
 \caption{IF syntax}
 \label{IFsyntax}
 \end{figure}
@@ -6286,9 +6286,9 @@ IF ::= if TEST then BLOCK [else BLOCK]
         \chainin (blk)  [join];
   }
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 FOR ::= for VARIABLE in EXPRESSION repeat BLOCK
-\end{verbatim}
+#+end_example
 \caption{FOR syntax}
 \label{FORsyntax}
 \end{figure}
@@ -6298,7 +6298,7 @@ FOR ::= for VARIABLE in EXPRESSION repeat BLOCK
 Given a *theparse* structure, construct the corresponding
 defclass.
 
-\begin{verbatim}
+#+begin_example
 (defclass |BitsType| (|BitAggregateType|)
   ((parents :initform '(|BitAggregate|))
    (name :initform "Bits")
@@ -6317,7 +6317,7 @@ defclass.
     (push '|Bits| *Domains*)
     (make-instance '|BitsType|)))
 
-\end{verbatim}
+#+end_example
 
 The *compileSpad* 
 \index[doc]{compileSpad}
@@ -6348,7 +6348,7 @@ to executable code.
 
 ** The Language
 
-\begin{verbatim}
+#+begin_example
 FILENAME    ::= PATHNAME
 RAWCODE     ::= List(STRING)
 PILE        ::= List(STRING)
@@ -6358,11 +6358,11 @@ SOURCECODE  ::= FILENAME RAWCODE PILE TREE
 UCHAR       ::= uppercase character
 
 CONSTRUCT   ::= constructorname
-\end{verbatim}
+#+end_example
 
 
 
-\begin{verbatim}
+#+begin_example
 FILE        ::= ABBREV BODY
 BODY        ::= CDPSIG MACROS WITH ADD
 CDPSIG      ::= CDPNAME ['(' [ CDPARGS ] ')'] '==' 
@@ -6380,20 +6380,20 @@ PREFIX      ::= + | -
 SPECIALNAME ::= "*" | "**" | "^" | "/" | PREFIX | INFIX
 SIGNAME     ::= SPECIALNAME | SYMBOL
 FSMSIG      ::= INDENT SIGNAME [':' SIGINTYPE '->' SIGOUTTYPE] [SIGIFSEC]
-\end{verbatim}
+#+end_example
 
 ** Finite State Machine tools
 
 The Finite State Machine tools mimic the EBNF in the language
 grammar. An example of its use is to recognize the abbreviation
 line. The line looks like:
-\begin{verbatim}
+#+begin_example
    )abbrev domain TIM Tim
-\end{verbatim}
+#+end_example
 
 The Finite State Machine code to recognize this and construct an
 abbreviation instance would be:
-\begin{verbatim}
+#+begin_example
 (defun FSM-abbrev (linelist)
   (let ((split (splitchar (first linelist) #\space)) result)
     (when
@@ -6409,7 +6409,7 @@ abbreviation instance would be:
         (rest linelist)
         (make-abbreviation (third result) (second result) (first result))))))
 
-\end{verbatim}
+#+end_example
 
 Things to note about this code are that the variables *split*
 \index[code]{split!variable}
@@ -6506,7 +6506,7 @@ from the list of input strings.It expects 3 arguments
   that will hold the lines that pass the test.
 
 Given a linelist that looks like:
-\begin{verbatim}
+#+begin_example
   ("++ Author: Stephen M. Watt"
     "++ Description:"
     "++ \\spadtype{Bits} provides logical functions for Indexed Bits."
@@ -6516,38 +6516,38 @@ Given a linelist that looks like:
     "      ++ bits(n,b) creates bits with n values of b"
     "  CODE ==> IndexedBits(1) add"
     "    bits(n,b)    == new(n,b)")
-\end{verbatim}
+#+end_example
 and the call to gather comments, lines starting the "$++$":
-\begin{verbatim}
+#+begin_example
 (defun FSM-comment (linelist)
   (let (comment result)
     (setq comment (make-instance 'gather))
     (values
       (FSM-gather linelist (FSM-match "++") comment)
       comment)))
-\end{verbatim}
+#+end_example
 when invoked with:
-\begin{verbatim}
+#+begin_example
    (multiple-value-setq (t3 t4) (fsm-comment t2))
-\end{verbatim}
+#+end_example
 we end up with t4 as a *gather* instance containing the
 lines that passed the *FSM-match* test. For example,
-\begin{verbatim}
+#+begin_example
 The object is a STANDARD-OBJECT of type GATHER.
 0. LINES:
  ("++ Author: Stephen M. Watt"
   "++ Description:"
   "++ \\spadtype{Bits} provides logical functions for Indexed Bits.")
-\end{verbatim}
+#+end_example
 The t3 variable contains the new linelist without the matching lines:
-\begin{verbatim}
+#+begin_example
    ("Bits() : SIG == CODE where"
     "  SIG ==> BitAggregate() with"
     "    bits : (NonNegativeInteger, Boolean) -> %"
     "      ++ bits(n,b) creates bits with n values of b"
     "  CODE ==> IndexedBits(1) add"
     "    bits(n,b)    == new(n,b)")
-\end{verbatim}
+#+end_example
 
 \index[code]{defmacro!FSM-gather}
 \index[code]{FSM-gather!defmacro}
@@ -6579,10 +6579,10 @@ The *FSM-startsWith*
 \index[code]{FSM-startsWith!defmacro}
 occurs in cases where we want to check whether the prefix is a
 word we expect, such as looking for the category name, for example,
-\begin{verbatim}
+#+begin_example
    Bits() : Category
    FSM-match "Bits"   
-\end{verbatim}
+#+end_example
 
 \index[code]{defmacro!FSM-startsWith}
 \index[code]{FSM-startsWith!defmacro}
@@ -6670,9 +6670,9 @@ The *FSM-cdpname*
 \index[doc]{FSM-cdpname}
 checks to see if the next word in the split is a known class. 
 For example,
-\begin{verbatim}
+#+begin_example
   (FSM-cdpname *categories*)
-\end{verbatim}
+#+end_example
 will check if the string at the top of the split is in the known list
 of category names. (Note that it interns the string first). 
 It adds the word to the result and pops it off the split.
@@ -6919,9 +6919,9 @@ The *birth* function
 \index[doc]{birth}
 expects the indentation count and anything, and just conses
 them together.
-\begin{verbatim}
+#+begin_example
    DEPTH, ANY -> BIRTHFORM
-\end{verbatim}
+#+end_example
 
 \index[code]{defmacro!birth}
 \index[code]{birth!defmacro}
@@ -6935,9 +6935,9 @@ them together.
 Naturally, if we have a cons, we need to disassemble it.
 The *depthof* function returns the indentation.
 \index[doc]{depthof}
-\begin{verbatim}
+#+begin_example
    BIRTHFORM -> DEPTH
-\end{verbatim}
+#+end_example
 
 \index[code]{defmacro!depthof}
 \index[code]{depthof!defmacro}
@@ -6951,9 +6951,9 @@ The *depthof* function returns the indentation.
 And the *nameof*
 \index[doc]{nameof}
 returns the thing we put in the cdr.
-\begin{verbatim}
+#+begin_example
    BIRTHFORM -> ANY
-\end{verbatim}
+#+end_example
 
 \index[code]{defmacro!nameof}
 \index[code]{nameof!defmacro}
@@ -6971,9 +6971,9 @@ the source string. We call this rewrite the *spawn*
 \index[doc]{spawn}
 of the tree. From this information we can compute things
 like the depth of nesting.
-\begin{verbatim}
+#+begin_example
    PILEFORM -> SPAWNFORM
-\end{verbatim}
+#+end_example
 
 # sig: spawn -> tree{list(indentedLines)}
 \index[code]{defun!spawn}
@@ -6989,7 +6989,7 @@ like the depth of nesting.
 The *pile2tree* 
 \index[code]{pile2tree}
 function takes a *sourcecode pile* which looks like:
-\begin{verbatim}
+#+begin_example
 (")abbrev domain BITS Bits"
  "++ Author: Stephen M. Watt" "++ Description:"
  "++ \\spadtype{Bits} provides logical functions for Indexed Bits."
@@ -7000,11 +7000,11 @@ function takes a *sourcecode pile* which looks like:
  "  CODE ==> IndexedBits(1) add"
  "    bits(n,b)    == new(n,b)")
 
-\end{verbatim}
+#+end_example
 
 and inserts parentheses that group the code into a tree form,
 called a *sourcecode tree* looks like:
-\begin{verbatim}
+#+begin_example
 (")abbrev domain BITS Bits"
  "++ Author: Stephen M. Watt" "++ Description:"
  "++ \\spadtype{Bits} provides logical functions for Indexed Bits."
@@ -7017,7 +7017,7 @@ called a *sourcecode tree* looks like:
  "    (bits(n,b)    == new(n,b)"
  "    ))")
 
-\end{verbatim}
+#+end_example
 
 The *deep*
 \index[doc]{deep}
@@ -7107,7 +7107,7 @@ and prints it in a form we prefer.
 Spad code is indentation sensitive. This is called 'pile format'. We 
 unpile the spad file, recording the indentation.
 
-\begin{verbatim}
+#+begin_example
 FILE        ::= ABBREV BODY
 BODY        ::= CDPSIG MACROS WITH ADD
 CDPSIG      ::= CDPNAME ['(' [ CDPARGS ] ')'] '==' 
@@ -7126,7 +7126,7 @@ SPECIALNAME ::= "*" | "**" | "^" | "/" | PREFIX | INFIX
 SIGNAME     ::= SPECIALNAME | SYMBOL
 
 FSMSIG      ::= INDENT SIGNAME [':' SIGINTYPE '->' SIGOUTTYPE] [SIGIFSEC]
-\end{verbatim}
+#+end_example
 
 \index[fig]{syntax!FSMSIG}
 \index[fig]{FSMSIG syntax}
@@ -7161,9 +7161,9 @@ FSMSIG      ::= INDENT SIGNAME [':' SIGINTYPE '->' SIGOUTTYPE] [SIGIFSEC]
 (q10) edge[above] node{ifspec}   (q11);
 
 \end{tikzpicture}
-\begin{verbatim}
+#+begin_example
 FSMSIG ::=
-\end{verbatim}
+#+end_example
 \caption{FSMSIG syntax}
 \label{FSMSIGsyntax}
 \end{figure}
@@ -7173,17 +7173,17 @@ FSMSIG ::=
 \begin{figure}[ht]
 TODO
 \caption{LEAVE syntax}
-\begin{verbatim}
+#+begin_example
 LEAVE
-\end{verbatim}
+#+end_example
 \label{LEAVEsyntax}
 \end{figure}
 
-\begin{verbatim}
+#+begin_example
   FUNCTIONSPEC ::= INTTYPE
                  | INTYPE -> OUTPUT
                  | INTYPE -> OUTPUT IFSPEC
-\end{verbatim}
+#+end_example
 
 \begin{figure}[ht]
 \begin{tikzpicture}
@@ -7205,10 +7205,10 @@ LEAVE
 \caption{SIGNATURE}
 \label{SIGNATURE}
 \end{figure}
-\begin{verbatim}
+#+begin_example
   SIGNATURE ::= NAME EOF
               | NAME : FUNCTIONSPEC
-\end{verbatim}
+#+end_example
 
 The Finite State Machine (FSM) walks across a spad signature
 character by character. It constructs the syntactic pieces.
@@ -7422,7 +7422,7 @@ the macro lines.
 #+end_src
 
 * Common Lisp Types
-\begin{verbatim}
+#+begin_example
 Class      Class Precedence List
 
 array      array t
@@ -7442,13 +7442,13 @@ string     string vector array sequence t
 symbol     symbol t
 t          t
 vector     vector array sequence t
-\end{verbatim}
+#+end_example
 
 * EBNF
 
 ** For show output
 
-\begin{verbatim}
+#+begin_example
 PARAM ::= UPPERCASELETTER        
 
 DOMAINSPEC ::= DOMAIN
@@ -7525,7 +7525,7 @@ INFIX    ':' TWOLIST '->' UNIONSPEC
 '?.value  ':' '(' '%' ',' 'value' ')' '->' RECORDSPEC
 '?.value  ':' '(' '%' ',' 'value' ')' '->' PARAM
 '?.value  ':' '(' '%' ',' 'value' ')' '->' DOMAINSPEC
-\end{verbatim}
+#+end_example
 
 * The Compiler
 
@@ -7865,7 +7865,7 @@ by creating unique names instead.
 There are patterns in the following code. Violating these patterns
 will generate obscure bugs so be careful. Lets assume a given class.
 
-\begin{verbatim}
+#+begin_example
 (defclass |GcdDomainType| (|LeftOreRingType| |IntegralDomainType|)
   ((parents :initform '(|LeftOreRing| |IntegralDomain|))
    (name :initform "GcdDomain")
@@ -7877,7 +7877,7 @@ will generate obscure bugs so be careful. Lets assume a given class.
     (push '|GcdDomain| *Categories*)
     (make-instance '|GcdDomainType|)))
 
-\end{verbatim}
+#+end_example
 
 Notice the following properties:
 
@@ -8263,17 +8263,17 @@ This is a searchable list of all of the Categories in level 1.
     (make-instance '|BasicTypeType|)))
 
 #+end_src
-\begin{verbatim}
+#+begin_example
 (
  ?~=? : (%,%) -> Boolean
  (~= (((|Boolean|) $ $) 7))
 
  ?=? : (%,%) -> Boolean
  (= (((|Boolean|) $ $) 6)))
-\end{verbatim}
+#+end_example
 
 **** BASTYPE Source Code
-\begin{verbatim}
+#+begin_example
 )abbrev category BASTYPE BasicType
 --% BasicType
 ++ Description:
@@ -8294,10 +8294,10 @@ BasicType() : Category == SIG where
 
      _~_=(x:%,y:%) : Boolean == not(x=y)
 
-\end{verbatim}
+#+end_example
 
 **** BASTYPE Lisp Code (other)
-\begin{verbatim}
+#+begin_example
 BasicType : Category == Type with
   =: (%,%) -> Boolean
   ~=: (%,%) -> Boolean
@@ -8319,10 +8319,10 @@ BasicType : Category == Type with
     (when ((not (eq BasicType;AL nil)) BasicType;AL)
           (t (store BasicType;AL (BasicType;))))))
 
-\end{verbatim}
+#+end_example
 
 **** BASTYPE.lsp
-\begin{verbatim}
+#+begin_example
 (/VERSIONCHECK 2) 
 
 (SETQ |BasicType;AL| (QUOTE NIL)) 
@@ -8350,10 +8350,10 @@ BasicType : Category == Type with
 
 (SETF (GET (QUOTE |BasicType|) (QUOTE NILADIC)) T) 
 
-\end{verbatim}
+#+end_example
 
 **** BASTYPE index.kaf
-\begin{verbatim}
+#+begin_example
 1057                
 (SETQ |$CategoryFrame|
   (|put| 
@@ -8401,10 +8401,10 @@ BASTYPE
  ("NILADIC" 0 214)
  ("compilerInfo" 0 20))
 
-\end{verbatim}
+#+end_example
 
 **** BASICTYPE database struct
-\begin{verbatim}
+#+begin_example
 )lisp (showdatabase '|BasicType|)
 getdatabase call: BasicType            CONSTRUCTORKIND
 CONSTRUCTORKIND: category
@@ -8478,10 +8478,10 @@ getdatabase call: BasicType            PARENTS
 PARENTS: NIL
 Value = NIL
 
-\end{verbatim}
+#+end_example
 
 **** BASTYPE-.lsp
-\begin{verbatim}
+#+begin_example
 
 (/VERSIONCHECK 2) 
 
@@ -8515,10 +8515,10 @@ Value = NIL
        (CONS (QUOTE #()) (|makeByteWordVec2| 9 (QUOTE (2 6 7 0 0 8 2 0 7 0 0 9))))))
    (QUOTE |lookupComplete|))) 
 
-\end{verbatim}
+#+end_example
 
 **** BASTYPE- index.kaf
-\begin{verbatim}
+#+begin_example
 1540                
 (|updateSlot1DataBase| (QUOTE (|BasicType&| (NIL (~= ((7 0 0) 9))))))
 
@@ -8589,10 +8589,10 @@ Value = NIL
    ("loadTimeStuff" 0 90)
    ("slot1DataBase" 0 20))
 
-\end{verbatim}
+#+end_example
 
 **** BASICTYPE database struct
-\begin{verbatim}
+#+begin_example
 )lisp (showdatabase '|BasicType&|)
 getdatabase call: BasicType&           CONSTRUCTORKIND
 CONSTRUCTORKIND: domain
@@ -8660,7 +8660,7 @@ getdatabase call: BasicType&           PARENTS
 PARENTS: NIL
 Value = NIL
 
-\end{verbatim}
+#+end_example
 
 *** CanonicalAttribute
 \index[cat]{CanonicalAttribute!Category}
@@ -15631,7 +15631,7 @@ where
     (make-instance '|GcdDomainType|)))
 
 #+end_src
-\begin{verbatim}
+#+begin_example
 ( ?~=? : (%,%) -> Boolean
  (~= (((|Boolean|) $ $) 7))
 
@@ -15722,7 +15722,7 @@ where
  ?*? : (Integer,%) -> %
  ?*? : (%,%) -> %
  (* (($ (|PositiveInteger|) $) 12) (($ (|NonNegativeInteger|) $) 14) (($ (|Integer|) $) 19) (($ $ $) 23)))
-\end{verbatim}
+#+end_example
 
 *** LinearOrdinaryDifferentialOperatorCategory
 \index[cat]{LinearOrdinaryDifferentialOperatorCategory!Category}
@@ -17370,7 +17370,7 @@ where
 
 * The NonNegativeInteger Domain
 
-\begin{verbatim}
+#+begin_example
 )show NNI
  NonNegativeInteger is a domain constructor
  Abbreviation for NonNegativeInteger is NNI 
@@ -17398,7 +17398,7 @@ where
  exquo : (%,%) -> Union(%,"failed")
  subtractIfCan : (%,%) -> Union(%,"failed")
 
-\end{verbatim}
+#+end_example
 
 *** Database Files
 
@@ -17469,7 +17469,7 @@ the index is a number and the data is a non-numeric sexpr there is
 no source of confusion about when the data needs to be read.
 
 The format of this new database is as follows:
-\begin{verbatim}
+#+begin_example
  first entry:
    an integer giving the byte offset to the constructor alist
    at the bottom of the file
@@ -17483,7 +17483,7 @@ The format of this new database is as follows:
       (NNI offset-of-operationAlist offset-of-constructorModemap)
        ....)
   This list is read at open time and hashed by the car of each item.
-\end{verbatim}
+#+end_example
 
 The system has been changed to use the property list of the
 symbols rather than hash tables. since we already hashed once
@@ -17609,7 +17609,7 @@ Currently these are added to the database for 2 reasons;
 there is a still-unresolved issue of user database extensions and
 this information is used during database build time
 
-\begin{verbatim}
+#+begin_example
 )lisp (showdatabase '|NonNegativeInteger|)
 getdatabase call: NonNegativeInteger   CONSTRUCTORKIND
 CONSTRUCTORKIND: domain
@@ -17725,9 +17725,9 @@ DOCUMENTATION: ((constructor (NIL \spadtype{NonNegativeInteger} provides functio
 getdatabase call: NonNegativeInteger   PARENTS
 PARENTS: NIL
 Value = NIL
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
 #S(DATABASE 
    ABBREVIATION NNI 
    ANCESTORS NIL 
@@ -17797,7 +17797,7 @@ Value = NIL
    DEPENDENTS NIL 
    SPARE NIL)
 
-\end{verbatim}
+#+end_example
 
 * The Domains
 ** A
@@ -45608,9 +45608,9 @@ The *SigSort* function is called *during build*
 from the Makefile to sort the
 *signature.tex* file. The *signatures.tex* file contains
 lines like:
-\begin{verbatim}
+#+begin_example
   \hyperpage {46}\hskip 1em\relax pretty : treeform $\rightarrow $ values
-\end{verbatim}
+#+end_example
 which is the tex code to generate the signature for the function
 *pretty*
 \[pretty : treeform \rightarrow values\]
@@ -46992,38 +46992,38 @@ anywhere in the tree, root, inner nodes, or leaves to require that
 those things are available to the type required by a function.
 
 We define an address
-\begin{verbatim}
+#+begin_example
 (s/def ::street string?)
 (s/def ::city string?)
 (s/def ::state state-code?)
 (s/def ::zip int?)
 (s/def ::addr (s/schema [[::street ::city ::state ::zip]]))
-\end{verbatim}
+#+end_example
 
 We define a user which has an address subtree
-\begin{verbatim}
+#+begin_example
 (s/def ::id int?)
 (s/def ::first string?)
 (s/def ::last string?)
 (s/def ::user (s/schema [[::id ::first ::last ::addr]]))
-\end{verbatim}
+#+end_example
 
 Not every function needs all of the fields so we create a select
 function that ensures the needed fields exist.
 
 Here we only need the zip from the address subtree
-\begin{verbatim}
+#+begin_example
 (get-movie-times user =>
   (s/select ::user [::id ::addr {::addr [::zip]}]))
-\end{verbatim}
+#+end_example
 
 Here we need street, city, state, and zip from the address subtree
-\begin{verbatim}
+#+begin_example
 (place-order user =>
   (s/selct ::user
     [::first ::last ::addr
       {::addr [::street ::city ::state ::zip]}]))
-\end{verbatim}
+#+end_example
 
 ** A GCD proof
 
@@ -47076,11 +47076,11 @@ counter-intuitive, and therefore requires explanation. Suppose a set
 of sentences $S$ defines a relation $P(x y)$. (In a typical
 application, $x$ might be input, $y$ output and $P(x y)$ an
 input-output relation.) This means that
-\begin{verbatim}
+#+begin_example
    (x y) is a relation in P
    iff
    S |- P(x y)
-\end{verbatim}
+#+end_example
 
 Where $X \vdash Y$ means that conclusion $Y$ can be proved from
 assumptions $X$. Thus not only does $S$ imply $P(x y)$, it also
@@ -47091,25 +47091,25 @@ defining a relation $P(x y)$. Then to say that the program is
 /partially correct/ relative to the specification is to say that
 every instance of $P$ that is a consequence of *Prog* is also a
 consequence of *Spec*, i.e.
-\begin{verbatim}
+#+begin_example
    if Prog |- P(x y) then Spec |- P(x y)
-\end{verbatim}
+#+end_example
 
 But this holds if
-\begin{verbatim}
+#+begin_example
    Spec |- Prog
-\end{verbatim}
+#+end_example
 by the transitivity of the proof predicate. If the converse holds,
 i.e. 
-\begin{verbatim}
+#+begin_example
    if Spec |- P(x y) then Prog |- P(x y)
-\end{verbatim}
+#+end_example
 then the program is /complete/ in the sense that the program
 derives every instance of $P$ that is defined by the
 specification. This holds if
-\begin{verbatim}
+#+begin_example
    Prog |- Spec
-\end{verbatim}
+#+end_example
 
 Notice that to prove correctness or completeness we can replace either 
 *Spec* or *Prog* by any stronger set of sentences that implies
@@ -47135,7 +47135,7 @@ Assuming loop structure where
 - *tail* what happens after the loop and return result
 
 
-\begin{verbatim}
+#+begin_example
 Iter(params) {
   header
   while (condition) {
@@ -47155,7 +47155,7 @@ RecurInner(params, header_vars) {
   loopbody
   return RecurInner(params, modified_header_vars)
 }
-\end{verbatim}
+#+end_example
 
 ** Common Lisp Types
 
@@ -47187,71 +47187,71 @@ of only the elements $x$
 predicate $p$
 
 The universal type ``t'' has everything as its value
-\begin{verbatim}
+#+begin_example
 (typep 'x 't) ;; -> true
 (typep 12 't) ;; -> true
-\end{verbatim}
+#+end_example
 
 The empty type nil
-\begin{verbatim}
+#+begin_example
 (typep 'x 'nil) ;; -> false; nil has no values
-\end{verbatim}
+#+end_example
 
 The type ``null'' contains the one value ``nil''
-\begin{verbatim}
+#+begin_example
 (typep nil 'null) ;; -> true
 (typep () 'null)  ;; -> true
-\end{verbatim}
+#+end_example
 
 ``(eql x)'' is the singleton type consisting of only x
-\begin{verbatim}
+#+begin_example
 (typep 3 '(eql 3)) ;; -> true
 (typep 4 '(eql 3)) ;; -> false
-\end{verbatim}
+#+end_example
 
 ``(member $x_0... x_n$)'' denotes the enumerated type consisting of
 only the $x_i$
-\begin{verbatim}
+#+begin_example
 (typep 3  '(member 3 x "c")) ;; -> true
 (typep 'x '(member 3 x "c")) ;; -> true
 (typep 'y '(member 3 x "c")) ;; -> false
-\end{verbatim}
+#+end_example
 
 ``(satisfies p)'' is the type of vaues that satisfy predicate p
-\begin{verbatim}
+#+begin_example
 (typep 12 '(satisfies (lambda (x) (oddp x)))) ;; -> false
 (typep 12 '(satisfies (evenp))                ;; -> true
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
 (booleanp x) = (typep x '(member t nil))
 (booleanp 2)   ;; -> false
 (booleanp nil) ;; -> true
-\end{verbatim}
+#+end_example
 
 The =check-type= will return nil if the type passes, otherwise it
 throws an error
-\begin{verbatim}
+#+begin_example
 (setq x 12)
 (check-type x integer)             ;; -> nil
 (check-type x (or symbol integer)) ;; -> nil
 (check-type x (or symbol string))  ;; -> error  
-\end{verbatim}
+#+end_example
 
 Type annotation using ``the''
-\begin{verbatim}
+#+begin_example
 (the integer 3) ;; -> 3
 (the string 3)  ;; -> error
-\end{verbatim}
+#+end_example
 
 Type coercion
-\begin{verbatim}
+#+begin_example
 (coerce 3 'float)   ;; -> 3.0
 (coerce 'x integer) ;; -> error
-\end{verbatim}
+#+end_example
 
 Using ``deftype''
-\begin{verbatim}
+#+begin_example
 (defun small-number-seq-p (thing)
   (and (listp thing)
        (every #'numberp thing)
@@ -47265,12 +47265,12 @@ Using ``deftype''
 
 (typep yes 'small-number-seq)
 (typep no  'small-number-seq)
-\end{verbatim}
+#+end_example
 
 also
-\begin{verbatim}
+#+begin_example
 (proclaim '(type (simple-array fixnum (4 4))) matrix)
-\end{verbatim}
+#+end_example
 
 ** Polymorphism
 
@@ -47590,11 +47590,11 @@ arguments, providing it with their binding power to make user it gets
 just the right tokens from the input. 
 
 For example:
-\begin{verbatim}
+#+begin_example
    3 + 1 * 2 * 4 + 5
-\end{verbatim}
+#+end_example
 has the call trace
-\begin{verbatim}
+#+begin_example
   expression with rbp 0
     literal nud = 3
     led of +
@@ -47609,7 +47609,7 @@ has the call trace
     led of +
     expression with rbp 10
       literal nud = 5
-\end{verbatim}
+#+end_example
 
 \[\begin{array}{|c|c|c|c|c|c|c|c|c|}
 \hline
@@ -47670,7 +47670,7 @@ From Altenkirch [cite:@Alte18]
 
 Jenkins [cite:@Jenk18] proposes  combination of sum and product 
 types, e.g.
-\begin{verbatim}
+#+begin_example
 data OrderResponse
   = PurchaseSuccessful
       { newOrder :: Order }
@@ -47681,7 +47681,7 @@ data OrderResponse
       { statusCode :: Int,
         message    :: String
       }
-\end{verbatim}
+#+end_example
 
 ** Interactive Proof Semantics
 
@@ -47981,12 +47981,12 @@ $X \overset{\cong}{=} Y$
 
 In Coq (by Voevodsky [cite:@Gray18a])
 
-\begin{verbatim}
+#+begin_example
 Definition eqweqmap {T1 T2 : UU} (e: paths T1 T2) : weq T1 T2.
 Proof. intros, destruct e, apply idweq, Defined.
 
 Axiom univalenceaxiom : forall T1 T2 : UU, isweq (@eqweqmap T1 T2).
-\end{verbatim}
+#+end_example
 where =isweq= is the $\overset{\cong}{=}$ relation
 
 Voevodsky's definition of a group:
@@ -48083,7 +48083,7 @@ Moving along the Z axis (back) $\rightarrow$ types depend on types
 
 A trivial program to add a goal to the list of goals
 from a command line input.
-\begin{verbatim}
+#+begin_example
 def experiment (s : string ) : lean.parser unit :=
 do
   pe <- lean.parser.with_input interactive.types.texpr s, --parser monad
@@ -48096,9 +48096,9 @@ do
   return()
 
 run_cmd experiment "true"
-\end{verbatim}
+#+end_example
   
-\begin{verbatim}
+#+begin_example
 def experiment (s : string ) : lean.parser unit :=
 do
   pe <- lean.parser.with_input interactive.types.texpr s, --parser monad
@@ -48111,9 +48111,9 @@ do
   return ()
 
 run_cmd experiment "true"
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
 import system.io
 open io
 
@@ -48149,7 +48149,7 @@ meta def main : io unit :=
   do iterate () read_eval_print,
   return ()
 
-\end{verbatim}
+#+end_example
   
 \subsection{Robert Y. Lewis [cite:@Lewi20]}
 
@@ -48166,7 +48166,7 @@ y $\in$ carrier $\rightarrow$ x + y $\in$ carrier)\\
 c : x $\in$ carrier)
 
 Axiom NNI is
-\begin{verbatim}
+#+begin_example
 NonNegativeInteger() : SIG == CODE where
 
   SIG ==> Join(OrderedAbelianMonoidSup, Monoid) with
@@ -48224,10 +48224,10 @@ NonNegativeInteger() : SIG == CODE where
     gcd(x,y) ==
       zero? x => y
       gcd(y rem x,x)
-\end{verbatim}
+#+end_example
 
 The Axiom NNI operations are:
-\begin{verbatim}
+#+begin_example
  ?*? : (%,%) -> %                     
  ?*? : (NonNegativeInteger,%) -> %
  ?*? : (PositiveInteger,%) -> %       
@@ -48263,7 +48263,7 @@ The Axiom NNI operations are:
  divide : (%,%) -> Record(quotient: %,remainder: %)
  exquo : (%,%) -> Union(%,"failed")
  subtractIfCan : (%,%) -> Union(%,"failed")
-\end{verbatim}
+#+end_example
 
 So casting this in Lean might look like:\\
 structure NonNegativeInteger (R : Type u) (M : Type v) [semiring R]\\
@@ -48309,18 +48309,18 @@ $\rightarrow$ M.p (tree x f))) $\rightarrow$\\
 end.
 
 A hand-written OCAML program is
-\begin{verbatim}
+#+begin_example
 module W (B : Branching) = struct
   type w = Tree of B.s * (B.t -> w)
   let tree x y = Tree (x, y)
   let rec induction f (Tree (x, g)) =
     f x g (fun y - induction f (g y))
 end
-\end{verbatim}
+#+end_example
 
 
 The RZ program generates:
-\begin{verbatim}
+#+begin_example
 module type Branching =
   sig
     type s
@@ -48385,7 +48385,7 @@ sig
           forall (t:||w||), p t (induction f t)
   *)
 end
-\end{verbatim}
+#+end_example
 
 From Bauer [cite:@Baue19]
 
@@ -48496,6 +48496,7 @@ will compiled. This method should be private.
 *br* -- shorthand for *linebreak*
 
 #+NAME: axiom.bib
+#+begin_src bibtex :noweb yes
 #+begin_src common-lisp :noweb yes
 (defmacro br (verbx)
   `(lineBreak ,verbx))
@@ -48511,6 +48512,7 @@ will compiled. This method should be private.
 *any* -- shorthand for *anyOf*
 
 #+NAME: axiom.bib
+#+begin_src bibtex :noweb yes
 #+begin_src common-lisp :noweb yes
 (defmacro any (verbx)
   `(anyOf ,verbx))
@@ -49051,7 +49053,7 @@ mentioned here.}\\
 
 \url{https://github.com/k-vs-coq-language-frameworks/coq/imp.v}
 
-\begin{verbatim}
+#+begin_example
 
 (* Based on the imp example in coind,
    extracted to a single-file.
@@ -49368,10 +49370,10 @@ apply sum_algebra.
 assumption.
 Qed.
 
-\end{verbatim}
+#+end_example
 
 The proof
-\begin{verbatim}
+#+begin_example
 Require Import String.
 Require Import ZArith.
 Require Import imp.
@@ -49409,11 +49411,11 @@ Time Defined.
 (** The final environment can be extracted from this trace *)
 Eval simpl in proj1_sig test_execution2.
 
-\end{verbatim}
+#+end_example
 
 Proving reachability
 
-\begin{verbatim}
+#+begin_example
 (*
   This file contains the main soundness proof allowing
   the reachability logic proof strategy to be used in Coq.
@@ -49509,7 +49511,7 @@ Qed.
 
 End relations.
 
-\end{verbatim}
+#+end_example
 
 * Bibliography
 We have made every effort to consult and reference primary

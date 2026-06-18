@@ -51,7 +51,7 @@ which reads expressions in a FORTRAN-like form, but prints
 them out using CHARYBDIS. A complete explanation of the commands and
 replies shown would be too lengthy to include here, but the
 conversation is not hard to follow, even without the explanation.
-\begin{verbatim}
+#+begin_example
   MATHLAB NIL
 
   V : 1/(X*(X**2 + B*X + 1)) $
@@ -82,17 +82,17 @@ conversation is not hard to follow, even without the explanation.
        - ----------------ARCTAN(----------------)
                   2                      2
           SQRT(- B  + 4)         SQRT(- B  + 4)
-\end{verbatim}
+#+end_example
 
 Tall parentheses can be simulated as follows:
-\begin{verbatim}
+#+begin_example
             (                                       1/2)
          T  (     (                T G  + T   G    )   )
           0 (     (           2     1 1    TAU TAU )   )
    2R   ----(G  + ((G  + G   )  + -----------------)   )
      EQ  T  ( 1   (( 1    TAU)           R         )   )
           S (     (                       EQ       )   )
-\end{verbatim}
+#+end_example
 The same expression can also be displayed with the parentheses always
 single. The CHARYBDIS user has his choice, made known to the program
 by setting a switch (the global variable TALLPAR).
@@ -101,7 +101,7 @@ Expressions too long for a single line are a problem for any display
 program using a device with a fixed line length, in fact, they are a
 problem even for textbooks. CHARYBDIS splits such expressions over
 several lines in an unconventional way, for example:
-\begin{verbatim}
+#+begin_example
 
                                            B
                                         - ----X
@@ -133,7 +133,7 @@ several lines in an unconventional way, for example:
 
                              2
      (A + B + C)SQRT(4C*A - B )
-\end{verbatim}
+#+end_example
 The expression shown is the solution, as computed by MATHLAB, of the
 differential equation $Ay^{\prime\prime}+By^{\prime}+Cy=e^x$.
 
@@ -162,7 +162,7 @@ Let us return to the less immediate but more vexing difficulty of
 displaying expressions requiring special characters, such as the sigma
 of extended summation. A natural approach is to draw the symbol using
 characters like periods or asterisks. For example:
-\begin{verbatim}
+#+begin_example
    CHARYBDIS((EQUAL(EXPT(SUB C N)2)(PLUS(EXT(SIGMA)K ) N I N
    (QUOTIENT(EXPT(SUB A X)2)(EXPT(SUB SIGMA X)2)))(EXT
    (SIGMA)X(PLUS N 1)(QUOTIENT(TIMES 3 N)2)(QUOTIENT(EXPT
@@ -177,7 +177,7 @@ characters like periods or asterisks. For example:
     N     *          2     *             2
          * * * SIGMA     * * *    SIGMA
          K=1        K    K=N + 1       K
-\end{verbatim}
+#+end_example
 
 Heated arguments occur over just how the symbols ought to be
 drawn. Even in the case of the sigma, which is pretty straightforward,
@@ -195,7 +195,7 @@ The class of displays which CHARYBDIS is capable of handling is
 broader than the term ``mathematical expressions'' and the preceding
 examples might lead us to believe. By way of illustration here is a
 display of a more general nature produced by CHARYBDIS.
-\begin{verbatim}
+#+begin_example
    CHARYBDIS((TREE S(TREE NP(TREE GP(ART THE)(G WRITING))(TREE PP
    (P OF)(TREE NP(N FUNCTIONS)(TREE IP(TREE I TO(VT HANDLE))(TREE
    NP(ADJ RARE)(N CASES))))))(TREE VP(TREE PI(VA CAN)(VL BE))(PA
@@ -222,7 +222,7 @@ display of a more general nature produced by CHARYBDIS.
        .    .    .VL(BE)
         .VP.
             .PA(POSTPONED)
-\end{verbatim}
+#+end_example
 
 *** Program Structure
 
@@ -289,7 +289,7 @@ The framework comprises the definitions of four terms:
 4. The /subspan/ of a display is the number of lines it extends
   below the origin
 
-\begin{verbatim}
+#+begin_example
              |              2
    superspan |           - X
       (5)    |          E
@@ -301,7 +301,7 @@ The framework comprises the definitions of four terms:
      (2)
              +-----------------+
                  width (17)
-\end{verbatim}
+#+end_example
 
 Most mathematical displays have in common the property that a certain
 natural choice for the ordinate of the origin, consistently made,
@@ -346,7 +346,7 @@ Having specified the display abstractly, we can now write the four
 LISP functions to handle the jobs of APP. WIDTH, SUPERSPAN, and
 SUBSPAN. Note the parallel between the definition of the APP and the
 description of the display given above.
-\begin{verbatim}
+#+begin_example
    appsum[u; x; y; d] = prog[[newd; w];
                          w := width[cadr[u]];
                          newd := app[cadr[u]; x; y; d];
@@ -356,7 +356,7 @@ description of the display given above.
    widthsum[u] = width[cadr[u]] + 1 + width[caddr[u]]
    superspansum[u] = max[superspan[cadr[u]]; superspan[caddr[u]]]
    subspansum[u] = max[subspan[cadr[u]]; subspan[caddr[u]]]
-\end{verbatim}
+#+end_example
 
 In this example, the number of subexpressions was known in
 advance. When this is not the case, as in the actual version of this
@@ -603,7 +603,7 @@ the complexity of the display itself.
     (t (stringer x))))
 
 #+end_src
-\begin{verbatim}
+#+begin_example
 General convention in the ``app...'' functions:
 Added from an attempt to fix bugs by JHD: 2 Aug 89
 The arguments are:
@@ -613,7 +613,7 @@ The arguments are:
 - - d - is the "layout" so far
 
 these functions return an updated ``layout so far'' in general
-\end{verbatim}
+#+end_example
 #+NAME: *
 #+begin_src common-lisp :noweb yes
 ;appChar(string,x,y,d) ==
