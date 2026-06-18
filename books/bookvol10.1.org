@@ -9793,30 +9793,30 @@ dynamic algebraic closure as proposed by D. Duval [cite:@Duva95].
 Example 1
 
 This example compute the genus of the projective plane curve defined by:
-\begin{verbatim}
+#+begin_example
        5    2 3      4
       X  + Y Z  + Y Z  = 0
-\end{verbatim}
+#+end_example
 over the field GF(2).
 
 First we define the field GF(2).
-\begin{verbatim}
+#+begin_example
 K:=PF 2
 R:=DMP([X,Y,Z],K)
 P:=PAFF(K,[X,Y,Z],BLQT)
-\end{verbatim}
+#+end_example
 
 We defined the polynomial of the curve.
-\begin{verbatim}
+#+begin_example
 C:R:=X**5 + Y**2*Z**3+Y*Z**4
-\end{verbatim}
+#+end_example
 
 We give it to the package PAFF(K,[X,Y,Z]) which was assigned to the
 variable $P$.
 
-\begin{verbatim}
+#+begin_example
 setCurve(C)$P
-\end{verbatim}
+#+end_example
 
 * Interpolation Formulas
 {[[ps/lozenge2.eps]]}
@@ -11108,7 +11108,7 @@ additional properties of ${\cal C}_2$.
 \rule{\textwidth}{0.1pt}
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 ++ the class of all multiplicative semigroups
 ++ Axioms
 ++ .  associative("*":($,$)->$)            ++ (x*y)*z = x*(y*z)
@@ -11122,7 +11122,7 @@ SemiGroup(): Category == SetCategory with
     add
       import RepeatedSquaring($)
       x:$ ** n:PositiveInteger == expt(x,n)
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 \rule{\textwidth}{0.1pt}
@@ -11172,7 +11172,7 @@ Sec.~\ref{chtydeel}.
 \rule{\textwidth}{0.1pt}
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 class  (Eq a) => Ord a  where
   (<), (<=), (>=), (>):: a -> a -> Bool
   max, min            :: a -> a -> a
@@ -11190,7 +11190,7 @@ class  (Eq a) => Ord a  where
   min x y | x <= y    =  x
           | y <= x    =  y
           |otherwise  =  error "min{PreludeCore}: no ordering relation"
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 \rule{\textwidth}{0.1pt}
@@ -11204,7 +11204,7 @@ class  (Eq a) => Ord a  where
 \rule{\textwidth}{0.1pt}
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 ++ Totally ordered sets
 ++ Axioms
 ++ . a<b or a=b or b<a (and only one of these!)
@@ -11225,7 +11225,7 @@ OrderedSet(): Category == SetCategory with
     min(x,y) ==
       x > y => y
       x
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 \rule{\textwidth}{0.1pt}
@@ -11409,12 +11409,12 @@ overloading which can be performed by category definitions.
 A declaration such as
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 AbelianSemiGroup(): Category == SetCategory with
     --operations
       "+": ($,$) -> $            ++ x+y computes the sum of x and y
       "*": (PositiveInteger,$) -> $
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 would translate into 
@@ -11774,7 +11774,7 @@ of {\sf Axiom}.
 \rule{\textwidth}{0.1pt}
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 ->fac n == if n < 3 then n else n * fac(n-1)
                                                            Type: Void
 ->fac 10
@@ -11814,7 +11814,7 @@ of {\sf Axiom}.
 
    (10)  theMap(*1;anonymousFunction;0;G1048;internal,502)
                                             Type: (Integer -> Integer)
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 \rule{\textwidth}{0.1pt}
@@ -11827,28 +11827,28 @@ of {\sf Axiom}.
 \rule{\textwidth}{0.1pt}
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 fact 0 = 1
 fact (n+1) = (n+1)*fact n
 Phase TYPE:
 fact :: Integral m => m -> m
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 square x = x * x
 Phase TYPE:
 square :: Num t => t -> t
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 mersenne i = 2^ i - 1
 addx x    =  \y -> y+x
 z::Integer
@@ -11862,7 +11862,7 @@ addx :: Num tv59 => tv59 -> tv59 -> tv59
 z :: Integer
 g :: Integer -> Integer
 h :: Integer
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb}
 \rule{\textwidth}{0.1pt}
@@ -11953,12 +11953,12 @@ of these connections in a computer algebra system.
 Consider the Axiom dialogue:
 %\begin{progverb} 
 \begin{footnotesize}
-\begin{verbatim}
+#+begin_example
 ->a:Integer 
                                                             Type: Void 
 
 ->a+a a is declared as being in Integer but has not been given a value.
-\end{verbatim} 
+#+end_example 
 \end{footnotesize}
 %\end{progverb}
 
@@ -12274,11 +12274,11 @@ right-modules over a ring $R$.
 An example of a category having an element as a parameter is
 %\begin{progverb} 
 \begin{footnotesize}
-\begin{verbatim} 
+#+begin_example 
 PAdicIntegerCategory(p): Category == Definition where
   ++ This is the category of stream-based representations of
   ++ the p-adic integers.
-\end{verbatim}
+#+end_example
 \end{footnotesize}
 %\end{progverb} 
 It describes all domains implementing the $p$-adic integers for a
@@ -15413,7 +15413,7 @@ number) with methods and functions for reading and updating its
 numerator and denominator or performing addition among rationals - to
 be an element of a recursively defined type (Bruce and Mitchell
 [cite:@Bruc92]) like:
-\begin{verbatim}
+#+begin_example
 Rational : Category := with (
   new: (Integer,Integer) -> Rep ;
   numerator: Rep -> Integer ;
@@ -15421,7 +15421,7 @@ Rational : Category := with (
   SetNumDenom: Rep - (Integer,Integer) -> Rep ;
   + : Rep -> Rep -> Rep ;
   * : Rep -> Rep -> Rep ; etc. )
-\end{verbatim}
+#+end_example
 where /Rep/ stands for the type under scope, here /Rational/,
 or any subtype of /Rational/.
 
@@ -15431,7 +15431,7 @@ new instance of Rational in response to a call to /new/ is placed
 within the function /new/ itself. Another notation identifies the
 representation of instances with the implementation of the
 representation, as in Pierce and Turner [cite:@Pier93]
-\begin{verbatim}
+#+begin_example
 RationalFun := (Rep: Type) -> with (
   new: (Integer,Integer) -> Rep ;
   numerator: Rep -> Integer ;
@@ -15439,7 +15439,7 @@ RationalFun := (Rep: Type) -> with (
   SetNumDenom: Rep -> (Integer,Integer) -> Rep ;
   + : Rep -> Rep -> Rep ;
   * : Rep -> Rep -> Rep, etc. )
-\end{verbatim}
+#+end_example
 
 This method gives the caller of /new/ the responsibility for
 transforming the value returned by /new/ into a new Rational
@@ -15451,11 +15451,11 @@ or =extensible records= (Cardelli [cite:@Card88a], Mitchell
 [cite:@Mitc88a], Wirth [cite:@Wirt88]) which are implementation
 dependent; however, expressiveness is sacrificed. Using recursive
 types the above expressions can have any desirable formulation as in
-\begin{verbatim}
+#+begin_example
 RationalFun := (Rep < F(Rep)) -> with (
   new: (Integer,Integer) -> Rep ;
   etc. )
-\end{verbatim}
+#+end_example
 where *F* can be the functor /RationalFun/ itself. This
 formulation is closer to our intuition about object-oriented
 programming with subtypes. It can be further enriched with other
@@ -15492,26 +15492,26 @@ either the internal state, or the hidden functions that operate on
 this state, or any other operation including the ones mentioned in the
 specification. This encapsulation is directly expressed by a (possibly
 recursively defined) existential type:
-\begin{verbatim}
+#+begin_example
 Rational:=((Rep: Type) +> with (Rep, RationalFun(Rep))) SomeRep
-\end{verbatim}
+#+end_example
 Abstracting /RationalFun/ from /Rational/ yields a higher
 order type operator that, given a specification, forms the
 =type= of objects that satisfy it.
-\begin{verbatim}
+#+begin_example
 DeclareDomain := (Fun: Type -> Category) +>
   (((Rep: Type) +> with(Rep,Fun(Rep))) SomeRep)
-\end{verbatim}
+#+end_example
 The type of /Rational/ objects can now be expressed by applying
 the /DeclareDomain/ constructor to the specification of
 /RationalFun/:
-\begin{verbatim}
+#+begin_example
 Rational := DeclareDomain(RationalFun)
-\end{verbatim}
+#+end_example
 or the shortcut:
-\begin{verbatim}
+#+begin_example
 Rational : RationalFun
-\end{verbatim}
+#+end_example
 
 In order to give proper treatment to the interaction between
 representations and subtyping, it is necessary to separate 
@@ -15526,12 +15526,12 @@ Rationals are created using the function /box/, which captures the
 semantics of dynamic objects in object oriented programming. A
 rational number with =representation= (x:Integer,y:Integer),
 =internal state= (5,2) and method implementations:
-\begin{verbatim}
+#+begin_example
 numerator := (r:{x:Integer, y:Integer}) +> r.x
 denominator := (r:{x:Integer, y:Integer}) +> r.y
-\end{verbatim}
+#+end_example
 can be created as:
-\begin{verbatim}
+#+begin_example
 r: := box ( coerceTo ( ( Rep := {x:=5, y:=2},
   (numerator := (r:{x:Integer,y:Integer}) +> r.x ;
    + := (r:{x:Integer,y:Integer}) +> (arg: Rational) +>
@@ -15539,7 +15539,7 @@ r: := box ( coerceTo ( ( Rep := {x:=5, y:=2},
                                (r.y * denominator arg)
    etc. )),
   Rational ))
-\end{verbatim}
+#+end_example
 
 The /coerce/ function here is only a syntactic construct, which
 shows the compiler how to view the introduced list; in this example it
@@ -15549,10 +15549,10 @@ for building a rational.
 The /box/ function is helpful for the implementation of the
 /new/ function and the $+$ and $*$ operators which return new
 instances of Rational:
-\begin{verbatim}
+#+begin_example
 new:=(initX:Integer, initY:Integer) +>
    box ( coerceTo ( (Rep:={x:=initX,y:=initY},...), Rational))
-\end{verbatim}
+#+end_example
 
 Unlike Axiom, in object oriented systems based on =delegation=
 (Ungar and Smith [cite:@Unga91]) or on =subtyping= the elements of an
@@ -15560,14 +15560,14 @@ object type have different internal representations and different
 internal representations of their functions. For example, a rational
 with representation type $(x:Integer)$ might be implemented as
 follows:
-\begin{verbatim}
+#+begin_example
 r2 := box ( coerceTo ( (Rep := {x:=5},
   (numerator := (r:{x:Integer}) +> r.x ;
    denominator := (r:{x:Integer}) +> 1 ;
    + := (r:{x:Integer}) +> (arg:Rational) +> new(r.x + numerator arg) ;
    etc. )),
   Rational ))
-\end{verbatim}
+#+end_example
 and the definition of /new/ changes accordingly. The functions
 /SetNumDenom, numerator, denominator/ have compatible signatures
 as in the previous implementation since we abstract
@@ -15614,7 +15614,7 @@ It is useful to have all the operations defined in the previous
 section in the class /Rational/. In such case we assume a hidden
 /common representation/ for all objects of class /Rational/,
 so we can assume that Rational is defined locally:
-\begin{verbatim}
+#+begin_example
 let Rep := {x:Integer, y:Integer}
 in RationalDomain := coerce (
   (new := (m:Integer, n:Integer) +> box {x:=m, y:=n} ;
@@ -15622,7 +15622,7 @@ in RationalDomain := coerce (
    + := (s1:Rep) +> (s2:Rep) +> box(...) ;
    etc. ),
   RationalFun Rep)
-\end{verbatim}
+#+end_example
 
 Many simplifications can be performed. Since all the objects of
 /RationalDomain/ have the same representation, unboxing and
@@ -15675,7 +15675,7 @@ Booleans, without any need for them to include operations like
 as arguments.
 
 We can transliterate this, using =categories=:
-\begin{verbatim}
+#+begin_example
 RationalMeta := (Rep:Type) +> (
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
@@ -15683,19 +15683,19 @@ RationalMeta := (Rep:Type) +> (
   / : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep ;
-\end{verbatim}
+#+end_example
 
 This specification can be viewed as a coding for the
 =algebraic structure= /Field/: we write
-\begin{verbatim}
+#+begin_example
 Field:=RationalMeta
-\end{verbatim}
+#+end_example
 
 /Rep/ refers to the implementation of the domains declared as
 instances of Field:
-\begin{verbatim}
+#+begin_example
 Rational : Field
-\end{verbatim}
+#+end_example
 
 The programming language /Haskell/ defines similar constructs
 calling them =typeclasses=. The analogous constructs for object
@@ -15902,7 +15902,7 @@ $Integer$ is again an extension of any of them.
 
 Opaque and transparent types can be combined to control domain
 extensions and ensure their safety. In the definitions
-\begin{verbatim}
+#+begin_example
 Semigroup := with (+ : Rep -> Rep -> Rep )
 Monoid := with ( Semigroup; 0:Rep )
 D1 : with (Semigroup; Rep=Integer) := add (
@@ -15912,16 +15912,16 @@ D2 : Monoid := add (
    D1 ;
    Rep := D1 ;
    0:Rep := 0$Integer )
-\end{verbatim}
+#+end_example
 the domain $D_1$ shares with $Integer$. This allows a safe extension
 of $D_1$ in the body of $D_2$, which involves a value of type
 $Integer$. Since the type $Monoid$ of $D_2$ does not specify any
 sharing, $D_2$ is sharing with neither $Integer$ nor $D_1$. This does
 not mean that $D_2$ cannot be extended:
-\begin{verbatim}
+#+begin_example
 D3 : with ( Monoid; Rep=D2 ; double: Rep -> Rep) := add ( D2;
             double(x:Rep):Rep := x+x )
-\end{verbatim}
+#+end_example
 $D_3$ shares with $D_2$; instances of $D_2$ can be passed as arguments
 to the function $double$ defined in $D_3$.
 
@@ -15954,24 +15954,24 @@ the type $t$.
 In such case it is useful to consider packages with type components as
 instances of categories. For example, a package which implements
 rationals, and its corresponding type are:
-\begin{verbatim}
+#+begin_example
 RationalPack := (
   Rep := {x:Integer, y:Integer} ;
   + : Rep -> Rep -> Rep := a +> b +>
     {x := a.x*b.y + a.y*b.x, y:=a.x*b.x} ;
   ... )
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 FieldPack := with (
   Rep: Type ;
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
   * : Rep -> Rep -> Rep ;
   ... )
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 RationalCatPack := with (FieldPack; Rep = {x:Integer, y:Integer})
-\end{verbatim}
+#+end_example
 
 Categories which correspond to packages represent a type similar to an
 existential type, namely, a =dependent sum type=
@@ -15992,7 +15992,7 @@ Packages can be nested inside other packages. =Nested packages=
 are accessed by accessing their parent package recursively. The
 components of a package can depend on the type components of other
 nested packages as in:
-\begin{verbatim}
+#+begin_example
 PolynomialCat := with (
   R:Ring;
   E:OrderedAbelianMonoid;
@@ -16000,7 +16000,7 @@ PolynomialCat := with (
   leadingCoefficient: Rep -> Rep$R;
   degree: Rep -> Rep$E;
   ... )
-\end{verbatim}
+#+end_example
 
 In this way, /extensions/ on existing domains are easily
 implemented, by flattening domains to packages, and exposing their
@@ -16052,12 +16052,12 @@ One could argue that packages with multiple type components correspond
 to multiple domain definitions. This is in general impossible when the
 distinction in the interface (category) for the two domains is not
 clear:
-\begin{verbatim}
+#+begin_example
 PackMultCat := with (
   R: Type ;
   S: Type ;
   x: R -> S -> R )
-\end{verbatim}
+#+end_example
 In order to implement the above package as a combination of two domain
 categories, each category needs to reference the representation of the
 domains of the other. This involves parameterization, which we discuss
@@ -16143,7 +16143,7 @@ $\Sigma$-types and the conclusion that packages are more general than
 domains, we can assume that $\Sigma$-types and packages can be
 parameterized by other packages resulting in new $\Sigma$-types and
 packages respectively as in:
-\begin{verbatim}
+#+begin_example
 DictionaryCat (Keys: with
                       (T:Type;
                        eq:T->T->Boolean;
@@ -16155,7 +16155,7 @@ DictionaryCat (Keys: with
     at: T -> T$Keys -> T$Values ;
     update: T -> T$Keys -> T$Values -> T ;
     ... )
-\end{verbatim}
+#+end_example
 
 The parameterized category /DictionaryCat/ provides the interface
 of parameterized packages which receive two arguments: a package with
@@ -16174,7 +16174,7 @@ over a Ring, etc. [cite:@Dave90] [cite:@Dave91] which are actually
 simple $\Sigma$-types. Given the category of Polynomials as defined
 previously we can construct a parameterized package which returns
 implementations of polynomial types:
-\begin{verbatim}
+#+begin_example
 PolynomialRing(R:Ring,E:OrderedAbelianMonoid): PolynomialCat
   := add (
     R := R;
@@ -16184,7 +16184,7 @@ PolynomialRing(R:Ring,E:OrderedAbelianMonoid): PolynomialCat
     degree := e +> ... ;
     ...
   )
-\end{verbatim}
+#+end_example
 
 \begin{figure}[t]
 \[\begin{array}{|ll|}
@@ -16294,19 +16294,19 @@ Sharing among type components is of special importance in the case of
 functors and product types. The rule $\Sigma$-transparent for sharing
 is powerful enough to allow the definition of functors which combine
 or compose domains and packages:
-\begin{verbatim}
+#+begin_example
 RingFun (P1:Monoid) (P2: with (Monoid; Rep=P1.Rep)):Category :=
   with ( Monoid ;
          * : Rep - Rep -> Rep ;
          1 : Rep )
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
 BuildRing: RingFun := P1 +> P2 +>
   add ( P1;
         * := (+)$P2 ;
         1 := 0$P2 )
-\end{verbatim}
+#+end_example
 In this example, two monoids with the same representation are combined
 in order to form a ring. Since the category /Monoid/ already
 exists in the system, the only additional action is to add a sharing
@@ -16315,9 +16315,9 @@ constraint to it for $P2$.
 Without sharing the above construction is more complicated and less
 natural for modeling algebraic concepts. It would require the
 parameterization of algebraic categories with their representation:
-\begin{verbatim}
+#+begin_example
 RingFun(T:Type)(M1:Monoid(T))(M2:Monoid(T)):Category := ...
-\end{verbatim}
+#+end_example
 
 Such constructs demand the implicit or explicit creation of new
 hierarchies for parameterized monoid categories. The former increases
@@ -16360,11 +16360,11 @@ realistic implementation would demand the type of the keys and values
 to be accessible so as to perform computations other than the ones
 specified in this category, like transforming dictionaries to other
 structures. The category
-\begin{verbatim}
+#+begin_example
 DictionaryCat(Keys:=String; Values:=Integer)
-\end{verbatim}
+#+end_example
 could be defined as
-\begin{verbatim}
+#+begin_example
 DictionaryCat := with (
   Keys: with(Type;...);
   Values: Type;
@@ -16373,19 +16373,19 @@ DictionaryCat := with (
   ...
   );
   with (DictionaryCat; Keys=String; Values=Integer)
-\end{verbatim}
+#+end_example
 allowing dictionaries to expose the implementation of Keys and Values
 and propagate evntual sharing constraints.
 
 However, in some cases, instantiation of dependent products can serve
 modeling purposes better than dependent sums. For instance, a
 /Ring/ is a /LeftModule/ over itself:
-\begin{verbatim}
+#+begin_example
 LeftModules(R: with(AbelianGroup; SemiGroup)) :=
   (AbelianGroup;
    * : (Rep,R) -> Rep )
 Ring := with (LeftModules(%):...)
-\end{verbatim}
+#+end_example
 where the construct \% refers to the package which is an instance of
 the category we define (in this case /Ring/). If $R$ were a nested
 package inside the definition of LeftModules then it should be defined
@@ -16503,9 +16503,9 @@ If $S\sqsubseteq T:C$, then an instance of $S$ may safely be used in
 any operation specified in $C$ where an instance of $T$ is expected.
 
 For example the function
-\begin{verbatim}
+#+begin_example
 foo(x:Rational) := (x+1) * x**2
-\end{verbatim}
+#+end_example
 can be safely applied to the integer argument 4 because it is possible
 to view any integer as a rational in the above operations. More
 important, since integers form a =subring= of rationals, and the
@@ -16637,18 +16637,18 @@ By means of [+-sub] and [$\mu$-sub] our type system can assure that
 
 For continuing our analysis we introduce the category $Ring$ and
 repeat the definition of the category $Field$:
-\begin{verbatim}
+#+begin_example
 Ring := (Rep:Type) +> with (
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
   * : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep )
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
 Field := (Rep: Type) +> Ring(Rep) with (
   / : Rep -> Rep -> Rep )
-\end{verbatim}
+#+end_example
 and $Field\sqsubseteq Ring$ given the subtyping rules for existential
 types above. This means that {\sl every instance of the category Field
 can be viewed as an instance of Ring} or {\sl every instance of an
@@ -16659,7 +16659,7 @@ be easily extended to rules for their instances.
 Given the definition of the type /RationalFun/ from above we can
 introduce in a similar way the type of integers which form a Ring. Our
 notation allows us to abstract the implementations away:
-\begin{verbatim}
+#+begin_example
 IntegerFun := (Rep:Type) +> (
   new: Integer -> Rep ;
   numerator: Rep -> Integer ;
@@ -16670,7 +16670,7 @@ IntegerFun := (Rep:Type) +> (
   * : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep ; )
-\end{verbatim}
+#+end_example
 It is not the case that $IntegerFun\sqsubseteq RationalFun$ since the
 specification of integers does not include the record field $/$,
 leaving $IntegerFun$ with one field less than $RationalFun$.
@@ -16699,41 +16699,41 @@ relationship, but in an algebraic relationship based in terms of
 =subrings=, =subfields=, etc. We introduce type classes in
 order to provide the facility of viewing Integer as a =subring= of
 Rational:
-\begin{verbatim}
+#+begin_example
 RationalRing := (Rep:Type) +> with (
   + : Rep -> Rep -> Rep ;
   - : Rep -> Rep ;
   * : Rep -> Rep -> Rep ;
   0 : Rep ;
   1 : Rep )
-\end{verbatim}
+#+end_example
 
 This declares that any eventual subtype of rational which happens to
 be an instance of /Ring/ implements the operations declared in the
 type class /RationalRing/. Since /Integer/ forms a subring of
 /Rational/, from the definition
-\begin{verbatim}
+#+begin_example
 IntegerRing := (Rep:Type) +> RationalRing(Rep)
-\end{verbatim}
+#+end_example
 we may conclude:
 \[IntegerRing\sqsubseteq RationalRing\]
 The declaration of $Integer$ as instance of the type class
 $IntegerRing$ is straightforward:
-\begin{verbatim}
+#+begin_example
 Integer :: IntegerRing
-\end{verbatim}
+#+end_example
 while for Rationals we need one additional type class:
-\begin{verbatim}
+#+begin_example
 RationalField := (Rep:Type) +> RationalRing(Rep) with (
   / : Rep -> Rep -> Rep )
 
 Rational :: RationalField
-\end{verbatim}
+#+end_example
 
 Given the function definition
-\begin{verbatim}
+#+begin_example
 dblSqrd(x::Rational) := (x+x)*(x+x)
-\end{verbatim}
+#+end_example
 by means of type classes the system infers the most general signature
 for $dblSqrd$:
 \[\Gamma,\forall a::RationalRing \vdash dblSqrd :
@@ -16855,7 +16855,7 @@ It is worth noting that none of the forgoing would have been possible
 if the type variable $Rep$ was not introduced in the definition of
 domains and categories. Suppose that Rational and Integer had the
 definitions
-\begin{verbatim}
+#+begin_example
 Rational := ( ...
   + : Rational -> Rational -> Rational
   etc. )
@@ -16863,7 +16863,7 @@ Rational := ( ...
 Integer := ( ...
   + : Integer -> Integer -> Integer
   etc. )
-\end{verbatim}
+#+end_example
 
 This would influence the definitions of RationalFun and IntegerFun
 respectively, and finally the definitions of RationalRing and
@@ -17021,10 +17021,10 @@ argument of a conditional category (and thus its body) can increase in
 the presence of recursive definitions in a way similar to that
 encountered at the $F_{\le}$ type system which has been shown by
 Pierce [cite:@Pier91a] to be undecidable. For example, given the definitions:
-\begin{verbatim}
+#+begin_example
 C():Category == with (if % has Ring then Ring)
 t: C() == add ...
-\end{verbatim}
+#+end_example
 it is not clear whether $t$ is a $Ring$, and the system may loop. The
 above situation is handled in /Gauss/ (Monagan [cite:@Mona93]) purely
 syntactially by viewing \% as the category in scope and checking if
@@ -17252,10 +17252,10 @@ $\mathbb{Z}\rightarrow\mathbb{Z}[X]$:
 In Axiom. the type =UnivariatePolynomial(X,Integer)= typically
 represents $\mathbb{Z}[X]$. This is constructed by the type
 constructor,
-\begin{verbatim}
+#+begin_example
    UnivariatePolynomial:(S:Symbol,R:Ring) ->
       PolynomialCategory(R,NonNegativeInteger,Symbol)
-\end{verbatim}
+#+end_example
 *UnivariatePolynomial* exports a function
 \[coerce : R \rightarrow \%\]
 which is the natural monomorphism including the ring =R= in the
@@ -17321,14 +17321,14 @@ Axiom cannot coerce from =IntegerMod(25)= to =IntegerMod(5)=.
 
 The structural coercions are ``lifts'' of other coercions. In the case
 of =Lists=, one may perform a structural coercion as follows:
-\begin{verbatim}
+#+begin_example
    coerce(x:List(A)):List(B) == map(coerce,x)@List(B)
-\end{verbatim}
-\begin{verbatim}
+#+end_example
+#+begin_example
    map(f:List(A) -> List(B),x:List(A)):List(B) ==
      nullp(x) => nil()$List(B)
      cons(f(car(x)),map(f,cdr(x)))
-\end{verbatim}
+#+end_example
 
 In the case of =Polynomials=, a similar =map= function exists
 which uses $+$ instead of =cons=
@@ -17391,7 +17391,7 @@ engineers crying. This person was clearly a magician.
 
 So here is your algorithm for moving London bridge, and hence any
 future bridge.
-\begin{verbatim}
+#+begin_example
   If the original bridge has no bricks left then finished.
   Else,
     take a brick from the top of the original bridge.
@@ -17405,7 +17405,7 @@ future bridge.
     Endif.
   Endif.
   Repeat.
-\end{verbatim}
+#+end_example
 
 Indeed, you realize that this method will work for other brick-based
 constructions, or indeed anything that is ``built''. (Obviously, there
@@ -22753,7 +22753,7 @@ similarly organized. The reason for choosing DK as an example has been
 that it is short enough to be reproduced on a single page but still
 contains all the relevant details.
 
-\begin{verbatim}
+#+begin_example
 )abbreviate domain DK DifferentialKernel
 DifferenetialKernel: Cat == Tar where
   I ==> Integer
@@ -22783,7 +22783,7 @@ DifferenetialKernel: Cat == Tar where
         -- creates DK from LDFV and record VAR
     VarDK: $ -> List VAR
         -- returns record VAR of argument
-\end{verbatim}
+#+end_example
 
 After the various modules which build up the full package SPDE have
 been established~ their mutual relations have to be investigated. All
@@ -22959,7 +22959,7 @@ Our starting code for Axiom's implementation (slightly modified from
 that distributed with Axiom release 1, in particular to split out the
 auxiliary function =rabinProvesComposite=, but using the same
 algorithm) is 
-\begin{verbatim}
+#+begin_example
                          Original Code
 
 [ 1] prime? n ==
@@ -22991,7 +22991,7 @@ algorithm) is
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
 where we have numbered the lines for ease of refernce. *I* is the
 datatype of $n$, and can be thought of as being the integers. 
@@ -23095,7 +23095,7 @@ algorithm. This is certainly true -- how programmable, and how widely
 applicable, is it? A global (to =prime?= and 
 =rabinProvesComposite=) variable =rootsMinus1= is added, whose
 type is a =Set= of =I=. The code now reads:
-\begin{verbatim}
+#+begin_example
                          "Roots of -1" Modifications
 
 [ 1] prime? n ==
@@ -23131,7 +23131,7 @@ type is a =Set= of =I=. The code now reads:
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
 These changes certainly stop the algorithm from returning ``N is
 probably prime'' on the Jaeschke number, and do not otherwise alter
@@ -23173,7 +23173,7 @@ We need a global (to =prime?= and =rabinProvesComposite=)
 variable =count2Order= whose type is a =Vector= of
 =NonNegativeInteger=s. This variable is used to count the number
 of elements of each 2-order.
-\begin{verbatim}
+#+begin_example
                          "Maximal 2-part" Modifications
 
 [ 1] prime? n ==
@@ -23216,7 +23216,7 @@ of elements of each 2-order.
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 We currently collect more information than we use. Again, this 
 modification to the Rabin algorithm proves that the Jaeschke number 
 is not prime.
@@ -23358,7 +23358,7 @@ the above theorem. There seems no reason not to test both the
 exceptional conditions in the Damgard-Landrock Theorem -- such numbers
 are always composite, except for trivial cases ruled out by lines
 before [ 5]. 
-\begin{verbatim}
+#+begin_example
                          "Damgard-Landrock" Modifications
 
 [ 1] prime? n ==
@@ -23405,7 +23405,7 @@ before [ 5].
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
 ** Conclusions
 
@@ -23433,7 +23433,7 @@ statement by Lenstra [cite:@Lens81] (see also Koblitz [cite:@Kobl87])
 that, if suitable assumptions similar to the generalised Riemann
 hypothesis are made, the 70 $\text{log}^2~N$ values suffice, which
 would be a $O(\text{log}^5~N)$ primality test.
-\begin{verbatim}
+#+begin_example
            The Pomerance et al. Modifications
 
 [ 0a] PomeranceList:=[25326001::I,161304001::I,960946321::I,1157839381::I,
@@ -23492,9 +23492,9 @@ would be a $O(\text{log}^5~N)$ primality test.
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
            O(Log^4 N) Modifications
 
 [ 0a] PomeranceList:=[25326001::I,161304001::I,960946321::I,1157839381::I,
@@ -23555,7 +23555,7 @@ would be a $O(\text{log}^5~N)$ primality test.
 [27]               leave
 [28]       not (t = nm1) => return true
 [29]    false
-\end{verbatim}
+#+end_example
 
 * Finite Fields in Axiom (Grabmeier/Scheerhorn)
 
@@ -23730,9 +23730,9 @@ normal over $F$, if the roots of $f$ in $GF(q^n)$ are linearly independent.
 
 Each domain in Axiom which represents a finite field is an object
 in the category
-\begin{verbatim}
+#+begin_example
    FFIELDC FiniteFieldCategory
-\end{verbatim}
+#+end_example
 
 This category defines functions which are typical for finite sets as
 =order= or =random= and those which are typical for finite
@@ -23743,9 +23743,9 @@ multiplicative group structure as =primitiveElement=,
 see section \ref{section4.3}
 
 Functions which need to know the /groundfield/ $F$ are defined in
-\begin{verbatim}
+#+begin_example
    FAXF(F)  FiniteAlgebraicExtensionField(F)
-\end{verbatim}
+#+end_example
 These are functions considering the extension field as an algebra of
 finite rank over $F$, 
 see section \ref{section4.1}, and functions concerning the 
@@ -23908,14 +23908,14 @@ Note that this implementation requires factorizing the order $(q^n-1)$ of
 the multiplicative group. Other functions as =discreteLog= also need
 these factors. Since factoring $(q^n-1)$ is time expensive, 
 the factorization of $(q^n-1)$ is stored in a global variable
-\begin{verbatim}
+#+begin_example
    facOfGroupSize: List Record(factor:Integer,exponent:Integer)
-\end{verbatim}
+#+end_example
 in the respective domain. To make this information available to the category
 for default implementations, we export the function
-\begin{verbatim}
+#+begin_example
    factorsOfCyclicGroupSize()
-\end{verbatim}
+#+end_example
 which returns the factorization. $(q^n-1)$ is factored only the first time
 this function is called.
 
@@ -23936,15 +23936,15 @@ see [cite:@Odly85] or [cite:@Pohl78].
 
 To compute discrete logarithms in cyclic groups of prime order $p$ we
 use Shank's algorithm implemented by
-\begin{verbatim}
+#+begin_example
    shanksDiscLogAlgorithm:(M,M,NonNegativeInteger) ->
                            Union(NonNegativeInteger,"failed")
-\end{verbatim}
+#+end_example
 in the package =DiscreteLogarithmPackage(M)= and =M= has to be
 of type =Join(Monoid,Finite)=, i.e. a finite multiplicative Monoid.
-\begin{verbatim}
+#+begin_example
    shanksDiscLogAlgorithm(b,a,p)
-\end{verbatim}
+#+end_example
 computes $e$ with $b^e=a$ assuming that $b$ and $a$ are elements of a
 finite cyclic group of order $p$. If no such $e$ exists, it returns
 ="failed"=.
@@ -23963,9 +23963,9 @@ is for a fixed prime factor $p$ of $(q^n-1)$ always the same. To compute
 logarithms to the base given by =primitiveElement()\$E= efficiently,
 the tables needed by Shanks algorithm are precomputed and stored in the
 global variable
-\begin{verbatim}
+#+begin_example
    discLogTable : Table(PI,Table(PI,NNI))
-\end{verbatim}
+#+end_example
 in =E=. It is initialized at the first call of the function
 =discreteLog=. Here =PI= abbreviates =PositiveInteger=
 and =NNI= abbreviates =NonNegativeInteger=.
@@ -23973,22 +23973,22 @@ and =NNI= abbreviates =NonNegativeInteger=.
 To implement the discrete logarithm function on category level in 
 =FiniteFieldCategory=, we have to make this data available to the
 category. This is done by exporting the function
-\begin{verbatim}
+#+begin_example
    tableForDiscreteLogarithm: Integer -> Table(PI,NNI)
-\end{verbatim}
+#+end_example
 Called with a prime divisor $p$ of $q^n-1$ as argument, it returns a
 table of size roughly $\tilde{p}\approx\sqrt{p}$, whose $k$-th entry for
 $0 \le k < \tilde{p}$ is of the form
-\begin{verbatim}
+#+begin_example
    [lookup(a**k),k) : Record(key:PI,entry:PI)
-\end{verbatim}
+#+end_example
 where $a=\alpha^{(q^n-1)/p}$
 
 We implemented two functions for discrete logarithms:
-\begin{verbatim}
+#+begin_example
    discreteLog: E     -> NonNegativeInteger
    discreteLog: (E,E) -> Unioin(NonNegativeInteger,"failed")
-\end{verbatim}
+#+end_example
 The first one computes discrete logarithms to the base
 =primitiveElement()\$E= using the precomputed tables. 
 =discreteLog(b,a)= computes $log_b(a)$ if $a$ belongs
@@ -24000,10 +24000,10 @@ table is performed using the second function.
 \label{section4.5}
 
 The functions
-\begin{verbatim}
+#+begin_example
    primitiveElement()$E
    normalElement()$E
-\end{verbatim}
+#+end_example
 yields a primitive element of $E$ and a generator of a normal basis of
 $E$ over $F$, respectively. The first having maximal multiplicative order
 $(q^n-1)$, the second maximal linear associated order $(X^n-1)$.
@@ -24024,16 +24024,16 @@ Extended Riemann Hypothesis, see [cite:@Shou92].
 
 To aviod searching a second time for the same element, we store the results
 after the first computation of such an element using the helper functions
-\begin{verbatim}
+#+begin_example
    createPrimitiveElement()$E
    createNormalElement()$E
-\end{verbatim}
+#+end_example
 
 The functions
-\begin{verbatim}
+#+begin_example
   primitive?
   normal?
-\end{verbatim}
+#+end_example
 check whether the multiplicative resp. linear associated order of an
 element is maximal.
 
@@ -24053,13 +24053,13 @@ $\sum_{i=0}^{n-1}{\alpha^{q^i}X^{n-1-i}}$ are relatively prime in $E[X]$
 
 The number of elements of $E$ can be found out by calling =size()\$E=.
 The elements of =E= are enumerated by 
-\begin{verbatim}
+#+begin_example
    index: PositiveInteger -> E
-\end{verbatim}
+#+end_example
 with inverse
-\begin{verbatim}
+#+begin_example
    lookup: E -> PositiveInteger
-\end{verbatim}
+#+end_example
 
 These functions implement a bijection between =E= and the set of 
 positive integers $\{1,2,...,q^n\}$. They allow iterating over all
@@ -24090,10 +24090,10 @@ the sections according to the special representations.
 
 Let $p$ be a prime number. Since $GF(p)\simeq\mathbb{Z}/p\mathbb{Z}$
 in Axiom the internal representation of elements of the domains
-\begin{verbatim}
+#+begin_example
    IPF(p)   InnerPrimeField(p)
    PF(p)    PrimeField(p)
-\end{verbatim}
+#+end_example
 is =IntegerMod(p)=, from which most functions are inherited. The
 only difference between =IPF= and =PF= is, that in =PF= it 
 is checked whether the parameter $p$ is prime while this is not checked
@@ -24105,11 +24105,11 @@ prime field as an extension of degree 1 of itself. For recursions
 depending e.g. on the extension degree and simply for completeness,
 we have decided to make =PrimeField= an =FiniteAlgebraicExtensionField=
 of itself. The trivial implementations include
-\begin{verbatim}
+#+begin_example
    normalElement()    == 1
    inGroundField?(a)  == true
    generator()        == 1
-\end{verbatim}
+#+end_example
 
 Since the value returned by =generator()= should be a root of the
 defining polynomial of the field extension, we had to code
@@ -24175,12 +24175,12 @@ $\beta\in E$ uniquely in the form:
 \[\beta=\sum_{i=0}^{n-1}{b_i\alpha^i}, b_i\in F\]
 
 This kind of representation is used in the domains
-\begin{verbatim}
+#+begin_example
    FFP   FiniteFieldExtensionByPolynomial
    FFX   FiniteFieldExtension
    IFF   InnerFiniteField
    FF    FiniteField
-\end{verbatim}
+#+end_example
 
 The only difference between these domains are the different natures of
 their parameterization, 
@@ -24192,9 +24192,9 @@ defined by $f$.
 
 For the internal representation of elements of $E$ we use polynomials
 modulo $f$. This structure is in Axiom implemented by the domain
-\begin{verbatim}
+#+begin_example
    SAE(F,SUP(F),f)  SimpleAlgebraicExtension(F,SUP(F),f)
-\end{verbatim}
+#+end_example
 Here =SUP(F)= abbreviates =SparseUnivariatePolynomial(F)= a
 domain representing polynomials over $F$. Most arithmetic operations are
 inherited from this domain. There are only a few functions which have a
@@ -24203,11 +24203,11 @@ special implementation.
 The imbedding of =F= in =E= is obvious:
 $\sum_{i=0}^{n-1}{a_i\alpha^i}$ is in $F$ if and only if
 $a_1,a_2,...,a_{n-1}=0$. Using this, the functions
-\begin{verbatim}
+#+begin_example
    retract:       E -> F
    coerce:        F -> E
    inGroundfield? E -> Boolean
-\end{verbatim}
+#+end_example
 are implemented in the obvious way.
 
 To check whether $\beta$ is normal in $E$ over $F$ we proceed as follows.
@@ -24235,11 +24235,11 @@ its discrete logarithm $e$ to $\alpha$, i.e. the element
 $0 \le e \le q^n-1$ with $\alpha^e=\beta$.
 
 In the three domains
-\begin{verbatim}
+#+begin_example
    FFCGP   FiniteFieldCyclicGroupExtensionByPolynomial
    FFCGX   FiniteFieldCyclicGroupExtension
    FFCG    FiniteFieldCyclicGroup
-\end{verbatim}
+#+end_example
 the nonzero field elements are represented by powers of a fixed primitive
 element. Let =F= be a finite field domain representing $F$, $E$ the
 extension of $F$ defined by the monic, irreducible polynomial $f(x) \in F[X]$
@@ -24258,10 +24258,10 @@ This table is of size about $q^n/2$. For efficiency reasons we also want
 to use =SmallInteger= and not =Integer= as the internal 
 representation of the field elements. Therefore we restricted ourself
 to a field size of maximal $2^{20}$ elements:
-\begin{verbatim}
+#+begin_example
    if sizeFF > 2**20 then
      error "field too large for cyclic group representation"
-\end{verbatim}
+#+end_example
 
 A nonzero element $\beta\in E$ is represented by the unique
 $n \in \{0,1,...,q^n-2\}$ of type =SmallInteger= with
@@ -24305,9 +24305,9 @@ defined by
 
 In the domain =E= the Zech logarithm array is stored in the global
 variable
-\begin{verbatim}
+#+begin_example
    zechlog : PrimitiveArray(SmallInteger)
-\end{verbatim}
+#+end_example
 of the datatype of length $(q^n+1)/2$. Its $k$-th entry
 corresponds to $Z(k)$. $Z(k)$ is undefined, if $\alpha^k+1=0$. 
 This exception appears in characteristic 2 if $k=0$ and in odd
@@ -24365,12 +24365,12 @@ are computed directly using (1) on page 6.
 But there remain some operations, which are quite time expensive.
 That are those operations, which change the representation of the
 field elements:
-\begin{verbatim}
+#+begin_example
    coerce:      F -> E
    retract:     E -> F
    represents:  Vector F -> E
    coordinates: E -> Vector F
-\end{verbatim}
+#+end_example
 
 Let $\beta=N_{E/F}(\alpha)$ be the norm of $\alpha$ over $F$. 
 Since $\beta$ is primitive in $F$, every nonzero element $\gamma$
@@ -24411,11 +24411,11 @@ linearly independent over $F$. Then $\alpha$ is normal in $E$
 over $F$ and every element of $E$ can be expressed in the form
 \[\beta=\sum_{i=0}^{n-1}{b_i\alpha^{q^i}}\] 
 with $b_i\in F$. This kind of representation is used in the domains
-\begin{verbatim}
+#+begin_example
    FFNBP   FiniteFieldNormalBasisExtensionByPolynomial
    FFNBX   FiniteFieldNormalBasisExtension
    FFNB    FiniteFieldNormalBasis
-\end{verbatim}
+#+end_example
 
 Let =F= be a finite field domain representing $F$ and
 =E:=FFNBP(F,f)= the normal basis extension of $F$ by $f$.
@@ -24439,9 +24439,9 @@ The lengthy code for the arithmetic is shared by the three different
 versions of normal basis representations and the package
 =FiniteFieldFunctions=. Hence, we decide to have a 
 parameterized package
-\begin{verbatim}
+#+begin_example
    INBFF   InnerNormalBasisFieldFunctions(F)
-\end{verbatim}
+#+end_example
 where most of the arithmetic in =E= is performed.
 
 *** Operations of additive nature
@@ -24528,9 +24528,9 @@ a base for given $(q,n)$ is unsolved.
 
 The algorithm described by A. Wassermann in [cite:@Wass89] is implemented
 in the function
-\begin{verbatim}
+#+begin_example
    createLowComplexityNormalBasis(n)
-\end{verbatim}
+#+end_example
 in the package =FiniteFieldFunctions(F)=. If for the given
 $(q,n)$ a direct construction of a low complexity normal basis
 is possible, the algorithm computes the multiplication matrix of
@@ -24538,9 +24538,9 @@ this base and the function returns this matrix in form of a
 variable of type 
 =Vector List Record(value:F,index:SmallInteger)= (see below).
 If such a construction is not possible for $(q,n)$ the function
-\begin{verbatim}
+#+begin_example
    createNormalPoly(n)$FiniteFieldPolynomialPackage(F)
-\end{verbatim}
+#+end_example
 is called to produce a normal polynomial of degree $n$. To have the
 nice embedding $d\mapsto(d,d,...,d)$ of =F= in =E=,
 the computed normal basis has in both cases the property that its
@@ -24555,9 +24555,9 @@ would hardly speed up the multiplication time.
 
 This is why we store $M_\alpha$ in the domain $E$ in a global
 variable of the form
-\begin{verbatim}
+#+begin_example
    multTable : Vector List Record(value:F,index:SmallInteger)
-\end{verbatim}
+#+end_example
 
 The entry $m_{i,j}$ of $M_\alpha$ corresponds to the element of
 =multTable.i= with =index= $j-1$ and =value= $m_{i,j}$.
@@ -24572,7 +24572,7 @@ it is initialized by an automatic call of the function
 =FinitFieldFunctions(F)=.
 
 The user has access to the multiplication matrix of the field by
-\begin{verbatim}
+#+begin_example
    getMultiplicationTable: () ->
         Vector List Record(value:F,index:SmallInteger)
      ++ getMultiplicationTable() returns the multiplication
@@ -24580,12 +24580,12 @@ The user has access to the multiplication matrix of the field by
    getMultiplicationMatrix: () -> Matrix F
      ++ getMultiplicationMatrix() returns the multiplication
      ++ table in the form of a matrix
-\end{verbatim}
+#+end_example
 
 The complexity of the normal basis can be found out by calling
-\begin{verbatim}
+#+begin_example
    sizeMultiplication:() -> NonNegativeInteger
-\end{verbatim}
+#+end_example
 
 *** Norm and multiplicative inverse
 \label{section8.3}
@@ -24599,7 +24599,7 @@ It computes
 \[expPot(\beta,k,d)=\prod_{i=0}^{k-1}{\beta^{q^{id}}}\]
 for $\beta\in E$ and integers $k,d>0$ is computed by the (slightly
 simplified) algorithm
-\begin{verbatim}
+#+begin_example
    expPot(beta,k,d) ==
      e:Integer:=0
      gamma:E:=1
@@ -24607,7 +24607,7 @@ simplified) algorithm
        if bit?(k,i) then gamma:=gamma * beta**(q**e); e:=e+d
        beta:=beta * beta**(q**d); d:=2*d
      return(gamma)
-\end{verbatim}
+#+end_example
 where =length(k)= denotes the number of bits of $k$, i.e.
 $\ceiling{log_2(k+1)}$, and =bit?(k,i)= tests whether the
 $i$-th bit of $k$, binary represented, is set or not. The average
@@ -24659,10 +24659,10 @@ The computation of such
 $k\sim log_q log_q(e)-log_q log_q log_q(e)$ is performed using
 exclusively =SmallInteger= arithmetic to minimize the decision
 time. It is supported by the two global variables
-\begin{verbatim}
+#+begin_example
    logq:List SmallInteger
    expTable:List List SmallInteger
-\end{verbatim}
+#+end_example
 which contain some precomputed auxiliary values.
 
 Then the actual number of multiplications is compared with the
@@ -24688,9 +24688,9 @@ last situation we also change the representation.
 These data type conversions - called /coercions/ in Axiom, and
 hence are under the control of the interpreter - are realized by the
 package 
-\begin{verbatim}
+#+begin_example
    FFHOM FiniteFieldHomomorphisms 
-\end{verbatim}
+#+end_example
 
 It is parameterized by three parameters: a source field $K_1$
 represented by =K1=, a target field $K_2$ represented by =K2=
@@ -24703,15 +24703,15 @@ However, this package cannot be used for the general situation as this
 settings suggests. We had to restrict ourselves to the case where both
 =K1= and =K2= are realized as simple extensions of =F=,
 i.e. of type 
-\begin{verbatim} 
+#+begin_example 
    FiniteAlgebraicExtensionField(F)
-\end{verbatim}
+#+end_example
 
 To implement the general case also, it would be necessary to have a
 function 
-\begin{verbatim} 
+#+begin_example 
    groundfield: () -> FiniteFieldCategory
-\end{verbatim}
+#+end_example
 
 Its result could be used for package calling functions of that
 subfield. Using such a function it would be possible to build a
@@ -24723,17 +24723,17 @@ will be available.
 The source field and the destination field may appear in arbitrary
 order in the parametrization of =FFHOM=, since =FFHOM=
 supports coercions in both directions: 
-\begin{verbatim} 
+#+begin_example 
    coerce: K1 -> K2 
    coerce: K2 -> K1 
-\end{verbatim}
+#+end_example
 
 Restricted to $K_1 \cap K_2$ these two mappings are inverses of each
 other, i.e. for $\alpha \in K_1 \cap K_2$ and $a$ being a
 representation of $\alpha$ in =K1= or in =K2= holds:
-\begin{verbatim} 
+#+begin_example 
    coerce(coerce(a)$FFHOM(K1,F,K2))$FFHOM(K1,F,K2)=a
-\end{verbatim}
+#+end_example
 
 To be independent of the ordering of the arguments we have ordered the
 fields inside the package by comparing the defining polynomials of the
@@ -24744,9 +24744,9 @@ To explain the details of the implementation let $\beta\in K_1$ and
 distinguish between some cases:
 
 First check whether $\beta$ is in $F$. In this case 
-\begin{verbatim}
+#+begin_example
    retract(b)@F$K1::K2 
-\end{verbatim} 
+#+end_example 
 is used.
 
 The next case is that =K1= and =K2= are constructed using the
@@ -24754,17 +24754,17 @@ same defining polynomial $f$. If furthermore =K1= and =K2= are
 represented in the same say, the elements of =K1= and =K2= are
 represented completely identical. Therefore the coercion may be
 performed by 
-\begin{verbatim} 
+#+begin_example 
    b pretend K2 
-\end{verbatim}
+#+end_example
 
 Now assume that one of =K1= and =K2= is represented using
 cyclic groups and the other one represented by a polynomial basis.
 
 If =K1= is cyclically represented, we coerce by 
-\begin{verbatim}
+#+begin_example
    represents(coordinates(b)$K1)$K2 
-\end{verbatim} 
+#+end_example 
 and vice versa, if =K2= is cyclically represented.
 
 All remaining cases are treated in the same way which we explain
@@ -24772,17 +24772,17 @@ now. Denote by =degree1= and =degree2= the extension degrees
 of $K_1$ and $K_2$ over $F$, respectively. The first time a coercion
 from =K1= into =K2=, or vice versa, is called, two conversion
 matrices stored in global variables 
-\begin{verbatim} 
+#+begin_example 
    conMat1to2:Matrix F 
      -- conversion Matrix for the conversion direction K1 -> K2
    conMat2to1:Matrix F 
      -- conversion Matrix for the conversion direction K2 -> K1 
-\end{verbatim} 
+#+end_example 
 in the package are initialized. Once these
 matrices are initialized, the coercion is performed by
-\begin{verbatim} 
+#+begin_example 
    represents(conMat1to2 * coordinates(b)$K1)$K2
-\end{verbatim}
+#+end_example
 
 Notice, that we do not have to care about the coercion between cyclic
 representation and polynomial representation as above, since this step
@@ -24839,9 +24839,9 @@ $n_2 \ge n_1$.
 We first compute a root 
 $\alpha_1=\sum_{i=0}^{n_2-1}{a_i\alpha_2^i}$ of =defpol1= in a
 polynomial basis representation =FFP(F,defpol2)= of $K_2$ using
-\begin{verbatim}
+#+begin_example
    rootOfIrreduciblePoly(defpol1)$FFPOLY2(FFP(F,defpol2),F)
-\end{verbatim}
+#+end_example
 
 By powering this root we compute the Matrix 
 $R=(r_{i,j}) \in F^{n_2\times n_1}$ defined by
@@ -24873,19 +24873,19 @@ matrix $M_1\in F^{n_1\times n_1}$ and compute
 \[R:=RM_1, S:=M_1^{-1}S\].
 
 After this computation $R$ and $S$ are the desired conversion matrices
-\begin{verbatim}
+#+begin_example
    conMat1to2:=R
    conMat2to1:=S
-\end{verbatim}
+#+end_example
 
 Now we can coerce from =K1= into =K2= by
-\begin{verbatim}
+#+begin_example
    represents(conMat1to2 * coordinates(b)$K1)$K2
-\end{verbatim}
+#+end_example
 and in the other direction by
-\begin{verbatim}
+#+begin_example
    represents(conMat2to1 * coordinates(b)$K2)$K1
-\end{verbatim}
+#+end_example
 
 ** Polynomials over finite fields
 \label{section10}
@@ -24893,10 +24893,10 @@ and in the other direction by
 Let $F=GF(q)$ and $E=GF(q^n)$ be represented by the domain
 =F= and =E=, respectively. There are two packages with
 functions concerning polynomials over finite fields.
-\begin{verbatim}
+#+begin_example
    FFPOLY(F)      FiniteFieldPolynomialPackage(F)
    FFPOLY2(E,F)   FiniteFieldPolynomialPackage2(E,F)
-\end{verbatim}
+#+end_example
 
 *** Root finding
 \label{section10.1}
@@ -24904,9 +24904,9 @@ functions concerning polynomials over finite fields.
 Although Axiom has a good factorizer for polynomials over fields,
 which can be used to find roots in extensions, we have implemented
 a function
-\begin{verbatim}
+#+begin_example
    rootOfIrreduciblePoly(f)
-\end{verbatim}
+#+end_example
 in the package =FFPOLY2(E,F)=. This function computes only one
 root in $E$ of a monic, irreducible polynomial $f\in F[X]$. This is
 useful as in section \ref{section9} 
@@ -24933,12 +24933,12 @@ described below, and compute the number of polynomials of a given
 degree of a certain kind.
 
 The functions for normal polynomials are for example
-\begin{verbatim}
+#+begin_example
    normal?(f)
    createNormalPoly(n)
    nextNormalPoly(f)
    numberOfNormalPoly(n)
-\end{verbatim}
+#+end_example
 
 Unfortunately, there is no formula known to compute the number of
 primitive and normal polynomials of a given degree. Up to this
@@ -25282,16 +25282,16 @@ the different constructors of the finite field world of Axiom.
 Here is the list of used abbreviations:
 
 *Categories*
-\begin{verbatim}
+#+begin_example
    CHARNZ  CharacteristicNonZero
    FPC     FieldOfPrimeCharacteristic
    XF      ExtensionField
    FFC     FiniteFieldCategory
    FAXF    FiniteAlgebraicExtensionField
-\end{verbatim}
+#+end_example
 
 *Domains*
-\begin{verbatim}
+#+begin_example
    SAE     SimpleAlgebraicExtension
    IPF     InnerPrimeField
    PF      PrimeField
@@ -25305,17 +25305,17 @@ Here is the list of used abbreviations:
    FF      FiniteField
    FFCG    FiniteFieldCyclicGroup
    FFNB    FiniteFieldNormalBasis
-\end{verbatim}
+#+end_example
 
 *Packages*
-\begin{verbatim}
+#+begin_example
    DLP     DiscreteLogarithmPackage
    FFF     FiniteFieldFunctions
    INBFF   InnerNormalBasisFieldFunctions
    FFPOLY  FiniteFieldPolynomialPackage
    FFPOLY2 FiniteFieldPolynomialPackage2
    FFHOM   FiniteFieldHomomorphisms
-\end{verbatim}
+#+end_example
 
 \chapter[Real Quantifier Elimination]
 {Real Quantifier Elimination Tutorial by Hoon Hong}
@@ -27836,11 +27836,11 @@ Here's a fun little problem, whose only solution I know involves a
 fair bit of math and computer algebra.
 
 We are given the grammar for a language $L$:
-\begin{verbatim}
+#+begin_example
    E = T +_mod8 T | T = -_mod8 T
    T = V | V ^ V | V ^ V ^ V
    V = 'a1' | 'a2' | ...
-\end{verbatim}
+#+end_example
 
 where =+_mod8= is addition modulo 8, =-_mod8= is subtraction
 modulo 8, and =^= is XOR.
@@ -27852,9 +27852,9 @@ Since we have addition, we can perform multiplication by a constant by
 repeated addition. So we can perform =3*a= as =a+a+a=.
 
 We are then given the input expression
-\begin{verbatim}
+#+begin_example
    (a0 ^ a1 ^ a2 ^ a3)
-\end{verbatim}
+#+end_example
 We wish t find an equivalent expression in terms of the above language
 $L$. 
 
@@ -27870,13 +27870,13 @@ why it's natural to reach for them to solve this problem, the code,
 and eventual solution. 
 
 As a spoiler, the solution is:
-\begin{verbatim}
+#+begin_example
    a^b^c^d =
       -a - b + c + 3*d - 3*axorb - axorc
       + axord - bxorc + bxord + 3*cxord
       - 3*axorbxorc - axorbxord
       + axorcxord + bxorcxord
-\end{verbatim}
+#+end_example
 
 Clearly, this contains only additions/subtractions and multiplication
 by a constant.
@@ -27888,17 +27888,17 @@ rules which also understand arithmetic (I learnt this viewpoint from
 the book ``Term Rewriting and All That''. Fantastic book in
 general). Expanding on the nutshell, assuming we have a term rewriting
 system:
-\begin{verbatim}
+#+begin_example
   A -> -1*B -- (1)
   C -> B^2  -- (2)
-\end{verbatim}
+#+end_example
 over an alphabet =(A, B, C)=.
 
 Now, given the string =C + AB=, we wish to find out if it can be
 rewritten to 0 or not. Let's try to substitute and see what happens.
-\begin{verbatim}
+#+begin_example
    C + AB -2-> B^2 + AB -1-> B^2 + (-1*B)B
-\end{verbatim}
+#+end_example
 
 At this point, we're stuck! We don't have rewrite rules to allow us to
 rewrite =(-1*B)B= into =-B^2=. Indeed, creating such a list
@@ -27906,9 +27906,9 @@ would be infinitely long. But if we are willing to accept that we
 somehow have the rewrite rules that correspond to polynomial
 arithmetic, where we view =A,B,C= as variables, then we can
 rewrite the above string to 0.
-\begin{verbatim}
+#+begin_example
    B^2 + (-1*B)B -> B^2 - B^2 -> 0
-\end{verbatim}
+#+end_example
 
 A Grobner basis is the algorithmic / mathematical machine that allows
 us to perform this kind of sumbstitution.
@@ -27922,21 +27922,21 @@ constructed example.
 *** A complicated example that shattters dreams
 
 Here's the patheologicial example:
-\begin{verbatim}
+#+begin_example
    A -> 1     -- (1)
    AB -> -B^2 -- (2)
-\end{verbatim}
+#+end_example
 
 And we consider the string =S = AB + B^2=. If we blindly apply
 the first rule, we arrive at
-\begin{verbatim}
+#+begin_example
    S = AB + B^2 -1-> 1B + B^2 = B + B^2 (STUCK)
-\end{verbatim}
+#+end_example
 
 However, if we apply (2) and then (1)
-\begin{verbatim}
+#+begin_example
    S = AB + B^2 -2-> -B^2 + B^2 -> 0
-\end{verbatim}
+#+end_example
 
 This tells us that we can't just apply the rewrite rules
 willy-nilly. It's sensitive to the order of the rewrites! That is, the
@@ -27964,32 +27964,32 @@ by solving a slightly simpler problem:
 Rewrite =a^b^c= in terms of =a^b=, =b^c=, =c^a=
 and the same =+_mod8= instruction set as the original
 problem. The only difference this time is that we do not have 
-\begin{verbatim}
+#+begin_example
    T -> V ^ V ^ V
-\end{verbatim}
+#+end_example
 
 The idea is to construct the polynomial ring over =Z/8Z=
 (integers modulo 8) with variables a, b, c, axorb, bxorc, axorc. Now,
 we know that 
-\begin{verbatim}
+#+begin_example
    a^b = a + b - 2ab
-\end{verbatim}
+#+end_example
 So, we setup rewrite rules such that 
-\begin{verbatim}
+#+begin_example
    a + b - 2ab -> axorb
    b + c - 2bc -> bxorc
    c + a - 2ca -> cxora
-\end{verbatim}
+#+end_example
 
 We construct the polynomial
-\begin{verbatim}
+#+begin_example
    f(a, b, c) = a^b^c
-\end{verbatim}
+#+end_example
 which has been written in terms of addition and multiplication,
 defined as
-\begin{verbatim}
+#+begin_example
    f_orig(a, b, c) = 4*a*b*c - 2*a*b - 2*a*c - 2*b*c + a + b + c
-\end{verbatim}
+#+end_example
 We then rewrite =f_orig= with respect to our rewrite
 rules. Hopefully, the rewrite rules should give us a clean expression
 in terms of one variable and two-variable xor's. There is the danger
@@ -27998,47 +27998,47 @@ such a term =(2*b*axorc)= in this case, but it does not appear in
 the original problem.
 
 Create a ring with variables a, b, c, axorb, bxorc, axorc.
-\begin{verbatim}
+#+begin_example
    R = IntegerModRing(8)['a, b, c, axorb, bxorc, axorc']
    (a, b, c, axorb, bxorc, axorc) = R.gens()
-\end{verbatim}
+#+end_example
 
 XOR in terms of polynomials
-\begin{verbatim}
+#+begin_example
    def xor2(x, y): return x + y - 2*x*y
-\end{verbatim}
+#+end_example
 
 Define the ideal which allows us to rewrite 
 =xor2(a,b)->axorb=, and so on we also add the relation
 =a^2-a=0 => a=0= or =a=1= in case this helps the solver.
-\begin{verbatim}
+#+begin_example
    I = ideal((axorb - xor2(a,b), 
               bxorc - xors(b,c), 
               axorc - xor2(a,c), 
               a*a-a, b*b-b, c*c-c))
-\end{verbatim}
+#+end_example
 
 The polynomial representing =a^b^c= we wish to reduce
-\begin{verbatim}
+#+begin_example
    f_orig = xor2(a, b, c)
-\end{verbatim}
+#+end_example
 
 We take the groebner basis of the ring to reduce the polynomial $f$
-\begin{verbatim}
+#+begin_example
    IG = I.groebner_basis()
-\end{verbatim}
+#+end_example
 
 We reduce =a^b^c= with respect to the groebner basis.
-\begin{verbatim}
+#+begin_example
    f_reduced = f_orig.reduce(IG)
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    print("value of a^b^c:\n\t%s\n\treduced: %s" % (f_orig, f_reduced))
-\end{verbatim}
+#+end_example
 
 Code to evaluate the function $f$ on all inputs to check correctness.
-\begin{verbatim}
+#+begin_example
    def evalxor2(f)
      for (i, j, k) in [(i, j, k) 
        for i in [0, 1] 
@@ -28049,19 +28049,19 @@ Code to evaluate the function $f$ on all inputs to check correctness.
                                  axorb=i^^j, bxorc=j^^k, axorc=i^^k)
              print("%s^%s^%s: ref(%s) =?= f(%s): %s" %
                (i, j, k, ref, eval, ref == eval))
-\end{verbatim}
+#+end_example
 
 Check original formulation is correct
-\begin{verbatim}
+#+begin_example
    print("evaluating original f for sanity check")
    evalxor2(f_orig)
-\end{verbatim}
+#+end_example
 
 Check reduced formulation is correct
-\begin{verbatim}
+#+begin_example
    print("evaluating reduced f:")
    evalxor2(f_reduced)
-\end{verbatim}
+#+end_example
 
 Running the code gives us the redued polynomial
 =-2*b*axorc+b+axorc= which unfortunately contains a term that is 
@@ -28070,14 +28070,14 @@ my friend that she is unaware of a solution to this problem (writing
 =a^b^c= in terms of smaller xors and sums).
 
 The full code output is:
-\begin{verbatim}
+#+begin_example
    value of a^b^c:
      4*a*b*c - 2*a*b - 2*a*c - 2*b*c + a + b + c
      reduced: -2*b*axorc + b + axorc
    evaluating original f for sanity check:
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    0^0^0: ref(0) =?= f(0): True
    0^0^1: ref(1) =?= f(1): True
    0^1^0: ref(1) =?= f(1): True
@@ -28086,9 +28086,9 @@ The full code output is:
    1^0^1: ref(0) =?= f(0): True
    1^1^0: ref(0) =?= f(0): True
    1^1^1: ref(1) =?= f(1): True
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    evaluating reduced f:
    0^0^0: ref(0) =?= f(0): True
    0^0^1: ref(1) =?= f(1): True
@@ -28098,24 +28098,24 @@ The full code output is:
    1^0^1: ref(0) =?= f(0): True
    1^1^0: ref(0) =?= f(0): True
    1^1^1: ref(1) =?= f(1): True
-\end{verbatim}
+#+end_example
 
 That is, both the original polynomial and the reduced polynomial match
 the expected results. But the reduced polynomial is not in our
 language $L$, since it has a term that is a product of $b$ with
 $axorc$.
-\begin{verbatim}
+#+begin_example
    -a - b + c + 3*d - 3*axorb - axorc
    + axord - bxorc + bxord + 3*cxord
    - 3*axorbxorc - axorbxord
    + axorcxord + bxorcxord
-\end{verbatim}
+#+end_example
 
 which happily has no products between terms! It also passes our sanity
 check, so we've now found the answer.
 
 The full output is:
-\begin{verbatim}
+#+begin_example
    value of a^b^c^d:
      4*a*b*c + 4*a*b*d + 4*a*c*d + 4*b*c*d - 2*a*b -2*a*c - 2*b*c
      - 2*a*d - 2*b*d - 2*c*d + a + b + c + d
@@ -28123,9 +28123,9 @@ The full output is:
       -a - b + c + 3*d - 3*axorb - axorc + axord - bxorc + bxord
       + 3*cxord - 3*axorbxorc - axorbxord + axorcxord + bxorcxord
  
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    evaluating original a^b^c^d
    0^0^0^0: ref(0) =?= f(0): True
    0^0^0^1: ref(1) =?= f(1): True
@@ -28143,9 +28143,9 @@ The full output is:
    1^1^0^1: ref(1) =?= f(1): True
    1^1^1^0: ref(1) =?= f(1): True
    1^1^1^1: ref(0) =?= f(0): True
-\end{verbatim}
+#+end_example
 
-\begin{verbatim}
+#+begin_example
    evaluating reduced a^b^c^d
    0^0^0^0: ref(0) =?= f(0): True
    0^0^0^1: ref(1) =?= f(1): True
@@ -28163,10 +28163,10 @@ The full output is:
    1^1^0^1: ref(1) =?= f(1): True
    1^1^1^0: ref(1) =?= f(1): True
    1^1^1^1: ref(0) =?= f(0): True
-\end{verbatim}
+#+end_example
 
 Code for =a^b^c^d=
-\begin{verbatim}
+#+begin_example
 def xor3(x, y, z): return xor2(x, xor2(y, z))
 
 R = IntegerModRing(8)['a, b, c, d, axorb, axorc, axord,
@@ -28215,7 +28215,7 @@ evalxor3(f_orig)
 print("evaluating reduced a^b^c^d")
 evalxor3(f_reduced)
 
-\end{verbatim}
+#+end_example
 
 ** Ideals as Rewrite Systems
 

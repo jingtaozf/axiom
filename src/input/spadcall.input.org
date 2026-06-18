@@ -206,11 +206,11 @@ The =third= function takes one argument, an element of the domain. We construct
 a list of one argument which is =(|List| (|Fraction| (|Integer|)))=.
 
 The call looks like:
-\begin{verbatim}
+#+begin_example
 (setq f (|getFunctionFromDomain| '|third| 
                                  '(|List| (|Fraction| (|Integer|))) 
                                  '((|List| (|Fraction| (|Integer|))))))
-\end{verbatim}
+#+end_example
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -225,19 +225,19 @@ Now we have a cons cell containing the function in the car and the domain
 vector in the cdr, stored in the variable =f=. 
 
 The =spadcall= macro expands to
-\begin{verbatim}
+#+begin_example
    )lisp (macroexpand '(spadcall a f))
 
    (LET ((#:G1587 F)) (THE (VALUES T) (FUNCALL (CAR #:G1587) A (CDR #:G1587))))
-\end{verbatim}
+#+end_example
 Notice that this will call the function (from the car of the cons) with the
 arguments =a= which is our list and the domain vector (from the cdr of
 the cons). So =spadcall= is just a convenience macro.
 
 This call will be the exact same result as Axiom's 
-\begin{verbatim}
+#+begin_example
    third b
-\end{verbatim}
+#+end_example
 Notice that it returns the internal representation of an element of the
 Fraction(Integer) domain, as expected.
 #+NAME: *
@@ -265,11 +265,11 @@ sort b
 #+end_src
 Now we look up =sort= by hand
 The call looks like:
-\begin{verbatim}
+#+begin_example
 (setq f (|getFunctionFromDomain| '|sort| 
                                  '(|List| (|Fraction| (|Integer|))) 
                                  '((|List| (|Fraction| (|Integer|))))))
-\end{verbatim}
+#+end_example
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes
@@ -307,18 +307,18 @@ of the domain List(Fraction(Integer)) and the second argument to be an element
 of the domain NonNegativeInteger. Remember that the 3th argument to the 
 =getFunctionFromDomain= lookup requires a list of argument types, in this case
 there are two, so we make a list of two of them:
-\begin{verbatim}
+#+begin_example
 '( (|List| (|Fraction| (|Integer|))) 
    (|NonNegativeInteger|))
-\end{verbatim}
+#+end_example
 
 The call looks like:
-\begin{verbatim}
+#+begin_example
 (setq f (|getFunctionFromDomain| '|size?| 
                                  '(|List| (|Fraction| (|Integer|))) 
                                  '((|List| (|Fraction| (|Integer|))) 
                                    (|NonNegativeInteger|))))
-\end{verbatim}
+#+end_example
 
 #+NAME: *
 #+begin_src common-lisp :noweb yes

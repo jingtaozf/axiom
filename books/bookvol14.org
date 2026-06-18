@@ -74,9 +74,9 @@ value so 6 is the canonical element for the associates $\{6, -6\}$.
 We call this function *unitCanonical* although it is simply
 the absolute value function in the domain Integer. Indeed, in 
 *Volume 10.3: Domains* we find this line in the domain *Integer*:
-\begin{verbatim}
+#+begin_example
       unitCanonical x == abs x
-\end{verbatim}
+#+end_example
 
 *** Example
 
@@ -91,7 +91,7 @@ and the common set of factors is
 Rather than factor the numbers it is more efficient to divide the
 two numbers which will yield a quotient and a remainder. So
 in this case:
-\begin{verbatim}
+#+begin_example
 c:=18
 d:=30
   r:= c rem d -> 18 rem 30 -> 18
@@ -107,7 +107,7 @@ d:=30
   c:= 6
   d:= 0
 result is c -> 6
-\end{verbatim}
+#+end_example
 
 Since the quotient and remainder will share the same common factors
 as the original numbers we can continue this division loop until
@@ -184,46 +184,46 @@ Here we introduce two functions, *quo* and *unitNormal*.
 
 The *quo* function is defined in *Volume 10.2: Domains* in
 the domain *Integer* as
-\begin{verbatim}
+#+begin_example
    x quo y == QUOTIENT2(x,y)$Lisp
-\end{verbatim}
+#+end_example
 which resolves to the Lisp function in *Volume 5: Interpreter*
-\begin{verbatim}
+#+begin_example
    (defun quotient2 (x y)
      (values (truncate x y)))
-\end{verbatim}
+#+end_example
 which will return the integer portion of an integer division,
 ignoring the fractional portion.
 
 The *unitNormal* function in *Volume 10.2: Categories*
 in the category *IntegralDomain* returns a portion of a Record.
 The Record is defined as:
-\begin{verbatim}
+#+begin_example
    Record(unit:%,canonical:%,associate:%)
-\end{verbatim}
+#+end_example
 holding three pieces of information, the unit, the canonical element,
 and the set of associates. We only need the unit information so we
 access the record structure using the unit selector thus:
-\begin{verbatim}
+#+begin_example
    resultRecord.unit
-\end{verbatim}
+#+end_example
 
 The actual definition of *unitNormal* used here comes from 
 *Volume 10.3: Domains* in domain *Integer* which defines it as
-\begin{verbatim}
+#+begin_example
    UCA ==> Record(unit:%,canonical:%,associate:%)
    unitNormal x ==
      x < 0 => [-1,-x,-1]$UCA
      [1,x,1]$UCA
-\end{verbatim}
+#+end_example
 which for the value $-6$ would resolve to 
-\begin{verbatim}
+#+begin_example
    [unit= - 1,canonical= 6,associate= - 1]
-\end{verbatim}
+#+end_example
 giving
-\begin{verbatim}
+#+begin_example
    unitNormal(-6).unit -> -1
-\end{verbatim}
+#+end_example
 and, as above, the *unitCanonical* function is just the absolute
 value.
 
@@ -231,19 +231,19 @@ We use the *quo* operation at the final step rather than division.
 Integer is not a Field so the operation isn't available. The division
 operator would come from the domain *Fraction(Integer)* with the
 signature
-\begin{verbatim}
+#+begin_example
    ?/? : (Integer,Integer) -> %
-\end{verbatim}
+#+end_example
 which takes two integers and returns an element of Fraction(Integer)
 which is not what we want at the result. We know that the Integer
 unit can only be $\pm 1$ so we use the *quo* operation from
 *Integer*  to form the quotient we need, with the signature
-\begin{verbatim}
+#+begin_example
    ?quo? : (%,%) -> % 
-\end{verbatim}
+#+end_example
 
 *** Example
-\begin{verbatim}
+#+begin_example
 ExtendedEuclidean(18,30)
   c   d  c1  d1  c2  d2   q   r  r1  r2   c   c1  c2   d  d1  d2
  18  30   1   0   0   1   0  18   1   0   30   0   1  18   1   0
@@ -257,7 +257,7 @@ ExtendedEuclidean(18,30)
  t2:=c1 quo (unitNormal(a).unit*unitNormal(c).unit) -> 2/1 -> 2
  t3:Integer:= c2 quo (unitNormal(b).unit*unitNormal(c).unit) -> -1/1 -> -1
  [gcd= 6,s= 2,t= - 1]
-\end{verbatim}
+#+end_example
 
 
 * Primitive Euclidean
@@ -363,7 +363,7 @@ $c(x) \leftarrow PolyInterp(\xi_0,...,\xi_m)$\\
 *** Example
 
 Ordinary multiplication of 25 x 63:
-\begin{verbatim}
+#+begin_example
      
      25
   x  63
@@ -382,7 +382,7 @@ and then
 So we have 4 multiplications and 3 additions
 
 
-\end{verbatim}
+#+end_example
 
 * Fast Fourier Transform
 
