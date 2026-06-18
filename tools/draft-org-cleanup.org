@@ -719,3 +719,55 @@ The 5 outside references are prose text mentioning GCL features (documentation),
 not actual conditional code.
 
 Conclusion: No GCL conditional removal needed in the cleanup script.
+
+* Proposal: Fix Incorrect Language Tags in #+begin_src (2026-06-17)
+
+** Root Cause
+
+The migration tool (pamphlet2org.org) assigns language tags to chunks using:
+1. Chunk name suffix (e.g., =foo.lisp= → =common-lisp=)
+2. File extension (e.g., =.boot= → =boot=)
+3. *Default: =common-lisp=*
+
+The default is wrong for many chunk types. 6,390 chunks are tagged as
+=common-lisp= but contain non-Lisp content.
+
+** Incorrectly Tagged Chunks
+
+| Chunk Suffix | Count | Actual Content      | Correct Tag  |
+|--------------+-------+---------------------+--------------|
+| .bib         | 3,330 | BibTeX bibliography | =bibtex=     |
+| .ht          | 2,700 | HyperDoc HTML       | =html=       |
+| .txt         | ~100  | Plain text/config   | =text=       |
+| .input       | ~200  | Axiom input         | =axiom-input=|
+| Other        | ~60   | Various             | case-by-case |
+
+** Impact
+
+- org-mode syntax highlighting shows wrong colors
+- org-babel tangling still works (language tag is ignored by tanglec)
+- No impact on build or tangled source
+- Readability is degraded (Lisp highlighting on HTML/BibTeX content)
+
+** Proposed Fix
+
+Update the language tag for each chunk based on its suffix:
+
+| Suffix   | New Tag        |
+|----------+----------------|
+| .bib     | =bibtex=       |
+| .ht      | =html=         |
+| .txt     | =text=         |
+| .input   | =axiom-input=  |
+| .dot     | =dot=          |
+| .ps      | =text=         |
+| .sh      | =bash=         |
+
+For chunks with no recognized suffix, keep =common-lisp= as default.
+
+** Safety
+
+- Only changes the language tag on =#+begin_src= lines
+- Does NOT change chunk content or =#+NAME:= lines
+- Does NOT affect tangled source (tanglec ignores the tag)
+- untanglec passes the tag through to pamphlet (no impact)
