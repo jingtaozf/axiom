@@ -8,7 +8,6 @@
 #+END_abstract
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 )set break resume
 )sys rm -f rsa.output
 )spool rsa.output
@@ -67,7 +66,6 @@ values $P=61$ and $Q = 53$.
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 1 of 13
 P := 61
 --R 
@@ -93,7 +91,6 @@ The next step is to calculate $N$ - which is simply just the product of $P*Q$.
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 3 of 13
 N := P * Q
 --R 
@@ -114,7 +111,6 @@ Put more clearly, find the product of $(P-1)*(Q-1)$.
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 4 of 13
 totient := (P-1)*(Q-1)
 --R 
@@ -133,7 +129,6 @@ and $E$ must equal one.
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 5 of 13
 t1:=[x for x in 1..totient | gcd(totient,x) = 1]
 --R
@@ -211,7 +206,6 @@ E = 17
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 6 of 13
 E := t1.4
 --R 
@@ -242,7 +236,6 @@ In our case, 17 will satisfy these conditions.
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 7 of 13
 ttn:=IntegerMod(totient)
 --R 
@@ -265,7 +258,6 @@ private key ($N$ and $D$).
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 9 of 13
 [N,E]
 --R 
@@ -311,7 +303,6 @@ This will give us.
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 11 of 13
 M := 65
 --R 
@@ -346,7 +337,6 @@ which is our original message.
 
 #+NAME: rsatest.input
 #+begin_src axiom :noweb yes
-#+begin_src axiom-input :noweb yes
 --S 13 of 13
 (C^D)::IntegerMod(N)
 --R 
