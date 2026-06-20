@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/src/booklets Makefile.pamphlet}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+<<*>>=
+all: announce
+	@echo sbt01 building ${INT}/docs/src/booklets
+	@cp rosetta.pamphlet ${INT}/docs/src/booklets
+	@(cd ${INT}/docs/src/booklets ; \
+	  ${DOCUMENT} ${NOISE} rosetta )
+
+announce:
+	@ echo ======================================
+	@ echo src/booklets BUILDING BOOKLETS
+	@ echo ======================================
+
+clean:
+	@echo sbt02 cleaning ${INT}/docs/src/booklets
+	@rm -rf ${INT}/docs/src/booklets
+	@rm -f Makefile Makefile.dvi
+@
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}

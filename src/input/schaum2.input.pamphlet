@@ -1,0 +1,1551 @@
+\documentclass{article}
+\usepackage{axiom}
+\setlength{\textwidth}{400pt}
+\begin{document}
+\title{\$SPAD/input schaum2.input}
+\author{Timothy Daly}
+\maketitle
+\eject
+\tableofcontents
+\eject
+\section{\cite{1}:14.84~~~~~$\displaystyle
+\int{\frac{dx}{\sqrt{ax+b}}}$}
+$$\int{\frac{1}{\sqrt{ax+b}}}=
+\frac{2\sqrt{ax+b}}{a}
+$$
+\begin{chunk}{*}
+)set break resume
+)spool schaum2.output
+)set message test on
+)set message auto off
+)clear all
+
+--S 1 of 98
+aa:=integrate(1/sqrt(a*x+b),x)
+--R 
+--R
+--R          +-------+
+--R        2\|a x + b
+--R   (1)  -----------
+--R             a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 2 of 98
+bb:=(2*sqrt(a*x+b))/a
+--R 
+--R
+--R          +-------+
+--R        2\|a x + b
+--R   (2)  -----------
+--R             a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 3 of 98      14:84 Schaums and Axiom agree
+cc:=aa-bb
+--R 
+--R
+--R   (3)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.85~~~~~$\displaystyle
+\int{\frac{x~dx}{\sqrt{ax+b}}}$}
+$$\int{\frac{x}{\sqrt{ax+b}}}=
+\frac{2(ax-2b)}{3a^2}\sqrt{ax+b}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 4 of 98
+aa:=integrate(x/sqrt(a*x+b),x)
+--R 
+--R
+--R                    +-------+
+--R        (2a x - 4b)\|a x + b
+--R   (1)  ---------------------
+--R                   2
+--R                 3a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 5 of 98
+bb:=(2*(a*x-2*b))/(3*a^2)*sqrt(a*x+b)
+--R 
+--R
+--R                    +-------+
+--R        (2a x - 4b)\|a x + b
+--R   (2)  ---------------------
+--R                   2
+--R                 3a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 6 of 98      14:85 Schaums and Axiom agree
+cc:=aa-bb
+--R 
+--R
+--R   (3)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.86~~~~~$\displaystyle
+\int{\frac{x^2~dx}{\sqrt{ax+b}}}$}
+$$\int{\frac{x}{\sqrt{ax+b}}}=
+\frac{2(3a^2x^2-4abx+8b^2)}{15a^2}\sqrt{ax+b}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 7 of 98
+aa:=integrate(x^2/sqrt(a*x+b),x)
+--R 
+--R
+--R           2 2               2  +-------+
+--R        (6a x  - 8a b x + 16b )\|a x + b
+--R   (1)  ---------------------------------
+--R                          3
+--R                       15a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 8 of 98
+bb:=(2*(3*a^2*x^2-4*a*b*x+8*b^2))/(15*a^3)*sqrt(a*x+b)
+--R 
+--R
+--R           2 2               2  +-------+
+--R        (6a x  - 8a b x + 16b )\|a x + b
+--R   (2)  ---------------------------------
+--R                          3
+--R                       15a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 9 of 98      14:86 Schaums and Axiom agree
+cc:=aa-bb
+--R 
+--R
+--R   (3)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.87~~~~~$\displaystyle
+\int{\frac{dx}{x\sqrt{ax+b}}}$}
+$$\int{\frac{1}{x\sqrt{ax+b}}}=
+\left\{
+\begin{array}{l}
+\displaystyle
+\frac{1}{\sqrt{b}}~\ln
+\left(\frac{\sqrt{ax+b}-\sqrt{b}}{\sqrt{ax+b}+\sqrt{b}}\right)\\
+\displaystyle
+\frac{2}{\sqrt{-b}}~\tan^{-1}\sqrt{\frac{ax+b}{-b}}
+\end{array}
+\right.
+$$
+
+Note: the first answer assumes $b > 0$ and the second assumes $b < 0$.
+\begin{chunk}{*}
+)clear all
+
+--S 10 of 98
+aa:=integrate(1/(x*sqrt(a*x+b)),x)
+--R 
+--R
+--R                  +-------+              +-+           +---+ +-------+
+--R             - 2b\|a x + b  + (a x + 2b)\|b           \|- b \|a x + b
+--R         log(-------------------------------)   2atan(----------------)
+--R                            x                                 b
+--R   (1)  [------------------------------------,- -----------------------]
+--R                          +-+                             +---+
+--R                         \|b                             \|- b
+--R                                   Type: Union(List(Expression(Integer)),...)
+--E 
+\end{chunk}
+Cleary Spiegel's first answer assumes $b > 0$:
+\begin{chunk}{*}
+--S 11 of 98
+bb1:=1/sqrt(b)*log((sqrt(a*x+b)-sqrt(b))/(sqrt(a*x+b)+sqrt(b)))
+--R 
+--R
+--R             +-------+    +-+
+--R            \|a x + b  - \|b
+--R        log(-----------------)
+--R             +-------+    +-+
+--R            \|a x + b  + \|b
+--R   (2)  ----------------------
+--R                  +-+
+--R                 \|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+So we try the difference of the two results
+\begin{chunk}{*}
+--S 12 of 98
+cc11:=aa.1-bb1
+--R
+--R               +-------+    +-+             +-------+              +-+
+--R              \|a x + b  - \|b         - 2b\|a x + b  + (a x + 2b)\|b
+--R        - log(-----------------) + log(-------------------------------)
+--R               +-------+    +-+                       x
+--R              \|a x + b  + \|b
+--R   (3)  ---------------------------------------------------------------
+--R                                       +-+
+--R                                      \|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+But the results don't simplify to 0. So we try some other tricks.
+
+Since both functions are of the form log(f(x))/sqrt(b) we extract
+the f(x) from each. First we get the function from Axiom's first answer:
+\begin{chunk}{*}
+--S 13 of 98
+ff:=exp(aa.1*sqrt(b))
+--R
+--R             +-------+              +-+
+--R        - 2b\|a x + b  + (a x + 2b)\|b
+--R   (4)  -------------------------------
+--R                       x
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and we get the same form from Spiegel's answer
+\begin{chunk}{*}
+--S 14 of 98
+gg:=exp(bb1*sqrt(b))
+--R
+--R         +-------+    +-+
+--R        \|a x + b  - \|b
+--R   (5)  -----------------
+--R         +-------+    +-+
+--R        \|a x + b  + \|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+We can change Spiegel's form into Axiom's form. They differ by
+the constant a*sqrt(b). To see this we multiply the numerator and
+denominator by $1 == (sqrt(a*x+b) - sqrt(b))/(sqrt(a*x+b) - sqrt(b))$.
+
+First we multiply the numerator by $(sqrt(a*x+b) - sqrt(b))$
+\begin{chunk}{*}
+--S 15 of 98
+gg1:=gg*(sqrt(a*x+b) - sqrt(b))
+--R
+--R            +-+ +-------+
+--R        - 2\|b \|a x + b  + a x + 2b
+--R   (6)  ----------------------------
+--R               +-------+    +-+
+--R              \|a x + b  + \|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+Now we multiply the denominator by $(sqrt(a*x+b) - sqrt(b))$
+\begin{chunk}{*}
+--S 16 of 98
+gg2:=gg1/(sqrt(a*x+b) - sqrt(b))
+--R
+--R            +-+ +-------+
+--R        - 2\|b \|a x + b  + a x + 2b
+--R   (7)  ----------------------------
+--R                     a x
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and now we multiply by the integration constant $a*sqrt(b)$
+\begin{chunk}{*}
+--S 17 of 98
+gg3:=gg2*(a*sqrt(b))
+--R
+--R             +-------+              +-+
+--R        - 2b\|a x + b  + (a x + 2b)\|b
+--R   (8)  -------------------------------
+--R                       x
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and when we difference this with ff, the Axiom answer we get:
+\begin{chunk}{*}
+--S 18 of 98     14:87a Schaums and Axiom differ by a constant
+ff-gg3
+--R
+--R   (9)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+So the constant of integration difference is $a*sqrt(b)$
+
+Now we look at the second equations. We difference Axiom's second answer
+from Spiegel's answer:
+\begin{chunk}{*}
+--S 19 of 98
+t1:=aa.2-bb1
+--R
+--R                      +-------+    +-+               +---+ +-------+
+--R            +---+    \|a x + b  - \|b       +-+     \|- b \|a x + b
+--R         - \|- b log(-----------------) - 2\|b atan(----------------)
+--R                      +-------+    +-+                      b
+--R                     \|a x + b  + \|b
+--R   (10)  ------------------------------------------------------------
+--R                                   +---+ +-+
+--R                                  \|- b \|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and again they do not simplify to zero. But we can show that both answers
+differ by a constant because the derivative is zero:
+\begin{chunk}{*}
+--S 20 of 98
+D(t1,x)
+--R
+--R   (11)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+Rather than find the constant this time we will differentiate both
+answers and compare them with the original equation.
+\begin{chunk}{*}
+--S 21 of 98
+target:=1/(x*sqrt(a*x+b))
+--R
+--R              1
+--R   (12)  -----------
+--R           +-------+
+--R         x\|a x + b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and we select the second Axiom solution
+\begin{chunk}{*}
+--S 22 of 98
+aa2:=aa.2
+--R
+--R                  +---+ +-------+
+--R                 \|- b \|a x + b
+--R           2atan(----------------)
+--R                         b
+--R   (13)  - -----------------------
+--R                     +---+
+--R                    \|- b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+take its derivative
+\begin{chunk}{*}
+--S 23 of 98
+ad2:=D(aa2,x)
+--R
+--R              1
+--R   (14)  -----------
+--R           +-------+
+--R         x\|a x + b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+When we take the difference of Axiom's input and the derivative of the
+output we see:
+\begin{chunk}{*}
+--S 24 of 98
+ad2-target
+--R
+--R   (15)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+Thus the original equation and Axiom's derivative of the integral are equal.
+
+Now we do the same with Spiegel's answer. We take the derivative of his
+answer.
+\begin{chunk}{*}
+--S 25 of 98
+ab1:=D(bb1,x)
+--R
+--R                +-------+    +-+
+--R               \|a x + b  + \|b
+--R   (16)  ----------------------------
+--R           +-+ +-------+      2
+--R         x\|b \|a x + b  + a x  + b x
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and we difference it from the original equation
+\begin{chunk}{*}
+--S 26 of 98     14:87b Schaums and Axiom differ by a constant
+ab1-target
+--R
+--R   (17)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+Thus the original equation and Spiegel's derivative of the integral are equal.
+
+So we can conclude that both second answers are correct although they differ
+by a constant of integration.
+
+\section{\cite{1}:14.88~~~~~$\displaystyle
+\int{\frac{dx}{x^2\sqrt{ax+b}}}$}
+$$\int{\frac{1}{x^2\sqrt{ax+b}}}=
+-\frac{\sqrt{ax+b}}{bx}-\frac{a}{2b}~\int{\frac{1}{x\sqrt{ax+b}}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 27 of 98
+aa:=integrate(1/(x^2*sqrt(a*x+b)),x)
+--R 
+--R
+--R   (1)
+--R               +-------+              +-+
+--R            2b\|a x + b  + (a x + 2b)\|b       +-+ +-------+
+--R    a x log(-----------------------------) - 2\|b \|a x + b
+--R                          x
+--R   [--------------------------------------------------------,
+--R                                 +-+
+--R                            2b x\|b
+--R              +---+ +-------+
+--R             \|- b \|a x + b      +---+ +-------+
+--R    a x atan(----------------) - \|- b \|a x + b
+--R                     b
+--R    ---------------------------------------------]
+--R                          +---+
+--R                      b x\|- b
+--R                                   Type: Union(List(Expression(Integer)),...)
+--E 
+\end{chunk}
+
+In order to write down the book answer we need to first take the
+integral which has two results
+\begin{chunk}{*}
+--S 28 of 98
+dd:=integrate(1/(x*sqrt(a*x+b)),x)
+--R 
+--R
+--R                  +-------+              +-+           +---+ +-------+
+--R             - 2b\|a x + b  + (a x + 2b)\|b           \|- b \|a x + b
+--R         log(-------------------------------)   2atan(----------------)
+--R                            x                                 b
+--R   (2)  [------------------------------------,- -----------------------]
+--R                          +-+                             +---+
+--R                         \|b                             \|- b
+--R                                   Type: Union(List(Expression(Integer)),...)
+--E
+\end{chunk}
+and derive two results for the book answer. The first result assumes
+$b > 0$
+\begin{chunk}{*}
+--S 29 of 98
+bb1:=-sqrt(a*x+b)/(b*x)-a/(2*b)*dd.1
+--R 
+--R
+--R                       +-------+              +-+
+--R                  - 2b\|a x + b  + (a x + 2b)\|b       +-+ +-------+
+--R        - a x log(-------------------------------) - 2\|b \|a x + b
+--R                                 x
+--R   (3)  ------------------------------------------------------------
+--R                                       +-+
+--R                                  2b x\|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and the second result assumes $b < 0$.
+\begin{chunk}{*}
+--S 30 of 98
+bb2:=-sqrt(a*x+b)/(b*x)-a/(2*b)*dd.2
+--R 
+--R
+--R                  +---+ +-------+
+--R                 \|- b \|a x + b      +---+ +-------+
+--R        a x atan(----------------) - \|- b \|a x + b
+--R                         b
+--R   (4)  ---------------------------------------------
+--R                              +---+
+--R                          b x\|- b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+So we compute the difference of Axiom's first result with Spiegel's
+first result
+\begin{chunk}{*}
+--S 31 of 98
+cc11:=bb1-aa.1
+--R
+--R   (5)
+--R                  +-------+              +-+
+--R               2b\|a x + b  + (a x + 2b)\|b
+--R       - a log(-----------------------------)
+--R                             x
+--R     + 
+--R                    +-------+              +-+
+--R               - 2b\|a x + b  + (a x + 2b)\|b
+--R       - a log(-------------------------------)
+--R                              x
+--R  /
+--R        +-+
+--R     2b\|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+we compute its derivative
+\begin{chunk}{*}
+--S 32 of 98
+D(cc11,x)
+--R
+--R   (6)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and we can see that the answers differ by a constant, the constant of
+integration. So Axiom's first answer should differentiate back to the target
+equation.
+\begin{chunk}{*}
+--S 33 of 98
+target:=1/(x^2*sqrt(a*x+b))
+--R
+--R              1
+--R   (7)  ------------
+--R         2 +-------+
+--R        x \|a x + b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+We differentiate Axiom's first answer
+\begin{chunk}{*}
+--S 34 of 98
+ad1:=D(aa.1,x)
+--R
+--R                             +-+ +-------+              2
+--R                  (a x + 2b)\|b \|a x + b  + 2a b x + 2b
+--R   (8)  ----------------------------------------------------------
+--R               3     2 2  +-------+     2 4         3     2 2  +-+
+--R        (2a b x  + 2b x )\|a x + b  + (a x  + 3a b x  + 2b x )\|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and subtract it from the target equation
+\begin{chunk}{*}
+--S 35 of 98
+ad1-target
+--R
+--R   (9)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and now we do the same with first Spiegel's answer:
+\begin{chunk}{*}
+--S 36 of 98
+bd1:=D(bb1,x)
+--R
+--R                                +-+ +-------+              2
+--R                   (- a x - 2b)\|b \|a x + b  + 2a b x + 2b
+--R   (10)  ------------------------------------------------------------
+--R                3     2 2  +-------+       2 4         3     2 2  +-+
+--R         (2a b x  + 2b x )\|a x + b  + (- a x  - 3a b x  - 2b x )\|b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+and we subtract it from the target
+\begin{chunk}{*}
+--S 37 of 98
+bd1-target
+--R
+--R   (11)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+so we know that the two first answers are both correct and that their
+integrals differ by a constant.
+
+Now we look at the second answers. We difference the answers and can
+see immediately that they are equal.
+\begin{chunk}{*}
+--S 38 of 98     14:88 Schaums and Axiom differ by a constant
+cc22:=bb2-aa.2
+--R 
+--R
+--R   (12)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.89~~~~~$\displaystyle
+\int{\sqrt{ax+b}~dx}$}
+$$\int{\sqrt{ax+b}}=
+\frac{2\sqrt{(ax+b)^3}}{3a}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 39 of 98
+aa:=integrate(sqrt(a*x+b),x)
+--R 
+--R
+--R                    +-------+
+--R        (2a x + 2b)\|a x + b
+--R   (1)  ---------------------
+--R                  3a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+\begin{chunk}{*}
+--S 40 of 98
+bb:=(2*sqrt((a*x+b)^3))/(3*a)
+--R 
+--R
+--R          +----------------------------+
+--R          | 3 3     2   2       2     3
+--R        2\|a x  + 3a b x  + 3a b x + b
+--R   (2)  --------------------------------
+--R                       3a
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+\begin{chunk}{*}
+--S 41 of 98
+cc:=aa-bb
+--R
+--R            +----------------------------+
+--R            | 3 3     2   2       2     3                +-------+
+--R        - 2\|a x  + 3a b x  + 3a b x + b   + (2a x + 2b)\|a x + b
+--R   (3)  ----------------------------------------------------------
+--R                                    3a
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+Since this didn't simplify we could check each answer using the derivative
+\begin{chunk}{*}
+--S 42 of 98
+target:=sqrt(a*x+b)
+--R
+--R         +-------+
+--R   (4)  \|a x + b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+We take the derivative of Axiom's answer
+\begin{chunk}{*}
+--S 43 of 98
+t1:=D(aa,x)
+--R
+--R          a x + b
+--R   (5)  ----------
+--R         +-------+
+--R        \|a x + b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+And we subtract the target from the derivative of Axiom's answer
+\begin{chunk}{*}
+--S 44 of 98
+t1-target
+--R
+--R   (6)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+So they are equal. Now we do the same with Spiegel's answer
+\begin{chunk}{*}
+--S 45 of 98
+t2:=D(bb,x)
+--R
+--R                2 2             2
+--R               a x  + 2a b x + b
+--R   (7)  -------------------------------
+--R         +----------------------------+
+--R         | 3 3     2   2       2     3
+--R        \|a x  + 3a b x  + 3a b x + b
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+The numerator is
+\begin{chunk}{*}
+--S 46 of 98
+nn:=(a*x+b)^2
+--R
+--R         2 2             2
+--R   (8)  a x  + 2a b x + b
+--R                                                    Type: Polynomial(Integer)
+--E
+\end{chunk}
+\begin{chunk}{*}
+--S 47 of 98
+mm:=(a*x+b)^3
+--R
+--R         3 3     2   2       2     3
+--R   (9)  a x  + 3a b x  + 3a b x + b
+--R                                                    Type: Polynomial(Integer)
+--E
+\end{chunk}
+which expands to Spiegel's version.
+\begin{chunk}{*}
+--S 48 of 98     14:89 Schaums and Axiom differ by a constant
+result=nn/sqrt(mm)
+--R
+--R                         2 2             2
+--R                        a x  + 2a b x + b
+--R   (10)  result= -------------------------------
+--R                  +----------------------------+
+--R                  | 3 3     2   2       2     3
+--R                 \|a x  + 3a b x  + 3a b x + b
+--R                                          Type: Equation(Expression(Integer))
+--E
+\end{chunk}
+and this reduces to $\sqrt{ax+b}$
+
+\section{\cite{1}:14.90~~~~~$\displaystyle
+\int{x\sqrt{ax+b}~dx}$}
+$$\int{x\sqrt{ax+b}}=
+\frac{2(3ax-2b)}{15a^2}~\sqrt{(ax+b)^3}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 49 of 98
+aa:=integrate(x*sqrt(a*x+b),x)
+--R 
+--R
+--R           2 2              2  +-------+
+--R        (6a x  + 2a b x - 4b )\|a x + b
+--R   (1)  --------------------------------
+--R                         2
+--R                      15a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 50 of 98
+bb:=(2*(3*a*x-2*b))/(15*a^2)*sqrt((a*x+b)^3)
+--R 
+--R
+--R                    +----------------------------+
+--R                    | 3 3     2   2       2     3
+--R        (6a x - 4b)\|a x  + 3a b x  + 3a b x + b
+--R   (2)  ------------------------------------------
+--R                              2
+--R                           15a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 51 of 98
+cc:=aa-bb
+--R
+--R   (3)
+--R                     +----------------------------+
+--R                     | 3 3     2   2       2     3
+--R       (- 6a x + 4b)\|a x  + 3a b x  + 3a b x + b
+--R     + 
+--R          2 2              2  +-------+
+--R       (6a x  + 2a b x - 4b )\|a x + b
+--R  /
+--R        2
+--R     15a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 52 of 98     14:90 Schaums and Axiom agree
+dd:=rootSimp cc
+--R
+--R   (4)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.91~~~~~$\displaystyle
+\int{x^2\sqrt{ax+b}~dx}$}
+$$\int{x^2\sqrt{ax+b}}=
+\frac{2(15a^2x^2-12abx+8b^2)}{105a^2}~\sqrt{(a+bx)^3}
+$$
+Note: the sqrt term is almost certainly $\sqrt{(ax+b)}$
+\begin{chunk}{*}
+)clear all
+
+--S 53 of 98
+aa:=integrate(x^2*sqrt(a*x+b),x)
+--R 
+--R
+--R            3 3     2   2       2       3  +-------+
+--R        (30a x  + 6a b x  - 8a b x + 16b )\|a x + b
+--R   (1)  --------------------------------------------
+--R                                3
+--R                            105a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 54 of 98
+bb:=(2*(15*a^2*x^2-12*a*b*x+8*b^2))/(105*a^3)*sqrt((a+b*x)^3)
+--R 
+--R
+--R                                  +----------------------------+
+--R            2 2                2  | 3 3       2 2     2       3
+--R        (30a x  - 24a b x + 16b )\|b x  + 3a b x  + 3a b x + a
+--R   (2)  --------------------------------------------------------
+--R                                      3
+--R                                  105a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 55 of 98     14:91 Axiom cannot simplify this expression. Schaums typo?
+cc:=aa-bb
+--R
+--R   (3)
+--R                                   +----------------------------+
+--R             2 2                2  | 3 3       2 2     2       3
+--R       (- 30a x  + 24a b x - 16b )\|b x  + 3a b x  + 3a b x + a
+--R     + 
+--R           3 3     2   2       2       3  +-------+
+--R       (30a x  + 6a b x  - 8a b x + 16b )\|a x + b
+--R  /
+--R         3
+--R     105a
+--R                                                    Type: Expression(Integer)
+--E
+
+\end{chunk}
+Notice that if we factor the numerator of 'aa' we get an expression that
+differs from schaums on by the order of the variables in the square root.
+(We can square the term (a*x+b) and drag it under the square root to get
+the cubic term). It appears that Schaums has a typo.
+\begin{chunk}{*}
+--S 56 of 98
+factor numer aa
+--R
+--R                      2 2               2  +-------+
+--R   (4)  2(a x + b)(15a x  - 12a b x + 8b )\|a x + b
+--RType: Factored(SparseMultivariatePolynomial(Integer,Kernel(Expression(Integer))))
+--E
+\end{chunk}
+
+\section{\cite{1}:14.92~~~~~$\displaystyle
+\int{\frac{\sqrt{ax+b}}{x}~dx}$}
+$$\int{\frac{\sqrt{ax+b}}{x}}=
+2\sqrt{ax+b}+b~\int{\frac{1}{x\sqrt{ax+b}}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 57 of 98
+aa:=integrate(sqrt(a*x+b)/x,x)
+--R 
+--R
+--R   (1)
+--R                +-+ +-------+
+--R     +-+    - 2\|b \|a x + b  + a x + 2b      +-------+
+--R   [\|b log(----------------------------) + 2\|a x + b ,
+--R                          x
+--R                   +-------+
+--R        +---+     \|a x + b       +-------+
+--R    - 2\|- b atan(----------) + 2\|a x + b ]
+--R                     +---+
+--R                    \|- b
+--R                                   Type: Union(List(Expression(Integer)),...)
+--E 
+
+--S 58 of 98
+dd:=integrate(1/(x*sqrt(a*x+b)),x)
+--R 
+--R
+--R                  +-------+              +-+           +---+ +-------+
+--R             - 2b\|a x + b  + (a x + 2b)\|b           \|- b \|a x + b
+--R         log(-------------------------------)   2atan(----------------)
+--R                            x                                 b
+--R   (2)  [------------------------------------,- -----------------------]
+--R                          +-+                             +---+
+--R                         \|b                             \|- b
+--R                                   Type: Union(List(Expression(Integer)),...)
+--E
+
+--S 59 of 98
+bb1:=2*sqrt(a*x+b)+b*dd.1
+--R 
+--R
+--R                   +-------+              +-+
+--R              - 2b\|a x + b  + (a x + 2b)\|b       +-+ +-------+
+--R        b log(-------------------------------) + 2\|b \|a x + b
+--R                             x
+--R   (3)  --------------------------------------------------------
+--R                                   +-+
+--R                                  \|b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 60 of 98
+bb2:=2*sqrt(a*x+b)+b*dd.2
+--R 
+--R
+--R                   +---+ +-------+
+--R                  \|- b \|a x + b       +---+ +-------+
+--R        - 2b atan(----------------) + 2\|- b \|a x + b
+--R                          b
+--R   (4)  -----------------------------------------------
+--R                              +---+
+--R                             \|- b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 61 of 98
+cc11:=bb1-aa.1
+--R 
+--R
+--R   (5)
+--R              +-------+              +-+              +-+ +-------+
+--R         - 2b\|a x + b  + (a x + 2b)\|b           - 2\|b \|a x + b  + a x + 2b
+--R   b log(-------------------------------) - b log(----------------------------)
+--R                        x                                       x
+--R   ----------------------------------------------------------------------------
+--R                                        +-+
+--R                                       \|b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 62 of 98
+cc12:=bb1-aa.2
+--R 
+--R
+--R                   +-------+              +-+                     +-------+
+--R              - 2b\|a x + b  + (a x + 2b)\|b       +---+ +-+     \|a x + b
+--R        b log(-------------------------------) + 2\|- b \|b atan(----------)
+--R                             x                                      +---+
+--R                                                                   \|- b
+--R   (6)  --------------------------------------------------------------------
+--R                                         +-+
+--R                                        \|b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 63 of 98
+cc21:=bb2-aa.1
+--R 
+--R
+--R   (7)
+--R                       +-+ +-------+                        +---+ +-------+
+--R      +---+ +-+    - 2\|b \|a x + b  + a x + 2b            \|- b \|a x + b
+--R   - \|- b \|b log(----------------------------) - 2b atan(----------------)
+--R                                 x                                 b
+--R   -------------------------------------------------------------------------
+--R                                      +---+
+--R                                     \|- b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 64 of 98
+cc22:=bb2-aa.2
+--R 
+--R
+--R                   +---+ +-------+             +-------+
+--R                  \|- b \|a x + b             \|a x + b
+--R        - 2b atan(----------------) - 2b atan(----------)
+--R                          b                      +---+
+--R                                                \|- b
+--R   (8)  -------------------------------------------------
+--R                               +---+
+--R                              \|- b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 65 of 98     14:92 Schaums and Axiom agree
+dd22:=ratDenom cc22
+--R
+--R   (9)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.93~~~~~$\displaystyle
+\int{\frac{\sqrt{ax+b}}{x^2}~dx}$}
+$$\int{\frac{\sqrt{ax+b}}{x^2}}=
+-\frac{\sqrt{ax+b}}{x}+\frac{a}{2}~\int{\frac{1}{x\sqrt{ax+b}}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 65 of 98
+aa:=integrate(sqrt(a*x+b)/x^2,x)
+--R 
+--R
+--R   (1)
+--R                 +-------+              +-+
+--R            - 2b\|a x + b  + (a x + 2b)\|b       +-+ +-------+
+--R    a x log(-------------------------------) - 2\|b \|a x + b
+--R                           x
+--R   [----------------------------------------------------------,
+--R                                 +-+
+--R                              2x\|b
+--R                +---+ +-------+
+--R               \|- b \|a x + b      +---+ +-------+
+--R    - a x atan(----------------) - \|- b \|a x + b
+--R                       b
+--R    -----------------------------------------------]
+--R                          +---+
+--R                        x\|- b
+--R                                   Type: Union(List(Expression(Integer)),...)
+--E 
+
+--S 66 of 98
+dd:=integrate(1/(x*sqrt(a*x+b)),x)
+--R 
+--R
+--R                  +-------+              +-+           +---+ +-------+
+--R             - 2b\|a x + b  + (a x + 2b)\|b           \|- b \|a x + b
+--R         log(-------------------------------)   2atan(----------------)
+--R                            x                                 b
+--R   (2)  [------------------------------------,- -----------------------]
+--R                          +-+                             +---+
+--R                         \|b                             \|- b
+--R                                   Type: Union(List(Expression(Integer)),...)
+--E
+
+--S 67 of 98
+bb1:=-sqrt(a*x+b)/x+a/2*dd.1
+--R 
+--R
+--R                     +-------+              +-+
+--R                - 2b\|a x + b  + (a x + 2b)\|b       +-+ +-------+
+--R        a x log(-------------------------------) - 2\|b \|a x + b
+--R                               x
+--R   (3)  ----------------------------------------------------------
+--R                                     +-+
+--R                                  2x\|b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 68 of 98
+bb2:=-sqrt(a*x+b)/x+a/2*dd.2
+--R 
+--R
+--R                    +---+ +-------+
+--R                   \|- b \|a x + b      +---+ +-------+
+--R        - a x atan(----------------) - \|- b \|a x + b
+--R                           b
+--R   (4)  -----------------------------------------------
+--R                              +---+
+--R                            x\|- b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 69 of 98
+cc11:=bb1-aa.1
+--R 
+--R
+--R   (5)  0
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 70 of 98
+cc21:=bb-aa.1
+--R 
+--R
+--R   (6)
+--R                  +-------+              +-+
+--R             - 2b\|a x + b  + (a x + 2b)\|b       +-+ +-------+         +-+
+--R   - a x log(-------------------------------) + 2\|b \|a x + b  + 2bb x\|b
+--R                            x
+--R   ------------------------------------------------------------------------
+--R                                       +-+
+--R                                    2x\|b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 71 of 98
+cc12:=bb1-aa.2
+--R 
+--R
+--R   (7)
+--R                   +-------+              +-+                +---+ +-------+
+--R     +---+    - 2b\|a x + b  + (a x + 2b)\|b        +-+     \|- b \|a x + b
+--R   a\|- b log(-------------------------------) + 2a\|b atan(----------------)
+--R                             x                                      b
+--R   --------------------------------------------------------------------------
+--R                                     +---+ +-+
+--R                                   2\|- b \|b
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 72 of 98     14:93 Schaums and Axiom agree
+cc22:=bb2-aa.2
+--R 
+--R
+--R   (8)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.94~~~~~$\displaystyle
+\int{\frac{x^m}{\sqrt{ax+b}}~dx}$}
+$$\int{\frac{x^m}{\sqrt{ax+b}}}=
+\frac{2x^m\sqrt{ax+b}}{(2m+1)a}-\frac{2mb}{(2m+1)a}
+~\int{\frac{x^{m-1}}{\sqrt{ax+b}}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 73 of 98     14:94 Axiom cannot do this integral
+aa:=integrate(x^m/sqrt(a*x+b),x)
+--R 
+--R
+--R           x       m
+--I         ++      %L
+--I   (1)   |   ----------- d%L
+--R        ++    +--------+
+--I             \|b + %L a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+
+\section{\cite{1}:14.95~~~~~$\displaystyle
+\int{\frac{dx}{x^m\sqrt{ax+b}}}$}
+$$\int{\frac{1}{x^m\sqrt{ax+b}}}=
+-\frac{\sqrt{ax+b}}{(m-1)bx^{m-1}}-\frac{(2m-3)a}{(2m-2)b}
+~\int{\frac{1}{x^{m-1}\sqrt{ax+b}}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 74 of 98     14:95 Axiom cannot do this integral
+aa:=integrate(1/(x^m*sqrt(a*x+b)),x)
+--R 
+--R
+--R           x
+--R         ++         1
+--I   (1)   |   -------------- d%L
+--R        ++     m +--------+
+--I             %L \|b + %L a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+
+\section{\cite{1}:14.96~~~~~$\displaystyle
+\int{x^m\sqrt{ax+b}~dx}$}
+$$\int{x^m\sqrt{ax+b}}=
+\frac{2x^m}{(2m+3)a}(ax+b)^{3/2}
+-\frac{2mb}{(2m+3)a}~\int{x^{m-1}\sqrt{ax+b}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 75 of 98     14:96 Axiom cannot do this integral
+aa:=integrate(x^m*sqrt(a*x+b),x)
+--R 
+--R
+--R           x
+--R         ++    m +--------+
+--I   (1)   |   %L \|b + %L a d%L
+--R        ++
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+
+\section{\cite{1}:14.97~~~~~$\displaystyle
+\int{\frac{\sqrt{ax+b}}{x^m}~dx}$}
+$$\int{\frac{\sqrt{ax+b}}{x^m}}=
+-\frac{\sqrt{ax+b}}{(m-1)x^{m-1}}
++\frac{a}{2(m-1)}~\int{\frac{1}{x^{m-1}\sqrt{ax+b}}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 76 of 98     14:97 Axiom cannot do this integral
+aa:=integrate(sqrt(a*x+b)/x^m,x)
+--R 
+--R
+--R           x  +--------+
+--I         ++  \|b + %L a
+--I   (1)   |   ----------- d%L
+--R        ++         m
+--I                 %L
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+
+\section{\cite{1}:14.98~~~~~$\displaystyle
+\int{\frac{\sqrt{ax+b}}{x^m}~dx}$}
+$$\int{\frac{\sqrt{ax+b}}{x^m}}=
+\frac{-(ax+b)^{3/2}}{(m-1)bx^{m-1}}
+-\frac{(2m-5)a}{(2m-2)b}~\int{\frac{\sqrt{ax+b}}{x^{m-1}}}
+$$
+Note: 14.98 is the same as 14.97
+\begin{chunk}{*}
+)clear all
+
+--S 77 of 98     14:98 Axiom cannot do this integral
+aa:=integrate(sqrt(a*x+b)/x^m,x)
+--R 
+--R
+--R           x  +--------+
+--I         ++  \|b + %L a
+--I   (1)   |   ----------- d%L
+--R        ++         m
+--I                 %L
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+
+\section{\cite{1}:14.99~~~~~$\displaystyle
+\int{(ax+b)^{m/2}~dx}$}
+$$\int{(ax+b)^{m/2}}=
+\frac{2(ax+b)^{(m+2)/2}}{a(m+2)}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 78 of 98
+aa:=integrate((a*x+b)^(m/2),x)
+--R 
+--R
+--R                     m log(a x + b)
+--R                     --------------
+--R                            2
+--R        (2a x + 2b)%e
+--R   (1)  ---------------------------
+--R                  a m + 2a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 79 of 98
+bb:=(2*(a*x+b)^((m+2)/2))/(a*(m+2))
+--R 
+--R
+--R                  m + 2
+--R                  -----
+--R                    2
+--R        2(a x + b)
+--R   (2)  ---------------
+--R            a m + 2a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 80 of 98
+cc:=aa-bb
+--R 
+--R
+--R                     m log(a x + b)             m + 2
+--R                     --------------             -----
+--R                            2                     2
+--R        (2a x + 2b)%e               - 2(a x + b)
+--R   (3)  ---------------------------------------------
+--R                           a m + 2a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 81 of 98
+explog:=rule(%e^(n*log(x)) == x^n)
+--R
+--R          n log(x)     n
+--R   (4)  %e         == x
+--R                       Type: RewriteRule(Integer,Integer,Expression(Integer))
+--E
+
+--S 82 of 98
+dd:=explog cc
+--R
+--R                    m + 2                       m
+--R                    -----                       -
+--R                      2                         2
+--R        - 2(a x + b)      + (2a x + 2b)(a x + b)
+--R   (5)  -----------------------------------------
+--R                         a m + 2a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 83 of 98     14:99 Schaums and Axiom agree
+ee:=complexNormalize dd
+--R
+--R   (6)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.100~~~~~$\displaystyle
+\int{x(ax+b)^{m/2}~dx}$}
+$$\int{x(ax+b)^{m/2}}=
+\frac{2(ax+b)^{(m+4)/2}}{a^2(m+4)}
+-\frac{2b(ax+b)^{(m+2)/2}}{a^2(m+2)}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 84 of 98
+aa:=integrate(x*(a*x+b)^(m/2),x)
+--R 
+--R
+--R                                           m log(a x + b)
+--R                                           --------------
+--R            2      2  2                2          2
+--R        ((2a m + 4a )x  + 2a b m x - 4b )%e
+--R   (1)  -------------------------------------------------
+--R                         2 2     2      2
+--R                        a m  + 6a m + 8a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 85 of 98
+bb:=(2*(a*x+b)^((m+4)/2))/(a^2*(m+4))-(2*b*(a*x+b)^((m+2)/2))/(a^2*(m+2))
+--R 
+--R
+--R                         m + 4                         m + 2
+--R                         -----                         -----
+--R                           2                             2
+--R        (2m + 4)(a x + b)      + (- 2b m - 8b)(a x + b)
+--R   (2)  ----------------------------------------------------
+--R                           2 2     2      2
+--R                          a m  + 6a m + 8a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 86 of 98
+cc:=aa-bb
+--R 
+--R
+--R   (3)
+--R                                          m log(a x + b)
+--R                                          --------------
+--R           2      2  2                2          2
+--R       ((2a m + 4a )x  + 2a b m x - 4b )%e
+--R     + 
+--R                          m + 4                       m + 2
+--R                          -----                       -----
+--R                            2                           2
+--R       (- 2m - 4)(a x + b)      + (2b m + 8b)(a x + b)
+--R  /
+--R      2 2     2      2
+--R     a m  + 6a m + 8a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 87 of 98
+explog:=rule(%e^(n*log(x)) == x^n)
+--R
+--R          n log(x)     n
+--R   (4)  %e         == x
+--R                       Type: RewriteRule(Integer,Integer,Expression(Integer))
+--E
+
+--S 88 of 98
+dd:=explog cc
+--R
+--R   (5)
+--R                          m + 4                       m + 2
+--R                          -----                       -----
+--R                            2                           2
+--R       (- 2m - 4)(a x + b)      + (2b m + 8b)(a x + b)
+--R     + 
+--R                                                 m
+--R                                                 -
+--R           2      2  2                2          2
+--R       ((2a m + 4a )x  + 2a b m x - 4b )(a x + b)
+--R  /
+--R      2 2     2      2
+--R     a m  + 6a m + 8a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 89 of 98     14:100 Schaums and Axiom agree
+ee:=complexNormalize dd
+--R
+--R   (6)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.101~~~~~$\displaystyle
+\int{x^2(ax+b)^{m/2}~dx}$}
+$$\int{x^2(ax+b)^{m/2}}=
+\frac{2(ax+b)^{(m+6)/2}}{a^3(m+6)}
+-\frac{4b(ax+b)^{(m+4)/2}}{a^3(m+4)}
++\frac{2b^2(ax+b)^{(m+2)/2}}{a^3(m+2)}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 90 of 98
+aa:=integrate(x^2*(a*x+b)^(m/2),x)
+--R 
+--R
+--R   (1)
+--R           3 2      3       3  3      2   2     2     2       2         3
+--R       ((2a m  + 12a m + 16a )x  + (2a b m  + 4a b m)x  - 8a b m x + 16b )
+--R    *
+--R         m log(a x + b)
+--R         --------------
+--R                2
+--R       %e
+--R  /
+--R      3 3      3 2      3       3
+--R     a m  + 12a m  + 44a m + 48a
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+--S 91 of 98
+bb:=(2*(a*x+b)^((m+6)/2))/(a^3*(m+6))-_
+      (4*b*(a*x+b)^((m+4)/2))/(a^3*(m+4))+_
+        (2*b^2*(a*x+b)^((m+2)/2))/(a^3*(m+2))
+--R 
+--R
+--R   (2)
+--R                                m + 6                                   m + 4
+--R                                -----                                   -----
+--R          2                       2            2                          2
+--R       (2m  + 12m + 16)(a x + b)      + (- 4b m  - 32b m - 48b)(a x + b)
+--R     + 
+--R                                      m + 2
+--R                                      -----
+--R          2 2      2       2            2
+--R       (2b m  + 20b m + 48b )(a x + b)
+--R  /
+--R      3 3      3 2      3       3
+--R     a m  + 12a m  + 44a m + 48a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 92 of 98
+cc:=aa-bb
+--R 
+--R
+--R   (3)
+--R             3 2      3       3  3      2   2     2     2       2         3
+--R         ((2a m  + 12a m + 16a )x  + (2a b m  + 4a b m)x  - 8a b m x + 16b )
+--R      *
+--R           m log(a x + b)
+--R           --------------
+--R                  2
+--R         %e
+--R     + 
+--R                                  m + 6                                 m + 4
+--R                                  -----                                 -----
+--R            2                       2          2                          2
+--R       (- 2m  - 12m - 16)(a x + b)      + (4b m  + 32b m + 48b)(a x + b)
+--R     + 
+--R                                        m + 2
+--R                                        -----
+--R            2 2      2       2            2
+--R       (- 2b m  - 20b m - 48b )(a x + b)
+--R  /
+--R      3 3      3 2      3       3
+--R     a m  + 12a m  + 44a m + 48a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 93 of 98
+explog:=rule(%e^(n*log(x)) == x^n)
+--R
+--R          n log(x)     n
+--R   (4)  %e         == x
+--R                       Type: RewriteRule(Integer,Integer,Expression(Integer))
+--E
+
+--S 94 of 98
+dd:=explog cc
+--R
+--R   (5)
+--R                                  m + 6                                 m + 4
+--R                                  -----                                 -----
+--R            2                       2          2                          2
+--R       (- 2m  - 12m - 16)(a x + b)      + (4b m  + 32b m + 48b)(a x + b)
+--R     + 
+--R                                        m + 2
+--R                                        -----
+--R            2 2      2       2            2
+--R       (- 2b m  - 20b m - 48b )(a x + b)
+--R     + 
+--R             3 2      3       3  3      2   2     2     2       2         3
+--R         ((2a m  + 12a m + 16a )x  + (2a b m  + 4a b m)x  - 8a b m x + 16b )
+--R      *
+--R                  m
+--R                  -
+--R                  2
+--R         (a x + b)
+--R  /
+--R      3 3      3 2      3       3
+--R     a m  + 12a m  + 44a m + 48a
+--R                                                    Type: Expression(Integer)
+--E
+
+--S 95 of 98     14:101 Schaums and Axiom agree
+ee:=complexNormalize dd
+--R
+--R   (6)  0
+--R                                                    Type: Expression(Integer)
+--E
+\end{chunk}
+
+\section{\cite{1}:14.102~~~~~$\displaystyle
+\int{\frac{(ax+b)^{m/2}}{x}~dx}$}
+$$\int{\frac{(ax+b)^{m/2}}{x}}=
+\frac{2(ax+b)^{m/2}}{m}
++b~\int{\frac{(ax+b)^{(m-2)/2}}{x}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 96 of 98     14:102 Axiom cannot do this integral
+aa:=integrate((a*x+b)^(m/2)/x,x)
+--R 
+--R
+--R                       m
+--R                       -
+--R           x           2
+--I         ++  (b + %L a)
+--I   (1)   |   ----------- d%L
+--I        ++        %L
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+\section{\cite{1}:14.103~~~~~$\displaystyle
+\int{\frac{(ax+b)^{m/2}}{x^2}~dx}$}
+$$\int{\frac{(ax+b)^{m/2}}{x^2}}=
+-\frac{(ax+b)^{(m+2)/2}}{bx}
++\frac{ma}{2b}~\int{\frac{(ax+b)^{m/2}}{x}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 97 of 98     14:103 Axiom cannot do this integral
+aa:=integrate((a*x+b)^(m/2)/x^2,x)
+--R 
+--R
+--R                       m
+--R                       -
+--R           x           2
+--I         ++  (b + %L a)
+--I   (1)   |   ----------- d%L
+--R        ++         2
+--I                 %L
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+\end{chunk}
+\section{\cite{1}:14.104~~~~~$\displaystyle
+\int{\frac{dx}{x(ax+b)^{m/2}}}$}
+$$\int{\frac{1}{x(ax+b)^{m/2}}}=
+\frac{2}{(m-2)b(ax+b)^{(m-2)/2}}
++\frac{1}{b}~\int{\frac{1}{x(ax+b)^{(m-2)/2}}}
+$$
+\begin{chunk}{*}
+)clear all
+
+--S 98 of 98     14:104 Axiom cannot do this integral
+aa:=integrate(1/(x*(a*x+b)^(m/2)),x)
+--R 
+--R
+--R           x
+--R         ++         1
+--I   (1)   |   -------------- d%L
+--R        ++                m
+--R                          -
+--R                          2
+--I             %L (b + %L a)
+--R                                         Type: Union(Expression(Integer),...)
+--E 
+
+)spool
+)lisp (bye)
+\end{chunk}
+
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} Spiegel, Murray R.
+{\sl Mathematical Handbook of Formulas and Tables}\\
+Schaum's Outline Series McGraw-Hill 1968 pp61-62
+\end{thebibliography}
+\end{document}

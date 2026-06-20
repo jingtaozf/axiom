@@ -1,0 +1,105 @@
+\documentclass{article}
+\usepackage{axiom}
+\setlength{\textwidth}{400pt}
+\begin{document}
+\title{\$SPAD/src/input exlap.input}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{License}
+\begin{chunk}{license}
+--Copyright The Numerical Algorithms Group Limited 1991.
+\end{chunk}
+\begin{chunk}{*}
+)set break resume
+)spool exlap.output
+)set message test on
+)set message auto off
+)clear all
+ 
+--S 1 of 6
+laplace(2/t * (1 - cos(a*t)), t, s)
+--R 
+--R
+--R             2    2
+--R   (1)  log(s  + a ) - 2log(s)
+--R                                                    Type: Expression(Integer)
+--E 1
+
+--S 2 of 6
+laplace((exp(a*t) - exp(b*t))/t, t, s)
+--R 
+--R
+--R   (2)  - log(s - a) + log(s - b)
+--R                                                    Type: Expression(Integer)
+--E 2
+
+--S 3 of 6
+laplace(exp(a*t+b)*Ei(c*t), t, s)
+--R 
+--R
+--R          b    s + c - a
+--R        %e log(---------)
+--R                   c
+--R   (3)  -----------------
+--R              s - a
+--R                                                    Type: Expression(Integer)
+--E 3
+
+)clear all
+
+--S 4 of 6
+laplace(a*Ci(b*t) + c*Si(d*t), t, s)
+--R 
+--R
+--R               2    2
+--R              s  + b             d
+--R        a log(-------) + 2c atan(-)
+--R                  2              s
+--R                 b
+--R   (1)  ---------------------------
+--R                     2s
+--R                                                    Type: Expression(Integer)
+--E 4
+
+)clear all
+
+--S 5 of 6
+laplace(sin(a*t) * cosh(a*t) - cos(a*t) * sinh(a*t), t, s)
+--R 
+--R
+--R             3
+--R           4a
+--R   (1)  --------
+--R         4     4
+--R        s  + 4a
+--R                                                    Type: Expression(Integer)
+--E 5
+
+)clear all
+
+--S 6 of 6
+laplace(t^4 * exp(-a*t) / factorial(4), t, s)
+--R 
+--R
+--R                            1
+--R   (1)  ----------------------------------------
+--R         5       4      2 3      3 2     4     5
+--R        s  + 5a s  + 10a s  + 10a s  + 5a s + a
+--R                                                    Type: Expression(Integer)
+--E 6
+)spool 
+)lisp (bye)
+ 
+\end{chunk}
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
+
+ 

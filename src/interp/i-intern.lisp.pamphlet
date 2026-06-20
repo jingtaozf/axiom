@@ -1,0 +1,2554 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{i-intern.lisp}
+\author{The Axiom Team}
+\begin{abstract}
+\end{abstract}
+\section{Internal Interpreter Facilities}
+Vectorized Attributed Trees
+
+The interpreter translates parse forms into vats for analysis.
+These contain a number of slots in each node for information.
+The leaves are now all vectors, though the leaves for basic types
+such as integers and strings used to just be the objects themselves.
+The vectors for the leaves with such constants now have the value
+of =$immediateDataSymbol= as their name. There are undoubtably still
+some functions that still check whether a leaf is a constant. Note
+that if it is not a vector it is a subtree.
+
+attributed tree nodes have the following form:
+
+| slot | description |
+| ---- | ------------------------- |
+| 0 | operation name or literal |
+| 1 | declared mode of variable |
+| 2 | computed value of subtree from this node |
+| 3 | modeset: list of single computed mode of subtree |
+| 4 | prop list for extra things |
+
+\begin{chunk}{*}
+
+(IN-PACKAGE "BOOT" )
+
+;SETANDFILEQ($useParserSrcPos, NIL)
+
+(SETANDFILEQ |$useParserSrcPos| NIL) 
+;SETANDFILEQ($transferParserSrcPos, NIL)
+
+(SETANDFILEQ |$transferParserSrcPos| NIL) 
+
+\end{chunk}
+
+\section{Making trees}
+
+\subsection{mkAtreeNode}
+\begin{chunk}{*}
+;mkAtreeNode x ==
+;  -- maker of attrib tree node
+;  v := MAKE_-VEC 5
+;  v.0 := x
+;  v
+
+(defun |mkAtreeNode| (x)
+ (let (v)
+  (setq v (make-array 5 :initial-element nil))
+  (setelt v 0 x)
+  v))
+
+\end{chunk}
+
+\subsection{mkAtree}
+Maker of attrib tree from parser form
+\begin{chunk}{*}
+;mkAtree x ==
+;  mkAtree1 mkAtreeExpandMacros x
+
+(defun |mkAtree| (x)
+ (|mkAtree1| (|mkAtreeExpandMacros| x))) 
+
+\end{chunk}
+
+\subsection{mkAtreeWithSrcPos}
+\begin{chunk}{*}
+;mkAtreeWithSrcPos(form, posnForm) ==
+;    posnForm and $useParserSrcPos => pf2Atree(posnForm)
+;    transferSrcPosInfo(posnForm, mkAtree form)
+
+(defun |mkAtreeWithSrcPos| (form posnForm)
+ (declare (special |$useParserSrcPos|))
+ (cond
+  ((and posnForm |$useParserSrcPos|) (|pf2Atree| posnForm))
+  (t (|transferSrcPosInfo| posnForm (|mkAtree| form))))) 
+
+\end{chunk}
+
+\subsection{mkAtree1WithSrcPos}
+\begin{chunk}{*}
+;mkAtree1WithSrcPos(form, posnForm) ==
+;  transferSrcPosInfo(posnForm, mkAtree1 form)
+
+(defun |mkAtree1WithSrcPos| (form posnForm)
+ (|transferSrcPosInfo| posnForm (|mkAtree1| form))) 
+
+\end{chunk}
+
+\subsection{mkAtreeNodeWithSrcPos}
+\begin{chunk}{*}
+;mkAtreeNodeWithSrcPos(form, posnForm) ==
+;  transferSrcPosInfo(posnForm, mkAtreeNode form)
+
+(defun |mkAtreeNodeWithSrcPos| (form posnForm)
+ (|transferSrcPosInfo| posnForm (|mkAtreeNode| form))) 
+
+\end{chunk}
+
+\subsection{transferSrcPosInfo}
+\begin{chunk}{*}
+;transferSrcPosInfo(pf, atree) ==
+;    not (pf and $transferParserSrcPos) => atree
+;    pos := pfPosOrNopos(pf)
+;    pfNoPosition?(pos) => atree
+;
+;    -- following is a hack because parser code for getting filename
+;    -- seems wrong.
+;    fn := lnPlaceOfOrigin poGetLineObject(pos)
+;    if NULL fn or fn = '"strings" then fn := '"console"
+;
+;    putSrcPos(atree, fn, pfSourceText(pf), pfLinePosn(pos), pfCharPosn(pos))
+;    atree
+
+(defun |transferSrcPosInfo| (pf atree)
+ (let (pos fn)
+ (declare (special |$transferParserSrcPos|))
+  (cond
+   ((null (and pf |$transferParserSrcPos|)) atree)
+   (t
+     (setq pos (|pfPosOrNopos| pf))
+     (cond
+      ((|pfNoPosition?| pos) atree)
+      (t
+       (setq fn (|lnPlaceOfOrigin| (|poGetLineObject| pos)))
+       (cond
+        ((or (null fn) (string= fn "strings"))
+         (setq fn "console")))
+       (|putSrcPos| atree fn
+        (|pfSourceText| pf)
+        (|pfLinePosn| pos)
+        (|pfCharPosn| pos))
+       atree))))))
+
+\end{chunk}
+
+\subsection{mkAtreeExpandMacros}
+Handle macro expansion. if the macros have args we require that
+we match the correct number of args
+\begin{chunk}{*}
+;mkAtreeExpandMacros x ==
+;  if x isnt ['MDEF,:.] and x isnt ['DEF,['macro,:.],:.] then
+;    atom x and (m := isInterpMacro x) =>
+;      [args,:body] := m
+;      args => 'doNothing
+;      x := body
+;    x is [op,:argl] =>
+;      op = 'QUOTE => 'doNothing
+;      op = 'where and argl is [before,after] =>
+;        -- in a where clause, what follows "where" (the "after" parm
+;        -- above) might be a local macro, so do not expand the "before"
+;        -- part yet
+;        x := [op,before,mkAtreeExpandMacros after]
+;      argl := [mkAtreeExpandMacros a for a in argl]
+;      (m := isInterpMacro op) =>
+;        [args,:body] := m
+;        #args = #argl =>
+;          sl := [[a,:s] for a in args for s in argl]
+;          x := SUBLISNQ(sl,body)
+;        null args => x := [body,:argl]
+;        x := [op,:argl]
+;      x := [mkAtreeExpandMacros op,:argl]
+;  x
+
+(defun |mkAtreeExpandMacros| (x)
+ (let (tmp1 op before after argl m args body sl)
+  (cond
+   ((and
+        (null (and (consp x) (eq (qcar x) (quote mdef))))
+        (null 
+         (and (consp x)
+              (eq (qcar x) (quote def))
+              (progn
+               (and
+                (consp (qcdr x))
+                (progn
+                 (and
+                  (consp (qcar (qcdr x)))
+                  (eq (qcar (qcar (qcdr x))) '|macro|))))))))
+       (cond
+        ((and (atom x) (setq m (|isInterpMacro| x)))
+         (setq args (car m))
+         (setq body (cdr m))
+         (cond (args '|doNothing|) (t (setq x body))))
+        ((and (consp x)
+              (progn
+               (setq op (qcar x))
+               (setq argl (qcdr x))
+               t))
+         (cond
+          ((boot-equal op 'quote) '|doNothing|)
+          ((and (boot-equal op '|where|)
+                (consp argl)
+                (progn
+                 (setq before (qcar argl))
+                 (setq tmp1 (qcdr argl))
+                 (and
+                  (consp tmp1)
+                  (eq (qcdr tmp1) nil)
+                  (progn (setq after (qcar tmp1)) t))))
+           (setq x
+            (cons op
+             (cons before
+              (cons (|mkAtreeExpandMacros| after) nil)))))
+          (t
+           (setq argl
+            (let (g0)
+              (do ((g1 argl (cdr g1)) (a nil))
+                  ((or (atom g1) (progn (setq a (car g1)) nil))
+                    (nreverse0 g0))
+                (seq
+                 (exit
+                  (setq g0 (cons (|mkAtreeExpandMacros| a) g0)))))))
+           (cond
+            ((setq m (|isInterpMacro| op))
+             (setq args (car m))
+             (setq body (cdr m))
+             (cond
+              ((= (|#| args) (|#| argl))
+               (setq sl
+                (let (g2)
+                  (do ((g3 args (cdr g3))
+                       (a nil)
+                       (g4 argl (cdr g4))
+                       (s nil))
+                      ((or (atom g3)
+                           (progn (setq a (car g3)) nil)
+                           (atom g4)
+                           (progn (setq s (car g4)) nil))
+                       (nreverse0 g2))
+                    (seq (exit (setq g2 (cons (cons a s) g2)))))))
+               (setq x (sublisnq sl body)))
+              ((null args) (setq x (cons body argl)))
+              (t (setq x (cons op argl)))))
+            (t
+             (setq x (cons (|mkAtreeExpandMacros| op) argl))))))))))
+     x))
+ 
+\end{chunk}
+\subsection{mkAtree1}
+\begin{chunk}{*}
+;mkAtree1 x ==
+;  -- first special handler for making attrib tree
+;  null x => throwKeyedMsg("S2IP0005",['"NIL"])
+;  VECP x => x
+;  atom x =>
+;    x in '(noBranch noMapVal) => x
+;    x in '(nil true false) => mkAtree2([x],x,NIL)
+;    x = '_/throwAway =>
+;      -- don't want to actually compute this
+;      tree := mkAtree1 '(void)
+;      putValue(tree,objNewWrap(voidValue(),$Void))
+;      putModeSet(tree,[$Void])
+;      tree
+;    getBasicMode x =>
+;      v := mkAtreeNode $immediateDataSymbol
+;      putValue(v,getBasicObject x)
+;      v
+;    IDENTP x => mkAtreeNode x
+;    keyedSystemError("S2II0002",[x])
+;  x is [op,:argl] => mkAtree2(x,op,argl)
+;  systemErrorHere '"mkAtree1"
+
+(defun |mkAtree1| (x)
+ (let (tree v)
+ (declare (special |$immediateDataSymbol| |$Void|))
+  (cond
+   ((null x)
+    (|throwKeyedMsg|
+     "%1 is not a valid identifier to use in Axiom."
+     (cons "NIL" nil)))
+   ((vecp x) x)
+   ((atom x)
+    (cond
+     ((|member| x '(|noBranch| |noMapVal|)) x)
+     ((|member| x '(|nil| |true| |false|))
+      (|mkAtree2| (cons x nil) x nil))
+     ((eq x '|/throwAway|)
+      (setq tree (|mkAtree1| '(|void|)))
+      (|putValue| tree (mkObjWrap (|voidValue|) |$Void|))
+      (|putModeSet| tree (cons |$Void| nil)) tree)
+     ((|getBasicMode| x)
+      (setq v (|mkAtreeNode| |$immediateDataSymbol|))
+      (|putValue| v (|getBasicObject| x)) v)
+     ((identp x) (|mkAtreeNode| x))
+     (t (|keyedSystemError|
+         "Unknown form of attributed tree: %1s"
+         (cons x nil)))))
+   ((consp x) (|mkAtree2| x (qcar x) (qcdr x)))
+   (t (|systemErrorHere| "mkAtree1")))))
+
+\end{chunk}
+
+\subsection{mkAtree2}
+mkAtree2 and mkAtree3 were created because mkAtree1 got so big
+\begin{chunk}{*}
+;mkAtree2(x,op,argl) ==
+;  nargl := #argl
+;  (op= '_-) and (nargl = 1) and (INTEGERP CAR argl) =>
+;    mkAtree1(MINUS CAR argl)
+;  op='_: and argl is [y,z] => [mkAtreeNode 'Declare,:argl]
+;  op='COLLECT => [mkAtreeNode op,:transformCollect argl]
+;  op= 'break =>
+;    argl is [.,val] =>
+;      if val = '$NoValue then val := '(void)
+;      [mkAtreeNode op,mkAtree1 val]
+;    [mkAtreeNode op,mkAtree1 '(void)]
+;  op= 'return =>
+;    argl is [val] =>
+;      if val = '$NoValue then val := '(void)
+;      [mkAtreeNode op,mkAtree1 val]
+;    [mkAtreeNode op,mkAtree1 '(void)]
+;  op='exit => mkAtree1 CADR argl
+;  op = 'QUOTE => [mkAtreeNode op,:argl]
+;  op='SEGMENT =>
+;    argl is [a] => [mkAtreeNode op, mkAtree1 a]
+;    z :=
+;      null argl.1 => nil
+;      mkAtree1 argl.1
+;    [mkAtreeNode op, mkAtree1 argl.0,z]
+;  op in '(pretend is isnt) =>
+;    [mkAtreeNode op,mkAtree1 first argl,:rest argl]
+;  op =  '_:_: =>
+;    [mkAtreeNode 'COERCE,mkAtree1 first argl,CADR argl]
+;  x is ['_@, expr, type] =>
+;    t := evaluateType unabbrev type
+;    t = '(DoubleFloat) and expr is [['_$elt, '(Float), 'float], :args] =>
+;        mkAtree1 [['_$elt, '(DoubleFloat), 'float], :args]
+;    t = '(DoubleFloat) and INTEGERP expr =>
+;        v := mkAtreeNode $immediateDataSymbol
+;        putValue(v,getBasicObject float expr)
+;        v
+;    t = '(Float) and INTEGERP expr =>
+;        mkAtree1 ["::", expr, t]
+;    typeIsASmallInteger(t) and INTEGERP expr =>
+;        mkAtree1 ["::", expr, t]
+;    [mkAtreeNode 'TARGET,mkAtree1 expr, type]
+;  (op='case) and (nargl = 2)  =>
+;    [mkAtreeNode 'case,mkAtree1 first argl,unabbrev CADR argl]
+;  op='REPEAT => [mkAtreeNode op,:transformREPEAT argl]
+;  op='LET and argl is [['construct,:.],rhs] =>
+;    [mkAtreeNode 'LET,first argl,mkAtree1 rhs]
+;  op='LET and argl is [['_:,a,.],rhs] =>
+;    mkAtree1 ['SEQ,first argl,['LET,a,rhs]]
+;  op is ['_$elt,D,op1] =>
+;    op1 is '_= =>
+;      a' := [mkAtreeNode '_=,:[mkAtree1 arg for arg in argl]]
+;      [mkAtreeNode 'Dollar,D,a']
+;    [mkAtreeNode 'Dollar,D,mkAtree1 [op1,:argl]]
+;  op='_$elt =>
+;    argl is [D,a] =>
+;      INTEGERP a =>
+;        a = 0 => mkAtree1 [['_$elt,D,'Zero]]
+;        a = 1 => mkAtree1 [['_$elt,D,'One]]
+;        t := evaluateType unabbrev [D]
+;        typeIsASmallInteger(t) and SINTP a =>
+;            v := mkAtreeNode $immediateDataSymbol
+;            putValue(v,mkObjWrap(a, t))
+;            v
+;        mkAtree1 ["*",a,[['_$elt,D,'One]]]
+;      [mkAtreeNode 'Dollar,D,mkAtree1 a]
+;    keyedSystemError("S2II0003",['"$",argl,
+;      '"not qualifying an operator"])
+;  mkAtree3(x,op,argl)
+
+(defun |mkAtree2| (x op argl)
+ (let (nargl y val z expr type args tmp3 tmp4 rhs tmp2 op1 ap D tmp1 a tt v)
+ (declare (special |$elt| |$immediateDataSymbol| |$NoValue|))
+  (setq nargl (|#| argl))
+  (cond
+   ((and (eq op '-)
+         (eql nargl 1)
+         (integerp (car argl)))
+    (|mkAtree1| (minus (car argl))))
+   ((and (eq op '|:|)
+         (consp argl)
+         (progn
+          (setq y (qcar argl))
+          (and
+           (consp (qcdr argl))
+           (eq (qcdr (qcdr argl)) nil)
+           (progn (setq z (qcar (qcdr argl))) t))))
+    (cons (|mkAtreeNode| '|Declare|) argl))
+   ((eq op 'collect)
+    (cons (|mkAtreeNode| op) (|transformCollect| argl)))
+   ((eq op '|break|)
+    (cond
+     ((and (consp argl)
+           (progn
+            (setq tmp1 (qcdr argl))
+            (and
+             (consp tmp1)
+             (eq (qcdr tmp1) nil)
+             (progn (setq val (qcar tmp1)) t))))
+      (cond
+       ((eq val '|$NoValue|)
+        (setq val '(|void|))))
+      (cons (|mkAtreeNode| op) (cons (|mkAtree1| val) nil)))
+     (t
+      (cons
+       (|mkAtreeNode| op)
+       (cons (|mkAtree1| '(|void|)) nil)))))
+   ((eq op '|return|)
+    (cond
+     ((and (consp argl)
+           (eq (qcdr argl) nil)
+           (progn (setq val (qcar argl)) t))
+      (cond
+       ((eq val '|$NoValue|)
+        (setq val '(|void|))))
+      (cons (|mkAtreeNode| op) (cons (|mkAtree1| val) nil)))
+     (t
+      (cons
+       (|mkAtreeNode| op)
+       (cons (|mkAtree1| '(|void|)) nil)))))
+   ((eq op '|exit|) (|mkAtree1| (cadr argl)))
+   ((eq op 'quote) (cons (|mkAtreeNode| op) argl))
+   ((eq op 'segment)
+    (cond
+     ((and (consp argl)
+           (eq (qcdr argl) nil)
+           (progn (setq a (qcar argl)) t))
+      (cons (|mkAtreeNode| op) (cons (|mkAtree1| a) nil)))
+     (t
+      (setq z
+       (cond
+        ((null (elt argl 1)) nil)
+        (t (|mkAtree1| (elt argl 1)))))
+      (cons
+       (|mkAtreeNode| op)
+       (cons (|mkAtree1| (elt argl 0)) (cons z nil))))))
+   ((|member| op '(|pretend| |is| |isnt|))
+    (cons
+     (|mkAtreeNode| op)
+     (cons (|mkAtree1| (car argl)) (cdr argl))))
+   ((eq op '|::|)
+    (cons
+     (|mkAtreeNode| 'coerce)
+     (cons (|mkAtree1| (car argl)) (cons (cadr argl) nil))))
+   ((and (consp x)
+         (eq (qcar x) '@)
+         (progn
+          (setq tmp1 (qcdr x))
+          (and
+           (consp tmp1)
+           (progn
+            (setq expr (qcar tmp1))
+            (setq tmp2 (qcdr tmp1))
+            (and
+             (consp tmp2)
+             (eq (qcdr tmp2) nil)
+             (progn (setq type (qcar tmp2)) t))))))
+    (setq tt (|evaluateType| (|unabbrev| type)))
+    (cond
+     ((and
+       (equal tt '(|DoubleFloat|))
+       (consp expr)
+       (progn
+        (setq tmp1 (qcar expr))
+        (and
+         (consp tmp1)
+         (eq (qcar tmp1) '|$elt|)
+         (progn
+          (setq tmp2 (qcdr tmp1))
+          (and
+           (consp tmp2)
+           (equal (qcar tmp2) '(|Float|))
+           (progn
+            (setq tmp3 (qcdr tmp2))
+            (and
+             (consp tmp3)
+             (eq (qcdr tmp3) nil)
+             (eq (qcar tmp3) '|float|)))))))
+       (progn (setq args (qcdr expr)) t))
+      (|mkAtree1|
+       (cons
+        (cons
+         '|$elt|
+         (cons '(|DoubleFloat|) (cons '|float| nil)))
+        args)))
+     ((and (eq tt '(|DoubleFloat|)) (integerp expr))
+      (setq v (|mkAtreeNode| |$immediateDataSymbol|))
+      (|putValue| v (|getBasicObject| (|float| expr)))
+      v)
+     ((and (eq tt '(|Float|)) (integerp expr))
+      (|mkAtree1| (cons '|::| (cons expr (cons tt nil)))))
+     ((and (|typeIsASmallInteger| tt) (integerp expr))
+      (|mkAtree1| (cons '|::| (cons expr (cons tt nil)))))
+     (t
+      (cons
+       (|mkAtreeNode| 'target)
+       (cons (|mkAtree1| expr) (cons type nil))))))
+   ((and (eq op '|case|) (eql nargl 2))
+    (cons
+     (|mkAtreeNode| '|case|)
+     (cons
+      (|mkAtree1| (car argl))
+      (cons (|unabbrev| (cadr argl)) nil))))
+   ((eq op 'repeat)
+    (cons (|mkAtreeNode| op) (|transformREPEAT| argl)))
+   ((AND
+     (eq op 'let)
+     (consp argl)
+     (progn
+      (setq tmp1 (QCAR argl))
+      (and (consp tmp1) (eq (qcar tmp1) '|construct|)))
+     (progn
+      (setq tmp2 (qcdr argl))
+      (and (consp tmp2)
+           (eq (qcdr tmp2) nil)
+           (progn (setq rhs (qcar tmp2)) t))))
+    (cons
+     (|mkAtreeNode| 'let)
+     (cons (car argl) (cons (|mkAtree1| rhs) nil))))
+   ((and
+     (eq op 'let)
+     (consp argl)
+     (progn
+      (setq tmp1 (qcar argl))
+      (and
+       (consp tmp1)
+       (eq (qcar tmp1) '|:|)
+       (progn
+        (setq tmp2 (qcdr tmp1))
+        (and
+         (consp tmp2)
+         (progn
+          (setq a (qcar tmp2))
+          (setq tmp3 (qcdr tmp2))
+          (and (consp tmp3) (eq (qcdr tmp3) nil)))))))
+     (progn
+      (setq tmp4 (qcdr argl))
+      (and
+       (consp tmp4)
+       (eq (qcdr tmp4) nil)
+       (progn (setq rhs (qcar tmp4)) t))))
+     (|mkAtree1|
+      (cons 'seq
+       (cons
+        (car argl)
+        (cons (cons 'let (cons a (cons rhs nil))) nil)))))
+   ((and (consp op)
+         (eq (qcar op) '|$elt|)
+         (progn
+          (setq tmp1 (qcdr op))
+          (and
+           (consp tmp1)
+           (progn
+            (setq d (qcar tmp1))
+            (setq tmp2 (qcdr tmp1))
+            (and
+             (consp tmp2)
+             (eq (qcdr tmp2) nil)
+             (progn (setq op1 (qcar tmp2)) t))))))
+    (cond
+     ((eq op1 '=)
+      (setq ap
+       (cons
+        (|mkAtreeNode| '=)
+        (let (g0)
+          (do ((g1 argl (cdr g1)) (arg nil))
+              ((or (atom g1) (progn (setq arg (car g1)) nil))
+                (nreverse0 g0))
+            (seq (exit (setq g0 (cons (|mkAtree1| arg) g0))))))))
+      (cons (|mkAtreeNode| '|Dollar|) (cons d (cons ap nil))))
+     (t
+      (cons
+       (|mkAtreeNode| '|Dollar|)
+       (cons d (cons (|mkAtree1| (cons op1 argl)) nil))))))
+   ((eq op '|$elt|)
+    (cond
+     ((and (consp argl)
+           (progn
+            (setq d (qcar argl))
+            (setq tmp1 (qcdr argl))
+            (and
+             (consp tmp1)
+             (eq (qcdr tmp1) nil)
+             (progn (setq a (qcar tmp1)) t))))
+      (cond
+       ((integerp a)
+        (cond
+         ((eql a 0)
+          (|mkAtree1|
+           (cons
+            (cons '|$elt| (cons d (cons '|Zero| nil)))
+            nil)))
+         ((eql a 1)
+          (|mkAtree1|
+           (cons
+            (cons '|$elt| (cons d (cons '|One| nil)))
+            nil)))
+         (t
+          (setq tt (|evaluateType| (|unabbrev| (cons d nil))))
+          (cond
+           ((and (|typeIsASmallInteger| tt) (typep a 'fixnum))
+            (setq v (|mkAtreeNode| |$immediateDataSymbol|))
+            (|putValue| v (mkObjWrap a tt)) v)
+           (t
+            (|mkAtree1|
+             (cons '*
+              (cons a
+               (cons
+                (cons
+                 (cons '|$elt| (cons d (cons '|One| nil)))
+                 nil)
+                nil)))))))))
+       (t
+        (cons
+         (|mkAtreeNode| '|Dollar|)
+         (cons d (cons (|mkAtree1| a) nil))))))
+     (t
+      (|keyedSystemError|
+       "Improper use of %1 with argument %2s: %3"
+       (cons "$" (cons argl (cons "not qualifying an operator" nil)))))))
+   (t (|mkAtree3| x op argl)))))
+
+\end{chunk}
+
+\subsection{mkAtree3}
+mkAtree2 and mkAtree3 were created because mkAtree1 got so big
+\begin{chunk}{*}
+;mkAtree3(x,op,argl) ==
+;  op='REDUCE and argl is [op1,axis,body] =>
+;    [mkAtreeNode op,axis,mkAtree1 op1,mkAtree1 body]
+;  op='has => [mkAtreeNode op, :argl]
+;  op='_| => [mkAtreeNode 'AlgExtension,:[mkAtree1 arg for arg in argl]]
+;  op='_= => [mkAtreeNode 'equation,:[mkAtree1 arg for arg in argl]]
+;  op='not and argl is [["=",lhs,rhs]] =>
+;    [mkAtreeNode 'not,[mkAtreeNode "=",mkAtree1 lhs,mkAtree1 rhs]]
+;  op='in and argl is [var ,['SEGMENT,lb,ul]] =>
+;    upTest:=
+;      null ul => NIL
+;      mkLessOrEqual(var,ul)
+;    lowTest:=mkLessOrEqual(lb,var)
+;    z :=
+;      ul => ['and,lowTest,upTest]
+;      lowTest
+;    mkAtree1 z
+;  x is ['IF,p,'noBranch,a] => mkAtree1 ['IF,['not,p],a,'noBranch]
+;  x is ['RULEDEF,:.] => [mkAtreeNode 'RULEDEF,:CDR x]
+;  x is ['MDEF,sym,junk1,junk2,val] =>
+;    -- new macros look like  macro f ==  or macro f(x) ===
+;    -- so transform into that format
+;    mkAtree1 ['DEF,['macro,sym],junk1,junk2,val]
+;  x is ["~=",a,b] => mkAtree1 ['not,["=",a,b]]
+;  x is ["+->",funargs,funbody] =>
+;    if funbody is [":",body,type] then
+;      types := [type]
+;      funbody := body
+;    else types := [NIL]
+;    v := collectDefTypesAndPreds funargs
+;    types := [:types,:v.1]
+;    [mkAtreeNode 'ADEF,[v.0,types,[NIL for a in types],funbody],
+;      if v.2 then v.2 else true, false]
+;  x is ['ADEF,arg,:r] =>
+;    r := mkAtreeValueOf r
+;    v :=
+;      null arg => VECTOR(NIL,NIL,NIL)
+;      CONSP arg and rest arg and first arg^= "|" =>
+;        collectDefTypesAndPreds ['Tuple,:arg]
+;      null rest arg => collectDefTypesAndPreds first arg
+;      collectDefTypesAndPreds arg
+;    [types,:r'] := r
+;    at := [fn(x,y) for x in rest types for y in v.1] where
+;      fn(a,b) ==
+;        a and b =>
+;          if a = b then a
+;          else throwMessage '"   double declaration of parameter"
+;        a or b
+;    r := [[first types,:at],:r']
+;    [mkAtreeNode 'ADEF,[v.0,:r],if v.2 then v.2 else true,false]
+;  x is ['where,before,after] =>
+;    [mkAtreeNode 'where,before,mkAtree1 after]
+;  x is ['DEF,['macro,form],.,.,body] =>
+;    [mkAtreeNode 'MDEF,form,body]
+;  x is ['DEF,a,:r] =>
+;    r := mkAtreeValueOf r
+;    a is [op,:arg] =>
+;      v :=
+;        null arg => VECTOR(NIL,NIL,NIL)
+;        CONSP arg and rest arg and first arg^= "|" =>
+;          collectDefTypesAndPreds ['Tuple,:arg]
+;        null rest arg => collectDefTypesAndPreds first arg
+;        collectDefTypesAndPreds arg
+;      [types,:r'] := r
+;      -- see case for ADEF above for defn of fn
+;      at := [fn(x,y) for x in rest types for y in v.1]
+;      r := [[first types,:at],:r']
+;      [mkAtreeNode 'DEF,[[op,:v.0],:r],if v.2 then v.2 else true,false]
+;    [mkAtreeNode 'DEF,[a,:r],true,false]
+;--x is ['when,y,pred] =>
+;--  y isnt ['DEF,a,:r] =>
+;--    keyedSystemError("S2II0003",['"when",y,'"improper argument form"])
+;--  a is [op,p1,:pr] =>
+;--    null pr => mkAtree1 ['DEF,[op,["|",p1,pred]],:r]
+;--    mkAtree1 ['DEF,[op,["|",['Tuple,p1,:pr],pred]],:r]
+;--  [mkAtreeNode 'DEF, CDR y,pred,false]
+;--x is ['otherwise,u] =>
+;--  throwMessage '"   otherwise is no longer supported."
+;  z :=
+;    getBasicMode op =>
+;      v := mkAtreeNode $immediateDataSymbol
+;      putValue(v,getBasicObject op)
+;      v
+;    atom op => mkAtreeNode op
+;    mkAtree1 op
+;  [z,:[mkAtree1 y for y in argl]]
+
+(defun |mkAtree3,fn| (a b)
+ (seq
+  (if (and a b)
+   (exit
+    (if (equal a b)
+     a
+     (|throwMessage| "   double declaration of parameter"))))
+  (exit (or a b)))) 
+
+(defun |mkAtree3| (x op argl)
+ (let (op1 axis lhs rhs var lb ul upTest lowTest p sym junk1 junk2 val b 
+       funargs type funbody before after tmp2 tmp3 form tmp4 tmp5 tmp6 
+       body tmp1 a arg types rp at r v z)
+ (declare (special |$immediateDataSymbol|))
+  (cond
+     ((and (eq op 'reduce)
+           (consp argl)
+           (progn
+            (setq op1 (qcar argl))
+            (setq tmp1 (qcdr argl))
+            (and
+             (consp tmp1)
+             (progn
+              (setq axis (qcar tmp1))
+              (setq tmp2 (qcdr tmp1))
+              (and
+               (consp tmp2)
+               (eq (qcdr tmp2) nil)
+               (progn (setq body (qcar tmp2)) t))))))
+      (cons
+       (|mkAtreeNode| op)
+       (cons axis (cons (|mkAtree1| op1) (cons (|mkAtree1| body) nil)))))
+     ((eq op '|has|) (cons (|mkAtreeNode| op) argl))
+     ((eq op '|\||)
+      (cons
+       (|mkAtreeNode| '|AlgExtension|)
+       (let (g0)
+         (do ((g1 argl (cdr g1)) (arg nil))
+             ((or (atom g1) (progn (setq arg (car g1)) nil))
+              (nreverse0 g0))
+           (setq g0 (cons (|mkAtree1| arg) g0))))))
+     ((eq op '=)
+      (cons
+       (|mkAtreeNode| '|equation|)
+       (let (g2)
+         (do ((g3 argl (cdr g3)) (arg nil))
+             ((or (atom g3) (progn (setq arg (car g3)) nil))
+               (nreverse0 g2))
+          (setq g2 (cons (|mkAtree1| arg) g2))))))
+     ((and (eq op '|not|)
+           (consp argl)
+           (eq (qcdr argl) nil)
+           (progn
+            (setq tmp1 (qcar argl))
+            (and
+             (consp tmp1)
+             (eq (qcar tmp1) '=)
+             (progn
+              (setq tmp2 (qcdr tmp1))
+              (and
+               (consp tmp2)
+               (progn
+                (setq lhs (qcar tmp2))
+                (setq tmp3 (qcdr tmp2))
+                (and
+                 (consp tmp3)
+                 (eq (qcdr tmp3) nil)
+                 (progn (setq rhs (qcar tmp3)) t))))))))
+      (cons
+       (|mkAtreeNode| '|not|)
+       (cons
+        (cons
+         (|mkAtreeNode| '=)
+         (cons (|mkAtree1| lhs) (cons (|mkAtree1| rhs) nil)))
+        nil)))
+     ((and (eq op '|in|)
+           (consp argl)
+           (progn
+            (setq var (qcar argl))
+            (setq tmp1 (qcdr argl))
+            (and
+             (consp tmp1)
+             (eq (qcdr tmp1) nil)
+             (progn
+              (setq tmp2 (qcar tmp1))
+              (and
+               (consp tmp2)
+               (eq (qcar tmp2) 'segment)
+               (progn
+                (setq tmp3 (qcdr tmp2))
+                (and
+                 (consp tmp3)
+                 (progn
+                  (setq lb (qcar tmp3))
+                  (setq tmp4 (qcdr tmp3))
+                  (and
+                   (consp tmp4)
+                   (eq (qcdr tmp4) nil)
+                   (progn (setq ul (qcar tmp4)) t))))))))))
+       (setq upTest
+        (cond
+         ((null ul) nil)
+         (t (|mkLessOrEqual| var ul))))
+       (setq lowTest (|mkLessOrEqual| lb var))
+       (setq z
+        (cond
+         (ul (cons '|and| (cons lowTest (cons upTest nil))))
+         (t lowTest)))
+       (|mkAtree1| z))
+     ((and (consp x)
+           (eq (qcar x) 'if)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and
+             (consp tmp1)
+             (progn
+              (setq p (qcar tmp1))
+              (setq tmp2 (qcdr tmp1))
+              (and
+               (consp tmp2)
+               (eq (qcar tmp2) '|noBranch|)
+               (progn
+                (setq tmp3 (qcdr tmp2))
+                (and
+                 (consp tmp3)
+                 (eq (qcdr tmp3) nil)
+                 (progn (setq a (qcar tmp3)) t))))))))
+      (|mkAtree1|
+       (cons 'IF
+        (cons
+         (cons '|not| (cons p nil))
+         (cons a (cons '|noBranch| nil))))))
+     ((and (consp x) (eq (qcar x) 'ruledef))
+      (cons (|mkAtreeNode| 'ruledef) (cdr x)))
+     ((and (consp x)
+           (eq (qcar x) 'mdef)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and
+             (consp tmp1)
+             (progn
+              (setq sym (qcar tmp1))
+              (setq tmp2 (qcdr tmp1))
+              (and
+               (consp tmp2)
+               (progn
+                (setq junk1 (qcar tmp2))
+                (setq tmp3 (qcdr tmp2))
+                (and
+                 (consp tmp3)
+                 (progn
+                  (setq junk2 (qcar tmp3))
+                  (setq tmp4 (qcdr tmp3))
+                  (and
+                   (consp tmp4)
+                   (eq (qcdr tmp4) nil)
+                   (progn (setq val (qcar tmp4)) t))))))))))
+      (|mkAtree1|
+       (cons 'def
+        (cons
+         (cons '|macro| (cons sym nil))
+         (cons junk1 (cons junk2 (cons val nil)))))))
+     ((and (consp x)
+           (eq (qcar x) '~=)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and
+             (consp tmp1)
+             (progn
+              (setq a (qcar tmp1))
+              (setq tmp2 (qcdr tmp1))
+              (and
+               (consp tmp2)
+               (eq (qcdr tmp2) nil)
+               (progn (setq b (qcar tmp2)) t))))))
+      (|mkAtree1|
+       (cons '|not|
+        (cons (cons '= (cons a (cons b nil))) nil))))
+     ((and (consp x)
+           (eq (qcar x) '+->)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and (consp tmp1)
+                 (progn
+                  (setq funargs (qcar tmp1))
+                  (setq tmp2 (qcdr tmp1))
+                  (and
+                   (consp tmp2)
+                   (eq (qcdr tmp2) nil)
+                   (progn (setq funbody (qcar tmp2)) t))))))
+       (cond
+        ((and (consp funbody)
+              (eq (qcar funbody) '|:|)
+              (progn
+               (setq tmp1 (qcdr funbody))
+               (and (consp tmp1)
+                    (progn
+                     (setq body (qcar tmp1))
+                     (setq tmp2 (qcdr tmp1))
+                     (and
+                      (consp tmp2)
+                      (eq (qcdr tmp2) nil)
+                      (progn (setq type (qcar tmp2)) t))))))
+         (setq types (cons type nil)) (setq funbody body))
+        (t (setq types (cons nil nil))))
+       (setq v (|collectDefTypesAndPreds| funargs))
+       (setq types (append types (elt v 1)))
+       (cons
+        (|mkAtreeNode| 'adef)
+        (cons
+         (cons
+          (elt v 0)
+          (cons types
+           (cons
+             (let (g4)
+              (DO ((g5 types (CDR g5)) (a NIL))
+                  ((OR (ATOM g5) (PROGN (SETQ a (CAR g5)) NIL))
+                    (NREVERSE0 g4))
+                (SEQ (EXIT (SETQ g4 (CONS NIL g4))))))
+            (cons funbody nil))))
+         (cons
+          (cond ((elt v 2) (elt v 2)) (t t))
+          (cons nil nil)))))
+     ((and (consp x)
+           (eq (qcar x) 'adef)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and (consp tmp1)
+                 (progn
+                  (setq arg (qcar tmp1))
+                  (setq r (qcdr tmp1))
+                  t))))
+      (setq r (|mkAtreeValueOf| r))
+      (setq v
+       (cond
+        ((null arg) (vector nil nil nil))
+        ((and (consp arg) (cdr arg) (nequal (car arg) '|\||))
+         (|collectDefTypesAndPreds| (cons '|Tuple| arg)))
+        ((null (cdr arg)) (|collectDefTypesAndPreds| (car arg)))
+        (t (|collectDefTypesAndPreds| arg))))
+      (setq types (car r))
+      (setq rp (cdr r))
+      (setq at
+       (let (g6)
+         (do ((g7 (cdr types) (cdr g7))
+              (x nil)
+              (g8 (elt v 1) (cdr g8))
+              (y nil))
+             ((or (atom g7)
+                  (progn (setq x (car g7)) nil)
+                  (atom g8)
+                  (progn (setq y (car g8)) nil))
+               (nreverse0 g6))
+          (setq g6 (cons (|mkAtree3,fn| x y) g6)))))
+      (setq r (cons (cons (car types) at) rp))
+      (cons 
+       (|mkAtreeNode| 'adef)
+       (cons
+        (cons (elt v 0) r)
+        (cons
+         (cond ((elt v 2) (elt v 2)) (t t))
+         (cons nil nil)))))
+     ((and (consp x)
+           (eq (qcar x) '|where|)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and
+             (consp tmp1)
+             (progn
+              (setq before (qcar tmp1))
+              (setq tmp2 (qcdr tmp1))
+              (and
+               (consp tmp2)
+               (eq (qcdr tmp2) nil)
+               (progn (setq after (qcar tmp2)) t))))))
+      (cons
+       (|mkAtreeNode| '|where|)
+       (cons before (cons (|mkAtree1| after) nil))))
+     ((and (consp x)
+           (eq (qcar x) 'def)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and
+             (consp tmp1)
+             (progn
+              (setq tmp2 (qcar tmp1))
+              (and
+               (consp tmp2)
+               (eq (qcar tmp2) '|macro|)
+               (progn
+                (setq tmp3 (qcdr tmp2))
+                (and
+                 (consp tmp3)
+                 (eq (qcdr tmp3) nil)
+                 (progn (setq form (qcar tmp3)) t)))))
+             (progn
+              (setq tmp4 (qcdr tmp1))
+              (and
+               (consp tmp4)
+               (progn
+                (setq tmp5 (qcdr tmp4))
+                (and
+                 (consp tmp5)
+                 (progn
+                  (setq tmp6 (qcdr tmp5))
+                  (and
+                   (consp tmp6)
+                   (eq (qcdr tmp6) nil)
+                   (progn (setq body (qcar tmp6)) t))))))))))
+      (cons (|mkAtreeNode| 'mdef) (cons form (cons body nil))))
+     ((and (consp x)
+           (eq (qcar x) 'def)
+           (progn
+            (setq tmp1 (qcdr x))
+            (and
+             (consp tmp1)
+             (progn
+              (setq a (qcar tmp1))
+              (setq r (qcdr tmp1))
+              t))))
+      (setq r (|mkAtreeValueOf| r))
+      (cond
+       ((and (consp a)
+             (progn
+              (setq op (qcar a))
+              (setq arg (qcdr a))
+              t))
+        (setq v
+         (cond
+          ((null arg) (vector nil nil nil))
+          ((and (consp arg) (cdr arg) (nequal (car arg) '|\||))
+           (|collectDefTypesAndPreds| (cons '|Tuple| arg)))
+          ((null (cdr arg)) (|collectDefTypesAndPreds| (car arg)))
+          (t (|collectDefTypesAndPreds| arg))))
+        (setq types (car r))
+        (setq rp (cdr r))
+        (setq at
+         (let (g9)
+           (do ((g10 (cdr types) (cdr g10))
+                (x nil)
+                (g11 (elt v 1) (cdr g11))
+                (y nil))
+               ((or (atom g10)
+                    (progn (setq x (car g10)) nil)
+                    (atom g11)
+                    (progn (setq y (car g11)) nil))
+                 (nreverse0 g9))
+            (setq g9 (cons (|mkAtree3,fn| x y) g9)))))
+        (setq r (cons (cons (car types) at) rp))
+        (cons
+         (|mkAtreeNode| 'def)
+         (cons
+          (cons (cons op (elt v 0)) r)
+          (cons
+           (cond ((elt v 2) (elt v 2)) (t t))
+           (cons nil nil)))))
+       (t
+        (cons
+         (|mkAtreeNode| 'def)
+         (cons (cons a r) (cons t (cons nil nil)))))))
+     (t
+      (setq z
+       (cond
+        ((|getBasicMode| op)
+         (setq v (|mkAtreeNode| |$immediateDataSymbol|))
+         (|putValue| v (|getBasicObject| op)) v)
+        ((ATOM op) (|mkAtreeNode| op)) (t (|mkAtree1| op))))
+      (cons z
+       (let (g12)
+         (DO ((g13 argl (CDR g13)) (y nil))
+             ((or (atom g13) (progn (setq y (car g13)) nil))
+               (nreverse0 g12))
+          (setq g12 (cons (|mkAtree1| y) g12)))))))))
+
+\end{chunk}
+\subsection{collectDefTypesAndPreds}
+Given an arglist to a DEF-like form, this function returns
+a vector of three things:
+\begin{itemize}
+\item slot 0: just the variables
+\item slot 1: the type declarations on the variables
+\item slot 2: a predicate for all arguments
+\end{itemize}
+
+\begin{chunk}{*}
+;collectDefTypesAndPreds args ==
+;  pred := types := vars := NIL
+;  junk :=
+;    IDENTP args =>
+;      types := [NIL]
+;      vars  := [args]
+;    args is [":",var,type] =>
+;      types := [type]
+;      var is ["|",var',p] =>
+;        vars := [var']
+;        pred := addPred(pred,p) where
+;          addPred(old,new) ==
+;            null new => old
+;            null old => new
+;            ['and,old,new]
+;      vars := [var]
+;    args is ["|",var,p] =>
+;      pred := addPred(pred,p)
+;      var is [":",var',type] =>
+;        types := [type]
+;        vars := [var']
+;      var is ['Tuple,:.] or var is ["|",:.] =>
+;        v := collectDefTypesAndPreds var
+;        vars  := [:vars,:v.0]
+;        types := [:types,:v.1]
+;        pred  := addPred(pred,v.2)
+;      vars := [var]
+;      types := [NIL]
+;    args is ['Tuple,:args'] =>
+;      for a in args' repeat
+;        v := collectDefTypesAndPreds a
+;        vars  := [:vars,first v.0]
+;        types := [:types,first v.1]
+;        pred  := addPred(pred,v.2)
+;    types := [NIL]
+;    vars  := [args]
+;  VECTOR(vars,types,pred)
+
+(defun |collectDefTypesAndPreds,addPred| (old new)
+ (cond
+  ((null new) old)
+  ((null old) new)
+  (t (list '|and| old new))))
+
+(defun |collectDefTypesAndPreds| (args)
+ (PROG (var p tmp1 varp tmp2 type argsp v pred types vars junk)
+  (RETURN
+   (SEQ
+    (PROGN
+     (setq pred (setq types (setq vars NIL)))
+     (setq junk
+      (cond
+       ((identp args)
+        (setq types (cons nil nil))
+        (setq vars (cons args nil)))
+       ((and (consp args)
+             (eq (qcar args) '|:|)
+             (progn
+              (setq tmp1 (qcdr args))
+              (and
+               (consp tmp1)
+               (progn
+                (setq var (qcar tmp1))
+                (setq tmp2 (qcdr tmp1))
+                (and
+                 (consp tmp2)
+                 (eq (qcdr tmp2) nil)
+                 (progn (setq type (qcar tmp2)) t))))))
+        (setq types (cons type nil))
+        (cond
+         ((and (consp var)
+               (eq (qcar var) '|\||)
+               (progn
+                (setq tmp1 (qcdr var))
+                (and
+                 (consp tmp1)
+                 (progn
+                  (setq varp (qcar tmp1))
+                  (setq tmp2 (qcdr tmp1))
+                  (and
+                   (consp tmp2)
+                   (eq (qcdr tmp2) nil)
+                   (progn (setq p (qcar tmp2)) t))))))
+          (setq vars (cons varp nil))
+          (setq pred (|collectDefTypesAndPreds,addPred| pred p)))
+         (t (setq vars (cons var nil)))))
+       ((and (consp args)
+             (eq (qcar args) '|\||)
+             (progn
+              (setq tmp1 (qcdr args))
+              (and
+               (consp tmp1)
+               (progn
+                (setq var (qcar tmp1))
+                (setq tmp2 (qcdr tmp1))
+                (and
+                 (consp tmp2)
+                 (eq (qcdr tmp2) nil)
+                 (progn (setq p (qcar tmp2)) t))))))
+        (setq pred (|collectDefTypesAndPreds,addPred| pred p))
+        (cond
+         ((and (consp var)
+               (eq (qcar var) '|:|)
+               (progn
+                (setq tmp1 (qcdr var))
+                (and
+                 (consp tmp1)
+                 (progn
+                  (setq varp (qcar tmp1))
+                  (setq tmp2 (qcdr tmp1))
+                  (and
+                   (consp tmp2)
+                   (eq (qcdr tmp2) nil)
+                   (progn (setq type (qcar tmp2)) t))))))
+          (setq types (cons type nil))
+          (setq vars (cons varp nil)))
+         ((or (and (consp var) (eq (qcar var) '|Tuple|))
+              (and (consp var) (eq (qcar var) '|\||)))
+          (setq v (|collectDefTypesAndPreds| var))
+          (setq vars (append vars (elt v 0)))
+          (setq types (append types (elt v 1)))
+          (setq pred
+           (|collectDefTypesAndPreds,addPred| pred (elt v 2))))
+         (t
+          (setq vars (cons var nil))
+          (setq types (cons nil nil)))))
+       ((and (consp args)
+             (eq (qcar args) '|Tuple|)
+             (progn (setq argsp (qcdr args)) t))
+        (do ((g0 argsp (cdr g0)) (a nil))
+            ((or (atom g0) (progn (setq a (car g0)) nil)) nil)
+           (setq v (|collectDefTypesAndPreds| a))
+           (setq vars (append vars (cons (car (elt v 0)) nil)))
+           (setq types (append types (cons (car (elt v 1)) nil)))
+           (setq pred
+             (|collectDefTypesAndPreds,addPred| pred (elt v 2)))))
+       (t
+        (setq types (cons nil nil))
+        (setq vars (cons args nil)))))
+     (vector vars types pred)))))) 
+
+\end{chunk}
+
+\subsection{mkAtreeValueOf}
+\begin{chunk}{*}
+;mkAtreeValueOf l ==
+;  -- scans for ['valueOf,atom]
+;  not CONTAINED('valueOf,l) => l
+;  mkAtreeValueOf1 l
+
+(defun |mkAtreeValueOf| (z)
+ (cond
+  ((null (contained '|valueOf| z)) z)
+  (t (|mkAtreeValueOf1| z)))) 
+
+\end{chunk}
+
+\subsection{mkAtreeValueOf1}
+\begin{chunk}{*}
+;mkAtreeValueOf1 l ==
+;  null l or atom l or null rest l => l
+;  l is ['valueOf,u] and IDENTP u =>
+;    v := mkAtreeNode $immediateDataSymbol
+;    putValue(v,get(u,'value,$InteractiveFrame) or
+;      objNewWrap(u,['Variable,u]))
+;    v
+;  [mkAtreeValueOf1 x for x in l]
+
+(defun |mkAtreeValueOf1| (z)
+ (let (tmp1 u v)
+ (declare (special |$InteractiveFrame| |$immediateDataSymbol|))
+  (cond
+   ((or (null z) (atom z) (null (cdr z))) z)
+   ((and
+     (consp z)
+     (eq (qcar z) '|valueOf|)
+     (progn
+      (setq tmp1 (qcdr z))
+      (and
+       (consp tmp1)
+       (eq (qcdr tmp1) nil)
+       (progn (setq u (qcar tmp1)) t)))
+     (identp u))
+    (setq v (|mkAtreeNode| |$immediateDataSymbol|))
+    (|putValue| v
+     (or
+      (|get| u '|value| |$InteractiveFrame|)
+      (mkObjWrap u (cons '|Variable| (cons u nil)))))
+    v)
+   (t
+    (let (g0)
+      (do ((g1 z (cdr g1)) (x nil))
+          ((or (atom g1) (progn (setq x (car g1)) nil)) (nreverse0 g0))
+       (setq g0 (cons (|mkAtreeValueOf1| x) g0))))))))
+
+\end{chunk}
+\subsection{mkLessOrEqual}
+\begin{chunk}{*}
+;mkLessOrEqual(lhs,rhs) == ['not,['_<,rhs,lhs]]
+
+(defun |mkLessOrEqual| (lhs rhs)
+ (list '|not| (list '< rhs lhs) ))
+
+\end{chunk}
+
+\subsection{emptyAtree}
+Remove mode, value, and misc. info from attrib tree
+\begin{chunk}{*}
+;emptyAtree expr ==
+;  VECP expr =>
+;    $immediateDataSymbol = expr.0 => nil
+;    expr.1:= NIL
+;    expr.2:= NIL
+;    expr.3:= NIL
+;    -- kill proplist too?
+;  atom expr => nil
+;  for e in expr repeat emptyAtree e
+
+(defun |emptyAtree| (expr)
+ (declare (special |$immediateDataSymbol|))
+  (cond
+   ((vecp expr)
+    (cond                        ; operation name or literal
+     ((equal |$immediateDataSymbol| (elt expr 0)) nil)
+     (t
+      (setelt expr 1 nil)        ; declared mode of variable
+      (setelt expr 2 nil)        ; computed value of subtree from this node
+      (setelt expr 3 nil))))     ; list of single computed mode of subtree
+   ((atom expr) nil)
+   (t (dolist (e expr) (|emptyAtree| e)))))
+
+\end{chunk}
+
+\subsection{unVectorize}
+Transforms from an atree back into a tree
+\begin{chunk}{*}
+;unVectorize body ==
+;  VECP body =>
+;    name := getUnname body
+;    name ^= $immediateDataSymbol => name
+;    objValUnwrap getValue body
+;  atom body => body
+;  body is [op,:argl] =>
+;    newOp:=unVectorize op
+;    if newOp = 'SUCHTHAT then newOp := '_|
+;    if newOp = 'COERCE then newOp := '_:_:
+;    if newOp = 'Dollar then newOp := "$elt"
+;    [newOp,:unVectorize argl]
+;  systemErrorHere '"unVectorize"
+
+(defun |unVectorize| (body)
+ (let (name op argl newOp)
+ (declare (special |$elt| |$immediateDataSymbol|))
+   (cond
+    ((vecp body)
+     (setq name (|getUnname| body))
+     (cond
+      ((nequal name |$immediateDataSymbol|) name)
+      (t (|objValUnwrap| (|getValue| body)))))
+    ((atom body) body)
+    ((and
+      (consp body)
+      (progn
+       (setq op (qcar body))
+       (setq argl (qcdr body))
+       t))
+     (setq newOp (|unVectorize| op))
+     (cond
+      ((eq newOp 'suchthat)
+       (setq newOp '|\||)))
+     (cond
+      ((eq newOp 'coerce)
+       (setq newOp '|::|)))
+     (cond 
+      ((eq newOp '|Dollar|)
+       (setq newOp '|$elt|)))
+     (cons newOp (|unVectorize| argl)))
+    (t (|systemErrorHere| "unVectorize")))))
+
+\end{chunk}
+
+\section{Stuffing and Getting Info}
+
+\subsection{putAtree}
+\begin{chunk}{*}
+;putAtree(x,prop,val) ==
+;  x is [op,:.] =>
+;    -- only willing to add property if op is a vector
+;    -- otherwise will be pushing to deeply into calling structure
+;    if VECP op then putAtree(op,prop,val)
+;    x
+;  null VECP x => x     -- just ignore it
+;  n := QLASSQ(prop,'((mode . 1) (value . 2) (modeSet . 3)))
+;    => x.n := val
+;  x.4 := insertShortAlist(prop,val,x.4)
+;  x
+
+(defun |putAtree| (x prop val)
+ (let (op n)
+   (cond
+    ((and (consp x) (progn (setq op (qcar x)) t))
+     (cond ((vecp op) (|putAtree| op prop val))) x)
+    ((null (vecp x)) x)
+    ((setq n (qlassq prop '((|mode| . 1) (|value| . 2) (|modeSet| . 3))))
+     (setelt x n val))
+    (t
+     (setelt x 4 (|insertShortAlist| prop val (elt x 4))) x))))
+
+\end{chunk}
+
+\subsection{getAtree}
+\begin{chunk}{*}
+;getAtree(x,prop) ==
+;  x is [op,:.] =>
+;    -- only willing to get property if op is a vector
+;    -- otherwise will be pushing to deeply into calling structure
+;    VECP op => getAtree(op,prop)
+;    NIL
+;  null VECP x => NIL     -- just ignore it
+;  n:= QLASSQ(prop,'((mode . 1) (value . 2) (modeSet . 3)))
+;    => x.n
+;  QLASSQ(prop,x.4)
+
+(defun |getAtree| (x prop)
+ (let (op n)
+   (cond
+    ((and (consp x) (progn (setq op (qcar x)) t))
+     (cond ((vecp op) (|getAtree| op prop)) (t nil)))
+    ((null (vecp x)) nil)
+    ((setq n (QLASSQ prop '((|mode| . 1) (|value| . 2) (|modeSet| . 3))))
+     (elt x n))
+    (t (qlassq prop (elt x 4))))))
+
+\end{chunk}
+
+\subsection{putTarget}
+\begin{chunk}{*}
+;putTarget(x, targ) ==
+;  -- want to put nil modes perhaps to clear old target
+;  if targ = $EmptyMode then targ := nil
+;  putAtree(x,'target,targ)
+
+(defun |putTarget| (x targ)
+ (declare (special |$EmptyMode|))
+  (cond ((equal targ |$EmptyMode|) (setq targ nil)))
+  (|putAtree| x '|target| targ))
+
+\end{chunk}
+
+\subsection{getTarget}
+\begin{chunk}{*}
+;getTarget(x) == getAtree(x,'target)
+
+(defun |getTarget| (x)
+ (|getAtree| x '|target|))
+
+\end{chunk}
+
+\subsection{insertShortAlist}
+\begin{chunk}{*}
+;insertShortAlist(prop,val,al) ==
+;  pair := QASSQ(prop,al) =>
+;    RPLACD(pair,val)
+;    al
+;  [[prop,:val],:al]
+
+(defun |insertShortAlist| (prop val al)
+ (let (pair)
+   (cond
+    ((setq pair (qassq prop al)) (rplacd pair val) al)
+    (t (cons (cons prop val) al)))))
+
+\end{chunk}
+
+\subsection{transferPropsToNode}
+\begin{chunk}{*}
+;transferPropsToNode(x,t) ==
+;  propList := getProplist(x,$env)
+;  QLASSQ('Led,propList) or QLASSQ('Nud,propList) => nil
+;  node :=
+;    VECP t => t
+;    first t
+;  for prop in '(mode localModemap value name generatedCode)
+;    repeat transfer(x,node,prop)
+;      where
+;        transfer(x,node,prop) ==
+;          u := get(x,prop,$env) => putAtree(node,prop,u)
+;          (not (x in $localVars)) and (u := get(x,prop,$e)) =>
+;            putAtree(node,prop,u)
+;  if not getMode(t) and (am := get(x,'automode,$env)) then
+;    putModeSet(t,[am])
+;    putMode(t,am)
+;  t
+
+(defun |transferPropsToNode,transfer| (x node prop)
+ (PROG (u)
+ (declare (special |$e| |$localVars| |$env|))
+  (RETURN
+   (SEQ
+    (IF (setq u (|get| x prop |$env|))
+      (EXIT (|putAtree| node prop u)))
+    (EXIT
+     (IF (AND (NULL (|member| x |$localVars|))
+              (setq u (|get| x prop |$e|)))
+      (EXIT (|putAtree| node prop u))))))))
+
+(defun |transferPropsToNode| (x tt)
+ (let (propList node am)
+ (declare (special |$env|))
+   (setq propList (|getProplist| x |$env|))
+   (cond
+    ((or (qlassq '|Led| propList) (qlassq '|Nud| propList)) nil)
+    (t
+     (setq node (cond ((vecp tt) tt) (t (car tt))))
+     (do ((g0 '(|mode| |localModemap| |value| |name| |generatedCode|) (cdr g0))
+          (prop nil))
+         ((or (atom g0) (progn (setq prop (car g0)) nil)) nil)
+       (|transferPropsToNode,transfer| x node prop))
+     (cond
+      ((and
+        (null (|getMode| tt))
+        (setq am (|get| x '|automode| |$env|)))
+       (|putModeSet| tt (cons am nil)) (|putMode| tt am))) tt))))
+
+\end{chunk}
+
+\subsection{isLeaf}
+May be a number or a vector
+\begin{chunk}{*}
+; isLeaf x == atom x
+
+(defun |isLeaf| (x)
+ (atom x)) 
+
+\end{chunk}
+
+\subsection{getMode}
+\begin{chunk}{*}
+;getMode x ==
+;  x is [op,:.] => getMode op
+;  VECP x => x.1
+;  m := getBasicMode x => m
+;  keyedSystemError("S2II0001",[x])
+
+(defun |getMode| (x)
+ (let (op m)
+   (cond
+    ((and (consp x) (progn (setq op (qcar x)) t)) (|getMode| op))
+    ((vecp x) (elt x 1))
+    ((setq m (|getBasicMode| x)) m)
+    (t (|keyedSystemError|
+        "The attributed tree form %1s is not a vector."
+        (cons x nil)))))) 
+
+\end{chunk}
+
+\subsection{putMode}
+\begin{chunk}{*}
+;putMode(x,y) ==
+;  x is [op,:.] => putMode(op,y)
+;  null VECP x => keyedSystemError("S2II0001",[x])
+;  x.1 := y
+
+(defun |putMode| (x y)
+ (let (op)
+  (cond
+   ((and (consp x) (progn (setq op (qcar x)) t)) (|putMode| op y))
+   ((null (vecp x))
+    (|keyedSystemError|
+      "The attributed tree form %1s is not a vector."
+      (cons x nil)))
+   (t (setelt x 1 y)))))
+
+\end{chunk}
+
+\subsection{getValue}
+\begin{chunk}{*}
+;getValue x ==
+;  VECP x => x.2
+;  atom x =>
+;    t := getBasicObject x => t
+;    keyedSystemError("S2II0001",[x])
+;  getValue first x
+
+(defun |getValue| (x) 
+ (let (z)
+  (cond
+    ((vecp x) (elt x 2))
+    ((atom x)
+     (cond
+      ((setq z (|getBasicObject| x)) z)
+      (t (|keyedSystemError|
+          "The attributed tree form %1s is not a vector."
+          (cons x nil)))))
+    (t (|getValue| (car x))))))
+
+\end{chunk}
+
+\subsection{putValue}
+\begin{chunk}{*}
+;putValue(x,y) ==
+;  x is [op,:.] => putValue(op,y)
+;  null VECP x => keyedSystemError("S2II0001",[x])
+;  x.2 := y
+
+(defun |putValue| (x y)
+ (let (op)
+   (cond
+    ((and (consp x) (progn (setq op (qcar x)) t)) (|putValue| op y))
+    ((null (vecp x))
+      (|keyedSystemError|
+       "The attributed tree form %1s is not a vector."
+       (cons x nil)))
+    (t (setelt x 2 y)))))
+
+\end{chunk}
+
+\subsection{putValueValue}
+\begin{chunk}{*}
+;putValueValue(vec,val) ==
+;  putValue(vec,val)
+;  vec
+
+(defun |putValueValue| (vec val)
+  (|putValue| vec val)
+  vec)
+
+\end{chunk}
+
+\subsection{getUnnameIfCan}
+\begin{chunk}{*}
+;getUnnameIfCan x ==
+;  VECP x => x.0
+;  x is [op,:.] => getUnnameIfCan op
+;  atom x => x
+;  nil
+
+(defun |getUnnameIfCan| (x)
+ (let (op)
+  (cond
+    ((vecp x) (elt x 0))
+    ((and (consp x) (progn (setq op (qcar x)) t)) (|getUnnameIfCan| op))
+    ((atom x) x)
+    (t nil)))) 
+
+\end{chunk}
+
+\subsection{getUnname}
+\begin{chunk}{*}
+;getUnname x ==
+;  x is [op,:.] => getUnname op
+;  getUnname1 x
+
+(defun |getUnname| (x)
+ (let (op)
+   (cond
+    ((and (consp x) (progn (setq op (qcar x)) t)) (|getUnname| op))
+    (t (|getUnname1| x)))))
+
+\end{chunk}
+
+\subsection{getUnname1}
+\begin{chunk}{*}
+;getUnname1 x ==
+;  VECP x => x.0
+;  null atom x => keyedSystemError("S2II0001",[x])
+;  x
+
+(defun |getUnname1| (x)
+ (cond
+  ((vecp x) (elt x 0))
+  ((null (atom x))
+    (|keyedSystemError|
+     "The attributed tree form %1s is not a vector."
+     (cons x nil)))
+  (t x)))
+
+\end{chunk}
+\subsection{computedMode}
+\begin{chunk}{*}
+;computedMode t ==
+;  getModeSet t is [m] => m
+;  keyedSystemError("S2GE0016",['"computedMode",'"non-singleton modeset"])
+
+(defun |computedMode| (tt)
+ (let (tmp1 m)
+  (cond
+    ((progn
+      (setq tmp1 (|getModeSet| tt))
+      (and
+       (consp tmp1)
+       (eq (qcdr tmp1) nil)
+       (progn (setq m (qcar tmp1)) t)))
+     m)
+    (t
+     (|keyedSystemError| 
+      "Unexpected error or improper call to system function %1: %2"
+       (list "computedMode" "non-singleton modeset"))))))
+
+\end{chunk}
+
+\subsection{putModeSet}
+\begin{chunk}{*}
+;putModeSet(x,y) ==
+;  x is [op,:.] => putModeSet(op,y)
+;  not VECP x => keyedSystemError("S2II0001",[x])
+;  x.3 := y
+;  y
+
+(defun |putModeSet| (x y)
+ (let (op)
+  (cond
+    ((and (consp x) (progn (setq op (qcar x)) t)) (|putModeSet| op y))
+    ((null (vecp x))
+     (|keyedSystemError|
+      "The attributed tree form %1s is not a vector."
+      (cons x nil)))
+    (t (setelt x 3 y) y))))
+
+\end{chunk}
+
+\subsection{getModeOrFirstModeSetIfThere}
+\begin{chunk}{*}
+;getModeOrFirstModeSetIfThere x ==
+;  x is [op,:.] => getModeOrFirstModeSetIfThere op
+;  VECP x =>
+;    m := x.1 => m
+;    val := x.2 => objMode val
+;    y := x.aModeSet =>
+;      (y = [$EmptyMode]) and ((m := getMode x) is ['Mapping,:.]) => m
+;      first y
+;    NIL
+;  m := getBasicMode x => m
+;  NIL
+
+(defun |getModeOrFirstModeSetIfThere| (x)
+ (let (op val y tmp1 m)
+ (declare (special |$EmptyMode|))
+  (cond
+   ((and (consp x) (progn (setq op (qcar x)) t))
+     (|getModeOrFirstModeSetIfThere| op))
+   ((vecp x)
+     (cond
+      ((setq m (elt x 1)) m)
+      ((setq val (elt x 2)) (|objMode| val))
+      ((setq y (elt x 3))
+       (cond
+        ((and (equal y (cons |$EmptyMode| nil))
+              (progn
+               (setq tmp1 (setq m (|getMode| x)))
+               (and (consp tmp1) (eq (qcar tmp1) '|Mapping|))))
+         m)
+        (t (car y))))
+      (t nil)))
+   ((setq m (|getBasicMode| x)) m) (t nil))))
+
+\end{chunk}
+
+\subsection{getModeSet}
+\begin{chunk}{*}
+;getModeSet x ==
+;  x and CONSP x => getModeSet first x
+;  VECP x =>
+;    y:= x.aModeSet =>
+;      (y = [$EmptyMode]) and ((m := getMode x) is ['Mapping,:.]) =>
+;        [m]
+;      y
+;    keyedSystemError("S2GE0016",['"getModeSet",'"no mode set"])
+;  m:= getBasicMode x => [m]
+;  null atom x => getModeSet first x
+;  keyedSystemError("S2GE0016",['"getModeSet",
+;    '"not an attributed tree"])
+
+(defun |getModeSet| (x)
+ (let (y tmp1 m)
+ (declare (special |$EmptyMode|))
+   (cond
+    ((and x (consp x)) (|getModeSet| (car x)))
+    ((vecp x)
+     (cond
+      ((setq y (elt x 3))
+       (cond
+        ((and (equal y (cons |$EmptyMode| nil))
+              (progn
+               (setq tmp1 (setq m (|getMode| x)))
+               (and
+                (consp tmp1)
+                (eq (qcar tmp1) '|Mapping|))))
+         (cons m nil))
+        (t y)))
+      (t
+       (|keyedSystemError|
+        "Unexpected error or improper call to system function %1: %2"
+        (list "getModeSet" "no mode set")))))
+    ((setq m (|getBasicMode| x)) (cons m nil))
+    ((null (atom x)) (|getModeSet| (car x)))
+    (t
+     (|keyedSystemError|
+      "Unexpected error or improper call to system function %1: %2"
+      (list "getModeSet" "not an attributed tree"))))))
+
+\end{chunk}
+
+\subsection{getModeSetUseSubdomain}
+\begin{chunk}{*}
+;getModeSetUseSubdomain x ==
+;  x and CONSP x => getModeSetUseSubdomain first x
+;  VECP(x) =>
+;    -- don't play subdomain games with retracted args
+;    getAtree(x,'retracted) => getModeSet x
+;    y := x.aModeSet =>
+;      (y = [$EmptyMode]) and ((m := getMode x) is ['Mapping,:.]) =>
+;        [m]
+;      val := getValue x
+;      (x.0 = $immediateDataSymbol) and (y = [$Integer]) =>
+;        val := objValUnwrap val
+;        m := getBasicMode0(val,true)
+;        x.2 := objNewWrap(val,m)
+;        x.aModeSet := [m]
+;        [m]
+;      null val => y
+;      isEqualOrSubDomain(objMode(val),$Integer) and
+;        INTEGERP(f := objValUnwrap val) =>
+;          [getBasicMode0(f,true)]
+;      y
+;    keyedSystemError("S2GE0016",
+;      ['"getModeSetUseSubomain",'"no mode set"])
+;  m := getBasicMode0(x,true) => [m]
+;  null atom x => getModeSetUseSubdomain first x
+;  keyedSystemError("S2GE0016",
+;    ['"getModeSetUseSubomain",'"not an attributed tree"])
+
+(defun |getModeSetUseSubdomain| (x)
+ (let (y tmp1 val f m)
+ (declare (special |$Integer| |$immediateDataSymbol| |$EmptyMode|))
+  (cond
+    ((and x (consp x)) (|getModeSetUseSubdomain| (car x)))
+    ((vecp x)
+     (cond
+      ((|getAtree| x '|retracted|) (|getModeSet| x))
+      ((setq y (elt x 3))
+       (cond
+        ((and
+          (equal y (cons |$EmptyMode| nil))
+          (progn
+           (setq tmp1 (setq m (|getMode| x)))
+           (and (consp tmp1) (eq (qcar tmp1) '|Mapping|))))
+         (cons m nil))
+        (t
+         (setq val (|getValue| x))
+         (cond
+          ((and (equal (elt x 0) |$immediateDataSymbol|)
+                (equal y (cons |$Integer| nil)))
+           (setq val (|objValUnwrap| val))
+           (setq m (|getBasicMode0| val t))
+           (setelt x 2 (mkObjWrap val m))
+           (setelt x 3 (cons m nil))
+           (cons m nil))
+          ((null val) y)
+          ((and (|isEqualOrSubDomain| (|objMode| val) |$Integer|)
+                (integerp (setq f (|objValUnwrap| val))))
+           (cons (|getBasicMode0| f t) nil))
+          (t y)))))
+      (t
+       (|keyedSystemError|
+        "Unexpected error or improper call to system function %1: %2"
+        (list "getModeSetUseSubomain" "no mode set")))))
+    ((setq m (|getBasicMode0| x t)) (cons m nil))
+    ((null (atom x)) (|getModeSetUseSubdomain| (car x)))
+    (t
+     (|keyedSystemError|
+      "Unexpected error or improper call to system function %1: %2"
+      (list "getModeSetUseSubomain" "not an attributed tree"))))))
+
+\end{chunk}
+
+\subsection{atree2EvaluatedTree}
+\begin{chunk}{*}
+;atree2EvaluatedTree x == atree2Tree1(x,true)
+
+(defun |atree2EvaluatedTree| (x)
+ (|atree2Tree1| x t)) 
+
+\end{chunk}
+
+\subsection{atree2Tree1}
+\begin{chunk}{*}
+;atree2Tree1(x,evalIfTrue) ==
+;  (triple := getValue x) and objMode(triple) ^= $EmptyMode =>
+;    coerceOrCroak(triple,$OutputForm,$mapName)
+;  isLeaf x =>
+;    VECP x => x.0
+;    x
+;  [atree2Tree1(y,evalIfTrue) for y in x]
+
+(defun |atree2Tree1| (x evalIfTrue)
+ (let (triple)
+ (declare (special |$mapName| |$OutputForm| |$EmptyMode|))
+   (cond
+     ((and (setq triple (|getValue| x))
+           (nequal (|objMode| triple) |$EmptyMode|))
+      (|coerceOrCroak| triple |$OutputForm| |$mapName|))
+     ((|isLeaf| x) (cond ((vecp x) (elt x 0)) (t x)))
+     (t
+      (let (g0)
+        (do ((g1 x (cdr g1)) (y nil))
+            ((or (atom g1) (progn (setq y (car g1)) nil)) (nreverse0 g0))
+           (setq g0 (cons (|atree2Tree1| y evalIfTrue) g0))))))))
+
+\end{chunk}
+
+\section{Environment Utilities}
+
+\subsection{getValueFromEnvironment}
+\begin{chunk}{*}
+;getValueFromEnvironment(x,mode) ==
+;  $failure ^= (v := getValueFromSpecificEnvironment(x,mode,$env)) => v
+;  $failure ^= (v := getValueFromSpecificEnvironment(x,mode,$e))   => v
+;  null(v := coerceInt(objNew(x, ['Variable, x]), mode)) =>
+;     throwKeyedMsg("S2IE0001",[x])
+;  objValUnwrap v
+
+(defun |getValueFromEnvironment| (x mode)
+ (let (v)
+ (declare (special |$e| |$failure| |$env|))
+   (cond
+    ((nequal |$failure|
+       (setq v (|getValueFromSpecificEnvironment| x mode |$env|)))
+      v)
+    ((nequal |$failure|
+       (setq v (|getValueFromSpecificEnvironment| x mode |$e|)))
+     v)
+    ((null
+      (setq v
+       (|coerceInt|
+        (mkObj x (cons '|Variable| (cons x nil)))
+        mode)))
+      (|throwKeyedMsg|
+       "You cannot use %1 in the manner you have because it has no value."
+       (cons x nil)))
+    (t (|objValUnwrap| v)))))
+
+\end{chunk}
+
+\subsection{getValueFromSpecificEnvironment}
+\begin{chunk}{*}
+;getValueFromSpecificEnvironment(id,mode,e) ==
+;  CONSP e =>
+;    u := get(id,'value,e) =>
+;      objMode(u) = $EmptyMode =>
+;        systemErrorHere '"getValueFromSpecificEnvironment"
+;      v := objValUnwrap u
+;      mode isnt ['Mapping,:mapSig] => v
+;      v isnt ['MAP,:.] => v
+;      v' := coerceInt(u,mode)
+;      null v' => throwKeyedMsg("S2IC0002",[objMode u,mode])
+;      objValUnwrap v'
+;
+;    m := get(id,'mode,e) =>
+;      -- See if we can make it into declared mode from symbolic form
+;      -- For example, (x : P[x] I; x + 1)
+;      if isPartialMode(m) then m' := resolveTM(['Variable,id],m)
+;      else m' := m
+;      m' and
+;        (u := coerceInteractive(objNewWrap(id,['Variable,id]),m')) =>
+;          objValUnwrap u
+;
+;      throwKeyedMsg("S2IE0002",[id,m])
+;    $failure
+;  $failure
+
+(defun |getValueFromSpecificEnvironment| (id mode e)
+ (let (v mapSig vp m mp u)
+ (declare (special |$failure| |$EmptyMode|))
+  (cond
+   ((consp e)
+     (cond
+      ((setq u (|get| id '|value| e))
+       (cond
+        ((equal (|objMode| u) |$EmptyMode|)
+         (|systemErrorHere| "getValueFromSpecificEnvironment"))
+        (t
+         (setq v (|objValUnwrap| u))
+         (cond
+          ((null
+            (and
+             (consp mode)
+             (eq (qcar mode) '|Mapping|)
+             (progn (setq mapSig (qcdr mode)) t)))
+           v)
+          ((null (and (consp v) (eq (qcar v) 'map))) v)
+          (t
+           (setq vp (|coerceInt| u mode)) 
+           (cond
+            ((null vp)
+             (|throwKeyedMsg|
+              "Cannot convert the value from type %1p to %2p ."
+              (list (|objMode| u) mode)))
+            (t (|objValUnwrap| vp))))))))
+      ((setq m (|get| id '|mode| e))
+       (cond
+        ((|isPartialMode| m)
+         (setq mp
+          (|resolveTM| (cons '|Variable| (cons id nil)) m)))
+        (t (setq mp m)))
+       (cond
+        ((and mp
+              (setq u
+               (|coerceInteractive|
+                (mkObjWrap id (list '|Variable| id))
+                 mp)))
+         (|objValUnwrap| u))
+        (t
+         (|throwKeyedMsg|
+          (format nil
+           "Though %1 has declared type (or partial type) %2p it does not ~
+            have an assigned value. You must give it one before it can ~
+            be so used.")
+           (list id m)))))
+      (t |$failure|)))
+   (t |$failure|))))
+
+\end{chunk}
+
+\subsection{augProplistInteractive}
+\begin{chunk}{*}
+;augProplistInteractive(proplist,prop,val) ==
+;  u := ASSQ(prop,proplist) =>
+;    RPLACD(u,val)
+;    proplist
+;  [[prop,:val],:proplist]
+
+(defun |augProplistInteractive| (proplist prop val)
+ (let (u)
+   (cond
+    ((setq u (assq prop proplist)) (rplacd u val) proplist)
+    (t (cons (cons prop val) proplist)))))
+
+\end{chunk}
+
+\subsection{getFlag}
+\begin{chunk}{*}
+;getFlag x == get("--flags--",x,$e)
+
+(defun |getFlag| (x)
+ (declare (special |$e|))
+ (|get| '|--flags--| x |$e|)) 
+
+\end{chunk}
+
+\subsection{putFlag}
+\begin{chunk}{*}
+;putFlag(flag,value) ==
+;  $e := put ("--flags--", flag, value, $e)
+
+(defun |putFlag| (flag value)
+ (declare (special |$e|))
+ (setq |$e| (|put| '|--flags--| flag value |$e|))) 
+
+\end{chunk}
+
+\subsection{get}
+\begin{chunk}{*}
+;get(x,prop,e) ==
+;  $InteractiveMode => get0(x,prop,e)
+;  get1(x,prop,e)
+
+(defun |get| (x prop e)
+ (declare (special |$InteractiveMode|))
+ (cond
+  (|$InteractiveMode| (|get0| x prop e))
+  (t (|get1| x prop e)))) 
+
+\end{chunk}
+
+\subsection{get0}
+\begin{chunk}{*}
+;get0(x,prop,e) ==
+;  null atom x => get(QCAR x,prop,e)
+;  u:= QLASSQ(x,CAR QCAR e) => QLASSQ(prop,u)
+;  (tail:= CDR QCAR e) and (u:= fastSearchCurrentEnv(x,tail)) =>
+;    QLASSQ(prop,u)
+;  nil
+
+(defun |get0| (x prop e)
+ (let (tail u)
+   (cond
+    ((null (atom x)) (|get| (qcar x) prop e))
+    ((setq u (qlassq x (car (qcar e)))) (qlassq prop u))
+    ((and (setq tail (cdr (qcar e)))
+          (setq u (|fastSearchCurrentEnv| x tail)))
+     (qlassq prop u))
+    (t nil)))) 
+
+\end{chunk}
+
+\subsection{get1}
+We try to avoid lookups in the environment if it is clear that
+the lookup will fail. The =$envHashTable= was populated in
+addBinding (see g-util.boot.pamphlet).
+\begin{chunk}{*}
+;get1(x,prop,e) ==
+;    --this is the old get
+;  negHash := nil
+;  null atom x => get(QCAR x,prop,e)
+;  if $envHashTable and _
+;     (not(EQ($CategoryFrame,e))) and _
+;     (not(EQ(prop,"modemap"))) then
+;   null (HGET($envHashTable,[x,prop])) => return nil
+;   negHash := false
+;  prop="modemap" and $insideCapsuleFunctionIfTrue=true =>
+;    ress:=LASSOC("modemap",getProplist(x,$CapsuleModemapFrame))
+;         or get2(x,prop,e)
+;    ress
+;  ress:=LASSOC(prop,getProplist(x,e)) or get2(x,prop,e)
+;  if ress and negHash then
+;   SAY ["get1",x,prop,ress and true]
+;  ress
+
+(defun |get1| (x prop e)
+ (prog (negHash ress)
+ (declare (special |$CapsuleModemapFrame| |$insideCapsuleFunctionIfTrue|
+                   |$envHashTable| |$CategoryFrame|))
+  (return
+    (cond
+     ((null (atom x)) (|get| (qcar x) prop e))
+     (t
+      (cond
+       ((and |$envHashTable|
+             (null (eq |$CategoryFrame| e))
+             (null (eq prop '|modemap|)))
+        (unless (hget |$envHashTable| (list x prop)) (return nil))))
+      (cond
+       ((and (eq prop '|modemap|)
+             (eq |$insideCapsuleFunctionIfTrue| t))
+        (setq ress
+         (or
+          (lassoc '|modemap| (|getProplist| x |$CapsuleModemapFrame|))
+          (|get2| x prop e)))
+        ress)
+       (t
+        (setq ress (or (lassoc prop (|getProplist| x e)) (|get2| x prop e)))
+        (cond
+         ((and ress negHash)
+          (say
+           (list "get1" x prop (and ress t)))))
+        ress)))))))
+
+\end{chunk}
+
+\subsection{get2}
+\begin{chunk}{*}
+;get2(x,prop,e) ==
+;  prop="modemap" and constructor? x =>
+;    (u := getConstructorModemap(x)) => [u]
+;    nil
+;  nil
+
+(defun |get2| (x prop e)
+ (declare (ignore e))
+ (let (u)
+   (cond
+    ((and (eq prop '|modemap|) (|constructor?| x))
+     (cond
+      ((setq u (|getConstructorModemap| x)) (cons u nil))
+      (t nil)))
+    (t nil))))
+
+\end{chunk}
+
+\subsection{getI}
+\begin{chunk}{*}
+;getI(x,prop) == get(x,prop,$InteractiveFrame)
+
+(defun |getI| (x prop)
+ (declare (special |$InteractiveFrame|))
+ (|get| x prop |$InteractiveFrame|)) 
+
+\end{chunk}
+
+\subsection{putI}
+\begin{chunk}{*}
+;putI(x,prop,val) == ($InteractiveFrame := put(x,prop,val,$InteractiveFrame))
+
+(defun |putI| (x prop val)
+ (declare (special |$InteractiveFrame|))
+ (setq |$InteractiveFrame| (|put| x prop val |$InteractiveFrame|))) 
+
+\end{chunk}
+
+\subsection{getIProplist}
+\begin{chunk}{*}
+;getIProplist x == getProplist(x,$InteractiveFrame)
+
+(defun |getIProplist| (x)
+ (declare (special |$InteractiveFrame|))
+ (|getProplist| x |$InteractiveFrame|)) 
+
+\end{chunk}
+
+\subsection{removeBindingI}
+\begin{chunk}{*}
+;removeBindingI x ==
+;  RPLAC(CAAR $InteractiveFrame,deleteAssocWOC(x,CAAR $InteractiveFrame))
+
+(defun |removeBindingI| (x)
+ (rplac 
+  (caar |$InteractiveFrame|)
+  (|deleteAssocWOC| x (caar |$InteractiveFrame|)))) 
+
+\end{chunk}
+
+\subsection{rempropI}
+\begin{chunk}{*}
+;rempropI(x,prop) ==
+;  id:=
+;    atom x => x
+;    first x
+;  getI(id,prop) =>
+;    recordNewValue(id,prop,NIL)
+;    recordOldValue(id,prop,getI(id,prop))
+;    $InteractiveFrame:= remprop(id,prop,$InteractiveFrame)
+
+(defun |rempropI| (x prop)
+ (let (id)
+ (declare (special |$InteractiveFrame|))
+  (setq id (cond ((atom x) x) (t (car x))))
+  (cond
+   ((|getI| id prop)
+     (|recordNewValue| id prop nil)
+     (|recordOldValue| id prop (|getI| id prop))
+     (setq |$InteractiveFrame| (|remprop| id prop |$InteractiveFrame|))))))
+
+\end{chunk}
+
+\subsection{remprop}
+\begin{chunk}{*}
+;remprop(x,prop,e) ==
+;  u:= ASSOC(prop,pl:= getProplist(x,e)) =>
+;    e:= addBinding(x,DELASC(first u,pl),e)
+;    e
+;  e
+
+(defun |remprop| (x prop e)
+ (let (pl u)
+   (cond
+    ((setq u (|assoc| prop (setq pl (|getProplist| x e))))
+     (setq e (|addBinding| x (remove (car u) pl :key #'car) e))
+     e)
+    (t e))))
+
+\end{chunk}
+
+\subsection{fastSearchCurrentEnv}
+\begin{chunk}{*}
+;fastSearchCurrentEnv(x,currentEnv) ==
+;  u:= QLASSQ(x,CAR currentEnv) => u
+;  while (currentEnv:= QCDR currentEnv) repeat
+;    u:= QLASSQ(x,CAR currentEnv) => u
+
+(defun |fastSearchCurrentEnv| (x currentEnv)
+ (PROG (u)
+  (RETURN
+   (SEQ
+    (cond
+     ((setq u (qlassq x (car currentEnv))) u)
+     (t
+      (do () 
+          ((null (setq currentEnv (qcdr currentEnv))) nil)
+         (cond
+          ((setq u (qlassq x (car currentEnv))) (exit u))))))))))
+
+\end{chunk}
+
+\subsection{put}
+\begin{chunk}{*}
+;put(x,prop,val,e) ==
+;  $InteractiveMode and not EQ(e,$CategoryFrame) =>
+;    putIntSymTab(x,prop,val,e)
+;  --e must never be $CapsuleModemapFrame
+;  null atom x => put(first x,prop,val,e)
+;  newProplist:= augProplistOf(x,prop,val,e)
+;  prop="modemap" and $insideCapsuleFunctionIfTrue=true =>
+;    SAY ["**** modemap PUT on CapsuleModemapFrame: ",val]
+;    $CapsuleModemapFrame:=
+;      addBinding(x,augProplistOf(x,"modemap",val,$CapsuleModemapFrame),
+;        $CapsuleModemapFrame)
+;    e
+;  addBinding(x,newProplist,e)
+
+(defun |put| (x prop val e)
+ (let (newProplist)
+ (declare (special |$CapsuleModemapFrame| |$insideCapsuleFunctionIfTrue|
+                   |$CategoryFrame|))
+   (cond
+    ((and |$InteractiveMode| (null (eq e |$CategoryFrame|)))
+     (|putIntSymTab| x prop val e))
+    ((null (atom x)) (|put| (car x) prop val e))
+    (t
+     (setq newProplist (|augProplistOf| x prop val e))
+     (cond
+      ((and (eq prop '|modemap|)
+            (eq |$insideCapsuleFunctionIfTrue| t))
+       (say (list "**** modemap PUT on CapsuleModemapFrame: " val))
+       (setq |$CapsuleModemapFrame|
+        (|addBinding| x
+         (|augProplistOf| x '|modemap| val |$CapsuleModemapFrame|)
+         |$CapsuleModemapFrame|))
+       e)
+      (t (|addBinding| x newProplist e)))))))
+
+\end{chunk}
+
+\subsection{putIntSymTab}
+\begin{chunk}{*}
+;putIntSymTab(x,prop,val,e) ==
+;  null atom x => putIntSymTab(first x,prop,val,e)
+;  pl0 := pl := search(x,e)
+;  pl :=
+;    null pl => [[prop,:val]]
+;    u := ASSQ(prop,pl) =>
+;      RPLACD(u,val)
+;      pl
+;    lp := LASTPAIR pl
+;    u := [[prop,:val]]
+;    RPLACD(lp,u)
+;    pl
+;  EQ(pl0,pl) => e
+;  addIntSymTabBinding(x,pl,e)
+
+(defun |putIntSymTab| (x prop val e)
+ (let (pl0 lp u pl)
+   (cond
+    ((null (atom x)) (|putIntSymTab| (car x) prop val e))
+    (t
+     (setq pl0 (setq pl (|search| x e)))
+     (setq pl
+      (cond
+       ((null pl) (cons (cons prop val) nil))
+       ((setq u (assq prop pl)) (rplacd u val) pl)
+       (t
+        (setq lp (lastpair pl))
+        (setq u (cons (cons prop val) nil))
+        (rplacd lp u) pl)))
+     (cond
+      ((eq pl0 pl) e)
+      (t (|addIntSymTabBinding| x pl e)))))))
+
+\end{chunk}
+
+\subsection{addIntSymTabBinding}
+\begin{chunk}{*}
+;addIntSymTabBinding(var,proplist,e is [[curContour,:.],:.]) ==
+;  -- change proplist of var in e destructively
+;  u := ASSQ(var,curContour) =>
+;    RPLACD(u,proplist)
+;    e
+;  RPLAC(CAAR e,[[var,:proplist],:curContour])
+;  e
+
+(defun |addIntSymTabBinding| (var proplist e)
+ (let (curContour u)
+  (setq curContour (caar e))
+  (cond
+    ((setq u (assq var curContour)) (rplacd u proplist) e)
+    (t (rplac (caar e) (cons (cons var proplist) curContour)) e))))
+
+\end{chunk}
+
+\section{Source and position information}
+In the following, src is a string containing an original input line,
+line is the line number of the string within the source file,
+and col is the index within src of the start of the form represented
+by x. x is a VAT.
+
+\subsection{putSrcPos}
+\begin{chunk}{*}
+;putSrcPos(x, file, src, line, col) ==
+;    putAtree(x, 'srcAndPos, srcPos_New(file, src, line, col))
+
+(defun |putSrcPos| (x file src line col)
+ (|putAtree| x '|srcAndPos| (|srcPosNew| file src line col))) 
+
+\end{chunk}
+
+\subsection{getSrcPos}
+\begin{chunk}{*}
+;getSrcPos(x) == getAtree(x, 'srcAndPos)
+
+(defun |getSrcPos| (x)
+ (|getAtree| x '|srcAndPos|))
+
+\end{chunk}
+
+\subsection{srcPosNew}
+\begin{chunk}{*}
+;srcPosNew(file, src, line, col) == LIST2VEC [file, src, line, col]
+
+(defun |srcPosNew| (file src line col)
+ (list2vec (list file src line col))) 
+
+\end{chunk}
+
+\subsection{srcPosFile}
+\begin{chunk}{*}
+;srcPosFile(sp) ==
+;    if sp then sp.0 else nil
+
+(defun |srcPosFile| (sp)
+ (cond
+  (sp (elt sp 0))
+  (t nil))) 
+
+\end{chunk}
+
+\subsection{srcPosSource}
+\begin{chunk}{*}
+;srcPosSource(sp) ==
+;    if sp then sp.1 else nil
+
+(defun |srcPosSource| (sp)
+ (cond
+  (sp (elt sp 1))
+  (t nil))) 
+
+\end{chunk}
+
+\subsection{srcPosLine}
+\begin{chunk}{*}
+;srcPosLine(sp) ==
+;    if sp then sp.2 else nil
+
+(defun |srcPosLine| (sp)
+ (cond 
+  (sp (elt sp 2))
+  (t nil))) 
+
+\end{chunk}
+
+\subsection{srcPosColumn}
+\begin{chunk}{*}
+;srcPosColumn(sp) ==
+;    if sp then sp.3 else nil
+
+(defun |srcPosColumn| (sp)
+ (cond
+  (sp (elt sp 3))
+  (t nil))) 
+
+\end{chunk}
+
+\subsection{srcPosDisplay}
+\begin{chunk}{*}
+;srcPosDisplay(sp) ==
+;    null sp => nil
+;    s := STRCONC('"_"", srcPosFile sp, '"_", line ",
+;        princ-to-string srcPosLine sp, '": ")
+;    sayBrightly [s, srcPosSource sp]
+;    col  := srcPosColumn sp
+;    dots :=
+;        col = 0 => '""
+;        fillerSpaces(col, '".")
+;    sayBrightly [fillerSpaces(#s, '" "), dots, '"^"]
+;    true
+
+(defun |srcPosDisplay| (sp)
+ (let (s col dots)
+  (cond
+    ((null sp) nil)
+    (t
+     (setq s
+      (strconc "\"" (|srcPosFile| sp) "\", line "
+       (princ-to-string (|srcPosLine| sp)) ": "))
+     (|sayBrightly| (list s (|srcPosSource| sp)))
+     (setq col (|srcPosColumn| sp))
+     (setq dots
+      (cond
+       ((eql col 0) "")
+       (t (|fillerSpaces| col "."))))
+     (|sayBrightly| (list (|fillerSpaces| (|#| s) " ") dots "^"))
+     t))))
+
+\end{chunk}
+
+\section{Library compiler structures needed by the interpreter}
+Tuples and Crosses
+\subsection{asTupleNew}
+\begin{chunk}{*}
+;asTupleNew(size, listOfElts) == CONS(size, LIST2VEC listOfElts)
+
+(defun |asTupleNew| (SIZE listOfElts)
+ (cons size (list2vec listOfElts))) 
+
+\end{chunk}
+
+\subsection{asTupleNew0}
+\begin{chunk}{*}
+;asTupleNew0(listOfElts) == CONS(#listOfElts, LIST2VEC listOfElts)
+
+(defun |asTupleNew0| (listOfElts)
+ (cons (|#| listOfElts) (list2vec listOfElts))) 
+
+\end{chunk}
+
+\subsection{asTupleNewCode}
+\begin{chunk}{*}
+;asTupleNewCode(size, listOfElts) == ["asTupleNew", size, ['LIST, :listOfElts]]
+
+(defun |asTupleNewCode| (size listOfElts)
+ (cons '|asTupleNew| (list size (cons 'list listOfElts)))) 
+
+\end{chunk}
+
+\subsection{asTupleNewCode0}
+\begin{chunk}{*}
+;asTupleNewCode0(listForm) == ["asTupleNew0", listForm]
+
+(defun |asTupleNewCode0| (listForm)
+ (list '|asTupleNew0| listForm)) 
+
+\end{chunk}
+
+\subsection{asTupleSize}
+\begin{chunk}{*}
+;asTupleSize(at) == CAR at
+
+(defun |asTupleSize| (at)
+ (car at)) 
+
+\end{chunk}
+
+\subsection{asTupleAsVector}
+\begin{chunk}{*}
+;asTupleAsVector(at) == CDR at
+
+(defun |asTupleAsVector| (at)
+ (cdr at)) 
+
+\end{chunk}
+
+\subsection{asTupleAsList}
+\begin{chunk}{*}
+;asTupleAsList(at) == VEC2LIST asTupleAsVector at
+
+(defun |asTupleAsList| (at)
+ (vec2list (|asTupleAsVector| at))) 
+
+\end{chunk}
+
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
+

@@ -1,0 +1,1964 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{parsing.lisp}
+\author{Timothy Daly}
+\begin{abstract}
+\end{abstract}
+
+\begin{chunk}{*}
+(in-package "BOOT")
+
+\end{chunk}
+\chapter{META/LISP Parser Generator and Lexical Analysis Utilities (Parsing)}
+\subsection{Stack}
+\subsection{Token}
+\subsection{Reduction}
+\section{Recursive descent parsing support routines}
+\subsection{Stacking and retrieving reductions of rules.}
+;(defmacro sequence (subrules &optional (actions nil))
+;  `(and ,(pop subrules) .
+;        ,(append (mapcar #'(lambda (x) (list 'must x)) subrules)
+;                   (if actions `((progn . ,(append actions '(t))))))))
+\section{Routines for handling lexical scanning}
+Lexical scanning of tokens is performed off of the current line.  No
+token can span more than 1 line.  All real I/O is handled in a line-oriented
+fashion (in a slight paradox) below the character level.  All character
+routines implicitly assume the parameter Current-Line.  We do not make
+Current-Line an explicit optional parameter for reasons of efficiency.
+\subsection{Manipulating the token stack and reading tokens}
+This section is broken up into 3 levels:
+\begin{itemize}
+\item String grabbing:    Match String, Match Advance String
+\item Token handling:     Current Token, Next Token, Advance Token
+\item Character handling: Current Char, Next Char, Advance Char
+\item Line handling:      Next Line, Print Next Line
+\item Random Stuff
+\end{itemize}
+
+\subsubsection{Token handling}
+Tokens are acquired from a stream of characters.  Lexical analysis is performed
+by the functiond Get Token. One-token lookahead is maintained in variables
+Current-Token and Next-Token by procedures Current Token, Next Token, and
+Advance Token. The functions Match Current Token and Match Next Token recognize
+classes of tokens, by type, or by type and symbol.  The current and next tokens
+can be shoved back on the input stream (to the current line) with Unget-Tokens.
+\subsubsection{Line handling}
+\begin{chunk}{*}
+
+(defparameter Printer-Line-Stack (make-stack)
+  "Stack of output listing lines waiting to print. [local to PRINT-NEW-LINE]")
+
+(defparameter Read-Quietly nil
+  "Whether or not to produce an output listing. [local to PRINT-NEW-LINE]")
+
+(defun Print-New-Line (string &optional (strm *terminal-io*))
+  "Makes output listings."
+ (if Read-Quietly 
+  (stack-push (copy-tree string) Printer-Line-Stack)
+  (progn
+   (mapc #'(lambda (x) (format strm "; ~A~%" x) (terpri))
+         (nreverse (stack-store Printer-Line-Stack)))
+   (stack-clear Printer-Line-Stack)
+   (format strm "~&; ~A~%" string))))
+
+\end{chunk}
+
+\subsection{Error handling}
+\begin{chunk}{*}
+(defparameter errcol nil)
+
+(defparameter line nil)
+
+(defparameter count nil)
+
+(defun conversation (x y)
+ (prog (u)
+a
+  (reduce-stack-clear)
+  (setq u (namederrset 'spad_reader (conversation1 x y)))
+  (cond
+   (*eof* (return nil))
+   ((atom u) (go a))
+   ((return (car u))))))
+
+(defparameter ulcasefg nil)
+
+(defun conversation1 (firstfun procfun)
+ (prog nil
+top
+  (cond
+   ((not (Current-Char)) (return nil))
+   ((and (current-token) (next-token)) (go top))
+   ((compfin) (return 't))
+   ((and (funcall firstfun) (or (funcall procfun (pop-stack-1)))) (go top))
+   ((compfin) (return 't)) )
+  (meta-syntax-error)
+  (go top)))
+
+(defun termchr ()
+  "Is CHR a terminating character?"
+  (position (current-char) " *,;<>()[]/\\"))
+
+(defun compfin ()
+ (or (match-string ")fin") (match-string ".FIN")))
+
+(defparameter Meta_Errors_Occurred nil  "Did any errors occur")
+
+\end{chunk}
+\subsection{Constructing parsing procedures}
+\begin{chunk}{*}
+(eval-when (eval load)
+ (setf (get 'progn 'nary) t))  ; Setting for Make-Parse-Function
+
+(defun make-parse-function (l op)
+ (when (flagp op 'nary) (setq l (make-parse-func-flatten-1 l op nil)))
+ (make-parse-function1 l op))
+
+(defun make-parse-func-flatten (x op)
+ (cond
+  ((atom x) 
+   x)
+  ((eq (car x) op)
+   (cons op (make-parse-func-flatten-1 (cdr x) op nil)))
+  (t
+   (cons 
+    (make-parse-func-flatten (car x) op)
+    (make-parse-func-flatten (cdr x) op)))))
+
+(defun make-parse-func-flatten-1 (l op r)
+ (let (x)
+  (if (null l)
+   r
+   (make-parse-func-flatten-1
+     (cdr l) op
+     (append r 
+      (if (eqcar (setq x (make-parse-func-flatten (car l) op)) op)
+       (cdr x)
+       (list x)))))))
+
+(defun make-parse-function1 (l op)
+ (let (x)
+  (case op
+   (plus
+    (cond
+     ((eq 0 (setq x (length (setq l (s- l '(0 (zero))))))) 0)
+     ((eq 1 x) (car l))
+     (t `(+ . ,l))))
+   (times
+    (cond
+     ((s* l '(0 (zero))) 0)
+     ((eq 0 (setq x (length (setq l (s- l '(1 (one))))))) 1)
+     ((eq 1 x) (car l))
+     (t `(times . ,l)) ))
+   (quotient
+    (cond
+     ((> (length l) 2) (fail))
+     ((eq 0 (car l)) 0)
+     ((eq (cadr l) 1) (car l))
+     (t `(quotient . ,l)) ))
+   (minus
+    (cond
+     ((cdr l) (fail))
+     ((numberp (setq x (car l))) (minus x))
+     ((eqcar x 'minus) (cadr x))
+     (t `(minus . ,l))  ))
+   (-
+    (cond
+     ((> (length l) 2) (fail))
+     ((equal (car l) (cadr l)) '(zero))
+     ((member (car l) '(0 (zero))) (make-parse-function (cdr l) 'minus))
+     ((member (cadr l) '(0 (zero))) (car l))
+     ((eqcar (cadr l) 'minus)
+       (make-parse-function (list (car l) (cadadr l)) 'plus))
+     (t `(- . ,l)) ))
+   (expt
+    (cond
+     ((> (length l) 2) (fail))
+     ((eq 0 (cadr l)) 1)
+     ((eq 1 (cadr l)) (car l))
+     ((member (car l) '(0 1 (zero) (one))) (car l))
+     (t `(expt . ,l)) ))
+   (or
+    (cond
+     ((member 't l) ''t)
+     ((eq 0 (setq x (length (setq l (delete nil l))))) nil)
+     ((eq 1 x) (car l))
+     (t `(or . ,l)) ))
+   (|or|
+    (cond
+     ((member 't l) 't)
+     ((eq 0 (setq x (length (setq l (delete nil l))))) nil)
+     ((eq 1 x) (car l))
+     (t `(|or| . ,l)) ))
+   (null
+    (cond
+     ((cdr l) (fail))
+     ((eqcar (car l) 'null) (cadar l))
+     ((eq (car l) 't) nil)
+     ((null (car l)) ''t)
+     (t `(null . ,l))))
+   (|and|
+    (cond
+     ((eq 0 (setq x (length (setq l (delete 't (delete 'true l)))))) 't)
+     ((eq 1 x) (car l))
+     (t `(|and| . ,l)) ))
+   (and
+    (cond
+     ((eq 0 (setq x (length (setq l (delete 't (delete 'true l)))))) ''t)
+     ((eq 1 x) (car l))
+     (t `(and . ,l)) ))
+   (progn
+    (cond
+     ((and (not (atom l)) (null (last l)))
+       (cond
+        ((cdr l) `(progn . ,l))
+        (t (car l))))
+     ((null (setq l (delete nil l))) nil)
+     ((cdr l) `(progn . ,l))
+     (t (car l)) ))
+   (seq
+    (cond
+     ((eqcar (car l) 'exit) (cadar l))
+     ((cdr l) `(seq . ,l))
+     (t (car l))   ))
+   (list
+    (cond 
+     ((null l) nil)
+     (t `(list . ,l))))
+   (cons
+    (cond
+     ((cdr l) `(cons . ,l))
+     (t (car l)) ))
+   (t
+    (cons op l) ))))
+
+(defparameter /genvarlst nil "??")
+
+(defparameter /gensymlist nil
+   "List of rule local variables generated by getgensym.")
+
+(defun getgensym (n)
+  "Used to create unique numerically indexed local variables for the use 
+   of rules."
+ (loop
+  (let ((m (length /gensymlist)))
+   (if (< m n)
+    (setq /gensymlist
+     (nconc /gensymlist `(,(intern (format nil "G~D" (1+ m))))))
+    (return (nth (1- n) /gensymlist))))))
+
+\end{chunk}
+\subsection{Managing rule sets}
+\begin{chunk}{*}
+(defparameter bac nil)
+
+(defparameter keyfn nil)
+
+(defparameter /metaoption "")
+
+(defparameter tline nil)
+
+(defparameter rs nil)
+
+(defun getrulefunlists  (rootfun rs)
+ (let* ((metapfx (or (get rootfun 'metapfx) ""))
+        (mainfun (internl metapfx (pname rootfun)))
+        (mainfunstr (pname mainfun))
+        (flnam (internl mainfunstr "FUN"))
+        (pfx-funlist
+         (union
+          (cons mainfun (if (atom (eval flnam)) nil (eval flnam)))
+          (mapcar #'(lambda (x) (internl metapfx (pname x)))
+                  (assocleft rs))))
+         n unpfx-funlist)
+  (set flnam pfx-funlist)
+  (if (not (lessp (setq n (length metapfx)) 0))
+   (setq unpfx-funlist
+    (mapcar #'(lambda (x) (intern (subseq (copy-symbol (pname x)) n)))
+            pfx-funlist)))
+  (if unpfx-funlist (list pfx-funlist unpfx-funlist))))
+
+\end{chunk}
+\section{Tracing routines}
+\begin{chunk}{*}
+(defparameter debugmode 'yes "Can be either YES or NO")
+
+(defun reduction-print (y rule)
+ (format t "~&")
+ (cond
+  ((eq y t) (|sayBrightly| `(|%b| ,rule |%d| " reduced")))
+  (y (|sayBrightlyNT| `(|%b| ,rule |%d|)) (format t " reduced ~A~%" y)))
+ y)
+
+(defparameter /depth 0 "Used in Debug.lisp.")
+
+(defun /embed-1 (x y)
+ (princ (strconc (pname x) " embedded"))
+ (terpri)
+ (/embed-q x y))
+
+(defun /embed-q (x y)
+ (setq /embednames (cons x /embednames))
+ (embed x
+  (cond
+   ((eqcar y 'lambda) y)
+   ((eqcar y 'before)
+     `(lambda ,(cadr y)
+       (prog2 ,(caddr y) ,(cons 'funcall (cons x (cadr y))))))
+   ((eqcar y 'after)
+     `(lambda ,(cadr y)
+       (prog1 ,(cons 'funcall (cons x (cadr y))) ,(caddr y))))))
+ (/embedreply))
+
+(defun /embedreply ()
+  (if (atom (embedded))
+   '(|none| |embedded|)
+   (append (embedded) (list '|embedded|))))
+
+(defun numofargs (fn) (numberofargs (car (/mdef (cons fn '(x))))))
+
+(defparameter mdeftrace nil)
+
+(defun /mdef (x)
+ (let (u)
+  (cond
+   ((atom x) x)
+   ((or (null (atom (car x))) (not (mbpip (car x)))) (mapcar #'/mdef x))
+   ((equal x (setq u (mdef (car x) x))) x)
+   (mdeftrace (print x) (princ " --> ") (print u) (/mdef u))
+   ((/mdef u)))))
+
+\end{chunk}
+\section{Routines for inspecting and resetting total I/O system state}
+
+bootlex
+\begin{chunk}{*}
+
+; *** 1. BOOT file handling
+
+;; note that this is no longer called or used. Boot has been removed.
+(defun boot (&optional
+              (*boot-input-file* nil)
+              (*boot-output-file* nil)
+             &aux
+             (Echo-Meta t)
+             ($BOOT T)
+             (|$InteractiveMode| NIL)
+             (File-Closed NIL)
+             (*EOF* NIL)
+             (OPTIONLIST NIL)
+             (*fileactq-apply* (function print-defun))
+             (*comp370-apply* (function print-defun)))
+  (declare (special echo-meta *comp370-apply* *EOF* File-Closed))
+  (init-boot/spad-reader)
+  (with-open-stream
+    (in-stream (if *boot-input-file* (open *boot-input-file* :direction :input)
+                    *standard-input*))
+    (initialize-preparse in-stream)
+    (with-open-stream
+      (out-stream (if *boot-output-file*
+                      (open *boot-output-file* :direction :output)
+                      #-:cmulisp (make-broadcast-stream *standard-output*)
+                      #+:cmulisp *standard-output*
+                      ))
+      (when *boot-output-file*
+         (format out-stream "~&;;; -*- Mode:Lisp; Package:Boot  -*-~%~%")
+         (format out-stream "~&~%(IN-PACKAGE \"BOOT\")~%~%"))
+      (loop (if (and (not File-Closed)
+                     (setq Boot-Line-Stack (PREPARSE in-stream)))
+                (progn
+                       (|PARSE-Expression|)
+                       (let ((parseout (pop-stack-1)) )
+                         (setq parseout (new2OldLisp parseout))
+                         (setq parseout (DEF-RENAME parseout))
+                         (let ((*standard-output* out-stream))
+                           (DEF-PROCESS parseout))
+                         (format out-stream "~&")
+                         (if (null parseout) (ioclear)) ))
+                (return nil)))
+      (if *boot-input-file*
+          (format out-stream ";;;Boot translation finished for ~a~%"
+                  (namestring *boot-input-file*)))
+      (IOClear in-stream out-stream)))
+  T)
+
+;  *** 2. BOOT Line Handling ***
+
+; See the file PREPARSE.LISP for the hard parts of BOOT line processing.
+
+(defun next-BOOT-line (&optional (in-stream t))
+
+  "Get next line, trimming trailing blanks and trailing comments.
+One trailing blank is added to a non-blank line to ease between-line
+processing for Next Token (i.e., blank takes place of return).        Returns T
+if it gets a non-blank line, and NIL at end of stream."
+
+  (if Boot-Line-Stack
+      (let ((Line-Number (caar Boot-Line-Stack))
+            (Line-Buffer (suffix #\Space (cdar Boot-Line-Stack))))
+        (pop Boot-Line-Stack)
+        (Line-New-Line Line-Buffer Current-Line Line-Number)
+        (setq |$currentLine| (setq LINE Line-Buffer))
+        Line-Buffer)))
+
+;  *** 3. BOOT Token Handling ***
+
+(defun get-BOOT-token (token)
+
+  "If you have an _, go to the next line.
+If you have a . followed by an integer, get a floating point number.
+Otherwise, get a .. identifier."
+
+  (if (not (boot-skip-blanks))
+      nil
+      (let ((token-type (boot-token-lookahead-type (current-char))))
+        (case token-type
+          (eof                        (token-install nil '*eof token nonblank))
+          (escape                (advance-char)
+                                (get-boot-identifier-token token t))
+          (argument-designator        (get-argument-designator-token token))
+          (id                        (get-boot-identifier-token token))
+          (num                        (get-number-token token))
+          (string                (get-SPADSTRING-token token))
+          (special-char                (get-special-token token))
+          (t                        (get-gliph-token token token-type))))))
+
+(defun boot-skip-blanks ()
+  (setq nonblank t)
+  (loop (let ((cc (current-char)))
+          (if (not cc) (return nil))
+          (if (eq (boot-token-lookahead-type cc) 'white)
+              (progn (setq nonblank nil) (if (not (advance-char)) (return nil)))
+              (return t)))))
+
+(defun boot-token-lookahead-type (char)
+  "Predicts the kind of token to follow, based on the given initial character."
+  (cond ((not char)                                           'eof)
+        ((char= char #\_)                                   'escape)
+        ((and (char= char #\#) (digitp (next-char)))           'argument-designator)
+        ((digitp char)                                           'num)
+        ((and (char= char #\$) $boot
+              (alpha-char-p (next-char)))                   'id)
+        ((or (char= char #\%) (char= char #\?)
+             (char= char #\!) (alpha-char-p char))           'id)
+        ((char= char #\")                                  'string)
+        ((member char
+                 '(#\Space #\Tab #\Return)
+                 :test #'char=)                                   'white)
+        ((get (intern (string char)) 'Gliph))
+        (t                                                   'special-char)))
+
+(defun get-argument-designator-token (token)
+  (advance-char)
+  (get-number-token token)
+  (token-install (intern (strconc "#" (format nil "~D" (token-symbol token))))
+                 'argument-designator token nonblank))
+
+(defvar Keywords '(|or| |and| |isnt| |is| |otherwise| |when| |where|
+                  |has| |with| |add| |case| |in| |by| |pretend| |mod|
+                  |exquo| |div| |quo| |else| |rem| |then| |suchthat|
+                  |if| |yield| |iterate| |from| |exit| |leave| |return|
+                  |not| |unless| |repeat| |until| |while| |for| |import|)
+
+
+
+"Alphabetic literal strings occurring in the New Meta code constitute
+keywords.   These are recognized specifically by the AnyId production,
+GET-BOOT-IDENTIFIER will recognize keywords but flag them
+as keywords.")
+
+(defun get-boot-identifier-token (token &optional (escaped? nil))
+  "An identifier consists of an escape followed by any character, a %, ?,
+or an alphabetic, followed by any number of escaped characters, digits,
+or the chracters ?, !, ' or %"
+  (prog ((buf (make-adjustable-string 0))
+         (default-package NIL))
+      (suffix (current-char) buf)
+      (advance-char)
+   id (let ((cur-char (current-char)))
+         (cond ((char= cur-char #\_)
+                (if (not (advance-char)) (go bye))
+                (suffix (current-char) buf)
+                (setq escaped? t)
+                (if (not (advance-char)) (go bye))
+                (go id))
+               ((and (null default-package)
+                     (char= cur-char #\'))
+                (setq default-package buf)
+                (setq buf (make-adjustable-string 0))
+                (if (not (advance-char)) (go bye))
+                (go id))
+               ((or (alpha-char-p cur-char)
+                    (digitp cur-char)
+                    (member cur-char '(#\% #\' #\? #\!) :test #'char=))
+                (suffix (current-char) buf)
+                (if (not (advance-char)) (go bye))
+                (go id))))
+  bye (if (and (stringp default-package)
+               (or (not (find-package default-package))         ;; not a package name
+                   (every #'(lambda (x) (eql x #\')) buf))) ;;token ends with ''
+          (setq buf (concatenate 'string default-package "'" buf)
+                default-package nil))
+      (setq buf (intern buf (or default-package "BOOT")))
+      (return (token-install
+                buf
+                (if (and (not escaped?)
+                         (member buf Keywords :test #'eq))
+                    'keyword 'identifier)
+                token
+                nonblank))))
+
+(defun get-gliph-token (token gliph-list)
+  (prog ((buf (make-adjustable-string 0)))
+        (suffix (current-char) buf)
+        (advance-char)
+   loop (setq gliph-list (assoc (intern (string (current-char))) gliph-list))
+        (if gliph-list
+            (progn (suffix (current-char) buf)
+                   (pop gliph-list)
+                   (advance-char)
+                   (go loop))
+            (let ((new-token (intern buf)))
+              (return (token-install (or (get new-token 'renametok) new-token)
+                                     'gliph token nonblank))))))
+
+(defun get-SPADSTRING-token (token)
+   "With TOK=\" and ABC\" on IN-STREAM, extracts and stacks string ABC"
+  (PROG ((BUF (make-adjustable-string 0)))
+        (if (char/= (current-char) #\") (RETURN NIL) (advance-char))
+        (loop
+         (if (char= (current-char) #\") (return nil))
+         (SUFFIX (if (char= (current-char) #\_)
+                     (advance-char)
+                   (current-char))
+                 BUF)
+         (if (null  (advance-char)) ;;end of line
+             (PROGN (|sayBrightly| "Close quote inserted") (RETURN nil)))
+         )
+        (advance-char)
+        (return (token-install (copy-seq buf) ;should make a simple string
+                               'spadstring token))))
+
+; **** 4. BOOT token parsing actions
+
+; Parsing of operator tokens depends on tables initialized by BOTTOMUP.LISP
+
+; **** 5. BOOT Error Handling
+
+
+
+
+; NAME:     Def
+; PURPOSE:  Defines BOOT code
+
+
+;;; Common Block
+
+(defparameter deftran nil)
+(defparameter $macroassoc nil)
+(defparameter $ne nil)
+
+(defparameter $op nil
+"$OP is globalized for construction of local function names, e.g.
+foo defined inside of fum gets renamed as fum,foo.")
+
+(defparameter $opassoc nil
+"$OPASSOC is a renaming accumulator to be used with SUBLIS.")
+
+(defparameter $BODY nil)
+
+; We are making shallow binding cells for these functions as well
+
+(defun B-MDEF (FORM SIGNATURE $BODY)
+  (declare (ignore SIGNATURE))
+ (let* ($OpAssoc
+        ($op (first form)) (argl (cdr form))
+        (GARGL (MAPCAR '(LAMBDA (X) (GENSYM)) ARGL))
+        ($BODY (SUBLISLIS GARGL ARGL (|bootTransform| (DEFTRAN $BODY))))
+        ($BODY (LIST 'SUBLISLIS (CONS 'LIST GARGL) (LIST 'QUOTE GARGL)
+                     (LIST 'QUOTE $BODY))))
+   (COMP (SUBLIS $OPASSOC
+                 (LIST (LIST $OP (LIST 'MLAMBDA (CONS () GARGL) $BODY)))))))
+
+(defun MKPROGN (L) (MKPF L 'PROGN))
+
+(mapcar #'(lambda (x) (setf (get (CAR X) 'RENAME) (CDR X)))
+        '((|true| 'T) (|otherwise| 'T) (|false| NIL)
+          (|and| AND) (|or| OR) (|is| IS)
+          (|list| LIST) (|cons| CONS) 
+          (|setDifference| SETDIFFERENCE) (INTERSECTION |intersection|)
+          (|setIntersection| |intersection|) (|setUnion| |union|)
+          (UNION |union|) (REMOVE |remove|) (MEMBER |member|) (ASSOC |assoc|)
+          (READ VMREAD) (READ-LINE |read-line|)
+          (|apply| APPLY) (|lastNode| LASTPAIR) (LAST |last|)
+          (|in| |member|) (|strconc| STRCONC) (|append| APPEND)
+          (|copy| COPY) (DELETE |delete|) (RASSOC |rassoc|)
+          (|size| SIZE) (|nconc| NCONC)
+          (|setPart| SETELT) (|where| WHERE)
+          (|first| CAR) (|rest| CDR) (|substitute| MSUBST)
+          (|removeDuplicates| REMDUP) (|reverse| REVERSE) (|nreverse| NREVERSE)
+          (|drop| DROP) (|take| TAKE) (|croak| CROAK) (|genvar| GENVAR)
+          (|mkpf| MKPF) (^= NEQUAL) (= EQUAL) 
+          (* TIMES) (/ QUOTIENT)
+          (** EXPT) (|return| RETURN) (|exit| EXIT) (\| SUCHTHAT)
+          (^ NULL) (|not| NULL) (NOT NULL) (REDUCE spadReduce) (DO spadDo)
+          (|atom| ATOM) (|nil| NIL) (|null| NULL) (GET GETL)
+          (T T$)))
+
+(defun DEF-select (L)
+  (cond ((IDENTP (FIRST L)) (DEF-select1 (FIRST L) (SECOND L)))
+        ((LET* ((G (GENSYM))
+                (U (DEF-select1 G (SECOND L))))
+           (LIST 'PROGN (LIST 'setq G (FIRST L)) U)))))
+
+(defun DEF-select1 (X Y)
+  (if (EQCAR Y 'SEQ)
+      (CONS 'COND (DEF-select2 X (CDR Y)))
+      (MOAN (format nil "Unexpected CASE body: ~S" Y))))
+
+(defun DEF-select2 (X Y)
+  (let (u v)
+    (COND ((NOT Y) (MOAN "Unexpected CASE clause termination"))
+          ((EQCAR (setq U (FIRST Y)) 'EXIT)
+           (LIST (LIST ''T (SECOND U))))
+          ((AND (EQCAR U 'COND) (NOT (CDDR U))
+                (EQCAR (SECOND (setq V (SECOND U))) 'EXIT))
+           (CONS (LIST (DEF-IS (LIST X (FIRST V))) (CADADR V))
+                 (DEF-select2 X (CDR Y))))
+          ((MOAN (format nil "Unexpected CASE clause: ~S" (FIRST Y)))))))
+
+(defun MK_LEFORM (U)
+  (COND ((IDENTP U) (PNAME U))
+        ((STRINGP U) U)
+        ((ATOM U) (princ-to-string U))
+        ((MEMBER (FIRST U) '(VCONS CONS) :test #'eq)
+         (STRCONC "(" (MK_LEFORM-CONS U) ")") )
+        ((EQ (FIRST U) 'LIST) (STRCONC "(" (MK_LEFORM (SECOND U)) ")") )
+        ((EQ (FIRST U) 'APPEND) (STRCONC "(" (MK_LEFORM-CONS U) ")") )
+        ((EQ (FIRST U) 'QUOTE) (MK_LEFORM (SECOND U)))
+        ((EQ (FIRST U) 'EQUAL) (STRCONC "=" (MK_LEFORM (SECOND U)) ))
+        ((EQ (FIRST U) 'setq) (MK_LEFORM (THIRD U)))
+        ((|systemError| "problem with BOOT to LISP translation"))))
+
+(defun MK_LEFORM-CONS (U)
+  (COND ((ATOM U) (STRCONC ":" (MK_LEFORM U)))
+        ((EQ (FIRST U) 'APPEND)
+         (STRCONC ":" (MK_LEFORM (SECOND U)) "\," (MK_LEFORM-CONS (THIRD U)) ))
+        ((EQ (THIRD U) NIL) (MK_LEFORM (SECOND U)))
+        ((STRCONC (MK_LEFORM (SECOND U)) "\," (MK_LEFORM-CONS (THIRD U))))))
+
+(defun IS-GENSYM ()
+  (if (NOT (CDR $IS-GENSYMLIST)) (RPLACD $IS-GENSYMLIST (LIST (GENSYM))))
+  (pop $IS-GENSYMLIST))
+
+(defun LIST2CONS (X)
+"Produces LISP code for constructing a list, involving only CONS."
+ (LIST2CONS-1 (CDR X)))
+
+(defun LIST2CONS-1 (X)
+  (if (NOT X) NIL (LIST 'CONS (FIRST X) (LIST2CONS-1 (CDR X)))))
+
+(defun WHDEF (X Y)
+  "Returns no value -- side effect is to do a compilation or modify a global."
+  (prog ((XP (if (ATOM X) (LIST X) X)) Op)
+    (COND ((NOT (CDR XP))
+           (RETURN (PUSH (CONS (FIRST XP) Y) $MACROASSOC))))
+    (setq OP (INTERNL (PNAME $OP) "\," (FIRST XP)))
+    (SETQ $OPASSOC (PUSH (CONS (FIRST XP) OP) $OPASSOC))
+    (SETQ $DEFSTACK (CONS (LIST (CONS OP (CDR XP)) Y) $DEFSTACK))
+    NIL))
+
+(defvar |$new2OldRenameAssoc|
+        '((\QUAD . \.) (\' . QUOTE) (|nil| . NIL) (|append| . APPEND)
+          (|union| . UNION) (|cons| . CONS)))
+
+\end{chunk}
+metalex
+\begin{chunk}{*}
+
+; NAME:         MetaLex.lisp
+; PURPOSE:      Parsing support routines for Meta code
+; CONTENTS:
+;
+;               1. META File Handling
+;               2. META Line Handling
+;               3. META Token Handling
+;               4. META Token Parsing Actions
+;               5. META Error Handling
+ 
+(in-package "BOOT")
+ 
+; *** 2. META Line Handling
+ 
+(defun next-META-line (&optional (in-stream t))
+ 
+"Get next line, trimming trailing blanks and trailing comments.
+One trailing blank is added to a non-blank line to ease between-line
+processing for Next Token (i.e., blank takes place of return).  Returns T
+if it gets a non-blank line, and NIL at end of stream."
+ 
+  (prog (string)
+empty (if File-Closed (return nil))
+      (setq string (kill-trailing-blanks (kill-comments
+                                          (get-a-line in-stream))))
+      (if (= (length string) 0) (go empty))
+      (Line-New-Line (suffix #\Space string) Current-Line)
+      (if Echo-Meta (Print-New-Line (Line-Buffer Current-Line) out-stream))
+      (return t)))
+ 
+(defparameter Comment-Character #\% "Delimiter of comments in Meta code.")
+ 
+(defun kill-comments (string)
+  "Deletes from comment character % to end of STRING."
+  (subseq string 0
+          (let ((mi (maxindex string)))
+            (do ((i 0 (1+ i)))
+                ((> i mi) i)
+              (if (and (char= (elt string i) Comment-Character)
+                       (or (eq i 0) (char/= (elt string (1- i)) #\\)))
+                  (return i))))))
+ 
+(defun kill-trailing-blanks (string)
+ 
+  "Remove white space from end of STRING."
+ 
+  ; Coding note: yes, I know, use string-trim --  but it is broken
+  ; in Symbolics Common Lisp for short strings
+ 
+  (let* ((sl (length string))
+         (right (if (= sl 0) -1
+                    (or
+                      (position-if-not
+                        #'(lambda (x)
+                            (member x '(#\Space #\Tab #\Newline) :test #'char=))
+                        string :from-end t)
+                      -1))))
+    (if (>= right 0) (subseq string 0 (1+ right)) (make-string 0))))
+ 
+; *** 3. META Token Handling
+ 
+; STRING: "'"  { Chars - "'" }* "'"
+; BSTRING: "[" ... "]*"
+; ID: letters, _ and then numbers
+; NUMBER: digits, ., digits, e, +-, digits
+ 
+(defun parse-bstring ()
+  (let* ((tok (match-current-token 'bstring))
+         (symbol (if tok (token-symbol tok))))
+    (when tok
+      (push-reduction 'bstring-token (copy-tree symbol))
+      (advance-token)
+      t)))
+
+; Meta tokens fall into the following categories:
+;
+;               Number
+;               Identifier
+;               Dollar-sign
+;               Special character
+;
+; Special characters are represented as characters, numbers as numbers, and
+; identifiers as strings.  The reason identifiers are represented as strings is
+; that the full print-name of the intern of a string depends on the package you
+; are currently executing in; this can lead to very confusing results!
+ 
+(defun get-META-token (token)
+  (prog nil
+   loop (if (not (skip-blanks)) (return nil))
+        (case (token-lookahead-type (current-char))
+          (id           (return (get-identifier-token token)))
+          (num          (return (get-number-token token)))
+          (string       (return (get-string-token token)))
+          (bstring      (return (get-bstring-token token)))
+;         (dollar       (return (get-identifier-token token)))
+          (special-char (return (get-special-token token)))
+          (eof          (return nil)))))
+ 
+(defun make-adjustable-string (n)
+  (make-array (list n) :element-type 'character :adjustable t))
+
+(defun get-identifier-token (token)
+  "Take an identifier off the input stream."
+  (prog ((buf (make-adjustable-string 0)))
+   id (let ((cur-char (current-char)))
+         (cond ((equal cur-char Escape-Character)
+                (if (not (advance-char)) (go bye))
+                (suffix (current-char) buf)
+                (if (not (advance-char)) (go bye))
+                (go id))
+               ((or (alpha-char-p cur-char)
+                    (char= cur-char #\-)
+                    (digitp cur-char)
+                    (char= cur-char #\_))
+                (suffix (current-char) buf)
+                (if (not (advance-char)) (go bye))
+                (go id))))
+  bye (return (token-install (intern buf) 'identifier token))))
+ 
+(defun get-string-token (token)
+  "With 'ABC' on IN-STREAM, extracts and stacks String 'ABC'."
+  (let ((buf (make-adjustable-string 0)))
+    (if (char= (current-char) #\')
+        (progn (advance-char)
+               (loop (case (current-char)
+                       (#\' (advance-char)
+                        (return (token-install buf 'string token)))
+                       (#\\ (advance-char)
+                        (suffix (current-char) buf)
+                        (advance-char))
+                       (#\Return
+                        (moan "String should fit on one line!")
+                        (advance-char)
+                        (meta-syntax-error)
+                        (return nil))
+                       (t (suffix (current-char) buf)
+                          (advance-char))))))))
+ 
+(defun get-bstring-token (token)
+  "With ABC]* on in-stream, extracts and stacks string ABC."
+  (let ((buf (make-adjustable-string 0)))
+    (if (char= (current-char) #\[)
+        (progn (advance-char)
+               (loop (case (current-char)
+                       (#\] (if (char= (next-char) #\*)
+                                (progn (advance-char)
+                                       (advance-char)
+                                       (return (token-install buf 'bstring token)))
+                                (progn (suffix (current-char) buf)
+                                       (advance-char))))
+                       (#\\ (advance-char)
+                        (suffix (current-char) buf)
+                        (advance-char))
+                       (#\Return
+                        (moan "String should fit on one line!")
+                        (advance-char)
+                        (meta-syntax-error)
+                        (return nil))
+                       (t (suffix (current-char) buf)
+                          (advance-char))))))))
+ 
+(defun get-special-token (token)
+  "Take a special character off the input stream.  We let the type name of each
+special character be the atom whose print name is the character itself."
+  (let ((symbol (current-char)))
+    (advance-char)
+    (token-install symbol 'special-char token)))
+ 
+(defun get-number-token (token)
+  "Take a number off the input stream."
+  (prog ((buf (make-adjustable-string 0)))
+    nu1 (suffix (current-char) buf)                     ; Integer part
+        (let ((next-chr (next-char)))
+          (cond ((digitp next-chr)
+                 (advance-char)
+                 (go nu1))))
+        (advance-char) 
+ formint(return (token-install
+                 (read-from-string buf)
+                  'number token
+                  (size buf) ;used to keep track of digit count
+                  ))))
+ 
+; *** 4. META Auxiliary Parsing Actions
+ 
+(defun make-defun (nametok vars body)
+  (let ((name (INTERN (STRCONC |META_PREFIX| nametok))))
+    (if vars
+        `(DEFUN ,name ,vars (declare (special . ,vars)) ,body)
+        `(DEFUN ,name ,vars ,body))))
+ 
+(defun print-fluids (fluids)
+  (terpri out-stream)
+  (mapcar #'(lambda (x) (format out-stream "~&(DEFPARAMETER ~S NIL)~%" x)) fluids)
+  (terpri out-stream))
+ 
+(defparameter Meta_Prefix nil)
+ 
+(defun set-prefix (prefix)  (setq META_PREFIX prefix))
+ 
+(defun print-rule (x)  (print x out-stream) (format out-stream "~%~%"))
+ 
+; *** 5. META Error Handling
+ 
+(defun meta-meta-error-handler (&optional (wanted nil) (parsing nil))
+  "Print syntax error indication, underline character, scrub line."
+  (format out-stream "~&% MetaLanguage syntax error: ")
+  (if (Line-Past-End-P Current-Line)
+      (cond ((and wanted parsing)
+             (format out-stream "wanted ~A while parsing ~A.~%"
+                     wanted parsing))
+            (wanted (format out-stream "wanted ~A.~%" wanted))
+            (parsing (format out-stream "while parsing ~A.~%" parsing)))
+      (progn (format out-stream "~:[here~;wanted ~A here~]" wanted wanted)
+             (format out-stream "~:[~; while parsing ~A~]:~%" parsing parsing)
+             (Line-Print Current-Line)
+             (Line-Clear Current-Line)
+             (current-token)
+             (incf $num_of_meta_errors)
+             (setq Meta_Errors_Occurred t)))
+   nil)
+
+\end{chunk}
+preparse
+\begin{chunk}{*}
+; Global storage
+ 
+(defparameter $preparseReportIfTrue NIL         "Should we print listings?")
+(defparameter $IOIndex 0                        "Number of latest terminal input line.")
+ 
+(defmacro pptest () `(/rp ">scratchpad>test.boot"))
+ 
+(defun /RP (&optional (*boot-input-file* nil) (*boot-output-file* nil)
+                      ($preparseReportIfTrue t))
+  (with-open-stream
+    (in-stream (or (and *boot-input-file* (open *boot-input-file* :direction :input))
+                   *terminal-io*))
+    (declare (special in-stream))
+    (with-open-stream
+      (out-stream (if *boot-output-file*
+                      (open *boot-output-file* :direction :output)
+                      *terminal-io*))
+      (declare (special out-stream))
+      (initialize-preparse in-stream)
+      (do ((lines (PREPARSE in-stream) (PREPARSE in-stream))) ((null lines)))))
+  T)
+ 
+\end{chunk}
+parse
+\begin{chunk}{*}
+;parseUpArrow u ==  parseTran ["**",:u]
+
+;;;     ***       |parseUpArrow| REDEFINED
+
+(DEFUN |parseUpArrow| (|u|) (|parseTran| (CONS (QUOTE **) |u|))) 
+;
+;parseLeftArrow u == parseTran ["LET",:u]
+
+;;;     ***       |parseLeftArrow| REDEFINED
+
+(DEFUN |parseLeftArrow| (|u|) (|parseTran| (CONS (QUOTE LET) |u|))) 
+;
+;
+;
+;
+;
+;
+;
+;parseBigelt [typ,consForm] ==
+;  [['elt,typ,'makeRecord],:transUnCons consForm]
+
+;;;     ***       |parseBigelt| REDEFINED
+
+(DEFUN |parseBigelt| (arg)
+  (PROG (|typ| |consForm|)
+    (RETURN
+      (PROGN
+        (setq |typ| (CAR arg))
+        (setq |consForm| (CADR arg))
+        (CONS (CONS '|elt| (CONS |typ| (CONS '|makeRecord| NIL)))
+              (|transUnCons| |consForm|))))))
+
+;
+;transUnCons u ==
+;  atom u => systemErrorHere '"transUnCons"
+;  u is ["APPEND",x,y] =>
+;    null y => x
+;    systemErrorHere '"transUnCons"
+;  u is ["CONS",x,y] =>
+;    atom y => [x,:y]
+;    [x,:transUnCons y]
+
+;;;     ***       |transUnCons| REDEFINED
+
+(DEFUN |transUnCons| (|u|)
+  (PROG (|ISTMP#1| |x| |ISTMP#2| |y|)
+    (RETURN
+      (COND
+        ((ATOM |u|) (|systemErrorHere| "transUnCons"))
+        ((AND (CONSP |u|) (EQ (QCAR |u|) 'APPEND)
+              (PROGN
+                (setq |ISTMP#1| (QCDR |u|))
+                (AND (CONSP |ISTMP#1|)
+                     (PROGN
+                       (setq |x| (QCAR |ISTMP#1|))
+                       (setq |ISTMP#2| (QCDR |ISTMP#1|))
+                       (AND (CONSP |ISTMP#2|) (EQ (QCDR |ISTMP#2|) NIL)
+                            (PROGN (setq |y| (QCAR |ISTMP#2|)) 'T))))))
+         (COND
+           ((NULL |y|) |x|)
+           ('T (|systemErrorHere| "transUnCons"))))
+        ((AND (CONSP |u|) (EQ (QCAR |u|) 'CONS)
+              (PROGN
+                (setq |ISTMP#1| (QCDR |u|))
+                (AND (CONSP |ISTMP#1|)
+                     (PROGN
+                       (setq |x| (QCAR |ISTMP#1|))
+                       (setq |ISTMP#2| (QCDR |ISTMP#1|))
+                       (AND (CONSP |ISTMP#2|) (EQ (QCDR |ISTMP#2|) NIL)
+                            (PROGN (setq |y| (QCAR |ISTMP#2|)) 'T))))))
+         (COND
+           ((ATOM |y|) (CONS |x| |y|))
+           ('T (CONS |x| (|transUnCons| |y|)))))))))
+
+
+;
+;parseTypeEvaluate form ==
+;  form is [op,:argl] =>
+;    newType? op => form
+;    $op: local:= op
+;    op = 'Mapping =>
+;      [op,:[parseTypeEvaluate a for a in argl]]
+;    op = 'Union =>
+;      isTaggedUnion form =>
+;        [op,:[['_:,sel,parseTypeEvaluate type] for
+;          ['_:,sel,type] in argl]]
+;      [op,:[parseTypeEvaluate a for a in argl]]
+;    op = 'Record =>
+;      [op,:[['_:,sel,parseTypeEvaluate type] for ['_:,sel,type] in argl]]
+;    cmm :=
+;      fn := constructor? op =>
+;        p := pathname [fn,$spadLibFT,'"*"] =>
+;          isExistingFile p => getConstructorModemap(abbreviation? fn)
+;          nil
+;      nil
+;    cmm is [[.,.,:argml],:.] => [op,:parseTypeEvaluateArgs(argl,argml)]
+;    throwKeyedMsg("S2IL0015",[op])
+;  form
+
+;;;     ***       |parseTypeEvaluate| REDEFINED
+
+(DEFUN |parseTypeEvaluate| (|form|)
+  (PROG (|$op| |op| |argl| |sel| |type| |fn| |p| |cmm| |ISTMP#1|
+               |ISTMP#2| |argml|)
+    (DECLARE (SPECIAL |$op|))
+    (RETURN
+      (SEQ (COND
+             ((AND (CONSP |form|)
+                   (PROGN
+                     (setq |op| (QCAR |form|))
+                     (setq |argl| (QCDR |form|))
+                     'T))
+      (setq |$op| |op|)
+      (COND
+       ((BOOT-EQUAL |op| '|Mapping|)
+        (CONS |op|
+                          (PROG (tpd1)
+                            (setq tpd1 NIL)
+                            (RETURN
+                              (DO ((tpd2 |argl| (CDR tpd2))
+                                   (|a| NIL))
+                                  ((OR (ATOM tpd2)
+                                    (PROGN
+                                      (SETQ |a| (CAR tpd2))
+                                      NIL))
+                                   (NREVERSE0 tpd1))
+                                (SEQ (EXIT
+                                      (SETQ tpd1
+                                       (CONS (|parseTypeEvaluate| |a|)
+                                        tpd1)))))))))
+       ((BOOT-EQUAL |op| '|Union|)
+                    (COND
+                      ((|isTaggedUnion| |form|)
+                       (CONS |op|
+                             (PROG (tpd3)
+                               (setq tpd3 NIL)
+                               (RETURN
+                                 (DO ((tpd4 |argl|
+                                       (CDR tpd4))
+                                      (tpd5 NIL))
+                                     ((OR (ATOM tpd4)
+                                       (PROGN
+                                         (SETQ tpd5
+                                          (CAR tpd4))
+                                         NIL)
+                                       (PROGN
+                                         (PROGN
+                                           (setq |sel|
+                                            (CADR tpd5))
+                                           (setq |type|
+                                            (CADDR tpd5))
+                                           tpd5)
+                                         NIL))
+                                      (NREVERSE0 tpd3))
+                                   (SEQ
+                                    (EXIT
+                                     (SETQ tpd3
+                                      (CONS
+                                       (CONS '|:|
+                                        (CONS |sel|
+                                         (CONS
+                                          (|parseTypeEvaluate| |type|)
+                                          NIL)))
+                                       tpd3)))))))))
+                      ('T
+                       (CONS |op|
+                             (PROG (tpd6)
+                               (setq tpd6 NIL)
+                               (RETURN
+                                 (DO ((tpd7 |argl|
+                                       (CDR tpd7))
+                                      (|a| NIL))
+                                     ((OR (ATOM tpd7)
+                                       (PROGN
+                                         (SETQ |a| (CAR tpd7))
+                                         NIL))
+                                      (NREVERSE0 tpd6))
+                                   (SEQ
+                                    (EXIT
+                                     (SETQ tpd6
+                                      (CONS (|parseTypeEvaluate| |a|)
+                                       tpd6)))))))))))
+       ((BOOT-EQUAL |op| '|Record|)
+                    (CONS |op|
+                          (PROG (tpd8)
+                            (setq tpd8 NIL)
+                            (RETURN
+                              (DO ((tpd9 |argl| (CDR tpd9))
+                                   (tpda NIL))
+                                  ((OR (ATOM tpd9)
+                                    (PROGN
+                                      (SETQ tpda (CAR tpd9))
+                                      NIL)
+                                    (PROGN
+                                      (PROGN
+                                        (setq |sel|
+                                         (CADR tpda))
+                                        (setq |type|
+                                         (CADDR tpda))
+                                        tpda)
+                                      NIL))
+                                   (NREVERSE0 tpd8))
+                                (SEQ (EXIT
+                                      (SETQ tpd8
+                                       (CONS
+                                        (CONS '|:|
+                                         (CONS |sel|
+                                          (CONS
+                                           (|parseTypeEvaluate| |type|)
+                                           NIL)))
+                                        tpd8)))))))))
+       ('T
+                    (setq |cmm|
+                             (SEQ (COND
+                                    ((setq |fn|
+                                      (|constructor?| |op|))
+                                     (COND
+                                       ((setq |p|
+                                         (|pathname|
+                                          (CONS |fn|
+                                           (CONS |$spadLibFT|
+                                            (CONS "*" NIL)))))
+                                        (EXIT
+                                         (COND
+                                           ((|isExistingFile| |p|)
+                                            (|getConstructorModemap|
+                                             (|abbreviation?| |fn|)))
+                                           ('T NIL))))))
+                                    ('T NIL))))
+                    (COND
+                      ((AND (CONSP |cmm|)
+                            (PROGN
+                              (setq |ISTMP#1| (QCAR |cmm|))
+                              (AND (CONSP |ISTMP#1|)
+                                   (PROGN
+                                     (setq |ISTMP#2|
+                                      (QCDR |ISTMP#1|))
+                                     (AND (CONSP |ISTMP#2|)
+                                      (PROGN
+                                        (setq |argml|
+                                         (QCDR |ISTMP#2|))
+                                        'T))))))
+                       (CONS |op|
+                             (|parseTypeEvaluateArgs| |argl| |argml|)))
+                      ('T
+                       (|throwKeyedMsg|
+                        (format nil
+                         "%1 is an unknown constructor and so is unavailable. ~
+                         Did you mean to use -> but type something ~
+                         different instead?")  
+                        (CONS |op| NIL)))))))
+             ('T |form|))))))
+
+;
+;parseTypeEvaluateArgs(argl,argml) ==
+;  [argVal for arg in argl for md in argml for i in 1..] where argVal ==
+;      isCategoryForm(md,$CategoryFrame) => parseTypeEvaluate arg
+;      arg
+
+;;;     ***       |parseTypeEvaluateArgs| REDEFINED
+
+(DEFUN |parseTypeEvaluateArgs| (|argl| |argml|)
+  (PROG ()
+    (RETURN
+      (SEQ (PROG (tpdb)
+             (setq tpdb NIL)
+             (RETURN
+               (DO ((tpdc |argl| (CDR tpdc)) (|arg| NIL)
+                    (tpdd |argml| (CDR tpdd)) (|md| NIL)
+                    (|i| 1 (QSADD1 |i|)))
+                   ((OR (ATOM tpdc)
+                        (PROGN (SETQ |arg| (CAR tpdc)) NIL)
+                        (ATOM tpdd)
+                        (PROGN (SETQ |md| (CAR tpdd)) NIL))
+                    (NREVERSE0 tpdb))
+                 (SEQ (EXIT (SETQ tpdb
+                                  (CONS (COND
+                                          ((|isCategoryForm| |md|
+                                            |$CategoryFrame|)
+                                           (|parseTypeEvaluate| |arg|))
+                                          ('T |arg|))
+                                        tpdb)))))))))))
+
+
+;
+;
+;parseTypeError(x,md,i) == throwKeyedMsg("S2IP0003",[i,$op,md])
+
+;;;     ***       |parseTypeError| REDEFINED
+
+(DEFUN |parseTypeError| (|x| |md| |i|)
+  (|throwKeyedMsg| "Argument number %1 of %2p must have type %3p ."
+    (CONS |i| (CONS |$op| (CONS |md| NIL)))))
+
+
+;
+;specialModeTran form ==
+;  form is [op,:argl] =>
+;    not ATOM op => form --added 10/5/84 by SCM
+;    (s0:= (sop:= PNAME op).0) = "*" =>
+;      n:= #sop
+;      n=1=> form
+;      argKey:= sop.1
+;      numArgs:= #argl - (argKey="1" => 1; 0)
+;      zeroOrOne:= argKey="0" or argKey="1"
+;      isDmp :=
+;        numArgs < 10 =>
+;          n=6 and ('"DMP"=SUBSTRING(sop,3,3)) and zeroOrOne
+;        true =>
+;          n=7 and ('"DMP"=SUBSTRING(sop,4,3)) and zeroOrOne
+;      isDmp =>
+;        if argKey="0" then
+;          extraDomain:= $EmptyMode
+;          vl:= argl
+;         else
+;          [:vl,extraDomain] := argl
+;        ['DistributedMultivariatePolynomial,['construct,:vl],
+;            specialModeTran extraDomain]
+;      n=4 and (s3:= sop.3) = "M" and zeroOrOne =>
+;        specialModeTran
+;          extraDomain:= (argKey="0" => [$EmptyMode]; nil)
+;          (n:= PARSE_-INTEGER PNAME sop.2)=1 =>
+;            ['SquareMatrix,:argl,:extraDomain]
+;          n=2 => ['RectangularMatrix,:argl,:extraDomain]
+;          form
+;      isUpOrMp :=
+;        numArgs < 10 =>
+;          n=4 and (s3:= sop.3) = 'P and zeroOrOne or
+;            n=5 and (s3:= sop.3)='R and sop.4='F and zeroOrOne
+;        true =>
+;          n=5 and (s3:= sop.4) = 'P and zeroOrOne or
+;            n=6 and (s3:= sop.4)='R and sop.5='F and zeroOrOne
+;      isUpOrMp =>
+;        polyForm:=
+;          domainPart:= (argKey="0" => $EmptyMode; last argl)
+;          argPart:= (argKey="0" => argl; drop(-1,argl))
+;          numArgs < 10 and (n:= PARSE_-INTEGER PNAME sop.2)=1
+;            => ['UP,:argPart,domainPart]
+;          ['MP,['construct,:argPart],domainPart]
+;        specialModeTran
+;          s3 = 'R => [$QuotientField,polyForm]
+;          polyForm
+;      [first form,:[specialModeTran x for x in rest form]]
+;    [first form,:[specialModeTran x for x in rest form]]
+;  form
+
+;;;     ***       |specialModeTran| REDEFINED
+
+(DEFUN |specialModeTran| (|form|)
+  (PROG (|op| |argl| |sop| |s0| |argKey| |numArgs| |zeroOrOne| |isDmp|
+              |LETTMP#1| |vl| |extraDomain| |s3| |isUpOrMp|
+              |domainPart| |argPart| |n| |polyForm|)
+    (RETURN
+      (SEQ (COND
+             ((AND (CONSP |form|)
+                   (PROGN
+                     (setq |op| (QCAR |form|))
+                     (setq |argl| (QCDR |form|))
+                     'T))
+              (COND
+                ((NULL (ATOM |op|)) |form|)
+                ((BOOT-EQUAL
+                     (setq |s0|
+                              (ELT (setq |sop| (PNAME |op|)) 0))
+                     '*)
+                 (setq |n| (|#| |sop|))
+                 (COND
+                   ((EQL |n| 1) |form|)
+                   ('T (setq |argKey| (ELT |sop| 1))
+                    (setq |numArgs|
+                             (- (|#| |argl|)
+                                 (COND
+                                   ((BOOT-EQUAL |argKey| '|1|) 1)
+                                   ('T 0))))
+                    (setq |zeroOrOne|
+                             (OR (BOOT-EQUAL |argKey| '|0|)
+                                 (BOOT-EQUAL |argKey| '|1|)))
+                    (setq |isDmp|
+                             (COND
+                               ((> 10 |numArgs|)
+                                (AND (EQL |n| 6)
+                                     (BOOT-EQUAL "DMP"
+                                      (SUBSTRING |sop| 3 3))
+                                     |zeroOrOne|))
+                               ('T
+                                (AND (EQL |n| 7)
+                                     (BOOT-EQUAL "DMP"
+                                      (SUBSTRING |sop| 4 3))
+                                     |zeroOrOne|))))
+                    (COND
+                      (|isDmp| (COND
+                                 ((BOOT-EQUAL |argKey| '|0|)
+                                  (setq |extraDomain| |$EmptyMode|)
+                                  (setq |vl| |argl|))
+                                 ('T
+                                  (setq |LETTMP#1| (REVERSE |argl|))
+                                  (setq |extraDomain|
+                                           (CAR |LETTMP#1|))
+                                  (setq |vl|
+                                           (NREVERSE (CDR |LETTMP#1|)))
+                                  |argl|))
+                               (CONS '|DistributedMultivariatePolynomial|
+                                     (CONS (CONS '|construct| |vl|)
+                                      (CONS
+                                       (|specialModeTran|
+                                        |extraDomain|)
+                                       NIL))))
+                      ((AND (EQL |n| 4)
+                            (BOOT-EQUAL (setq |s3| (ELT |sop| 3))
+                                'M)
+                            |zeroOrOne|)
+                       (|specialModeTran|
+                           (PROGN
+                             (setq |extraDomain|
+                                      (COND
+                                        ((BOOT-EQUAL |argKey| '|0|)
+                                         (CONS |$EmptyMode| NIL))
+                                        ('T NIL)))
+                             (COND
+                               ((EQL (setq |n|
+                                      (PARSE-INTEGER
+                                       (PNAME (ELT |sop| 2))))
+                                     1)
+                                (CONS '|SquareMatrix|
+                                      (APPEND |argl| |extraDomain|)))
+                               ((EQL |n| 2)
+                                (CONS '|RectangularMatrix|
+                                      (APPEND |argl| |extraDomain|)))
+                               ('T |form|)))))
+                      ('T
+                       (setq |isUpOrMp|
+                                (COND
+                                  ((> 10 |numArgs|)
+                                   (OR
+                                    (AND (EQL |n| 4)
+                                     (BOOT-EQUAL
+                                      (setq |s3| (ELT |sop| 3)) 'P)
+                                     |zeroOrOne|)
+                                    (AND (EQL |n| 5)
+                                     (BOOT-EQUAL
+                                      (setq |s3| (ELT |sop| 3)) 'R)
+                                     (BOOT-EQUAL (ELT |sop| 4) 'F)
+                                     |zeroOrOne|)))
+                                  ('T
+                                   (OR
+                                    (AND (EQL |n| 5)
+                                     (BOOT-EQUAL
+                                      (setq |s3| (ELT |sop| 4)) 'P)
+                                     |zeroOrOne|)
+                                    (AND (EQL |n| 6)
+                                     (BOOT-EQUAL
+                                      (setq |s3| (ELT |sop| 4)) 'R)
+                                     (BOOT-EQUAL (ELT |sop| 5) 'F)
+                                     |zeroOrOne|)))))
+                       (COND
+                         (|isUpOrMp|
+                             (setq |polyForm|
+                                      (PROGN
+                                        (setq |domainPart|
+                                         (COND
+                                           ((BOOT-EQUAL |argKey| '|0|)
+                                            |$EmptyMode|)
+                                           ('T (|last| |argl|))))
+                                        (setq |argPart|
+                                         (COND
+                                           ((BOOT-EQUAL |argKey| '|0|)
+                                            |argl|)
+                                           ('T
+                                            (DROP (- 1)
+                                             |argl|))))
+                                        (COND
+                                          ((AND (> 10 |numArgs|)
+                                            (EQL
+                                             (setq |n|
+                                              (PARSE-INTEGER
+                                               (PNAME (ELT |sop| 2))))
+                                             1))
+                                           (CONS 'UP
+                                            (APPEND |argPart|
+                                             (CONS |domainPart| NIL))))
+                                          ('T
+                                           (CONS 'MP
+                                            (CONS
+                                             (CONS '|construct|
+                                              |argPart|)
+                                             (CONS |domainPart| NIL)))))))
+                             (|specialModeTran|
+                                 (COND
+                                   ((BOOT-EQUAL |s3| 'R)
+                                    (CONS |$QuotientField|
+                                     (CONS |polyForm| NIL)))
+                                   ('T |polyForm|))))
+                         ('T
+                          (CONS (CAR |form|)
+                                (PROG (tpde)
+                                  (setq tpde NIL)
+                                  (RETURN
+                                    (DO
+                                     ((tpdf (CDR |form|)
+                                       (CDR tpdf))
+                                      (|x| NIL))
+                                     ((OR (ATOM tpdf)
+                                       (PROGN
+                                         (SETQ |x| (CAR tpdf))
+                                         NIL))
+                                      (NREVERSE0 tpde))
+                                      (SEQ
+                                       (EXIT
+                                        (SETQ tpde
+                                         (CONS (|specialModeTran| |x|)
+                                          tpde)))))))))))))))
+                ('T
+                 (CONS (CAR |form|)
+                       (PROG (tpdg)
+                         (setq tpdg NIL)
+                         (RETURN
+                           (DO ((tpdh (CDR |form|)
+                                    (CDR tpdh))
+                                (|x| NIL))
+                               ((OR (ATOM tpdh)
+                                    (PROGN
+                                      (SETQ |x| (CAR tpdh))
+                                      NIL))
+                                (NREVERSE0 tpdg))
+                             (SEQ (EXIT (SETQ tpdg
+                                         (CONS (|specialModeTran| |x|)
+                                          tpdg)))))))))))
+             ('T |form|))))))
+
+
+;
+;
+;
+;
+;parseCases [expr,ifClause] ==
+;  casefn(expr,ifClause) where
+;    casefn(x,ifExpr) ==
+;      ifExpr='noBranch => ['ifClauseError,x]
+;      ifExpr is ['IF,a,b,c] => ['IF,parseTran a,parseTran b,casefn(x,c)]
+;      postError ['"   CASES format error: cases ",x," of ",ifExpr]
+
+;;;     ***       |parseCases,casefn| REDEFINED
+
+(DEFUN |parseCases,casefn| (|x| |ifExpr|)
+  (PROG (|ISTMP#1| |a| |ISTMP#2| |b| |ISTMP#3| |c|)
+    (RETURN
+      (SEQ (IF (BOOT-EQUAL |ifExpr| '|noBranch|)
+               (EXIT (CONS '|ifClauseError| (CONS |x| NIL))))
+           (IF (AND (CONSP |ifExpr|) (EQ (QCAR |ifExpr|) 'IF)
+                    (PROGN
+                      (setq |ISTMP#1| (QCDR |ifExpr|))
+                      (AND (CONSP |ISTMP#1|)
+                           (PROGN
+                             (setq |a| (QCAR |ISTMP#1|))
+                             (setq |ISTMP#2| (QCDR |ISTMP#1|))
+                             (AND (CONSP |ISTMP#2|)
+                                  (PROGN
+                                    (setq |b| (QCAR |ISTMP#2|))
+                                    (setq |ISTMP#3|
+                                     (QCDR |ISTMP#2|))
+                                    (AND (CONSP |ISTMP#3|)
+                                     (EQ (QCDR |ISTMP#3|) NIL)
+                                     (PROGN
+                                       (setq |c| (QCAR |ISTMP#3|))
+                                       'T))))))))
+               (EXIT (CONS 'IF
+                           (CONS (|parseTran| |a|)
+                                 (CONS (|parseTran| |b|)
+                                       (CONS
+                                        (|parseCases,casefn| |x| |c|)
+                                        NIL))))))
+           (EXIT (postError
+                     (CONS "   CASES format error: cases "
+                           (CONS |x|
+                                 (CONS '| of | (CONS |ifExpr| NIL))))))))))
+
+
+;;;     ***       |parseCases| REDEFINED
+
+(DEFUN |parseCases| (arg)
+  (PROG (|expr| |ifClause|)
+    (RETURN
+      (PROGN
+        (setq |expr| (CAR arg))
+        (setq |ifClause| (CADR arg))
+        (|parseCases,casefn| |expr| |ifClause|)))))
+
+;
+;
+;
+;
+
+;
+;
+;
+;
+
+;
+;
+;parseExclusiveOr [a,b] == parseIf [a,parseIf [b,:'(false true)],b]
+
+;;;     ***       |parseExclusiveOr| REDEFINED
+
+;(DEFUN |parseExclusiveOr| (#0=#:G167140) (PROG (|a| |b|) (RETURN (PROGN (setq |a| (CAR #0#)) (setq |b| (CADR #0#)) (|parseIf| (CONS |a| (CONS (|parseIf| (CONS |b| (QUOTE (|false| |true|)))) (CONS |b| NIL)))))))) 
+;
+
+;transSeq l ==
+;  null l => nil
+;  null rest l => decExitLevel first l
+;  [item,:tail]:= l
+;  item is ['SEQ,:l,['exit,1,['IF,p,['exit, =2,q],'noBranch]]] and
+;    (and/[x is ['LET,:.] for x in l]) =>
+;      ['SEQ,:[decExitLevel x for x in l],['exit,1,['IF,decExitLevel p,
+;        decExitLevel q,transSeq tail]]]
+;  item is ['IF,a,['exit,1,b],'noBranch] =>
+;    ['IF,decExitLevel a,decExitLevel b,transSeq tail]
+;  item is ['IF,a,'noBranch,['exit,1,b]] =>
+;    ['IF,decExitLevel a,transSeq tail,decExitLevel b]
+;  (y:= transSeq tail) is ['SEQ,:s] => ['SEQ,item,:s]
+;  ['SEQ,item,['exit,1,incExitLevel y]]
+
+;;;     ***       |transSeq| REDEFINED
+
+(DEFUN |transSeq| (|l|)
+  (PROG (|item| |tail| |ISTMP#7| |p| |ISTMP#8| |ISTMP#9| |ISTMP#10|
+                |ISTMP#11| |q| |ISTMP#12| |a| |ISTMP#2| |ISTMP#3|
+                |ISTMP#4| |ISTMP#5| |ISTMP#6| |b| |y| |ISTMP#1| |s|)
+    (RETURN
+      (SEQ (COND
+             ((NULL |l|) NIL)
+             ((NULL (CDR |l|)) (|decExitLevel| (CAR |l|)))
+             ('T (setq |item| (CAR |l|)) (setq |tail| (CDR |l|))
+              (COND
+                ((AND (CONSP |item|) (EQ (QCAR |item|) 'SEQ)
+                      (PROGN
+                        (setq |ISTMP#1| (QCDR |item|))
+                        (AND (CONSP |ISTMP#1|)
+                             (PROGN
+                               (setq |ISTMP#2| (REVERSE |ISTMP#1|))
+                               'T)
+                             (CONSP |ISTMP#2|)
+                             (PROGN
+                               (setq |ISTMP#3| (QCAR |ISTMP#2|))
+                               (AND (CONSP |ISTMP#3|)
+                                    (EQ (QCAR |ISTMP#3|) '|exit|)
+                                    (PROGN
+                                      (setq |ISTMP#4|
+                                       (QCDR |ISTMP#3|))
+                                      (AND (CONSP |ISTMP#4|)
+                                       (EQUAL (QCAR |ISTMP#4|) 1)
+                                       (PROGN
+                                         (setq |ISTMP#5|
+                                          (QCDR |ISTMP#4|))
+                                         (AND (CONSP |ISTMP#5|)
+                                          (EQ (QCDR |ISTMP#5|) NIL)
+                                          (PROGN
+                                            (setq |ISTMP#6|
+                                             (QCAR |ISTMP#5|))
+                                            (AND (CONSP |ISTMP#6|)
+                                             (EQ (QCAR |ISTMP#6|) 'IF)
+                                             (PROGN
+                                               (setq |ISTMP#7|
+                                                (QCDR |ISTMP#6|))
+                                               (AND (CONSP |ISTMP#7|)
+                                                (PROGN
+                                                  (setq |p|
+                                                   (QCAR |ISTMP#7|))
+                                                  (setq |ISTMP#8|
+                                                   (QCDR |ISTMP#7|))
+                                                  (AND
+                                                   (CONSP |ISTMP#8|)
+                                                   (PROGN
+                                                     (setq |ISTMP#9|
+                                                      (QCAR |ISTMP#8|))
+                                                     (AND
+                                                      (CONSP |ISTMP#9|)
+                                                      (EQ
+                                                       (QCAR |ISTMP#9|)
+                                                       '|exit|)
+                                                      (PROGN
+                                                        (setq
+                                                         |ISTMP#10|
+                                                         (QCDR
+                                                          |ISTMP#9|))
+                                                        (AND
+                                                         (CONSP
+                                                          |ISTMP#10|)
+                                                         (EQUAL
+                                                          (QCAR
+                                                           |ISTMP#10|)
+                                                          2)
+                                                         (PROGN
+                                                           (setq
+                                                            |ISTMP#11|
+                                                            (QCDR
+                                                             |ISTMP#10|))
+                                                           (AND
+                                                            (CONSP
+                                                             |ISTMP#11|)
+                                                            (EQ
+                                                             (QCDR
+                                                              |ISTMP#11|)
+                                                             NIL)
+                                                            (PROGN
+                                                              (setq
+                                                               |q|
+                                                               (QCAR
+                                                                |ISTMP#11|))
+                                                              'T)))))))
+                                                   (PROGN
+                                                     (setq
+                                                      |ISTMP#12|
+                                                      (QCDR |ISTMP#8|))
+                                                     (AND
+                                                      (CONSP
+                                                       |ISTMP#12|)
+                                                      (EQ
+                                                       (QCDR
+                                                        |ISTMP#12|)
+                                                       NIL)
+                                                      (EQ
+                                                       (QCAR
+                                                        |ISTMP#12|)
+                                                       '|noBranch|)))))))))))))))
+                             (PROGN (setq |l| (QCDR |ISTMP#2|)) 'T)
+                             (PROGN (setq |l| (NREVERSE |l|)) 'T)))
+                      (PROG (tpdj)
+                        (setq tpdj 'T)
+                        (RETURN
+                          (DO ((tpdk NIL (NULL tpdj))
+                               (tpdl |l| (CDR tpdl))
+                               (|x| NIL))
+                              ((OR tpdk (ATOM tpdl)
+                                   (PROGN
+                                     (SETQ |x| (CAR tpdl))
+                                     NIL))
+                               tpdj)
+                            (SEQ (EXIT (SETQ tpdj
+                                        (AND tpdj
+                                         (AND (CONSP |x|)
+                                          (EQ (QCAR |x|) 'LET))))))))))
+                 (CONS 'SEQ
+                       (APPEND (PROG (tpdm)
+                                 (setq tpdm NIL)
+                                 (RETURN
+                                   (DO
+                                    ((tpdn |l| (CDR tpdn))
+                                     (|x| NIL))
+                                    ((OR (ATOM tpdn)
+                                      (PROGN
+                                        (SETQ |x| (CAR tpdn))
+                                        NIL))
+                                     (NREVERSE0 tpdm))
+                                     (SEQ
+                                      (EXIT
+                                       (SETQ tpdm
+                                        (CONS (|decExitLevel| |x|)
+                                         tpdm)))))))
+                               (CONS (CONS '|exit|
+                                      (CONS 1
+                                       (CONS
+                                        (CONS 'IF
+                                         (CONS (|decExitLevel| |p|)
+                                          (CONS (|decExitLevel| |q|)
+                                           (CONS (|transSeq| |tail|)
+                                            NIL))))
+                                        NIL)))
+                                     NIL))))
+                ((AND (CONSP |item|) (EQ (QCAR |item|) 'IF)
+                      (PROGN
+                        (setq |ISTMP#1| (QCDR |item|))
+                        (AND (CONSP |ISTMP#1|)
+                             (PROGN
+                               (setq |a| (QCAR |ISTMP#1|))
+                               (setq |ISTMP#2| (QCDR |ISTMP#1|))
+                               (AND (CONSP |ISTMP#2|)
+                                    (PROGN
+                                      (setq |ISTMP#3|
+                                       (QCAR |ISTMP#2|))
+                                      (AND (CONSP |ISTMP#3|)
+                                       (EQ (QCAR |ISTMP#3|) '|exit|)
+                                       (PROGN
+                                         (setq |ISTMP#4|
+                                          (QCDR |ISTMP#3|))
+                                         (AND (CONSP |ISTMP#4|)
+                                          (EQUAL (QCAR |ISTMP#4|) 1)
+                                          (PROGN
+                                            (setq |ISTMP#5|
+                                             (QCDR |ISTMP#4|))
+                                            (AND (CONSP |ISTMP#5|)
+                                             (EQ (QCDR |ISTMP#5|) NIL)
+                                             (PROGN
+                                               (setq |b|
+                                                (QCAR |ISTMP#5|))
+                                               'T)))))))
+                                    (PROGN
+                                      (setq |ISTMP#6|
+                                       (QCDR |ISTMP#2|))
+                                      (AND (CONSP |ISTMP#6|)
+                                       (EQ (QCDR |ISTMP#6|) NIL)
+                                       (EQ (QCAR |ISTMP#6|)
+                                        '|noBranch|))))))))
+                 (CONS 'IF
+                       (CONS (|decExitLevel| |a|)
+                             (CONS (|decExitLevel| |b|)
+                                   (CONS (|transSeq| |tail|) NIL)))))
+                ((AND (CONSP |item|) (EQ (QCAR |item|) 'IF)
+                      (PROGN
+                        (setq |ISTMP#1| (QCDR |item|))
+                        (AND (CONSP |ISTMP#1|)
+                             (PROGN
+                               (setq |a| (QCAR |ISTMP#1|))
+                               (setq |ISTMP#2| (QCDR |ISTMP#1|))
+                               (AND (CONSP |ISTMP#2|)
+                                    (EQ (QCAR |ISTMP#2|) '|noBranch|)
+                                    (PROGN
+                                      (setq |ISTMP#3|
+                                       (QCDR |ISTMP#2|))
+                                      (AND (CONSP |ISTMP#3|)
+                                       (EQ (QCDR |ISTMP#3|) NIL)
+                                       (PROGN
+                                         (setq |ISTMP#4|
+                                          (QCAR |ISTMP#3|))
+                                         (AND (CONSP |ISTMP#4|)
+                                          (EQ (QCAR |ISTMP#4|) '|exit|)
+                                          (PROGN
+                                            (setq |ISTMP#5|
+                                             (QCDR |ISTMP#4|))
+                                            (AND (CONSP |ISTMP#5|)
+                                             (EQUAL (QCAR |ISTMP#5|) 1)
+                                             (PROGN
+                                               (setq |ISTMP#6|
+                                                (QCDR |ISTMP#5|))
+                                               (AND (CONSP |ISTMP#6|)
+                                                (EQ (QCDR |ISTMP#6|)
+                                                 NIL)
+                                                (PROGN
+                                                  (setq |b|
+                                                   (QCAR |ISTMP#6|))
+                                                  'T))))))))))))))
+                 (CONS 'IF
+                       (CONS (|decExitLevel| |a|)
+                             (CONS (|transSeq| |tail|)
+                                   (CONS (|decExitLevel| |b|) NIL)))))
+                ((PROGN
+                   (setq |ISTMP#1|
+                            (setq |y| (|transSeq| |tail|)))
+                   (AND (CONSP |ISTMP#1|) (EQ (QCAR |ISTMP#1|) 'SEQ)
+                        (PROGN (setq |s| (QCDR |ISTMP#1|)) 'T)))
+                 (CONS 'SEQ (CONS |item| |s|)))
+                ('T
+                 (CONS 'SEQ
+                       (CONS |item|
+                             (CONS (CONS '|exit|
+                                    (CONS 1
+                                     (CONS (|incExitLevel| |y|) NIL)))
+                                   NIL)))))))))))
+
+;
+;transCategoryItem x ==
+;  x is ['SIGNATURE,lhs,rhs] =>
+;    lhs is ['LISTOF,:y] =>
+;      "append" /[transCategoryItem ['SIGNATURE,z,rhs] for z in y]
+;    atom lhs =>
+;      if STRINGP lhs then lhs:= INTERN lhs
+;      rhs is ['Mapping,:m] =>
+;        m is [.,'constant] => LIST ['SIGNATURE,lhs,[first m],'constant]
+;        LIST ['SIGNATURE,lhs,m]
+;      $transCategoryAssoc:= [[lhs,:rhs],:$transCategoryAssoc]
+;      NIL
+;    [op,:argl]:= lhs
+;    extra:= nil
+;    if rhs is ['Mapping,:m] then
+;      if rest m then extra:= rest m
+;                 --should only be 'constant' or 'variable'
+;      rhs:= first m
+;    LIST ['SIGNATURE,op,[rhs,:SUBLIS($transCategoryAssoc,argl)],:extra]
+;  LIST x
+
+;;;     ***       |transCategoryItem| REDEFINED
+
+(DEFUN |transCategoryItem| (|x|)
+  (PROG (|ISTMP#2| |y| |lhs| |ISTMP#1| |op| |argl| |m| |extra| |rhs|)
+    (RETURN
+      (SEQ (COND
+             ((AND (CONSP |x|) (EQ (QCAR |x|) 'SIGNATURE)
+                   (PROGN
+                     (setq |ISTMP#1| (QCDR |x|))
+                     (AND (CONSP |ISTMP#1|)
+                          (PROGN
+                            (setq |lhs| (QCAR |ISTMP#1|))
+                            (setq |ISTMP#2| (QCDR |ISTMP#1|))
+                            (AND (CONSP |ISTMP#2|)
+                                 (EQ (QCDR |ISTMP#2|) NIL)
+                                 (PROGN
+                                   (setq |rhs| (QCAR |ISTMP#2|))
+                                   'T))))))
+              (COND
+                ((AND (CONSP |lhs|) (EQ (QCAR |lhs|) 'LISTOF)
+                      (PROGN (setq |y| (QCDR |lhs|)) 'T))
+                 (PROG (tpdo)
+                   (setq tpdo NIL)
+                   (RETURN
+                     (DO ((tpdp |y| (CDR tpdp)) (|z| NIL))
+                         ((OR (ATOM tpdp)
+                              (PROGN (SETQ |z| (CAR tpdp)) NIL))
+                          tpdo)
+                       (SEQ (EXIT (SETQ tpdo
+                                        (APPEND tpdo
+                                         (|transCategoryItem|
+                                          (CONS 'SIGNATURE
+                                           (CONS |z| (CONS |rhs| NIL))))))))))))
+                ((ATOM |lhs|)
+                 (COND
+                   ((STRINGP |lhs|) (setq |lhs| (INTERN |lhs|))))
+                 (COND
+                   ((AND (CONSP |rhs|) (EQ (QCAR |rhs|) '|Mapping|)
+                         (PROGN (setq |m| (QCDR |rhs|)) 'T))
+                    (COND
+                      ((AND (CONSP |m|)
+                            (PROGN
+                              (setq |ISTMP#1| (QCDR |m|))
+                              (AND (CONSP |ISTMP#1|)
+                                   (EQ (QCDR |ISTMP#1|) NIL)
+                                   (EQ (QCAR |ISTMP#1|) '|constant|))))
+                       (LIST (CONS 'SIGNATURE
+                                   (CONS |lhs|
+                                    (CONS (CONS (CAR |m|) NIL)
+                                     (CONS '|constant| NIL))))))
+                      ('T
+                       (LIST (CONS 'SIGNATURE
+                                   (CONS |lhs| (CONS |m| NIL)))))))
+                   ('T
+                    (setq |$transCategoryAssoc|
+                             (CONS (CONS |lhs| |rhs|)
+                                   |$transCategoryAssoc|))
+                    NIL)))
+                ('T (setq |op| (CAR |lhs|))
+                 (setq |argl| (CDR |lhs|)) (setq |extra| NIL)
+                 (COND
+                   ((AND (CONSP |rhs|) (EQ (QCAR |rhs|) '|Mapping|)
+                         (PROGN (setq |m| (QCDR |rhs|)) 'T))
+                    (COND ((CDR |m|) (setq |extra| (CDR |m|))))
+                    (setq |rhs| (CAR |m|))))
+                 (LIST (CONS 'SIGNATURE
+                             (CONS |op|
+                                   (CONS
+                                    (CONS |rhs|
+                                     (SUBLIS |$transCategoryAssoc|
+                                      |argl|))
+                                    |extra|)))))))
+             ('T (LIST |x|)))))))
+
+;
+;superSub(name,x) ==
+;  for u in x repeat y:= [:y,:u]
+;  code:=
+;    x is [[u]] => $quadSymbol
+;    STRCONC("_(",scriptTranRow first x,scriptTran rest x,"_)")
+;  [INTERNL(PNAME name,"$",code),:y]
+
+;;;     ***       |superSub| REDEFINED
+
+(DEFUN |superSub| (|name| |x|)
+  (PROG (|y| |ISTMP#1| |u| |code|)
+    (RETURN
+      (SEQ (PROGN
+             (DO ((tpdq |x| (CDR tpdq)) (|u| NIL))
+                 ((OR (ATOM tpdq)
+                      (PROGN (SETQ |u| (CAR tpdq)) NIL))
+                  NIL)
+               (SEQ (EXIT (setq |y| (APPEND |y| |u|)))))
+             (setq |code|
+                      (COND
+                        ((AND (CONSP |x|) (EQ (QCDR |x|) NIL)
+                              (PROGN
+                                (setq |ISTMP#1| (QCAR |x|))
+                                (AND (CONSP |ISTMP#1|)
+                                     (EQ (QCDR |ISTMP#1|) NIL)
+                                     (PROGN
+                                       (setq |u| (QCAR |ISTMP#1|))
+                                       'T))))
+                         |$quadSymbol|)
+                        ('T
+                         (STRCONC '|(| (|scriptTranRow| (CAR |x|))
+                                  (|scriptTran| (CDR |x|)) '|)|))))
+             (CONS (INTERNL (PNAME |name|) '$ |code|) |y|))))))
+
+;
+;scriptTran x ==
+;  null x => ""
+;  STRCONC(";",scriptTranRow first x,scriptTran rest x)
+
+;;;     ***       |scriptTran| REDEFINED
+
+(DEFUN |scriptTran| (|x|)
+  (COND
+    ((NULL |x|) '||)
+    ('T
+     (STRCONC '|;| (|scriptTranRow| (CAR |x|))
+              (|scriptTran| (CDR |x|))))))
+
+;
+;scriptTranRow x ==
+;  null x => ""
+;  STRCONC($quadSymbol,scriptTranRow1 rest x)
+
+;;;     ***       |scriptTranRow| REDEFINED
+
+(DEFUN |scriptTranRow| (|x|)
+  (COND
+    ((NULL |x|) '||)
+    ('T (STRCONC |$quadSymbol| (|scriptTranRow1| (CDR |x|))))))
+
+;
+;scriptTranRow1 x ==
+;  null x => ""
+;  STRCONC(",",$quadSymbol,scriptTranRow1 rest x)
+
+;;;     ***       |scriptTranRow1| REDEFINED
+
+(DEFUN |scriptTranRow1| (|x|)
+  (COND
+    ((NULL |x|) '||)
+    ('T (STRCONC '|,| |$quadSymbol| (|scriptTranRow1| (CDR |x|))))))
+
+;
+;;;Boot translation finished for parse.boot
+
+\end{chunk}
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
+

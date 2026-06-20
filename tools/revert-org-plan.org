@@ -1,0 +1,202 @@
+#+TITLE: Revert the pamphlet→org Migration (keep GCL→SBCL) — Reviewed Plan
+#+AUTHOR: Jingtao Xu
+#+DATE: 2026-06-20
+#+OPTIONS: toc:2 num:nil
+
+* Goal & scope
+
+Two interleaved efforts landed on branch =jt= between the daly merge
+base =7e11a37a= (2026-06-11) and HEAD:
+
+1. *GCL→SBCL port* + Lisp/build fixes — **KEEP**.
+2. *pamphlet→org* source migration + org-native cleanup + org→HTML
+   publisher — **REVERT**.
+
+This document is the analysis and the phased execution plan to revert
+(2) while preserving every change from (1). It has been self-reviewed
+for assumptions and gaps; confirmed gaps are listed in
+[[#gaps][Assumptions & gaps]].
+
+NOTE: this plan file is *not* org-migration tooling; it is the reversal
+record. Phase D does **not** delete it.
+
+* Decisions (locked 2026-06-20)
+
+| Decision | Choice |
+|----------+--------|
+| Source-file strategy | *M1 true revert* — restore daly base =.pamphlet= + port SBCL code into the 31 changed files |
+| org→HTML publisher | *Remove* (=axiom-publish.org=, =axiom-html.mk=, =gen-index.sh=, the =make html= target + =htmlize= var) |
+| =editor/ob-axiom.org= | *Keep* (orthogonal Emacs tool; not a migrated source) |
+| =README.org= | Keep (note: its body indexes sources by title and will go stale once sources are =.pamphlet= again) |
+| Cadence | *Phased*, CI-green checkpoints after B, C, E |
+
+Rejected: *M2 (untanglec batch)* — produces =.pamphlet= with
+org-flavoured prose (=*bold*= leaking in), violating daly style.
+
+* Evidence & inventory (reconciled)
+
+| Quantity | Value | Source |
+|----------+-------+--------|
+| Base =7e11a37a= | 1048 =.pamphlet= + 1 =.org= | =git ls-tree= |
+| HEAD | 1059 =.org=, 0 =.pamphlet= | =git ls-files= |
+| Migration mechanism | =01942865= = a single commit of *1049 renames* (.pamphlet→.org, content transformed in place) | =git show --diff-filter=R= |
+| Commit buckets | SBCL ~110 / ORG ~49 / MIXED 5 / NEUTRAL 6 | subagent + cross-check |
+
+Bijection: 1048 base pamphlets ↔ 1048 current .org (zero deletions),
+plus 11 net-new .org = 1059. Reconciled, no orphan.
+
+* The key finding: untanglec is NOT lossless at HEAD
+
+The migration had two layers. Layer 1 (=01942865=, phases 1–3) claimed
+a byte-exact roundtrip. Layer 2 — the later "org-native cleanup"
+series (=cde252c0= + phases 8–14) — rewrote LaTeX prose into org markup
+*one-way*. Measured against the daly base:
+
+#+begin_example
+bookvol1 (pure doc, no SBCL code change):
+  untanglec(HEAD.org) is 18 KB SMALLER than daly base.pamphlet
+  \pagenumbering / \mainmatter dropped; {\bf X}->*X*; {\sl X}->/X/;
+  {\tt X}-> =X= ; itemize-> org list  — none reversed
+#+end_example
+
+⇒ "run untanglec to get daly pamphlets back" is *false*. The true
+revert must restore base =.pamphlet= from git, then port the SBCL code
+changes in.
+
+* The revert engine (proven)
+
+Insight: *inside a chunk = code* (identical form in pamphlet and org);
+*outside a chunk = prose* (where org cleanup diverged). Diffing only
+=\begin{chunk}…\end{chunk}= interiors isolates the SBCL code delta from
+prose noise. Full byte-mode (=LC_ALL=C=) scan over all 1048 migrated
+files:
+
+| Class | Count | Handling |
+|-------+-------+----------|
+| *CLEAN* (zero chunk-code delta) | *1010* | =git checkout 7e11a37a -- F.pamphlet= + =git rm F.org= — fully automatic, zero risk |
+| *CODE-CHANGED source* | *30* | restore base + *selectively* port SBCL hunks |
+| *CODE-CHANGED infra* (Makefile.org family, lsp/Makefile.org) | *8* | restore base + reapply SBCL hunks (lsp/Makefile.org has none — pure org-wiring) |
+
+Caution — some book chunks interleave SBCL and org-wiring in the *same*
+file, e.g. =bookvol10.org=:
+
+#+begin_example
+(in-package (quote boot)) -> (in-package "BOOT")     <- SBCL: KEEP
+${IN}/%.pamphlet -> ${IN}/%.org                       <- org-wiring: DROP
+${TANGLE} ... .pamphlet -> srctangle ... .org         <- org-wiring: DROP
+grep 'begin{chunk}{category }' -> grep '^#+NAME: '     <- org-wiring: DROP
+#+end_example
+
+base-restore drops the org-wiring automatically; only the SBCL lines
+need re-adding. Never blindly apply the whole chunk-diff.
+
+* Phased execution
+
+Phases are commits on a working branch. CI cannot be green until the
+build system is repointed, so the *green checkpoints are after B, C and
+E* — Phase A's intermediate red on the branch is expected, not a
+failure.
+
+** Phase 0 — baseline anchor (read-only)
+Build AXIOMsys on the current org tree and run the 5-shard regression;
+*record the green count* (the SBCL port reported 519/525). Every later
+phase must match this number — it is the proof that SBCL fixes survive.
+
+** Phase A — 1010 CLEAN files (automatic batch)
+Script: for each, =git checkout 7e11a37a -- F.pamphlet= ; =git rm F.org=.
+Gate: code is byte-identical to daly; spot-check =tanglec=. CI is red
+here (build still points at .org) — fixed in B.
+
+** Phase B — infrastructure split (keep SBCL, drop org)
+- =Makefile= — restore base + reapply 4 SBCL hunks (=LISPFLAVOR= / =O:=fasl=,
+  ENV line, =lspdir= =ifeq sbcl= branch, =run:= target).
+- =.gitignore= — restore base (drops =*.pamphlet= / =*.org= / =untanglec= /
+  =orgtangle= rules).
+- Delete =Makefile.org=, =lsp/Makefile.org=, and every =*/Makefile.org=;
+  restore the matching =.pamphlet= tracking.
+- =git rm= =books/untanglec.c=, =books/orgtangle.c=, =books/srctangle=;
+  leave =books/tanglec.c= (base == HEAD).
+- =.github/workflows/sbcl-ci.yml= (only physically-interleaved file):
+  keep body, line-edit out org steps (=srctangle…org=→=tanglec…pamphlet=,
+  drop "Build tanglers" step, cache key =.org=→=.pamphlet=).
+- *=ci/run-regression.sh=* (found in review — G-g): repoint =.input.org=
+  →=.input.pamphlet=, =src/input/Makefile.org=→=Makefile.pamphlet=,
+  =bookvol10.org #+NAME: algebra.regress=→=bookvol10.pamphlet=
+  =\begin{chunk}{algebra.regress}=, =srctangle=→=tanglec=, drop the
+  =untanglec= materialization.
+- Gate: *CI green*, regression count == Phase 0.
+
+** Phase C — port SBCL code into the 30 source files
+Per file: restore base =.pamphlet= → hand-insert the SBCL hunks from the
+chunk-diff (=#+:sbcl= / =#-:gcl= / =coerce 'function= / =defvar= /
+=in-package "BOOT"=…) → drop org-wiring hunks → =git rm= the .org.
+*Inspect =src/input/lamp19.input.org= first* (G-4: 170-line delta looks
+like content add/drop, not a clean SBCL fix).
+Gate: per file, =tanglec(reverted)= code chunks ≡ =orgtangle(old .org)=
+(book Makefile-wiring chunks are allowed to differ — org→pamphlet is
+intentional); full regression == Phase 0.
+
+** Phase D — net-new file disposition
+- =books/bookvolMIGRATION.org= → restore =.pamphlet= *from the pre-rename
+  commit =01942865^=* (G-d: org cleanup mangled its prose; do NOT
+  untanglec). SBCL content intact there.
+- =git rm= =axiom-publish.org=, =axiom-html.mk=, =gen-index.sh=, and the
+  =tools/*.org= migration tools (keep this plan file).
+- Revert my =make html= / =HTMLIZE= edits in =Makefile= and =axiom-html.mk=
+  (the latter is deleted anyway).
+- Keep =editor/ob-axiom.org=, =README.org=, =CLAUDE.md=.
+
+** Phase E — final verification
+Fresh clone → =make= + full regression, green count == Phase 0. For the
+1010 CLEAN files, =git diff 7e11a37a -- '*.pamphlet'= must be empty
+(byte-exact daly). =git status= clean (no stray materialized
+=.input.pamphlet= or =public/=).
+
+* Verification gates summary
+
+1. *Per-file build-equivalence* — code chunks of reverted pamphlet match
+   the org's tangle output (wiring chunks excepted).
+2. *Master gate — regression parity* — reverted tree's 5-shard
+   regression equals Phase 0's count. This is the definitive "SBCL
+   preserved" proof.
+3. *daly byte-exactness* — CLEAN files diff-empty against base.
+
+* Assumptions & gaps
+:PROPERTIES:
+:CUSTOM_ID: gaps
+:END:
+
+| # | Item | Status | Handling |
+|---+------+--------+----------|
+| 1 | untanglec losslessly restores daly pamphlet | *FALSE* (proven) | base-restore + port |
+| 2 | SBCL code lives in chunks, separable | TRUE (prototype) | chunk-interior diff engine |
+| 3 | book Makefile chunks interleave SBCL/org | TRUE (bookvol10) | selective port; base drops org-wiring |
+| 4 | =lamp19.input.org= 170-line delta | *OPEN* | inspect before Phase C |
+| 5 | early SBCL fixes were on .pamphlet pre-rename | OK | chunk-diff captures net delta regardless of timing |
+| 6 | bookvol7/7.1 huge delta | FALSE POSITIVE (latin-1) | fixed with =LC_ALL=C= |
+| 7 | 5 MIXED commits split at file level | TRUE | bucket by file, not =git revert= |
+| 8 | =ci/run-regression.sh= is org-wired | *CONFIRMED* (review) | added to Phase B |
+| 9 | =lsp/Makefile.org= delta = SBCL? | *NO* — pure org-wiring | delete + restore base, no port |
+| 10 | =bookvolMIGRATION= prose mangled by org cleanup | *CONFIRMED* | restore from =01942865^=, not untanglec |
+| 11 | committed =*.input.pamphlet= materialization (=f33c092e=) | OPEN | =git status= clean check in Phase E |
+
+* Appendix — the 30 source files needing SBCL port
+
+src/interp (24): vmlisp, cfuns, sys-pkg, sockio, patches, nruncomp,
+g-error, buildom, clammed, template, msgdb, functor, clam, c-util,
+i-funsel, g-util, util, parsing, nrunopt, i-output, i-intern, category,
+br-con, i-spec1.
+books (6): bookvol5, bookvol10, bookvol10.2, bookvol10.3, bookvol9,
+bookvol8.
+src/input (1): lamp19.input  — inspect first (G-4).
+(=Makefile.org=-family + =lsp/Makefile.org= handled in Phase B, not here.)
+
+* Appendix — the 5 MIXED commits (split at file level)
+
+| sha | SBCL part (keep) | org part (revert) |
+|-----+------------------+-------------------|
+| 47ba9213 | bookvol5/template/sys-pkg/cfuns .pamphlet fixes, run-regression.sh | pamphlet2org.org, test-pamphlet2org.org |
+| 46e04105 | Makefile sync, Makefile.org srctangle-tools | bookvol10.org genericSPADfiles .org wiring |
+| be9c603c | gcl-patch deletions, LISPFLAVOR gcl→sbcl, bookvol5 GCL-cond removal | draft-org-cleanup.org, tools/archive moves |
+| a7d8d65b | =run:= target | check-pamphlet-bytes / regen-pamphlets targets |
+| 524f9d8c | bookvol5 GCL reader-conditional restore (Lisp) | (file is .org — content must land in .pamphlet) |

@@ -98,11 +98,11 @@ ALL="$WORKROOT/all_names.txt"
 # Note the '-' in the char class: names like richhyper000-099.regress are real
 # tests; a class without '-' splits them into a bogus "099" fragment and the
 # whole batch is silently dropped.
-grep -oE '[a-zA-Z0-9_-]+\.regress' "$SPD/src/input/Makefile.org" \
+grep -oE '[a-zA-Z0-9_-]+\.regress' "$SPD/src/input/Makefile.pamphlet" \
   | sed 's/\.regress//' | sort -u \
   | while read -r t; do
       case " $EXCLUDE " in *" $t "*) continue;; esac
-      [ -f "$SPD/src/input/$t.input.org" ] && echo "$t"
+      [ -f "$SPD/src/input/$t.input.pamphlet" ] && echo "$t"
     done > "$ALL"
 SRC_TOTAL=$(wc -l < "$ALL" | tr -d ' ')
 
@@ -111,11 +111,10 @@ SRC_TOTAL=$(wc -l < "$ALL" | tr -d ' ')
 # files are build artifacts staged in int/input/.  Append the ones present --
 # graceful if a given build did not stage them (the count is logged below).
 ALG="$WORKROOT/alg_names.txt"; : > "$ALG"
-# bookvol10 is now .org: the chunk opens with `#+NAME: algebra.regress' instead
-# of `\begin{chunk}{algebra.regress}'.  The REGRESS= body inside the chunk is
-# verbatim, so only the chunk-start pattern changes.
-{ awk '/^#\+NAME: algebra\.regress/{p=1} p&&/REGRESS=/{r=1} r{print} p&&/%\.regress:/{exit}' \
-      "$SPD/books/bookvol10.org" \
+# bookvol10 algebra.regress chunk opens with `\begin{chunk}{algebra.regress}'.
+# The REGRESS= body inside the chunk lists the ~1157 domain tests.
+{ awk '/\\begin\{chunk\}\{algebra\.regress\}/{p=1} p&&/REGRESS=/{r=1} r{print} p&&(/%\.regress:/||/\\end\{chunk\}/){exit}' \
+      "$SPD/books/bookvol10.pamphlet" \
     | grep -oE '[A-Za-z][A-Za-z0-9]*\.regress' | sed 's/\.regress//'
   printf '%s\n' $POOL2          # staged-but-unlisted constructors (Pool 2)
 } | sort -u \
@@ -138,7 +137,7 @@ echo "discovered $SRC_TOTAL src/input + $ALG_TOTAL algebra-domain = $TOTAL tests
 EXPECTED_MIN="${EXPECTED_MIN:-520}"
 if [ "$TOTAL" -lt "$EXPECTED_MIN" ]; then
   echo "FATAL: discovered only $TOTAL regression tests (< $EXPECTED_MIN expected)." >&2
-  echo "  The .regress scan of src/input/Makefile.org likely broke." >&2
+  echo "  The .regress scan of src/input/Makefile.pamphlet likely broke." >&2
   echo "  Refusing to report a shrunk suite green." >&2
   exit 2
 fi
@@ -181,7 +180,7 @@ xargs -P "$NW" -I{} bash -c '
   # the tally (pass+fail < total) and a never-run test cannot fail the gate.
   mkdir -p "$d" || { echo "$t FAIL mkdir" >> "$RESULTS"; exit 0; }
   cd "$d" || { echo "$t FAIL chdir" >> "$RESULTS"; exit 0; }
-  pf="$SPD/src/input/$t.input.org"
+  pf="$SPD/src/input/$t.input.pamphlet"
   if grep -qxF "$t" "$WORKROOT/alg_names.txt" 2>/dev/null; then
     # algebra-domain test: read the staged int/input directly.  Do NOT tangle a
     # same-named src/input source -- 32 domains (Vector, Color, Palette, ...)
@@ -189,13 +188,11 @@ xargs -P "$NW" -I{} bash -c '
     # and would NOOUT the shard.
     cp "$SPD/int/input/$t.input" "$t.input"
   elif [ -f "$pf" ]; then
-    # src/input test: tangle the .org source DIRECTLY to a .input (srctangle ->
-    # orgtangle by default; AXIOM_TANGLE_VIA_PAMPHLET=1 routes through .pamphlet).
-    "$SPD/books/srctangle" "$pf" "*" > "$t.input" 2>/dev/null || true
+    # src/input test: tangle the .pamphlet source to a .input via tanglec.
     # ~19 inputs self-reference src/input/<t>.input.pamphlet at an absolute path
-    # ()sys cp ... ; )lisp (tangle "<t>.input.pamphlet" sub out)).  Materialise the
-    # exact .pamphlet bytes beside the .org so those self-tangling tests still run.
-    "$SPD/books/untanglec" "$pf" > "$SPD/src/input/$t.input.pamphlet" 2>/dev/null || true
+    # ()sys cp ... ; )lisp (tangle "<t>.input.pamphlet" sub out)); that file is
+    # the tracked source here, so no materialisation is needed.
+    "$SPD/books/tanglec" "$pf" "*" > "$t.input" 2>/dev/null || true
   elif [ -f "$SPD/int/input/$t.input" ]; then
     cp "$SPD/int/input/$t.input" "$t.input"
   fi

@@ -1,0 +1,2017 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{msgdb.lisp}
+\author{The Axiom Team}
+\begin{abstract}
+\end{abstract}
+\begin{chunk}{*}
+
+(IN-PACKAGE "BOOT" )
+
+;--% Accessing the Database
+;string2Words l ==
+;  i := 0
+;  [w while wordFrom(l,i) is [w,i]]
+
+(defun |string2Words| (|l|)
+  (PROG (|ISTMP#1| |w| |ISTMP#2| |i|)
+    (RETURN
+      (SEQ (PROGN
+             (setq |i| 0)
+             (PROG (G166078)
+               (setq G166078 nil)
+               (RETURN
+                 (DO ()
+                     ((NULL (PROGN
+                              (setq |ISTMP#1| (|wordFrom| |l| |i|))
+                              (AND (consp |ISTMP#1|)
+                                   (PROGN
+                                     (setq |w| (QCAR |ISTMP#1|))
+                                     (setq |ISTMP#2|
+                                      (QCDR |ISTMP#1|))
+                                     (AND (consp |ISTMP#2|)
+                                      (EQ (QCDR |ISTMP#2|) nil)
+                                      (PROGN
+                                        (setq |i| (QCAR |ISTMP#2|))
+                                        t))))))
+                      (NREVERSE0 G166078))
+                   (SEQ (EXIT (SETQ G166078 (cons |w| G166078))))))))))))
+
+;wordFrom(l,i) ==
+;  maxIndex := MAXINDEX l
+;  k := or/[j for j in i..maxIndex | l.j ^= char ('_ ) ] or return nil
+;  buf := '""
+;  while k < maxIndex and (c := l.k) ^= char ('_ ) repeat
+;    ch :=
+;      c = char '__   => l.(k := 1+k)  --this may exceed bounds
+;      c
+;    buf := STRCONC(buf,ch)
+;    k := k + 1
+;  if k = maxIndex and (c := l.k) ^= char ('_ ) then buf := STRCONC(buf,c)
+;  [buf,k+1]
+
+(defun |wordFrom| (|l| |i|)
+  (PROG (|maxIndex| |ch| |k| |c| |buf|)
+    (RETURN
+      (SEQ (PROGN
+             (setq |maxIndex| (MAXINDEX |l|))
+             (setq |k|
+                      (OR (PROG (G166098)
+                            (setq G166098 nil)
+                            (RETURN
+                              (DO ((G166105 nil G166098)
+                                   (|j| |i| (+ |j| 1)))
+                                  ((OR G166105 (> |j| |maxIndex|))
+                                   G166098)
+                                (SEQ (EXIT
+                                      (COND
+                                        ((NEQUAL (ELT |l| |j|)
+                                          #\space)
+                                         (SETQ G166098
+                                          (OR G166098 |j|)))))))))
+                          (RETURN nil)))
+             (setq |buf| "")
+             (DO ()
+                 ((NULL (AND (> |maxIndex| |k|)
+                             (NEQUAL (setq |c| (ELT |l| |k|))
+                                     #\space)))
+                  nil)
+               (SEQ (EXIT (PROGN
+                            (setq |ch|
+                                     (COND
+                                       ((BOOT-EQUAL |c| #\_)
+                                        (ELT |l|
+                                         (setq |k| (+ 1 |k|))))
+                                       (t |c|)))
+                            (setq |buf| (STRCONC |buf| |ch|))
+                            (setq |k| (+ |k| 1))))))
+             (COND
+               ((AND (BOOT-EQUAL |k| |maxIndex|)
+                     (NEQUAL (setq |c| (ELT |l| |k|)) #\space))
+                (setq |buf| (STRCONC |buf| |c|))))
+             (cons |buf| (cons (+ |k| 1) nil)))))))
+
+;segmentedMsgPreprocess x ==
+;  ATOM x => x
+;  [head,:tail] := x
+;  center := rightJust := nil
+;  if head in '(%ceon "%ceon") then center := true
+;  if head in '(%rjon "%rjon") then rightJust := true
+;  center or rightJust =>
+;    -- start collecting terms
+;    y := nil
+;    ok := true
+;    while tail and ok repeat
+;      [t,:tail] := tail
+;      t in '(%ceoff "%ceoff" %rjoff "%rjoff") => ok := nil
+;      y := cons(segmentedMsgPreprocess t,y)
+;    head1 := [(center => '"%ce"; '"%rj"),:NREVERSE y]
+;    NULL tail => [head1]
+;    [head1,:segmentedMsgPreprocess tail]
+;  head1 := segmentedMsgPreprocess head
+;  tail1 := segmentedMsgPreprocess tail
+;  EQ(head,head1) and EQ(tail,tail1) => x
+;  [head1,:tail1]
+
+(defun |segmentedMsgPreprocess| (|x|)
+  (PROG (|head| |center| |rightJust| |LETTMP#1| |t| |tail| |ok| |y|
+                |head1| |tail1|)
+    (RETURN
+      (SEQ (COND
+             ((ATOM |x|) |x|)
+             (t (setq |head| (CAR |x|)) (setq |tail| (CDR |x|))
+              (setq |center| (setq |rightJust| nil))
+              (COND
+                ((|member| |head| '(|%ceon| "%ceon"))
+                 (setq |center| t)))
+              (COND
+                ((|member| |head| '(|%rjon| "%rjon"))
+                 (setq |rightJust| t)))
+              (COND
+                ((OR |center| |rightJust|) (setq |y| nil)
+                 (setq |ok| t)
+                 (DO () ((NULL (AND |tail| |ok|)) nil)
+                   (SEQ (EXIT (PROGN
+                                (setq |LETTMP#1| |tail|)
+                                (setq |t| (CAR |LETTMP#1|))
+                                (setq |tail| (CDR |LETTMP#1|))
+                                (COND
+                                  ((|member| |t|
+                                    '(|%ceoff| "%ceoff" |%rjoff|
+                                      "%rjoff"))
+                                   (setq |ok| nil))
+                                  (t
+                                   (setq |y|
+                                    (cons
+                                     (|segmentedMsgPreprocess| |t|)
+                                     |y|))))))))
+                 (setq |head1|
+                          (cons (COND
+                                  (|center| "%ce")
+                                  (t "%rj"))
+                                (NREVERSE |y|)))
+                 (COND
+                   ((NULL |tail|) (cons |head1| nil))
+                   (t
+                    (cons |head1| (|segmentedMsgPreprocess| |tail|)))))
+                (t (setq |head1| (|segmentedMsgPreprocess| |head|))
+                 (setq |tail1| (|segmentedMsgPreprocess| |tail|))
+                 (COND
+                   ((AND (EQ |head| |head1|) (EQ |tail| |tail1|)) |x|)
+                   (t (cons |head1| |tail1|)))))))))))
+
+;removeAttributes msg ==
+;    --takes a segmented message and returns it with the attributes
+;    --separted.
+;    first msg ^= '"%atbeg" =>
+;        [msg,nil]
+;    attList := []
+;    until item = '"%atend" repeat
+;        msg     := rest  msg
+;        item    := first msg
+;        attList := [INTERN item,:attList]
+;    msg := rest msg
+;    attList := rest attList
+;    [msg,attList]
+
+(defun |removeAttributes| (|msg|)
+  (PROG (|item| |attList|)
+    (RETURN
+      (SEQ (COND
+             ((NEQUAL (CAR |msg|) "%atbeg")
+              (cons |msg| (cons nil nil)))
+             (t (setq |attList| nil)
+              (DO ((G166190 nil
+                       (BOOT-EQUAL |item| "%atend")))
+                  (G166190 nil)
+                (SEQ (EXIT (PROGN
+                             (setq |msg| (CDR |msg|))
+                             (setq |item| (CAR |msg|))
+                             (setq |attList|
+                                      (cons (INTERN |item|) |attList|))))))
+              (setq |msg| (CDR |msg|))
+              (setq |attList| (CDR |attList|))
+              (cons |msg| (cons |attList| nil))))))))
+
+;substituteSegmentedMsg(msg,args) ==
+;  -- this does substitution of the parameters
+;  l := nil
+;  nargs := #args
+;  for x in segmentedMsgPreprocess msg repeat
+;    -- x is a list
+;    consp x =>
+;      l := cons(substituteSegmentedMsg(x,args),l)
+;    c := x.0
+;    n := STRINGLENGTH x
+;    -- x is a special case
+;    (n > 2) and (c = "%") and (x.1 = "k") =>
+;        l := NCONC(NREVERSE pkey SUBSTRING(x,2,nil),l)
+;    -- ?name gets replaced by '"Push PF10" or '"Type >b (enter)"
+;    (x.0 = char "?") and n > 1 and (v := pushOrTypeFuture(INTERN x,nil)) =>
+;      l := NCONC(NREVERSE v,l)
+;    -- x requires parameter substitution
+;    (x.0 = char "%") and (n > 1) and (DIGITP x.1) =>
+;      a := DIG2FIX x.1
+;      arg :=
+;        a <= nargs => args.(a-1)
+;        '"???"
+;      -- now pull out qualifiers
+;      q := nil
+;      for i in 2..(n-1) repeat q := cons(x.i,q)
+;      -- Note 'f processing must come first.
+;      if MEMQ(char 'f,q) then
+;          arg :=
+;              consp arg => APPLY(first arg, rest arg)
+;              arg
+;      if MEMQ(char 'm,q) then arg := [['"%m",:arg]]
+;      if MEMQ(char 's,q) then arg := [['"%s",:arg]]
+;      if MEMQ(char 'p,q) then
+;          arg := prefix2String arg
+;      if MEMQ(char 'P,q) then
+;          arg := [prefix2String x for x in arg]
+;      if MEMQ(char 'c,q) then arg := [['"%ce",:arg]]
+;      if MEMQ(char 'r,q) then arg := [['"%rj",:arg]]
+;      if MEMQ(char 'l,q) then l := cons('"%l",l)
+;      if MEMQ(char 'b,q) then l := cons('"%b",l)
+;      --we splice in arguments that are lists
+;      --if y is not specified, then the adding of blanks is
+;      --stifled after the first item in the list until the
+;      --end of the list. (using %n and %y)
+;      l :=
+;         consp(arg) =>
+;           MEMQ(char 'y,q) or (CAR arg = '"%y") or ((LENGTH arg) = 1)  =>
+;             APPEND(REVERSE arg, l)
+;           head := first arg
+;           tail := rest arg
+;           ['"%y",:APPEND(REVERSE tail, ['"%n",head,:l ]) ]
+;         cons(arg,l)
+;      if MEMQ(char 'b,q) then l := cons('"%d",l)
+;      for ch in '(_. _, _! _: _; _?) repeat
+;        if MEMQ(char ch,q) then l := cons(ch,l)
+;    --x is a plain word
+;    l := cons(x,l)
+;  addBlanks NREVERSE l
+
+(defun |substituteSegmentedMsg| (|msg| |args|)
+  (PROG (|nargs| |c| |n| |v| |a| |q| |arg| |head| |tail| |l|)
+    (RETURN
+      (SEQ (PROGN
+             (setq |l| nil)
+             (setq |nargs| (|#| |args|))
+             (DO ((G166215 (|segmentedMsgPreprocess| |msg|)
+                      (CDR G166215))
+                  (|x| nil))
+                 ((OR (ATOM G166215)
+                      (PROGN (SETQ |x| (CAR G166215)) nil))
+                  nil)
+               (SEQ (EXIT (COND
+                            ((consp |x|)
+                             (setq |l|
+                                      (cons
+                                       (|substituteSegmentedMsg| |x|
+                                        |args|)
+                                       |l|)))
+                            (t (setq |c| (ELT |x| 0))
+                             (setq |n| (STRINGLENGTH |x|))
+                             (COND
+                               ((AND (> |n| 2) (BOOT-EQUAL |c| '%)
+                                     (BOOT-EQUAL (ELT |x| 1) '|k|))
+                                (setq |l|
+                                         (NCONC
+                                          (NREVERSE
+                                           (|pkey|
+                                            (SUBSTRING |x| 2 nil)))
+                                          |l|)))
+                               ((AND (BOOT-EQUAL (ELT |x| 0)
+                                      #\?)
+                                     (> |n| 1)
+                                     (setq |v|
+                                      (|pushOrTypeFuture| (INTERN |x|)
+                                       nil)))
+                                (setq |l|
+                                         (NCONC (NREVERSE |v|) |l|)))
+                               ((AND (BOOT-EQUAL (ELT |x| 0)
+                                      #\%)
+                                     (> |n| 1) (DIGITP (ELT |x| 1)))
+                                (setq |a| (DIG2FIX (ELT |x| 1)))
+                                (setq |arg|
+                                         (COND
+                                           ((<= |a| |nargs|)
+                                            (ELT |args|
+                                             (- |a| 1)))
+                                           (t "???")))
+                                (setq |q| nil)
+                                (DO ((G166224 (- |n| 1))
+                                     (|i| 2 (1+ |i|)))
+                                    ((QSGREATERP |i| G166224) nil)
+                                  (SEQ (EXIT
+                                        (setq |q|
+                                         (cons (ELT |x| |i|) |q|)))))
+                                (COND
+                                  ((member #\f |q|)
+                                   (setq |arg|
+                                    (COND
+                                      ((consp |arg|)
+                                       (APPLY (CAR |arg|) (CDR |arg|)))
+                                      (t |arg|)))))
+                                (COND
+                                  ((member #\m |q|)
+                                   (setq |arg|
+                                    (cons
+                                     (cons "%m" |arg|)
+                                     nil))))
+                                (COND
+                                  ((member #\s |q|)
+                                   (setq |arg|
+                                    (cons
+                                     (cons "%s" |arg|)
+                                     nil))))
+                                (COND
+                                  ((member #\p |q|)
+                                      (setq |arg|
+                                       (|prefix2String| |arg|))))
+                                (COND
+                                  ((member #\P |q|)
+                                      (setq |arg|
+                                       (PROG (G166247)
+                                         (setq G166247 nil)
+                                         (RETURN
+                                           (DO
+                                            ((G166252 |arg|
+                                              (CDR G166252))
+                                             (|x| nil))
+                                            ((OR (ATOM G166252)
+                                              (PROGN
+                                                (SETQ |x|
+                                                 (CAR G166252))
+                                                nil))
+                                             (NREVERSE0 G166247))
+                                             (SEQ
+                                              (EXIT
+                                               (SETQ G166247
+                                                (cons
+                                                 (|prefix2String| |x|)
+                                                 G166247))))))))))
+                                (COND
+                                  ((member #\c |q|)
+                                   (setq |arg|
+                                    (cons
+                                     (cons "%ce" |arg|)
+                                     nil))))
+                                (COND
+                                  ((member #\r |q|)
+                                   (setq |arg|
+                                    (cons
+                                     (cons "%rj" |arg|)
+                                     nil))))
+                                (COND
+                                  ((member #\l |q|)
+                                   (setq |l|
+                                    (cons "%l" |l|))))
+                                (setq |l|
+                                         (COND
+                                           ((consp |arg|)
+                                            (COND
+                                              ((OR
+                                                (member #\y
+                                                 |q|)
+                                                (BOOT-EQUAL (CAR |arg|)
+                                                 "%y")
+                                                (EQL (LENGTH |arg|) 1))
+                                               (APPEND (REVERSE |arg|)
+                                                |l|))
+                                              (t
+                                               (setq |head|
+                                                (CAR |arg|))
+                                               (setq |tail|
+                                                (CDR |arg|))
+                                               (cons "%y"
+                                                (APPEND
+                                                 (REVERSE |tail|)
+                                                 (cons
+                                                  "%n"
+                                                  (cons |head| |l|)))))))
+                                           (t (cons |arg| |l|))))
+                                (DO ((G166261 '(|.| |,| ! |:| |;| ?)
+                                      (CDR G166261))
+                                     (|ch| nil))
+                                    ((OR (ATOM G166261)
+                                      (PROGN
+                                        (SETQ |ch| (CAR G166261))
+                                        nil))
+                                     nil)
+                                  (SEQ (EXIT
+                                        (COND
+                                          ((member (character |ch|) |q|)
+                                           (setq |l|
+                                            (cons |ch| |l|)))
+                                          (t nil))))))
+                               (t (setq |l| (cons |x| |l|)))))))))
+             (|addBlanks| (NREVERSE |l|)))))))
+
+;addBlanks msg ==
+;  -- adds proper blanks
+;  null consp msg => msg
+;  null msg => msg
+;  LENGTH msg = 1 => msg
+;  blanksOff := false
+;  x := first msg
+;  if x = '"%n" then
+;    blanksOff := true
+;    msg1 := []
+;  else
+;    msg1 := LIST x
+;  blank := '" "
+;  for y in rest msg repeat
+;    y in '("%n" %n) => blanksOff := true
+;    y in '("%y" %y) => blanksOff  := false
+;    if noBlankAfterP x or noBlankBeforeP y or blanksOff then
+;       msg1 := [y,:msg1]
+;    else
+;       msg1 := [y,blank,:msg1]
+;    x := y
+;  NREVERSE msg1
+
+(defun |addBlanks| (|msg|)
+  (PROG (|blank| |blanksOff| |msg1| |x|)
+    (RETURN
+      (SEQ (COND
+             ((NULL (consp |msg|)) |msg|)
+             ((NULL |msg|) |msg|)
+             ((EQL (LENGTH |msg|) 1) |msg|)
+             (t (setq |blanksOff| nil) (setq |x| (CAR |msg|))
+              (COND
+                ((BOOT-EQUAL |x| "%n")
+                 (setq |blanksOff| t) (setq |msg1| nil))
+                (t (setq |msg1| (LIST |x|))))
+              (setq |blank| " ")
+              (DO ((G166308 (CDR |msg|) (CDR G166308)) (|y| nil))
+                  ((OR (ATOM G166308)
+                       (PROGN (SETQ |y| (CAR G166308)) nil))
+                   nil)
+                (SEQ (EXIT (COND
+                             ((|member| |y| '("%n" |%n|))
+                              (setq |blanksOff| t))
+                             ((|member| |y| '("%y" |%y|))
+                              (setq |blanksOff| nil))
+                             (t
+                              (COND
+                                ((OR (|noBlankAfterP| |x|)
+                                     (|noBlankBeforeP| |y|)
+                                     |blanksOff|)
+                                 (setq |msg1| (cons |y| |msg1|)))
+                                (t
+                                 (setq |msg1|
+                                          (cons |y|
+                                           (cons |blank| |msg1|)))))
+                              (setq |x| |y|))))))
+              (NREVERSE |msg1|)))))))
+
+(defvar |$msgdbListPrims|
+    '(|%m| |%s| |%ce| |%rj| "%m" "%s" "%ce" "%rj"))
+
+;noBlankBeforeP word==
+;    INTP word => false
+;    word in $msgdbNoBlanksBeforeGroup => true
+;    if CVECP word and SIZE word > 1 then
+;       word.0 = char '% and word.1 = char 'x => return true
+;       word.0 = char " " => return true
+;    (consp word) and (CAR word in $msgdbListPrims) => true
+;    false
+
+(defun |noBlankBeforeP| (|word|)
+  (PROG ()
+  (declare (special |$msgdbListPrims| |$msgdbNoBlanksBeforeGroup|))
+    (RETURN
+      (COND
+        ((integerp |word|) nil)
+        ((|member| |word| |$msgdbNoBlanksBeforeGroup|) t)
+        (t
+         (COND
+           ((AND (stringp |word|) (> (SIZE |word|) 1))
+            (COND
+              ((AND (BOOT-EQUAL (ELT |word| 0) #\%)
+                    (BOOT-EQUAL (ELT |word| 1) #\x))
+               (RETURN t))
+              ((BOOT-EQUAL (ELT |word| 0) #\space) (RETURN t)))))
+         (COND
+           ((AND (consp |word|)
+                 (|member| (CAR |word|) |$msgdbListPrims|))
+            t)
+           (t nil)))))))
+
+;noBlankAfterP word==
+;    INTP word => false
+;    word in $msgdbNoBlanksAfterGroup => true
+;    if CVECP word and (s := SIZE word) > 1 then
+;       word.0 = char '% and word.1 = char 'x => return true
+;       word.(s-1) = char " " => return true
+;    (consp word) and (CAR word in $msgdbListPrims) => true
+;    false
+
+(defun |noBlankAfterP| (|word|)
+  (PROG (|s|)
+  (declare (special |$msgdbListPrims| |$msgdbNoBlanksAfterGroup|))
+    (RETURN
+      (COND
+        ((integerp |word|) nil)
+        ((|member| |word| |$msgdbNoBlanksAfterGroup|) t)
+        (t
+         (COND
+           ((AND (stringp |word|) (> (setq |s| (SIZE |word|)) 1))
+            (COND
+              ((AND (BOOT-EQUAL (ELT |word| 0) #\%)
+                    (BOOT-EQUAL (ELT |word| 1) #\x))
+               (RETURN t))
+              ((BOOT-EQUAL (ELT |word| (- |s| 1))
+                   #\space)
+               (RETURN t)))))
+         (COND
+           ((AND (consp |word|)
+                 (|member| (CAR |word|) |$msgdbListPrims|))
+            t)
+           (t nil)))))))
+
+;cleanUpSegmentedMsg msg ==
+;  -- removes any junk like double blanks
+;  -- takes a reversed msg and puts it in the correct order
+;  null consp msg => msg
+;  blanks := ['" "," "]
+;  haveBlank := nil
+;  prims :=
+;    '(%b %d %l %i %u %m %ce %rj _
+;     "%b" "%d" "%l" "%i" "%m" "%u" "%ce" "%rj")
+;  msg1 := nil
+;  for x in msg repeat
+;    if haveBlank and ((x in blanks) or (x in prims)) then
+;      msg1 := CDR msg1
+;    msg1 := cons(x,msg1)
+;    haveBlank := (x in blanks => true; nil)
+;  msg1
+
+(defun |cleanUpSegmentedMsg| (|msg|)
+  (PROG (|blanks| |prims| |msg1| |haveBlank|)
+    (RETURN
+      (SEQ (COND
+             ((NULL (consp |msg|)) |msg|)
+             (t
+              (setq |blanks|
+                       (cons " " (cons '| | nil)))
+              (setq |haveBlank| nil)
+              (setq |prims|
+                       '(|%l| |%i| |%u| |%m| |%ce| |%rj| 
+                               "%l" "%i" "%m" "%u" "%ce" "%rj"))
+              (setq |msg1| nil)
+              (DO ((G166348 |msg| (CDR G166348)) (|x| nil))
+                  ((OR (ATOM G166348)
+                       (PROGN (SETQ |x| (CAR G166348)) nil))
+                   nil)
+                (SEQ (EXIT (PROGN
+                             (COND
+                               ((AND |haveBlank|
+                                     (OR (|member| |x| |blanks|)
+                                      (|member| |x| |prims|)))
+                                (setq |msg1| (CDR |msg1|))))
+                             (setq |msg1| (cons |x| |msg1|))
+                             (setq |haveBlank|
+                                      (COND
+                                        ((|member| |x| |blanks|) t)
+                                        (t nil)))))))
+              |msg1|))))))
+
+;operationLink name ==
+;  FORMAT(nil, '"\lispLink{\verb!(|oSearch| _"~a_")!}{~a}",
+;         name,
+;         escapeSpecialChars princ-to-string name)
+
+(defun |operationLink| (|name|)
+  (FORMAT nil "\\lispLink{\\verb!(|oSearch| \"~a\")!}{~a}"
+          |name| (|escapeSpecialChars| (princ-to-string |name|))))
+
+;----------------------------------------
+;throwKeyedErrorMsg(kind,key,args) ==
+;  BUMPERRORCOUNT kind
+;  sayMSG '" "
+;  if $testingSystem then sayMSG $testingErrorPrefix
+;  sayKeyedMsg(key,args)
+;  spadThrow()
+
+(defun |throwKeyedErrorMsg| (|kind| |key| |args|)
+  (declare (special |$testingErrorPrefix| |$testingSystem|))
+    (bumperrorcount |kind|)
+    (|sayMSG| " ")
+    (when |$testingSystem| (|sayMSG| |$testingErrorPrefix|))
+    (|sayKeyedMsg| |key| |args|)
+    (|spadThrow|))
+
+;throwKeyedMsgSP(key,args,atree) ==
+;    if atree and (sp := getSrcPos(atree)) then
+;        sayMSG '" "
+;        srcPosDisplay(sp)
+;    throwKeyedMsg(key,args)
+
+(defun |throwKeyedMsgSP| (|key| |args| |atree|)
+  (PROG (|sp|)
+    (RETURN
+      (PROGN
+        (COND
+          ((AND |atree| (setq |sp| (|getSrcPos| |atree|)))
+           (|sayMSG| " ") (|srcPosDisplay| |sp|)))
+        (|throwKeyedMsg| |key| |args|)))))
+
+;throwKeyedMsg(key,args) ==
+;  _*STANDARD_-OUTPUT_* : fluid := $texOutputStream
+;  sayMSG '" "
+;  if $testingSystem then sayMSG $testingErrorPrefix
+;  sayKeyedMsg(key,args)
+;  spadThrow()
+
+(defun |throwKeyedMsg| (|key| |args|)
+ (let ((*standard-output* (or |$texOutputStream| *standard-output*)))
+ (declare (special |$testingErrorPrefix|
+                   |$testingSystem| |$texOutputStream|))
+   (|sayMSG| " ")
+   (when |$testingSystem| (|sayMSG| |$testingErrorPrefix|))
+   (|sayKeyedMsg| |key| |args|)
+   (|spadThrow|)))
+
+;throwListOfKeyedMsgs(descKey,descArgs,l) ==
+;  -- idea is that descKey and descArgs are the message describing
+;  -- what the list is about and l is a list of [key,args] messages
+;  -- the messages in the list are numbered and should have a %1 as
+;  -- the first token in the message text.
+;  sayMSG '" "
+;  if $testingSystem then sayMSG $testingErrorPrefix
+;  sayKeyedMsg(descKey,descArgs)
+;  sayMSG '" "
+;  for [key,args] in l for i in 1.. repeat
+;    n := STRCONC(object2String i,'".")
+;    sayKeyedMsg(key,[n,:args])
+;  spadThrow()
+
+(defun |throwListOfKeyedMsgs| (|descKey| |descArgs| |l|)
+  (PROG (|key| |args| |n|)
+  (declare (special |$testingErrorPrefix| |$testingSystem|))
+    (RETURN
+      (SEQ (PROGN
+             (|sayMSG| " ")
+             (COND
+               (|$testingSystem| (|sayMSG| |$testingErrorPrefix|)))
+             (|sayKeyedMsg| |descKey| |descArgs|)
+             (|sayMSG| " ")
+             (DO ((G166441 |l| (CDR G166441)) (G166429 nil)
+                  (|i| 1 (1+ |i|)))
+                 ((OR (ATOM G166441)
+                      (PROGN (SETQ G166429 (CAR G166441)) nil)
+                      (PROGN
+                        (PROGN
+                          (setq |key| (CAR G166429))
+                          (setq |args| (CADR G166429))
+                          G166429)
+                        nil))
+                  nil)
+               (SEQ (EXIT (PROGN
+                            (setq |n|
+                                     (STRCONC (|object2String| |i|)
+                                      "."))
+                            (|sayKeyedMsg| |key| (cons |n| |args|))))))
+             (|spadThrow|))))))
+
+;--  breakKeyedMsg is like throwKeyedMsg except that the user is given
+;--  a chance to play around in a break loop if $BreakMode is not 'nobreak
+;breakKeyedMsg(key,args) ==
+;  BUMPCOMPERRORCOUNT()
+;  sayKeyedMsg(key,args)
+;  handleLispBreakLoop($BreakMode)
+
+(defun |breakKeyedMsg| (|key| |args|)
+  (declare (special |$BreakMode|))
+  (PROGN
+    (BUMPCOMPERRORCOUNT)
+    (|sayKeyedMsg| |key| |args|)
+    (|handleLispBreakLoop| |$BreakMode|)))
+
+;keyedSystemError(key,args) ==
+;  sayKeyedMsg("S2GE0000",nil)
+;  breakKeyedMsg(key,args)
+
+;;; One stray top-level close removed (GCL discards, SBCL aborts the
+;;; read): two closes balance breakKeyedMsg's call and the defun.
+(defun |keyedSystemError| (|key| |args|)
+  (|sayKeyedMsg| "Internal Error" nil)
+  (|breakKeyedMsg| |key| |args|))
+
+;systemErrorHere functionName ==
+;  keyedSystemError("S2GE0017",[functionName])
+
+(defun |systemErrorHere| (|functionName|)
+  (|keyedSystemError| "Unexpected error in call to system function %1"
+   (cons |functionName| nil)))
+
+;flowSegmentedMsg(msg, len, offset) ==
+;  -- tries to break a sayBrightly-type input msg into multiple
+;  -- lines, with offset and given length.
+;  -- msgs that are entirely centered or right justified are not flowed
+;  msg is [[ce,:.]] and ce in '(%ce "%ce" %rj "%rj") => msg
+;  -- if we are formatting latex, then we assume
+;  -- that nothing needs to be done
+;  -- msgs that are entirely centered are not flowed
+;  msg is [[ce,:.]] and ListMember?(ce,'(%ce "%ce")) => msg
+;
+;  potentialMarg := 0
+;  actualMarg    := 0
+;  off := (offset <= 0 => '""; fillerSpaces(offset,'" "))
+;  off1:= (offset <= 1 => '""; fillerSpaces(offset-1,'" "))
+;  firstLine := true
+;  consp msg =>
+;    lnl := offset
+;    if msg is [a,:.] and a in '(%b %d _  "%b" "%d" " ") then
+;      nl :=  [off1]
+;      lnl := lnl - 1
+;    else nl := [off]
+;    for f in msg repeat
+;      f in '("%l" %l) =>
+;        actualMarg := potentialMarg
+;        if lnl = 99999 then nl := ['%l,:nl]
+;        lnl := 99999
+;      consp(f) and CAR(f) in '("%m" %m '%ce "%ce" %rj "%rj") =>
+;        actualMarg := potentialMarg
+;        nl := [f,'%l,:nl]
+;        lnl := 199999
+;      f in '("%i" %i ) =>
+;        potentialMarg := potentialMarg + 3
+;        nl := [f,:nl]
+;      consp(f) and CAR(f) in '("%t" %t) =>
+;        potentialMarg := potentialMarg + CDR f
+;        nl := [f,:nl]
+;      sbl := sayBrightlyLength f
+;      tot := lnl + offset + sbl + actualMarg
+;      if firstLine then
+;        firstLine  := false
+;        offset := offset + offset
+;        off1   := STRCONC(off, off1)
+;        off    := STRCONC(off, off)
+;      if (tot <= len) or (sbl = 1 and tot = len) then
+;        nl := [f,:nl]
+;        lnl := lnl + sbl
+;      else
+;        f in '(%b %d _  "%b" "%d" " ") =>
+;          nl := [f,off1,'%l,:nl]
+;          actualMarg := potentialMarg
+;          lnl := -1 + offset + sbl
+;        nl := [f,off,'%l,:nl]
+;        lnl := offset + sbl
+;    concat nreverse nl
+;  concat('%l,off,msg)
+
+(defun |flowSegmentedMsg| (|msg| |len| |offset|)
+  (PROG (|ISTMP#1| |ce| |a| |potentialMarg| |sbl| |tot| |firstLine|
+                   |off1| |off| |actualMarg| |nl| |lnl|)
+    (RETURN
+      (SEQ (COND
+             ((AND (consp |msg|) (EQ (QCDR |msg|) nil)
+                   (PROGN
+                     (setq |ISTMP#1| (QCAR |msg|))
+                     (AND (consp |ISTMP#1|)
+                          (PROGN (setq |ce| (QCAR |ISTMP#1|)) t)))
+                   (|member| |ce| '(|%ce| "%ce" |%rj| "%rj")))
+              |msg|)
+             ((AND (consp |msg|) (EQ (QCDR |msg|) nil)
+                   (PROGN
+                     (setq |ISTMP#1| (QCAR |msg|))
+                     (AND (consp |ISTMP#1|)
+                          (PROGN (setq |ce| (QCAR |ISTMP#1|)) t)))
+                   (member |ce| '(|%ce| "%ce") :test #'equal))
+              |msg|)
+             (t (setq |potentialMarg| 0) (setq |actualMarg| 0)
+              (setq |off|
+                       (COND
+                         ((<= |offset| 0) "")
+                         (t
+                          (|fillerSpaces| |offset| " "))))
+              (setq |off1|
+                       (COND
+                         ((<= |offset| 1) "")
+                         (t
+                          (|fillerSpaces| (- |offset| 1)
+                              " "))))
+              (setq |firstLine| t)
+              (COND
+                ((consp |msg|) (setq |lnl| |offset|)
+                 (COND
+                   ((AND (consp |msg|)
+                         (PROGN (setq |a| (QCAR |msg|)) t)
+                         (|member| |a| '(| | " ")))
+                    (setq |nl| (cons |off1| nil))
+                    (setq |lnl| (- |lnl| 1)))
+                   (t (setq |nl| (cons |off| nil))))
+                 (DO ((G166564 |msg| (CDR G166564)) (|f| nil))
+                     ((OR (ATOM G166564)
+                          (PROGN (SETQ |f| (CAR G166564)) nil))
+                      nil)
+                   (SEQ (EXIT (COND
+                                ((|member| |f| '("%l" |%l|))
+                                 (setq |actualMarg| |potentialMarg|)
+                                 (COND
+                                   ((EQL |lnl| 99999)
+                                    (setq |nl| (cons '|%l| |nl|))))
+                                 (setq |lnl| 99999))
+                                ((AND (consp |f|)
+                                      (|member| (CAR |f|)
+                                       '("%m" |%m| '|%ce| "%ce" |%rj|
+                                         "%rj")))
+                                 (setq |actualMarg| |potentialMarg|)
+                                 (setq |nl|
+                                          (cons |f| (cons '|%l| |nl|)))
+                                 (setq |lnl| 199999))
+                                ((|member| |f| '("%i" |%i|))
+                                 (setq |potentialMarg|
+                                          (+ |potentialMarg| 3))
+                                 (setq |nl| (cons |f| |nl|)))
+                                ((AND (consp |f|)
+                                      (|member| (CAR |f|) '("%t" |%t|)))
+                                 (setq |potentialMarg|
+                                          (+ |potentialMarg|
+                                           (CDR |f|)))
+                                 (setq |nl| (cons |f| |nl|)))
+                                (t
+                                 (setq |sbl|
+                                          (|sayBrightlyLength| |f|))
+                                 (setq |tot|
+                                          (+
+                                           (+ (+ |lnl| |offset|)
+                                            |sbl|)
+                                           |actualMarg|))
+                                 (COND
+                                   (|firstLine|
+                                    (setq |firstLine| nil)
+                                    (setq |offset|
+                                     (+ |offset| |offset|))
+                                    (setq |off1|
+                                     (STRCONC |off| |off1|))
+                                    (setq |off|
+                                     (STRCONC |off| |off|))))
+                                 (COND
+                                   ((OR (<= |tot| |len|)
+                                     (AND (EQL |sbl| 1)
+                                      (BOOT-EQUAL |tot| |len|)))
+                                    (setq |nl| (cons |f| |nl|))
+                                    (setq |lnl| (+ |lnl| |sbl|)))
+                                   ((|member| |f|
+                                     '(| | " "))
+                                    (setq |nl|
+                                     (cons |f|
+                                      (cons |off1| (cons '|%l| |nl|))))
+                                    (setq |actualMarg|
+                                     |potentialMarg|)
+                                    (setq |lnl|
+                                     (+
+                                      (+ (- 1)
+                                       |offset|)
+                                      |sbl|)))
+                                   (t
+                                    (setq |nl|
+                                     (cons |f|
+                                      (cons |off| (cons '|%l| |nl|))))
+                                    (setq |lnl|
+                                     (+ |offset| |sbl|)))))))))
+                 (|concat| (NREVERSE |nl|)))
+                (t (|concat| '|%l| |off| |msg|)))))))))
+
+;--% Other handy things
+;keyedMsgCompFailure(key,args) ==
+;  -- Called when compilation fails in such a way that interpret-code
+;  --  mode might be of some use.
+;  not $useCoerceOrCroak =>   THROW('coerceOrCroaker, 'croaked)
+;  if not($Coerce) and  $reportInterpOnly then
+;    sayKeyedMsg(key,args)
+;    sayKeyedMsg("S2IB0009",nil)
+;  null $compilingMap => THROW('loopCompiler,'tryInterpOnly)
+;  THROW('mapCompiler,'tryInterpOnly)
+
+(defun |keyedMsgCompFailure| (|key| |args|)
+  (declare (special |$compilingMap| |$reportInterpOnly| |$Coerce|
+                    |$useCoerceOrCroak|))
+  (COND
+    ((NULL |$useCoerceOrCroak|) (THROW '|coerceOrCroaker| '|croaked|))
+    (t
+     (COND
+       ((AND (NULL |$Coerce|) |$reportInterpOnly|)
+        (|sayKeyedMsg| |key| |args|)
+        (|sayKeyedMsg|
+          "Axiom will attempt to step through and interpret the code." nil)))
+     (COND
+       ((NULL |$compilingMap|)
+        (THROW '|loopCompiler| '|tryInterpOnly|))
+       (t (THROW '|mapCompiler| '|tryInterpOnly|))))))
+
+;keyedMsgCompFailureSP(key,args,atree) ==
+;  -- Called when compilation fails in such a way that interpret-code
+;  --  mode might be of some use.
+;  not $useCoerceOrCroak =>   THROW('coerceOrCroaker, 'croaked)
+;  if not($Coerce) and  $reportInterpOnly then
+;    if atree and (sp := getSrcPos(atree)) then
+;        sayMSG '" "
+;        srcPosDisplay(sp)
+;    sayKeyedMsg(key,args)
+;    sayKeyedMsg("S2IB0009",nil)
+;  null $compilingMap => THROW('loopCompiler,'tryInterpOnly)
+;  THROW('mapCompiler,'tryInterpOnly)
+
+(defun |keyedMsgCompFailureSP| (|key| |args| |atree|)
+  (PROG (|sp|)
+  (declare (special |$compilingMap| |$reportInterpOnly| |$Coerce|
+                    |$useCoerceOrCroak|))
+    (RETURN
+      (COND
+        ((NULL |$useCoerceOrCroak|)
+         (THROW '|coerceOrCroaker| '|croaked|))
+        (t
+         (COND
+           ((AND (NULL |$Coerce|) |$reportInterpOnly|)
+            (COND
+              ((AND |atree| (setq |sp| (|getSrcPos| |atree|)))
+               (|sayMSG| " ") (|srcPosDisplay| |sp|)))
+            (|sayKeyedMsg| |key| |args|)
+            (|sayKeyedMsg|
+              "Axiom will attempt to step through and interpret the code."
+               nil)))
+         (COND
+           ((NULL |$compilingMap|)
+            (THROW '|loopCompiler| '|tryInterpOnly|))
+           (t (THROW '|mapCompiler| '|tryInterpOnly|))))))))
+
+;throwKeyedMsgCannotCoerceWithValue(val,t1,t2) ==
+;  null (val' := coerceInteractive(mkObj(val,t1),$OutputForm)) =>
+;    throwKeyedMsg("S2IC0002",[t1,t2])
+;  val' := objValUnwrap(val')
+;  throwKeyedMsg("S2IC0003",[t1,t2,val'])
+
+(defun |throwKeyedMsgCannotCoerceWithValue| (|val| |t1| |t2|)
+  (PROG (|val'|)
+  (declare (special |$OutputForm|))
+    (RETURN
+      (COND
+        ((NULL (setq |val'|
+                        (|coerceInteractive| (mkObj |val| |t1|)
+                            |$OutputForm|)))
+         (|throwKeyedMsg| "Cannot convert the value from type %1p to %2p ."
+          (cons |t1| (cons |t2| nil))))
+        (t (setq |val'| (|objValUnwrap| |val'|))
+         (|throwKeyedMsg| "Cannot convert from type %1p to %2p for value %3m"
+             (cons |t1| (cons |t2| (cons |val'| nil)))))))))
+
+;--% Some Standard Message Printing Functions
+;bright x == ['"%b",:(consp(x) and NULL CDR LASTNODE x => x; [x]),'"%d"]
+
+(defun |bright| (|x|)
+ (if (consp |x|) `(" " ,@|x| " ")  `(" " ,|x| " ")))
+
+;--bright x == ['%b,:(ATOM x => [x]; x),'%d]
+;mkMessage msg ==
+;  msg and (consp msg) and ((first msg) in '(%l "%l"))  and
+;    ((last msg) in '(%l "%l")) => concat msg
+;  concat('%l,msg,'%l)
+
+(defun |mkMessage| (|msg|)
+  (COND
+    ((AND |msg| (consp |msg|) (|member| (CAR |msg|) '(|%l| "%l"))
+          (|member| (|last| |msg|) '(|%l| "%l")))
+     (|concat| |msg|))
+    (t (|concat| '|%l| |msg| '|%l|))))
+
+;sayMessage msg == sayMSG mkMessage msg
+
+(defun |sayMessage| (|msg|) (|sayMSG| (|mkMessage| |msg|)))
+
+;HELP() == sayKeyedMsg("S2GL0019",nil)
+
+;;;     ***       HELP REDEFINED
+
+(defun HELP ()
+ (|sayKeyedMsg|
+  (format nil
+   "Type (resume) to return to Axiom and continue with the next statement. ~
+    Type (toplevel) to abort all input files and continue with ~
+    interactive Axiom.")
+  nil))
+
+;version() == _*YEARWEEK_*
+
+(defun |version| ()
+ (declare (special  *YEARWEEK*)) 
+  *YEARWEEK*)
+
+;--% Some Advanced Formatting Functions
+;brightPrint x ==
+;  $MARG : local := 0
+;  for y in x repeat brightPrint0 y
+;  nil
+
+(defun |brightPrint| (|x|)
+  (PROG ($MARG)
+    (DECLARE (SPECIAL $MARG))
+    (RETURN
+      (SEQ (PROGN
+             (setq $MARG 0)
+             (DO ((G166664 |x| (CDR G166664)) (|y| nil))
+                 ((OR (ATOM G166664)
+                      (PROGN (SETQ |y| (CAR G166664)) nil))
+                  nil)
+               (SEQ (EXIT (|brightPrint0| |y|))))
+             nil)))))
+
+;brightPrint0 x ==
+;  if IDENTP x then x := PNAME x
+;  -- if the first character is a backslash and the second is a percent sign,
+;  -- don't try to give the token any special interpretation. Just print
+;  -- it without the backslash.
+;  STRINGP x and STRINGLENGTH x > 1 and x.0 = char "\" and x.1 = char "%" =>
+;    sayString SUBSTRING(x,1,nil)
+;  x = '"%l" =>
+;    sayNewLine()
+;    for i in 1..$MARG repeat sayString '" "
+;  x = '"%i" =>
+;    $MARG := $MARG + 3
+;  x = '"%u" =>
+;    $MARG := $MARG - 3
+;    if $MARG < 0 then $MARG := 0
+;  x = '"%U" =>
+;    $MARG := 0
+;  x = '"%" =>
+;    sayString '" "
+;  x = '"%%" =>
+;    sayString  '"%"
+;  x = '"%b" =>
+;    NULL IS_-consOLE CUROUTSTREAM => sayString '" "
+;    NULL $highlightAllowed        => sayString '" "
+;    sayString $highlightFontOn
+;  k := blankIndicator x => BLANKS k
+;  x = '"%d" =>
+;    NULL IS_-consOLE CUROUTSTREAM => sayString '" "
+;    NULL $highlightAllowed        => sayString '" "
+;    sayString $highlightFontOff
+;  STRINGP x => sayString x
+;  brightPrintHighlight x
+
+(defun |brightPrint0| (|x|)
+  (PROG (|k|)
+  (declare (special |$highlightFontOff| |$highlightAllowed| $MARG
+                    |$highlightFontOn|))
+    (RETURN
+      (SEQ  (COND ((IDENTP |x|) (setq |x| (PNAME |x|))))
+              (COND
+                ((AND (STRINGP |x|) (> (STRINGLENGTH |x|) 1)
+                      (BOOT-EQUAL (ELT |x| 0) #\\)
+                      (BOOT-EQUAL (ELT |x| 1) #\%))
+                 (princ (SUBSTRING |x| 1 nil)))
+                ((BOOT-EQUAL |x| "%l") (terpri)
+                 (DO ((|i| 1 (1+ |i|)))
+                     ((QSGREATERP |i| $MARG) nil)
+                   (SEQ (EXIT (princ " ")))))
+                ((BOOT-EQUAL |x| "%i")
+                 (setq $MARG (+ $MARG 3)))
+                ((BOOT-EQUAL |x| "%u")
+                 (setq $MARG (- $MARG 3))
+                 (COND ((MINUSP $MARG) (setq $MARG 0)) (t nil)))
+                ((BOOT-EQUAL |x| "%U") (setq $MARG 0))
+                ((BOOT-EQUAL |x| "%")
+                 (princ " "))
+                ((BOOT-EQUAL |x| "%%")
+                 (princ "%"))
+                ((setq |k| (|blankIndicator| |x|)) (BLANKS |k|))
+                ((STRINGP |x|) (princ |x|))
+                (t (|brightPrintHighlight| |x|)))))))
+
+;brightPrint0AsTeX x ==
+;  x = '"%l" =>
+;    sayString('"\\")
+;    for i in 1..$MARG repeat sayString '"\ "
+;  x = '"%i" =>
+;    $MARG := $MARG + 3
+;  x = '"%u" =>
+;    $MARG := $MARG - 3
+;    if $MARG < 0 then $MARG := 0
+;  x = '"%U" =>
+;    $MARG := 0
+;  x = '"%" =>
+;    sayString '"\ "
+;  x = '"%%" =>
+;    sayString  '"%"
+;  x = '"%b" =>
+;    sayString '" {\tt "
+;  k := blankIndicator x => for i in 1..k repeat sayString '"\ "
+;  x = '"%d" =>
+;    sayString '"} "
+;  x = '"_"$_"" =>
+;    sayString('"_"\verb!$!_"")
+;  x = '"$" =>
+;    sayString('"\verb!$!")
+;  STRINGP x => sayString x
+;  brightPrintHighlight x
+
+(defun |brightPrint0AsTeX| (|x|)
+  (PROG (|k|)
+  (declare (special $MARG))
+    (RETURN
+      (SEQ (COND
+             ((BOOT-EQUAL |x| "%l")
+              (princ "\\\\")
+              (DO ((|i| 1 (1+ |i|))) ((QSGREATERP |i| $MARG) nil)
+                (SEQ (EXIT (princ "\\ ")))))
+             ((BOOT-EQUAL |x| "%i")
+              (setq $MARG (+ $MARG 3)))
+             ((BOOT-EQUAL |x| "%u")
+              (setq $MARG (- $MARG 3))
+              (COND ((MINUSP $MARG) (setq $MARG 0)) (t nil)))
+             ((BOOT-EQUAL |x| "%U") (setq $MARG 0))
+             ((BOOT-EQUAL |x| "%")
+              (princ "\\ "))
+             ((BOOT-EQUAL |x| "%%")
+              (princ "%"))
+;TPD             ((BOOT-EQUAL |x| "%b")
+;TPD              (princ " {\\tt "))
+             ((setq |k| (|blankIndicator| |x|))
+              (DO ((|i| 1 (1+ |i|))) ((QSGREATERP |i| |k|) nil)
+                (SEQ (EXIT (princ "\\ ")))))
+;TPD             ((BOOT-EQUAL |x| "%d")
+;TPD              (princ "} "))
+             ((BOOT-EQUAL |x| "\"$\"")
+              (princ "\"\\verb!$!\""))
+             ((BOOT-EQUAL |x| "$")
+              (princ "\\verb!$!"))
+             ((STRINGP |x|) (princ |x|))
+             (t (|brightPrintHighlight| |x|)))))))
+
+;blankIndicator x ==
+;  if IDENTP x then x := PNAME x
+;  null STRINGP x or MAXINDEX x < 1 => nil
+;  x.0 = '% and x.1 = 'x =>
+;    MAXINDEX x > 1 => PARSE_-INTEGER SUBSTRING(x,2,nil)
+;    1
+;  nil
+
+(defun |blankIndicator| (|x|)
+  (PROGN
+    (COND ((IDENTP |x|) (setq |x| (PNAME |x|))))
+    (COND
+      ((OR (NULL (STRINGP |x|)) (> 1 (MAXINDEX |x|))) nil)
+      ((AND (BOOT-EQUAL (ELT |x| 0) '%) (BOOT-EQUAL (ELT |x| 1) '|x|))
+       (COND
+         ((> (MAXINDEX |x|) 1) (PARSE-INTEGER (SUBSTRING |x| 2 nil)))
+         (t 1)))
+      (t nil))))
+
+;brightPrint1 x ==
+;  if x in '(%l "%l") then sayNewLine()
+;  else if STRINGP x then sayString x
+;       else brightPrintHighlight x
+;  nil
+
+(defun |brightPrint1| (|x|)
+  (PROGN
+    (COND
+      ((|member| |x| '(|%l| "%l")) (terpri))
+      ((STRINGP |x|) (princ |x|))
+      (t (|brightPrintHighlight| |x|)))
+    nil))
+
+;brightPrintHighlight x ==
+;  IDENTP x =>
+;    pn := PNAME x
+;    sayString pn
+;  -- following line helps find certain bugs that slip through
+;  -- also see sayBrightlyLength1
+;  VECP x => sayString '"UNPRINTABLE"
+;  ATOM x => sayString object2String x
+;  [key,:rst] := x
+;  if IDENTP key then key:=PNAME key
+;  key = '"%m" => mathprint rst
+;  key in '("%p" "%s") => PRETTYPRIN0 rst
+;  key = '"%ce" => brightPrintCenter rst
+;  key = '"%rj" => brightPrintRightJustify rst
+;  key = '"%t"  => $MARG := $MARG + tabber rst
+;  sayString '"("
+;  brightPrint1 key
+;  if EQ(key,'TAGGEDreturn) then
+;    rst:=[CAR rst,CADR rst,CADDR rst, '"environment (omitted)"]
+;  for y in rst repeat
+;    sayString '" "
+;    brightPrint1 y
+;  if rst and (la := LASTATOM rst) then
+;    sayString '" . "
+;    brightPrint1 la
+;  sayString '")"
+
+(defun |brightPrintHighlight| (|x|)
+  (PROG (|pn| |key| |rst| |la|)
+  (declare (special $MARG))
+    (RETURN
+      (SEQ (COND
+             ((IDENTP |x|) (setq |pn| (PNAME |x|))
+              (princ |pn|))
+             ((VECP |x|) (princ |x|))
+             ((ATOM |x|) (princ (|object2String| |x|)))
+             (t (setq |key| (CAR |x|)) (setq |rst| (CDR |x|))
+              (COND ((IDENTP |key|) (setq |key| (PNAME |key|))))
+              (COND
+                ((BOOT-EQUAL |key| "%m")
+                 (|mathprint| |rst|))
+                ((|member| |key| '("%p" "%s")) (PRETTYPRIN0 |rst|))
+                ((BOOT-EQUAL |key| "%ce")
+                 (|brightPrintCenter| |rst|))
+                ((BOOT-EQUAL |key| "%rj")
+                 (|brightPrintRightJustify| |rst|))
+                ((BOOT-EQUAL |key| "%t")
+                 (setq $MARG (+ $MARG (|tabber| |rst|))))
+                (t (princ "(")
+                 (|brightPrint1| |key|)
+                 (COND
+                   ((EQ |key| '|TAGGEDreturn|)
+                    (setq |rst|
+                             (cons (CAR |rst|)
+                                   (cons (CADR |rst|)
+                                    (cons (CADDR |rst|)
+                                     (cons "environment (omitted)"
+                                      nil)))))))
+                 (DO ((G166741 |rst| (CDR G166741)) (|y| nil))
+                     ((OR (ATOM G166741)
+                          (PROGN (SETQ |y| (CAR G166741)) nil))
+                      nil)
+                   (SEQ (EXIT (PROGN
+                                (princ " ")
+                                (|brightPrint1| |y|)))))
+                 (COND
+                   ((AND |rst| (setq |la| (LASTATOM |rst|)))
+                    (princ " . ")
+                    (|brightPrint1| |la|)))
+                 (princ ")")))))))))
+
+;brightPrintHighlightAsTeX x ==
+;  IDENTP x =>
+;    pn := PNAME x
+;    sayString pn
+;  ATOM x => sayString object2String x
+;  VECP x => sayString '"UNPRINTABLE"
+;  [key,:rst] := x
+;  key = '"%m" => mathprint rst
+;  key = '"%m" => rst
+;  key = '"%s" =>
+;    sayString '"\verb__"
+;    PRETTYPRIN0 rst
+;    sayString '"__"
+;  key = '"%ce" => brightPrintCenter rst
+;  key = '"%t"  => $MARG := $MARG + tabber rst
+;  -- unhandled junk (print verbatim(ish)
+;  sayString '"("
+;  brightPrint1 key
+;  if EQ(key,'TAGGEDreturn) then
+;    rst:=[CAR rst,CADR rst,CADDR rst, '"environment (omitted)"]
+;  for y in rst repeat
+;    sayString '" "
+;    brightPrint1 y
+;  if rst and (la := LASTATOM rst) then
+;    sayString '" . "
+;    brightPrint1 la
+;  sayString '")"
+
+(defun |brightPrintHighlightAsTeX| (|x|)
+  (PROG (|pn| |key| |rst| |la|)
+  (declare (special $MARG))
+    (RETURN
+      (SEQ (COND
+             ((IDENTP |x|) (setq |pn| (PNAME |x|))
+              (princ |pn|))
+             ((ATOM |x|) (princ (|object2String| |x|)))
+             ((VECP |x|) (princ |x|))
+             (t (setq |key| (CAR |x|)) (setq |rst| (CDR |x|))
+              (COND
+                ((BOOT-EQUAL |key| "%m")
+                 (|mathprint| |rst|))
+                ((BOOT-EQUAL |key| "%m") |rst|)
+                ((BOOT-EQUAL |key| "%s")
+                 (princ "\\verb_")
+                 (PRETTYPRIN0 |rst|) (princ "_"))
+                ((BOOT-EQUAL |key| "%ce")
+                 (|brightPrintCenter| |rst|))
+                ((BOOT-EQUAL |key| "%t")
+                 (setq $MARG (+ $MARG (|tabber| |rst|))))
+                (t (princ "(")
+                 (|brightPrint1| |key|)
+                 (COND
+                   ((EQ |key| '|TAGGEDreturn|)
+                    (setq |rst|
+                             (cons (CAR |rst|)
+                                   (cons (CADR |rst|)
+                                    (cons (CADDR |rst|)
+                                     (cons "environment (omitted)"
+                                      nil)))))))
+                 (DO ((G166770 |rst| (CDR G166770)) (|y| nil))
+                     ((OR (ATOM G166770)
+                          (PROGN (SETQ |y| (CAR G166770)) nil))
+                      nil)
+                   (SEQ (EXIT (PROGN
+                                (princ " ")
+                                (|brightPrint1| |y|)))))
+                 (COND
+                   ((AND |rst| (setq |la| (LASTATOM |rst|)))
+                    (princ " . ")
+                    (|brightPrint1| |la|)))
+                 (princ ")")))))))))
+
+;tabber num ==
+;    maxTab := 50
+;    num > maxTab => maxTab
+;    num
+
+(defun |tabber| (|num|)
+  (PROG (|maxTab|)
+    (RETURN
+      (PROGN
+        (setq |maxTab| 50)
+        (COND ((> |num| |maxTab|) |maxTab|) (t |num|))))))
+
+;brightPrintCenter x ==
+;  -- centers rst within $LINELENGTH, checking for %l's
+;  ATOM x =>
+;    x := object2String x
+;    wid := STRINGLENGTH x
+;    if wid < $LINELENGTH then
+;      f := DIVIDE($LINELENGTH - wid,2)
+;      x := LIST(fillerSpaces(f.0,'" "),x)
+;    for y in x repeat brightPrint0 y
+;    nil
+;  y := nil
+;  ok := true
+;  while x and ok repeat
+;    if CAR(x) in '(%l "%l") then ok := nil
+;    else y := cons(CAR x, y)
+;    x := CDR x
+;  y := NREVERSE y
+;  wid := sayBrightlyLength y
+;  if wid < $LINELENGTH then
+;    f := DIVIDE($LINELENGTH - wid,2)
+;    y := cons(fillerSpaces(f.0,'" "),y)
+;  for z in y repeat brightPrint0 z
+;  if x then
+;    sayNewLine()
+;    brightPrintCenter x
+;  nil
+
+(defun |brightPrintCenter| (|x|)
+  (PROG (|ok| |wid| |f| |y|)
+  (declare (special $LINELENGTH))
+    (RETURN
+      (SEQ (COND
+             ((ATOM |x|) (setq |x| (|object2String| |x|))
+              (setq |wid| (STRINGLENGTH |x|))
+              (COND
+                ((> $LINELENGTH |wid|)
+                 (setq |f|
+                          (DIVIDE (- $LINELENGTH |wid|) 2))
+                 (setq |x|
+                          (LIST (|fillerSpaces| (ELT |f| 0)
+                                    " ")
+                                |x|))))
+              (DO ((G166799 |x| (CDR G166799)) (|y| nil))
+                  ((OR (ATOM G166799)
+                       (PROGN (SETQ |y| (CAR G166799)) nil))
+                   nil)
+                (SEQ (EXIT (|brightPrint0| |y|))))
+              nil)
+             (t (setq |y| nil) (setq |ok| t)
+              (DO () ((NULL (AND |x| |ok|)) nil)
+                (SEQ (EXIT (PROGN
+                             (COND
+                               ((|member| (CAR |x|) '(|%l| "%l"))
+                                (setq |ok| nil))
+                               (t (setq |y| (cons (CAR |x|) |y|))))
+                             (setq |x| (CDR |x|))))))
+              (setq |y| (NREVERSE |y|))
+              (setq |wid| (|sayBrightlyLength| |y|))
+              (COND
+                ((> $LINELENGTH |wid|)
+                 (setq |f|
+                          (DIVIDE (- $LINELENGTH |wid|) 2))
+                 (setq |y|
+                          (cons (|fillerSpaces| (ELT |f| 0)
+                                    " ")
+                                |y|))))
+              (DO ((G166816 |y| (CDR G166816)) (|z| nil))
+                  ((OR (ATOM G166816)
+                       (PROGN (SETQ |z| (CAR G166816)) nil))
+                   nil)
+                (SEQ (EXIT (|brightPrint0| |z|))))
+              (COND (|x| (terpri) (|brightPrintCenter| |x|)))
+              nil))))))
+
+;brightPrintCenterAsTeX x ==
+;  ATOM x =>
+;    sayString '"\centerline{"
+;    sayString x
+;    sayString '"}"
+;  lst := x
+;  while lst repeat
+;    words := nil
+;    while lst and not CAR(lst) = "%l" repeat
+;      words := [CAR lst,: words]
+;      lst := CDR lst
+;    if lst then lst := cdr lst
+;    sayString '"\centerline{"
+;    words := nreverse words
+;    for zz in words repeat
+;      brightPrint0 zz
+;    sayString '"}"
+;  nil
+
+(defun |brightPrintCenterAsTeX| (|x|)
+  (PROG (|lst| |words|)
+    (RETURN
+      (SEQ (COND
+             ((ATOM |x|) (princ "\\centerline{")
+              (princ |x|) (princ "}"))
+             (t (setq |lst| |x|)
+              (DO () ((NULL |lst|) nil)
+                (SEQ (EXIT (PROGN
+                             (setq |words| nil)
+                             (DO ()
+                                 ((NULL (AND |lst|
+                                         (NULL
+                                          (BOOT-EQUAL (CAR |lst|)
+                                           '|%l|))))
+                                  nil)
+                               (SEQ (EXIT
+                                     (PROGN
+                                       (setq |words|
+                                        (cons (CAR |lst|) |words|))
+                                       (setq |lst| (CDR |lst|))))))
+                             (COND
+                               (|lst| (setq |lst| (CDR |lst|))))
+                             (princ "\\centerline{")
+                             (setq |words| (NREVERSE |words|))
+                             (DO ((G166868 |words| (CDR G166868))
+                                  (|zz| nil))
+                                 ((OR (ATOM G166868)
+                                      (PROGN
+                                        (SETQ |zz| (CAR G166868))
+                                        nil))
+                                  nil)
+                               (SEQ (EXIT (|brightPrint0| |zz|))))
+                             (princ "}")))))
+              nil))))))
+
+;brightPrintRightJustify x ==
+;  -- right justifies rst within $LINELENGTH, checking for %l's
+;  ATOM x =>
+;    x := object2String x
+;    wid := STRINGLENGTH x
+;    wid < $LINELENGTH =>
+;      x := LIST(fillerSpaces($LINELENGTH-wid,'" "),x)
+;      for y in x repeat brightPrint0 y
+;      nil
+;    brightPrint0 x
+;    nil
+;  y := nil
+;  ok := true
+;  while x and ok repeat
+;    if CAR(x) in '(%l "%l") then ok := nil
+;    else y := cons(CAR x, y)
+;    x := CDR x
+;  y := NREVERSE y
+;  wid := sayBrightlyLength y
+;  if wid < $LINELENGTH then
+;    y := cons(fillerSpaces($LINELENGTH-wid,'" "),y)
+;  for z in y repeat brightPrint0 z
+;  if x then
+;    sayNewLine()
+;    brightPrintRightJustify x
+;  nil
+
+(defun |brightPrintRightJustify| (|x|)
+  (PROG (|ok| |wid| |y|)
+  (declare (special $LINELENGTH))
+    (RETURN
+      (SEQ (COND
+             ((ATOM |x|) (setq |x| (|object2String| |x|))
+              (setq |wid| (STRINGLENGTH |x|))
+              (COND
+                ((> $LINELENGTH |wid|)
+                 (setq |x|
+                          (LIST (|fillerSpaces|
+                                    (- $LINELENGTH |wid|)
+                                    " ")
+                                |x|))
+                 (DO ((G166891 |x| (CDR G166891)) (|y| nil))
+                     ((OR (ATOM G166891)
+                          (PROGN (SETQ |y| (CAR G166891)) nil))
+                      nil)
+                   (SEQ (EXIT (|brightPrint0| |y|))))
+                 nil)
+                (t (|brightPrint0| |x|) nil)))
+             (t (setq |y| nil) (setq |ok| t)
+              (DO () ((NULL (AND |x| |ok|)) nil)
+                (SEQ (EXIT (PROGN
+                             (COND
+                               ((|member| (CAR |x|) '(|%l| "%l"))
+                                (setq |ok| nil))
+                               (t (setq |y| (cons (CAR |x|) |y|))))
+                             (setq |x| (CDR |x|))))))
+              (setq |y| (NREVERSE |y|))
+              (setq |wid| (|sayBrightlyLength| |y|))
+              (COND
+                ((> $LINELENGTH |wid|)
+                 (setq |y|
+                          (cons (|fillerSpaces|
+                                    (- $LINELENGTH |wid|)
+                                    " ")
+                                |y|))))
+              (DO ((G166908 |y| (CDR G166908)) (|z| nil))
+                  ((OR (ATOM G166908)
+                       (PROGN (SETQ |z| (CAR G166908)) nil))
+                   nil)
+                (SEQ (EXIT (|brightPrint0| |z|))))
+              (COND
+                (|x| (terpri) (|brightPrintRightJustify| |x|)))
+              nil))))))
+
+;-- some hooks for older functions
+;--------------------> NEW DEFINITION (see macros.lisp.pamphlet)
+;BRIGHTPRINT x == brightPrint x
+
+;;;     ***       BRIGHTPRINT REDEFINED
+
+(defun BRIGHTPRINT (|x|) (|brightPrint| |x|)) 
+
+;--------------------> NEW DEFINITION (see macros.lisp.pamphlet)
+;BRIGHTPRINT_-0 x == brightPrint0 x
+
+;;;     ***       BRIGHTPRINT-0 REDEFINED
+
+(defun BRIGHTPRINT-0 (|x|) (|brightPrint0| |x|)) 
+
+;--% Message Formatting Utilities
+;sayBrightlyLength l ==
+;  null l => 0
+;  atom l => sayBrightlyLength1 l
+;  sayBrightlyLength1 first l + sayBrightlyLength rest l
+
+(defun |sayBrightlyLength| (|l|)
+  (COND
+    ((NULL |l|) 0)
+    ((ATOM |l|) (|sayBrightlyLength1| |l|))
+    (t
+     (+ (|sayBrightlyLength1| (CAR |l|))
+           (|sayBrightlyLength| (CDR |l|))))))
+
+;sayBrightlyLength1 x ==
+;  MEMBER(x,'("%b" "%d" %b %d)) =>
+;    NULL $highlightAllowed => 1
+;    1
+;  MEMBER(x,'("%l" %l)) => 0
+;  STRINGP x and STRINGLENGTH x > 2 and x.0 = '"%" and x.1 = '"x" =>
+;    INTERN x.3
+;  STRINGP x => STRINGLENGTH x
+;  IDENTP x => STRINGLENGTH PNAME x
+;  -- following line helps find certain bugs that slip through
+;  -- also see brightPrintHighlight
+;  VECP x => STRINGLENGTH '"UNPRINTABLE"
+;  ATOM x => STRINGLENGTH princ-to-string x
+;  2 + sayBrightlyLength x
+
+(defun |sayBrightlyLength1| (|x|)
+  (declare (special |$highlightAllowed|))
+  (COND
+;TPD    ((|member| |x| '("%b" "%d" |%b| |%d|))
+;TPD     (COND ((NULL |$highlightAllowed|) 1) (t 1)))
+    ((|member| |x| '("%l" |%l|)) 0)
+    ((AND (STRINGP |x|) (> (STRINGLENGTH |x|) 2)
+          (BOOT-EQUAL (ELT |x| 0) "%")
+          (BOOT-EQUAL (ELT |x| 1) "x"))
+     (INTERN (ELT |x| 3)))
+    ((STRINGP |x|) (STRINGLENGTH |x|))
+    ((IDENTP |x|) (STRINGLENGTH (PNAME |x|)))
+    ((VECP |x|) (STRINGLENGTH "UNPRINTABLE"))
+    ((ATOM |x|) (STRINGLENGTH (princ-to-string |x|)))
+    (t (+ 2 (|sayBrightlyLength| |x|)))))
+
+;sayAsManyPerLineAsPossible l ==
+;  -- it is assumed that l is a list of strings
+;  l := [atom2String a for a in l]
+;  m := 1 + "MAX"/[SIZE(a) for a in l]
+;  -- w will be the field width in which we will display the elements
+;  m > $LINELENGTH =>
+;    for a in l repeat sayMSG a
+;    nil
+;  w := MIN(m + 3,$LINELENGTH)
+;  -- p is the number of elements per line
+;  p := QUOTIENT($LINELENGTH,w)
+;  n := # l
+;  str := '""
+;  for i in 0..(n-1) repeat
+;    [c,:l] := l
+;    str := STRCONC(str,c,fillerSpaces(w - #c,'" "))
+;    REMAINDER(i+1,p) = 0 => (sayMSG str ; str := '"" )
+;  if str ^= '"" then sayMSG str
+;  nil
+
+(defun |sayAsManyPerLineAsPossible| (|l|)
+  (PROG (|m| |w| |p| |n| |LETTMP#1| |c| |str|)
+  (declare (special $LINELENGTH))
+    (RETURN
+      (SEQ (PROGN
+             (setq |l|
+                      (PROG (G166958)
+                        (setq G166958 nil)
+                        (RETURN
+                          (DO ((G166963 |l| (CDR G166963))
+                               (|a| nil))
+                              ((OR (ATOM G166963)
+                                   (PROGN
+                                     (SETQ |a| (CAR G166963))
+                                     nil))
+                               (NREVERSE0 G166958))
+                            (SEQ (EXIT (SETQ G166958
+                                        (cons (|atom2String| |a|)
+                                         G166958))))))))
+             (setq |m|
+                      (+ 1
+                            (PROG (G166969)
+                              (setq G166969 -999999)
+                              (RETURN
+                                (DO ((G166974 |l| (CDR G166974))
+                                     (|a| nil))
+                                    ((OR (ATOM G166974)
+                                      (PROGN
+                                        (SETQ |a| (CAR G166974))
+                                        nil))
+                                     G166969)
+                                  (SEQ (EXIT
+                                        (SETQ G166969
+                                         (MAX G166969 (SIZE |a|))))))))))
+             (COND
+               ((> |m| $LINELENGTH)
+                (DO ((G166983 |l| (CDR G166983)) (|a| nil))
+                    ((OR (ATOM G166983)
+                         (PROGN (SETQ |a| (CAR G166983)) nil))
+                     nil)
+                  (SEQ (EXIT (|sayMSG| |a|))))
+                nil)
+               (t (setq |w| (MIN (+ |m| 3) $LINELENGTH))
+                (setq |p| (QUOTIENT $LINELENGTH |w|))
+                (setq |n| (|#| |l|)) (setq |str| "")
+                (DO ((G166999 (- |n| 1))
+                     (|i| 0 (1+ |i|)))
+                    ((QSGREATERP |i| G166999) nil)
+                  (SEQ (EXIT (PROGN
+                               (setq |LETTMP#1| |l|)
+                               (setq |c| (CAR |LETTMP#1|))
+                               (setq |l| (CDR |LETTMP#1|))
+                               (setq |str|
+                                        (STRCONC |str| |c|
+                                         (|fillerSpaces|
+                                          (- |w|
+                                           (|#| |c|))
+                                          " ")))
+                               (COND
+                                 ((EQL (REMAINDER (+ |i| 1) |p|) 0)
+                                  (PROGN
+                                    (|sayMSG| |str|)
+                                    (setq |str| ""))))))))
+                (COND
+                  ((NEQUAL |str| "") (|sayMSG| |str|)))
+                nil)))))))
+
+;say2PerLine l == say2PerLineWidth(l,$LINELENGTH / 2)
+
+(defun |say2PerLine| (|l|)
+  (declare (special $LINELENGTH))
+  (|say2PerLineWidth| |l| (QUOTIENT $LINELENGTH 2)))
+
+;say2PerLineWidth(l,n) ==
+;  [short,long] := say2Split(l,nil,nil,n)
+;  say2PerLineThatFit short
+;  for x in long repeat sayLongOperation x
+;  sayBrightly '""
+
+(defun |say2PerLineWidth| (|l| |n|)
+  (PROG (|LETTMP#1| |short| |long|)
+    (RETURN
+      (SEQ (PROGN
+             (setq |LETTMP#1| (|say2Split| |l| nil nil |n|))
+             (setq |short| (CAR |LETTMP#1|))
+             (setq |long| (CADR |LETTMP#1|))
+             (|say2PerLineThatFit| |short|)
+             (DO ((G167033 |long| (CDR G167033)) (|x| nil))
+                 ((OR (ATOM G167033)
+                      (PROGN (SETQ |x| (CAR G167033)) nil))
+                  nil)
+               (SEQ (EXIT (|sayLongOperation| |x|))))
+             (|sayBrightly| ""))))))
+
+;say2Split(l,short,long,width) ==
+;  l is [x,:l'] =>
+;    sayWidth x < width => say2Split(l',[x,:short],long,width)
+;    say2Split(l',short,[x,:long],width)
+;  [nreverse short,nreverse long]
+
+(defun |say2Split| (|l| |short| |long| |width|)
+  (PROG (|x| |l'|)
+    (RETURN
+      (COND
+        ((AND (consp |l|)
+              (PROGN
+                (setq |x| (QCAR |l|))
+                (setq |l'| (QCDR |l|))
+                t))
+         (COND
+           ((> |width| (|sayWidth| |x|))
+            (|say2Split| |l'| (cons |x| |short|) |long| |width|))
+           (t (|say2Split| |l'| |short| (cons |x| |long|) |width|))))
+        (t (cons (NREVERSE |short|) (cons (NREVERSE |long|) nil)))))))
+
+;sayLongOperation x ==
+;  sayWidth x > $LINELENGTH and (splitListOn(x,"if") is [front,back]) =>
+;    sayBrightly front
+;    BLANKS (6 + # PNAME front.1)
+;    sayBrightly back
+;  sayBrightly x
+
+(defun |sayLongOperation| (|x|)
+  (PROG (|ISTMP#1| |front| |ISTMP#2| |back|)
+  (declare (special $LINELENGTH))
+    (RETURN
+      (COND
+        ((AND (> (|sayWidth| |x|) $LINELENGTH)
+              (PROGN
+                (setq |ISTMP#1| (|splitListOn| |x| '|if|))
+                (AND (consp |ISTMP#1|)
+                     (PROGN
+                       (setq |front| (QCAR |ISTMP#1|))
+                       (setq |ISTMP#2| (QCDR |ISTMP#1|))
+                       (AND (consp |ISTMP#2|) (EQ (QCDR |ISTMP#2|) nil)
+                            (PROGN
+                              (setq |back| (QCAR |ISTMP#2|))
+                              t))))))
+         (|sayBrightly| |front|)
+         (BLANKS (+ 6 (|#| (PNAME (ELT |front| 1)))))
+         (|sayBrightly| |back|))
+        (t (|sayBrightly| |x|))))))
+
+;splitListOn(x,key) ==
+;  key in x =>
+;    while first x ^= key repeat
+;      y:= [first x,:y]
+;      x:= rest x
+;    [nreverse y,x]
+;  nil
+
+(defun |splitListOn| (|x| |key|)
+  (PROG (|y|)
+    (RETURN
+      (SEQ (COND
+             ((|member| |key| |x|)
+              (DO () ((NULL (NEQUAL (CAR |x|) |key|)) nil)
+                (SEQ (EXIT (PROGN
+                             (setq |y| (cons (CAR |x|) |y|))
+                             (setq |x| (CDR |x|))))))
+              (cons (NREVERSE |y|) (cons |x| nil)))
+             (t nil))))))
+
+;say2PerLineThatFit l ==
+;  while l repeat
+;    sayBrightlyNT first l
+;    sayBrightlyNT
+;      fillerSpaces((($LINELENGTH/2)-sayDisplayWidth first l),'" ")
+;    (l:= rest l) =>
+;      sayBrightlyNT first l
+;      l:= rest l
+;      sayBrightly '""
+;    sayBrightly '""
+
+(defun |say2PerLineThatFit| (|l|)
+  (declare (special $LINELENGTH))
+  (SEQ (DO () ((NULL |l|) nil)
+         (SEQ (EXIT (PROGN
+                      (|sayBrightlyNT| (CAR |l|))
+                      (|sayBrightlyNT|
+                          (|fillerSpaces|
+                              (- (QUOTIENT $LINELENGTH 2)
+                                  (|sayDisplayWidth| (CAR |l|)))
+                              " "))
+                      (COND
+                        ((setq |l| (CDR |l|))
+                         (|sayBrightlyNT| (CAR |l|))
+                         (setq |l| (CDR |l|))
+                         (|sayBrightly| ""))
+                        (t (|sayBrightly| "")))))))))
+
+;sayDisplayWidth x ==
+;  consp x =>
+;    +/[fn y for y in x] where fn y ==
+;      y in '(%b %d "%b" "%d") or y=$quadSymbol => 1
+;      k := blankIndicator y => k
+;      sayDisplayWidth y
+;  x = "%%" or x = '"%%" => 1
+;  # atom2String x
+
+(defun |sayDisplayWidth,fn| (|y|)
+  (PROG (|k|)
+  (declare (special |$quadSymbol|))
+    (RETURN
+      (SEQ (IF (BOOT-EQUAL |y| |$quadSymbol|)       (EXIT 1))
+           (IF (setq |k| (|blankIndicator| |y|)) (EXIT |k|))
+           (EXIT (|sayDisplayWidth| |y|))))))
+
+
+(defun |sayDisplayWidth| (|x|)
+  (PROG ()
+    (RETURN
+      (SEQ (COND
+             ((consp |x|)
+              (PROG (G167123)
+                (setq G167123 0)
+                (RETURN
+                  (DO ((G167128 |x| (CDR G167128)) (|y| nil))
+                      ((OR (ATOM G167128)
+                           (PROGN (SETQ |y| (CAR G167128)) nil))
+                       G167123)
+                    (SEQ (EXIT (SETQ G167123
+                                     (+ G167123
+                                      (|sayDisplayWidth,fn| |y|)))))))))
+             ((OR (BOOT-EQUAL |x| '%%)
+                  (BOOT-EQUAL |x| "%%"))
+              1)
+             (t (|#| (|atom2String| |x|))))))))
+
+;sayWidth x ==
+;  atom x => # atom2String x
+;  +/[fn y for y in x] where fn y ==
+;    sayWidth y
+
+
+(defun |sayWidth| (x)
+ (if (atom x)
+   (|#| (princ-to-string x))
+   (loop for y in x sum (|sayWidth| y))))
+
+;pp2Cols(al) ==
+;  while al repeat
+;    [[abb,:name],:al]:= al
+;    ppPair(abb,name)
+;    if canFit2ndEntry(name,al) then
+;      [[abb,:name],:al]:= al
+;      TAB ($LINELENGTH / 2)
+;      ppPair(abb,name)
+;    sayNewLine()
+;  nil
+
+(defun |pp2Cols| (|al|)
+  (PROG (|LETTMP#1| |abb| |name|)
+  (declare (special $LINELENGTH))
+    (RETURN
+      (SEQ (PROGN
+             (DO () ((NULL |al|) nil)
+               (SEQ (EXIT (PROGN
+                            (setq |LETTMP#1| |al|)
+                            (setq |abb| (CAAR |LETTMP#1|))
+                            (setq |name| (CDAR |LETTMP#1|))
+                            (setq |al| (CDR |LETTMP#1|))
+                            (|ppPair| |abb| |name|)
+                            (COND
+                              ((|canFit2ndEntry| |name| |al|)
+                               (setq |LETTMP#1| |al|)
+                               (setq |abb| (CAAR |LETTMP#1|))
+                               (setq |name| (CDAR |LETTMP#1|))
+                               (setq |al| (CDR |LETTMP#1|))
+                               (TAB (QUOTIENT $LINELENGTH 2))
+                               (|ppPair| |abb| |name|)))
+                            (terpri)))))
+             nil)))))
+
+;ppPair(abb,name) ==
+;    sayBrightlyNT [:bright abb,fillerSpaces(8-entryWidth abb," "),name]
+
+(defun |ppPair| (|abb| |name|)
+  (|sayBrightlyNT|
+      (APPEND (|bright| |abb|)
+              (cons (|fillerSpaces|
+                        (- 8 (|#| (|atom2String| |abb|))) '| |)
+                    (cons |name| nil)))))
+
+;canFit2ndEntry(name,al) ==
+;  wid := ($LINELENGTH/2) - 10
+;  null al => nil
+;  entryWidth name > wid => nil
+;  entryWidth CDAR al > wid => nil
+;  t
+
+(defun |canFit2ndEntry| (|name| |al|)
+  (PROG (|wid|)
+  (declare (special $LINELENGTH))
+    (RETURN
+      (PROGN
+        (setq |wid| (- (QUOTIENT $LINELENGTH 2) 10))
+        (COND
+          ((NULL |al|) nil)
+          ((> (|#| (|atom2String| |name|)) |wid|) nil)
+          ((> (|#| (|atom2String| (CDAR |al|))) |wid|) nil)
+          (t t))))))
+
+;center(text,argList) ==
+;  width := IFCAR argList or $LINELENGTH
+;  fillchar := IFCAR IFCDR argList or '" "
+;  if (u:= splitSayBrightlyArgument text) then [text,:moreLines]:= u
+;  wid := sayBrightlyLength text
+;  wid >= width - 2 => sayBrightly text
+;  f := DIVIDE(width - wid - 2,2)
+;  fill1 := '""
+;  for i in 1..(f.0) repeat
+;    fill1 := STRCONC(fillchar,fill1)
+;  if f.1 = 0 then fill2 := fill1 else fill2 := STRCONC(fillchar,fill1)
+;  concat(fill1,text,fill2)
+
+;(defun |center| (|text| |argList|)
+;  (PROG (|width| |fillchar| |u| |moreLines| |wid| |f| |fill1| |fill2|)
+;  (declare (special $LINELENGTH))
+;    (RETURN
+;      (SEQ (PROGN
+;             (setq |width| (OR (IFCAR |argList|) $LINELENGTH))
+;             (setq |fillchar|
+;                      (OR (IFCAR (IFCDR |argList|)) " "))
+;             (COND
+;               ((setq |u| (splitSayBrightlyArgument |text|))
+;                (setq |text| (CAR |u|))
+;                (setq |moreLines| (CDR |u|)) |u|))
+;             (setq |wid| (|sayBrightlyLength| |text|))
+;             (COND
+;               ((>= |wid| (- |width| 2))
+;                (|sayBrightly| |text|))
+;               (t
+;                (setq |f|
+;                         (DIVIDE (-
+;                                     (- |width| |wid|) 2)
+;                                 2))
+;                (setq |fill1| "")
+;                (DO ((G167248 (ELT |f| 0)) (|i| 1 (1+ |i|)))
+;                    ((QSGREATERP |i| G167248) nil)
+;                  (SEQ (EXIT (setq |fill1|
+;                                      (STRCONC |fillchar| |fill1|)))))
+;                (COND
+;                  ((EQL (ELT |f| 1) 0) (setq |fill2| |fill1|))
+;                  (t (setq |fill2| (STRCONC |fillchar| |fill1|))))
+;                (|concat| |fill1| |text| |fill2|))))))))
+
+;splitSayBrightlyArgument u ==
+;  atom u => nil
+;  while splitListSayBrightly u is [head,:u] repeat result:= [head,:result]
+;  result => [:NREVERSE result,u]
+;  [u]
+
+(defun splitSayBrightlyArgument (u)
+ (let (t1 head result)
+   (cond
+    ((atom u) nil)
+    (t
+     (do ()
+         ((null
+           (progn
+            (setq t1 (splitListSayBrightly u))
+            (and (consp t1)
+                 (progn
+                   (setq head (qcar t1))
+                   (setq u (qcdr t1))
+                   t))))
+                  nil)
+        (setq result (cons head result)))
+     (if result
+      (append (nreverse result) (cons u nil))
+      (cons u nil))))))
+
+(defun splitListSayBrightly (u)
+ (let (y ans)
+   (do ((x u (cdr x)))
+       ((atom x) nil)
+     (setq y (cdr x))
+     (cond
+      ((null y) nil)
+      ((eq (car y) '|%l|)
+        (rplacd x nil)
+        (setq ans (cons u (cdr y))))))
+    ans))
+
+(defun |queryUserKeyedMsg| (key args)
+ "Display message and return reply"
+ (let (conStream ans)
+   (setq conStream (defiostream '((device . console) (mode . input)) 120 0))
+   (|sayKeyedMsg| key args)
+   (setq ans (|read-line| conStream))
+   (shut conStream)
+   ans))
+
+\end{chunk}
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
+

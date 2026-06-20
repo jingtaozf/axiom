@@ -1,0 +1,127 @@
+\documentclass{article}
+\usepackage{axiom}
+\setlength{\textwidth}{400pt}
+\begin{document}
+\title{\$SPAD/src/input dfloat.input}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{License}
+\begin{chunk}{license}
+--Copyright The Numerical Algorithms Group Limited 1991.
+\end{chunk}
+\begin{chunk}{*}
+)set break resume
+)spool dfloat.output
+)set message test on
+)set message auto off
+)clear all
+
+--S 1 of 10
+machineFraction(2.71828)
+--R 
+--R
+--R        382563899846521
+--R   (1)  ---------------
+--R        140737488355328
+--R                                                      Type: Fraction(Integer)
+--E 1
+
+--S 2 of 10
+machineFraction(2.71828@DoubleFloat)
+--R 
+--R
+--R        382563899846521
+--R   (2)  ---------------
+--R        140737488355328
+--R                                                      Type: Fraction(Integer)
+--E 2
+
+--S 3 of 10
+machineFraction(2.71828 :: DoubleFloat)
+--R 
+--R
+--R        382563899846521
+--R   (3)  ---------------
+--R        140737488355328
+--R                                                      Type: Fraction(Integer)
+--E 3
+
+--S 4 of 10
+machineFraction(eApprox : DoubleFloat := 2.71828)
+--R 
+--R
+--R        382563899846521
+--R   (4)  ---------------
+--R        140737488355328
+--R                                                      Type: Fraction(Integer)
+--E 4
+
+--S 5 of 10
+avg : List DoubleFloat -> DoubleFloat
+--R 
+--R                                                                   Type: Void
+--E 5
+
+--S 6 of 10
+avg l ==
+  empty? l => 0 :: DoubleFloat
+  reduce(_+,l) / #l
+--R 
+--R                                                                   Type: Void
+--E 6
+
+--S 7 of 10
+avg []
+--R 
+--R   Compiling function avg with type List(DoubleFloat) -> DoubleFloat 
+--R
+--R   (7)  0.
+--R                                                            Type: DoubleFloat
+--E 7
+
+--S 8 of 10
+machineFraction(avg [3.4,9.7,-6.8])
+--R 
+--R
+--R        1182194902184755
+--R   (8)  ----------------
+--R         562949953421312
+--R                                                      Type: Fraction(Integer)
+--E 8
+
+--S 9 of 10
+machineFraction(cos(3.1415926)$DoubleFloat)
+--R 
+--R
+--R          9007199254740979
+--R   (9)  - ----------------
+--R          9007199254740992
+--R                                                      Type: Fraction(Integer)
+--E 9
+
+--S 10 of 10
+machineFraction(cos(3.1415926 :: DoubleFloat))
+--R 
+--R
+--R           9007199254740979
+--R   (10)  - ----------------
+--R           9007199254740992
+--R                                                      Type: Fraction(Integer)
+--E 10
+
+)spool
+)lisp (bye)
+ 
+\end{chunk}
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
+
+ 
