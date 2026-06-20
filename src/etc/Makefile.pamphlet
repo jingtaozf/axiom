@@ -1,14 +1,10 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{\$SPAD/src/etc Makefile}
+\title{Makefile}
 \author{Timothy Daly}
-\maketitle
 \begin{abstract}
 \end{abstract}
-\eject
-\tableofcontents
-\eject
 \section{The databases}
 The databases are built in this Makefile even though the prerequisites
 are actually made during the previous step in the algebra directory.
@@ -23,6 +19,7 @@ ${MNT}/${SYS}/algebra/*.daase: ${INT}/algebra/*.nrlib/code.o
 	@ cp ${SRC}/doc/gloss.text ${INT}/algebra
 	@ cp ${SRC}/doc/topics.data ${INT}/algebra
 	@ cp ${SRC}/doc/topics.data ${INT}/algebra
+	@ cp ${SRC}/doc/topics.data ${SPD}
 	@ (cd ${INT}/algebra ; \
            echo ')lisp (make-databases "" nil)' | ${INTERPSYS} )
 	@ cp -pr ${INT}/algebra/*.daase ${MNT}/${SYS}/algebra
@@ -109,8 +106,8 @@ clean:
 	@rm -f Makefile Makefile.dvi
 
 \end{chunk}
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}
 \end{document}
+

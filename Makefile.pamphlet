@@ -3,12 +3,8 @@
 \begin{document}
 \title{The Top Level Makefile}
 \author{Timothy Daly}
-\maketitle
 \begin{abstract}
 \end{abstract}
-\eject
-\tableofcontents
-\newpage
 \section{The overall build process}
 
 Makefiles are responsible for building all of their subdirectories
@@ -25,7 +21,8 @@ and then themselves. The system is built in the following order
 \item src/algebra -- building input files
 \item src/algebra -- building xhtml files
 \item src/algebra -- building algebra files
-\begin{itemize}
+\end{enumerate}
+\begin{itemize}\begin{itemize}
 \item algebra bootstrap complete
 \item layer 0 of 24 complete
 \item layer 1 of 24 complete
@@ -53,10 +50,13 @@ and then themselves. The system is built in the following order
 \item layer 23 of 24 complete
 \item layer 0 copy complete
 \end{itemize}
+\end{itemize}
+\begin{enumerate}
 \item src/etc   -- building etc
 \item src/doc   -- building doc files
 \item src/input -- running regression tests
 \end{enumerate}
+
 
 \section{General Makefile Structure}
 
@@ -72,7 +72,6 @@ The clean stanza has been modified to be more effective. Previously
 it walked the Makefile hierarchy trying to clean subdirectories. This
 method often fails for various reasons (e.g. permissions, incomplete
 builds, etc). Now we simply remove the created files directly.
-\newpage
 
 \subsection{The Top Level Makefile}
 We have added a stanza to separate the build of documents from the build
@@ -87,7 +86,7 @@ Note that make cannot handle recursively calling itself in the same
 directory so we have to expand the serial forms inline. Cheesy.
 
 \begin{chunk}{parallel}
-all: rootdirs axiom.sty tanglec libspad lspdir
+all: srctangle-tools rootdirs axiom.sty tanglec libspad lspdir
 	@ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 2 Environment ${ENV}
 	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
@@ -104,7 +103,7 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	     cd ${MNT}/${SYS}/doc/src/input ; \
 	     cp ${BOOKS}/axiom.sty . ; \
 	     cp ${SRC}/input/*.eps . ; \
-	     for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
+	     for i in `ls ${SRC}/input/*.input.org` ; do \
 	      if [ .${NOISE} = . ] ; \
 	      then \
 	       latex $$i ; \
@@ -125,7 +124,7 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	      echo s3 ${SPD}/books/Makefile from \
 		   ${SPD}/books/Makefile.pamphlet ; \
 	      cd ${SPD}/books ; \
-	      ${EXTRACT} Makefile ; \
+	      ${EXTRACT} Makefile.pamphlet ; \
 	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
 	      ${ENV} ${MAKE} & ) ; \
 	  else \
@@ -133,7 +132,7 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	      echo s3 ${SPD}/books/Makefile from \
 		   ${SPD}/books/Makefile.pamphlet ; \
 	      cd ${SPD}/books ; \
-	      ${EXTRACT} Makefile ; \
+	      ${EXTRACT} Makefile.pamphlet ; \
 	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
 	      if [ "${BUILD}" = "full" ] ; then \
 	      ${ENV} ${MAKE} ; fi ) ; \
@@ -193,7 +192,7 @@ input:
 	@ if [ "${BUILD}" = "full" ] ; then \
 	  ( cd ${MNT}/${SYS}/doc/src/input ; \
 	    cp ${BOOKS}/axiom.sty . ; \
-	    for i in `ls ${SRC}/input/*.input.pamphlet` ; \
+	    for i in `ls ${SRC}/input/*.input.org` ; \
 	      do latex $$i ; \
 	      done ; \
 	     rm -f *~ ; \
@@ -278,13 +277,13 @@ reference bug reports to versions.
 
 The VERSION variable is used in the src/interp/Makefile
 to set a lisp variable boot::*build-version*. This variable
-is used by the {\tt yearweek} function to construct the banner.
+is used by the =yearweek= function to construct the banner.
 
 The banner also contains a build timestamp so we can determine
 when the image is compiled. We touch the file 
-called \verb|${MNT}/${SYS}/timestamp| and using a formatted form
+called =${MNT}/${SYS}/timestamp= and using a formatted form
 of its file information. See the YEARWEEK variable in the
-src/interp/Makefile.pamphlet and the {\tt yearweek} function in 
+src/interp/Makefile.pamphlet and the =yearweek= function in 
 src/interp/util.lisp.pamphlet.
 
 \subsubsection{SPAD}
@@ -293,7 +292,7 @@ It is expected to be a path to the top level directory of the
 shipped system. For example, if we want to build a linux system
 the SPAD variable should look like:
 \begin{verbatim}
-    `pwd`/new/mnt/{\bf linux}
+    `pwd`/new/mnt/*linux*
 \end{verbatim}
 \subsubsection{SYS}
 From the SPAD variable we look at the last directory name
@@ -332,10 +331,10 @@ functions, allowing fast-function calling behavior.
 
 When defining the environment, the SPD variable is defined as the
 current directory. SYS is taken as the last non-directory part of
-the environment variable \verb|$AXIOM| (e.g. if 
-\verb|$AXIOM=/(a-path)/mnt/linux|
-then SYS=linux). It is {\bf mandatory} that \verb|$AXIOM| does
-{\bf not} contain any trailing slash, because the {\tt notdir} function
+the environment variable =$AXIOM= (e.g. if 
+=$AXIOM=/(a-path)/mnt/linux=
+then SYS=linux). It is *mandatory* that =$AXIOM= does
+*not* contain any trailing slash, because the =notdir= function
 will return the string following the final slash and would thus return
 the empty string.
 
@@ -369,7 +368,7 @@ time by compilers for each specific system.
 The MNT subdirectory is a complete, working copy of Axiom.
 This directory contains everything that is needed to run Axiom and
 can be copied anywhere. Everything in this directory takes its required
-information from the \verb|$AXIOM| shell variable. Once this directory is
+information from the =$AXIOM= shell variable. Once this directory is
 copied the SRC, INT, and OBJ subdirectories can be erased.
 
 \subsubsection{ZIPS}
@@ -386,7 +385,7 @@ avoid writing outside of our build tree.
 Note that TMP is a workspace in the OBJ directory. It is
 working space for temporary files since we cannot assume that
 we can write outside our own tree. Output from commands like
-the {\tt document} command will generally be written to the
+the =document= command will generally be written to the
 TMP/trace file. If the build seems to hang while making a
 document file then check this file. It will contain the output
 of the latex command and the likely error in the tex file.
@@ -394,8 +393,8 @@ of the latex command and the likely error in the tex file.
 \subsubsection{SPADBIN}
 The SPADBIN directory is the path to the executable 
 binary directory of the shipped system. The directory contains
-all of the executable commands, such as the {\tt document}
-command. The {\tt document} command lives in the SRC/SCRIPTS
+all of the executable commands, such as the =document=
+command. The =document= command lives in the SRC/SCRIPTS
 subdirectory and will be copied to SPADBIN before we start
 walking the build subtree.
 
@@ -524,10 +523,7 @@ BYE:=bye
 GCLDIR:=${LSP}/${GCLVERSION}
 \getchunk{GCLOPTS-LOCBFD}
 LISP:=lsp
-LISPFLAVOR?=gcl
-ifeq (${LISPFLAVOR},sbcl)
-O:=fasl
-endif
+\getchunk{LISPFLAVOR}
 
 ##### command line control
 NOISE:="-o ${TMP}/trace"
@@ -609,7 +605,7 @@ run latex over the pamphlet file.
 \begin{chunk}{book}
 book:
 	@ echo 79 building the book as ${MNT}/${SYS}/doc/book.dvi 
-	@ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
+	@ ${BOOKS}/untanglec ${SRC}/doc/book.org > ${MNT}/${SYS}/doc/book.pamphlet
 	@ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
 	@ (cd ${MNT}/${SYS}/doc ; \
 	  if [ .${NOISE} = . ] ; then \
@@ -633,6 +629,60 @@ tanglec: books/tanglec.c
 	@echo t01 making tanglec from books/tanglec.c
 	@( cd books ; gcc -o tanglec tanglec.c )
 
+# The literate sources are .org; three small C tools tangle from them.
+# orgtangle X.org [chunk] -> source directly (the default build path);
+# untanglec X.org -> the exact .pamphlet bytes (PDF / via mode); srctangle is
+# the dispatcher every rule calls (orgtangle by default, untanglec+tanglec when
+# AXIOM_TANGLE_VIA_PAMPHLET=1).  Kept in sync with the committed root Makefile.
+untanglec: books/untanglec.c
+	@echo t02 making untanglec from books/untanglec.c
+	@( cd books ; ${CC} -o untanglec untanglec.c )
+
+orgtangle: books/orgtangle.c
+	@echo t04 making orgtangle from books/orgtangle.c
+	@( cd books ; ${CC} -o orgtangle orgtangle.c )
+
+srctangle-tools: tanglec untanglec orgtangle
+	@chmod +x ${BOOKS}/srctangle
+
+# Byte-exact gate for the org-native migration.  Regenerate every tracked
+# source pamphlet twice -- from BASE (with BASE's untanglec) and from the
+# working tree (with the current untanglec) -- and assert they are identical.
+# It flags EVERY pamphlet-byte change in BASE..worktree -- a format rewrite that
+# moved bytes AND a deliberate content edit -- so pick BASE = the commit before
+# the phase to read a green run as "byte-transparent".  BASE defaults to HEAD
+# (the script's own default when $(BASE) is empty).
+#   make check-pamphlet-bytes BASE=<commit-before-the-phase>
+check-pamphlet-bytes:
+	@echo t05 byte-exact pamphlet gate vs $(BASE)
+	@tools/check-pamphlet-bytes.sh $(BASE)
+
+# Regenerate a .pamphlet beside every migrated .org (those carrying a
+# ':noweb yes' chunk).  Only needed to build PDFs or to run the build in
+# AXIOM_TANGLE_VIA_PAMPHLET=1 mode; the default direct build never calls it.
+# Exclude tools/ : those literate-elisp files carry ':noweb yes' inside CODE
+# strings, are NOT pamphlets, and must not be untanglec'd (their `* heading'
+# lines are real org headings, not migrated LaTeX).
+regen-pamphlets: untanglec
+	@echo t03 regenerating .pamphlet files from migrated .org via untanglec
+	@grep -rIl ':noweb yes' --include='*.org' . | grep -vE '/\.git/|/tools/' | while read f ; do \
+	   ${BOOKS}/untanglec "$$f" > "$${f%.org}.pamphlet" ; \
+	 done
+
+# Start the built AXIOMsys REPL interactively.  Detects the platform
+# automatically from the existing mnt/* tree and ensures the algebra
+# database files are present on first run.
+run:
+	@SYS=$$(ls -d mnt/*/bin/AXIOMsys 2>/dev/null | sed 's|mnt/||;s|/bin/AXIOMsys||' | head -1); \
+	if [ -z "$$SYS" ]; then \
+	  echo "No AXIOMsys found. Run 'make' first to build the system." >&2; exit 1; fi; \
+	AX=$${SPD:-$$PWD}/mnt/$$SYS; export AXIOM=$$AX; \
+	for f in interp browse category operation; do \
+	  if [ ! -f "$$AX/algebra/$$f.daase" ]; then \
+	    cp src/share/algebra/$$f.daase "$$AX/algebra/$$f.daase"; fi; \
+	done; \
+	exec "$$AX/bin/AXIOMsys" --noinform
+
 \end{chunk}
 
 \subsection{src}
@@ -654,13 +704,13 @@ srcdir: ${SPD}/src/Makefile
 ${SPD}/src/Makefile: ${SPD}/src/Makefile.pamphlet
 	@echo 16 making ${SPD}/src/Makefile from ${SPD}/src/Makefile.pamphlet
 	( cd src ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.pamphlet ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/src.Makefile.pdf )
 
 libspadclean:
 	@echo 17 cleaning ${OBJ}/${SYS}/lib     
 	@rm -rf ${OBJ}/${SYS}/lib       
-	@( cd src ; ${EXTRACT} Makefile )
+	@( cd src ; ${EXTRACT} Makefile.pamphlet )
 	@( cd src ; ${ENV} ${MAKE} clean )
 	@rm -f ${SPD}/src/Makefile ${SPD}/src/Makefile.dvi
 
@@ -683,7 +733,7 @@ called gcldir. This file has the same name as the stanza to create
 GCL and thus will prevent GCL from rebuilding. We need to do this
 since we have no control over the GCL makefiles.
 
-The \verb|${OBJ}/${SYS}/bin| directory is where the lisps get built.
+The =${OBJ}/${SYS}/bin= directory is where the lisps get built.
 \subsubsection{LSPMakefile}
 We need to specialize the Makefile stanza based on the version
 of Lisp we plan to use. At the moment there are 3 GCL versions
@@ -704,8 +754,8 @@ ${LSP}/Makefile: ${LSP}/Makefile.pamphlet
 	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 
 \end{chunk}
-Here we add mkdir -p \verb|${OBJ}/${SYS}/lsp| because we need to rename the
-\verb|gcl_collectfn.lsp| back to collectfn.lsp. We also start adding support
+Here we add mkdir -p =${OBJ}/${SYS}/lsp= because we need to rename the
+=gcl_collectfn.lsp= back to collectfn.lsp. We also start adding support
 for sys-proclaim.lsp and other dynamically collected proclaim information.
 
 The obj/sys/bin dir is necessary to keep the compiled lisp image.
@@ -715,8 +765,37 @@ information during a compile-file. This information gets written out
 to a .fn file. These .fn files can be loaded and written out
 as a file containing proclaims information. If this proclaims information
 is available at compile time then the resulting function calls are much
-more efficient. The sys-proclaims file contains type information 
+more efficient. The sys-proclaims file contains type information
 about standard common lisp function calls.
+
+Under *LISPFLAVOR=sbcl* this target changes meaning. There is no
+GCL to compile: the host Lisp is the system SBCL, and all this target
+must do is provide it where the rest of the build expects to find the
+host, namely =${OBJ}/${SYS}/bin/lisp= (the *LISPSYS* of
+src/interp/Makefile.pamphlet, which pipes the depsys save form into
+it). We write a two-line wrapper script there. The flags matter:
+{\bf -{}-no-userinit -{}-no-sysinit} keep the user's sbclrc out of the
+build, both for reproducibility and because an init file that starts
+threads (a SLYNK server, say) would abort every image save ---
+sb-ext:save-lisp-and-die refuses to dump a multithreaded image. This
+was observed directly, not predicted: the migration spike in
+books/bookvolMIGRATION.pamphlet failed exactly that way until the
+init files were excluded.
+
+Two further flags came out of the first full build attempt, each from
+a watched failure. First, the GCL bin/lisp was never a bare Lisp:
+lsp/Makefile.pamphlet loads books/tangle.lisp before its
+save-system, so the host image carries the literate tangler, and
+every recipe downstream pipes forms like
+=(tangle "foo.pamphlet" "*" "foo.lisp")= into it. A bare SBCL
+answered ``The function TANGLE is undefined''; the wrapper therefore
+loads books/tangle.lisp, which is plain portable Common Lisp and
+loads under SBCL unchanged. Second,
+{\bf -{}-disable-debugger}: when that undefined-function error fired,
+SBCL parked the whole build in its interactive debugger waiting on a
+pipe that would never answer. A batch host must die loudly, not wait
+politely; with the flag, any unhandled error aborts the recipe and
+make reports it.
 \begin{chunk}{lsp}
 lspdir: ${LSP}/Makefile
 	@echo 19 making ${LSP}
@@ -863,13 +942,13 @@ the algebra files are compiled. The bootstrap versions of these
 databases live in the src/share subdirectory. Axiom will
 use the value of the shell variable DAASE to find its 
 databases. If this variable is unbound it uses the standard
-\verb|${MNT}/${SYS}| path. Note that Axiom will append the string
+=${MNT}/${SYS}= path. Note that Axiom will append the string
 /algebra to the value of DAASE. The default value setting
 given here is:
 
-\verb|DAASE=${SRC}/share|
+=DAASE=${SRC}/share=
 
-so \verb|${SRC}/share/algebra/*.daase| will be the
+so =${SRC}/share/algebra/*.daase= will be the
 Axiom bootstrap database files.
 
 \subsubsection{The XLIB variable}
@@ -928,6 +1007,37 @@ forget to erase the lsp/Makefile the wrong patches will be applied.
 #GCLVERSION=gcl-2.6.11
 #GCLVERSION=gcl-2.6.12
 GCLVERSION=gcl-2.6.13pre
+\end{chunk}
+
+\subsubsection{Selecting the host Lisp flavor}
+
+Historically the only host Lisp this build knew was the bundled GCL,
+so ``which Lisp'' was never a question the Makefile had to answer.
+The GCL-to-SBCL migration (see books/bookvolMIGRATION.pamphlet)
+changes that: the same literate build must be able to host on either
+Lisp while the port proceeds, with GCL remaining the default so that
+existing platforms are not disturbed.
+
+The *LISPFLAVOR* variable is that selector. It defaults to
+*gcl*, which leaves every recipe exactly as it always was. Saying
+\begin{verbatim}
+make LISPFLAVOR=sbcl
+\end{verbatim}
+selects the system SBCL instead. Two things change under sbcl. First,
+the compiled-object extension *O* becomes *fasl*: SBCL's
+compile-file emits fasl files, not the .o object modules GCL's
+C-backed compiler produces, and every dependency pattern keyed on
+=${O}= follows automatically. Second, the *lspdir* target
+stops building the bundled GCL and instead provides the system SBCL
+as the build's host Lisp (see the lsp section). Source file
+extensions are untouched: *LISP* stays *lsp* because the
+written sources do not change dialect, only their compiled form does.
+
+\begin{chunk}{LISPFLAVOR}
+LISPFLAVOR?=sbcl
+ifeq (${LISPFLAVOR},sbcl)
+O:=fasl
+endif
 \end{chunk}
 
 \subsubsection{The GCLOPTS configure variable}
@@ -1660,14 +1770,14 @@ all: srcsetup srcdir
 \subsection{Makefile.MACOSX}
 On the MAC OSX someone decided (probably a BSDism) to rename the
 SIGCLD signal to SIGCHLD. In order to handle this in the 
-low level C socket code (in particular, in \verb|src/lib/fnct_key.c|)
+low level C socket code (in particular, in =src/lib/fnct_key.c=)
 we change the platform variable to be MACOSXplatform and create
 this new stanza.
 
 It appears that the MAC OSX does not include gawk or nawk by 
 default so we change the AWK variable to use awk.
 
-We need to add -I/usr/include/sys because {\tt malloc.h} has been
+We need to add -I/usr/include/sys because =malloc.h= has been
 moved on this platform. 
 
 We need to search includes (``-I'') in /usr/include before 
@@ -1691,6 +1801,15 @@ XLIB:=/usr/X11R6/lib
 LDF="-L/usr/X11R6/lib64 -L/usr/local/lib64 -L/usr/openwin/lib64 -L/usr/lib64 "
 O:=o
 
+# The platform line above resets O to o after ENVDEFAULTS has already
+# applied the LISPFLAVOR selection, and ENVAR below snapshots the
+# variables with immediate assignment -- so without re-applying the
+# selector here, a LISPFLAVOR=sbcl build hands its sub-makes O=o and
+# depsys compiles fasls under .o names the extensionless loader then
+# cannot find (observed: "wrote clam.o ... Couldn't load clam").
+# The re-application must sit between the platform reset and ENVAR.
+\getchunk{LISPFLAVOR}
+
 \getchunk{GCLOPTS-MACPORT}
 \getchunk{ENVAR}
 
@@ -1712,14 +1831,14 @@ all: srcsetup srcdir
 \subsection{Makefile.BSD}
 On the MAC OSX someone decided (probably a BSDism) to rename the
 SIGCLD signal to SIGCHLD. In order to handle this in the 
-low level C socket code (in particular, in \verb|src/lib/fnct_key.c|)
+low level C socket code (in particular, in =src/lib/fnct_key.c=)
 we change the platform variable to be MACOSXplatform and create
 this new stanza.
 
 It appears that the MAC OSX does not include gawk or nawk by 
 default so we change the AWK variable to use awk.
 
-We need to add -I/usr/include/sys because {\tt malloc.h} has been
+We need to add -I/usr/include/sys because =malloc.h= has been
 moved on this platform. 
 
 We need to search includes (``-I'') in /usr/include before 
@@ -1761,14 +1880,14 @@ all: srcsetup srcdir
 \getchunk{clean}
 
 \end{chunk}
-\newpage
 \begin{thebibliography}{99}
-\bibitem{1} CMUCL {\bf http://www.cons.org/cmucl}
-\bibitem{2} GCL {\bf http://savannah.gnu.org/projects/gcl}
+\bibitem{1} CMUCL *http://www.cons.org/cmucl*
+\bibitem{2} GCL *http://savannah.gnu.org/projects/gcl*
 \bibitem{3} Codemist Ltd, ``Alta'', Horsecombe Vale Combs Down
 Bath BA2 5QR UK Tel. +44-1225-837430 
-{\bf http://www.codemist.co.uk}
+*http://www.codemist.co.uk*
 \bibitem{5} \$SPAD/zips/advi-1.2.0.tar.gz, the advi source tree
 \end{thebibliography}
 \end{document}
+
 

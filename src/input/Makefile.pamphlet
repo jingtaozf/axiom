@@ -2,14 +2,10 @@
 \usepackage{axiom}
 \setlength{\textwidth}{400pt}
 \begin{document}
-\title{\$SPAD/src/input Makefile}
+\title{Makefile}
 \author{The Axiom Team}
-\maketitle
 \begin{abstract}
 \end{abstract}
-\eject
-\tableofcontents
-\eject
 \section{Introduction}
 This creates the mnt/sys/input subdirectory. The files are known
 as ``input'' files which are a list of Axiom commands. Each file
@@ -63,8 +59,7 @@ LISPTANGLE=${OBJ}/${SYS}/bin/lisp
 ${MID}/%.input: ${IN}/%.input.pamphlet
 	@ echo si02 making ${MID}/$*.input from ${IN}/$*.input.pamphlet
 	@(cd ${MID} ; \
-          echo '(tangle "${IN}/$*.input.pamphlet" "*" "$*.input")' | \
-          ${LISPTANGLE} )
+          ${BOOKS}/tanglec ${IN}/$*.input.pamphlet "*" > $*.input )
 
 ${DOC}/axiom.sty:
 	@echo si05 making ${DOC}/axiom.sty from ${BOOKS}/axiom.sty
@@ -75,7 +70,7 @@ ${DOC}/%.input.dvi: ${IN}/%.input.pamphlet ${DOC}/axiom.sty
                ${IN}/$*.input.pamphlet
 	@ if [ "${BUILD}" = "full" ] ; then \
 	( cd ${DOC} ; \
-	cp ${IN}/$*.input.pamphlet ${DOC} ; \
+	${BOOKS}/untanglec ${IN}/$*.input.pamphlet > ${DOC}/$*.input.pamphlet ; \
 	cp ${IN}/$*.eps ${DOC} ; \
 	latex $*.input.pamphlet ; \
 	dvipdf $*.input.dvi ; \
@@ -533,11 +528,10 @@ notests:
 %.input: ${IN}/%.input.pamphlet
 	@ echo si15 making ${MID}/$*.input from ${IN}/$*.input.pamphlet
 	@(cd ${MID} ; \
-         echo '(tangle "${IN}/$*.input.pamphlet" "*" "$*.input")' | \
-	  ${LISPTANGLE} 1>/dev/null 2>/dev/null)
+         ${BOOKS}/tanglec ${IN}/$*.input.pamphlet "*" > $*.input 2>/dev/null)
 
 \end{chunk}
-The curious use of {\tt egrep} in the pipeline is to remove the
+The curious use of =egrep= in the pipeline is to remove the
 spurious differences caused by the Version and Timestamp lines
 in the standard Axiom banner. These cause mismatches in otherwise
 identical output.
@@ -1362,8 +1356,8 @@ clean:
 	@rm -f Makefile Makefile.dvi
 
 \end{chunk}
-\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}
 \end{document}
+

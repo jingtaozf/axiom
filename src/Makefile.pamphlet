@@ -1,17 +1,13 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{\$SPAD/src Makefile}
+\title{Makefile}
 \author{Timothy Daly}
-\maketitle
 \begin{abstract}
 \end{abstract}
-\eject
-\tableofcontents
-\eject
 \section{Directory overview}
 \subsection{Environment variables}
-DIRS is a list of directories with the suffix {\bf dir}.
+DIRS is a list of directories with the suffix *dir*.
 
 There is a partial order of the directories which is not apparent.
 
@@ -55,7 +51,7 @@ smandir: ${SPD}/books/bookvol6.pamphlet
 
 \end{chunk}
 \subsection{The share directory}
-The {\bf share} directory files that are shared by all version of the
+The *share* directory files that are shared by all version of the
 system.
 
 \begin{chunk}{sharedir}
@@ -67,7 +63,7 @@ ${SRC}/share/Makefile: ${SRC}/share/Makefile.pamphlet
 	@echo 10 making ${SRC}/share/Makefile from \
 	   ${SRC}/share/Makefile.pamphlet
 	@( cd share ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.pamphlet ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/share.Makefile.pdf )
 
 sharedocument: ${SRC}/share/Makefile
@@ -83,7 +79,7 @@ shareclean: ${SRC}/share/Makefile
 \end{chunk}
 \subsection{The boot directory}
 Axiom is built in layers. The first layer is contructed into
-an image called {\bf bootsys}. The {\bf bootsys} image is used
+an image called *bootsys*. The *bootsys* image is used
 to translate boot code to common lisp code. Since a boot coded
 interpreter is needed to translate the code for the boot coded
 interpreter we have a "boot-strapping" problem. In order to get
@@ -98,7 +94,7 @@ bootdir: ${SRC}/boot/Makefile
 ${SRC}/boot/Makefile: ${SRC}/boot/Makefile.pamphlet
 	@echo 22 making ${SRC}/boot/Makefile from ${SRC}/boot/Makefile.pamphlet
 	@( cd boot ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.pamphlet ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/boot.Makefile.pdf )
 
 bootdocument: ${SRC}/boot/Makefile
@@ -114,8 +110,8 @@ bootclean: ${SRC}/boot/Makefile
 
 \end{chunk}
 \subsection{The interp directory}
-Once {\bf bootsys} exists we need to build {\bf depsys}
-and {\bf interpsys}. Since these two images share a lot of
+Once *bootsys* exists we need to build *depsys*
+and *interpsys*. Since these two images share a lot of
 files they are built in the interp subdirectory using the
 same Makefile.
 
@@ -142,7 +138,7 @@ ${SRC}/interp/Makefile: ${SRC}/interp/Makefile.pamphlet
 	@echo 26 making ${SRC}/interp/Makefile from \
 		 ${SRC}/interp/Makefile.pamphlet
 	@( cd interp ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.pamphlet ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/interp.Makefile.pdf )
 
 interpdocument: ${SRC}/interp/Makefile
@@ -182,7 +178,7 @@ ${SRC}/input/Makefile: ${SRC}/input/Makefile.pamphlet
 	@echo 34 making ${SRC}/input/Makefile from \
 		${SRC}/input/Makefile.pamphlet
 	@( cd input ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.pamphlet ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/input.Makefile.pdf )
 
 inputdocument: ${SRC}/input/Makefile
@@ -200,7 +196,7 @@ inputclean: ${SRC}/input/Makefile
 \subsection{The etc directory}
 The etc directory contains code used as tools surrounding Axiom.
 
-The asq \cite{2} command, contained in this directory, is useful
+The asq [cite:@2] command, contained in this directory, is useful
 for finding detailed information about domains, packages, and
 categories from the shell without running Axiom.
 \begin{chunk}{etcdir}
@@ -211,7 +207,7 @@ etcdir: ${SRC}/etc/Makefile
 ${SRC}/etc/Makefile: ${SRC}/etc/Makefile.pamphlet
 	@echo 38 making ${SRC}/etc/Makefile from ${SRC}/etc/Makefile.pamphlet
 	@( cd etc ; \
-	   ${EXTRACT} Makefile ; \
+	   ${EXTRACT} Makefile.pamphlet ; \
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/etc.Makefile.pdf )
 
 etcdocument: ${SRC}/etc/Makefile
@@ -275,8 +271,8 @@ graphdir: ${SPD}/books/bookvol8.pamphlet
 \end{chunk}
 \subsection{The algebra directory}
 The algebra directory contains code written in Axiom's computer
-algebra language called {\bf spad}. There are two compilers for
-this language, the spad compiler and the {\bf Aldor}\cite{1} compiler.
+algebra language called *spad*. There are two compilers for
+this language, the spad compiler and the *Aldor*[cite:@1] compiler.
 
 Both of these compilers accept the same input language except for
 some platform-dependent differences. The spad compiler is written
@@ -366,7 +362,7 @@ browserdir: ${SPD}/books/bookvol11.pamphlet
 
 \section{The Makefile}
 
-The second call will execute the {\bf all} stanza. This stanza walks 
+The second call will execute the *all* stanza. This stanza walks 
 all of the lower level directories.
 \begin{chunk}{*}
 
@@ -397,10 +393,10 @@ setup: ${SETUP}
 \getchunk{browserdir}
 
 \end{chunk}
-\eject
 \begin{thebibliography}{99}
-\bibitem{1} Watt, Stephen, The Aldor compiler, {\bf www.aldor.org}
+\bibitem{1} Watt, Stephen, The Aldor compiler, *www.aldor.org*
 \bibitem{2} \$AXIOM/src/etc/asq.c.pamphlet
 \bibitem{3} \$AXIOM/src/clef/edible.c.pamphlet
 \end{thebibliography}
 \end{document}
+
