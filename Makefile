@@ -72,7 +72,7 @@ GCLVERSION=gcl-2.6.13pre
 GCLDIR:=${LSP}/${GCLVERSION}
 GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"
 LISP:=lsp
-LISPFLAVOR?=gcl
+LISPFLAVOR?=sbcl
 ifeq (${LISPFLAVOR},sbcl)
 O:=fasl
 endif
