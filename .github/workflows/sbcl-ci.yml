@@ -131,7 +131,7 @@ jobs:
             # target`.  Editing the := line keeps the quotes surviving only the
             # ENV-string -> shell hop in `cd src; ${ENV} ${MAKE}`.
             perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="interpdir sharedir algebradir"/m' Makefile.MACOSX
-            time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang \
+            time make -f Makefile.MACOSX LISPFLAVOR=sbcl CC=/usr/bin/clang NOISE= \
               2>&1 | tee -a /tmp/build.log | tail -n 4000
             test -x obj/MACOSX/bin/interpsys
             test -x mnt/MACOSX/bin/AXIOMsys
