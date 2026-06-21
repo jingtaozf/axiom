@@ -17,8 +17,8 @@ and then themselves. The system is built in the following order
 \item books       -- building pdf files
 \item src/scripts -- building scripts
 \item src/lib     -- building lib files
-\item lsp       -- building gcl common lisp
-\item src       -- building src
+\item lsp         -- building gcl common lisp
+\item src         -- building src
 \item src/interp  -- building interpreter files
 \item src/share   -- building share files
 \item src/algebra -- building help files
@@ -99,20 +99,20 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	   ( echo p4 starting parallel make of input files ; \
 	     ${ENV} ${MAKE} input ${NOISE} & ) ; \
 	  else \
-	   if [ "${BUILD}" = "full" ] ; then \
+           if [ "${BUILD}" = "full" ] ; then \
 	   ( echo s4 starting serial make of input files ; \
-	     cd ${MNT}/${SYS}/doc/src/input ; \
+             cd ${MNT}/${SYS}/doc/src/input ; \
 	     cp ${BOOKS}/axiom.sty . ; \
-	     cp ${SRC}/input/*.eps . ; \
+             cp ${SRC}/input/*.eps . ; \
 	     for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
 	      if [ .${NOISE} = . ] ; \
 	      then \
-	       latex $$i ; \
+               latex $$i ; \
 	      else \
 	       ( echo p4a making $$i ; \
-		 latex $$i >${TMP}/trace ) ; \
+	         latex $$i >${TMP}/trace ) ; \
 	      fi ; \
-	     done ; \
+             done ; \
 	     rm -f *~ ; \
 	     rm -f *.pamphlet~ ; \
 	     rm -f *.log ; \
@@ -123,19 +123,19 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
 	    ( echo s2 starting parallel make of books ; \
 	      echo s3 ${SPD}/books/Makefile from \
-		   ${SPD}/books/Makefile.pamphlet ; \
+                   ${SPD}/books/Makefile.pamphlet ; \
 	      cd ${SPD}/books ; \
-	      ${EXTRACT} Makefile ; \
-	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
+              ${EXTRACT} Makefile ; \
+              cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
 	      ${ENV} ${MAKE} & ) ; \
 	  else \
 	    ( echo s2 starting serial make of books ; \
 	      echo s3 ${SPD}/books/Makefile from \
-		   ${SPD}/books/Makefile.pamphlet ; \
+                   ${SPD}/books/Makefile.pamphlet ; \
 	      cd ${SPD}/books ; \
-	      ${EXTRACT} Makefile ; \
-	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
-	      if [ "${BUILD}" = "full" ] ; then \
+              ${EXTRACT} Makefile ; \
+              cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
+              if [ "${BUILD}" = "full" ] ; then \
 	      ${ENV} ${MAKE} ; fi ) ; \
 	  fi
 	@ echo p7 starting make of src
@@ -148,7 +148,7 @@ libspad:
 	@ echo 11a making libspad
 	@ ( cd ${OBJ}/${SYS}/lib ; \
 	    ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
-	    ${ENV} ${MAKE} libspad.a )
+            ${ENV} ${MAKE} libspad.a )
 
 axiom.sty:
 	@ echo 11c copying books/axiom.sty
@@ -194,8 +194,8 @@ input:
 	  ( cd ${MNT}/${SYS}/doc/src/input ; \
 	    cp ${BOOKS}/axiom.sty . ; \
 	    for i in `ls ${SRC}/input/*.input.pamphlet` ; \
-	      do latex $$i ; \
-	      done ; \
+              do latex $$i ; \
+              done ; \
 	     rm -f *~ ; \
 	     rm -f *.pamphlet~ ; \
 	     rm -f *.log ; \
@@ -484,7 +484,7 @@ TMP:=${OBJ}/tmp
 ZIPS:=${SPD}/zips
 BOOKS:=${SPD}/books
 SRCDIRS:="interpdir sharedir algebradir etcdir docdir \
-	  graphdir smandir hyperdir browserdir inputdir"
+          graphdir smandir hyperdir browserdir inputdir"
 
 SYS:=$(notdir $(AXIOM))
 DAASE:=${SRC}/share
@@ -528,7 +528,7 @@ LISP:=lsp
 
 ##### command line control
 NOISE:="-o ${TMP}/trace"
-PART:=  cprogs
+PART:=	cprogs
 SUBPART:= everything
 RUNTYPE:=serial
 # can be richtests, catstests, regresstests (see src/input/Makefile)
@@ -609,7 +609,7 @@ book:
 	@ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
 	@ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
 	@ (cd ${MNT}/${SYS}/doc ; \
-	  if [ .${NOISE} = . ] ; then \
+          if [ .${NOISE} = . ] ; then \
 	    ( latex book.pamphlet --interaction nonstopmode ; \
 	      latex book.pamphlet --interaction nonstopmode ) ; \
 	   else \
@@ -655,8 +655,8 @@ ${SPD}/src/Makefile: ${SPD}/src/Makefile.pamphlet
 	   cp Makefile.pdf ${MNT}/${SYS}/doc/src/src.Makefile.pdf )
 
 libspadclean:
-	@echo 17 cleaning ${OBJ}/${SYS}/lib     
-	@rm -rf ${OBJ}/${SYS}/lib       
+	@echo 17 cleaning ${OBJ}/${SYS}/lib	
+	@rm -rf ${OBJ}/${SYS}/lib	
 	@( cd src ; ${EXTRACT} Makefile )
 	@( cd src ; ${ENV} ${MAKE} clean )
 	@rm -f ${SPD}/src/Makefile ${SPD}/src/Makefile.dvi
@@ -697,7 +697,7 @@ ${LSP}/Makefile: ${LSP}/Makefile.pamphlet
 	 ${EXTRACT} Makefile.pamphlet ; \
 	 if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
 	 ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
-	 fi ; \
+         fi ; \
 	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 
 \end{chunk}
@@ -712,7 +712,7 @@ information during a compile-file. This information gets written out
 to a .fn file. These .fn files can be loaded and written out
 as a file containing proclaims information. If this proclaims information
 is available at compile time then the resulting function calls are much
-more efficient. The sys-proclaims file contains type information
+more efficient. The sys-proclaims file contains type information 
 about standard common lisp function calls.
 
 Under {\bf LISPFLAVOR=sbcl} this target changes meaning. There is no
@@ -760,7 +760,7 @@ else
 	@echo =====================================
 	@echo lsp BUILDING GCL COMMON LISP
 	@echo =====================================
-	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir )
+	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir ) 
 	@(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
 endif
 
@@ -1044,7 +1044,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1086,7 +1086,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1116,7 +1116,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1148,7 +1148,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1180,7 +1180,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1212,7 +1212,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1244,7 +1244,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1276,7 +1276,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1308,7 +1308,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1340,7 +1340,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1372,7 +1372,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1404,7 +1404,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1436,7 +1436,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1468,7 +1468,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1501,7 +1501,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1534,7 +1534,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1584,7 +1584,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1637,7 +1637,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1670,7 +1670,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1704,7 +1704,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1765,7 +1765,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
@@ -1817,7 +1817,7 @@ all: srcsetup srcdir
 	@echo 46 Environment : ${ENV} 
 	@echo 47 finished system build on `date` | tee >lastBuildDate
 	@- if [ "${TESTSET}" != "notests" ] ; \
-	    then  grep "result FAILED" int/input/*.regress || true ; fi
+            then  grep "result FAILED" int/input/*.regress || true ; fi
 
 \getchunk{literate commands}
 \getchunk{srcsetup}
