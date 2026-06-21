@@ -232,3 +232,81 @@ jobs:
           name: regression-shard-${{ matrix.shard }}
           path: /tmp/axci/results.txt
           if-no-files-found: ignore
+
+  # Compile the X11 GUI subsystems the regression build deliberately skips:
+  # graphics (viewman/view2d/view3d), HyperDoc (hypertex/htadd + ht.db), and
+  # the session manager (sman/session/spadclient/clef).  This proves the
+  # macOS/XQuartz arm64 port compiles + links; it does NOT run them (the GUI
+  # needs a live X display, absent on the runner).  Independent of build/test
+  # so the regression pipeline stays fast and green regardless.
+  gui-build:
+    runs-on: macos-14
+    timeout-minutes: 90
+    env:
+      LISPFLAVOR: sbcl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Install build dependencies (+ XQuartz for /opt/X11)
+        run: |
+          set -x
+          brew update >/dev/null || true
+          brew install sbcl gawk gnu-sed grep coreutils || true
+          # XQuartz supplies /opt/X11 (libX11/libXpm/libXt/libSM/libICE + headers)
+          # that the graphics + HyperDoc C links against.
+          brew install --cask xquartz || true
+          test -d /opt/X11/include/X11
+          test -e /opt/X11/lib/libXpm.dylib
+          echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
+          echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
+          echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
+          # macos-14 keeps C headers in the SDK, not /usr/include; point CPATH
+          # there so the GUI C (and tanglec) resolve <stdio.h> etc.
+          {
+            echo "SDKROOT=$(xcrun --show-sdk-path)"
+            echo "CPATH=$(xcrun --show-sdk-path)/usr/include"
+          } >> "$GITHUB_ENV"
+
+      - name: Build GUI (libspad + graphics + HyperDoc + sman)
+        run: |
+          set -exo pipefail
+          export AXIOM="$PWD/mnt/MACOSX"
+          export PATH="$AXIOM/bin:$PATH"
+          # Dirs, axiom.sty, tanglec, and the SBCL lisp image (depsys) that
+          # HyperDoc's page tangler runs on.  No algebra/interp build needed.
+          make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
+            2>&1 | tee /tmp/gui.log | tail -n 100
+          # libspad.a: the X11-coupled C archive the GUI binaries link against.
+          make libspad LISPFLAVOR=sbcl CC=/usr/bin/clang \
+            2>&1 | tee -a /tmp/gui.log | tail -n 40
+          # Build only the GUI SRCDIRS through the tangled platform makefile.
+          # Edit the SRCDIRS:= line (not a cmdline override, whose quotes leak
+          # through MAKEFLAGS into sub-makes and break them).
+          books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
+          perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="graphdir hyperdir smandir"/m' Makefile.MACOSX
+          make -f Makefile.MACOSX srcdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
+            2>&1 | tee -a /tmp/gui.log | tail -n 300
+
+      - name: Verify GUI binaries built + linked against XQuartz
+        run: |
+          set -e
+          for b in lib/viewman lib/view2d lib/view3d bin/viewAlone \
+                   bin/hypertex bin/htadd bin/sman bin/clef \
+                   lib/session lib/spadclient; do
+            test -x "mnt/MACOSX/$b" && echo "ok  $b" || { echo "MISSING $b"; exit 1; }
+          done
+          test -s mnt/MACOSX/doc/ht.db && echo "ok  ht.db ($(wc -c < mnt/MACOSX/doc/ht.db) bytes)"
+          test -f obj/MACOSX/lib/libspad.a && echo "ok  libspad.a"
+          otool -L mnt/MACOSX/bin/hypertex | grep -q '/opt/X11/lib/libX11' && echo "ok  hypertex -> libX11"
+          otool -L mnt/MACOSX/lib/viewman  | grep -q '/opt/X11/lib/libXpm' && echo "ok  viewman -> libXpm"
+
+      - name: Upload GUI build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gui-build-log
+          path: /tmp/gui.log
+          if-no-files-found: ignore
