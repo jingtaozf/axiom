@@ -1,11 +1,13 @@
 \documentclass[dvipdfm]{book}
 \newcommand{\VolumeName}{Volume 9: Axiom Compiler}
 \input{bookheader.tex}
+\pagenumbering{arabic}
+\mainmatter
 \setcounter{chapter}{0} % Chapter 1
 \chapter{The Axiom Compiler}
 \section{Makefile}
 \sig{a}{b}
-This book is actually a literate program[cite:@Knut92] and contains
+This book is actually a literate program\cite{Knut92} and contains
 executable source code. In particular, the Makefile for this book
 is part of the source of the book and is included below. 
 
@@ -17,7 +19,7 @@ in general purpose programming languages, such as selecting overloaded
 procedures based on the return type as well as the types of the arguments.
 
 The Spad language is heavily influenced by Barbara Liskov's
-[cite:@Lisk77] work.  It features encapsulation (aka objects),
+\cite{Lisk77} work.  It features encapsulation (aka objects),
 inheritance, and overloading.  It has categories which are defined by
 the exports. Categories are parameterized functors that take arguments
 which define their behavior.
@@ -71,99 +73,124 @@ actually the code you are reading we will expand parts as we go.
 \section{Syntax by Jacob Smith}
 
 {\bf {\Large Module}}\\
-[[ps/v9Module.eps]]
+\includegraphics{ps/v9Module.eps}
 
+\vskip 1.0cm
 {\bf {\Large TopLevelDef}}\\
-[[ps/v9TopLevelDef.eps]]
+\includegraphics{ps/v9TopLevelDef.eps}
 
+\vskip 1.0cm
 {\bf {\Large CategoryDef}}\\
-[[ps/v9CategoryDef.eps]]
+\includegraphics{ps/v9CategoryDef.eps}
 
+\newpage
+\vskip 1.0cm
 {\bf {\Large Exports}}\\
-[[ps/v9Exports.eps]]
+\includegraphics{ps/v9Exports.eps}
 
+\vskip 1.0cm
 {\bf {\Large Extension}}\\
-[[ps/v9Extension.eps]]
+\includegraphics{ps/v9Extension.eps}
 
+\vskip 1.0cm
 {\bf {\Large WithExpr}}\\
-[[ps/v9WithExpr.eps]]
+\includegraphics{ps/v9WithExpr.eps}
 
+\vskip 1.0cm
 {\bf {\Large Signature}}\\
-[[ps/v9Signature.eps]]
+\includegraphics{ps/v9Signature.eps}
 
+\newpage
+\vskip 1.0cm
 {\bf {\Large Type}}\\
-[[ps/v9Type.eps]]
+\includegraphics{ps/v9Type.eps}
 
+\vskip 1.0cm
 {\bf {\Large DomainDef}}\\
-[[ps/v9DomainDef.eps]]
+\includegraphics{ps/v9DomainDef.eps}
 
+\vskip 1.0cm
 {\bf {\Large PackageDef}}\\
-[[ps/v9PackageDef.eps]]
+\includegraphics{ps/v9PackageDef.eps}
 
+\newpage
+\vskip 1.0cm
 {\bf {\Large Capsule}}\\
-[[ps/v9Capsule.eps]]
+\includegraphics{ps/v9Capsule.eps}
 
+\vskip 1.0cm
 {\bf {\Large Representation}}\\
-[[ps/v9Representation.eps]]
+\includegraphics{ps/v9Representation.eps}
 
+\vskip 1.0cm
 {\bf {\Large Definition}}\\
-[[ps/v9Definition.eps]]
+\includegraphics{ps/v9Definition.eps}
 
+\vskip 1.0cm
 {\bf {\Large CallForm}}\\
-[[ps/v9CallForm.eps]]
+\includegraphics{ps/v9CallForm.eps}
 
+\newpage
+\vskip 1.0cm
 {\bf {\Large Statement}}\\
-[[ps/v9Statement.eps]]
+\includegraphics[scale=0.8]{ps/v9Statement.eps}
 
+\vskip 1.0cm
 {\bf {\Large Iterator}}\\
-[[ps/v9Iterator.eps]]
+\includegraphics[scale=0.8]{ps/v9Iterator.eps}
 
+\vskip 1.0cm
 {\bf {\Large Variable}}
 
+\vskip 1.0cm
 {\bf {\Large Constant}}
 
+\vskip 1.0cm
 {\bf {\Large Identifier}}
 
+\vskip 1.0cm
 {\bf {\Large CDPName}}
 
+\newpage
+\vskip 1.0cm
 {\bf {\Large Expression}}\\
-[[ps/v9Expression.eps]]
+\includegraphics[scale=0.5]{ps/v9Expression.eps}
 
-The Railroad diagrams were generated online [cite:@Bott17].
+The Railroad diagrams were generated online \cite{Bott17}.
 
-In Smith [cite:@Smit10] we find
+In Smith \cite{Smit10} we find
 \[\begin{array}{rccl}
 Module         & M      & ::= & \Delta^{+}\\
 TopLevelDef    & \Delta & ::= & C\, |\, D\, |\, P\, |\, d\\
-CategoryDef    & C      & ::= & \phi : Category == E\\
+CategoryDef    & C      & ::= & \phi : {\rm Category} == E\\
 Exports        & E      & ::= & W\\
                &        & |   & X\, W^{?}\\
 Extension      & X      & ::= & \tau\\
-               &        & |   & Join\(\tau^{+})\\
-WithExpr       & W      & ::= & with\ S^{+}\\
+               &        & |   & {\rm Join\ }(\tau^{+})\\
+WithExpr       & W      & ::= & {\rm with\ } S^{+}\\
 Signature      & S      & ::= & x : \tau\\
-Type           & \tau   & ::= & Boolean\\
-               &        & |   & Integer\\
-               &        & |   & Float\\
-               &        & |   & Record(S^{+})\\
-               &        & |   & Union(S^{+})\\
+Type           & \tau   & ::= & {\rm Boolean}\\
+               &        & |   & {\rm Integer}\\
+               &        & |   & {\rm Float}\\
+               &        & |   & {\rm Record}(S^{+})\\
+               &        & |   & {\rm Union}(S^{+})\\
              &  & | & {\tau_1} \times\cdots\times {\tau_n} \rightarrow \tau_0\\
                &        & |   & \gamma\\
                &        & |   & \gamma([\tau | e]^{+})\\
 DomainDef      & D      & ::= & \phi : E == K\\
 PackageDef     & P      & ::= & \phi : E == K\\
-Capsule        & K      & ::= & add\ R^{?} d^{+}\\
-Representation & R      & ::= & Rep := \tau\\
+Capsule        & K      & ::= & {\rm add\ } R^{?} d^{+}\\
+Representation & R      & ::= & {\rm Rep} := \tau\\
 Definition     & d      & ::= & [n | \phi] : \tau == s\\
 CallForm       & \phi   & ::= & x(S^{+})\\
 Statement      & s      & ::= & e\\
-               &        & |   & if\e{\rm\ then\ }s\\
-               &        & |   & if\e{\rm\ then\ }s{\rm\ else\ }s\\
+               &        & |   & {\rm if\ }e{\rm\ then\ }s\\
+               &        & |   & {\rm if\ }e{\rm\ then\ }s{\rm\ else\ }s\\
                &        & |   & i^{+}{\rm\ repeat\ }s\\
                &        & |   & S == e\\
                &        & |   & S := e\\
-Iterator  & i & ::= & for\n{\rm\ in\ } e\; [such that\p]^{?}\\
-               &        & |   & while\p\\
+Iterator  & i & ::= & {\rm for\ }n{\rm\ in\ } e\; [{\rm such that\ }p]^{?}\\
+               &        & |   & {\rm while\ }p\\
 Expression     & e,p    & ::= & c\\
                &        & |   & x^{\tau}\\
                &        & |   & e(e^{+})\\
@@ -175,17 +202,17 @@ Variable       & x^{\tau} &\\
 Constant       & c^{\tau} &\\
 Identifier     & x      &\\
 CDPName        &\gamma  && 
-name\ of\ a\ Spad\ category,\ domain,\ or\  package\\
+{\rm name\ of\ a\ Spad\ category,\ domain,\ or\  package}\\
 \end{array}\]
 where $Z^{?}$ represents an optional $Z$,
 $Z^{+}$ a non-empty finite sequence of $Z$,
 the square brackets are used for grouping.
 
-/ToplevelDef/ A toplevel definition is either a Spad category 
+{\sl ToplevelDef} A toplevel definition is either a Spad category 
 definition, or a Spad domain definition, or a Spad package definition,
 or a delayed definition.
 
-/CategoryDef/ A Spad category definition specifies a class of algebras,
+{\sl CategoryDef} A Spad category definition specifies a class of algebras,
 by declaring the signatures of the required operations. A Spad category
 definition may extend existing Spad categories with new signatures. For
 example, the fragment
@@ -194,46 +221,43 @@ example, the fragment
       *: (%,%) -> %
       1: %
 \end{verbatim}
-declares =Monoid= as a Spad category with two signatures:
+declares {\tt Monoid} as a Spad category with two signatures:
 \begin{enumerate}
 \item the symbol $*$ is a binary operation on the domain belonging to
-\end{enumerate}
-  this category
-\begin{enumerate}
+this category
 \item the identifier 1 denotes a constant object of a domain belonging
+to the category being defined.
 \end{enumerate}
-  to the category being defined.
-
 
 The following category definition
 \begin{verbatim}
    Group(): Category == Monoid with
      inverse: % -> %
 \end{verbatim}
-extends =Monoid= with the =inverse= operation, to capture the
+extends {\tt Monoid} with the {\tt inverse} operation, to capture the
 mathematical notion of group structure. One can think of Spad categories
-as /specifying/ views on objects.
+as {\sl specifying} views on objects.
 
-/Exports/ Definitions for Spad categories, Spad domains, and packages
+{\sl Exports} Definitions for Spad categories, Spad domains, and packages
 specify exported operations, i.e., the ``public interface'' in 
-programming languages jargon, through either a /WithExpr/, or an
-/Extension/, or a combination of both.
+programming languages jargon, through either a {\sl WithExpr}, or an
+{\sl Extension}, or a combination of both.
 
-/WithExpr/ A /WithExpr/ is essentially an unnamed Spad category
-consisting of a list of operations with signatures (/Signature/).
+{\sl WithExpr} A {\sl WithExpr} is essentially an unnamed Spad category
+consisting of a list of operations with signatures ({\sl Signature}).
 
-/Extension/ Definitions for Spad categories and Spad domains may
+{\sl Extension} Definitions for Spad categories and Spad domains may
 extend existing Spad categories or domains. An extension may specify 
-either a type, or multiple categories through the =Join= operator.
+either a type, or multiple categories through the {\tt Join} operator.
 The latter form corresponds to multiple inheritance in object-oriented
 programming languages.
 
-/Signature/ The specification of a tyhpe for an identifer can appear
-in a /WithExpr/, as a parameter declaration in /CallForm/, as a 
+{\sl Signature} The specification of a tyhpe for an identifer can appear
+in a {\sl WithExpr}, as a parameter declaration in {\sl CallForm}, as a 
 field of a record or union, or in a local variable definition.
 
-/Type/ A type is a built-in type (=Boolean=, =Integer=,
-=Float=), a record or union, a function type, the name of a Spad
+{\sl Type} A type is a built-in type ({\tt Boolean}, {\tt Integer},
+{\tt Float}), a record or union, a function type, the name of a Spad
 category or Spad domain, or an instantiation of a Spad category or
 Spad domain. All field names specified by signatures in a record must
 be distinct. Similarly, all field names specified in a union must be
@@ -241,52 +265,49 @@ distinct and unique in the enclosing scope; this applies recursively
 to any other union types directly referenced in the signature list 
 of the union.
 
-=DomainDef= A Spad domain definition provides implemenations for views
+{\tt DomainDef} A Spad domain definition provides implemenations for views
 specified by categories. A domain definition has an interface specification
-part (/Exports/) stating the categories and possible additional
-signatures it implements, and an implementation part called /capsule/.
+part ({\sl Exports}) stating the categories and possible additional
+signatures it implements, and an implementation part called {\sl capsule}.
 The implementation part may define the representation of the object
 belonging to the domain, and provide definitions for operations declared
-in its /Exports/. For example, the program fragment
+in its {\sl Exports}. For example, the program fragment
 \begin{verbatim}
    IntMonoid(): Monoid == add
      Rep == Integer
      (x:%) * (y:%) == (rep x + rep y)$Integer
      1:% == 0::Integer
 \end{verbatim}
-provides an implementation of =IntMonoid= for the =Monoid=
+provides an implementation of {\tt IntMonoid} for the {\tt Monoid}
 specification as follows:
 \begin{itemize}
-\item the object representation domain is =Integer=;
-\item ``multiplication'' of two objects in =IntMonoid= is the value
+\item the object representation domain is {\tt Integer};
+\item ``multiplication'' of two objects in {\tt IntMonoid} is the value
+obtained by adding their respective underlying values (returned by the
+$*$ operator);
+\item the {\tt Integer} constant 0 is the underlying value of the unit
+of {\tt IntMonoid}
 \end{itemize}
-  obtained by adding their respective underlying values (returned by the
-  $*$ operator);
-\begin{itemize}
-\item the =Integer= constant 0 is the underlying value of the unit
-\end{itemize}
-  of =IntMonoid=
-
 
 Note that a Spad domain almost always references the ``current domain''
 using the symbol \%.
 
-/PackageDef/ A package definition provides implementations for functions
+{\sl PackageDef} A package definition provides implementations for functions
 that operate on a Spad domain. Unlike a Spad domain, a package does not
-define a /Representation/ and does not reference the symbol \%.
-Like a Spad domain, it has an /Exports/ part and an implementation part.
+define a {\sl Representation} and does not reference the symbol \%.
+Like a Spad domain, it has an {\sl Exports} part and an implementation part.
 
-/Capsule/ The implementation part of a Spad domain or package is its
+{\sl Capsule} The implementation part of a Spad domain or package is its
 capsule. A capsule mayu specify the representation of a domain (if it si
 the implementation of a domain), and specifies a sequence of toplevel
 definitions for operations on the Spad domain objects, or the operators
 in a package.
 
 {sl Representation} A Spad domain specifies the underlying representation
-of its objects by assigning a type expression to the indentifier =Rep=.
-A /Representation/ can occur only in a Spad domain definition.
+of its objects by assigning a type expression to the indentifier {\tt Rep}.
+A {\sl Representation} can occur only in a Spad domain definition.
 
-/Definition/ A (delayed) definition is the binding of an identifier or
+{\sl Definition} A (delayed) definition is the binding of an identifier or
 a function call expression to a Spad category, Spad domain, or an ordinary
 function. The body of the definition is evaluated when needed. That 
 evaluation may happen only once for a given arugment list. Even though the
@@ -297,32 +318,32 @@ they are the core of the language understood by the interpreter. For
 uniformity, we include toplevel function definitions in the Spad subset
 we describe.
 
-/CallForm/ A call form consists of an identifer and a parenthesized
+{\sl CallForm} A call form consists of an identifer and a parenthesized
 sequence of signatures declaring formal parameters. A call form is needed
 in the definitions of a Spad category, Spad domain, and function.
 
-/Statement/ Statements appear in the body of function definitions.
+{\sl Statement} Statements appear in the body of function definitions.
 A statement is either an expression, a one or two-arm if-statment, an
 iteration where the body of the iteration (a statement) is controlled
 by a list of iterators, a local variable definition, or an assignment.
 
-/Iterator/ An iterator is either a sequence of items $x$ drawn from
+{\sl Iterator} An iterator is either a sequence of items $x$ drawn from
 a sequence $e$, possibly filtered by a predicate $p$, or a repeated
 evaluation of a predicate.
 
-/Expression/ An expression is either a constant, variable, function call,
+{\sl Expression} An expression is either a constant, variable, function call,
 member selection, type-case expression, an assignment, or a qualifed
 expression. A qualified expression is an expresstion that contains free
 variables and is immediately followed by their definitions in a
 where-clause. We assimilate expressions built with built-in operations --
 such as addtion on integers, etc. -- as function calls.
 
-/Variable/ A variable is the use of a name declared with a given type
+{\sl Variable} A variable is the use of a name declared with a given type
 
-/Constant/ A constant is a built-in value, such as
+{\sl Constant} A constant is a built-in value, such as
 $+^{Integer\times Integer\to Integer}$, $345^{Integer}$, $true^{Boolean}$, etc.
 
-/Identifier/ An identifier is a finite sequence of characters. The set 
+{\sl Identifier} An identifier is a finite sequence of characters. The set 
 of identifiers in Spad is countably infinite.
 
 \subsection{Language features}
@@ -338,12 +359,12 @@ The Spad programming language also supports general function overloading;
 in particular, a function can be overloaded on its argument and return
 types. The overload resolution algorithm exploits all context information,
 including arguments and target types, to select the best matching function.
-Implicit conversion is supported through the =coerce= operator.
+Implicit conversion is supported through the {\tt coerce} operator.
 
 \subsection{Sematics}
 
 The computational rules used to evaluate Spad programs are those of
-/eager/ semantics (and call-by-value), and the arguments of functions
+{\sl eager} semantics (and call-by-value), and the arguments of functions
 are passed by reference. We sketch the semantics of Spad programs in two
 ways: small-step operational semantics, and denotational semantics. The
 small-step operational semantics gives an intuitive idea of the behavior
@@ -356,22 +377,23 @@ talk about the notion of a derivative of a Spad program.
 The Spad language is imperative in the sense that its programs operate on
 stores by explicit modification. Values of Spad programs can be booleans,
 integers, floating point numbers, aggregates thereof, or function codes.
-We denote the collection of values by *Value*, inductively defined as:
+We denote the collection of values by {\bf Value}, inductively defined as:
 
-| Location values: | object locations are in *Value* |
-| Boolean values: | $=true=\in *Value*$ and $=false=\in *Value*$ |
-| Integer Values: | integer constants $n^{Integer}$ are in *Value* |
-| Float values: | float constants $f^{Float}$ are in *Value* |
-| Functions: | If $f$ is a defined function of type $\tau_1\to \tau_2$ |
-|  | then the constant $f^{\tau_1\to \tau_2}$ is in *Value* |
-| Aggregates: | if $c_i^{\tau_i}$ are values of type $\tau_i$ in *Value*, |
-|  | then the tuple $(c_1^{\tau_1},...,c_n^{\tau_n})^{\tau_1\times\cdots |
-\times\tau_n}$ is in *Value*.\\
-|  | Tuples represent record values. |
-|  | Similarly, if $c^{\tau_1}$ is in *Value*, |
-| so is $c^{\tau_2\gets\tau_1}$.\\ |
-|  | It represents a value of a field of type $\tau_1$ in a union $\tau_2$. |
-
+\begin{tabular}{rl}
+Location values: & object locations are in {\bf Value}\\
+Boolean values:& ${\tt true}\in {\bf Value}$ and ${\tt false}\in {\bf Value}$\\
+Integer Values: & integer constants $n^{Integer}$ are in {\bf Value}\\
+Float values: & float constants $f^{Float}$ are in {\bf Value}\\
+Functions: & If $f$ is a defined function of type $\tau_1\to \tau_2$\\
+& then the constant $f^{\tau_1\to \tau_2}$ is in {\bf Value}\\
+Aggregates: & if $c_i^{\tau_i}$ are values of type $\tau_i$ in {\bf Value},\\
+& then the tuple $(c_1^{\tau_1},\ldots,c_n^{\tau_n})^{\tau_1\times\cdots
+\times\tau_n}$ is in {\bf Value}.\\
+& Tuples represent record values. \\
+& Similarly, if $c^{\tau_1}$ is in {\bf Value}, 
+so is $c^{\tau_2\gets\tau_1}$.\\
+& It represents a value of a field of type $\tau_1$ in a union $\tau_2$.
+\end{tabular}
 
 The behavior of a Spad program is a sequence of configurations 
 $\langle p, \sigma, \Gamma\rangle$ where $p$ denotes fragments of
@@ -381,11 +403,11 @@ notation $\Gamma, x^{\tau} == e$ denotes an enviroment obtained by
 extending $\Gamma$ with the binding $x^{\tau} == e$. The $== e$ part
 may be missing. A store of $\sigma$ is a mapping from memory locations
 to Spad values. We use the notation $\sigma[v/l]$ to designate an
-/updated function/ defined by
+{\sl updated function} defined by
 \[\sigma[v/l]=\left\{
 \begin{array}{ll}
-v &  if\x = l\\
-\sigma(x) &  otherwise
+v & \quad\quad {\rm if\ }x = l\\
+\sigma(x) & \quad\quad {\rm otherwise}
 \end{array}\right.\]
 
 Each configuration is defined by structural induction on the syntax of
@@ -396,49 +418,49 @@ Spad.
 The basic idea of algorithmic differentiation rests on the notion that a
 computer program computes a function whose range has a ring structure; and
 the collection of such functions can be endowed with a {\sl differential
-algebra} structure. The theory of /denotational semantics/ is a useful
+algebra} structure. The theory of {\sl denotational semantics} is a useful
 tool. We see a standard denotational semantics of the Spad programming
 languate that respects the operational semantics outlined above, i.e.
 \[t\to^{*} v^{\tau} \Rightarrow [[ t ]] = [[ v^{\tau} ]]\]
 
-*Variable*
+{\bf Variable}
 
 \begin{prooftree}
 \AxiomC{$\langle x^{\tau},\sigma,\Gamma\rangle \to 
 \langle \sigma (x^{\tau}),\sigma,\Gamma\rangle$}
 \end{prooftree}
 
-*Call-Arguments*
+{\bf Call-Arguments}
 
 \begin{prooftree}
 \AxiomC{$\langle e_i,\sigma,\Gamma\rangle \to 
 \langle e_i^\prime, \sigma^\prime, \Gamma\rangle$}
-\UnaryInfC{$e_0 (v_1,...,e_i,...,e_n),\sigma,\Gamma\rangle\to
-\langle e_0 (v_1,...,e_i^\prime,...,e_n),\sigma^\prime,\Gamma\rangle$}
+\UnaryInfC{$e_0 (v_1,\ldots,e_i,\ldots,e_n),\sigma,\Gamma\rangle\to
+\langle e_0 (v_1,\ldots,e_i^\prime,\ldots,e_n),\sigma^\prime,\Gamma\rangle$}
 \end{prooftree}
 where the $x_i$ are parameters of $v_0$
 
-*Call-Operator*
+{\bf Call-Operator}
 
 \begin{prooftree}
 \AxiomC{$\langle e_0,\sigma,\Gamma\rangle \to
 \langle e_0,\sigma^\prime,\Gamma\rangle$}
-\UnaryInfC{$\langle e_0 (v_1,...,v_n),\sigma,\Gamma\rangle \to
-\langle e_0^\prime (v_1,...,v_n),\sigma^\prime,\Gamma\rangle$}
+\UnaryInfC{$\langle e_0 (v_1,\ldots,v_n),\sigma,\Gamma\rangle \to
+\langle e_0^\prime (v_1,\ldots,v_n),\sigma^\prime,\Gamma\rangle$}
 \end{prooftree}
 where the $x_i$ are the parameters of $v_0$
 
-*Call*
+{\bf Call}
 
 \begin{prooftree}
-\AxiomC{$\langle v_0^{\tau_0}(v_1^{\tau_1},...,v_n^{\tau_n}),
+\AxiomC{$\langle v_0^{\tau_0}(v_1^{\tau_1},\ldots,v_n^{\tau_n}),
 \sigma,\Gamma\rangle
-\to \langle v_0^{\tau_0}[v_1^{\tau_1}/x_1,...,
+\to \langle v_0^{\tau_0}[v_1^{\tau_1}/x_1,\ldots,
 v_n^{\tau_n}/x_n],\sigma,\Gamma\rangle$}
 \end{prooftree}
 where the $x_i$ are parameters of $v_0$
 
-*Qualified Expression*
+{\bf Qualified Expression}
 
 \begin{prooftree}
 \AxiomC{$\begin{array}{ccc}
@@ -456,7 +478,7 @@ where the $x_i$ are parameters of $v_0$
 \rangle \to \langle e^\prime,\sigma^\prime,\Gamma_{n+2}\rangle$}
 \end{prooftree}
 
-*Sequence-Head*
+{\bf Sequence-Head}
 
 \begin{prooftree}
 \AxiomC{$\langle s_1,\sigma_1,\Gamma_1\rangle\to
@@ -465,14 +487,14 @@ where the $x_i$ are parameters of $v_0$
 \langle s_1^\prime;s_2,\sigma_2,\Gamma_2\rangle$}
 \end{prooftree}
 
-*Sequence-Tail*
+{\bf Sequence-Tail}
 
 \begin{prooftree}
 \AxiomC{$\langle v_1;s_2,\sigma,\Gamma\rangle\to
 \langle s_2,\sigma,\Gamma\rangle$}
 \end{prooftree}
 
-*If-True*
+{\bf If-True}
 
 \begin{prooftree}
 \AxiomC{$\langle s_1,\sigma,\Gamma\rangle\to
@@ -481,7 +503,7 @@ where the $x_i$ are parameters of $v_0$
 \langle s_1^\prime,\sigma^\prime,\Gamma^\prime\rangle$}
 \end{prooftree}
 
-*If-False*
+{\bf If-False}
 
 \begin{prooftree}
 \AxiomC{$\langle s_2,\sigma,\Gamma\rangle\to
@@ -490,7 +512,7 @@ where the $x_i$ are parameters of $v_0$
 \langle s_2^\prime,\sigma^\prime,\Gamma^\prime\rangle$}
 \end{prooftree}
 
-*Assignment-Left*
+{\bf Assignment-Left}
 
 \begin{prooftree}
 \AxiomC{$\langle e_1,\sigma_0,\Gamma\rangle \to
@@ -499,7 +521,7 @@ where the $x_i$ are parameters of $v_0$
 \langle e_1^\prime:=e_2,\sigma_1,\Gamma\rangle$}
 \end{prooftree}
 
-*Assignment-Right*
+{\bf Assignment-Right}
 
 \begin{prooftree}
 \AxiomC{$\langle e_2,\sigma,\Gamma\rangle \to
@@ -508,7 +530,7 @@ where the $x_i$ are parameters of $v_0$
 \langle l:=e_2^\prime,\sigma^\prime,\Gamma\rangle$}
 \end{prooftree}
 
-*Assignment*
+{\bf Assignment}
 
 \begin{prooftree}
 \AxiomC{}
@@ -516,7 +538,7 @@ where the $x_i$ are parameters of $v_0$
 \langle v^{\tau},\sigma[v^{\tau}/l],\Gamma\rangle$}
 \end{prooftree}
 
-*Immediate Definition*
+{\bf Immediate Definition}
 
 \begin{prooftree}
 \AxiomC{$\langle e,\sigma,\Gamma\rangle\to
@@ -525,7 +547,7 @@ where the $x_i$ are parameters of $v_0$
 \langle x:\tau:=e^\prime,\sigma_1,\Gamma\rangle$}
 \end{prooftree}
 
-*Immediate Definition*
+{\bf Immediate Definition}
 
 \begin{prooftree}
 \AxiomC{$\langle x:\tau:=v^{\tau},\sigma,\Gamma\rangle\to
@@ -759,7 +781,6 @@ for each category, domain, or package. The abbreviation line has 3 parts.
 \item the abbreviation for this domain (8 Uppercase Characters maximum)
 \item the name of this domain
 \end{itemize}
-
 
 Since the abbreviation for the Equation domain is EQ, the compiler will
 put all of its output into a subdirectory called ``EQ.nrlib''. The ``nrlib''
@@ -1897,9 +1918,9 @@ By default, Axiom uses Gnu Common Lisp (GCL), which generates ``.o'' files.
                BOOT::|devaluate| LIST BOOT::|lassocShiftWithFunction|
                BOOT::LETT COND RETURN)
       RETURN-TYPE NIL ARG-TYPES (T) NO-EMIT NIL MACROS
-      (VMLISP:HREM PROG1 VMLISP:HGET BOOT::LETT COND RETURN)) ))#+end_example
+      (VMLISP:HREM PROG1 VMLISP:HGET BOOT::LETT COND RETURN)) ))\end{verbatim}
 
-** The index.kaf file
+\section{The index.kaf file}
 
 Each constructor (e.g. EQ) had one library directory (e.g. EQ.nrlib). 
 This directory contained a random access file called the index.kaf file. 
@@ -1922,7 +1943,7 @@ the byte offset to the index. Due to the way the file is constructed, the
 index is at the end of the file. To read a kaf file, first read the
 integer, then seek to that location in the file, and do a (read).
 This will return the index, in this case:
-#+begin_example
+\begin{verbatim}
 (("slot1Info" 0 32444)
  ("documentation" 0 29640)
  ("ancestors" 0 28691)
@@ -1959,7 +1980,6 @@ So to read the ``operationAlist'' from this file you would:
 \item (seek) to the integer offset from the beginning of the file
 \item (read) the ``operationAlist''
 \end{enumerate}
-
 
 Note that the information below has been reformatted to fit this 
 document. In order to save space the index.kaf file is does not use
@@ -3084,7 +3104,7 @@ EQ
 
 \section{Spad Program Representation}
 
-From Davenport[cite:@Dave84a] and Dos Reis et al.[cite:@Dosr11]
+From Davenport\cite{Dave84a} and Dos Reis et al.\cite{Dosr11}
 
 The Spad programming language is strongly typed. Yet, it allows for
 runtime instantiation of domains and categories. Consequently, categories
@@ -3093,28 +3113,30 @@ will discuss only the representation of category objects. Domains and
 packages are similarly represented, with some variations to attend to
 data specific to domains.
 
-|---+---|
-| 0 | CategoryForm |
-|---+---|
-| 1 | ExportInfoList |
-|---+---|
-| 2 | AttributeList |
-|---+---|
-| 3 | (Category) |
-|---+---|
-| 4 |  |
-| 0 | PrincipalAncestorList |
-|---+---|
-| 1 | ExtendedCategoryList |
-|---+---|
-| 2 | DomainInfoList |
-
+\begin{tabular}{|c|c|}
+\hline
+0 & CategoryForm\\
+\hline
+1 & ExportInfoList\\
+\hline
+2 & AttributeList\\
+\hline
+3 & (Category)\\
+\hline
+4 &
+\begin{tabular}{c|c}
+0 & PrincipalAncestorList\\
+\hline
+1 & ExtendedCategoryList\\
+\hline
+2 & DomainInfoList\\
+\end{tabular}\\
 \hline
 5 & UsedDomainList\\
 \hline
 \vdots & vdots\\
 \hline
-
+\end{tabular}
 
 Figure: Layout of category objects
 
@@ -3122,41 +3144,33 @@ A category object is represented as a large heterogeneous tuple as shown
 in the figure above. Its components have the following meaning:
 \begin{itemize}
 \item slot 0 holds the canonical category form of the expression whose
-\end{itemize}
-  evaluation produces the category object under consideration.
-\begin{itemize}
+evaluation produces the category object under consideration.
 \item slot 1 holds a list of function signatures exported by the category
-\item slot 2 holds a list of attributes and the condition under which
-\end{itemize}
-  they hold
-\begin{itemize}
+\item slot 2 holds a list of attributes and the condition under which 
+they hold
 \item slot 3 always contains the form '(category)'. It serves as a runtime
-\end{itemize}
-  type checking tag
+type checking tag
+\item slot 4 contains 3 parts:
 \begin{itemize}
-\item slot 4 contains 3 parts:\begin{itemize}
 \item a list of principal ancestor category forms
 \item a list of directly extended category forms
 \item a list of domains explicitly used in that category
 \end{itemize}
 \item slot 5 holds the list of all domain forms mentioned in the exported
-\end{itemize}
-  signatures
-\begin{itemize}
+signatures
 \item each of the slots 6 and onwards holds either runtime information about
+a specific exported signature, or a pointer to a domain object or a 
+category object.
 \end{itemize}
-  a specific exported signature, or a pointer to a domain object or a
-  category object.
-
 
 \section{Global Data Structures}
 \section{Pratt Parsing}
 Parsing involves understanding the association of symbols and operators.
-Vaughn Pratt [cite:@Prat73] poses the question ``Given a substring AEB where A 
+Vaughn Pratt \cite{Prat73} poses the question ``Given a substring AEB where A 
 takes a right argument, B a left, and E is an expression, does E associate
 with A or B?''.
 
-Floyd [cite:@Floy63] associates a precedence with operators, storing them
+Floyd \cite{Floy63} associates a precedence with operators, storing them
 in a table, called ``binding powers''. The expression E would associate
 with the argument position having the highest binding power. This leads
 to a large set of numbers, one for every situation.
@@ -3182,7 +3196,6 @@ In more detail, there an ``association'' is a function of 4 types:
 \item $a_B$ -- The data type of the left argument
 \item $r_B$ -- The return type of the left argument
 \end{itemize}
-
 Note that the return types might depend on the type of the expression E.
 If all 4 are of the same class then the association is to the left.
 
@@ -3214,7 +3227,7 @@ class (e.g. x$^{}$y$^{}$z)
 This is the implementation of the )compile command.
 
 You use this command to invoke the new Axiom library compiler or the
-old Axiom system compiler.  The =)compile= system command is
+old Axiom system compiler.  The {\tt )compile} system command is
 actually a combination of Axiom processing and a call to the Aldor
 compiler.  It is performing double-duty, acting as a front-end to both
 the Aldor compiler and the old Axiom system compiler.  (The old Axiom
@@ -3222,32 +3235,32 @@ system compiler was written in Lisp and was an integral part of the
 Axiom environment.  The Aldor compiler is written in C and executed by
 the operating system when called from within Axiom.)
 
-\par\noindent*User Level Required:* compiler
+\par\noindent{\bf User Level Required:} compiler
 
-\par\noindent*Command Syntax:*
+\par\noindent{\bf Command Syntax:}
 
 \begin{list}{}
-\item =)compile=
-\item =)compile /fileName/=
-\item =)compile /fileName/.spad=
-\item =)compile /directory/fileName/.spad=
-\item =)compile /fileName/ )old=
-\item =)compile /fileName/ )translate=
-\item =)compile /fileName/ )quiet=
-\item =)compile /fileName/ )noquiet=
-\item =)compile /fileName/ )moreargs=
-\item =)compile /fileName/ )onlyargs=
-\item =)compile /fileName/ )break=
-\item =)compile /fileName/ )nobreak=
-\item =)compile /fileName/ )library=
-\item =)compile /fileName/ )nolibrary=
-\item =)compile /fileName/ )vartrace=
-\item =)compile /fileName/ )constructor= /nameOrAbbrev/
+\item {\tt )compile}
+\item {\tt )compile {\it fileName}}
+\item {\tt )compile {\it fileName}.spad}
+\item {\tt )compile {\it directory/fileName}.spad}
+\item {\tt )compile {\it fileName} )old}
+\item {\tt )compile {\it fileName} )translate}
+\item {\tt )compile {\it fileName} )quiet}
+\item {\tt )compile {\it fileName} )noquiet}
+\item {\tt )compile {\it fileName} )moreargs}
+\item {\tt )compile {\it fileName} )onlyargs}
+\item {\tt )compile {\it fileName} )break}
+\item {\tt )compile {\it fileName} )nobreak}
+\item {\tt )compile {\it fileName} )library}
+\item {\tt )compile {\it fileName} )nolibrary}
+\item {\tt )compile {\it fileName} )vartrace}
+\item {\tt )compile {\it fileName} )constructor} {\it nameOrAbbrev}
 \end{list}
 
-\par\noindent*Command Description:*
+\par\noindent{\bf Command Description:}
 
-The first thing =)compile= does is look for a source code
+The first thing {\tt )compile} does is look for a source code
 filename among its arguments.
 Thus
 \begin{verbatim}
@@ -3255,24 +3268,24 @@ Thus
 )compile /u/jones/mycode.spad
 )compile mycode
 \end{verbatim}
-all invoke =)compiler= on the file 
-=/u/jones/mycode.spad= if the current Axiom working
-directory is =/u/jones.= (Recall that you can set the
-working directory via the =)cd= command. If you don't set it
+all invoke {\tt )compiler} on the file 
+{\tt /u/jones/mycode.spad} if the current Axiom working
+directory is {\tt /u/jones.} (Recall that you can set the
+working directory via the {\tt )cd} command. If you don't set it
 explicitly, it is the directory from which you started
 Axiom.)
 
 If you omit the file extension, the command looks to see if you have
-specified the =)new= or =)old= option.  If you have given one
+specified the {\tt )new} or {\tt )old} option.  If you have given one
 of these options, the corresponding compiler is used.
 
 The command first looks in the standard system directories for files
-with extension /.as, .ao/ and /.al/ and then files with
-extension /.spad/.  The first file found has the appropriate
+with extension {\it .as, .ao} and {\it .al} and then files with
+extension {\it .spad}.  The first file found has the appropriate
 compiler invoked on it.  If the command cannot find a matching file,
 an error message is displayed and the command terminates.
 
-The first thing =)compile= does is look for a source code
+The first thing {\tt )compile} does is look for a source code
 filename among its arguments.
 Thus
 \begin{verbatim}
@@ -3280,10 +3293,10 @@ Thus
 )co mycode
 )co mycode.spad
 \end{verbatim}
-all invoke =)compiler= on the file {\tt
+all invoke {\tt )compiler} on the file {\tt
 /u/jones/mycode.spad} if the current Axiom working
-directory is =/u/jones.= Recall that you can set the
-working directory via the =)cd= command. If you don't set it
+directory is {\tt /u/jones.} Recall that you can set the
+working directory via the {\tt )cd} command. If you don't set it
 explicitly, it is the directory from which you started
 Axiom.
 
@@ -3293,30 +3306,29 @@ This simple command:
 \begin{enumerate}
 \item Invokes the Spad compiler and produces Lisp output.
 \item Calls the Lisp compiler if the compilation was successful.
-\item Uses the =)library= command to tell Axiom about
+\item Uses the {\tt )library} command to tell Axiom about
+the contents of your compiled file and arrange to have those
+contents loaded on demand.
 \end{enumerate}
-  the contents of your compiled file and arrange to have those
-  contents loaded on demand.
 
-
-Should you not want the =)library= command automatically
-invoked, call =)compile= with the =)nolibrary= option.
+Should you not want the {\tt )library} command automatically
+invoked, call {\tt )compile} with the {\tt )nolibrary} option.
 For example,
 \begin{verbatim}
 )compile mycode )nolibrary
 \end{verbatim}
 
-By default, the =)library= system command /exposes/ all
+By default, the {\tt )library} system command {\it exposes} all
 domains and categories it processes.
 This means that the Axiom intepreter will consider those domains and 
 categories when it is trying to resolve a reference to a function.
 Sometimes domains and categories should not be exposed.
 For example, a domain may just be used privately by another
 domain and may not be meant for top-level use.
-The =)library= command should still be used, though, so that
+The {\tt )library} command should still be used, though, so that
 the code will be loaded on demand.
-In this case, you should use the =)nolibrary= option on {\tt
-)compile} and the =)noexpose= option in the =)library=
+In this case, you should use the {\tt )nolibrary} option on {\tt
+)compile} and the {\tt )noexpose} option in the {\tt )library}
 command. For example,
 \begin{verbatim}
 )compile mycode )nolibrary
@@ -3324,14 +3336,14 @@ command. For example,
 \end{verbatim}
 
 Once you have established your own collection of compiled code,
-you may find it handy to use the =)dir= option on the
-=)library= command.
-This causes =)library= to process all compiled code in the
+you may find it handy to use the {\tt )dir} option on the
+{\tt )library} command.
+This causes {\tt )library} to process all compiled code in the
 specified directory. For example,
 \begin{verbatim}
 )library )dir /u/jones/quantum
 \end{verbatim}
-You must give an explicit directory after =)dir=, even if you
+You must give an explicit directory after {\tt )dir}, even if you
 want all compiled code in the current working directory
 processed, e.g.
 \begin{verbatim}
@@ -3339,64 +3351,64 @@ processed, e.g.
 \end{verbatim}
 
 \subsection{Spad compiler}
-This command compiles files with file extension =.spad=
+This command compiles files with file extension {\tt .spad}
 with the Spad system compiler.  
 
-The =)translate= option is used to invoke a special version of the
-old system compiler that will translate a /.spad/ file to a {\it
-.as} file.  That is, the /.spad/ file will be parsed and analyzed
+The {\tt )translate} option is used to invoke a special version of the
+old system compiler that will translate a {\it .spad} file to a {\it
+.as} file.  That is, the {\it .spad} file will be parsed and analyzed
 and a file using the new syntax will be created.
 
-By default, the /.as/ file is created in the same directory as the
-/.spad/ file. If that directory is not writable, the current
+By default, the {\it .as} file is created in the same directory as the
+{\it .spad} file. If that directory is not writable, the current
 directory is used. If the current directory is not writable, an error
-message is given and the command terminates.  Note that =)translate= 
-implies the =)old= option so the file extension can
-safely be omitted. If =)translate= is given, all other options are
+message is given and the command terminates.  Note that {\tt )translate} 
+implies the {\tt )old} option so the file extension can
+safely be omitted. If {\tt )translate} is given, all other options are
 ignored.  Please be aware that the translation is not necessarily one
 hundred percent complete or correct.  You should attempt to compile
 the output with the Aldor compiler and make any necessary corrections.
 
 You can compile category, domain, and package constructors contained
-in files with file extension /.spad/.  You can compile individual
+in files with file extension {\it .spad}.  You can compile individual
 constructors or every constructor in a file.
 
 The full filename is remembered between invocations of this command and
-=)edit= commands. The sequence of commands
+{\tt )edit} commands. The sequence of commands
 \begin{verbatim}
 )compile matrix.spad
 )edit
 )compile
 \end{verbatim}
 will call the compiler, edit, and then call the compiler again on the
-file *matrix.spad.*  If you do not specify a /directory,/ the
+file {\bf matrix.spad.}  If you do not specify a {\it directory,} the
 working current directory is searched for the file.  If the file is
 not found, the standard system directories are searched.
 
 If you do not give any options, all constructors within a file are
-compiled.  Each constructor should have an =)abbreviation= command
+compiled.  Each constructor should have an {\tt )abbreviation} command
 in the file in which it is defined.  We suggest that you place the
-=)abbreviation= commands at the top of the file in the order in
+{\tt )abbreviation} commands at the top of the file in the order in
 which the constructors are defined.
 
-The =)library= option causes directories containing the compiled
+The {\tt )library} option causes directories containing the compiled
 code for each constructor to be created in the working current
 directory.  The name of such a directory consists of the constructor
-abbreviation and the *.nrlib* file extension.  For example, the
-directory containing the compiled code for the =MATRIX=
-constructor is called *MATRIX.nrlib.*  The =)nolibrary= option
+abbreviation and the {\bf .nrlib} file extension.  For example, the
+directory containing the compiled code for the {\tt MATRIX}
+constructor is called {\bf MATRIX.nrlib.}  The {\tt )nolibrary} option
 says that such files should not be created.  The default is 
-=)library.=
+{\tt )library.}
 
-The =)vartrace= option causes the compiler to generate extra code
+The {\tt )vartrace} option causes the compiler to generate extra code
 for the constructor to support conditional tracing of variable
 assignments. Without this option, this code is suppressed and one
-cannot use the =)vars= option for the trace command.
+cannot use the {\tt )vars} option for the trace command.
 
-The =)constructor= option is used to
+The {\tt )constructor} option is used to
 specify a particular constructor to compile.
 All other constructors in the file are ignored.
-The constructor name or abbreviation follows =)constructor.=
+The constructor name or abbreviation follows {\tt )constructor.}
 Thus either
 \begin{verbatim}
 )compile matrix.spad )constructor RectangularMatrix
@@ -3405,16 +3417,16 @@ or
 \begin{verbatim}
 )compile matrix.spad )constructor RMATRIX
 \end{verbatim}
-compiles  the =RectangularMatrix= constructor
-defined in *matrix.spad.*
+compiles  the {\tt RectangularMatrix} constructor
+defined in {\bf matrix.spad.}
 
-The =)break= and =)nobreak= options determine what
+The {\tt )break} and {\tt )nobreak} options determine what
 the spad compiler does when it encounters an error.
-=)break= is the default and it indicates that processing
+{\tt )break} is the default and it indicates that processing
 should stop at the first error.
-The value of the =)set break= variable then controls what happens.
+The value of the {\tt )set break} variable then controls what happens.
 
-\section{Operator Precedence Table Initialization}
+\section{Operator Precedence Table Initialization} 
 \begin{verbatim}
 ; PURPOSE: This file sets up properties which are used by the Boot lexical
 ;          analyzer for bottom-up recognition of operators.  Also certain
@@ -3577,7 +3589,7 @@ Thus $:=$ is read as one token not as : followed by $=$.
           ( \: (=) (-) (\:))))
  
 \end{chunk}
-\subsection{Rename Token Table}
+\subsection{Rename Token Table} 
 RENAMETOK defines alternate token strings which can be used for different
 keyboards which define equivalent tokens.
 \begin{chunk}{RENAMETOKTable}
@@ -3592,7 +3604,7 @@ keyboards which define equivalent tokens.
 \subsection{Generic function table}
 GENERIC operators be suffixed by \$ qualifications in SPAD code.  
 \$ is then followed by a domain label, such as I for Integer, which 
-signifies which domain the operator refers to.  For example =+$Integer=
+signifies which domain the operator refers to.  For example \verb|+$Integer|
 is $+$ for Integers.
 \begin{chunk}{GENERICTable}
 (mapcar #'(lambda (x) (put x 'generic 'true))
@@ -3607,9 +3619,9 @@ scale (Giant) transformations at each stage of compilation and discuss the
 details (Baby) in subsequent chapters.
 \chapter{The Parser}
 \section{EQ.spad}
-We will explain the compilation function using the file =EQ.spad=.
+We will explain the compilation function using the file {\tt EQ.spad}.
 We trace the execution of the various functions to understand the actual
-call parameters and results returned. The =EQ.spad= file is:
+call parameters and results returned. The {\tt EQ.spad} file is:
 \begin{verbatim}
 )abbrev domain EQ Equation
 --FOR THE BENEFIT  OF LIBAX0 GENERATION
@@ -3960,7 +3972,7 @@ Equation(S: Type): public == private where
 \section{preparse}
 
 The first large transformation of this input occurs in the function
-preparse . The preparse function reads the source file
+preparse \index{preparse}. The preparse function reads the source file
 and breaks the input into a list of pairs. The first part of the pair
 is the line number of the input file and the second part of the pair
 is the actual source text as a string. 
@@ -3994,10 +4006,10 @@ semicolon delimited form.
 \end{chunk}
 
 \section{Parsing routines}
-The *initialize-preparse* expects to be called before the *preparse*
+The {\bf initialize-preparse} expects to be called before the {\bf preparse}
 function. It initializes the state, in particular, it reads a single line
-from the input stream and stores it in ==$preparse-last-line==.
-The caller gives a stream and the ==$preparse-last-line== variable
+from the input stream and stores it in {\tt \verb|$preparse-last-line|}.
+The caller gives a stream and the {\tt \verb|$preparse-last-line|} variable
 is initialized as:
 \begin{verbatim}
     2> (INITIALIZE-PREPARSE #<input stream "/tmp/EQ.spad">)
@@ -4018,9 +4030,9 @@ is initialized as:
 
 \end{chunk}
 
-The *preparse* function returns a list of pairs of the form:
+The {\bf preparse} function returns a list of pairs of the form:
 ( (linenumber . linestring) .... (linenumber . linestring))
-For instance, for the file =EQ.spad=, we get:
+For instance, for the file {\tt EQ.spad}, we get:
 \begin{verbatim}
     2> (PREPARSE #<input stream "/tmp/EQ.spad">)
       3> (PREPARSE1 (")abbrev domain EQ Equation"))
@@ -4250,14 +4262,14 @@ The READLOOP calls preparseReadLine which returns a pair of the form
 \refsdollar{preparse1}{index}
 \refsdollar{preparse1}{linelist}
 \refsdollar{preparse1}{in-stream}
-\sig{preparse1}{(List String){(List (Cons NNI String))}}
-where the input *List String* is the =abbrev= line:
+\sig{preparse1}{(List String)}{(List (Cons NNI String))}
+where the input {\bf List String} is the \verb|abbrev| line:
 \begin{verbatim}
 (")abbrev domain EQ Equation")
 \end{verbatim
-and the output is a *List (Cons NNI String)* containing
+and the output is a {\bf List (Cons NNI String)} containing
 a line number and the String from that line:
-#+begin_example
+\begin{verbatim}
 (... (13 . " (Ex ==> OutputForm;")...)
 \end{verbatim
 \begin{chunk}{defun preparse1}
@@ -4392,11 +4404,9 @@ REREAD
 
 \end{chunk}
 
-#+BEGIN_LATEX
 \defun{parsepiles}{parsepiles}
-#+END_LATEX
 Add parens and semis to lines to aid parsing.
-# calls: parsepiles -> add-parens-and-semis-to-line
+\calls{parsepiles}{add-parens-and-semis-to-line}
 \begin{chunk}{defun parsepiles}
 (defun parsepiles (locs lines)
   (mapl #'add-parens-and-semis-to-line
@@ -4405,22 +4415,21 @@ Add parens and semis to lines to aid parsing.
 
 \end{chunk}
  
-#+BEGIN_LATEX
 \defun{add-parens-and-semis-to-line}{add-parens-and-semis-to-line}
-#+END_LATEX
 The line to be worked on is (CAR SLINES).  It's indentation is (CAR SLOCS).
 There is a notion of current indentation. Then:
-- Add open paren to beginning of following line if following line's
-  indentation is greater than current, and add close paren to end of
-  last succeeding line with following line's indentation.
-- Add semicolon to end of line if following line's indentation is the same.
-- If the entire line consists of the single keyword then or else,
-  leave it alone."
-
-# calls: add-parens-and-semis-to-line -> infixtok
-# calls: add-parens-and-semis-to-line -> drop
-# calls: add-parens-and-semis-to-line -> addclose
-# calls: add-parens-and-semis-to-line -> nonblankloc
+\begin{itemize}
+\item Add open paren to beginning of following line if following line's 
+indentation is greater than current, and add close paren to end of 
+last succeeding line with following line's indentation.
+\item Add semicolon to end of line if following line's indentation is the same.
+\item If the entire line consists of the single keyword then or else, 
+leave it alone."
+\end{itemize}
+\calls{add-parens-and-semis-to-line}{infixtok}
+\calls{add-parens-and-semis-to-line}{drop}
+\calls{add-parens-and-semis-to-line}{addclose}
+\calls{add-parens-and-semis-to-line}{nonblankloc}
 \begin{chunk}{defun add-parens-and-semis-to-line}
 (defun add-parens-and-semis-to-line (slines slocs)
  (let ((start-column (car slocs)))
@@ -4448,20 +4457,18 @@ There is a notion of current indentation. Then:
  
 \end{chunk}
 
-#+BEGIN_LATEX
 \defun{preparseReadLine}{preparseReadLine}
-#+END_LATEX
-# calls: preparseReadLine -> preparseReadLine1
+\calls{preparseReadLine}{preparseReadLine1}
 \seebook{preparseReadLine}{initial-substring}{5}
-# calls: preparseReadLine -> string2BootTree
+\calls{preparseReadLine}{string2BootTree}
 \seebook{preparseReadLine}{storeblanks}{5}
-# calls: preparseReadLine -> skip-to-endif
-# calls: preparseReadLine -> preparseReadLine
-# refsdollar: preparseReadLine -> *eof*
-# sig: preparseReadLine1 -> nil{(Cons NNI String)}
+\calls{preparseReadLine}{skip-to-endif}
+\calls{preparseReadLine}{preparseReadLine}
+\refsdollar{preparseReadLine}{*eof*}
+\sig{preparseReadLine1}{nil}{(Cons NNI String)}
 where the result is a pair with the next input line number (\$index)
 and the input string.
-#+begin_example
+\begin{verbatim}
    (0 . ")abbrev domain EQ Equation")
 \end{verbatim}
 \begin{chunk}{defun preparseReadLine}
@@ -4542,7 +4549,7 @@ and the input string.
 \defsdollar{preparseReadLine1}{index}
 \defsdollar{preparseReadLine1}{EchoLineStack}
 \label{preparseReadLine1}
-\sig{preparseReadLine1}{nil{(Cons NNI String)}}
+\sig{preparseReadLine1}{nil}{(Cons NNI String)}
 where the result is a pair with the next input line number (\$index)
 and the input string.
 \begin{verbatim}
@@ -4859,7 +4866,7 @@ A reduction of a rule is any S-Expression the rule chooses to stack.
 \end{chunk}
 
 \section{Indirect called parse routines}
-In the *parseTran* function there is the code:
+In the {\bf parseTran} function there is the code:
 \begin{verbatim}
      ((and (atom u) (setq fn (getl u '|parseTran|)))
        (funcall fn argl))
@@ -6095,13 +6102,13 @@ of the symbol being parsed. The original list read:
 
 \chapter{Compile Transformers}
 With some specific exceptions most compile transformers are invoked
-through the property list item ``=special=''. When a specific
-keyword is encountered in a list form the =compExpression= function
+through the property list item ``{\tt special}''. When a specific
+keyword is encountered in a list form the {\tt compExpression} function
 looks up the keyword on the property list and funcalls the handler
 function, passing the form, the mode, and the environment.
 
 \label{handlers}
-If a handler for the keyword is not found then the =compForm= function
+If a handler for the keyword is not found then the {\tt compForm} function
 is called to attempt to compile the form.
 \defun{compExpression}{compExpression}
 \calls{compExpression}{getl}
@@ -6121,56 +6128,56 @@ The functions in this section are called through the symbol-plist
 of the symbol being parsed. In general, each of these functions
 takes 3 arguments
 \begin{enumerate}
-\item the *form* which is specific to the function
-\item the *mode* a |Join|, which is a set of categories and domains
-\item the *env* which is a list of functions and their modemaps
+\item the {\bf form} which is specific to the function
+\item the {\bf mode} a |Join|, which is a set of categories and domains
+\item the {\bf env} which is a list of functions and their modemaps
 \end{enumerate}
-
 and the functions return modified versions of the three arguments
 suitable for further processing.
-| =DEF= | \refto{compDefine} |
-| =add= | \refto{compAdd} |
-| =@= | \refto{compAtSign} |
-| =CAPSULE= | \refto{compCapsule} |
-| =case= | \refto{compCase} |
-| =Mapping= | \refto{compCat} |
-| =Record= | \refto{compCat} |
-| =Union= | \refto{compCat} |
-| =CATEGORY= | \refto{compCategory} |
-| =::= | \refto{compCoerce} |
-| =:= | \refto{compColon} |
-| =CONS= | \refto{compCons} |
-| =construct= | \refto{compConstruct} |
-| =ListCategory= | \refto{compConstructorCategory} |
-| =RecordCategory= | \refto{compConstructorCategory} |
-| =UnionCategory= | \refto{compConstructorCategory} |
-| =VectorCategory= | \refto{compConstructorCategory} |
-| =elt= | \refto{compElt} |
-| =exit= | \refto{compExit} |
-| =has= | \refto{compHas}(pred mode =$e=) |
-| =IF= | \refto{compIf} |
-| =import= | \refto{compImport} |
-| =is= | \refto{compIs} |
-| =Join= | \refto{compJoin} |
-| =+->= | \refto{compLambda} |
-| =leave= | \refto{compLeave} |
-| =MDEF= | \refto{compMacro} |
-| =pretend= | \refto{compPretend} |
-| =QUOTE= | \refto{compQuote} |
-| =REDUCE= | \refto{compReduce} |
-| =COLLECT= | \refto{compRepeatOrCollect} |
-| =REPEAT= | \refto{compRepeatOrCollect} |
-| =return= | \refto{compReturn} |
-| =SEQ= | \refto{compSeq} |
-| =LET= | \refto{compSetq} |
-| =SETQ= | \refto{compSetq} |
-| =String= | \refto{compString} |
-| =SubDomain= | \refto{compSubDomain} |
-| =SubsetCategory= | \refto{compSubsetCategory} |
-| =|= | \refto{compSuchthat} |
-| =VECTOR= | \refto{compVector} |
-| =where= | \refto{compWhere} |
-
+\begin{tabular}{ll}
+\verb|DEF|            & \refto{compDefine}\\
+\verb|add|            & \refto{compAdd}\\
+\verb|@|              & \refto{compAtSign}\\
+\verb|CAPSULE|        & \refto{compCapsule}\\
+\verb|case|           & \refto{compCase}\\
+\verb|Mapping|        & \refto{compCat}\\
+\verb|Record|         & \refto{compCat}\\
+\verb|Union|          & \refto{compCat}\\
+\verb|CATEGORY|       & \refto{compCategory}\\
+\verb|::|             & \refto{compCoerce}\\
+\verb|:|              & \refto{compColon}\\
+\verb|CONS|           & \refto{compCons}\\
+\verb|construct|      & \refto{compConstruct}\\
+\verb|ListCategory|   & \refto{compConstructorCategory}\\
+\verb|RecordCategory| & \refto{compConstructorCategory}\\
+\verb|UnionCategory|  & \refto{compConstructorCategory}\\
+\verb|VectorCategory| & \refto{compConstructorCategory}\\
+\verb|elt|            & \refto{compElt}\\
+\verb|exit|           & \refto{compExit}\\
+\verb|has|            & \refto{compHas}(pred mode \verb|$e|)\\
+\verb|IF|             & \refto{compIf}\\
+\verb|import|         & \refto{compImport}\\
+\verb|is|             & \refto{compIs}\\
+\verb|Join|           & \refto{compJoin}\\
+\verb|+->|            & \refto{compLambda}\\
+\verb|leave|          & \refto{compLeave}\\
+\verb|MDEF|           & \refto{compMacro}\\
+\verb|pretend|        & \refto{compPretend}\\
+\verb|QUOTE|          & \refto{compQuote}\\
+\verb|REDUCE|         & \refto{compReduce}\\
+\verb|COLLECT|        & \refto{compRepeatOrCollect}\\
+\verb|REPEAT|         & \refto{compRepeatOrCollect}\\
+\verb|return|         & \refto{compReturn}\\
+\verb|SEQ|            & \refto{compSeq}\\
+\verb|LET|            & \refto{compSetq}\\
+\verb|SETQ|           & \refto{compSetq}\\
+\verb|String|         & \refto{compString}\\
+\verb|SubDomain|      & \refto{compSubDomain}\\
+\verb|SubsetCategory| & \refto{compSubsetCategory}\\
+\verb?|?              & \refto{compSuchthat}\\
+\verb|VECTOR|         & \refto{compVector}\\
+\verb|where|          & \refto{compWhere}
+\end{tabular}
 
 \section{Handline Category DEF forms}
 This is the graph of the functions used for compDefine.
@@ -6234,7 +6241,7 @@ digraph pic {
 }
 
 \end{chunk}
-[[ps/v9compdefine.eps]]
+\includegraphics[scale=0.5]{ps/v9compdefine.eps}
 A Category is represented by a DEF form with 4 parts:
 \begin{itemize}
 \item a name
@@ -6242,7 +6249,6 @@ A Category is represented by a DEF form with 4 parts:
 \item an SC
 \item a body
 \end{itemize}
-
 For example, the BasicType category is written as
 \begin{verbatim}
 BasicType(): Category == with
@@ -6270,8 +6276,8 @@ Which compiles to the DEF form:
 \end{verbatim}
 
 \defplist{def}{compDefine plist}
-We set up the =compDefine= function to handle the DEF keyword
-by setting the =special= keyword on the DEF symbol property list.
+We set up the {\tt compDefine} function to handle the DEF keyword
+by setting the {\tt special} keyword on the DEF symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'def 'special) '|compDefine|))
@@ -6281,11 +6287,10 @@ by setting the =special= keyword on the DEF symbol property list.
 \defun{compDefine}{compDefine}
 The compDefine function expects three arguments:
 \begin{enumerate}
-\item the *form* which is an def specifying the domain to define.
-\item the *mode* a |Join|, which is a set of categories and domains
-\item the *env* which is a list of functions and their modemaps
+\item the {\bf form} which is an def specifying the domain to define.
+\item the {\bf mode} a |Join|, which is a set of categories and domains
+\item the {\bf env} which is a list of functions and their modemaps
 \end{enumerate}
-
 \calls{compDefine}{compDefine1}
 \defsdollar{compDefine}{tripleCache}
 \defsdollar{compDefine}{tripleHits}
@@ -7729,12 +7734,12 @@ The compDefine function expects three arguments:
 \end{chunk}
 
 \defdollar{EmptyMode}
-=$EmptyMode= is a contant whose value is =$EmptyMode=.
+\verb|$EmptyMode| is a contant whose value is \verb|$EmptyMode|.
 It is used by isPartialMode  to
-decide if a modemap is partially constructed. If the =$EmptyMode=
+decide if a modemap is partially constructed. If the \verb|$EmptyMode|
 constant occurs anywhere in the modemap structure at any depth
 then the modemap is still incomplete. To find this constant the
-isPartialMode function calls CONTAINED =$EmptyMode= $Y$
+isPartialMode function calls CONTAINED \verb|$EmptyMode| $Y$
 which will walk the structure $Y$ looking for this constant.
 \begin{chunk}{initvars}
 (defvar |$EmptyMode| '|EmptyMode|)
@@ -11811,7 +11816,7 @@ add flag identifiers as literals in the environment
 
 
 \section{Indirect called comp routines}
-In the *compExpression* function there is the code:
+In the {\bf compExpression} function there is the code:
 \begin{verbatim}
   (if (and (atom (car x)) (setq fn (getl (car x) 'special)))
     (funcall fn x m e)
@@ -11820,8 +11825,8 @@ In the *compExpression* function there is the code:
 
 
 \defplist{@}{compAdd plist}
-We set up the =compAdd= function to handle the =add= keyword
-by setting the =special= keyword on the =add= symbol property list.
+We set up the {\tt compAdd} function to handle the {\tt add} keyword
+by setting the {\tt special} keyword on the {\tt add} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|add| 'special) 'compAdd))
@@ -11831,29 +11836,23 @@ by setting the =special= keyword on the =add= symbol property list.
 \defun{compAdd}{compAdd}
 The compAdd function expects three arguments:
 \begin{enumerate}
-\item the *form* which is an |add| specifying the domain
+\item the {\bf form} which is an |add| specifying the domain
+to extend and a set of functions to be added
+\item the {\bf mode} a |Join|, which is a set of categories and domains
+\item the {\bf env} which is a list of functions and their modemaps
 \end{enumerate}
-  to extend and a set of functions to be added
-\begin{enumerate}
-\item the *mode* a |Join|, which is a set of categories and domains
-\item the *env* which is a list of functions and their modemaps
-\end{enumerate}
-
 
 The bulk of the work is performed by a call to compOrCroak which 
 compiles the functions in the add form capsule.
 
 The compAdd function returns a triple, the result of a call to compCapsule.
 \begin{enumerate}
-\item the *compiled capsule* which is a progn form which returns
+\item the {\bf compiled capsule} which is a progn form which returns
+the domain
+\item the {\bf mode} from the input argument
+\item the {\bf env} prepended with the signatures of the functions
+in the body of the add.
 \end{enumerate}
-  the domain
-\begin{enumerate}
-\item the *mode* from the input argument
-\item the *env* prepended with the signatures of the functions
-\end{enumerate}
-  in the body of the add.
-
 \calls{compAdd}{comp}
 \calls{compAdd}{compSubDomain1}
 \calls{compAdd}{nreverse0}
@@ -11944,8 +11943,8 @@ The compAdd function returns a triple, the result of a call to compCapsule.
 \end{chunk}
 
 \defplist{capsule}{compCapsule plist}
-We set up the =compCapsule= function to handle the =capsule= keyword
-by setting the =special= keyword on the =capsule= symbol property list.
+We set up the {\tt compCapsule} function to handle the {\tt capsule} keyword
+by setting the {\tt special} keyword on the {\tt capsule} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'capsule 'special) '|compCapsule|))
@@ -12025,7 +12024,7 @@ code won't check for this but interpreted code fails. We should
 PROVE that data is unbound at runtime but have not done so yet.
 Rather than remove the code entirely (since there MIGHT be a 
 path where it is used) we check for the runtime bound case and
-assign =$myFunctorBody= if data has a value.
+assign \verb|$myFunctorBody| if data has a value.
 
 The compCapsuleInner function in this file LOOKS like it sets
 data and expects code to manipulate the assigned data structure.
@@ -12364,8 +12363,8 @@ Since we can't be sure we take the least disruptive course of action.
 \end{chunk}
 
 \defplist{case}{compCase plist}
-We set up the =compCase= function to handle the =case= keyword
-by setting the =special= keyword on the =case= symbol property list.
+We set up the {\tt compCase} function to handle the {\tt case} keyword
+by setting the {\tt special} keyword on the {\tt case} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|case| 'special) '|compCase|))
@@ -12429,8 +12428,8 @@ An angry JHD - August 15th., 1984
 \end{chunk}
 
 \defplist{Record}{compCat plist}
-We set up the =compCat= function to handle the =Record= keyword
-by setting the =special= keyword on the =Record= symbol property list.
+We set up the {\tt compCat} function to handle the {\tt Record} keyword
+by setting the {\tt special} keyword on the {\tt Record} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|Record| 'special) '|compCat|))
@@ -12438,8 +12437,8 @@ by setting the =special= keyword on the =Record= symbol property list.
 \end{chunk}
 
 \defplist{Mapping}{compCat plist}
-We set up the =compCat= function to handle the =Mapping= keyword
-by setting the =special= keyword on the =Mapping= symbol property list.
+We set up the {\tt compCat} function to handle the {\tt Mapping} keyword
+by setting the {\tt special} keyword on the {\tt Mapping} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|Mapping| 'special) '|compCat|))
@@ -12447,8 +12446,8 @@ by setting the =special= keyword on the =Mapping= symbol property list.
 \end{chunk}
 
 \defplist{Union}{compCat plist}
-We set up the =compCat= function to handle the =Union= keyword
-by setting the =special= keyword on the =Union= symbol property list.
+We set up the {\tt compCat} function to handle the {\tt Union} keyword
+by setting the {\tt special} keyword on the {\tt Union} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|Union| 'special) '|compCat|))
@@ -12479,8 +12478,8 @@ by setting the =special= keyword on the =Union= symbol property list.
 \end{chunk}
 
 \defplist{category}{compCategory plist}
-We set up the =compCategory= function to handle the =category= keyword
-by setting the =special= keyword on the =category= 
+We set up the {\tt compCategory} function to handle the {\tt category} keyword
+by setting the {\tt special} keyword on the {\tt category} 
 symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
@@ -12660,8 +12659,8 @@ symbol property list.
 \end{chunk}
 
 \defplist{:}{compColon plist}
-We set up the =compColon= function to handle the =:= keyword
-by setting the =special= keyword on the =:= symbol property list.
+We set up the {\tt compColon} function to handle the \verb|:| keyword
+by setting the {\tt special} keyword on the \verb|:| symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|:| 'special) '|compColon|))
@@ -12830,8 +12829,8 @@ by setting the =special= keyword on the =:= symbol property list.
 \end{chunk}
 
 \defplist{cons}{compCons plist}
-We set up the =compCons= function to handle the =cons= keyword
-by setting the =special= keyword on the =cons= symbol property list.
+We set up the {\tt compCons} function to handle the {\tt cons} keyword
+by setting the {\tt special} keyword on the {\tt cons} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'cons 'special) '|compCons|))
@@ -12890,8 +12889,8 @@ by setting the =special= keyword on the =cons= symbol property list.
 \end{chunk}
 
 \defplist{construct}{compConstruct plist}
-We set up the =compConstruct= function to handle the =construct= 
-keyword by setting the =special= keyword on the =construct= 
+We set up the {\tt compConstruct} function to handle the {\tt construct} 
+keyword by setting the {\tt special} keyword on the {\tt construct} 
 symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
@@ -12935,9 +12934,9 @@ symbol property list.
 \end{chunk}
 
 \defplist{ListCategory}{compConstructorCategory plist}
-We set up the =compConstructorCategory= function to handle the 
-=ListCategory= keyword by setting the =special= keyword on the 
-=ListCategory= symbol property list.
+We set up the {\tt compConstructorCategory} function to handle the 
+{\tt ListCategory} keyword by setting the {\tt special} keyword on the 
+{\tt ListCategory} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|ListCategory| 'special) '|compConstructorCategory|))
@@ -12946,9 +12945,9 @@ We set up the =compConstructorCategory= function to handle the
 
 \defplist{RecordCategory}{compConstructorCategory plist}
 We set up the 
-=compConstructorCategory= function to handle the 
-=RecordCategory= keyword by setting the =special= keyword on the 
-=RecordCategory= symbol property list.
+{\tt compConstructorCategory} function to handle the 
+{\tt RecordCategory} keyword by setting the {\tt special} keyword on the 
+{\tt RecordCategory} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|RecordCategory| 'special) '|compConstructorCategory|))
@@ -12957,9 +12956,9 @@ We set up the
 
 \defplist{UnionCategory}{compConstructorCategory plist}
 We set up the 
-=compConstructorCategory= function to handle the 
-=UnionCategory= keyword by setting the =special= keyword on the 
-=UnionCategory= symbol property list.
+{\tt compConstructorCategory} function to handle the 
+{\tt UnionCategory} keyword by setting the {\tt special} keyword on the 
+{\tt UnionCategory} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|UnionCategory| 'special) '|compConstructorCategory|))
@@ -12968,9 +12967,9 @@ We set up the
 
 \defplist{VectorCategory}{compConstructorCategory plist}
 We set up the 
-=compConstructorCategory= function to handle the 
-=VectorCategory= keyword by setting the =special= keyword on the 
-=VectorCategory= symbol property list.
+{\tt compConstructorCategory} function to handle the 
+{\tt VectorCategory} keyword by setting the {\tt special} keyword on the 
+{\tt VectorCategory} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|VectorCategory| 'special) '|compConstructorCategory|))
@@ -13325,9 +13324,9 @@ is still more than one complain else return the only signature.
 
 \defplist{elt}{compElt plist}
 We set up the 
-=compElt= function to handle the 
-=elt= keyword by setting the =special= keyword on the 
-=elt= symbol property list.
+{\tt compElt} function to handle the 
+{\tt elt} keyword by setting the {\tt special} keyword on the 
+{\tt elt} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|elt| 'special) '|compElt|))
@@ -13397,9 +13396,9 @@ We set up the
 
 \defplist{exit}{compExit plist}
 We set up the 
-=compExit= function to handle the 
-=exit= keyword by setting the =special= keyword on the 
-=exit= symbol property list.
+{\tt compExit} function to handle the 
+{\tt exit} keyword by setting the {\tt special} keyword on the 
+{\tt exit} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|exit| 'special) '|compExit|))
@@ -13435,9 +13434,9 @@ We set up the
 
 \defplist{has}{compHas plist}
 We set up the 
-=compHas= function to handle the 
-=has= keyword by setting the =special= keyword on the 
-=has= symbol property list.
+{\tt compHas} function to handle the 
+{\tt has} keyword by setting the {\tt special} keyword on the 
+{\tt has} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|has| 'special) '|compHas|))
@@ -13519,9 +13518,9 @@ We set up the
 
 \defplist{if}{compIf plist}
 We set up the 
-=compIf= function to handle the 
-=if= keyword by setting the =special= keyword on the 
-=if= symbol property list.
+{\tt compIf} function to handle the 
+{\tt if} keyword by setting the {\tt special} keyword on the 
+{\tt if} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'if 'special) '|compIf|))
@@ -13832,9 +13831,9 @@ We set up the
 
 \defplist{import}{compImport plist}
 We set up the 
-=compImport= function to handle the 
-=import= keyword by setting the =special= keyword on the 
-=import= symbol property list.
+{\tt compImport} function to handle the 
+{\tt import} keyword by setting the {\tt special} keyword on the 
+{\tt import} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|import| 'special) '|compImport|))
@@ -13855,9 +13854,9 @@ We set up the
 
 \defplist{is}{compIs plist}
 We set up the 
-=compIs= function to handle the 
-=is= keyword by setting the =special= keyword on the 
-=is= symbol property list.
+{\tt compIs} function to handle the 
+{\tt is} keyword by setting the {\tt special} keyword on the 
+{\tt is} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|is| 'special) '|compIs|))
@@ -13890,9 +13889,9 @@ We set up the
 
 \defplist{Join}{compJoin plist}
 We set up the 
-=compJoin= function to handle the 
-=Join= keyword by setting the =special= keyword on the 
-=Join= symbol property list.
+{\tt compJoin} function to handle the 
+{\tt Join} keyword by setting the {\tt special} keyword on the 
+{\tt Join} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|Join| 'special) '|compJoin|))
@@ -13978,9 +13977,9 @@ We set up the
 
 \defplist{$+->$}{compLambda plist}
 We set up the 
-=compLambda= function to handle the 
-=+->= keyword by setting the =special= keyword on the 
-=+->= symbol property list.
+{\tt compLambda} function to handle the 
+\verb|+->| keyword by setting the {\tt special} keyword on the 
+\verb|+->| symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|+->| 'special) '|compLambda|))
@@ -14032,9 +14031,9 @@ We set up the
 
 \defplist{leave}{compLeave plist}
 We set up the 
-=compLeave= function to handle the 
-=leave= keyword by setting the =special= keyword on the 
-=leave= symbol property list.
+{\tt compLeave} function to handle the 
+{\tt leave} keyword by setting the {\tt special} keyword on the 
+{\tt leave} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|leave| 'special) '|compLeave|))
@@ -14062,9 +14061,9 @@ We set up the
 
 \defplist{mdef}{compMacro plist}
 We set up the 
-=compMacro= function to handle the 
-=MDEF= keyword by setting the =special= keyword on the 
-=MDEF= symbol property list.
+{\tt compMacro} function to handle the 
+{\tt MDEF} keyword by setting the {\tt special} keyword on the 
+{\tt MDEF} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'mdef 'special) '|compMacro|))
@@ -14112,9 +14111,9 @@ We set up the
 
 \defplist{pretend}{compPretend plist}
 We set up the 
-=compPretend= function to handle the 
-=pretend= keyword by setting the =special= keyword on the 
-=pretend= symbol property list.
+{\tt compPretend} function to handle the 
+{\tt pretend} keyword by setting the {\tt special} keyword on the 
+{\tt pretend} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|pretend| 'special) '|compPretend|))
@@ -14156,9 +14155,9 @@ We set up the
 
 \defplist{quote}{compQuote plist}
 We set up the 
-=compQuote= function to handle the 
-=QUOTE= keyword by setting the =special= keyword on the 
-=QUOTE= symbol property list.
+{\tt compQuote} function to handle the 
+{\tt QUOTE} keyword by setting the {\tt special} keyword on the 
+{\tt QUOTE} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'quote 'special) '|compQuote|))
@@ -14174,9 +14173,9 @@ We set up the
 
 \defplist{reduce}{compReduce plist}
 We set up the 
-=compReduce= function to handle the 
-=REDUCE= keyword by setting the =special= keyword on the 
-=REDUCE= symbol property list.
+{\tt compReduce} function to handle the 
+{\tt REDUCE} keyword by setting the {\tt special} keyword on the 
+{\tt REDUCE} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'reduce 'special) '|compReduce|))
@@ -14279,9 +14278,9 @@ We set up the
 
 \defplist{collect}{compRepeatOrCollect plist}
 We set up the 
-=compRepeatOrCollect= function to handle the 
-=COLLECT= keyword by setting the =special= keyword on the 
-=COLLECT= symbol property list.
+{\tt compRepeatOrCollect} function to handle the 
+{\tt COLLECT} keyword by setting the {\tt special} keyword on the 
+{\tt COLLECT} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'collect 'special) '|compRepeatOrCollect|))
@@ -14290,9 +14289,9 @@ We set up the
 
 \defplist{repeat}{compRepeatOrCollect plist}
 We set up the 
-=compRepeatOrCollect= function to handle the 
-=REPEAT= keyword by setting the =special= keyword on the 
-=REPEAT= symbol property list.
+{\tt compRepeatOrCollect} function to handle the 
+{\tt REPEAT} keyword by setting the {\tt special} keyword on the 
+{\tt REPEAT} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'repeat 'special) '|compRepeatOrCollect|))
@@ -14392,9 +14391,9 @@ We set up the
 
 \defplist{return}{compReturn plist}
 We set up the 
-=compReturn= function to handle the 
-=return= keyword by setting the =special= keyword on the 
-=return= symbol property list.
+{\tt compReturn} function to handle the 
+{\tt return} keyword by setting the {\tt special} keyword on the 
+{\tt return} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|return| 'special) '|compReturn|))
@@ -14440,9 +14439,9 @@ We set up the
 
 \defplist{seq}{compSeq plist}
 We set up the 
-=compSeq= function to handle the 
-=SEQ= keyword by setting the =special= keyword on the 
-=SEQ= symbol property list.
+{\tt compSeq} function to handle the 
+{\tt SEQ} keyword by setting the {\tt special} keyword on the 
+{\tt SEQ} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'seq 'special) '|compSeq|))
@@ -14555,9 +14554,9 @@ We set up the
 
 \defplist{let}{compSetq plist}
 We set up the 
-=compSetq= function to handle the 
-=LET= keyword by setting the =special= keyword on the 
-=LET= symbol property list.
+{\tt compSetq} function to handle the 
+{\tt LET} keyword by setting the {\tt special} keyword on the 
+{\tt LET} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'let 'special) '|compSetq|))
@@ -14566,9 +14565,9 @@ We set up the
 
 \defplist{setq}{compSetq plist}
 We set up the 
-=compSetq= function to handle the 
-=SETQ= keyword by setting the =special= keyword on the 
-=SETQ= symbol property list.
+{\tt compSetq} function to handle the 
+{\tt SETQ} keyword by setting the {\tt special} keyword on the 
+{\tt SETQ} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'setq 'special) '|compSetq|))
@@ -14991,9 +14990,9 @@ This function returns the index of domain entry x in the association list
 
 \defplist{String}{compString plist}
 We set up the 
-=compString= function to handle the 
-=String= keyword by setting the =special= keyword on the 
-=String= symbol property list.
+{\tt compString} function to handle the 
+{\tt String} keyword by setting the {\tt special} keyword on the 
+{\tt String} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|String| 'special) '|compString|))
@@ -15012,9 +15011,9 @@ We set up the
 
 \defplist{SubDomain}{compSubDomain plist}
 We set up the 
-=compSubDomain= function to handle the 
-=SubDomain= keyword by setting the =special= keyword on the 
-=SubDomain= symbol property list.
+{\tt compSubDomain} function to handle the 
+{\tt SubDomain} keyword by setting the {\tt special} keyword on the 
+{\tt SubDomain} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|SubDomain| 'special) '|compSubDomain|))
@@ -15095,9 +15094,9 @@ We set up the
 
 \defplist{SubsetCategory}{compSubsetCategory plist}
 We set up the 
-=compSubsetCategory= function to handle the 
-=SubsetCategory= keyword by setting the =special= keyword on the 
-=SubsetCategory= symbol property list.
+{\tt compSubsetCategory} function to handle the 
+{\tt SubsetCategory} keyword by setting the {\tt special} keyword on the 
+{\tt SubsetCategory} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|SubsetCategory| 'special) '|compSubsetCategory|))
@@ -15132,9 +15131,9 @@ We set up the
 
 \defplist{|}{compSuchthat plist}
 We set up the 
-=compSuchthat= function to handle the 
-=|= keyword by setting the =special= keyword on the 
-=|= symbol property list.
+{\tt compSuchthat} function to handle the 
+\verb?|? keyword by setting the {\tt special} keyword on the 
+\verb?|? symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '\| 'special) '|compSuchthat|))
@@ -15165,9 +15164,9 @@ We set up the
 
 \defplist{vector}{compVector plist}
 We set up the 
-=compVector= function to handle the 
-=VECTOR= keyword by setting the =special= keyword on the 
-=VECTOR= symbol property list.
+{\tt compVector} function to handle the 
+{\tt VECTOR} keyword by setting the {\tt special} keyword on the 
+{\tt VECTOR} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get 'vector 'special) '|compVector|))
@@ -15208,9 +15207,9 @@ We set up the
 
 \defplist{where}{compWhere plist}
 We set up the 
-=compWhere= function to handle the 
-=where= keyword by setting the =special= keyword on the 
-=where= symbol property list.
+{\tt compWhere} function to handle the 
+{\tt where} keyword by setting the {\tt special} keyword on the 
+{\tt where} symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|where| 'special) '|compWhere|))
@@ -15496,9 +15495,9 @@ of basic objects may not be the same.
 
 \defplist{@}{compAtSign plist}
 We set up the 
-=compAtSign= function to handle the 
-=@= keyword by setting the =special= keyword on the 
-=@= symbol property list.
+{\tt compAtSign} function to handle the 
+\verb|@| keyword by setting the {\tt special} keyword on the 
+\verb|@| symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|@| 'special) 'compAtSign))
@@ -15519,9 +15518,9 @@ We set up the
 
 \defplist{::}{compCoerce plist}
 We set up the 
-=compCoerce= function to handle the 
-=::= keyword by setting the =special= keyword on the 
-=::= symbol property list.
+{\tt compCoerce} function to handle the 
+\verb|::| keyword by setting the {\tt special} keyword on the 
+\verb|::| symbol property list.
 \begin{chunk}{postvars}
 (eval-when (eval load)
  (setf (get '|::| 'special) '|compCoerce|))
@@ -15948,7 +15947,7 @@ This orders Unions
 \defun{postError}{postError}
 \calls{postError}{bumperrorcount}
 \usesdollar{postError}{defOp}
-\usesdollar{postError}{InteractiveMode }
+\usesdollar{postError}{InteractiveMode} 
 \usesdollar{postError}{postStack}
 \begin{chunk}{defun postError}
 (defun postError (msg)
@@ -16016,7 +16015,7 @@ This orders Unions
 \end{chunk}
 
 \section{Indirect called postparse routines}
-In the *postTran* function there is the code:
+In the {\bf postTran} function there is the code:
 \begin{verbatim}
      ((and (atom op) (setq f (getl op '|postTran|)))
       (funcall f x))
@@ -18775,7 +18774,6 @@ This section is broken up into 3 levels:
 \item Floating Point Support
 \item Dollar Translation
 \end{itemize}
-
 \subsection{String grabbing}
 String grabbing is the art of matching initial segments of the current
 line, and removing them from the line before the get tokenized if they
@@ -19234,24 +19232,17 @@ equivalent to.
 
 \subsection{Applying metagrammatical elements of a production (e.g., Star).}
 \begin{itemize}
-\item *must* means that if it is not present in the token stream,
+\item {\bf must} means that if it is not present in the token stream, 
+it is a syntax error.
+\item {\bf optional} means that if it is present in the token stream, 
+that is a good thing, otherwise don't worry (like [ foo ] in BNF notation).
+\item {\bf action} is something we do as a consequence of successful 
+parsing; it is inserted at the end of the conjunction of requirements 
+for a successful parse, and so should return T.
+\item {\bf sequence} consists of a head, which if recognized implies that the
+tail must follow.   Following tail are actions, which
+are performed upon recognizing the head and tail.
 \end{itemize}
-  it is a syntax error.
-\begin{itemize}
-\item *optional* means that if it is present in the token stream,
-\end{itemize}
-  that is a good thing, otherwise don't worry (like [ foo ] in BNF notation).
-\begin{itemize}
-\item *action* is something we do as a consequence of successful
-\end{itemize}
-  parsing; it is inserted at the end of the conjunction of requirements
-  for a successful parse, and so should return T.
-\begin{itemize}
-\item *sequence* consists of a head, which if recognized implies that the
-\end{itemize}
-  tail must follow.   Following tail are actions, which
-  are performed upon recognizing the head and tail.
-
 \defmacro{Bang}
 If the execution of prod does not result in an increase in the size of
 the stack, then stack a NIL. Return the value of prod.
@@ -19288,7 +19279,7 @@ the stack, then stack a NIL. Return the value of prod.
 \defmacro{star}
 Succeeds if there are one or more of PROD, stacking as one unit
 the sub-reductions of PROD and labelling them with LAB.
-E.G., =(Star IDs (parse-id))= with A B C will stack (3 IDs (A B C)),
+E.G., {\tt (Star IDs (parse-id))} with A B C will stack (3 IDs (A B C)),
 where (parse-id) would stack (1 ID (A)) when applied once.
 \calls{star}{stack-size}
 \calls{star}{push-reduction}
@@ -19553,9 +19544,9 @@ variable is undefined, in which case it writes out all of the constructors,
 and the other case where it writes out a single constructor.
 Formal for libdb.text:
 \begin{verbatim}
-  constructors    Cname#\I\sig \args   \abb \comments (C is C, D, P, X)
-  operations      Op  #\E\sig \conname\pred\comments (E is one of U/E)
-  attributes      Aname#\E\args\conname\pred\comments
+  constructors    Cname\#\I\sig \args   \abb \comments (C is C, D, P, X)
+  operations      Op  \#\E\sig \conname\pred\comments (E is one of U/E)
+  attributes      Aname\#\E\args\conname\pred\comments
   I = <x if exposed><d if category with a default package>
 \end{verbatim}
 \calls{buildLibdb}{dsetq}
@@ -19861,7 +19852,7 @@ Formal for libdb.text:
 
 \defun{buildLibAttr}{buildLibAttr}
 \begin{verbatim}
-  attributes      AKname#\args\conname\pred\comments (K is U or C)
+  attributes      AKname\#\args\conname\pred\comments (K is U or C)
 \end{verbatim}
 \calls{buildLibAttr}{form2LispString}
 \calls{buildLibAttr}{sublislis}
@@ -20911,7 +20902,7 @@ digraph hierarchy {
 \end{chunk}
 
 \defun{checkHTargs}{checkHTargs}
-Note that =u= should start with an open brace.
+Note that {\tt u} should start with an open brace.
 \calls{checkHTargs}{checkLookForLeftBrace}
 \calls{checkHTargs}{checkLookForRightBrace}
 \calls{checkHTargs}{checkDocError}
@@ -22690,7 +22681,6 @@ Return a pointer to the Nth cons of X, counting 0 as the first cons.
 \item OLDLOCS is the list of previous indentation locations
 \item NCBLOCK is the current comment block
 \end{itemize}
-
 \calls{fincomblock}{preparse-echo}
 \usesdollar{fincomblock}{comblocklist}
 \usesdollar{fincomblock}{EchoLineStack}
@@ -22742,21 +22732,21 @@ Return a pointer to the Nth cons of X, counting 0 as the first cons.
 \defun{is-console}{is-console}
 The GCL form answers ``does this stream write to the console?'' by
 extracting the underlying C FILE pointer with the builtin
-=system:fp-output-stream= and comparing it against
-=*terminal-io*='s --- an identity test below the Lisp stream
+\verb|system:fp-output-stream| and comparing it against
+\verb|*terminal-io*|'s --- an identity test below the Lisp stream
 layer, so it sees through any number of stream wrappers. No other
 host exposes FILE pointers; the single-colon token does not even
 read outside GCL, hence the reader conditional. The portable branch
 approximates the same question one level up: the stream is the
-console if it is =*terminal-io*= itself or a synonym stream
-(the usual shape of =*standard-output*=) resolving to it. This
+console if it is \verb|*terminal-io*| itself or a synonym stream
+(the usual shape of \verb|*standard-output*|) resolving to it. This
 sees through the synonym indirection but not through other wrapper
 streams; if console detection ever misbehaves on SBCL, deepen this
 test rather than the callers.
 \calls{is-console}{fp-output-stream}
 \uses{is-console}{*terminal-io*}
 \label{is-console}
-\sig{is-console}{Stream{Boolean}}
+\sig{is-console}{Stream}{Boolean}
 \begin{chunk}{defun is-console}
 (defun is-console (stream)
  #+:GCL
@@ -22820,7 +22810,7 @@ test rather than the callers.
 
 \defdollar{newConlist}
 A list of new constructors discovered during compile.
-These are used in a call to =extendLocalLibdb= when a user 
+These are used in a call to {\tt extendLocalLibdb} when a user 
 compiles new local code.
 \begin{chunk}{initvars}
 (defvar |$newConlist| nil 
@@ -22969,7 +22959,7 @@ The default call chain looks like:
 In order to explain the compiler we will walk through the compilation of
 EQ.spad, which handles equations as mathematical objects. We start the
 system. Most of the structure in Axiom are circular so we have to the
-=*print-cycle*= to true.
+\verb|*print-cycle*| to true.
 \begin{verbatim}
 root@spiff:/tmp# axiom -nox
 
@@ -23031,20 +23021,20 @@ digraph pic {
 }
 
 \end{chunk}
-[[ps/v9compiler.eps]]
+\includegraphics[scale=0.5]{ps/v9compiler.eps}
 
 \defun{compiler}{compiler}
-We compile the spad file. We can see that the *compiler* function gets
+We compile the spad file. We can see that the {\bf compiler} function gets
 a list 
 \begin{verbatim}
 (1) -> )co EQ
 
   1> (|compiler| (EQ))
 \end{verbatim}
-In order to find this file, the *pathname* and *pathnameType* 
+In order to find this file, the {\bf pathname} and {\bf pathnameType} 
 functions are used to find the location and pathname to the file. They
-*pathnameType* function eventually returns the fact that this is
-a spad source file. Once that is known we call the *compileSpad2Cmd*
+{\bf pathnameType} function eventually returns the fact that this is
+a spad source file. Once that is known we call the {\bf compileSpad2Cmd}
 function with a list containing the full pathname as a string.
 \begin{verbatim}
   1> (|compiler| (EQ))
@@ -23082,7 +23072,7 @@ function with a list containing the full pathname as a string.
 \usesdollar{compiler}{newConlist}
 \usesdollar{compiler}{options}
 \uses{compiler}{/editfile}
-\sig{compiler}{(CONS SYMBOL NIL){Prompt}}
+\sig{compiler}{(CONS SYMBOL NIL)}{Prompt}
 \begin{chunk}{defun compiler}
 (defun |compiler| (args)
  "The top level compiler command"
@@ -23146,7 +23136,7 @@ commands. For example, the call
 \begin{verbatim}
    )co dh )constructor DHMATRIX )functions identity
 \end{verbatim}
-will look for the file =dh.spad= and issue a call
+will look for the file {\tt dh.spad} and issue a call
 \begin{verbatim}
 (|compilerDoitWithScreenedLisplib| (|DenavitHartenbergMatrix|) (|c| |lib|))
 \end{verbatim}
@@ -23159,7 +23149,7 @@ the string pathname to the file.
 \end{verbatim}
 
 Again we find a lot of redundant work. We finally end up calling
-*compilerDoit* with a constructed argument list:
+{\bf compilerDoit} with a constructed argument list:
 \begin{verbatim}
     2> (|compilerDoit| NIL (|rq| |lib|))
 \end{verbatim}
@@ -23195,7 +23185,7 @@ Again we find a lot of redundant work. We finally end up calling
 \usesdollar{compileSpad2Cmd}{options}
 \usesdollar{compileSpad2Cmd}{newConlist}
 \uses{compileSpad2Cmd}{/editfile}
-\sig{compileSpad2Cmd}{(CONS PathnameString NIL){Prompt}}
+\sig{compileSpad2Cmd}{(CONS PathnameString NIL)}{Prompt}
 \begin{chunk}{defun compileSpad2Cmd}
 (defun |compileSpad2Cmd| (args)
  (let (|$newComp| |$scanIfTrue| 
@@ -23447,7 +23437,7 @@ Compile with noisy output
 \end{chunk}
 
 \defun{/RQ,LIB}{/RQ,LIB}
-This function simply calls *=/rf-1=*. 
+This function simply calls {\bf \verb|/rf-1|}. 
 \begin{verbatim}
 (2) -> )co EQ
    Compiling AXIOM source code from file /tmp/EQ.spad using old system 
@@ -23472,7 +23462,7 @@ This function simply calls *=/rf-1=*.
  
 \defun{/rf-1}{/rf-1}
 Since this function is called with nil we fall directly into the
-call to the function *spad*:
+call to the function {\bf spad}:
 \begin{verbatim}
 (2) -> )co EQ
    Compiling AXIOM source code from file /tmp/EQ.spad using old system 
@@ -23554,11 +23544,11 @@ Here we begin the actual compilation process.
   <1 (OPEN #<output stream "libdb.text">)
 \end{verbatim}
 
-The major steps in this process involve the *preparse* function.
+The major steps in this process involve the {\bf preparse} function.
 (See book volume 5 for more details).
-The *preparse* function  returns a list of pairs of the form:
+The {\bf preparse} function  returns a list of pairs of the form:
 ( (linenumber . linestring) .... (linenumber . linestring))
-For instance, for the file =EQ.spad=, we get:
+For instance, for the file {\tt EQ.spad}, we get:
 \begin{verbatim}
     <2 (PREPARSE (
  (19 . "Equation(S: Type): public == private where")
@@ -23654,7 +23644,7 @@ For instance, for the file =EQ.spad=, we get:
 \end{chunk}
 
 \defun{s-process}{Interpreter interface to the compiler}
-And the *s-process* function which returns a parsed version of the input.
+And the {\bf s-process} function which returns a parsed version of the input.
 \begin{verbatim}
     2> (S-PROCESS
 (|where|
@@ -24226,10 +24216,10 @@ the resulting call looks like:
             (special |$EmptyMode| |$NoValueMode|))))))
 \end{verbatim}
 
-This compiler call expects the first argument =x= 
-to be a =DEF= form to compile,
-The second argument, =m=, is the mode.
-The third argument, =e=, is the environment.
+This compiler call expects the first argument {\tt x} 
+to be a {\tt DEF} form to compile,
+The second argument, {\tt m}, is the mode.
+The third argument, {\tt e}, is the environment.
 
 \defun{compOrCroak}{compOrCroak}
 \calls{compOrCroak}{compOrCroak1}
@@ -24262,8 +24252,8 @@ This results in a call to the inner function with
           |comp|)
 \end{verbatim}
 The inner function augments the environment with information
-from the compiler stack =\$compStack= and
-=\$compErrorMessageStack=. Note that these variables are passed
+from the compiler stack {\tt \$compStack} and
+{\tt \$compErrorMessageStack}. Note that these variables are passed
 in the argument list so they get preserved on the call stack. The
 calling function gets called for every inner form so we use this
 implicit stacking to retain the information.
@@ -24328,7 +24318,7 @@ implicit stacking to retain the information.
 \end{chunk}
 
 \defun{compNoStacking}{compNoStacking}
-=$Representation= is bound in compDefineFunctor, set by doIt.
+\verb|$Representation| is bound in compDefineFunctor, set by doIt.
 This hack says that when something is undeclared, \$ is
 preferred to the underlying representation -- RDJ 9/12/83
 \calls{compNoStacking}{comp2}
@@ -25918,10 +25908,10 @@ symbol in the free list are represented by the alist (symbol . count)
 \seebook{ncINTERPFILE}{SpadInterpretStream}{5}
 \usesdollar{ncINTERPFILE}{EchoLines}
 \usesdollar{ncINTERPFILE}{ReadingFile}
-The *SpadInterpretStream* function call takes three arguments.
+The {\bf SpadInterpretStream} function call takes three arguments.
 The first argument
-The second argument *source* is the name of a file to include.
-The third argument *interactive?*, when false, will read from the
+The second argument {\bf source} is the name of a file to include.
+The third argument {\bf interactive?}, when false, will read from the
 file rather than the console.
 \begin{chunk}{defun ncINTERPFILE}
 (defun |ncINTERPFILE| (file echo)
@@ -25982,7 +25972,7 @@ file rather than the console.
 \end{chunk}
 
 \defun{compileFileQuietly}{compileFileQuietly}
-if =$InteractiveMode= then use a null outputstream 
+if \verb|$InteractiveMode| then use a null outputstream 
 \usesdollar{compileFileQuietly}{InteractiveMode}
 \uses{compileFileQuietly}{*standard-output*}
 \begin{chunk}{defun compileFileQuietly}
@@ -26017,14 +26007,14 @@ Symbolics read-line returns embedded newlines in a c-m-Y.
 \end{chunk}
 
 \defun{read-a-line}{read-a-line}
-The *read-a-line* function
+The {\bf read-a-line} function
 reads a line from the current stream, potentially setting *eof*.
 It then recursively calls itself 
 \seebook{read-a-line}{line-new-line}{5}
 \seebook{read-a-line}{current-line}{5}
 \uses{read-a-line}{*eof*}
 \uses{read-a-line}{File-Closed}
-\sig{read-a-line}{FileStream{String}}
+\sig{read-a-line}{FileStream}{String}
 where FileStream might be
 \begin{verbatim}
    #<input stream "/research/t1/src/algebra/EQ.spad">
@@ -26791,4 +26781,3 @@ and the returned string might be
 \printindex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
-

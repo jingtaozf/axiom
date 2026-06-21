@@ -1,10 +1,14 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{sockio.lisp}
+\title{\$SPAD/src/interp sockio.lisp}
 \author{Timothy Daly}
+\maketitle
 \begin{abstract}
 \end{abstract}
+\eject
+\tableofcontents
+\eject
 \section{License}
 \begin{verbatim}
 ;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
@@ -88,28 +92,28 @@ resolve the problem
 
 \section{Hosting the socket layer on SBCL}
 
-The seventeen =defentry= bindings in the block below divide along
-the same line drawn in =cfuns.lisp.pamphlet=: most are genuinely
+The seventeen \verb|defentry| bindings in the block below divide along
+the same line drawn in \verb|cfuns.lisp.pamphlet|: most are genuinely
 foreign, a few only look it.
 
-Twelve --- =open_server=, the =sock_*= transfer calls,
-=server_switch=, =flush_stdout=, =sock_send_signal= and
-=print_line= --- are the real client/server socket layer that the
+Twelve --- \verb|open_server|, the \verb|sock_*| transfer calls,
+\verb|server_switch|, \verb|flush_stdout|, \verb|sock_send_signal| and
+\verb|print_line| --- are the real client/server socket layer that the
 HyperDoc browser and the graphical front end use to talk to the engine.
 They cross into C and have no meaning without the server. Because this
-port targets a console =AXIOMsys= first and defers HyperDoc, we do
-not bind them on SBCL; we install /stubs/ that raise a clear error
+port targets a console \verb|AXIOMsys| first and defers HyperDoc, we do
+not bind them on SBCL; we install \emph{stubs} that raise a clear error
 if anything calls them. The console interpreter never does --- recall
-that =spad-save= sets =$SpadServer= to nil --- so the stubs
+that \verb|spad-save| sets \verb|$SpadServer| to nil --- so the stubs
 merely make the absence explicit instead of failing later with an
 obscure ``undefined function''. When HyperDoc is eventually built these
-become real =sb-alien= routines against the socket C, which is the
-one place in the whole port where =sb-alien= is genuinely
+become real \verb|sb-alien| routines against the socket C, which is the
+one place in the whole port where \verb|sb-alien| is genuinely
 warranted.
 
-The other three are not sockets at all. =plus_infinity=,
-=minus_infinity= and =NANQ= return IEEE double values that the
-=Float= domain needs and that GCL happened to obtain through C.
+The other three are not sockets at all. \verb|plus_infinity|,
+\verb|minus_infinity| and \verb|NANQ| return IEEE double values that the
+\verb|Float| domain needs and that GCL happened to obtain through C.
 SBCL exposes them directly: the two infinities are constants, and a
 quiet NaN is the result of an invalid operation evaluated under masked
 float traps. We reimplement these in Lisp, exactly as the hashes were
@@ -302,8 +306,8 @@ float traps. We reimplement these in Lisp, exactly as the hashes were
 (setq |$minusInfinity| (- |$plusInfinity|))
 
 \end{chunk}
+\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}
 \end{document}
-

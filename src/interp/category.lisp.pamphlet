@@ -1,10 +1,14 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{category.lisp}
+\title{\$SPAD/src/interp category.lisp}
 \author{The Axiom Team}
+\maketitle
 \begin{abstract}
 \end{abstract}
+\eject
+\tableofcontents
+\eject
 \section{Category}
 Functions for building categories.
 
@@ -95,7 +99,7 @@ We compute the list of parameters that occur in signatures on the
 sigList, removing duplicates, and skipping the ``known'' constructors,
 Union, Mapping, List, and Record.
 
-=$PrimitiveDomainNames= is a list of domains that we need not cache.
+\verb|$PrimitiveDomainNames| is a list of domains that we need not cache.
 It is set in init.lisp.pamphlet.
 \begin{chunk}{*}
 ;sigParams(sigList) ==
@@ -215,15 +219,12 @@ This code defines the structure of a category. It creates a new category
 vector. The arguments are:
 \begin{itemize}
 \item domainOrPackage -- ``domain'' or ``package'' which marks the kind
-\end{itemize}
-  of category object.
-\begin{itemize}
+of category object.
 \item sigList -- list of all signatures
 \item attList -- list of all attributes
-\item domList
+\item domList 
 \item PrincipalAncestor -- principal ancestor (if any)
 \end{itemize}
-
 \begin{chunk}{*}
 ;mkCategory(domainOrPackage,sigList,attList,domList,PrincipalAncestor) ==
 ;  NSigList:= nil
@@ -1549,7 +1550,7 @@ Ancestor chasing code
 \subsection{JoinInner}
 The implementation of Join
 \subsubsection{hasCategoryBug}
-The hasCategoryBug (bug000001)[cite:@2] manifests itself by causing a
+The hasCategoryBug (bug000001)\cite{2} manifests itself by causing a
 value stack overflow when compiling algebra code that uses conditions
 that read ``if R has ...'' when using GCL (but not CCL). Essentially
 the [[|Ring|]] category keeps getting added to the list each time
@@ -1579,7 +1580,7 @@ copy-seq in there which is not getting executed in the assignment of
 [[|$NewCatVec|]] before the setelt.
 
 The original code failed to copy the NewCatVec before updating
-it. This code from macros.lisp[cite:@1] checks whether the array is
+it. This code from macros.lisp\cite{1} checks whether the array is
 adjustable.
 
 \begin{verbatim}
@@ -2378,9 +2379,9 @@ copy.
                  (EXIT (|isCategoryForm| |u| |e|))))))))))
 
 \end{chunk}
+\eject
 \begin{thebibliography}{99}
 \bibitem{1} [[pamphlet:src/interp/macros.lisp.pamphlet]]
 \bibitem{2} [[pamphlet:KNOWN.BUGS.pamphlet]]
 \end{thebibliography}
 \end{document}
-

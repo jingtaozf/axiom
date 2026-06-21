@@ -111,9 +111,7 @@ SRC_TOTAL=$(wc -l < "$ALL" | tr -d ' ')
 # files are build artifacts staged in int/input/.  Append the ones present --
 # graceful if a given build did not stage them (the count is logged below).
 ALG="$WORKROOT/alg_names.txt"; : > "$ALG"
-# bookvol10 algebra.regress chunk opens with `\begin{chunk}{algebra.regress}'.
-# The REGRESS= body inside the chunk lists the ~1157 domain tests.
-{ awk '/\\begin\{chunk\}\{algebra\.regress\}/{p=1} p&&/REGRESS=/{r=1} r{print} p&&(/%\.regress:/||/\\end\{chunk\}/){exit}' \
+{ awk '/begin\{chunk\}\{algebra.regress\}/{p=1} p&&/REGRESS=/{r=1} r{print} p&&/%\.regress:/{exit}' \
       "$SPD/books/bookvol10.pamphlet" \
     | grep -oE '[A-Za-z][A-Za-z0-9]*\.regress' | sed 's/\.regress//'
   printf '%s\n' $POOL2          # staged-but-unlisted constructors (Pool 2)
@@ -183,16 +181,13 @@ xargs -P "$NW" -I{} bash -c '
   pf="$SPD/src/input/$t.input.pamphlet"
   if grep -qxF "$t" "$WORKROOT/alg_names.txt" 2>/dev/null; then
     # algebra-domain test: read the staged int/input directly.  Do NOT tangle a
-    # same-named src/input source -- 32 domains (Vector, Color, Palette, ...)
+    # same-named src/input pamphlet -- 32 domains (Vector, Color, Palette, ...)
     # collide with LaTeX example pamphlets that are not )spool regression tests
     # and would NOOUT the shard.
     cp "$SPD/int/input/$t.input" "$t.input"
   elif [ -f "$pf" ]; then
-    # src/input test: tangle the .pamphlet source to a .input via tanglec.
-    # ~19 inputs self-reference src/input/<t>.input.pamphlet at an absolute path
-    # ()sys cp ... ; )lisp (tangle "<t>.input.pamphlet" sub out)); that file is
-    # the tracked source here, so no materialisation is needed.
-    "$SPD/books/tanglec" "$pf" "*" > "$t.input" 2>/dev/null || true
+    # src/input test: tangle the pamphlet to a .input.
+    echo "(tangle \"$pf\" \"*\" \"$t.input\")" | "$LISP" >/dev/null 2>&1 || true
   elif [ -f "$SPD/int/input/$t.input" ]; then
     cp "$SPD/int/input/$t.input" "$t.input"
   fi

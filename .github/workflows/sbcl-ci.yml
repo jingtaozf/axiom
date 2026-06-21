@@ -122,7 +122,6 @@ jobs:
             make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=/usr/bin/clang \
               2>&1 | tee /tmp/build.log | tail -n 200
             # the `all` recipe normally generates this then runs the cascade.
-            # Tangle the build Makefile from the literate Makefile.pamphlet.
             books/tanglec Makefile.pamphlet "Makefile.MACOSX" > Makefile.MACOSX
             # Shrink SRCDIRS by editing the generated Makefile's own `SRCDIRS:="..."`
             # line, NOT a command-line override: a cmdline SRCDIRS= propagates to
@@ -195,18 +194,12 @@ jobs:
       - name: Install test dependencies
         run: |
           set -x
-          # The only C compiled here is tanglec (a tiny self-contained tool)
-          # that tangles the .pamphlet sources the regression reads, so point
-          # CPATH at the SDK like the build job does.  Plus the Lisp host + GNU
-          # tools the harness uses (gtimeout, gawk, ...).
+          # No C is compiled here (we restore the built tree), so no SDK/X11 --
+          # just the Lisp host + GNU tools the harness uses (gtimeout, gawk, ...).
           brew install sbcl gawk gnu-sed grep coreutils || true
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
           echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
           echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
-          {
-            echo "SDKROOT=$(xcrun --show-sdk-path)"
-            echo "CPATH=$(xcrun --show-sdk-path)/usr/include"
-          } >> "$GITHUB_ENV"
 
       - name: Restore build artifacts
         uses: actions/cache/restore@v4
@@ -226,13 +219,6 @@ jobs:
           test -x obj/MACOSX/bin/interpsys
           test -x obj/MACOSX/bin/lisp
           test -x mnt/MACOSX/bin/AXIOMsys
-
-      - name: Build tangler (tanglec)
-        # run-regression.sh discovers tests by scanning the .pamphlet sources and
-        # tangles each test .input from src/input/<t>.input.pamphlet via
-        # books/tanglec.  The build TREE is restored from cache; the tiny C
-        # tangler it needs is compiled here.
-        run: make tanglec CC=/usr/bin/clang
 
       - name: Run regression shard ${{ matrix.shard }}/5
         run: |

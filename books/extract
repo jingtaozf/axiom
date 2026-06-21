@@ -3,10 +3,9 @@ latex=`which latex`
 STY=$AXIOM/../../books/axiom.sty
 TAN=$AXIOM/../../books/tanglec
 echo extract1: $TAN
-basearg() { basename "$1" .pamphlet; }
 if [ "$latex" = "" ] ; then
-  echo "document NOTE: no latex; tangling from .pamphlet but skipping the PDF"
-  if [ "$#" = "3" ]; then EXF=`basearg "$3"`; else EXF=`basearg "$1"`; fi
+  echo "document NOTE: no latex; tangling the file but skipping the PDF"
+  if [ "$#" = "3" ]; then EXF=`basename $3 .pamphlet`; else EXF=`basename $1 .pamphlet`; fi
   $TAN $EXF.pamphlet >$EXF
   : >$EXF.pdf
   exit 0

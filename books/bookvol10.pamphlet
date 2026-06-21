@@ -17385,6 +17385,7 @@ INPUT=${INT}/input
 LISP=${OBJ}/${SYS}/bin/lisp
 LISPTANGLE=${OBJ}/${SYS}/bin/lisp
 BOOKSRC=${SPD}/books/bookvol5.pamphlet
+BOOKS=${SPD}/books
 
 \end{chunk}
 \subsection{The depsys variable}
@@ -17536,6 +17537,13 @@ The output of the compile step is saved in a file of the same name
 and extension .out in the \${MID} directory. These files are useful for
 deriving the dependencies by scanning the ``Loading ...'' messages.
 
+The algebra object files keep the .o name on every host. The 400-odd
+layer-dependency lists below are all written with literal .o, and the
+interpreter's SPAD compiler writes the NRLIB member as code.o; rather
+than rewrite all of those, SBCL simply writes fasl content into the .o
+name (compile-file's :output-file takes any name, and load detects a
+fasl by its header regardless of extension). So .o here means
+``compiled object'', GCL .o or SBCL fasl, not a literal extension.
 \begin{chunk}{genericDotOfiles}
 
 ${OUT}/%.o: ${MID}/%.nrlib/code.o
@@ -17675,7 +17683,7 @@ grep -E 'begin{chunk}{category\ .*}' ${BOOKS}/bookvol10.2.pamphlet | sort | uniq
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.2.pamphlet";
-  print "	   @${BOOKS}/tanglec ${BOOKS}/bookvol10.2.pamphlet \""chunk"\" > "part[2]".spad ";
+  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.2.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
   print "";
 }'
 
@@ -17684,7 +17692,7 @@ grep -E 'begin{chunk}{domain\ .*}' ${BOOKS}/bookvol10.3.pamphlet | sort | uniq |
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.3.pamphlet";
-  print "	   @${BOOKS}/tanglec ${BOOKS}/bookvol10.3.pamphlet \""chunk"\" > "part[2]".spad ";
+  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.3.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
   print "";
 }'
 
@@ -17693,7 +17701,7 @@ grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.4.pamphlet | sort | uniq 
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.4.pamphlet";
-  print "	   @${BOOKS}/tanglec ${BOOKS}/bookvol10.4.pamphlet \""chunk"\" > "part[2]".spad ";
+  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.4.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
   print "";
 }'
 
@@ -17702,7 +17710,7 @@ grep -E 'begin{chunk}{package\ .*}' ${BOOKS}/bookvol10.5.pamphlet | sort | uniq 
   split(chunk,part," ");
   spadfile="${MID}/"part[2]".spad";
   print spadfile": ${BOOKS}/bookvol10.5.pamphlet";
-  print "	   @${BOOKS}/tanglec ${BOOKS}/bookvol10.5.pamphlet \""chunk"\" > "part[2]".spad ";
+  print "	   @echo \x27(tangle \"${BOOKS}/bookvol10.5.pamphlet\" \""chunk"\" \""part[2]".spad\")\x27 | ${LISPTANGLE} ";
   print "";
 }'
 
@@ -17766,7 +17774,7 @@ awk -F: '{
   split(chunk,part," ");
   lspfile="${MID}/"part[1];
   print lspfile": ${BOOKS}/bookvol10.2.pamphlet";
-  print "	  @${BOOKS}/tanglec ${BOOKS}/bookvol10.2.pamphlet \""chunk"\" > "lspfile" ";
+  print "	  @echo \x27(tangle \"${BOOKS}/bookvol10.2.pamphlet\" \""chunk"\" \""lspfile"\")\x27 | ${LISPTANGLE} ";
   print "";
 }'
 
@@ -17776,7 +17784,7 @@ awk -F: '{
   split(chunk,part," ");
   lspfile="${MID}/"part[1];
   print lspfile": ${BOOKS}/bookvol10.3.pamphlet";
-  print "	  @${BOOKS}/tanglec ${BOOKS}/bookvol10.3.pamphlet \""chunk"\" > "lspfile" ";
+  print "	  @echo \x27(tangle \"${BOOKS}/bookvol10.3.pamphlet\" \""chunk"\" \""lspfile"\")\x27 | ${LISPTANGLE} ";
   print "";
 }'
 
@@ -19228,14 +19236,14 @@ fasthelp:
 	@ echo src/algebra BUILDING HELP FILES bookvol10
 	@ echo =========================================
 	@echo sa17 making .help files with lisp
-	 @ export BOOKS=${BOOKS} && echo "(makeHelpFiles)" | ${LISP}
+	@ export BOOKS=${BOOKS} && echo "(makeHelpFiles)" | ${LISP}
 
 fastinput:
 	@ echo ==========================================
 	@ echo src/algebra BUILDING INPUT FILES bookvol10
 	@ echo ==========================================
 	@echo sa18 making .input files with lisp
-	 @ export BOOKS=${BOOKS} && echo "(makeInputFiles)" | ${LISP}
+	@ export BOOKS=${BOOKS} && echo "(makeInputFiles)" | ${LISP}
 
 fastxhtml:
 	@ echo ==========================================
@@ -19243,7 +19251,7 @@ fastxhtml:
 	@ echo ==========================================
 	@echo sa19 making .xhtml files with lisp
 	@ mkdir -p ${MNT}/doc
-	 @ export BOOKS=${BOOKS} && echo "(makeXHTMLFiles)" | ${LISP}
+	@ export BOOKS=${BOOKS} && echo "(makeXHTMLFiles)" | ${LISP}
 
 copyspad:
 	@ echo ==========================================

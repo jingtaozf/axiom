@@ -1,10 +1,14 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{cfuns.lisp}
+\title{\$SPAD/src/interp cfuns.lisp}
 \author{Timothy Daly}
+\maketitle
 \begin{abstract}
 \end{abstract}
+\eject
+\tableofcontents
+\eject
 \section{License}
 \begin{verbatim}
 ;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
@@ -45,40 +49,40 @@
 This file is the clearest illustration of why the GCL binding cannot be
 carried verbatim to SBCL, and of the right response.
 
-The four utilities Axiom needs here --- =directoryp=,
-=writeablep=, =hashString= and =hashCombine= --- are bound
-under GCL with =defentry=, and the two hash functions supply their C
-bodies inline with =Clines=. =Clines= asks the host Lisp to
-compile a snippet of C /into its own image/. GCL, descended from a
+The four utilities Axiom needs here --- \verb|directoryp|,
+\verb|writeablep|, \verb|hashString| and \verb|hashCombine| --- are bound
+under GCL with \verb|defentry|, and the two hash functions supply their C
+bodies inline with \verb|Clines|. \verb|Clines| asks the host Lisp to
+compile a snippet of C \emph{into its own image}. GCL, descended from a
 Lisp that was half a C compiler, can do this. SBCL cannot: it has no
 facility to compile C into the running image, and its foreign interface,
-=sb-alien=, can only call functions that already live in a loaded
+\verb|sb-alien|, can only call functions that already live in a loaded
 shared object.
 
 One could therefore build a small shared library and reach it with
-=sb-alien:define-alien-routine=. For /these/ functions that
+\verb|sb-alien:define-alien-routine|. For \emph{these} functions that
 would be effort spent badly, because each is trivial: the two hashes are
 a handful of integer operations, and the two filesystem predicates are
-already written in portable Lisp in the =#+:CCL= branch below. The
+already written in portable Lisp in the \verb|#+:CCL| branch below. The
 right SBCL port here is not foreign at all --- we reimplement the four in
 pure Common Lisp. This removes a foreign dependency and makes the
 behaviour visible in this book instead of hidden in a C string.
 
 Real foreign calls are still required elsewhere: the seventeen socket
-entries in =sockio.lisp.pamphlet= genuinely cross into C, and those
-are handled with =sb-alien= or stubbed when the HyperDoc server is
+entries in \verb|sockio.lisp.pamphlet| genuinely cross into C, and those
+are handled with \verb|sb-alien| or stubbed when the HyperDoc server is
 not built. The rule the whole port follows: \emph{reimplement trivial C
-in Lisp; reserve =sb-alien= for code that is irreducibly foreign.}
+in Lisp; reserve \texttt{sb-alien} for code that is irreducibly foreign.}
 
 The pure-Lisp hashes must reproduce the C bit-for-bit, because hash
-values may be stored and compared across sessions. =MYHASH=
+values may be stored and compared across sessions. \verb|MYHASH|
 exclusive-ors the running value left-shifted by eight, adds the
 character code plus a constant, and masks to thirty bits;
-=MYCOMBINE= shifts the masked second argument left by six, adds the
+\verb|MYCOMBINE| shifts the masked second argument left by six, adds the
 first, and reduces modulo a prime. Both are transcribed below. The
-filesystem predicates are less exact: =directoryp= follows the
-=#+:CCL= precedent, while =writeablep= is a non-creating
-open-probe whose correspondence to the C =access(2)= test ---
+filesystem predicates are less exact: \verb|directoryp| follows the
+\verb|#+:CCL| precedent, while \verb|writeablep| is a non-creating
+open-probe whose correspondence to the C \verb|access(2)| test ---
 particularly on directories --- is flagged for verification in Stage~5.
 
 \begin{chunk}{*}
@@ -238,8 +242,8 @@ Camm has rewritten it. This used to read:
 
 
 \end{chunk}
+\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}
 \end{document}
-

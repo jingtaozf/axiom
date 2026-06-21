@@ -1,22 +1,26 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{util.lisp}
+\title{\$SPAD/src/interp util.lisp}
 \author{Timothy Daly}
+\maketitle
 \begin{abstract}
 \end{abstract}
+\eject
+\tableofcontents
+\eject
 \section{util.lisp}
 This file is a collection of utility functions that are useful
-for system level work. A couple of the functions, *build-depsys*
-and *build-interpsys* interface to the src/interp/Makefile.
+for system level work. A couple of the functions, {\bf build-depsys}
+and {\bf build-interpsys} interface to the src/interp/Makefile.
 
 A second group of related functions allows us to rebuild portions
 of the system from the command prompt. This varies from rebuilding
 individual files to whole directories. The most complex functions
-like *makespad* can rebuild the whole algebra tree.
+like {\bf makespad} can rebuild the whole algebra tree.
 
 A third group of related functions are used to set up the 
-*autoload* mechanism. These enable whole subsystems to
+{\bf autoload} mechanism. These enable whole subsystems to
 be kept out of memory until they are used.
 
 A fourth group of related functions are used to construct and
@@ -26,11 +30,11 @@ A fifth group of related functions are some translated boot
 functions we need to define here so they work and are available
 at load time.
 \subsection{Building Depsys (build-depsys)}
-The *depsys* image is one of the two images we build from
-the src/interp subdirectory (the other is *interpsys*). We
-use *depsys* as a compile-time image as it contains all of
+The {\bf depsys} image is one of the two images we build from
+the src/interp subdirectory (the other is {\bf interpsys}). We
+use {\bf depsys} as a compile-time image as it contains all of
 the necessary functions and macros to compile any file. The 
-*depsys* image is almost the same as an *interpsys*
+{\bf depsys} image is almost the same as an {\bf interpsys}
 image but it does not have any autoload triggers or databases
 loaded.
 \begin{chunk}{build-depsys}
@@ -53,10 +57,10 @@ loaded.
 
 \end{chunk}
 \subsubsection{make-depsys}
-When we are building a *depsys* image for AKCL (now GCL) we need
+When we are building a {\bf depsys} image for AKCL (now GCL) we need
 need to initialize some optimization routines. Each time a file is
 compiled in GCL we collect some function information and write it
-out to a *.fn* file. If this *.fn* file exists at compile
+out to a {\bf .fn} file. If this {\bf .fn} file exists at compile
 time then GCL will perform function call optimizations. These can
 be significant in terms of performance.
 
@@ -109,15 +113,15 @@ into the image. It used to read:
 ;#     new autoload things and several functions in util.lisp need hacking.
 ;############################################################################
 \end{verbatim}
-The *build-interpsys* function takes a list of files to load
-into the image (*load-files*). It also takes several lists of files, 
+The {\bf build-interpsys} function takes a list of files to load
+into the image ({\bf load-files}). It also takes several lists of files, 
 one for each subsystem which will be autoloaded. Autoloading is explained
 below. Next it takes a set of shell variables, the most important of 
-which is the *spad* variable. This is normally set to be the same
+which is the {\bf spad} variable. This is normally set to be the same
 as the final build location. This function is called in the 
 src/interp/Makefile. 
 
-This function calls *initroot* to set up pathnames we need. Next
+This function calls {\bf initroot} to set up pathnames we need. Next
 it sets up the lisp system memory (at present only for AKCL/GCL). Next
 it loads all of the named files, resets a few global state variables,
 loads the databases, sets up autoload triggers and clears out hash tables.
@@ -329,7 +333,7 @@ on the system we are using.
 \end{chunk}
 
 \subsection{The autoload list}
-There are several subsystems within *AXIOM* that are not normally
+There are several subsystems within {\bf AXIOM} that are not normally
 loaded into a running system. They will be loaded only if you invoke
 one of the functions listed here. Each of these listed functions will
 have their definitions replaced by a special ``autoloader'' function.
@@ -337,17 +341,17 @@ The first time a function named here is called it will trigger a
 load of the associated subsystem, the autoloader functions will get
 overwritten, the function call is retried and now succeeds. Files
 containing functions listed here are assumed to exist in the 
-*autoload* subdirectory. The list of files to load is defined
+{\bf autoload} subdirectory. The list of files to load is defined
 in the src/interp/Makefile.
 \subsubsection{setBootAutloadProperties}
-This function is called by *build-interpsys*. It takes two lists.
+This function is called by {\bf build-interpsys}. It takes two lists.
 The first is a list of functions that need to be used as 
 ``autoload triggers''. The second is a list of files to load if one
 of the trigger functions is called. At system build time each of the
 functions in the first list is set up to load every file in the second
 list. In this way we will automatically load a whole subsystem if we
 touch any function in that subsystem. We call a helper function
-called *setBootAutoLoadProperty* to set up the autoload trigger.
+called {\bf setBootAutoLoadProperty} to set up the autoload trigger.
 This helper function is listed below.
 \begin{chunk}{setBootAutloadProperties}
 (defun |setBootAutloadProperties| (fun-list file-list)
@@ -360,7 +364,7 @@ This helper function is listed below.
 \end{chunk}
 \subsubsection{setBootAutoLoadProperty}
 This is a helper function to set up the autoload trigger. It sets
-the function cell of each symbol to *mkBootAutoLoad* which is
+the function cell of each symbol to {\bf mkBootAutoLoad} which is
 listed below. 
 \begin{chunk}{setBootAutoLoadProperty}
 (defun |setBootAutoLoadProperty| (func file-list)
@@ -370,7 +374,7 @@ listed below.
 \subsubsection{mkBootAutoLoad}
 This is how the autoload magic happens. Every function named in the
 autoload lists is actually just another name for this function. When
-the named function is called we call *boot-load* on all of the
+the named function is called we call {\bf boot-load} on all of the
 files in the subsystem. This overwrites all of the autoload triggers.
 We then look up the new (real) function definition and call it again
 with the real arguments. Thus the subsystem loads and the original
@@ -384,8 +388,8 @@ call succeeds.
 
 \end{chunk}
 \subsubsection{boot-load}
-This function knows where the *autoload* subdirectory lives.
-It is called by *mkBootAutoLoad* above to find the necessary
+This function knows where the {\bf autoload} subdirectory lives.
+It is called by {\bf mkBootAutoLoad} above to find the necessary
 files.
 \begin{chunk}{boot-load}
 (defun boot-load (file)
@@ -400,7 +404,7 @@ files.
 This is a further refinement of the autoload scheme. Since the
 Numerical Algorithms Group (NAG) fortran library contains many
 functions we subdivide the NAG library subsystem into chapters.
-We use a different helper function *get-NAG-chapter* to decide
+We use a different helper function {\bf get-NAG-chapter} to decide
 which files to load.
 \begin{chunk}{setNAGBootAutloadProperties}
 (defun |setNAGBootAutloadProperties| (function-list file-list)
@@ -463,7 +467,7 @@ the chapter name.
 
 \end{chunk}
 \subsubsection{parse-functions}
-This is the *boot parser* subsystem. It is only needed by 
+This is the {\bf boot parser} subsystem. It is only needed by 
 developers who translate boot code to Common Lisp.
 \begin{chunk}{parse-functions}
 ;(setq parse-functions
@@ -477,7 +481,7 @@ developers who translate boot code to Common Lisp.
 
 \end{chunk}
 \subsubsection{comp-functions}
-This is the *spad compiler* subsystem. It is only needed by
+This is the {\bf spad compiler} subsystem. It is only needed by
 developers who write or modify algebra code.
 \begin{chunk}{comp-functions}
 ;(setq comp-functions
@@ -494,8 +498,8 @@ developers who write or modify algebra code.
 
 \end{chunk}
 \subsubsection{browse-functions}
-This is the *browser* subsystem. It will get autoloaded only
-if you use the browse function of the *hypertex* system.
+This is the {\bf browser} subsystem. It will get autoloaded only
+if you use the browse function of the {\bf hypertex} system.
 \begin{chunk}{browse-functions}
 (setq browse-functions
       '(
@@ -528,8 +532,8 @@ if you use the browse function of the *hypertex* system.
 
 \end{chunk}
 \subsubsection{translate-functions}
-This is a little used subsystem to generate *ALDOR* code
-from *Spad* code. Frankly, I'd be amazed if it worked.
+This is a little used subsystem to generate {\bf ALDOR} code
+from {\bf Spad} code. Frankly, I'd be amazed if it worked.
 \begin{chunk}{translate-functions}
 (setq translate-functions '(
 ;; .spad to .as translator, in particular
@@ -539,7 +543,7 @@ from *Spad* code. Frankly, I'd be amazed if it worked.
 
 \end{chunk}
 \subsubsection{debug-functions}
-These are some *debugging* functions that I use. I can't imagine
+These are some {\bf debugging} functions that I use. I can't imagine
 why you might autoload them but they don't need to be in a running
 system.
 \begin{chunk}{debug-functions}
@@ -553,7 +557,7 @@ system.
 
 \end{chunk}
 \subsubsection{anna-functions}
-The *ANNA* subsystem, invoked thru *hypertex*, is an
+The {\bf ANNA} subsystem, invoked thru {\bf hypertex}, is an
 expert system that understands the Numerical Algorithms Group (NAG)
 fortran library. 
 \begin{chunk}{anna-functions}
@@ -696,7 +700,7 @@ is newer.
 \end{chunk}
 \subsubsection{recompile-nrlib-if-necessary}
 Recompile a single library's lisp file if it is out of date.
-The *recompile-lib-file-if-necessary* is defined in nlib.lisp.
+The {\bf recompile-lib-file-if-necessary} is defined in nlib.lisp.
 \begin{chunk}{recompile-nrlib-if-necessary}
 (defun recompile-nrlib-if-necessary (lib)
   (recompile-lib-file-if-necessary (concat (namestring lib) "/code.lsp"))
@@ -799,7 +803,7 @@ src/interp/TAGS file.
 
 \end{chunk}
 \subsubsection{compspadfiles}
-The *compspadfiles* function will recompile a list of *spad* files.
+The {\bf compspadfiles} function will recompile a list of {\bf spad} files.
 The filelist should be a file containing names of files to compile.
 \begin{chunk}{compspadfiles}
 (defun compspadfiles (filelist ;; should be a file containing files to compile
@@ -855,7 +859,7 @@ This is used by the ")cd" system command.
 
 \end{chunk}
 \subsubsection{make-directory}
-Make a directory relative to the *\$spadroot* variable.
+Make a directory relative to the {\bf \$spadroot} variable.
 \begin{chunk}{make-directory}
 (defun make-directory (direc)
   (setq direc (namestring direc))
@@ -908,8 +912,8 @@ like:
 (in-package "BOOT")
 (recompile-all-algebra-files "nalg")
 \end{verbatim}
-Note that it will build a pathname from the current *AXIOM*
-shell variable. So if the *AXIOM* shell variable had the value
+Note that it will build a pathname from the current {\bf AXIOM}
+shell variable. So if the {\bf AXIOM} shell variable had the value
 \begin{verbatim}
 /spad/mnt/${SYS}
 \end{verbatim}
@@ -933,10 +937,10 @@ and all of the matching files would be recompiled.
 
 \end{chunk}
 \subsubsection{boottocl}
-The *boottocl* function is the workhorse function that translates
-*.boot* files to *Common Lisp*. It basically wraps the actual
-*boot* function call to ensure that we don't truncate lines 
-because of **print-level** or **print-length**.
+The {\bf boottocl} function is the workhorse function that translates
+{\bf .boot} files to {\bf Common Lisp}. It basically wraps the actual
+{\bf boot} function call to ensure that we don't truncate lines 
+because of {\bf *print-level*} or {\bf *print-length*}.
 \begin{chunk}{boottocl}
 (in-package "BOOTTRAN") 
 
@@ -1140,8 +1144,8 @@ TAGS are useful for finding functions if you run Emacs. We have a
 set of functions that construct TAGS files for Axiom.
 \subsubsection{make-tags-file}
 Run the etags command on all of the lisp code. Then run the
-*spadtags-from-directory* function on the boot code. The
-final TAGS file is constructed in the *tmp* directory.
+{\bf spadtags-from-directory} function on the boot code. The
+final TAGS file is constructed in the {\bf tmp} directory.
 \begin{chunk}{make-tags-file}
 (defun make-tags-file ()
 #+:gcl (system::chdir "/tmp")
@@ -1153,7 +1157,7 @@ final TAGS file is constructed in the *tmp* directory.
 \end{chunk}
 \subsubsection{spadtags-from-directory}
 This function will walk across a directory and call 
-*spadtags-from-file* on each file.
+{\bf spadtags-from-file} on each file.
 \begin{chunk}{spadtags-from-directory}
 (defun spadtags-from-directory (dir type)
    (let* ((direc (make-directory dir))
@@ -1179,7 +1183,7 @@ This function will walk across a directory and call
 
 \end{chunk}
 \subsubsection{spadtags-from-file}
-This function knows how to find function names in *boot* code
+This function knows how to find function names in {\bf boot} code
 so we can add them to the TAGS file using standard etags format.
 \begin{chunk}{spadtags-from-file}
 (defun spadtags-from-file (spadfile)
@@ -1232,14 +1236,14 @@ using the etags file format.
 
 \end{chunk}
 \subsubsection{blankcharp}
-This is a trivial predicate for calls to *position-if-not* in the
-*findtag* function.
+This is a trivial predicate for calls to {\bf position-if-not} in the
+{\bf findtag} function.
 \begin{chunk}{blankcharp}
 (defun blankcharp (c) (char= c #\Space))
 
 \end{chunk}
 \subsubsection{findtag}
-The *findtag* function is a user-level function to figure out
+The {\bf findtag} function is a user-level function to figure out
 which file contains a given tag. This is sometimes useful if Emacs
 is not around or TAGS are not loaded.
 \begin{chunk}{findtag}
@@ -1283,7 +1287,7 @@ is not around or TAGS are not loaded.
 
 \end{chunk}
 \subsubsection{match-lisp-tag}
-The *match-lisp-tag* function is used by *findtag*. This
+The {\bf match-lisp-tag} function is used by {\bf findtag}. This
 function assumes that \\ can only appear as first character of name.
 \begin{chunk}{match-lisp-tag}
 (defun match-lisp-tag (tag tagline &optional (prefix nil)
@@ -1479,8 +1483,8 @@ function assumes that \\ can only appear as first character of name.
 \getchunk{makespad}
 
 \end{chunk}
+\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}
 \end{document}
-

@@ -3,10 +3,14 @@
 \begin{document}
 \title{books/Makefile}
 \author{Timothy Daly}
+\maketitle
 \begin{abstract}
 This Makefile creates all the primary documentation for Axiom
 as pdf files in the final output tree.
 \end{abstract}
+\eject
+\tableofcontents
+\eject
 Note that we need to set the SHELL variable here because the
 default shell appears to be /bin/sh which does not follow the
 semantics of echo used by /bin/bash. Thus, while trying to 
@@ -156,7 +160,7 @@ ${PDF}/axiom.bib:
 	@ echo ===========================================
 	@ echo making ${PDF}/axiom.bib from ${IN}/bookvolbib.pamphlet
 	@ echo ===========================================
-	@${BOOKS}/tanglec ${BOOKS}/bookvolbib.org axiom.bib \
+	@${BOOKS}/tanglec ${BOOKS}/bookvolbib.pamphlet axiom.bib \
            >${PDF}/axiom.bib
 
 ${PDF}/axiom.bst:
@@ -165,12 +169,12 @@ ${PDF}/axiom.bst:
 	@ echo ===========================================
 	@ cp ${BOOKS}/axiom.bst ${PDF}/axiom.bst
 
-${PDF}/endpaper.pdf: ${IN}/endpaper.org
+${PDF}/endpaper.pdf: ${IN}/endpaper.pamphlet
 	@ echo ===========================================
 	@ echo making ${IN}/endpaper.pdf from ${PDF}/endpaper.pamphlet
 	@ echo ===========================================
 	@(cd ${PDF} ; \
-          ${BOOKS}/untanglec ${BOOKS}/endpaper.org > ${PDF}/endpaper.pamphlet ; \
+          cp ${BOOKS}/endpaper.pamphlet ${PDF} ; \
 	  ${LATEX} endpaper.pamphlet ; \
 	  ${LATEX} endpaper.pamphlet ; \
 	  ${BIBTEX} endpaper.aux ; \
@@ -180,13 +184,13 @@ ${PDF}/endpaper.pdf: ${IN}/endpaper.org
 	  ${RM} endpaper.aux endpaper.dvi endpaper.log endpaper.out ; \
 	  ${RM} endpaper.pamphlet endpaper.ps endpaper.toc )
 
-${COOKBOOK}/%.pdf: ${COOKIN}/%.org
+${COOKBOOK}/%.pdf: ${COOKIN}/%.pamphlet
 	@ echo ===========================================
 	@ echo making ${COOKBOOK}/$*.pdf from ${COOKIN}/$*.pamphlet
 	@ echo ===========================================
 	@(cd ${COOKBOOK} ; \
 	  cp ${BOOKS}/*.sty ${COOKBOOK} ; \
-	  ${BOOKS}/untanglec ${COOKIN}/$*.org > ${COOKBOOK}/$*.pamphlet ; \
+	  cp ${COOKIN}/$*.pamphlet ${COOKBOOK} ; \
 	  ${RM} $*.toc ; \
 	  if [ -z "${NOISE}" ] ; then \
 	    ${LATEX} $*.pamphlet ; \
@@ -213,7 +217,7 @@ ${PDF}/bookvol2.pdf: ${IN}/bookvol2.pamphlet \
 	@ echo ===========================================
 	@(cd ${PDF} ; \
 	  cp ${BOOKS}/*.sty ${PDF} ; \
-	  ${BOOKS}/untanglec ${IN}/bookvol2.pamphlet > ${PDF}/bookvol2.pamphlet ; \
+	  cp ${IN}/bookvol2.pamphlet ${PDF} ; \
 	  cp ${IN}/bookheader.tex ${PDF} ; \
 	  cp -pr ${IN}/ps ${PDF} ; \
 	  ${RM} bookvol2.toc ; \
@@ -261,7 +265,7 @@ ${PDF}/bookvol10.1.pdf: ${IN}/bookvol10.1.pamphlet \
 	@ echo ===========================================
 	@(cd ${PDF} ; \
 	  cp ${BOOKS}/*.sty ${PDF} ; \
-	  ${BOOKS}/untanglec ${IN}/bookvol10.1.pamphlet > ${PDF}/bookvol10.1.pamphlet ; \
+	  cp ${IN}/bookvol10.1.pamphlet ${PDF} ; \
 	  cp ${IN}/bookheader.tex ${PDF} ; \
 	  cp -pr ${IN}/ps ${PDF} ; \
 	  ${RM} bookvol10.1.toc ; \
@@ -309,7 +313,7 @@ ${PDF}/bookvol15.pdf: ${IN}/bookvol15.pamphlet \
 	@ echo ===========================================
 	@(cd ${PDF} ; \
 	  cp ${BOOKS}/*.sty ${PDF} ; \
-	  ${BOOKS}/untanglec ${IN}/bookvol15.pamphlet > ${PDF}/bookvol15.pamphlet ; \
+	  cp ${IN}/bookvol15.pamphlet ${PDF} ; \
 	  cp ${IN}/bookheader.tex ${PDF} ; \
 	  cp -pr ${IN}/ps ${PDF} ; \
 	  ${RM} bookvol15.toc ; \
@@ -367,13 +371,13 @@ ${PDF}/bookvol15.pdf: ${IN}/bookvol15.pamphlet \
 	  ${RM} err.idx err.ilg err.ind ; \
 	  ${RM} bookheader.tex )
 
-${PDF}/%.pdf: ${IN}/%.org ${PDF}/axiom.bib ${PDF}/axiom.bst
+${PDF}/%.pdf: ${IN}/%.pamphlet ${PDF}/axiom.bib ${PDF}/axiom.bst 
 	@ echo ===========================================
 	@ echo making ${PDF}/$*.pdf from ${IN}/$*.pamphlet
 	@ echo ===========================================
 	@(cd ${PDF} ; \
 	  cp ${BOOKS}/*.sty ${PDF} ; \
-	  ${BOOKS}/untanglec ${IN}/$*.org > ${PDF}/$*.pamphlet ; \
+	  cp ${IN}/$*.pamphlet ${PDF} ; \
 	  cp ${IN}/bookheader.tex ${PDF} ; \
 	  cp -pr ${IN}/ps ${PDF} ; \
 	  ${RM} $*.toc ; \
@@ -423,14 +427,13 @@ shows up you'll have to add the pattern here to remove it.
 
 The cruft I've found so far has the forms:
 \begin{itemize}
-\item ={chapter.1}=
-\item ={section.1.1}=
-\item ={subsection.1.1}=
-\item ={appendix.A}=
-\item ={section.A.1}=
-\item ={subsection.A.1}=
+\item \verb|{chapter.1}|
+\item \verb|{section.1.1}|
+\item \verb|{subsection.1.1}|
+\item \verb|{appendix.A}|
+\item \verb|{section.A.1}|
+\item \verb|{subsection.A.1}|
 \end{itemize}
-
 The sed patterns to match and remove them (in order) are:
 \begin{chunk}{sed pattern}
 	sed -e 's/{chapter.[0-9]*}//' \
@@ -622,15 +625,15 @@ spadedit:
 
 \end{chunk}
 \section{Combined Bibliography}
+\eject
 \begin{thebibliography}{99}
-\bibitem{1} CMUCL *http://www.cons.org/cmucl*
-\bibitem{2} GCL *http://savannah.gnu.org/projects/gcl*
+\bibitem{1} CMUCL {\bf http://www.cons.org/cmucl}
+\bibitem{2} GCL {\bf http://savannah.gnu.org/projects/gcl}
 \bibitem{3} Codemist Ltd, ``Alta'', Horsecombe Vale Combs Down
 Bath BA2 5QR UK Tel. +44-1225-837430 
-*http://www.codemist.co.uk*
+{\bf http://www.codemist.co.uk}
 \bibitem{4} \$SPAD/zips/noweb-2.10a.tgz, the noweb source tree
 \bibitem{5} \$SPAD/zips/advi-1.2.0.tar.gz, the advi source tree
 \end{thebibliography}
 \end{document}
-
 

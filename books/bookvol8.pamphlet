@@ -1,33 +1,34 @@
 \documentclass[dvipdfm]{book}
 \newcommand{\VolumeName}{Volume 8: Axiom Graphics}
 \input{bookheader.tex}
+\pagenumbering{arabic}
+\mainmatter
 \setcounter{chapter}{0} % Chapter 1
 \chapter{Overview}
 \label{Overview}
 This book contains 5 programs, all related to the graphics subsystem.
 
 The primary 2D graphics routines live in the program ``view2d''
-(See Section \ref{view2d} on page~[[#view2d][view2d]]).
+(See Section \ref{view2d} on page~\pageref{view2d}).
 The primary 3d graphics routines live in the program ``view3d''
-(See Section \ref{view3d} on page~[[#view3d][view3d]]).
+(See Section \ref{view3d} on page~\pageref{view3d}).
 These two programs can be run under the control of sman using the
 program ``viewman''
-(See Section \ref{viewman} on page~[[#viewman][viewman]]).
+(See Section \ref{viewman} on page~\pageref{viewman}).
 They can also be run standalone using the program ``viewalone''
-(See Section \ref{viewalone} on page~[[#viewalone][viewalone]]).
+(See Section \ref{viewalone} on page~\pageref{viewalone}).
 
 
 \begin{itemize}
 \item viewman/viewman.c.pamphlet -- int main (void)
 \item viewalone/viewalone.c.pamphlet -- int main (int argc,char *argv[])
-\item view2d/main2d.c.pamphlet -- int main(void)
-\item view3d/main3d.c.pamphlet -- int main(void)
-\item view3d/testcol.c.pamphlet -- void main(void)
+\item view2d/main2d.c.pamphlet -- int main(void) 
+\item view3d/main3d.c.pamphlet -- int main(void) 
+\item view3d/testcol.c.pamphlet -- void main(void) 
 \end{itemize}
 
-
 The section ``gdraws'' 
-(see \ref{gdraws} on page~[[#gdraws][gdraws]])
+(see \ref{gdraws} on page~\pageref{gdraws})
 contains a set of functions for handling 
 postscript generation. This is handled by defining a set of cover
 functions for the X routines, as in GDrawArc versus XDrawArc.
@@ -59,7 +60,6 @@ is set the postscript routines are generated.
 \item Axiom.3D.monochrome (default: off)
 \item Axiom.3D.inverse (default: off)
 \end{itemize}
-
 \subsection{Shell Variables}
 \begin{itemize}
 \item DISPLAY
@@ -72,14 +72,13 @@ is set the postscript routines are generated.
 \item XENVIRONMENT/.Xdefaults-
 \item DEVE
 \end{itemize}
-
 \section{Pre-release change history}
 \begin{verbatim}
 This directory contains the C source code for the Scratchpad's
 graphics. Comments given to the maintenance program refer to 
 version numbers. The versions are documented below, starting with
 version23.
-#+begin_example
+\begin{verbatim}
 version23: (first version after returning from Europe)
    added a $DEVE environment variable - if it exists, the viewport manager 
    tries those executable files first; if it was unsuccessful or, if the 
@@ -650,44 +649,45 @@ x*x
 For the 3D graph information we have
 a table view of this information:
 
-| 1 | typeOf3D |  |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 2 | xmin | xmax | ymin | ymax | zmin | zmax |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 3 | title |  |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 4 | deltaX | deltaY | scale | scaleX | scaleY | scaleZ | theta | phi |
-|---+---+---+---+---+---+---+---+---|
-| 5 | window | window | window | window |  |  |  |  |
-|  | x | y | width | height |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 6 | haveontrol | style | axesOn | hue | number | diag- | outline |  |
-|  |  |  |  | Offset | of Hues | onals | render |  |
-|  |  |  |  |  |  |  | on |  |
-|---+---+---+---+---+---+---+---+---|
-| 7 | light | light | light | trans- |  |  |  |  |
-|  | Vec[0] | Vec[1] | Vec[2] | lucent |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 8 | persepective | eyeDistance |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 9 | numOfPoints |  |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 10- | aPt$->$x | aPt$->$y | aPt$->$z | aPt$->$c |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-| 10+ | number of |  |  |  |  |  |  |  |
-|  | Components |  |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-|  | prop closed | prop solid |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-|  | numOfLists |  |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-|  | prop closed | prop solid |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-|  | numOfPoints |  |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-|  | anIndex |  |  |  |  |  |  |  |
-|---+---+---+---+---+---+---+---+---|
-
+\begin{tabular}{l|l|l|l|l|l|l|l|l}
+1 & typeOf3D &  &  &  &  &  &  &  \\
+\hline
+2 & xmin & xmax & ymin & ymax & zmin & zmax &  &  \\
+\hline
+3 & title &  &  &  &  &  &  &  \\
+\hline
+4 & deltaX  & deltaY  & scale & scaleX & scaleY & scaleZ & theta & phi \\
+\hline
+5 & window     & window & window & window &  &  &  &  \\
+  & x          & y     & width  & height &         &       &         &  \\
+\hline
+6 & haveontrol & style & axesOn & hue    & number  & diag- & outline &  \\
+  &            &       &        & Offset & of Hues & onals & render  &  \\
+  &            &       &        &        &         &       & on      &  \\
+\hline
+7 & light  & light  & light  & trans- &  &  &  &  \\
+  & Vec[0] & Vec[1] & Vec[2] & lucent &  &  &  &  \\
+\hline
+8 & persepective & eyeDistance &  &  &  &  &  &  \\
+\hline
+9 & numOfPoints &  &  &  &  &  &  &  \\
+\hline
+10- & aPt$->$x & aPt$->$y & aPt$->$z & aPt$->$c &  &  &  &  \\
+\hline
+10+ & number of &  &  &  &  &  &  &  \\
+  & Components  &  &  &  &  &  &  &  \\
+\hline
+  & prop closed & prop solid &  &  &  &  &  &  \\
+\hline
+  & numOfLists &  &  &  &  &  &  &  \\
+\hline
+  & prop closed & prop solid  &  &  &  &  &  &  \\
+\hline
+  & numOfPoints &  &  &  &  &  &  &  \\
+\hline
+  & anIndex &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
 
 A data file, with uninteresting lines snipped is:
 \begin{verbatim}
@@ -1089,7 +1089,7 @@ typedef struct _Vertex {
 */
 
 \end{chunk}
-=XAssoc= - Associations used in the XAssocTable data structure.  The 
+{\tt XAssoc} - Associations used in the XAssocTable data structure.  The 
 associations are used as circular queue entries in the association table
 which is contains an array of circular queues (buckets).
 \index{struct!XAssoc}
@@ -1105,7 +1105,7 @@ typedef struct _XAssoc {
 } XAssoc;
 
 \end{chunk}
-=XAssocTable= - X Window System id to data structure pointer association
+{\tt XAssocTable} - X Window System id to data structure pointer association
 table.  An XAssocTable is a hash table whose buckets are circular
 queues of XAssoc's.  The XAssocTable is constructed from an array of
 XAssoc's which are the circular queue headers (bucket headers).  
@@ -4620,7 +4620,7 @@ again:
 The function superselect!, if select returns a -1
 due to an interrupt (EINTR), this routine checks to see if it's a
 child viewport that has closed. Expected global variables: 
-=checkClosedChild=
+{\tt checkClosedChild}
 \index{viewman!superSelect}
 \index{superSelect viewman}
 \begin{chunk}{viewman}
@@ -4669,7 +4669,7 @@ void brokenPipe(int sig) {
 The function superselect!, if select returns a -1
 due to an interrupt (EINTR), this routine checks to see if it's a
 child viewport that has closed. Expected global variables: 
-=checkClosedChild=
+{\tt checkClosedChild}
 \index{viewman!main}
 \index{main viewman}
 \begin{chunk}{viewman}
@@ -9506,29 +9506,22 @@ int writeViewport(int thingsToWrite) {
 \subsection{main}
 The main function performs the following steps
 \begin{enumerate}
-\item calls XOpenDisplay
-\end{enumerate}
-  (See \ref{XOpenDisplay} on page~[[#XOpenDisplay][XOpenDisplay]]),
-  using the DISPLAY variable from the environment, to choose the display.
-\begin{enumerate}
-\item uses the DefaultScreen macro
-\end{enumerate}
-  (See \ref{DefaultScreen} on page~[[#DefaultScreen][DefaultScreen]]), to get the
-  user's default screen.
-\begin{enumerate}
-\item uses the RootWindow macro
-\end{enumerate}
-  (See \ref{RootWindow} on page~[[#RootWindow][RootWindow]]), to get the
-  root window on the user's display and screen.
-\begin{enumerate}
+\item calls XOpenDisplay 
+(See \ref{XOpenDisplay} on page~\pageref{XOpenDisplay}), 
+using the DISPLAY variable from the environment, to choose the display.
+\item uses the DefaultScreen macro 
+(See \ref{DefaultScreen} on page~\pageref{DefaultScreen}), to get the
+user's default screen.
+\item uses the RootWindow macro 
+(See \ref{RootWindow} on page~\pageref{RootWindow}), to get the
+root window on the user's display and screen.
 \item calls XCreateAssocTable to create an association table with
+{\tt nbuckets} which is elsewhere defined to be 128. Note that we
+do not actually use the X10 definition of this function but use our
+own version. See \ref{XCreateAssocTable} on page~\pageref{XCreateAssocTable}.
+This table is used to hold an association between the control panel buttons
+and the window they control.
 \end{enumerate}
-  =nbuckets= which is elsewhere defined to be 128. Note that we
-  do not actually use the X10 definition of this function but use our
-  own version. See \ref{XCreateAssocTable} on page~[[#XCreateAssocTable][XCreateAssocTable]].
-  This table is used to hold an association between the control panel buttons
-  and the window they control.
-
 \index{view2d!main}
 \index{main view2d}
 \begin{chunk}{view2d}
@@ -12627,11 +12620,10 @@ We want to extract the following forms of data:
 \item defined polygon primitives
 \item surfaces
 \end{itemize}
-
 the last one is the one that will replace the function of 2 variables,
 tubes as well as 3D parameterized functions of 2 variables.
 Since there could be many other ways of constructing 
-=List List List Points= - much
+{\tt List List List Points} - much
 more than could be usefully interpreted - any other formats are
 currently not allowed. When they are, this comment should be updated
 appropriately.
@@ -12641,22 +12633,15 @@ We decide here, before we begin traversing the
 component what we want to interpret it as.
 Here's the convention used to figure that out:
 \begin{itemize}
-\item points: #anLLPoint$\rightarrow$numOfLists was 1\\
+\item points: \#anLLPoint$\rightarrow$numOfLists was 1\\
+\#anLPoint$\rightarrow$numOfPoints is 1
+\item lines: \#anLLPoint$\rightarrow$ numOfLists was 1\\
+\#anLPoint$\rightarrow$numOfPoints > 1
+\item polygons: \#anLLPoint$\rightarrow$numOfLists was 2\\
+\#anLPoint$\rightarrow$numOfPoints is 1
+\item surface: \#anLLPoint$\rightarrow$numOfLists was some $m>1$\\
+\#anLPoint$\rightarrow$numOfPoints all point lists are the same.
 \end{itemize}
-  #anLPoint$\rightarrow$numOfPoints is 1
-\begin{itemize}
-\item lines: #anLLPoint$\rightarrow$ numOfLists was 1\\
-\end{itemize}
-  #anLPoint$\rightarrow$numOfPoints > 1
-\begin{itemize}
-\item polygons: #anLLPoint$\rightarrow$numOfLists was 2\\
-\end{itemize}
-  #anLPoint$\rightarrow$numOfPoints is 1
-\begin{itemize}
-\item surface: #anLLPoint$\rightarrow$numOfLists was some $m>1$\\
-\end{itemize}
-  #anLPoint$\rightarrow$numOfPoints all point lists are the same.
-
 \begin{chunk}{view3d}
     anLLPoint = viewData.lllp.llp;
     for (i=0; i<viewData.lllp.numOfComponents; i++,anLLPoint++) {
@@ -20547,7 +20532,7 @@ The general drawing functions are (see file for description of functionality)
  16. ps.h
     header information needed by only the Gdraw routines.
 
-*** POSTSCRIPT
+\subsection{POSTSCRIPT}
 
 A PostScript file can be generated by using a button on the control
 panel of a viewalone picture, or in Axiom, with the command write,
@@ -20558,7 +20543,7 @@ window.
 
 In order to generate a postscript output, we first initializ file names and
 paths to be used by our program by using
-#+begin_example
+\begin{verbatim}
 	InitPs(viewWindow, titleWindow)    [in GinitPS.c]
 \end{verbatim}
 then call the G draw routines with option "PS", which would generate postscript
@@ -20591,50 +20576,39 @@ corresponding GDraw commands with the appropriate parameters.  In addition,
 we need to: draw frame, set GC variable names, create GCs, initialize
 postscript data structures, cat all the procedures used together.
 
-*IMPORTANT*:\\
+{\bf IMPORTANT}:\\
 In order to create postscript command file, we need environment
 variable DEVE (i.e., setenv DEVE /u/jimwen/3D/version28) or AXIOM (e.g., setenv
 AXIOM /spad/mnt/rt in case gdraws directory has been installed on the server).
 Without this path, the program would not know where the postscript files (in
 gdraws/PS) are.
 
-*LIMITATIONS* of current implementation:\\
+{\bf LIMITATIONS} of current implementation:\\
 A picture is printed with 1 inch x direction, and 1 inch y direction 
 offset, and the largest complete picutre is the size of the page
 with the offest.
 
-*BUGS*:\\
+{\bf BUGS}:\\
 The region box is not drawn correctly when perspective is altered.
 
 
-*FUTURE DIRECTIONS*:
+{\bf FUTURE DIRECTIONS}:
 \begin{itemize}
 \item for view3d color rendering, may want to convert LINE drawing color
-\end{itemize}
-  to the appropriate grayscale.  Right now, they're all drawn in black.
-\begin{itemize}
+to the appropriate grayscale.  Right now, they're all drawn in black.
 \item for view3d's routines for color rendering, may want to implement
-\end{itemize}
-  color drawing for postscript functions just in case someone does
-  have access to a color postscript printer.
-\begin{itemize}
+color drawing for postscript functions just in case someone does
+have access to a color postscript printer.
 \item implement more functionality for attributes used in GC, i.e., dashed
-\end{itemize}
-  line, dotted line etc.
-\begin{itemize}
+line, dotted line etc.
 \item implement a display postscript menu to set things like picture size,
-\end{itemize}
-  landscape/portrait orientation, picture centered, left, right, up,
-  down, etc., reversed video.
-\begin{itemize}
+landscape/portrait orientation, picture centered, left, right, up,
+down, etc., reversed video.
 \item make font an attribute in postscripts's graphics context so the
+font can be set in user program.  Right now, it uses only 1 font.
+\item for view2d's stuff, implement a smaller font for the drawing the 
+units on the axes.
 \end{itemize}
-  font can be set in user program.  Right now, it uses only 1 font.
-\begin{itemize}
-\item for view2d's stuff, implement a smaller font for the drawing the
-\end{itemize}
-  units on the axes.
-
 
 \section{gfun.c}
 Indices for PostScript draw procedures.
@@ -20825,7 +20799,7 @@ int GdrawsSetDimension(Window viewWindow, Window titleWindow) {
 \label{GDrawImageString}
 \index{gdraws!GDrawImageString}
 GDrawImageString draws an image text string 
-See \ref{XDrawImageString} on page~[[#XDrawImageString][XDrawImageString]]
+See \ref{XDrawImageString} on page~\pageref{XDrawImageString}
 \begin{chunk}{gfun.c}
 
 int GDrawImageString(
@@ -20865,7 +20839,7 @@ int GDrawImageString(
 \label{GDrawArc}
 \index{gdraws!GDrawArc}
 GDrawArc draws an arc.
-See \ref{XDrawArc} on page~[[#XDrawArc][XDrawArc]]
+See \ref{XDrawArc} on page~\pageref{XDrawArc}
 \begin{chunk}{gfun.c}
 
 int GDrawArc(
@@ -20904,7 +20878,7 @@ int GDrawArc(
 \label{GDrawLine}
 \index{gdraws!GDrawLine}
 GDrawLine draws a line.
-See \ref{XDrawLine} on page~[[#XDrawLine][XDrawLine]]
+See \ref{XDrawLine} on page~\pageref{XDrawLine}
 \begin{chunk}{gfun.c}
 
 int GDrawLine(
@@ -20986,7 +20960,7 @@ int GDrawLines(
 \label{GDrawPoint}
 \index{gdraws!GDrawPoint}
 GDrawPoint draws a point.
-(See Section \ref{XDrawPoint} on page~[[#XDrawPoint][XDrawPoint]]),
+(See Section \ref{XDrawPoint} on page~\pageref{XDrawPoint}),
 \begin{chunk}{gfun.c}
 
 int GDrawPoint(
@@ -21134,7 +21108,7 @@ int GDrawPushButton(
 \label{GDrawString}
 \index{gdraws!GDrawString}
 Draws a string.
-See \ref{XDrawString} on page~[[#XDrawString][XDrawString]].
+See \ref{XDrawString} on page~\pageref{XDrawString}.
 \begin{chunk}{gfun.c}
 
 int GDrawString(
@@ -21173,7 +21147,7 @@ int GDrawString(
 \label{GFillArc}
 \index{gdraws!GFillArc}
 Draws and fills an arc with foreground color.
-See \ref{XFillArc} on page~[[#XFillArc][XFillArc]].
+See \ref{XFillArc} on page~\pageref{XFillArc}.
 \begin{chunk}{gfun.c}
 
 int GFillArc(
@@ -21418,7 +21392,7 @@ char *PSfindGC(GC gc) {
 \label{GSetForeground}
 \index{gdraws!GSetForeground}
 Sets foreground color.
-See \ref{XSetForeground} on page~[[#XSetForeground][XSetForeground]].
+See \ref{XSetForeground} on page~\pageref{XSetForeground}.
 \begin{chunk}{gfun.c}
 
 int GSetForeground(
@@ -21455,7 +21429,7 @@ int GSetForeground(
 \label{GSetBackground}
 \index{gdraws!GSetBackground}
 Sets background color.
-See \ref{XSetBackground} on page~[[#XSetBackground][XSetBackground]].
+See \ref{XSetBackground} on page~\pageref{XSetBackground}.
 \begin{chunk}{gfun.c}
 
 int GSetBackground(
@@ -21491,7 +21465,7 @@ int GSetBackground(
 \subsection{GSetLineAttributes}
 \label{GSetLineAttributes}
 \index{gdraws!GSetLineAttributes}
-(See \ref{XSetLineAttributes} on page~[[#XSetLineAttributes][XSetLineAttributes]]),
+(See \ref{XSetLineAttributes} on page~\pageref{XSetLineAttributes}),
 Notice that we'll not setting line style for
 postscript.  This is because solid is the ls in ps and in view3d and 2d,
 we really don't use anything else than solid.
@@ -21626,7 +21600,7 @@ int centerY(GC viewGCy,int windowHeight) {
 \label{PSColorPolygon}
 \index{gdraws!PSColorPolygon}
 PSColorPolygon draws and fills a polygon given data in XPoint.
-(See \ref{XFillPolygon} on page~[[#XFillPolygon][XFillPolygon]])
+(See \ref{XFillPolygon} on page~\pageref{XFillPolygon})
 \begin{chunk}{gfun.c}
 
 int PSColorPolygon(
@@ -21723,7 +21697,7 @@ int PSDrawColor(
 \label{PSFillPolygon}
 \index{gdraws!PSFillPolygon}
 PSFillPolygon draws and fills a polygon given data in XPoint.
-(See \ref{XFillPolygon} on page~[[#XFillPolygon][XFillPolygon]]).
+(See \ref{XFillPolygon} on page~\pageref{XFillPolygon}).
 \begin{chunk}{gfun.c}
 
 int PSFillPolygon(
@@ -22507,27 +22481,20 @@ XDrawString (Display *display, Drawable drawable, GC gc,
 \end{verbatim}
 
 \begin{itemize}
-\item =display= --
+\item {\tt display} --
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt drawable} -- Specifies the drawable. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt x} --
+Specify the x coordinate of the baseline starting position for
+the character, relative to the origin of the specified drawable.
+\item {\tt y} --
+Specify the y coordinate of the baseline starting position for
+the character, relative to the origin of the specified drawable.
+\item {\tt string} -- Specifies the character string. 
+\item {\tt length} -- 
+Specifies the number of characters in the string argument. 
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =drawable= -- Specifies the drawable.
-\item =gc= -- Specifies the graphics context.
-\item =x= --
-\end{itemize}
-  Specify the x coordinate of the baseline starting position for
-  the character, relative to the origin of the specified drawable.
-\begin{itemize}
-\item =y= --
-\end{itemize}
-  Specify the y coordinate of the baseline starting position for
-  the character, relative to the origin of the specified drawable.
-\begin{itemize}
-\item =string= -- Specifies the character string.
-\item =length= --
-\end{itemize}
-  Specifies the number of characters in the string argument.
-
 
 XDrawString draws the given string into a drawable using the
 foreground only to draw set bits in the font. It does not affect any
@@ -22550,24 +22517,19 @@ From the Xlib Drawing Primitives, XDrawPoint draws a point.
 \begin{verbatim}
 XDrawPoint (Display *display, Drawable drawable, GC gc, int x, int y);
 \end{verbatim}
-*Arguments*
+{\bf Arguments}
 \begin{itemize}
-\item =display= --
+\item {\tt display} --
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt drawable} -- Specifies the drawable. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt x} --
+Specify the x coordinate of the point, relative to the corner of the 
+drawable. 
+\item {\tt y} --
+Specify the y coordinate of the point, relative to the corner of the 
+drawable. 
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =drawable= -- Specifies the drawable.
-\item =gc= -- Specifies the graphics context.
-\item =x= --
-\end{itemize}
-  Specify the x coordinate of the point, relative to the corner of the
-  drawable.
-\begin{itemize}
-\item =y= --
-\end{itemize}
-  Specify the y coordinate of the point, relative to the corner of the
-  drawable.
-
 
 XDrawPoint uses the foreground pixel and function components of the
 graphics con- text to draw a single point into the specified
@@ -22584,32 +22546,23 @@ XDrawLine(Display *display, Drawable drawable, GCgc,
           int x1, int y1, int x2, int y2);
 \end{verbatim}
 \begin{itemize}
-\item =display= --
+\item {\tt display} --
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt drawable} -- Specifies the drawable. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt x1} --
+Specify the x coordinate of the start point of the line relative to
+the drawable origin. 
+\item {\tt y1} --
+Specify the y coordinate of the start point of the line relative to
+the drawable origin. 
+\item {\tt x2} --
+Specify the x coordinate of the end point of the line relative to
+the drawable origin. 
+\item {\tt y2} --
+Specify the y coordinate of the end point of the line relative to
+the drawable origin. 
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =drawable= -- Specifies the drawable.
-\item =gc= -- Specifies the graphics context.
-\item =x1= --
-\end{itemize}
-  Specify the x coordinate of the start point of the line relative to
-  the drawable origin.
-\begin{itemize}
-\item =y1= --
-\end{itemize}
-  Specify the y coordinate of the start point of the line relative to
-  the drawable origin.
-\begin{itemize}
-\item =x2= --
-\end{itemize}
-  Specify the x coordinate of the end point of the line relative to
-  the drawable origin.
-\begin{itemize}
-\item =y2= --
-\end{itemize}
-  Specify the y coordinate of the end point of the line relative to
-  the drawable origin.
-
 
 XDrawLine connects point (xl, yl) to point (x2, y2).  XDrawLine uses
 the components of the specified graphics context to draw a line
@@ -22634,28 +22587,21 @@ XDrawImageString(Display *display, Drawable drawable, GC gc, int x, int y,
 \end{verbatim}
 
 \begin{itemize}
-\item =display= --
+\item {\tt display} --
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt drawable} -- Specifies the drawable. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt x} --
+Specify the x coordinate of the baseline starting position for the
+image text character, relative to the origin of the specified
+drawable.
+\item {\tt y} --
+Specify the y coordinate of the baseline starting position for the
+image text character, relative to the origin of the specified
+drawable.
+\item {\tt string} -- Specifies the character string
+\item {\tt length} -- Specifies the number of characters in the string
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =drawable= -- Specifies the drawable.
-\item =gc= -- Specifies the graphics context.
-\item =x= --
-\end{itemize}
-  Specify the x coordinate of the baseline starting position for the
-  image text character, relative to the origin of the specified
-  drawable.
-\begin{itemize}
-\item =y= --
-\end{itemize}
-  Specify the y coordinate of the baseline starting position for the
-  image text character, relative to the origin of the specified
-  drawable.
-\begin{itemize}
-\item =string= -- Specifies the character string
-\item =length= -- Specifies the number of characters in the string
-\end{itemize}
-
 
 XDrawImageString uses these graphics context components: plane\_mask,
 foreground, background, font, subwindow\_mode, clip x origin,
@@ -22680,44 +22626,31 @@ XFillArc (Display *display, Drawable drawable, GC gc,
           int angle1, int angle2);
 \end{verbatim}
 
-*Arguments*
+{\bf Arguments}
 \begin{itemize}
-\item =display= --
+\item {\tt display} --
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt drawable} -- Specifies the drawable. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt x} --
+Specify the x coordinate of the upper-left corner of the bounding box 
+containing the arc, relative to the origin of the drawable. 
+\item {\tt y} --
+Specify the y coordinate of the upper-left corner of the bounding box 
+containing the arc, relative to the origin of the drawable. 
+\item {\tt width} --
+Specify the width in pixels. These are the major and minor axes of the arc. 
+\item {\tt height} --
+Specify the height in pixels. These are the major and minor axes of the arc. 
+\item {\tt angle1} --
+Specifies the start of the arc relative to the three-o'clock position
+from the center. Angles are specified in degrees, multiplied by 64.
+\item {\tt angle2} --
+Specifies the path and extent of the arc relative to the start of the
+arc. Angles are specified in degrees, multiplied by 64.
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =drawable= -- Specifies the drawable.
-\item =gc= -- Specifies the graphics context.
-\item =x= --
-\end{itemize}
-  Specify the x coordinate of the upper-left corner of the bounding box
-  containing the arc, relative to the origin of the drawable.
-\begin{itemize}
-\item =y= --
-\end{itemize}
-  Specify the y coordinate of the upper-left corner of the bounding box
-  containing the arc, relative to the origin of the drawable.
-\begin{itemize}
-\item =width= --
-\end{itemize}
-  Specify the width in pixels. These are the major and minor axes of the arc.
-\begin{itemize}
-\item =height= --
-\end{itemize}
-  Specify the height in pixels. These are the major and minor axes of the arc.
-\begin{itemize}
-\item =angle1= --
-\end{itemize}
-  Specifies the start of the arc relative to the three-o'clock position
-  from the center. Angles are specified in degrees, multiplied by 64.
-\begin{itemize}
-\item =angle2= --
-\end{itemize}
-  Specifies the path and extent of the arc relative to the start of the
-  arc. Angles are specified in degrees, multiplied by 64.
 
-
-*Description*
+{\bf Description}
 
 XFillArc fills an arc according to the arc mode in the GC. The x, y,
 width, and height arguments specify the bounding box for the arc. See
@@ -22747,42 +22680,29 @@ XDrawArc(Display *display, Drawable drawable, GC gc, int x, int y,
          unsigned int width, unsigned int height, int angle1, int angle2);
 \end{verbatim}
 \begin{itemize}
-\item =display= --
+\item {\tt display} --
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt drawable} -- Specifies the drawable. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt x} --
+Specify the x coordinate of the upper-left corner of the rectangle that 
+contains the arc, relative to the origin of the specified drawable. 
+\item {\tt y} --
+Specify the y coordinate of the upper-left corner of the rectangle that 
+contains the arc, relative to the origin of the specified drawable. 
+\item {\tt width} --
+Specify the width in pixels of the major and minor axes of the arc. 
+\item {\tt height} --
+Specify the height in pixels of the major and minor axes of the arc. 
+\item {\tt angle1} --
+Specifies the start of the arc relative to the three-o'clock position
+from the center. Angles are specified in 64ths of a degree, (360 * 64
+is a complete circle).
+\item {\tt int angle2} --
+Specifies the path and extent of the arc relative to the start of the
+arc.  Angles are specified in 64ths of a degree, (360 * 64 is a
+complete circle).
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =drawable= -- Specifies the drawable.
-\item =gc= -- Specifies the graphics context.
-\item =x= --
-\end{itemize}
-  Specify the x coordinate of the upper-left corner of the rectangle that
-  contains the arc, relative to the origin of the specified drawable.
-\begin{itemize}
-\item =y= --
-\end{itemize}
-  Specify the y coordinate of the upper-left corner of the rectangle that
-  contains the arc, relative to the origin of the specified drawable.
-\begin{itemize}
-\item =width= --
-\end{itemize}
-  Specify the width in pixels of the major and minor axes of the arc.
-\begin{itemize}
-\item =height= --
-\end{itemize}
-  Specify the height in pixels of the major and minor axes of the arc.
-\begin{itemize}
-\item =angle1= --
-\end{itemize}
-  Specifies the start of the arc relative to the three-o'clock position
-  from the center. Angles are specified in 64ths of a degree, (360 * 64
-  is a complete circle).
-\begin{itemize}
-\item =int angle2= --
-\end{itemize}
-  Specifies the path and extent of the arc relative to the start of the
-  arc.  Angles are specified in 64ths of a degree, (360 * 64 is a
-  complete circle).
-
 
 XDrawArc draws a circular or elliptical arc. An arc is specified by a
 rectangle and two angles. The x and y coordinates are relative to the
@@ -22820,17 +22740,14 @@ XSetForeground m set the foreground pixel value in a graphics context.
 \begin{verbatim}
 XSetForeground (Display *display, GC gc, unsigned long foreground);
 \end{verbatim}
-*Arguments*
+{\bf Arguments}
 \begin{itemize}
-\item =display= --
+\item {\tt display} -- 
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt foreground} --
+Specifies the foreground you want to set for the specified graphics context. 
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =gc= -- Specifies the graphics context.
-\item =foreground= --
-\end{itemize}
-  Specifies the foreground you want to set for the specified graphics context.
-
 
 \subsection{XSetBackground}
 \label{XSetBackground}
@@ -22840,17 +22757,14 @@ XSetBackground m set the background pixel value in a graphics context.
 \begin{verbatim}
 XSetBackground (Display *display, GC gc, unsigned long background);
 \end{verbatim}
-*Arguments*
+{\bf Arguments}
 \begin{itemize}
-\item =display= --
+\item {\tt display} -- 
+Specifies a pointer to the Display structure; returned from XOpenDisplay. 
+\item {\tt gc} -- Specifies the graphics context. 
+\item {\tt background} --
+Specifies the background you want to set for the specified graphics context. 
 \end{itemize}
-  Specifies a pointer to the Display structure; returned from XOpenDisplay.
-\begin{itemize}
-\item =gc= -- Specifies the graphics context.
-\item =background= --
-\end{itemize}
-  Specifies the background you want to set for the specified graphics context.
-
 
 \subsection{XSetLineAttributes}
 \label{XSetLineAttributes}
@@ -22859,29 +22773,22 @@ In Xlib, in the Graphics Context, the function XSetLineAttributes
 sets four types of line characteristics in the GC: line\_width, 
 line\_style, cap\_style, and join\_style. 
 \begin{itemize}
-\item =line\_width= -- Specifies the line width you want to set
+\item {\tt line\_width} -- Specifies the line width you want to set
+for the specified graphics context.  A line\_width of zero (0) means
+to use the fastest algorithm for drawing a line of one pixel
+width. These lines may not meet properly with lines specified as width
+1 or more.
+\item {\tt line\_style} -- 
+Specifies the line style you want to set for the specified graphics context. 
+Possible values are LineSolid, LineOnOffDash, or LineDouble-Dash. 
+\item {\tt cap\_style} --
+Specifies the line and cap style you want to set for the specified graphics 
+context. Possible values are CapNotLast, CapButt, CapRound, or 
+CapProjecting. 
+\item {\tt join\_style} --
+Specifies the line-join style you want to set for the specified graphics con- 
+text. Possible values are JoinMiter, JoinRound, or JoinBevel. 
 \end{itemize}
-  for the specified graphics context.  A line\_width of zero (0) means
-  to use the fastest algorithm for drawing a line of one pixel
-  width. These lines may not meet properly with lines specified as width
-  1 or more.
-\begin{itemize}
-\item =line\_style= --
-\end{itemize}
-  Specifies the line style you want to set for the specified graphics context.
-  Possible values are LineSolid, LineOnOffDash, or LineDouble-Dash.
-\begin{itemize}
-\item =cap\_style= --
-\end{itemize}
-  Specifies the line and cap style you want to set for the specified graphics
-  context. Possible values are CapNotLast, CapButt, CapRound, or
-  CapProjecting.
-\begin{itemize}
-\item =join\_style= --
-\end{itemize}
-  Specifies the line-join style you want to set for the specified graphics con-
-  text. Possible values are JoinMiter, JoinRound, or JoinBevel.
-
 
 \subsection{DefaultScreen}
 \label{DefaultScreen}
@@ -22901,19 +22808,16 @@ of this function.
 \begin{verbatim}
   XAssocTable *XCreateAssocTable(int size) 
 \end{verbatim}
-*Arguments*
+{\bf Arguments}
 \begin{itemize}
-\item =size=
+\item {\tt size} 
+Specifies the number of buckets in the hashed association table. 
 \end{itemize}
-  Specifies the number of buckets in the hashed association table.
-
-*Description*
+{\bf Description}
 XCreateAssocTable creates an association table, which allows you to
 associate your own structures with X resources in a fast lookup
 table. This function is provided for compatibility with X Version
-\begin{enumerate}
-\item To use it you must include the file <xll> and link with the
-\end{enumerate}
+10. To use it you must include the file <xll> and link with the
 library -loldX.  The size argument specifies the number of buckets in
 the hash system of XAssocTable.  For reasons of efficiency the number
 of buckets should be a power of two. Some size sugges- tions might be:
@@ -22921,7 +22825,7 @@ use 32 buckets per 100 objects; a reasonable maximum number of object
 per buckets is 8.  If there is an error allocating memory for the
 XAssocTable, a NULL pointer is returned.
 
-*Structures*
+{\bf Structures}
 \begin{verbatim}
 typedef struct { 
     XAssoc *buckets; /* pointer to first bucket in array */ 
@@ -22937,16 +22841,15 @@ use XOpenDisplay().
 \begin{verbatim}
     Display *XOpenDisplay(char *displayname);
 \end{verbatim}
-*Arguments*
+{\bf Arguments}
 \begin{itemize}
-\item =displayname= Specifies the hardware display name, which
+\item {\tt displayname} Specifies the hardware display name, which
+determines the display and communications domain to be used. On a
+POSIX-conformant system, if the displayname is NULL, it defaults to
+the value of the DISPLAY environment variable.
 \end{itemize}
-  determines the display and communications domain to be used. On a
-  POSIX-conformant system, if the displayname is NULL, it defaults to
-  the value of the DISPLAY environment variable.
 
-
-*Description*
+{\bf Description}
 
 The encoding and interpretation of the display name is implementation
 dependent. Strings in the Host Portable Character Encoding are
@@ -22957,16 +22860,16 @@ environment variable can be a string in the format:
     hostname:number.screennumber
 \end{verbatim}
 
-=hostname= Specifies the name of the host machine on which the display
+{\tt hostname} Specifies the name of the host machine on which the display
 is physically attached. You follow the hostname with either a single
 colon (:) or a double colon (::).
 
-=number= Specifies the number of the display server on that host
+{\tt number} Specifies the number of the display server on that host
 machine. You may optionally follow this display number with a period
 (.). A single CPU can have more than one display. Multiple displays
 are usually numbered starting with zero.
 
-=screennumber= Specifies the screen to be used on that server. Multiple
+{\tt screennumber} Specifies the screen to be used on that server. Multiple
 screens can be controlled by a single X server. The screennumber sets
 an internal variable that can be accessed by using the DefaultScreen()
 macro or the XDefaultScreen() function if you are using languages
@@ -23002,7 +22905,8 @@ information macros or functions.
 
 \section{X11 API calls}
 \begin{itemize}
-\item XSolidColor\begin{itemize}
+\item XSolidColor
+\begin{itemize}
 \item moColor to define the foreground color
 \item moColor\_BG to define the background color
 \end{itemize}
@@ -23023,64 +22927,44 @@ information macros or functions.
 \item XSizeHints	       sizehints;
 \item XColor	       foreColor, backColor;
 \item XCreateBitmapFromData(dsply,rtWindow,mouseBitmap\_bits,
-\end{itemize}
-  mouseBitmap\_width,mouseBitmap\_height);
-\begin{itemize}
+				    mouseBitmap\_width,mouseBitmap\_height);
 \item XQueryColor(dsply,colorMap,\&foreColor);
 \item XCreatePixmapCursor(dsply,mousebits,mousemask,
-\end{itemize}
-  \&foreColor,\&backColor,
-  mouseBitmap\_x\_hot,mouseBitmap\_y\_hot);
-\begin{itemize}
+					\&foreColor,\&backColor,
+					mouseBitmap\_x\_hot,mouseBitmap\_y\_hot);
 \item XCreateWindow(dsply,rtWindow,
-\end{itemize}
-  cXY.putX,cXY.putY,controlWidth,controlHeight,3,
-  CopyFromParent,InputOutput,CopyFromParent,
-  controlCreateMASK,\&cwAttrib);
-\begin{itemize}
+		     cXY.putX,cXY.putY,controlWidth,controlHeight,3,
+		     CopyFromParent,InputOutput,CopyFromParent,
+		     controlCreateMASK,\&cwAttrib);
 \item XSetNormalHints(dsply,cw,\&sizehints);
 \item XSetStandardProperties(dsply,cw,"2D Control Panel","2D Control Panel",
-\end{itemize}
-  None,NULL,0,\&sizehints);
-\begin{itemize}
+			 None,NULL,0,\&sizehints);
 \item XMakeAssoc(dsply,table,(control->buttonQueue[i]).self,
-\end{itemize}
-  \&((control->buttonQueue[i]).buttonKey));
-\begin{itemize}
+	       \&((control->buttonQueue[i]).buttonKey));
 \item XMapWindow(dsply,(control->buttonQueue[i]).self);
 \item XRaiseWindow(dsply,control->controlWindow);
 \item XMoveWindow(dsply,control->controlWindow,whereControl.putX,
-\end{itemize}
-  whereControl.putY);
-\begin{itemize}
+	      whereControl.putY);
 \item XClearArea(dsply,viewport->controlPanel->controlWindow,
-\end{itemize}
-  0,controlMessageY-2,controlWidth,controlMessageHeight,False);
-\begin{itemize}
+	     0,controlMessageY-2,controlWidth,controlMessageHeight,False);
 \item XFontStruct   *globalFont,*buttonFont,*headerFont,*titleFont,
 \item XrmDatabase      rDB; -- X resource database
 \item XrmValue value;
 \item XGCValues gcVals;
 \item (XArc *)malloc(xPointsNeeded * sizeof(XArc))
 \item XSetFont(dsply,gc,font->fid)
-\item XCreateAssocTable(nbuckets);
+\item XCreateAssocTable(nbuckets);  
 \item XInitSpadFill(dsply,scrn,\&colorMap,
-\end{itemize}
-  \&totalHues,\&totalSolidShades,
-  \&totalDitheredAndSolids,\&totalShades);
-\begin{itemize}
+                              \&totalHues,\&totalSolidShades,
+                              \&totalDitheredAndSolids,\&totalShades);
 \item XQueryFont(dsply,XGContextFromGC(DefaultGC(dsply,scrn)));
 \item XrmGetResource(rDB,
-\end{itemize}
-  "Axiom.2D.messageFont",
-  "Axiom.2D.Font",
-  str\_type, \&value) == True)
-\begin{itemize}
+		     "Axiom.2D.messageFont",
+		     "Axiom.2D.Font",
+		     str\_type, \&value) == True)
 \item XLoadQueryFont(dsply, prop)
 \item XCreateGC(dsply,rtWindow,GCForeground | GCBackground ,
-\end{itemize}
-  \&controlGCVals);
-\begin{itemize}
+			\&controlGCVals);  
 \item XrmInitialize();
 \item XrmGetFileDatabase(name);
 \item XrmMergeDatabases(applicationDB, \&rDB);
@@ -23097,40 +22981,32 @@ information macros or functions.
 \item (XButtonEvent *)event
 \item (XEvent *)event)
 \item XCheckWindowEvent(dsply,
-\end{itemize}
-  viewport->titleWindow,
-  ExposureMask,
-  \&tempEvent);
-\begin{itemize}
+			      viewport->titleWindow,
+			      ExposureMask,
+			      \&tempEvent);
 \item XGetWindowAttributes(dsply,
-\end{itemize}
-  whichWindow,
-  \&graphWindowAttrib);
-\begin{itemize}
+				 whichWindow,
+				 \&graphWindowAttrib);
 \item XResizeWindow(dsply,
-\end{itemize}
-  viewport->viewWindow,
-  graphWindowAttrib.width,
-  graphWindowAttrib.height-titleHeight);
-\begin{itemize}
+			  viewport->viewWindow,
+			  graphWindowAttrib.width,
+			  graphWindowAttrib.height-titleHeight);
 \item XMapWindow(dsply,whichWindow);
 \item XCheckMaskEvent(dsply,
-\end{itemize}
-  ButtonMotionMask,
-  event));
-\begin{itemize}
+				   ButtonMotionMask,
+				   event));
 \item (XButtonEvent *)event)
 \item XFlush(dsply);
 \item XUnmapWindow(dsply,control->controlWindow);
 \item XLookUpAssoc(dsply,table,whichWindow));
 \item XMoveWindow(dsply,viewport->titleWindow,i1,i2);
-\item XResizeWindow(dsply,viewport->titleWindow,i1,i2+titleHeight);
+\item XResizeWindow(dsply,viewport->titleWindow,i1,i2+titleHeight); 
 \item XFreeGC(dsply,globalGC1);
 \item XFreeFont(dsply,globalFont);
 \item XFreeColormap(dsply,colorMap);
 \item XCloseDisplay(dsply);
 \item XWindowAttributes attribInfo;
-\item XClearWindow(dsply,viewport->titleWindow);
+\item XClearWindow(dsply,viewport->titleWindow); 
 \item XCharStruct       overall;
 \item XTextExtents(unitFont,"o",1,\&dummyInt,\&ascent,\&descent,\&overall);
 \item XSolidColor((int)(aPoint->hue),(int)(aPoint->shade)),
@@ -23142,88 +23018,64 @@ information macros or functions.
 \item XQueryColor(dsply,colorMap,\&foreColor);
 \item XInternAtom(dsply, "WM\_DELETE\_WINDOW", False);
 \item XSetWMProtocols(dsply, viewTitleWindow, \&wm\_delete\_window, 1);
-\item XSetNormalHints(dsply,viewTitleWindow,\&titleSizeHints);
+\item XSetNormalHints(dsply,viewTitleWindow,\&titleSizeHints); 
 \item XSetStandardProperties(dsply,viewTitleWindow,"Axiom 2D",viewport->title,
-\end{itemize}
-  None,NULL,0,\&titleSizeHints);
-\begin{itemize}
+			   None,NULL,0,\&titleSizeHints);
 \item XWriteBitmapFile(dsply,viewBitmapFilename,
-\end{itemize}
-  viewport->titleWindow,vwInfo.width,
-  vwInfo.height+vwInfo.border\_width+20,-1,-1);
-\begin{itemize}
+				  viewport->titleWindow,vwInfo.width,
+				  vwInfo.height+vwInfo.border\_width+20,-1,-1);
 \item XResizeWindow(dsply,viewport->titleWindow,300,300+titleHeight);
 \item XDeleteAssoc(dsply,table,(control->buttonQueue[i]).self);
 \item XDestroyWindow(dsply,control->controlWindow);
 \item XCreateImage(/* display */        dsply,
-\end{itemize}
-  /* visual */         DefaultVisual(dsply,scrn),
-  /* depth */          DefaultDepth(dsply,scrn),
-  /* format */         ZPixmap,
-  /* offset */         0,
-  /* data */           NULL,
-  /* width */          vwInfo.width,
-  /* height */         1,
-  /* bitmap\_pad */     32,
-  /* bytes\_per\_line */ 0);
-\begin{itemize}
+			/* visual */         DefaultVisual(dsply,scrn),
+			/* depth */          DefaultDepth(dsply,scrn),
+			/* format */         ZPixmap,
+			/* offset */         0,
+			/* data */           NULL,
+			/* width */          vwInfo.width,
+			/* height */         1,
+			/* bitmap\_pad */     32,
+			/* bytes\_per\_line */ 0);
 \item XSizeHints sizehint;
 \item XGetImage(dsply, slicer\_pixmap, 0, 0, slicer\_width, slicer\_height,
-\end{itemize}
-  AllPlanes, ZPixmap);
-\begin{itemize}
+			  AllPlanes, ZPixmap);
 \item XChangeShade(dsply, i);
 \item XShadeRectangle(dsply,cp->controlWindow,
-\end{itemize}
-  colormapX + colorOffsetX + i*shadeWidth,
-  colormapY + colorOffsetY - 10, shadeWidth, 40);
-\begin{itemize}
+		      colormapX + colorOffsetX + i*shadeWidth,
+		      colormapY + colorOffsetY - 10, shadeWidth, 40);
 \item XFree(childrenWs);
 \item XPoint           *quadMesh;
 \item XGetErrorText(display,event->error\_code,buffer,511);
 \item XSetErrorHandler(the\_handler);
-\item XCreateAssocTable(nbuckets);
+\item XCreateAssocTable(nbuckets);  
 \item XInitSpadFill(dsply,scrn,\&colorMap,
-\end{itemize}
-  \&totalHues,\&totalSolidShades,
-  \&totalDitheredAndSolids,\&totalShades);
-\begin{itemize}
+                              \&totalHues,\&totalSolidShades,
+                              \&totalDitheredAndSolids,\&totalShades);
 \item XInitShades(dsply,scrn) ;
 \item XGContextFromGC(DefaultGC(dsply,scrn))
 \item XCreatePixmap(dsply,viewport->viewWindow,
-\end{itemize}
-  vwInfo.width,vwInfo.height,
-  DisplayPlanes(dsply,scrn));
-\begin{itemize}
+			  vwInfo.width,vwInfo.height,
+			  DisplayPlanes(dsply,scrn));
 \item .Xdefaults
 \item XQueryPointer(dsply,rtWindow,\&dummy,\&dummy,\&px,\&py,\&lx,\&ly,\&lbuttons);
 \item XPixelColor((int)colorindx-1)
 \item XCreatePixmap(/* display */     dsply,
-\end{itemize}
-  /* drawable */    viewport->viewWindow,
-  /* width */       vwInfo.width,
-  /* height */      vwInfo.height,
-  /* depth */       DefaultDepth(dsply,scrn));
-\begin{itemize}
+			    /* drawable */    viewport->viewWindow,
+			    /* width */       vwInfo.width,
+			    /* height */      vwInfo.height,
+			    /* depth */       DefaultDepth(dsply,scrn));
 \item XFillRectangle(dsply,viewmap,trashGC,0,0,vwInfo.width,vwInfo.height);
 \item XPutPixel(imageX,i,0,foregroundColor);
 \item XPutImage(dsply,viewport->viewWindow,trashGC,imageX,0,0,0,
-\end{itemize}
-  scanline,vwInfo.width,1);
-\begin{itemize}
+		scanline,vwInfo.width,1);
 \item XDestroyImage(imageX);
 \item XCopyArea(dsply,viewmap,viewport->viewWindow,trashGC,0,0,
-\end{itemize}
-  vwInfo.width,vwInfo.height,0,0);
-\begin{itemize}
+		  vwInfo.width,vwInfo.height,0,0);
 \item XCopyArea(dsply,viewmap,viewport->viewWindow,trashGC,0,0,
-\end{itemize}
-  vwInfo.width,vwInfo.height,0,0);
-\begin{itemize}
+			  vwInfo.width,vwInfo.height,0,0);
 \item XFillPolygon(dsply, viewport->viewWindow, aGC, quadMesh, p->numpts,
-\end{itemize}
-  Convex,CoordModeOrigin);
-\begin{itemize}
+		     Convex,CoordModeOrigin);
 \item XPeekEvent(dsply,\&peekEvent);
 \item XDrawLines(dsply, wid, gc, points, numberOfPoints, mode);
 \item XGContextFromGC(viewGCx);
@@ -23234,36 +23086,35 @@ information macros or functions.
 \item XSelectInput(dsply, menu, KeyPressMask|ButtonPressMask|ExposureMask);
 \end{itemize}
 
-
 \chapter{libspad}
 These are library routines to support the graphics. Two of them,
-(*cfuns-c* and *sockio-c*, get integrated into the lisp image.
+({\bf cfuns-c} and {\bf sockio-c}, get integrated into the lisp image.
 
 \section{bsdsignal.c}
 The system defines a set of signals that may be delivered to a
 process. Signal delivery resembles the occurrence of a hardware
 interrupt: the signal is normally blocked from further occurrence, the
 current process context is saved, and a new one is built. A process
-may specify a /handler/ to which a signal is delivered, or specify
-that a signal is to be /ignored/. A process may also specify that
+may specify a {\sl handler} to which a signal is delivered, or specify
+that a signal is to be {\sl ignored}. A process may also specify that
 a default action is to be taken by the system when a signal occurs. A
-signal may also be /blocked/, in which case its delivery is
-postponed until it is /unblocked/. The action to be taken on
+signal may also be {\sl blocked}, in which case its delivery is
+postponed until it is {\sl unblocked}. The action to be taken on
 delivery is determined at the time of delivery. Normally, signal
 handlers execute on the current stack of the process. This may be
 changed, on a per-handler basis, so that signals are taken on a
-special /signal stack/.
+special {\sl signal stack}.
 
 Signal routines normally execute with the signal that caused their invocation 
-/blocked/, but other signals may yet occur. A global /signal mask/ 
+{\sl blocked}, but other signals may yet occur. A global {\sl signal mask} 
 defines the set of signals currently blocked from delivery to a process. 
 The signal mask for a process is initialized from that of its parent 
-(normally empty). It may be changed with a *sigprocmask(2)* call, or 
+(normally empty). It may be changed with a {\bf sigprocmask(2)} call, or 
 when a signal is delivered to the process.
 
 When a signal condition arises for a process, the signal is added to a
 set of signals pending for the process. If the signal is not currently
-/blocked/ by the process then it is delivered to the
+{\sl blocked} by the process then it is delivered to the
 process. Signals may be delivered any time a process enters the
 operating system (e.g., during a system call, page fault or trap, or
 clock interrupt). If muliple signals are ready to be delivered at the
@@ -23271,7 +23122,7 @@ same time, any signals that could be caused by traps are delivered
 first. Additional signals may be processed at the same time, with each
 appearing to interrupt the handlers for the previous signals before
 their first instructions. The set of pending signals is retuned by the
-*sigpending(2)* system call. When a caught signal is delivered,
+{\bf sigpending(2)} system call. When a caught signal is delivered,
 the current state of the process is saved, a new signal mask is
 calculated (as described below), and the signal handler is
 invoked. The call to the handler is arranged so that if the signal
@@ -23286,124 +23137,114 @@ sigprocmask(2)} system call is made). This mask is formed by taking
 the union of the current signal mask set, the signal to be delivered,
 and the signal mask associated with the handler to be invoked.
 
-The *sigaction()* system call assigns an action for a signal
-specified by /sig/. If /act/ is non-zero, it specifies an
+The {\bf sigaction()} system call assigns an action for a signal
+specified by {\sl sig}. If {\sl act} is non-zero, it specifies an
 action (SIG\_DFL, SIG\_IGN, or a handler routine) and mask to be used
-when delivering the specified signal.  If /oact/ is non-zero, the
+when delivering the specified signal.  If {\sl oact} is non-zero, the
 previous handling information for the signal is returned to the user.
 
 Once a signal handler is installed, it normally remains installed
-until another *sigaction()* system call is made, or an {\sl
+until another {\bf sigaction()} system call is made, or an {\sl
 execve(2)} is performed. A signal-specific default action may be reset
-by setting /sa\_handler/ to SIG\_DFL. The defaults are process
+by setting {\sl sa\_handler} to SIG\_DFL. The defaults are process
 termination, possibly with core dump; no action; stopping the process;
 or continuing the process. See the signal list below for each signal's
-default action. If /sa\_handler/ is SIG\_DFL, the default action
+default action. If {\sl sa\_handler} is SIG\_DFL, the default action
 for the signal is to discard the signal, and if a signal is pending,
 the pending signal is discarded even if the signal is masked. If {\sl
 sa\_handler} is set to SIG\_IGN current and pending instances of the
 signal are ignored and discarded.
 
-Options may be specified by setting /sa\_flags/. 
+Options may be specified by setting {\sl sa\_flags}. 
 The meaning of the various bits is as follows:
 
 \begin{itemize}
-\item *SA\_NOCLDSTOP* If this bit is set when installing a catching
+\item {\bf SA\_NOCLDSTOP} If this bit is set when installing a catching 
+function for the SIGCHLD signal, the SIGCHLD signal will  be generated 
+only when a child process exits, not when a child process stops.
+\item {\bf SA\_NOCLDWAIT}
+If this bit is set when calling {\sl sigaction()} for the
+SIGCHLD signal, the system will not create zombie processes
+when children of the calling process exit. If the calling
+process subsequently issues a {\sl wait()} (or equivalent),
+it blocks until all of the calling process's child processes
+terminate, and then returns a value of -1 with errno set to
+ECHILD.
+\item {\bf SA\_ONSTACK} If this bit is set, the system will deliver the 
+signal to the process on a {\sl signal stack}, specified with
+{\bf sigaltstack(2)}.
+\item {\bf SA\_NODEFER} If this bit is set, further occurrences of the 
+delivered signal are not masked during the execution of the handler.
+\item {\bf SA\_RESETHAND} If this bit is set, the handler is reset 
+to SIG\_DFL at the moment the signal is delivered.
+\item {\bf SA\_RESTART} See the paragraph below
+\item {SA\_SIGINFO} If this bit is set, the handler function is assumed to 
+be pointed to by the sa\_sigaction member of struct sigaction
+and should match the prototype shown above or as below in
+EXAMPLES. This bit should not be set when assigning SIG\_DFL
+or SIG\_IGN
 \end{itemize}
-  function for the SIGCHLD signal, the SIGCHLD signal will  be generated
-  only when a child process exits, not when a child process stops.
-\begin{itemize}
-\item *SA\_NOCLDWAIT*
-\end{itemize}
-  If this bit is set when calling /sigaction()/ for the
-  SIGCHLD signal, the system will not create zombie processes
-  when children of the calling process exit. If the calling
-  process subsequently issues a /wait()/ (or equivalent),
-  it blocks until all of the calling process's child processes
-  terminate, and then returns a value of -1 with errno set to
-  ECHILD.
-\begin{itemize}
-\item *SA\_ONSTACK* If this bit is set, the system will deliver the
-\end{itemize}
-  signal to the process on a /signal stack/, specified with
-  *sigaltstack(2)*.
-\begin{itemize}
-\item *SA\_NODEFER* If this bit is set, further occurrences of the
-\end{itemize}
-  delivered signal are not masked during the execution of the handler.
-\begin{itemize}
-\item *SA\_RESETHAND* If this bit is set, the handler is reset
-\end{itemize}
-  to SIG\_DFL at the moment the signal is delivered.
-\begin{itemize}
-\item *SA\_RESTART* See the paragraph below
-\item {SA\_SIGINFO} If this bit is set, the handler function is assumed to
-\end{itemize}
-  be pointed to by the sa\_sigaction member of struct sigaction
-  and should match the prototype shown above or as below in
-  EXAMPLES. This bit should not be set when assigning SIG\_DFL
-  or SIG\_IGN
-
 If a signal is caught during the system calls listed below, the call may be 
 forced to terminate with the error EINTR, the call may return with a data 
 transfer shorter than requested, or the call may be restarted. Restart of 
-pending calls is requested by setting the SA\_RESTART bit in /sa\_flags/. 
-The affected system calls include *open(2)*, *read(2)*, *write(2)*, 
-*sendto(2)*, *recvfrom(2)*, *sendmsg(2)* and *recvmsg(2)* 
+pending calls is requested by setting the SA\_RESTART bit in {\sl sa\_flags}. 
+The affected system calls include {\bf open(2)}, {\bf read(2)}, {\bf write(2)}, 
+{\bf sendto(2)}, {\bf recvfrom(2)}, {\bf sendmsg(2)} and {\bf recvmsg(2)} 
 on a communications channel or a slow device (such as a terminal, but not a 
-regular file) and during a *wait(2)* or *ioctl(2)*. However, calls 
+regular file) and during a {\bf wait(2)} or {\bf ioctl(2)}. However, calls 
 that have already committed are not restarted, but instead return a partial 
 success (for example, a short read count).
 
-After a *fork(2)* or *vfork(2)* all signals, the signal mask, the 
+After a {\bf fork(2)} or {\bf vfork(2)} all signals, the signal mask, the 
 signal stack, and the restart/interrupt flags are inherited by the child.
 
-The *execve(2)* system call reinstates the default action for all signals 
+The {\bf execve(2)} system call reinstates the default action for all signals 
 which were caught and resets all signals to be caught on the user stack. 
 Ignored signals remain ignored; the signal mask remains the same; signals 
 that restart pending system calls continue to do so.
 
 The following is a list of all signals with names in the include file
-/$<$signal.h$>$/:
+{\sl $<$signal.h$>$}:
 
-| *NAME* | *Default Action* | Description |
-| SIGHUP | terminate process | terminal line hangup |
-| SIGINT | terminate process | interrupt program |
-| SIGQUIT | create core image | quit program |
-| SIGILL | create core image | illegal instruction |
-| SIGTRAP | create core image | trace trap |
-| SIGABRT | create core image | *abort(3)* call (formerly SIGIOT) |
-| SIGEMT | create core image | emulate instruction executed |
-| SIGFPE | create core image | floating-point exception |
-| SIGKILL | terminate process | kill program |
-| SIGBUS | create core image | bus error |
-| SIGSEGV | create core image | segmentation violation |
-| SIGSYS | create core image | non-existent system call invoked |
-| SIGPIPE | terminate process | write on a pipe with no reader |
-| SIGALRM | terminate process | real-time timer expired |
-| SIGTERM | terminate process | software termination signal |
-| SIGURG | discard signal | urgent condition present on socket |
-| SIGSTOP | stop process | stop (cannot be caught or ignored) |
-| SIGSTP | stop process | keyboard generated stop signal |
-| SIGCONT | discard signal | continue after stop |
-| SIGCHLD | discard signal | child status has changed |
-| SIGTTIN | stop process | background read attempted from |
-|  |  | control terminal |
-| SIGTTOU | stop process | background write attempted from |
-|  |  | control terminal |
-| SIGIO | discard signal | I/O possible on descriptor fcntl(2) |
-| SIGXCPU | terminate process | cpu limit exceeded setrlimit(2) |
-| SIGXFSZ | terminate process | filesize exceeded setrlimit(2) |
-| SIGVTALRM | terminate process | virtual time alarm setitimer(2) |
-| SIGPROF | terminate process | profiling timer alarm setitimer(2) |
-| SIGWINCH | discard signal | Window size change |
-| SIGINFO | discard signal | status request from keyboard |
-| SIGUSR1 | terminate process | User defined signal 1 |
-| SIGUSR2 | terminate process | User defined signal 2 |
+\begin{tabular}{lll}
+{\bf NAME} & {\bf Default Action} & Description\\
+SIGHUP     & terminate process    & terminal line hangup\\
+SIGINT     & terminate process    & interrupt program\\
+SIGQUIT    & create core image    & quit program\\
+SIGILL     & create core image    & illegal instruction\\
+SIGTRAP    & create core image    & trace trap\\
+SIGABRT    & create core image    & {\bf abort(3)} call (formerly SIGIOT)\\
+SIGEMT     & create core image    & emulate instruction executed\\
+SIGFPE     & create core image    & floating-point exception\\
+SIGKILL    & terminate process    & kill program\\
+SIGBUS     & create core image    & bus error\\
+SIGSEGV    & create core image    & segmentation violation\\
+SIGSYS     & create core image    & non-existent system call invoked\\
+SIGPIPE    & terminate process    & write on a pipe with no reader\\
+SIGALRM    & terminate process    & real-time timer expired\\
+SIGTERM    & terminate process    & software termination signal\\
+SIGURG     & discard signal       & urgent condition present on socket\\
+SIGSTOP    & stop process         & stop (cannot be caught or ignored)\\
+SIGSTP     & stop process         & keyboard generated stop signal\\
+SIGCONT    & discard signal       & continue after stop\\
+SIGCHLD    & discard signal       & child status has changed\\
+SIGTTIN    & stop process         & background read attempted from \\
+           &                      & control terminal\\
+SIGTTOU    & stop process         & background write attempted from\\
+           &                      & control terminal\\
+SIGIO      & discard signal       & I/O possible on descriptor fcntl(2)\\
+SIGXCPU    & terminate process    & cpu limit exceeded setrlimit(2)\\
+SIGXFSZ    & terminate process    & filesize exceeded setrlimit(2)\\
+SIGVTALRM  & terminate process    & virtual time alarm setitimer(2)\\
+SIGPROF    & terminate process    & profiling timer alarm setitimer(2)\\
+SIGWINCH   & discard signal       & Window size change\\
+SIGINFO    & discard signal       & status request from keyboard\\
+SIGUSR1    & terminate process    & User defined signal 1\\
+SIGUSR2    & terminate process    & User defined signal 2
+\end{tabular}
 
-
-The /sigaction()/ function returns the value 0 if successful; otherwise 
-the value -1 is returned and the global variable /errno/ is set to indicate 
+The {\sl sigaction()} function returns the value 0 if successful; otherwise 
+the value -1 is returned and the global variable {\sl errno} is set to indicate 
 the error.
 
 Signal handlers should have either the ANSI C prototype:
@@ -23430,29 +23271,26 @@ function needs to be casted to compile without warning. The traditional BSD
 style is not portable and since its capabilities are a full subset of a 
 SA\_SIGNFO handler its use is deprecated.
 
-The /sig/ argument is the signal number, one of the SIG... values from 
-/<signal.h>/.
+The {\sl sig} argument is the signal number, one of the SIG\ldots values from 
+{\sl <signal.h>}.
 
-The /code/ argument of the BSD-style handler and the si\_code member of the
+The {\sl code} argument of the BSD-style handler and the si\_code member of the
 info argument to a SA\_SIGINFO handler contain a numeric code explaining the
-cause of the signal, usually on of the SI\_... values from /<sys/signal.h>/
-or codes specific to a signal, i.e. one of the FPE\_... values for SIGFPE.
+cause of the signal, usually on of the SI\_\ldots values from {\sl <sys/signal.h>}
+or codes specific to a signal, i.e. one of the FPE\_\ldots values for SIGFPE.
 
-The /uap/ argument to a POSIX SA\_SIGINFO handler points to an instance of 
+The {\sl uap} argument to a POSIX SA\_SIGINFO handler points to an instance of 
 ucontext\_t.
 
-The *sigaction()* system call will fail and no new signal handler will be
+The {\bf sigaction()} system call will fail and no new signal handler will be
 installed if one of the following occurs:
 \begin{itemize}
-\item *[EFAULT]* Either /act/ or /oact/ points to memory that
+\item {\bf [EFAULT]} Either {\sl act} or {\sl oact} points to memory that 
+is not a valid part of the process address space
+\item {\bf [EINVAL]} The {\sl sig} argument is not a valid signal number
+\item {\bf [EINVAL]} An attempt is made to ignore or supply a handler 
+for SIGKILL or SIGSTOP
 \end{itemize}
-  is not a valid part of the process address space
-\begin{itemize}
-\item *[EINVAL]* The /sig/ argument is not a valid signal number
-\item *[EINVAL]* An attempt is made to ignore or supply a handler
-\end{itemize}
-  for SIGKILL or SIGSTOP
-
 
 \begin{chunk}{bsdsignal.c}
 
@@ -23569,8 +23407,8 @@ of files are badly broken with respect to the [[/usr/include]] versions.
 \getchunk{include/cfuns-c.h1}
 
 \end{chunk}
-The =addtopath= function is used in =interp/i-toplev.boot= 
-as part of the =start= function.
+The {\tt addtopath} function is used in {\tt interp/i-toplev.boot} 
+as part of the {\tt start} function.
 \begin{chunk}{cfuns-c.c}
 
 int addtopath(char *dir) {
@@ -23624,9 +23462,9 @@ int make_path_from_file(char *s, char *t) {
 
 \end{chunk}
 
-This function is used in =interp/fname.lisp= to support the
-=myWriteable?= function, which is called by =fnameWriteable?=.
-It supports a test called =writeable?= in =algebra/fname.spad=. 
+This function is used in {\tt interp/fname.lisp} to support the
+{\tt myWriteable?} function, which is called by {\tt fnameWriteable?}.
+It supports a test called {\tt writeable?} in {\tt algebra/fname.spad}. 
 
 \begin{chunk}{cfuns-c.c}
 int writeablep(char *path) {
@@ -23674,8 +23512,8 @@ int CLgetpid(void) {
 \end{verbatim}
 
 This function does not appear to be used in axiom. It has been
-replaced by native lisp code in =fname.lisp= in the function
-=file-readablep=.
+replaced by native lisp code in {\tt fname.lisp} in the function
+{\tt file-readablep}.
 \begin{verbatim}
 int readablep(char *path) {
     struct stat buf;
@@ -25499,7 +25337,7 @@ alloc_string(char *str)
 
 \section{openpty.c}
 
-The main function is =ptyopen=. It simply opens up both sides of a
+The main function is {\tt ptyopen}. It simply opens up both sides of a
 pseudo-terminal. It uses and saves the pathnames for
 the devices which were actually opened.
 
@@ -25516,22 +25354,22 @@ If it fails it simply exits the program.
 \end{verbatim}
 The path name  vars should be declared of size 11 or more
 
-The device =/dev/ptmx= is the pseudo-terminal master device.
-The device =/dev/pts= is the pseudo-terminal slave device.
+The device {\tt /dev/ptmx} is the pseudo-terminal master device.
+The device {\tt /dev/pts} is the pseudo-terminal slave device.
 
-The file =/dev/ptmx= is a character file with a major number of 5
+The file {\tt /dev/ptmx} is a character file with a major number of 5
 and a minor number of 2, usually of mode 0666 and owner.group of
 root.root. It is used to create a pseudo-terminal master and slave pair.
 
-When a process opens =/dev/ptmx=, it gets a file descriptor for a
-pseudo-terminal master =PTM=, and a pseudo-terminal slave =PTS=
-device is created in the =/dev/pts= directory. Each file descriptor
-obtained by opening =/dev/ptmx= is an independent =PTM= with its
-own associated =PTS=, whose path can be found by passing the 
-descriptor to =ptsname=.
+When a process opens {\tt /dev/ptmx}, it gets a file descriptor for a
+pseudo-terminal master {\tt PTM}, and a pseudo-terminal slave {\tt PTS}
+device is created in the {\tt /dev/pts} directory. Each file descriptor
+obtained by opening {\tt /dev/ptmx} is an independent {\tt PTM} with its
+own associated {\tt PTS}, whose path can be found by passing the 
+descriptor to {\tt ptsname}.
 
 Before opening the pseudo-terminal slave, you must pass the master's
-file descriptor to =grantpt= and =unlockpt=.
+file descriptor to {\tt grantpt} and {\tt unlockpt}.
 
 Once both the pseudo-terminal master and slave are open, the slave
 provides processes with an interface that is identical to that of a
@@ -25541,22 +25379,22 @@ Data written to the slave is presented on the master descriptor as input.
 Data written to the master is presented to the slave as input.
 
 In practice, pseudo-terminals are used for implementing terminal 
-emulators such as =xterm=, in which data read from the 
+emulators such as {\tt xterm}, in which data read from the 
 pseudo-terminal master is interpreted by the application in the same way
 a real terminal would interpret the data, and for implementing 
-remote login programs such as =sshd=, in which data read from the
+remote login programs such as {\tt sshd}, in which data read from the
 pseudo-terminal master is sent across the network to a client program
 that is connected to a terminal or terminal emulator.
 
 Pseudo-terminals can also be used to send input to programs that normally
-refuse to read input from pipes (such as =su=) and =passwd=.
+refuse to read input from pipes (such as {\tt su}) and {\tt passwd}.
 
 The Linux support for the pseudo-terminals (known as Unix98 pty naming)
-is done using the =devpts= filesystem, that should be mounted on
-=/dev/pts=.
+is done using the {\tt devpts} filesystem, that should be mounted on
+{\tt /dev/pts}.
 
-Before this Unix98 scheme, master ptys were called =/dev/ptyp0=,
-$...$, and slave ptys =/dev/ttyp0=, $...$ and one to 
+Before this Unix98 scheme, master ptys were called {\tt /dev/ptyp0},
+$\ldots$, and slave ptys {\tt /dev/ttyp0}, $\ldots$ and one to 
 preallocate 
 a lot of device nodes./cite{1}
 
@@ -29263,7 +29101,7 @@ XShadeArcs(Display *display, Drawable drawable, XArc *arcs, int narcs)
 \section{xspadfill.c}
 
 This file contains the routines needed to dither using the
-spadcolors. The routines will have names such as XSpadFill, $...$
+spadcolors. The routines will have names such as XSpadFill, $\ldots$
 The user simply gives the normal arguments as with the corresponding
 XFill routine, with two additional arguments which choose the shade
 and the hue.
@@ -30375,4 +30213,3 @@ libspad.a: ${BOOK}
 \printindex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
-

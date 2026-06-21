@@ -1,10 +1,14 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{i-intern.lisp}
+\title{\$SPAD/src/interp i-intern.lisp}
 \author{The Axiom Team}
+\maketitle
 \begin{abstract}
 \end{abstract}
+\eject
+\tableofcontents
+\eject
 \section{Internal Interpreter Facilities}
 Vectorized Attributed Trees
 
@@ -13,20 +17,21 @@ These contain a number of slots in each node for information.
 The leaves are now all vectors, though the leaves for basic types
 such as integers and strings used to just be the objects themselves.
 The vectors for the leaves with such constants now have the value
-of =$immediateDataSymbol= as their name. There are undoubtably still
+of \verb|$immediateDataSymbol| as their name. There are undoubtably still
 some functions that still check whether a leaf is a constant. Note
 that if it is not a vector it is a subtree.
 
 attributed tree nodes have the following form:
 
-| slot | description |
-| ---- | ------------------------- |
-| 0 | operation name or literal |
-| 1 | declared mode of variable |
-| 2 | computed value of subtree from this node |
-| 3 | modeset: list of single computed mode of subtree |
-| 4 | prop list for extra things |
-
+\begin{tabular}{cl}
+slot & description\\
+---- & ------------------------- \\
+ 0   & operation name or literal\\
+ 1   & declared mode of variable\\
+ 2   & computed value of subtree from this node\\
+ 3   & modeset: list of single computed mode of subtree\\
+ 4   & prop list for extra things\\
+\end{tabular}
 \begin{chunk}{*}
 
 (IN-PACKAGE "BOOT" )
@@ -1096,7 +1101,6 @@ a vector of three things:
 \item slot 1: the type declarations on the variables
 \item slot 2: a predicate for all arguments
 \end{itemize}
-
 \begin{chunk}{*}
 ;collectDefTypesAndPreds args ==
 ;  pred := types := vars := NIL
@@ -2096,7 +2100,7 @@ May be a number or a vector
 
 \subsection{get1}
 We try to avoid lookups in the environment if it is clear that
-the lookup will fail. The =$envHashTable= was populated in
+the lookup will fail. The \verb|$envHashTable| was populated in
 addBinding (see g-util.boot.pamphlet).
 \begin{chunk}{*}
 ;get1(x,prop,e) ==
@@ -2547,8 +2551,8 @@ Tuples and Crosses
 
 \end{chunk}
 
+\eject
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}
 \end{document}
-

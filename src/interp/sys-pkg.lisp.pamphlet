@@ -1,10 +1,14 @@
 \documentclass{article}
 \usepackage{axiom}
 \begin{document}
-\title{sys-pkg.lisp}
+\title{\$SPAD/src/interp sys-pkg.lisp}
 \author{Timothy Daly}
+\maketitle
 \begin{abstract}
 \end{abstract}
+\newpage
+\tableofcontents
+\newpage
 \section{Non-portable code}
 \subsection{GCL only code}
 This section contains code that will only work in Gnu Common Lisp
@@ -22,47 +26,47 @@ from the environment.
 \end{chunk}
 \subsection{SBCL host bridge}
 The package definitions below speak the CLtL1 dialect of their AKCL
-origin: they say =lisp::use-package=, import symbols with a
-=LISP:= or =user::= prefix, and use-package the GCL-internal
-*SYSTEM* package. On SBCL none of those three packages exists ---
-the standard package is *COMMON-LISP* with nickname *CL*, the
-user package is *COMMON-LISP-USER*, and there is no *SYSTEM*.
-The failure is not at execution but at /read/ time: the reader
-cannot intern =lisp::use-package= when no package is named LISP,
+origin: they say \verb|lisp::use-package|, import symbols with a
+\verb|LISP:| or \verb|user::| prefix, and use-package the GCL-internal
+{\bf SYSTEM} package. On SBCL none of those three packages exists ---
+the standard package is {\bf COMMON-LISP} with nickname {\bf CL}, the
+user package is {\bf COMMON-LISP-USER}, and there is no {\bf SYSTEM}.
+The failure is not at execution but at \emph{read} time: the reader
+cannot intern \verb|lisp::use-package| when no package is named LISP,
 so the load aborts before the first form runs. (The already-guarded
-=#+:GCL SYSTEM:GETENV= tokens never bit, because a false feature
+\verb|#+:GCL SYSTEM:GETENV| tokens never bit, because a false feature
 test reads its form with suppression on.)
 
 The bridge below, which must therefore be the very first form this
 file tangles, teaches SBCL the old names instead of rewriting some
-nine hundred occurrences to the new ones: it adds *LISP* as a
-nickname of COMMON-LISP, *USER* as a nickname of
-COMMON-LISP-USER, and creates an empty *SYSTEM* package so the
-=use-package= calls succeed (every real SYSTEM symbol reference
-in this file is already =#+:GCL=-guarded). SYSTEM carries the
-nickname *SI*, matching GCL where SI names the same package, so
-=si::=-prefixed tokens read. An empty *COMPILER* package is
+nine hundred occurrences to the new ones: it adds {\bf LISP} as a
+nickname of COMMON-LISP, {\bf USER} as a nickname of
+COMMON-LISP-USER, and creates an empty {\bf SYSTEM} package so the
+\verb|use-package| calls succeed (every real SYSTEM symbol reference
+in this file is already \verb|#+:GCL|-guarded). SYSTEM carries the
+nickname {\bf SI}, matching GCL where SI names the same package, so
+\verb|si::|-prefixed tokens read. An empty {\bf COMPILER} package is
 created for the same reason: bookvol9's compile-lib-file mentions
-=compiler::fast-link-proclaimed-type-p= inside a function body,
+\verb|compiler::fast-link-proclaimed-type-p| inside a function body,
 and with no COMPILER package the whole book is unreadable --- the
-reference only needs to /read/; it is reached at run time solely
+reference only needs to \emph{read}; it is reached at run time solely
 on a GCL host. SBCL locks its
 standard packages against exactly this kind of mutation, so the two
-=unlock-package= calls are required first; this was observed as
+\verb|unlock-package| calls are required first; this was observed as
 a ``Lock on package COMMON-LISP violated'' error, not assumed. The
-form is =#+:sbcl=-guarded, so GCL reads it with suppression and
+form is \verb|#+:sbcl|-guarded, so GCL reads it with suppression and
 is undisturbed.
 
 One more old habit needs teaching. The build's generated load scripts
-say =(load "nocompil")= with no file extension, and the sources
-they mean are =.lsp= files. GCL probes =.lsp= for an
-extensionless load; SBCL probes only =.lisp= (and its fasl
-type), so the first such load died with ``Couldn't load ...{}
+say \verb|(load "nocompil")| with no file extension, and the sources
+they mean are \verb|.lsp| files. GCL probes \verb|.lsp| for an
+extensionless load; SBCL probes only \verb|.lisp| (and its fasl
+type), so the first such load died with ``Couldn't load \ldots{}
 nocompil: file does not exist'' --- observed in the first depsys run,
-with =nocompil.lsp= sitting right there in the directory. Setting
-SBCL's default source type to =lsp= restores the GCL behaviour
+with \verb|nocompil.lsp| sitting right there in the directory. Setting
+SBCL's default source type to \verb|lsp| restores the GCL behaviour
 for every extensionless load at once. The variable,
-=sb-impl::*load-source-default-type*=, is an SBCL internal with
+\verb|sb-impl::*load-source-default-type*|, is an SBCL internal with
 no exported equivalent; that is a pragmatic debt accepted knowingly,
 verified against SBCL 2.6.3, to be revisited if SBCL ever renames it.
 Compiled-then-loaded files are unaffected: when both a source and a
@@ -120,10 +124,10 @@ fasl.
   (sb-ext:exit :code code))
 
 \end{chunk}
-The build pipes forms like =(progn (compile-file ...) (bye))=
+The build pipes forms like \verb|(progn (compile-file ...) (bye))|
 into the depsys image, and the image's reader interns that
-=bye= in its startup package, COMMON-LISP-USER. On GCL
-=bye= is the builtin exit; SBCL has none, so the bridge defines
+\verb|bye| in its startup package, COMMON-LISP-USER. On GCL
+\verb|bye| is the builtin exit; SBCL has none, so the bridge defines
 it where the pipes will find it. Exit code zero by default ---
 make treats the recipe as succeeded exactly when the compile before
 it did not abort.
@@ -138,7 +142,7 @@ The spad compiler package. Although I believe this is a dead
 package at this point. All of the symbols from this package
 have been moved into the boot package.
 
-It must still *use* the Lisp package, because makeint switches
+It must still {\bf use} the Lisp package, because makeint switches
 into it ((in-package "SCRATCHPAD\_COMPILER")) and then evaluates a
 plain (in-package "BOOT") -- if the package inherits nothing, that
 in-package symbol interns locally and is an undefined function
@@ -1171,8 +1175,8 @@ FOAM::|BIntNext|
 ;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 \end{verbatim}
+\newpage
 \begin{thebibliography}{99}
 \bibitem{1} nothing
 \end{thebibliography}
 \end{document}
-
