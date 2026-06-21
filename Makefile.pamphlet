@@ -162,6 +162,7 @@ rootdirs:
 	 mkdir -p ${INT}/input
 	 mkdir -p ${INT}/interp
 	 mkdir -p ${INT}/sman
+	 mkdir -p ${SRC}/sman
 	 mkdir -p ${OBJ}/${SYS}/bin
 	 mkdir -p ${OBJ}/${SYS}/etc
 	 mkdir -p ${OBJ}/${SYS}/graph
@@ -1740,12 +1741,15 @@ AWK=awk
 ####K C Related variables
 PLF=MACOSXplatform
 CCF="-O2 -fno-strength-reduce -D_GNU_SOURCE -D${PLF} \
-     -I/usr/X11/include -I/usr/include -I/usr/include/sys \
-     -Wno-absolute-value -std=gnu89 -w" 
+     -I/opt/X11/include -I/usr/include -I/usr/include/sys \
+     -Wno-absolute-value -std=gnu89 -w"
 INC:=${SPD}/src/include
 CC:=gcc
-XLIB:=/usr/X11R6/lib
-LDF="-L/usr/X11R6/lib64 -L/usr/local/lib64 -L/usr/openwin/lib64 -L/usr/lib64 "
+# macOS X11 (XQuartz) installs under /opt/X11, not the Linux
+# /usr/X11R6/lib64 tree.  Without -L/opt/X11/lib the graphics + HyperDoc
+# link (-lX11 -lXpm -lXt -lSM -lICE) fails with ld: library 'Xpm' not found.
+XLIB:=/opt/X11/lib
+LDF="-L/opt/X11/lib -L/usr/local/lib "
 O:=o
 
 # The platform line above resets O to o after ENVDEFAULTS has already

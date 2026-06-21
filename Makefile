@@ -252,6 +252,7 @@ rootdirs:
 	 mkdir -p ${INT}/input
 	 mkdir -p ${INT}/interp
 	 mkdir -p ${INT}/sman
+	 mkdir -p ${SRC}/sman
 	 mkdir -p ${OBJ}/${SYS}/bin
 	 mkdir -p ${OBJ}/${SYS}/etc
 	 mkdir -p ${OBJ}/${SYS}/graph
