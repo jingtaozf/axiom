@@ -316,6 +316,20 @@ tanglec: books/tanglec.c
 	@echo t01 making tanglec from books/tanglec.c
 	@( cd books ; gcc -o tanglec tanglec.c )
 
+# Start the built AXIOMsys REPL interactively.  Detects the platform
+# automatically from the existing mnt/* tree and ensures the algebra
+# database files are present on first run.
+run:
+	@SYS=$$(ls -d mnt/*/bin/AXIOMsys 2>/dev/null | sed 's|mnt/||;s|/bin/AXIOMsys||' | head -1); \
+	if [ -z "$$SYS" ]; then \
+	  echo "No AXIOMsys found. Run 'make' first to build the system." >&2; exit 1; fi; \
+	AX=$${SPD:-$$PWD}/mnt/$$SYS; export AXIOM=$$AX; \
+	for f in interp browse category operation; do \
+	  if [ ! -f "$$AX/algebra/$$f.daase" ]; then \
+	    cp src/share/algebra/$$f.daase "$$AX/algebra/$$f.daase"; fi; \
+	done; \
+	exec "$$AX/bin/AXIOMsys" --noinform
+
 install:
 	@echo 78 installing Axiom in ${DESTDIR}
 	@mkdir -p ${DESTDIR}
