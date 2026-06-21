@@ -1,0 +1,249 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/src/interp cfuns.lisp}
+\author{Timothy Daly}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{License}
+\begin{verbatim}
+;; Copyright (c) 1991-2002, The Numerical ALgorithms Group Ltd.
+;; All rights reserved.
+;;
+;; Redistribution and use in source and binary forms, with or without
+;; modification, are permitted provided that the following conditions are
+;; met:
+;;
+;;     - Redistributions of source code must retain the above copyright
+;;       notice, this list of conditions and the following disclaimer.
+;;
+;;     - Redistributions in binary form must reproduce the above copyright
+;;       notice, this list of conditions and the following disclaimer in
+;;       the documentation and/or other materials provided with the
+;;       distribution.
+;;
+;;     - Neither the name of The Numerical ALgorithms Group Ltd. nor the
+;;       names of its contributors may be used to endorse or promote products
+;;       derived from this software without specific prior written permission.
+;;
+;; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+;; IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+;; TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+;; PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+;; OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+;; EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+;; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+;; PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+;; LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+\end{verbatim}
+
+\section{Hosting these C utilities on SBCL}
+
+This file is the clearest illustration of why the GCL binding cannot be
+carried verbatim to SBCL, and of the right response.
+
+The four utilities Axiom needs here --- \verb|directoryp|,
+\verb|writeablep|, \verb|hashString| and \verb|hashCombine| --- are bound
+under GCL with \verb|defentry|, and the two hash functions supply their C
+bodies inline with \verb|Clines|. \verb|Clines| asks the host Lisp to
+compile a snippet of C \emph{into its own image}. GCL, descended from a
+Lisp that was half a C compiler, can do this. SBCL cannot: it has no
+facility to compile C into the running image, and its foreign interface,
+\verb|sb-alien|, can only call functions that already live in a loaded
+shared object.
+
+One could therefore build a small shared library and reach it with
+\verb|sb-alien:define-alien-routine|. For \emph{these} functions that
+would be effort spent badly, because each is trivial: the two hashes are
+a handful of integer operations, and the two filesystem predicates are
+already written in portable Lisp in the \verb|#+:CCL| branch below. The
+right SBCL port here is not foreign at all --- we reimplement the four in
+pure Common Lisp. This removes a foreign dependency and makes the
+behaviour visible in this book instead of hidden in a C string.
+
+Real foreign calls are still required elsewhere: the seventeen socket
+entries in \verb|sockio.lisp.pamphlet| genuinely cross into C, and those
+are handled with \verb|sb-alien| or stubbed when the HyperDoc server is
+not built. The rule the whole port follows: \emph{reimplement trivial C
+in Lisp; reserve \texttt{sb-alien} for code that is irreducibly foreign.}
+
+The pure-Lisp hashes must reproduce the C bit-for-bit, because hash
+values may be stored and compared across sessions. \verb|MYHASH|
+exclusive-ors the running value left-shifted by eight, adds the
+character code plus a constant, and masks to thirty bits;
+\verb|MYCOMBINE| shifts the masked second argument left by six, adds the
+first, and reduces modulo a prime. Both are transcribed below. The
+filesystem predicates are less exact: \verb|directoryp| follows the
+\verb|#+:CCL| precedent, while \verb|writeablep| is a non-creating
+open-probe whose correspondence to the C \verb|access(2)| test ---
+particularly on directories --- is flagged for verification in Stage~5.
+
+\begin{chunk}{*}
+
+
+(in-package "BOOT")
+
+#+(and :Lucid (not :ibm/370))
+(progn
+; these appear to be unused in axiom code
+;  (system:define-foreign-function :c '|findString| :fixnum)
+;  (system:define-foreign-function :c '|copyEnvValue| :fixnum)
+  (system:define-foreign-function :c '|addtopath|  :fixnum)
+  (system:define-foreign-function :c '|chdir|      :fixnum)
+  (system:define-foreign-function :c '|writeablep| :fixnum)
+  (system:define-foreign-function :c '|directoryp| :fixnum)
+  )
+
+#+KCL
+(progn
+; these appear to be unused in axiom code
+;  (defentry |findString| (string string) (int "findString"))
+  (defentry |directoryp| (string)        (int "directoryp"))
+  (defentry |writeablep| (string)        (int "writeablep"))
+  )
+
+#+:CCL
+(defun |directoryp| (fn)
+  (cond ((not (probe-file fn)) -1)
+        ((directoryp fn) 1)
+        (t 0)))
+
+#+:sbcl
+(defun |directoryp| (fn)
+  "1 if FN names a directory, 0 if a non-directory file, -1 if absent.
+   A directory truename has neither a name nor a type component."
+  (let ((truename (probe-file fn)))
+    (cond ((null truename) -1)
+          ((and (null (pathname-name truename))
+                (null (pathname-type truename))) 1)
+          (t 0))))
+
+#+:sbcl
+(defun |writeablep| (fn)
+  "1 if FN is writable, -1 otherwise. GCL's C writeablep used access(W_OK),
+   which works for directories; an open(:output) probe does not -- you
+   cannot open a directory for output. myWritable?/fnameNew call this on
+   the *directory* that will hold a new file, so dispatch: probe a
+   directory by creating+deleting a temp file in it; probe a regular file
+   with a non-creating open-append."
+  (if (eql 1 (|directoryp| fn))
+      (let ((probe (merge-pathnames
+                    (make-pathname :name (symbol-name (gensym "AXWTEST"))
+                                   :type "tmp")
+                    (truename fn))))
+        (handler-case
+            (progn
+              (with-open-file (s probe :direction :output
+                                       :if-does-not-exist :create)
+                (declare (ignore s)))
+              (ignore-errors (delete-file probe))
+              1)
+          (file-error () -1)))
+      (handler-case
+          (with-open-file (s fn :direction :output
+                                :if-exists :append
+                                :if-does-not-exist nil)
+            (if s 1 -1))
+        (file-error () -1))))
+
+(defun |findStringInFile| (str p)
+    (|findString| (namestring p) str) )
+
+#+:gcl
+(defun |getEnv| (var-name)  (system::getenv var-name))
+#+:sbcl
+(defun |getEnv| (var-name)  (sb-ext:posix-getenv var-name))
+
+;;; Portable chdir — GCL has system::chdir built in; SBCL uses alien call.
+#+:sbcl
+(defun system::chdir (dir)
+  "Change process working directory.  GCL compatibility shim for SBCL.
+SBCL's truename/directory use *default-pathname-defaults*, not the
+OS CWD, so we must update both."
+  (require 'sb-posix)
+  (funcall (symbol-function (intern "CHDIR" "SB-POSIX")) dir)
+  ;; Read the new CWD back from the kernel rather than (truename dir): a
+  ;; relative DIR would otherwise be resolved against the not-yet-updated
+  ;; *default-pathname-defaults*, desynchronising the two.
+  (setq *default-pathname-defaults*
+        (pathname (concatenate 'string
+                    (funcall (symbol-function (intern "GETCWD" "SB-POSIX")))
+                    "/"))))
+
+;;stolen from AXIOM-XL src/strops.c
+#+(AND KCL (NOT ELF))
+(Clines 
+"MYHASH(s)"
+"char *s;"
+"{"
+" register unsigned int   h = 0;"
+" register int    c;"
+""
+" while ((c = *s++) != 0) {"
+"  h ^= (h << 8);"
+"  h += ((c) + 200041);"
+"  h &= 0x3FFFFFFF;"
+" }"
+" return h;"
+"}"
+)
+#+(AND KCL (NOT ELF))
+(defentry |hashString| (string) (int "MYHASH"))
+#+(AND KCL ELF)
+(defun |hashString| (string) (system:|hashString| string))
+#+:sbcl
+(defun |hashString| (s)
+  "Pure-Lisp transcription of the C MYHASH; must match it bit-for-bit."
+  (let ((h 0))
+    (loop for c across s do
+      (setf h (logand (+ (logxor h (ash h 8)) (char-code c) 200041)
+                      #x3FFFFFFF)))
+    h))
+
+\end{chunk}
+The MYCOMBINE function causes a problem as of GCL-2.6.8pre.
+Camm has rewritten it. This used to read:
+\begin{verbatim}
+#+(AND KCL (NOT ELF))
+(Clines
+"unsigned int MYCOMBINE(i,j)"
+"unsigned int i,j;"
+"{"
+"return ( (((j & 16777215) @<< 6)+i) % 1073741789);"
+"}"
+)
+\end{verbatim}
+\begin{chunk}{*}
+#+(AND KCL (NOT ELF))
+(Clines
+"int MYCOMBINE(i,j)"
+"int i,j;"
+"{"
+"return ( (((((unsigned int)j) & 16777215) << 6)+((unsigned int)i)) % 1073741789);"
+"}"
+)
+
+
+#+(AND KCL (NOT ELF))
+(defentry |hashCombine| (int int) (int "MYCOMBINE"))
+#+(AND KCL  ELF)
+(defun |hashCombine| (x y) (system:|hashCombine| x y))
+#+:sbcl
+(defun |hashCombine| (i j)
+  "Pure-Lisp transcription of the C MYCOMBINE; must match it bit-for-bit."
+  (mod (+ (ash (logand j 16777215) 6) i) 1073741789))
+
+
+\end{chunk}
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}

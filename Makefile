@@ -72,7 +72,7 @@ GCLVERSION=gcl-2.6.13pre
 GCLDIR:=${LSP}/${GCLVERSION}
 GCLOPTS="--enable-vssize=65536*2 --disable-xgcl --disable-tkconfig"
 LISP:=lsp
-LISPFLAVOR?=gcl
+LISPFLAVOR?=sbcl
 ifeq (${LISPFLAVOR},sbcl)
 O:=fasl
 endif
@@ -141,13 +141,12 @@ WEAVE=${WEAVE} \
 XLIB=${XLIB} \
 ZIPS=${ZIPS} 
 
-all: srctangle-tools rootdirs axiom.sty tanglec libspad lspdir
+all: rootdirs axiom.sty tanglec libspad lspdir
 	@ echo 1 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 2 Environment ${ENV}
-	@ ${BOOKS}/srctangle Makefile.org "Makefile.${SYS}" >Makefile.${SYS}
+	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
 	@ cp ${BOOKS}/dvipdfm.def ${MNT}/${SYS}/doc
 	@ cp ${BOOKS}/changepage.sty ${MNT}/${SYS}/doc
-	@ ${BOOKS}/untanglec Makefile.org > Makefile.pamphlet
 	@ ${EXTRACT} Makefile.pamphlet
 	@ cp Makefile.pdf ${MNT}/${SYS}/doc/src/root.Makefile.pdf
 	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
@@ -159,15 +158,13 @@ all: srctangle-tools rootdirs axiom.sty tanglec libspad lspdir
 	     cd ${MNT}/${SYS}/doc/src/input ; \
 	     cp ${BOOKS}/axiom.sty . ; \
 	     cp ${SRC}/input/*.eps . ; \
-	     for i in `ls ${SRC}/input/*.input.org` ; do \
-	      p=`basename $$i .org`.pamphlet ; \
-	      ${BOOKS}/untanglec $$i > $$p ; \
+	     for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
 	      if [ .${NOISE} = . ] ; \
 	      then \
-	       latex $$p ; \
+	       latex $$i ; \
 	      else \
-	       ( echo p4a making $$p ; \
-		 latex $$p >${TMP}/trace ) ; \
+	       ( echo p4a making $$i ; \
+		 latex $$i >${TMP}/trace ) ; \
 	      fi ; \
 	     done ; \
 	     rm -f *~ ; \
@@ -219,12 +216,12 @@ else
 	@(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
 endif
 
-${LSP}/Makefile: ${LSP}/Makefile.org
-	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.org
+${LSP}/Makefile: ${LSP}/Makefile.pamphlet
+	@echo 20 making ${LSP}/Makefile from ${LSP}/Makefile.pamphlet
 	@( cd lsp ; \
-	 ${EXTRACT} Makefile.org ; \
+	 ${EXTRACT} Makefile.pamphlet ; \
 	 if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
-	 ${BOOKS}/srctangle Makefile.org ${GCLVERSION} >Makefile ; \
+	 ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
 	 fi ; \
 	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 
@@ -240,7 +237,7 @@ lspclean:
 libspad: 
 	@ echo 11a making libspad
 	@ ( cd ${OBJ}/${SYS}/lib ; \
-	    ${BOOKS}/srctangle ${BOOKS}/bookvol8.org Makefile >Makefile ; \
+	    ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
 	    ${ENV} ${MAKE} libspad.a )
 
 axiom.sty:
@@ -286,10 +283,8 @@ input:
 	@ if [ "${BUILD}" = "full" ] ; then \
 	  ( cd ${MNT}/${SYS}/doc/src/input ; \
 	    cp ${BOOKS}/axiom.sty . ; \
-	    for i in `ls ${SRC}/input/*.input.org` ; \
-	      do p=`basename $$i .org`.pamphlet ; \
-	         ${BOOKS}/untanglec $$i > $$p ; \
-	         latex $$p ; \
+	    for i in `ls ${SRC}/input/*.input.pamphlet` ; \
+	      do latex $$i ; \
 	      done ; \
 	     rm -f *~ ; \
 	     rm -f *.pamphlet~ ; \
@@ -300,7 +295,7 @@ input:
 
 book:
 	@ echo 79 building the book as ${MNT}/${SYS}/doc/book.dvi 
-	@ ${BOOKS}/untanglec ${SRC}/doc/book.org > ${MNT}/${SYS}/doc/book.pamphlet
+	@ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
 	@ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
 	@ (cd ${MNT}/${SYS}/doc ; \
 	  if [ .${NOISE} = . ] ; then \
@@ -320,63 +315,6 @@ book:
 tanglec: books/tanglec.c
 	@echo t01 making tanglec from books/tanglec.c
 	@( cd books ; gcc -o tanglec tanglec.c )
-
-# The literate sources are now .org (single source of truth).  Three small C
-# tools bridge to the unchanged downstream build:
-#   orgtangle  X.org [chunk]  -> source, DIRECTLY (the default build path)
-#   untanglec  X.org          -> the exact .pamphlet bytes (for PDF / via mode)
-#   tanglec    X.pamphlet     -> source (the reference C tangler, used by `via')
-# srctangle is the dispatcher every rule calls: orgtangle by default,
-# untanglec+tanglec when AXIOM_TANGLE_VIA_PAMPHLET=1.  All three emit byte-
-# identical source (verified over every chunk of every file).
-untanglec: books/untanglec.c
-	@echo t02 making untanglec from books/untanglec.c
-	@( cd books ; ${CC} -o untanglec untanglec.c )
-
-orgtangle: books/orgtangle.c
-	@echo t04 making orgtangle from books/orgtangle.c
-	@( cd books ; ${CC} -o orgtangle orgtangle.c )
-
-srctangle-tools: tanglec untanglec orgtangle
-	@chmod +x ${BOOKS}/srctangle
-
-# Byte-exact gate for the org-native migration.  Regenerate every tracked
-# source pamphlet twice -- from BASE (with BASE's untanglec) and from the
-# working tree (with the current untanglec) -- and assert they are identical.
-# It flags EVERY pamphlet-byte change in BASE..worktree -- a format rewrite that
-# moved bytes AND a deliberate content edit -- so pick BASE = the commit before
-# the phase to read a green run as "byte-transparent".  BASE defaults to HEAD
-# (the script's own default when $(BASE) is empty).
-#   make check-pamphlet-bytes BASE=<commit-before-the-phase>
-check-pamphlet-bytes:
-	@echo t05 byte-exact pamphlet gate vs $(BASE)
-	@tools/check-pamphlet-bytes.sh $(BASE)
-
-# Regenerate a .pamphlet beside every migrated .org (those carrying a
-# ':noweb yes' chunk).  Only needed to build PDFs or to run the build in
-# AXIOM_TANGLE_VIA_PAMPHLET=1 mode; the default direct build never calls it.
-# Exclude tools/ : those literate-elisp files carry ':noweb yes' inside CODE
-# strings, are NOT pamphlets, and must not be untanglec'd (their `* heading'
-# lines are real org headings, not migrated LaTeX).
-regen-pamphlets: untanglec
-	@echo t03 regenerating .pamphlet files from migrated .org via untanglec
-	@grep -rIl ':noweb yes' --include='*.org' . | grep -vE '/\.git/|/tools/' | while read f ; do \
-	   ${BOOKS}/untanglec "$$f" > "$${f%.org}.pamphlet" ; \
-	 done
-
-# Start the built AXIOMsys REPL interactively.  Detects the platform
-# automatically from the existing mnt/* tree and ensures the algebra
-# database files are present on first run.
-run:
-	@SYS=$$(ls -d mnt/*/bin/AXIOMsys 2>/dev/null | sed 's|mnt/||;s|/bin/AXIOMsys||' | head -1); \
-	if [ -z "$$SYS" ]; then \
-	  echo "No AXIOMsys found. Run 'make' first to build the system." >&2; exit 1; fi; \
-	AX=$${SPD:-$$PWD}/mnt/$$SYS; export AXIOM=$$AX; \
-	for f in interp browse category operation; do \
-	  if [ ! -f "$$AX/algebra/$$f.daase" ]; then \
-	    cp src/share/algebra/$$f.daase "$$AX/algebra/$$f.daase"; fi; \
-	done; \
-	exec "$$AX/bin/AXIOMsys" --noinform
 
 install:
 	@echo 78 installing Axiom in ${DESTDIR}
@@ -399,7 +337,7 @@ install:
 document: 
 	@ echo 4 making a ${SYS} system, PART=${PART} SUBPART=${SUBPART}
 	@ echo 5 Environment ${ENV}
-	@ ${BOOKS}/srctangle Makefile.org "Makefile.${SYS}" >Makefile.${SYS}
+	@ ${BOOKS}/tanglec Makefile.pamphlet "Makefile.${SYS}" >Makefile.${SYS}
 	@ ${ENV} $(MAKE) -f Makefile.${SYS} document
 	@echo 6 finished system build on `date` | tee >lastBuildDate
 
@@ -439,8 +377,6 @@ clean:
 	@ for i in `find . -name "*~"` ; do rm -f $$i ; done
 	@ rm -f lastBuildDate
 	@ rm -f books/tanglec
-	@ rm -f books/untanglec
-	@ rm -f books/orgtangle
 	@ rm -f src/input/Makefile src/input/Makefile.dvi
 	@ rm -f src/input/Makefile.pdf 
 	@ rm -f src/interp/Makefile src/interp/Makefile.dvi

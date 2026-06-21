@@ -1,0 +1,352 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/src/interp g-error.lisp}
+\author{The Axiom Team}
+\maketitle
+\begin{abstract}
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\begin{chunk}{*}
+(IN-PACKAGE "BOOT" )
+
+;-- REDERR is used in BFLOAT LISP, should be a macro
+;-- REDERR msg == error msg
+;-- BFLERRMSG func ==
+;--  errorSupervisor($AlgebraError,STRCONC(
+;--    '"BigFloat: invalid argument to ",func))
+;argumentDataError(argnum, condit, funname) ==
+;  msg := ['"The test",:bright pred2English condit,'"evaluates to",
+;    :bright '"false",'%l,'"   for argument",:bright argnum,_
+;    '"to the function",:bright funname,'"and this indicates",'%l,_
+;    '"   that the argument is not appropriate."]
+;  errorSupervisor($AlgebraError,msg)
+
+(DEFUN |argumentDataError| (|argnum| |condit| |funname|)
+  (PROG (|msg|)
+    (RETURN
+      (PROGN
+        (setq |msg|
+                 (CONS "The test"
+                       (APPEND (|bright| (|pred2English| |condit|))
+                               (CONS "evaluates to"
+                                     (APPEND (|bright| "false")
+                                      (CONS '|%l|
+                                       (CONS "   for argument"
+                                        (APPEND (|bright| |argnum|)
+                                         (CONS "to the function"
+                                          (APPEND (|bright| |funname|)
+                                           (CONS "and this indicates"
+                                            (CONS '|%l|
+                                             (CONS
+                                     "   that the argument is not appropriate."
+                                              NIL)))))))))))))
+        (|errorSupervisor| 'AlgebraError |msg|)))))
+
+
+;queryUser msg ==
+;  -- display message and return reply
+;  sayBrightly msg
+;  READ_-LINE _*TERMINAL_-IO_*
+
+(DEFUN |queryUser| (|msg|)
+  (PROGN (|sayBrightly| |msg|) (|read-line| *TERMINAL-IO*)))
+
+;-- errorSupervisor is the old style error message trapper
+;errorSupervisor(errorType,errorMsg) ==
+;  errorSupervisor1(errorType,errorMsg,$BreakMode)
+
+(DEFUN |errorSupervisor| (|errorType| |errorMsg|)
+  (DECLARE (SPECIAL |$BreakMode|))
+  (|errorSupervisor1| |errorType| |errorMsg| |$BreakMode|))
+
+;errorSupervisor1(errorType,errorMsg,$BreakMode) ==
+;  BUMPCOMPERRORCOUNT()
+;  errorLabel :=
+;      errorType = $SystemError  => '"System error"
+;      errorType = $UserError    => '"Apparent user error"
+;      errorType = $AlgebraError =>
+;        '"Error detected within library code"
+;      STRINGP errorType         => errorType
+;      '"Error with unknown classification"
+;  msg :=
+;    errorMsg is ['mathprint, :.] => errorMsg
+;    not CONSP errorMsg => ['"   ", errorMsg]
+;    splitmsg := true
+;    if MEMBER('%b,errorMsg) then splitmsg := nil
+;      else if MEMBER('%d,errorMsg) then splitmsg := nil
+;           else if MEMBER('%l,errorMsg) then splitmsg := nil
+;    splitmsg => CDR [:['%l,'"   ",u] for u in errorMsg]
+;    ['"   ",:errorMsg]
+;  sayErrorly(errorLabel, msg)
+;  handleLispBreakLoop($BreakMode)
+
+(DEFUN |errorSupervisor1| (|errorType| |errorMsg| |$BreakMode|)
+  (DECLARE (SPECIAL |$BreakMode|))
+  (PROG (|errorLabel| |splitmsg| |msg|)
+    (RETURN
+      (SEQ 
+       (BUMPCOMPERRORCOUNT)
+              (setq |errorLabel|
+                       (COND
+                         ((BOOT-EQUAL |errorType| 'SystemError)
+                          "System error")
+                         ((BOOT-EQUAL |errorType| 'UserError)
+                          "Apparent user error")
+                         ((BOOT-EQUAL |errorType| 'AlgebraError)
+                          "Error detected within library code")
+                         ((STRINGP |errorType|) |errorType|)
+                         ('T "Error with unknown classification")))
+              (setq |msg|
+                       (COND
+                         ((AND (CONSP |errorMsg|)
+                               (EQ (QCAR |errorMsg|) '|mathprint|))
+                          |errorMsg|)
+                         ((NULL (CONSP |errorMsg|))
+                          (CONS "   "
+                                (CONS |errorMsg| NIL)))
+                         ('T (setq |splitmsg| 'T)
+                          (COND
+                            ((|member| '|%l| |errorMsg|)
+                             (setq |splitmsg| NIL))
+                            ('T NIL))
+                          (COND
+                            (|splitmsg|
+                                (CDR (PROG (G166072)
+                                       (setq G166072 NIL)
+                                       (RETURN
+                                         (DO
+                                          ((G166077 |errorMsg|
+                                            (CDR G166077))
+                                           (|u| NIL))
+                                          ((OR (ATOM G166077)
+                                            (PROGN
+                                              (SETQ |u|
+                                               (CAR G166077))
+                                              NIL))
+                                           G166072)
+                                           (SEQ
+                                            (EXIT
+                                             (SETQ G166072
+                                              (APPEND G166072
+                                               (CONS '|%l|
+                                                (CONS "   "
+                                                 (CONS |u| NIL))))))))))))
+                            ('T (CONS "   " |errorMsg|))))))
+              (|sayErrorly| |errorLabel| |msg|)
+              (|handleLispBreakLoop| |$BreakMode|)))))
+
+
+;handleLispBreakLoop($BreakMode) ==
+;  TERPRI()
+;  -- The next line is to try to deal with some reported cases of unwanted
+;  -- backtraces appearing, MCD.
+;  ENABLE_-BACKTRACE(nil)
+;  $BreakMode = 'break =>
+;    sayBrightly '" "
+;    BREAK()
+;  $BreakMode = 'query =>
+;    gotIt := nil
+;    while not gotIt repeat
+;      gotIt := true
+;      msgQ :=
+;       ['%l,'"   You have three options. Enter:",'%l,_
+;        '"    ",:bright '"continue",'"  to continue processing,",'%l,_
+;        '"    ",:bright '"top     ",'"  to return to top level, or",'%l,_
+;        '"    ",:bright '"break   ",'"  to enter a LISP break loop.",'%l,_
+;        '%l,'"   Please enter your choice now:"]
+;      x := STRING2ID_-N(queryUser msgQ,1)
+;      x :=
+;        selectOptionLC(x,'(top break continue),NIL)
+;      null x =>
+;        sayBrightly bright '"  That was not one of your choices!"
+;        gotIt := NIL
+;      x = 'top => returnToTopLevel()
+;      x = 'break =>
+;        $BreakMode := 'break
+;          sayBrightly ['"   Enter",:bright '":C",
+;            '"when you are ready to continue processing where you ",'%l,_
+;            '"   interrupted the system, enter",:bright '"(TOP)",_
+;            '"when you wish to return",'%l,'"   to top level.",'%l,'%l]
+;        BREAK()
+;      sayBrightly
+;        '"   Processing will continue where it was interrupted."
+;      THROW('SPAD__READER, nil)
+;  $BreakMode = 'resume =>
+;    returnToReader()
+;  returnToTopLevel()
+
+(defun |handleLispBreakLoop| (|$BreakMode|)
+ (declare (special |$BreakMode|))
+ (let (msgQ x go-tit)
+  (terpri)
+  (cond
+   ((eq |$BreakMode| '|break|) (|sayBrightly| " ") (break))
+   ((eq |$BreakMode| '|query|)
+    (do () 
+        ((null (null go-tit)) nil)
+      (setq go-tit t)
+      (setq msgQ
+       `(|%l| "   You have three options. Enter:" |%l| 
+         "    " ,@(|bright| "continue") "  to continue processing," |%l| 
+         "    " ,@(|bright| "top     ")   "  to return to top level, or" |%l|
+         "    " ,@(|bright| "break   ")  "  to enter a LISP break loop." |%l|
+         |%l| "   Please enter your choice now:"))
+      (setq x (string2id-n (|queryUser| msgQ) 1))
+      (setq x (|selectOptionLC| x '(|top| |break| |continue|) nil))
+      (cond
+       ((null x) 
+        (|sayBrightly| (|bright| "  That was not one of your choices!"))
+        (setq go-tit nil))
+       ((eq x '|top|) (|returnToTopLevel|))
+       ((boot-equal x '|break|)
+        (setq |$BreakMode| '|break|)
+        (|sayBrightly|
+         `("   Enter" ,@(|bright| ":C")
+           "when you are ready to continue processing where you " |%l|
+           "   interrupted the system, enter" ,@(|bright| "(TOP)")
+           "when you wish to return" |%l| "   to top level." |%l| |%l|))
+        (break))
+       (t
+        (|sayBrightly| "   Processing will continue where it was interrupted.")
+        (throw 'spad_reader nil)))))
+   ((eq |$BreakMode| '|resume|) (|returnToReader|))
+   ((eq |$BreakMode| '|quit|) (exitWithStatus 1))
+   (t (|returnToTopLevel|)))))
+
+; if the BreakMode is set to quit when the compile fails then 
+; exit, returning the value, typically 1. If the argument is not
+; numeric then it prints the message and exits with a 1 status.
+(defun exitWithStatus (value)
+ (format *error-output* "Axiom exit with status = ~s~%" value)
+ (if (numberp value)
+  (bye value)
+  (bye 1)))
+
+;; SBCL error trapping.  GCL embeds system:universal-error-handler to route a
+;; raw Lisp error into the $BreakMode protocol (see vmlisp.lisp); SBCL has no
+;; such hook, so without this an error like "Cannot take first of an empty list"
+;; (a known algebra bug, e.g. exp^log(x)) reaches --disable-debugger and quits
+;; interpsys instead of being reported as a "System error" and resumed.  Modelled
+;; on FriCAS's spad_system_error_handler: in batch ($BreakMode nobreak/...) hand
+;; the condition to systemError, which prints it and throws to the read loop's
+;; top_level catch via handleLispBreakLoop.
+#+:sbcl
+(defun |spad_system_error_handler| (c)
+ (declare (special |$BreakMode| |$NeedToSignalSessionManager|
+                   |$numericFailure|))
+ (setq |$NeedToSignalSessionManager| t)
+ (cond
+  ((member |$BreakMode|
+           '(|nobreak| |query| |resume| |quit| |validate| |trapSpadErrors|))
+   (|systemError| (format nil "~a" c)))
+  ((eq |$BreakMode| '|trapNumerics|)
+   (setq |$BreakMode| nil)
+   (throw '|trapNumerics| |$numericFailure|))
+  ((eq |$BreakMode| '|letPrint2|)
+   (setq |$BreakMode| nil)
+   (throw '|letPrint2| nil))
+  (t nil)))
+
+
+;TOP() == returnToTopLevel()
+
+(defun top () (|returnToTopLevel|))
+
+;returnToTopLevel() ==
+;  SETQ(CHR, "ENDOFLINECHR")
+;  SETQ(TOK, 'END__UNIT)
+;  TOPLEVEL()
+
+(defun |returnToTopLevel| ()
+ (setq chr 'endoflinechr) 
+ (setq tok 'end_unit) 
+ (toplevel))
+
+;returnToReader() ==
+;  ^$ReadingFile => returnToTopLevel()
+;  sayBrightly ['"   Continuing to read the file...", '%l]
+;  THROW('SPAD__READER, nil)
+
+(defun |returnToReader| ()
+ (declare (special |$ReadingFile|))
+ (cond
+  ((null |$ReadingFile|) (|returnToTopLevel|))
+  (t
+   (|sayBrightly| '("   Continuing to read the file..." |%l|))
+   (throw 'spad_reader nil))))
+
+(DEFUN |sayErrorly| (|errorLabel| |msg|)
+  (PROG (|m| |ISTMP#1| |mathexpr|)
+    (DECLARE (SPECIAL |$testingErrorPrefix|))
+    (RETURN
+      (PROGN
+        (|sayBrightly| " ")
+        (COND (|$testingSystem| (|sayMSG| |$testingErrorPrefix|)))
+        (|sayBrightly|
+            (CONS "   >> " (CONS |errorLabel| (CONS ":" NIL))))
+        (setq |m| |msg|)
+        (COND
+          ((AND (CONSP |msg|) (EQ (QCAR |msg|) '|mathprint|)
+                (PROGN
+                  (setq |ISTMP#1| (QCDR |msg|))
+                  (AND (CONSP |ISTMP#1|) (EQ (QCDR |ISTMP#1|) NIL)
+                       (PROGN
+                         (setq |mathexpr| (QCAR |ISTMP#1|))
+                         'T))))
+           (|mathprint| |mathexpr|))
+          ('T (|sayBrightly| |msg|)))))))
+
+;-- systemError is being phased out. Please use keyedSystemError.
+;systemError(:x) == errorSupervisor($SystemError,IFCAR x)
+
+(DEFUN |systemError| (&REST G166161 &AUX |x|)
+  (DSETQ |x| G166161)
+  (|errorSupervisor| 'SystemError (IFCAR |x|)))
+
+;-- unexpectedSystemError() ==
+;--  systemError '"Oh, no.  Unexpected internal error."
+;userError x == errorSupervisor($UserError,x)
+
+(DEFUN |userError| (|x|)
+  (|errorSupervisor| 'UserError |x|))
+
+;error(x) == errorSupervisor($AlgebraError,x)
+
+(DEFUN |error| (|x|)
+  (|errorSupervisor| 'AlgebraError |x|))
+
+;IdentityError(op) ==
+;    error(["No identity element for reduce of empty list using operation",op])
+
+(DEFUN |IdentityError| (|op|)
+ (|error| (CONS '|No identity element for reduce of empty list using operation|
+                 (CONS |op| NIL))))
+
+;throwMessage(:msg) ==
+;  if $compilingMap then clearCache $mapName
+;  msg' := mkMessage concatList msg
+;  sayMSG msg'
+;  if $printMsgsToFile then sayMSG2File msg'
+;  spadThrow()
+
+(DEFUN |throwMessage| (&REST G166176 &AUX |msg|)
+  (DSETQ |msg| G166176)
+  (PROG (|msg'|)
+    (DECLARE (SPECIAL |$printMsgsToFile| |$mapName| |$compilingMap|))
+    (RETURN
+      (PROGN
+        (COND (|$compilingMap| (|clearCache| |$mapName|)))
+        (setq |msg'| (|mkMessage| (|concatList| |msg|)))
+        (|sayMSG| |msg'|)
+        (COND (|$printMsgsToFile| (|sayMSG2File| |msg'|)))
+        (|spadThrow|)))))
+
+\end{chunk}
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}
