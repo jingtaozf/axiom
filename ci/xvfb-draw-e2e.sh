@@ -21,6 +21,7 @@ python3 - <<'PYEOF'
 import os
 import pty
 import select
+import signal
 import subprocess
 import sys
 import time
@@ -29,31 +30,48 @@ AXIOM = os.environ.get("AXIOM", os.path.join(os.getcwd(), "mnt/LINUX"))
 WRAPPER = os.path.join(AXIOM, "bin", "axiom")
 
 master, slave = pty.openpty()
+# start_new_session puts the wrapper + sman + viewman/hypertex in one process
+# group so we can reap the whole tree at the end (terminate() alone would orphan
+# the helpers).
 proc = subprocess.Popen(
     [WRAPPER, "-gr", "-ht", "-ihere", "-noclef"],
-    stdin=slave, stdout=slave, stderr=slave, env=dict(os.environ), close_fds=True,
+    stdin=slave, stdout=slave, stderr=slave, env=dict(os.environ),
+    close_fds=True, start_new_session=True,
 )
 os.close(slave)
 
 buf = b""
 
 
-def pump(seconds):
-    """Drain the pty for SECONDS, accumulating output into BUF."""
+def pump(seconds, until=None):
+    """Drain the pty for up to SECONDS; stop early on UNTIL (bytes) or child exit."""
     global buf
     deadline = time.time() + seconds
     while time.time() < deadline:
         ready, _, _ = select.select([master], [], [], 0.5)
         if ready:
             try:
-                buf += os.read(master, 8192)
+                chunk = os.read(master, 8192)
             except OSError:
-                break
+                return                       # pty closed -- child is gone
+            if not chunk:
+                return                       # EOF
+            buf += chunk
+        if until is not None and until in buf:
+            return
+        if proc.poll() is not None:
+            return                           # child exited
 
 
-pump(40)                                   # banner + viewman/hypertex startup + prompt
+pump(40, until=b") -> ")                    # banner + helpers startup; stop at prompt
+if proc.poll() is not None:
+    # Axiom exited before the first prompt -- a build/runtime failure, not a draw
+    # failure.  Report it cleanly rather than crashing on a write to a dead pty.
+    print("FAIL: axiom exited before reaching the interpreter prompt")
+    print(buf.decode(errors="replace")[-2000:])
+    sys.exit(1)
 os.write(master, b"draw(sin(x),x=0..2*%pi)\n")
-pump(15)                                    # let viewman map + draw the viewport
+pump(15)                                     # let viewman map + draw the viewport
 
 windows = subprocess.run(
     ["xwininfo", "-root", "-tree"], env=dict(os.environ),
@@ -63,8 +81,8 @@ windows = subprocess.run(
 os.write(master, b")quit\n")
 time.sleep(2)
 try:
-    proc.terminate()
-except Exception:
+    os.killpg(os.getpgid(proc.pid), signal.SIGTERM)   # reap sman + viewman too
+except (ProcessLookupError, OSError):
     pass
 
 transcript = buf.decode(errors="replace")

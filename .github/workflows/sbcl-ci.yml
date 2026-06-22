@@ -86,7 +86,7 @@ jobs:
         # rebuild that dies "fasl older than source".  Keeping the key to build
         # inputs means a harness/doc edit is an EXACT hit (no rebuild at all).
         run: |
-          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
+          echo "value=axiom-sbcl-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore build cache (obj/int/mnt/lsp)
         id: cache
@@ -381,7 +381,7 @@ jobs:
       - name: Compute cache key
         id: key
         run: |
-          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
+          echo "value=axiom-sbcl-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore build cache (obj/int/mnt/lsp)
         id: cache
