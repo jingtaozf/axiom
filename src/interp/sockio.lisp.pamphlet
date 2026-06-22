@@ -100,16 +100,29 @@ Twelve --- \verb|open_server|, the \verb|sock_*| transfer calls,
 \verb|server_switch|, \verb|flush_stdout|, \verb|sock_send_signal| and
 \verb|print_line| --- are the real client/server socket layer that the
 HyperDoc browser and the graphical front end use to talk to the engine.
-They cross into C and have no meaning without the server. Because this
-port targets a console \verb|AXIOMsys| first and defers HyperDoc, we do
-not bind them on SBCL; we install \emph{stubs} that raise a clear error
-if anything calls them. The console interpreter never does --- recall
-that \verb|spad-save| sets \verb|$SpadServer| to nil --- so the stubs
-merely make the absence explicit instead of failing later with an
-obscure ``undefined function''. When HyperDoc is eventually built these
-become real \verb|sb-alien| routines against the socket C, which is the
-one place in the whole port where \verb|sb-alien| is genuinely
-warranted.
+They cross into C and have no meaning without the server.
+
+GCL bound them with \verb|defentry| against the socket C linked into the
+saved image. SBCL cannot link arbitrary C into its image, so each is now
+bound as a real \verb|sb-alien:define-alien-routine| against
+\verb|libspadsock.dylib| --- the socket C (\verb|sockio-c| plus
+\verb|bsdsignal|) compiled as a standalone shared object carrying \emph{no}
+X11 dependency, so even a headless console image can \verb|dlopen| it
+safely. This is the one place in the whole port where \verb|sb-alien| is
+genuinely warranted; the other three entries below are not sockets and are
+reimplemented in Lisp.
+
+The bind is \emph{lazy}: the dylib is loaded on first socket use, never at
+image-build time, because \verb|interpsys| is built before \verb|libspad|
+and the dylib does not yet exist when this file is compiled into the image.
+A console or regression image never builds the dylib --- recall
+\verb|spad-save| leaves \verb|$SpadServer| nil for it --- so the load fails,
+the failure is cached once, and every primitive returns the old stub value
+($0$, or $-1$ for \verb|open_server|) and batch \verb|draw| degrades quietly
+instead of crashing with an ``undefined function''. A graphics build finds
+\verb|$AXIOM/lib/libspadsock.dylib|, loads it once, and the primitives then
+really drive HyperDoc and viewman (the \verb|/tmp/.d| SpadServer socket gets
+created, so HyperDoc connects).
 
 The other three are not sockets at all. \verb|plus_infinity|,
 \verb|minus_infinity| and \verb|NANQ| return IEEE double values that the
@@ -169,26 +182,112 @@ float traps. We reimplement these in Lisp, exactly as the hashes were
   ;; with no float operation to fold or trap.
   (defun NANQ ()
     (sb-kernel:make-double-float #x7FF80000 0))
-  ;; HyperDoc/graphics sockets: foreign, stubbed until the server is built.
-  ;; The console AXIOMsys never calls these ($SpadServer is nil); the stub
-  ;; turns an accidental call into a clear message instead of a crash.
-  ;; No-op (return 0) rather than error: the socket/HyperDoc server is not
-  ;; built into this SBCL image, but batch regression `draw` calls the send
-  ;; primitives expecting a status int. Erroring crashed every draw test;
-  ;; GCL's real layer simply returned a status when no viewport manager was
-  ;; listening. Returning 0 lets the graph build and the viewport object be
-  ;; returned without a live viewman. (Full socket layer is future work, as
-  ;; in fricas/open-axiom which build the server.)
-  (macrolet ((stub (name)
-               `(defun ,name (&rest args)
-                  (declare (ignore args))
-                  0)))
-    (stub open_server)          (stub sock_get_int)
-    (stub sock_send_int)        (stub sock_get_string_buf)
-    (stub sock_send_string_len) (stub sock_get_float)
-    (stub sock_send_float)      (stub sock_send_wakeup)
-    (stub server_switch)        (stub flush_stdout)
-    (stub sock_send_signal)     (stub print_line)))
+  ;; HyperDoc/graphics socket layer, ported from GCL's defentry to real
+  ;; sb-alien FFI.  The twelve primitives live in libspadsock.dylib --- the
+  ;; socket C (sockio-c.c + bsdsignal.o) compiled as a shared object with NO
+  ;; X11 dependency, so even a headless image can dlopen it safely.
+  ;;
+  ;; The library is loaded LAZILY on first call, never at image-build time:
+  ;;   - interpsys is built before libspad, so the dylib does not yet exist
+  ;;     when this file is compiled into the image; an eager load would fail.
+  ;;   - the console/regression image runs with no dylib present, and batch
+  ;;     `draw` calls the send primitives expecting a status int.  When the
+  ;;     load fails we return 0 --- exactly the old stub contract --- so
+  ;;     headless draw never crashes.
+  ;; A graphics-enabled (server) build finds $AXIOM/lib/libspadsock.dylib,
+  ;; loads it once, and the primitives then really talk to HyperDoc + viewman
+  ;; (the SpadServer /tmp/.d socket gets created, so HyperDoc connects).
+  (sb-alien:define-alien-routine ("open_server" %open-server) sb-alien:int
+    (name sb-alien:c-string))
+  (sb-alien:define-alien-routine ("sock_get_int" %sock-get-int) sb-alien:int
+    (purpose sb-alien:int))
+  (sb-alien:define-alien-routine ("sock_send_int" %sock-send-int) sb-alien:int
+    (purpose sb-alien:int) (val sb-alien:int))
+  (sb-alien:define-alien-routine ("sock_send_string_len" %sock-send-string-len)
+      sb-alien:int
+    (purpose sb-alien:int) (str sb-alien:c-string) (len sb-alien:int))
+  (sb-alien:define-alien-routine ("sock_get_float" %sock-get-float) sb-alien:double
+    (purpose sb-alien:int))
+  (sb-alien:define-alien-routine ("sock_send_float" %sock-send-float) sb-alien:int
+    (purpose sb-alien:int) (num sb-alien:double))
+  (sb-alien:define-alien-routine ("sock_send_wakeup" %sock-send-wakeup) sb-alien:int
+    (purpose sb-alien:int))
+  (sb-alien:define-alien-routine ("server_switch" %server-switch) sb-alien:int)
+  (sb-alien:define-alien-routine ("flush_stdout" %flush-stdout) sb-alien:void)
+  (sb-alien:define-alien-routine ("sock_send_signal" %sock-send-signal) sb-alien:int
+    (purpose sb-alien:int) (sig sb-alien:int))
+  (sb-alien:define-alien-routine ("print_line" %print-line) sb-alien:void
+    (s sb-alien:c-string))
+  (sb-alien:define-alien-routine ("sock_get_string_buf" %sock-get-string-buf)
+      (* sb-alien:char)
+    (purpose sb-alien:int) (buf (* sb-alien:char)) (buf-len sb-alien:int))
+
+  (defparameter *spad-socket-state* :unattempted
+    "Tri-state: :unattempted -> :loaded | :failed, set on first socket use.")
+  (defun spad-socket-available-p ()
+    (when (eq *spad-socket-state* :unattempted)
+      (let ((path (concatenate 'string
+                               (or (sb-ext:posix-getenv "AXIOM") ".")
+                               "/lib/libspadsock"
+                               #+:darwin ".dylib" #-:darwin ".so")))
+        (setq *spad-socket-state*
+              (handler-case
+                  (progn (sb-alien:load-shared-object path) :loaded)
+                (error (e)
+                  ;; Absent dylib is the expected console/regression case, so
+                  ;; stay silent; warn only when the file is present but won't
+                  ;; load, which is a real misconfiguration the user must see.
+                  (when (probe-file path)
+                    (warn "libspadsock present but failed to load: ~a" e))
+                  :failed)))))
+    (eq *spad-socket-state* :loaded))
+
+  (defun open_server (name)
+    ;; -1 (not 0) on the no-library fallback: 0 means "server socket opened",
+    ;; which would make restart wrongly mark a socket-less console image a
+    ;; server.  Only a real %open-server (library present) returns 0.
+    (if (spad-socket-available-p) (%open-server name) -1))
+  (defun sock_get_int (purpose)
+    (if (spad-socket-available-p) (%sock-get-int purpose) 0))
+  (defun sock_send_int (purpose val)
+    (if (spad-socket-available-p) (%sock-send-int purpose val) 0))
+  (defun sock_send_string_len (purpose str len)
+    (if (spad-socket-available-p) (%sock-send-string-len purpose str len) 0))
+  (defun sock_get_float (purpose)
+    (if (spad-socket-available-p) (%sock-get-float purpose) 0.0d0))
+  (defun sock_send_float (purpose num)
+    (if (spad-socket-available-p) (%sock-send-float purpose num) 0))
+  (defun sock_send_wakeup (purpose)
+    (if (spad-socket-available-p) (%sock-send-wakeup purpose) 0))
+  (defun server_switch ()
+    (if (spad-socket-available-p) (%server-switch) 0))
+  (defun flush_stdout ()
+    (when (spad-socket-available-p) (%flush-stdout)) 0)
+  (defun sock_send_signal (purpose sig)
+    (if (spad-socket-available-p) (%sock-send-signal purpose sig) 0))
+  (defun print_line (s)
+    (when (spad-socket-available-p) (%print-line s)) 0)
+  ;; Reads a socket string into the caller's pre-allocated Lisp buffer.  The
+  ;; GCL wrapper wrote straight into the string's storage; sb-alien cannot,
+  ;; so stage through a C buffer and REPLACE into BUF in place, returning BUF.
+  ;;
+  ;; cbuf is one byte larger than buf-len and zeroed before the call.  The C
+  ;; get_string_buf fills exactly str_len <= buf-len raw bytes and writes NO
+  ;; terminator, and on a not-yet-connected socket returns NULL having written
+  ;; nothing.  Without the zero-fill the (cast ... c-string) below would scan
+  ;; past the data into uninitialised heap (an over-read), or on the NULL path
+  ;; copy pure garbage into the caller's buffer.  Zeroing guarantees a NUL
+  ;; after the data (a clean c-string) and an empty string on the error path.
+  (defun sock_get_string_buf (purpose buf buf-len)
+    (if (spad-socket-available-p)
+        (let ((cbuf (sb-alien:make-alien sb-alien:char (1+ buf-len))))
+          (unwind-protect
+               (progn
+                 (dotimes (i (1+ buf-len)) (setf (sb-alien:deref cbuf i) 0))
+                 (%sock-get-string-buf purpose cbuf buf-len)
+                 (replace buf (sb-alien:cast cbuf sb-alien:c-string)))
+            (sb-alien:free-alien cbuf)))
+        buf)))
 
 (defun open-server (name)
   (open_server name))

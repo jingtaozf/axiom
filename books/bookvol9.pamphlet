@@ -22736,15 +22736,29 @@ extracting the underlying C FILE pointer with the builtin
 \verb|*terminal-io*|'s --- an identity test below the Lisp stream
 layer, so it sees through any number of stream wrappers. No other
 host exposes FILE pointers; the single-colon token does not even
-read outside GCL, hence the reader conditional. The portable branch
-approximates the same question one level up: the stream is the
-console if it is \verb|*terminal-io*| itself or a synonym stream
-(the usual shape of \verb|*standard-output*|) resolving to it. This
-sees through the synonym indirection but not through other wrapper
-streams; if console detection ever misbehaves on SBCL, deepen this
-test rather than the callers.
+read outside GCL, hence the reader conditional.
+
+The portable branch approximates the same question one level up. Under
+\verb|sman -ihere| the console reaches \verb|serverReadLine| as a synonym
+stream whose target is an input-only stdin symbol --- not the bidirectional
+\verb|*terminal-io*| GCL saw --- so the stream is input-only
+(\verb|output-stream-p| is nil) and its target is not \verb|*terminal-io*|.
+The GCL-shaped test (which required \verb|output-stream-p| and identity with
+\verb|*terminal-io*|) therefore returned nil, and with \verb|$SpadServer|
+set \verb|serverReadLine| then took the plain \verb|read-line| branch
+instead of \verb|serverSwitch|, so the session manager, HyperDoc, and
+viewman were never accepted on \verb|/tmp/.d| --- typed input and plotting
+both hung. The fix resolves the synonym and treats the stream as the
+console when its target is \verb|*terminal-io*|, \verb|*standard-input*|, or
+any interactive pty. It deliberately does \emph{not} accept
+\verb|*standard-output*|: \verb|is-console| guards a \verb|read-line|, and a
+synonym onto an output-only stream would make \verb|serverReadLine| read
+from a write-only stream and signal a stream-error. A \verb|)read| file is
+a plain file-stream and so keeps the \verb|read-line| path. If console
+detection ever misbehaves on SBCL, deepen this test rather than the callers.
 \calls{is-console}{fp-output-stream}
 \uses{is-console}{*terminal-io*}
+\uses{is-console}{*standard-input*}
 \label{is-console}
 \sig{is-console}{Stream}{Boolean}
 \begin{chunk}{defun is-console}
@@ -22754,11 +22768,21 @@ test rather than the callers.
        (eq (system:fp-output-stream stream)
            (system:fp-output-stream *terminal-io*)))
  #-:GCL
-  (and (streamp stream) (output-stream-p stream)
+  (and (streamp stream)
+       ;; SBCL: under sman -ihere the console arrives as a synonym stream to
+       ;; an input-only stdin symbol (not the bidirectional *terminal-io* GCL
+       ;; used); resolve the synonym and accept *terminal-io*, *standard-input*,
+       ;; or any interactive pty.  NOT *standard-output*: is-console guards a
+       ;; read-line, so a write-only target must stay false.  A )read file is a
+       ;; plain file-stream, so it keeps the read-line path.  See prose above.
        (or (eq stream *terminal-io*)
            (and (typep stream 'synonym-stream)
-                (eq (symbol-value (synonym-stream-symbol stream))
-                    *terminal-io*)))))
+                (let ((target (ignore-errors
+                                (symbol-value (synonym-stream-symbol stream)))))
+                  (and (streamp target)
+                       (or (eq target *terminal-io*)
+                           (eq target *standard-input*)
+                           (ignore-errors (interactive-stream-p target)))))))))
 
 \end{chunk}
 
