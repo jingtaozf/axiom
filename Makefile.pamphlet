@@ -1779,9 +1779,83 @@ all: srcsetup srcdir
 \getchunk{clean}
 
 \end{chunk}
+\subsection{Makefile.LINUX}
+The stock Linux stanzas above (\verb|Makefile.ubuntu|,
+\verb|Makefile.ubuntu64|, \verb|Makefile.linux|, \ldots) are the
+GCL-era recipes: each ends with \verb|\getchunk{GCLOPTS-CUSTRELOC}|
+and \verb|\getchunk{ENVAR}| but never re-applies
+\verb|\getchunk{LISPFLAVOR}| after the platform line resets
+\verb|O:=o|. That omission is fatal under {\bf LISPFLAVOR=sbcl}: SBCL
+writes \verb|.fasl|, not \verb|.o|, so a build that hands its sub-makes
+\verb|O=o| has \verb|depsys| compile \verb|clam.o| while the
+extensionless loader looks for \verb|clam.fasl| and dies ``Couldn't
+load clam'' --- the exact failure the \verb|Makefile.MACOSX| comment
+records.
+
+Rather than retrofit every distro stanza, we add one hand-crafted
+\verb|Makefile.LINUX| target that mirrors \verb|Makefile.MACOSX|: it
+re-applies \verb|\getchunk{LISPFLAVOR}| immediately after \verb|O:=o|
+so the sbcl extension survives, and otherwise carries native-Linux C
+settings. A modern Ubuntu (24.04) keeps the X11 headers under the
+default \verb|/usr/include/X11| and the libraries in the multiarch
+\verb|/usr/lib/<triplet>| that gcc already searches, so --- unlike the
+old \verb|-I/usr/X11/include -L/usr/X11R6/lib| paths --- no explicit
+X11 search path is needed; \verb|libx11-dev| and its siblings drop the
+headers and libraries exactly where the toolchain looks. Select this
+target with {\bf SYS=LINUX}; the regression build needs no X11 at all
+(it skips the graphics C), while the GUI build links the native
+\verb|-lX11 -lXpm -lXt -lSM -lICE|.
+
+Unlike macOS, Linux keeps \verb|malloc.h| in \verb|/usr/include|, and
+\verb|LINUXplatform| is exactly the branch the C sources already guard
+for (the macOS port piggybacked its \verb|MACOSXplatform| onto those
+branches), so no include-order workaround is required here.
+\begin{chunk}{Makefile.LINUX}
+
+\getchunk{ENVDEFAULTS}
+
+AWK=gawk
+
+####K C Related variables
+PLF=LINUXplatform
+CCF="-O2 -fno-strength-reduce -D_GNU_SOURCE -D${PLF} -std=gnu89 -w"
+INC:=${SPD}/src/include
+CC:=gcc
+# Modern Ubuntu keeps X11 headers under the default /usr/include and the
+# libraries in the multiarch /usr/lib/<triplet> gcc already searches, so
+# only the generic -L is needed; the graphics + HyperDoc makefiles add
+# -lX11 -lXpm -lXt -lSM -lICE themselves.
+XLIB:=/usr/lib
+LDF="-L/usr/lib -L/usr/local/lib "
+O:=o
+
+# Re-apply the LISPFLAVOR selection AFTER the platform line reset O:=o,
+# exactly as Makefile.MACOSX does: under sbcl this restores O=fasl so
+# depsys' compiled objects match the extensionless loader's expectation
+# (otherwise "wrote clam.o ... Couldn't load clam").
+\getchunk{LISPFLAVOR}
+
+\getchunk{GCLOPTS-CUSTRELOC}
+\getchunk{ENVAR}
+
+all: srcsetup srcdir
+	@echo 45 Makefile.LINUX called
+	@echo 46 Environment : ${ENV}
+	@echo 47 finished system build on `date` | tee >lastBuildDate
+	@- if [ "${TESTSET}" != "notests" ] ; \
+            then  grep "result FAILED" int/input/*.regress || true ; fi
+
+\getchunk{literate commands}
+\getchunk{srcsetup}
+\getchunk{src}
+\getchunk{lsp}
+\getchunk{document}
+\getchunk{clean}
+
+\end{chunk}
 \subsection{Makefile.BSD}
 On the MAC OSX someone decided (probably a BSDism) to rename the
-SIGCLD signal to SIGCHLD. In order to handle this in the 
+SIGCLD signal to SIGCHLD. In order to handle this in the
 low level C socket code (in particular, in \verb|src/lib/fnct_key.c|)
 we change the platform variable to be MACOSXplatform and create
 this new stanza.

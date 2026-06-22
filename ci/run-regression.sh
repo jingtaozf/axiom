@@ -49,8 +49,12 @@ set -u
 export SPD="${SPD:-$(cd "$(dirname "$0")/.." && pwd)}"
 export AXIOM="${AXIOM:-$SPD/mnt/MACOSX}"
 export DAASE="${DAASE:-$SPD/src/share}"
-export LISP="$SPD/obj/MACOSX/bin/lisp"
-export TESTSYS="$SPD/obj/MACOSX/bin/interpsys"
+# Derive the platform dir from AXIOM (matches the build's SYS:=$(notdir $(AXIOM)))
+# so a Linux tree (AXIOM=.../mnt/LINUX) resolves obj/LINUX, while the macOS
+# default (AXIOM=.../mnt/MACOSX) keeps obj/MACOSX unchanged.
+PLAT="$(basename "$AXIOM")"
+export LISP="$SPD/obj/$PLAT/bin/lisp"
+export TESTSYS="$SPD/obj/$PLAT/bin/interpsys"
 WORKROOT="${WORKROOT:-/tmp/axci}"
 export WORKROOT
 # Oversubscribe the cores: the tail tests are GC/IO-bound, not CPU-saturating,
