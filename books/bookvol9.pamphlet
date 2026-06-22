@@ -22754,11 +22754,24 @@ test rather than the callers.
        (eq (system:fp-output-stream stream)
            (system:fp-output-stream *terminal-io*)))
  #-:GCL
-  (and (streamp stream) (output-stream-p stream)
+  (and (streamp stream)
+       ;; SBCL: under sman -ihere the console arrives as a synonym stream to
+       ;; an input-only stdin symbol (not the bidirectional *terminal-io* GCL
+       ;; used), so (output-stream-p stream) is NIL and the target symbol is
+       ;; not *terminal-io* -- the old identity test fails, serverReadLine
+       ;; never enters the server-socket multiplexer, and the session manager,
+       ;; HyperDoc, and viewman are never accepted on /tmp/.d.  Resolve the
+       ;; synonym and accept the standard console streams or any interactive
+       ;; pty; a )read file is a plain file-stream, so it keeps read-line.
        (or (eq stream *terminal-io*)
            (and (typep stream 'synonym-stream)
-                (eq (symbol-value (synonym-stream-symbol stream))
-                    *terminal-io*)))))
+                (let ((target (ignore-errors
+                                (symbol-value (synonym-stream-symbol stream)))))
+                  (and (streamp target)
+                       (or (eq target *terminal-io*)
+                           (eq target *standard-input*)
+                           (eq target *standard-output*)
+                           (ignore-errors (interactive-stream-p target)))))))))
 
 \end{chunk}
 
