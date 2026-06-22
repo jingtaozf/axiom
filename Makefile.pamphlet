@@ -1818,7 +1818,12 @@ AWK=gawk
 
 ####K C Related variables
 PLF=LINUXplatform
-CCF="-O2 -fno-strength-reduce -D_GNU_SOURCE -D${PLF} -std=gnu89 -w"
+# -fcommon restores pre-GCC-10 tentative-definition merging: the legacy socket
+# and HyperDoc C declare globals (still_reading, str_len, ...) in headers pulled
+# into several translation units, which GCC 10+'s -fno-common default rejects as
+# "multiple definition" at link.  clang on macOS still merges them, so this is a
+# Linux/gcc-only need.
+CCF="-O2 -fno-strength-reduce -fcommon -D_GNU_SOURCE -D${PLF} -std=gnu89 -w"
 INC:=${SPD}/src/include
 CC:=gcc
 # Modern Ubuntu keeps X11 headers under the default /usr/include and the
