@@ -633,8 +633,11 @@ Return the prompt number, or `timeout', or `dead'."
 
 ** Session lifecycle
 
-A session is a pipe-connected comint process (=process-connection-type nil=)
-matching the one-shot path's clean line-buffered I/O. The TeX format is
+A session is a comint process whose connection type depends on
+=ob-axiom-session-graphics=: a graphics session runs the =axiom= wrapper over a
+*pty* (=process-connection-type= t) because sman + the viewport helpers want a
+controlling tty, while a non-graphics session keeps the bare REPL on a *pipe*
+(=process-connection-type nil=) for clean line-buffered I/O — see [[#session-graphics][Graphics and HyperDoc]]. The TeX format is
 primed once at start, not per block. Lifecycle is bounded per the project's
 resource rule: a sentinel reaps the hash entry on process death, and a
 buffer-local =kill-buffer-hook= forgets a killed session. Both closures use

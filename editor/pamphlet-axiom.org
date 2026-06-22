@@ -129,12 +129,14 @@ BEG is the buffer position of the backslash; CODE is the unescaped body."
     (let ((line-end (line-end-position)))
       (goto-char (line-beginning-position))
       (when (re-search-forward "\\\\spadcommand{" line-end t)
-        (let ((cmd-start (match-beginning 0))
-              (body-start (match-end 0)))
-          (when (re-search-forward "[^\\]}" line-end t)
-            (let* ((body-end (1- (point)))
-                   (raw (buffer-substring-no-properties body-start body-end)))
-              (cons cmd-start (pamphlet-axiom--unescape-latex raw)))))))))
+        (let ((cmd-start (match-beginning 0)))
+          ;; Body runs to the first } ; \spadcommand input never contains a
+          ;; literal } (Record/Union braces aside), so a [^}]* capture is exact
+          ;; and -- unlike the older [^\]} -- also matches an empty \spadcommand{}.
+          (when (re-search-forward "\\([^}]*\\)}" line-end t)
+            (cons cmd-start
+                  (pamphlet-axiom--unescape-latex
+                   (match-string-no-properties 1)))))))))
 
 (defun pamphlet-axiom--unescape-latex (s)
   "Unescape \\% \\& \\# \\_ \\$ in S for Axiom REPL input."
@@ -247,17 +249,26 @@ CALLBACK (a function designator suitable for `funcall') is invoked with
 t on success or nil on failure. Uses the latex→dvipng pipeline."
   (let* ((dir (make-temp-file "pamphlet-ax" t))
          (png (expand-file-name "f.png" dir))
-         (default-directory dir))
+         (default-directory dir)
+         (pbuf (generate-new-buffer " *pamphlet-ax-latex*")))
     (make-directory pamphlet-axiom-cache-dir t)
     (with-temp-file (expand-file-name "f.tex" dir)
       (insert pamphlet-axiom-preamble
               "\\begin{document}\n" content "\n\\end{document}\n"))
-    (make-process
-     :name "pamphlet-ax-latex" :noquery t
-     :buffer (generate-new-buffer " *pamphlet-ax-latex*")
-     :command '("latex" "-interaction" "nonstopmode" "-output-format" "dvi" "f.tex")
-     :sentinel (apply-partially #'pamphlet-axiom--latex-sentinel
-                                dir png final-file callback))))
+    ;; If `latex' is not on PATH, make-process signals before any sentinel can
+    ;; fire; free the temp dir + process buffer so a LaTeX-less machine does not
+    ;; leak one of each per eval (the bounded-resource discipline).
+    (condition-case nil
+        (make-process
+         :name "pamphlet-ax-latex" :noquery t
+         :buffer pbuf
+         :command '("latex" "-interaction" "nonstopmode" "-output-format" "dvi" "f.tex")
+         :sentinel (apply-partially #'pamphlet-axiom--latex-sentinel
+                                    dir png final-file callback))
+      (error
+       (when (buffer-live-p pbuf) (kill-buffer pbuf))
+       (ignore-errors (delete-directory dir t))
+       (funcall callback nil)))))
 
 (defun pamphlet-axiom--latex-sentinel (dir png final-file callback proc _event)
   "Latex-pass sentinel: if dvi exists, kick off dvipng; else fail CALLBACK."
@@ -419,7 +430,7 @@ instead of being overlaid. Session persists across calls (per buffer)."
     (save-restriction
       (narrow-to-region beg end)
       (goto-char (point-min))
-      (let (count skipped)
+      (let ((count 0) skipped)
         (while (re-search-forward "\\\\spadcommand{" (point-max) t)
           (beginning-of-line)
           (if (pamphlet-axiom--extract-at-point)
