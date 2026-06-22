@@ -36,6 +36,7 @@ concurrency:
 # No effect on the Linux jobs (no Homebrew there).
 env:
   HOMEBREW_NO_REQUIRE_TAP_TRUST: 1
+  HOMEBREW_NO_AUTO_UPDATE: 1
 
 jobs:
   mac-build:
@@ -54,9 +55,12 @@ jobs:
       - name: Install build dependencies
         run: |
           set -x
-          brew update >/dev/null || true
           # sbcl: the Lisp host. gawk: Makefile uses gawk. gnu-sed/grep: a few
           # recipes assume GNU behaviour. coreutils: gtimeout for the runner.
+          # Drop runner-preinstalled third-party taps we do not use; brew otherwise
+          # scans them and surfaces their formula-import errors + deprecations as
+          # job annotations (hashicorp vagrant.rb import failure, aws/tap SAM notice).
+          brew untap aws/tap azure/bicep hashicorp/tap 2>/dev/null || true
           brew install sbcl gawk gnu-sed grep coreutils || true
           sbcl --version
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
@@ -205,6 +209,10 @@ jobs:
           set -x
           # No C is compiled here (we restore the built tree), so no SDK/X11 --
           # just the Lisp host + GNU tools the harness uses (gtimeout, gawk, ...).
+          # Drop runner-preinstalled third-party taps we do not use; brew otherwise
+          # scans them and surfaces their formula-import errors + deprecations as
+          # job annotations (hashicorp vagrant.rb import failure, aws/tap SAM notice).
+          brew untap aws/tap azure/bicep hashicorp/tap 2>/dev/null || true
           brew install sbcl gawk gnu-sed grep coreutils || true
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
           echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
@@ -248,7 +256,7 @@ jobs:
   # macOS/XQuartz arm64 port compiles + links; it does NOT run them (the GUI
   # needs a live X display, absent on the runner).  Independent of build/test
   # so the regression pipeline stays fast and green regardless.
-  gui-build:
+  mac-gui-build:
     runs-on: macos-14
     timeout-minutes: 90
     env:
@@ -262,7 +270,10 @@ jobs:
       - name: Install build dependencies (+ XQuartz for /opt/X11)
         run: |
           set -x
-          brew update >/dev/null || true
+          # Drop runner-preinstalled third-party taps we do not use; brew otherwise
+          # scans them and surfaces their formula-import errors + deprecations as
+          # job annotations (hashicorp vagrant.rb import failure, aws/tap SAM notice).
+          brew untap aws/tap azure/bicep hashicorp/tap 2>/dev/null || true
           brew install sbcl gawk gnu-sed grep coreutils || true
           # XQuartz supplies /opt/X11 (libX11/libXpm/libXt/libSM/libICE + headers)
           # that the graphics + HyperDoc C links against.
@@ -322,7 +333,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v6
         with:
-          name: gui-build-log
+          name: mac-gui-build-log
           path: /tmp/gui.log
           if-no-files-found: ignore
 
