@@ -37,6 +37,13 @@ bindings, =)set= flags, and type environment survive across blocks — the
 stateful-CAS shape FriCAS's =efricas= provides. One-shot stays the default;
 sessions are opt-in. See =Process Backend: Sessions=.
 
+*Graphics is a session capability.* A one-shot =draw= can only return a
+viewport /object/: there is no live viewport manager behind a bare
+=AXIOMsys=. A =:session= instead launches through the =axiom= wrapper
+(=axiom -gr -ht -ihere=), which is =sman= — it starts the viewport manager
+and HyperDoc as socket-connected helpers, so =draw= opens a real X11 window.
+See [[#session-graphics][Graphics and HyperDoc]].
+
 * Public API
 
 The user-facing surface is a small set of Org header arguments plus the
@@ -73,8 +80,10 @@ cached if a later block depends on their side effects.
 * Package Preamble
 
 The preamble pulls in Org Babel and declares the customization group plus the
-knobs a site is most likely to change: the program to launch, the optional
-=AXIOM= home directory, the preview scale, and whether to auto-preview.
+knobs a site is most likely to change: the bare =AXIOMsys= REPL (for one-shot)
+and the =axiom= wrapper (for a graphics session), the optional =AXIOM= home
+directory, whether sessions enable graphics, the preview scale, and whether to
+auto-preview.
 
 #+begin_src elisp
 (require 'org)
@@ -93,6 +102,16 @@ knobs a site is most likely to change: the program to launch, the optional
 Used as-is when found on PATH (e.g. set to \"fricas\" for FriCAS).
 When `ob-axiom-axiom-home' is set or auto-detected, the
 \"bin/AXIOMsys\" under that home takes precedence."
+  :type 'string :group 'ob-axiom)
+
+(defcustom ob-axiom-axiom-command "axiom"
+  "Path to the `axiom' session-manager wrapper (sman).
+Distinct from `ob-axiom-command': that is the bare `AXIOMsys' REPL the
+one-shot path runs; this is the `axiom' shell wrapper a graphics :session
+launches (`axiom -gr -ht -ihere'), which starts the viewport manager and
+HyperDoc.  Used as-is when found on PATH; when `ob-axiom-axiom-home' is set
+or auto-detected, the \"bin/axiom\" under that home takes precedence.  Set
+to an absolute path to point at another install."
   :type 'string :group 'ob-axiom)
 
 (defcustom ob-axiom-axiom-home nil
@@ -122,6 +141,23 @@ string to share one persistent comint session across blocks that name
 no :session of their own."
   :type '(choice (const :tag "One-shot (no session)" nil) string)
   :group 'ob-axiom)
+
+(defcustom ob-axiom-session-graphics t
+  "When non-nil, a :session launches through the `axiom' wrapper (sman) so
+graphics and HyperDoc work: `draw' opens an X11 viewport instead of
+returning a viewport object no one can see.  When nil, sessions use the
+bare `AXIOMsys' REPL (no window, like the one-shot path) — set this off on
+a headless host with no X server."
+  :type 'boolean :group 'ob-axiom)
+
+(defcustom ob-axiom-session-graphics-args '("-gr" "-ht" "-ihere" "-noclef")
+  "Arguments passed to the `axiom' wrapper for a graphics session.
+`-gr' starts the viewport manager, `-ht' HyperDoc, `-ihere' keeps the
+interpreter in this (comint) terminal rather than a separate xterm, and
+`-noclef' drops the Clef line-editor whose terminal escapes would pollute
+the captured transcript (comint provides line editing).  Drop `-gr'/`-ht'
+or add `-nox' for a lighter or X-less session."
+  :type '(repeat string) :group 'ob-axiom)
 
 (defcustom ob-axiom-session-timeout 30
   "Seconds to wait for a session block's result before giving up."
@@ -201,7 +237,9 @@ Return the mnt/<platform> directory holding it, or nil."
     found))
 
 (defun ob-axiom--runtime ()
-  "Return a plist (:program P :env E :home H) describing how to launch Axiom."
+  "Return a plist describing how to launch Axiom.
+Keys: :program (the bare AXIOMsys REPL, for one-shot), :axiom-program (the
+`axiom' wrapper, for a graphics :session), :env, :home."
   (let* ((home (or ob-axiom-axiom-home
                    (ob-axiom--find-axiom-home
                     (and ob-axiom--this-file
@@ -209,13 +247,18 @@ Return the mnt/<platform> directory holding it, or nil."
                    (ob-axiom--find-axiom-home default-directory)))
          (home (and home (expand-file-name home)))
          (homed-bin (and home (expand-file-name "bin/AXIOMsys" home)))
+         (homed-axiom (and home (expand-file-name "bin/axiom" home)))
          (program (if (and homed-bin (file-executable-p homed-bin))
                       homed-bin
                     ob-axiom-command))
+         (axiom-program (if (and homed-axiom (file-executable-p homed-axiom))
+                            homed-axiom
+                          ob-axiom-axiom-command))
          (env (if home
                   (cons (concat "AXIOM=" home) process-environment)
                 process-environment)))
-    (list :program program :env env :home home)))
+    (list :program program :axiom-program axiom-program
+          :env env :home home)))
 
 (defun ob-axiom--runtime-available-p ()
   "Non-nil when an Axiom executable can be located."
@@ -481,6 +524,38 @@ A persistent =comint= session keyed by =:session= lets variable bindings,
 stateful-CAS shape FriCAS's =efricas= provides. Sessions are opt-in; one-shot
 stays the default.
 
+** Graphics and HyperDoc via the sman wrapper
+:PROPERTIES:
+:CUSTOM_ID: session-graphics
+:END:
+
+A bare =AXIOMsys= cannot draw: the X11 window is produced by =viewman= (the
+viewport manager, =ViewportServer= socket index 2), which =draw= reaches over
+a socket but which nothing starts on its own. =sman= — Axiom's session
+manager, invoked through the =axiom= wrapper — is what wires this up.
+=axiom -gr -ht -ihere= expands to =sman -gr -ht -ihere -ws AXIOMsys=: =sman=
+injects =SPADSERVER=/=SPADNUM= so the interpreter opens its server sockets,
+forks =viewman= (=-gr=) and =hypertex= (=-ht=) as clients, and keeps the
+interpreter in /this/ comint terminal (=-ihere=) rather than a separate xterm.
+A graphics =:session= is therefore the same process tree the interactive
+=axiom= command builds — the one already proven to pop a viewport.
+
+Three consequences shape the backend:
+
+- *A pty, not a pipe.* =sman= and the helpers expect a controlling tty
+  (=-ihere= does =isatty=/termios setup), so a graphics session binds
+  =process-connection-type= to t. The bare-REPL session keeps its pipe for
+  clean line-buffered I/O.
+- *=-noclef=.* The default Clef line-editor paints terminal escape sequences
+  that would corrupt the captured transcript; comint already provides line
+  editing, so the launch drops it.
+- *=DISPLAY= is inherited.* =viewman= opens the window against whatever
+  =DISPLAY= Emacs carries (the XQuartz display on macOS) — no injection, the
+  subprocess inherits the parent environment.
+
+Set =ob-axiom-session-graphics= to nil to fall back to the bare =AXIOMsys=
+session on a host with no X server.
+
 ** Knowing when a command has finished
 
 The hard part of any REPL backend is detecting completion. Axiom's prompt
@@ -558,8 +633,11 @@ Return the prompt number, or `timeout', or `dead'."
 
 ** Session lifecycle
 
-A session is a pipe-connected comint process (=process-connection-type nil=)
-matching the one-shot path's clean line-buffered I/O. The TeX format is
+A session is a comint process whose connection type depends on
+=ob-axiom-session-graphics=: a graphics session runs the =axiom= wrapper over a
+*pty* (=process-connection-type= t) because sman + the viewport helpers want a
+controlling tty, while a non-graphics session keeps the bare REPL on a *pipe*
+(=process-connection-type nil=) for clean line-buffered I/O — see [[#session-graphics][Graphics and HyperDoc]]. The TeX format is
 primed once at start, not per block. Lifecycle is bounded per the project's
 resource rule: a sentinel reaps the hash entry on process death, and a
 buffer-local =kill-buffer-hook= forgets a killed session. Both closures use
@@ -573,18 +651,25 @@ dynamic binding, where a lambda would not capture the session key.
     (remhash session ob-axiom--sessions)))
 
 (defun ob-axiom--session-start (session)
-  "Start, prime for TeX, and return a fresh comint buffer for SESSION."
+  "Start, prime for TeX, and return a fresh comint buffer for SESSION.
+With `ob-axiom-session-graphics' on, launch the `axiom' wrapper (sman)
+under a pty so `draw' opens an X11 viewport and HyperDoc is reachable;
+otherwise launch the bare `AXIOMsys' REPL over a pipe (no window)."
   (let* ((rt (ob-axiom--runtime))
-         (program (plist-get rt :program))
+         (graphics ob-axiom-session-graphics)
+         (program (plist-get rt (if graphics :axiom-program :program)))
+         (args (if graphics ob-axiom-session-graphics-args '("--noinform")))
          (process-environment (plist-get rt :env))
-         (process-connection-type nil))
+         ;; A graphics session is sman + helpers, which want a controlling
+         ;; tty (-ihere does isatty/termios); the bare REPL keeps the pipe.
+         (process-connection-type graphics))
     (unless (or (file-executable-p program) (executable-find program))
       (error "ob-axiom: no Axiom executable (%s); set `ob-axiom-axiom-home'"
              program))
-    (let* ((buf (make-comint-in-buffer
-                 (format "ob-axiom:%s" session)
-                 (format "*ob-axiom:%s*" session)
-                 program nil "--noinform"))
+    (let* ((buf (apply #'make-comint-in-buffer
+                       (format "ob-axiom:%s" session)
+                       (format "*ob-axiom:%s*" session)
+                       program nil args))
            (proc (get-buffer-process buf)))
       (set-process-query-on-exit-flag proc nil)
       (set-process-sentinel

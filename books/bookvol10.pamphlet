@@ -17565,6 +17565,18 @@ ${MID}/%.nrlib/code.o: ${MID}/%.spad
 	   fi 
 
 \end{chunk}
+
+The generic \verb|.lsp -> .o| rule below compiles and stages any
+bootstrap object. Usually \verb|$*| is a flat construct name, so the
+staging \verb|cp| writes \verb|${OUT}/X.o|. But when the spad compiler
+emits a default-package companion (an \verb|X-| construct) as an
+\emph{uncompiled} \verb|X-.nrlib/code.lsp| --- which the Linux+SBCL
+\verb|)co| does, where the macOS build pre-compiles the companion to
+\verb|code.o| inside \verb|)co| --- \verb|$*| carries a subdirectory
+(\verb|X-.nrlib/code|), so the destination \verb|${OUT}/X-.nrlib/| does
+not yet exist. The \verb|mkdir -p| makes the rule robust to that case;
+it is a no-op for the flat majority and for the macOS path, which never
+reaches this rule for companions.
 \begin{chunk}{genericBOOTSTRAPfiles}
 
 ${MID}/%.o: ${MID}/%.lsp
@@ -17577,6 +17589,7 @@ ${MID}/%.o: ${MID}/%.lsp
 	   echo '(progn (in-package "BOOT") (compile-file "$*.lsp" :output-file "$*.o"))'\
            | ${DEPSYS} 1>/dev/null 2>/dev/null ; \
 	  fi )
+	@ mkdir -p `dirname ${OUT}/$*.o`
 	@ cp ${MID}/$*.o ${OUT}/$*.o
 
 \end{chunk}

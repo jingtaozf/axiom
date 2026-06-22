@@ -1,9 +1,9 @@
 name: axiom SBCL build + regression
 
-# Builds Axiom from source under SBCL on Apple Silicon (the only LISPFLAVOR=sbcl
-# path is Makefile.MACOSX), then runs the src/input regression suite (excluding
-# six non-portable tests, see ci/run-regression.sh) SHARDED across 5 parallel
-# macOS jobs.
+# Builds Axiom from source under SBCL and runs the src/input regression suite
+# (excluding a few non-portable tests, see ci/run-regression.sh) sharded across
+# 5 parallel jobs -- on BOTH macOS arm64 (Makefile.MACOSX) and Ubuntu x86_64
+# (Makefile.LINUX), so the SBCL port is exercised on two OSes and two arches.
 #
 # Why this shape:
 #  - The suite is dominated by ~106 rich*/richder* (Risch integration) tests at
@@ -11,9 +11,10 @@ name: axiom SBCL build + regression
 #    queue.  GitHub caps FREE macOS concurrency at 5 jobs, so we split the suite
 #    into 5 timing-balanced shards that run at once -> ~5 min wall-clock.
 #  - The algebra build is long but cached on a source hash; the build runs once
-#    in `build`, and the 5 `test` shards restore that cache instead of rebuilding.
-#  - An exact cache-key hit means nothing affecting the build or the regression
-#    outcome changed, so the whole `test` matrix is skipped.
+#    in `mac-build` / `linux-build`, and the 5 `*-test` shards restore that cache
+#    instead of rebuilding.
+#  - An exact cache-key hit means nothing affecting the build changed, so the
+#    restored tree is reused without recompiling.
 
 on:
   push:
@@ -28,8 +29,17 @@ concurrency:
   group: sbcl-ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Silence Homebrew's "untrusted taps" notice on the macOS runners: aws/tap and
+# azure/bicep are pre-tapped in the runner image, not by us, and we install only
+# homebrew/core formulae.  This keeps the current behaviour during Homebrew's
+# trust transition; the notice self-resolves once the runner flips the default.
+# No effect on the Linux jobs (no Homebrew there).
+env:
+  HOMEBREW_NO_REQUIRE_TAP_TRUST: 1
+  HOMEBREW_NO_AUTO_UPDATE: 1
+
 jobs:
-  build:
+  mac-build:
     runs-on: macos-14
     timeout-minutes: 120
     outputs:
@@ -38,16 +48,19 @@ jobs:
       LISPFLAVOR: sbcl
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: false
 
       - name: Install build dependencies
         run: |
           set -x
-          brew update >/dev/null || true
           # sbcl: the Lisp host. gawk: Makefile uses gawk. gnu-sed/grep: a few
           # recipes assume GNU behaviour. coreutils: gtimeout for the runner.
+          # Drop runner-preinstalled third-party taps we do not use; brew otherwise
+          # scans them and surfaces their formula-import errors + deprecations as
+          # job annotations (hashicorp vagrant.rb import failure, aws/tap SAM notice).
+          brew untap aws/tap azure/bicep hashicorp/tap 2>/dev/null || true
           brew install sbcl gawk gnu-sed grep coreutils || true
           sbcl --version
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
@@ -73,7 +86,7 @@ jobs:
         # rebuild that dies "fasl older than source".  Keeping the key to build
         # inputs means a harness/doc edit is an EXACT hit (no rebuild at all).
         run: |
-          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
+          echo "value=axiom-sbcl-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore build cache (obj/int/mnt/lsp)
         id: cache
@@ -82,7 +95,7 @@ jobs:
         # persist a half-built tree and let the next run exact-hit it green.
         # No restore-keys: on a miss we rm + clean-build anyway, so a prefix
         # match would only waste a download of a tree we delete.
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             obj
@@ -147,7 +160,7 @@ jobs:
         # Persist ONLY a freshly built tree that also passed smoke -- never a
         # partial/broken one.  Skipped on an exact hit (nothing new to save).
         if: success() && steps.cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: |
             obj
@@ -158,7 +171,7 @@ jobs:
 
       - name: Upload build log on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: build-log
           path: |
@@ -166,8 +179,8 @@ jobs:
             /tmp/smoke.log
           if-no-files-found: ignore
 
-  test:
-    needs: build
+  mac-test:
+    needs: mac-build
     # Always run the sharded suite: at ~5 min across 5 shards it is cheap enough
     # that an unconditional run is simpler and safer than a skip-gate, and it
     # guarantees a harness or test-input edit is actually exercised (those files
@@ -187,7 +200,7 @@ jobs:
       SHARD_TOTAL: 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: false
 
@@ -196,13 +209,17 @@ jobs:
           set -x
           # No C is compiled here (we restore the built tree), so no SDK/X11 --
           # just the Lisp host + GNU tools the harness uses (gtimeout, gawk, ...).
+          # Drop runner-preinstalled third-party taps we do not use; brew otherwise
+          # scans them and surfaces their formula-import errors + deprecations as
+          # job annotations (hashicorp vagrant.rb import failure, aws/tap SAM notice).
+          brew untap aws/tap azure/bicep hashicorp/tap 2>/dev/null || true
           brew install sbcl gawk gnu-sed grep coreutils || true
           echo "$(brew --prefix coreutils)/libexec/gnubin" >> "$GITHUB_PATH"
           echo "$(brew --prefix gnu-sed)/libexec/gnubin"   >> "$GITHUB_PATH"
           echo "$(brew --prefix grep)/libexec/gnubin"      >> "$GITHUB_PATH"
 
       - name: Restore build artifacts
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: |
             obj
@@ -211,7 +228,7 @@ jobs:
             lsp/Makefile
           # Restore exactly what `build` saved; fail loudly rather than test a
           # stale/mismatched build via a restore-key fallback.
-          key: ${{ needs.build.outputs.cache-key }}
+          key: ${{ needs.mac-build.outputs.cache-key }}
           fail-on-cache-miss: true
 
       - name: Verify restored build
@@ -227,7 +244,7 @@ jobs:
 
       - name: Upload shard log on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: regression-shard-${{ matrix.shard }}
           path: /tmp/axci/results.txt
@@ -239,21 +256,24 @@ jobs:
   # macOS/XQuartz arm64 port compiles + links; it does NOT run them (the GUI
   # needs a live X display, absent on the runner).  Independent of build/test
   # so the regression pipeline stays fast and green regardless.
-  gui-build:
+  mac-gui-build:
     runs-on: macos-14
     timeout-minutes: 90
     env:
       LISPFLAVOR: sbcl
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           submodules: false
 
       - name: Install build dependencies (+ XQuartz for /opt/X11)
         run: |
           set -x
-          brew update >/dev/null || true
+          # Drop runner-preinstalled third-party taps we do not use; brew otherwise
+          # scans them and surfaces their formula-import errors + deprecations as
+          # job annotations (hashicorp vagrant.rb import failure, aws/tap SAM notice).
+          brew untap aws/tap azure/bicep hashicorp/tap 2>/dev/null || true
           brew install sbcl gawk gnu-sed grep coreutils || true
           # XQuartz supplies /opt/X11 (libX11/libXpm/libXt/libSM/libICE + headers)
           # that the graphics + HyperDoc C links against.
@@ -311,8 +331,277 @@ jobs:
 
       - name: Upload GUI build log on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
-          name: gui-build-log
+          name: mac-gui-build-log
           path: /tmp/gui.log
+          if-no-files-found: ignore
+
+  # ---- Linux (Ubuntu x86_64) SBCL build + regression -------------------------
+  # Proves the SBCL port is not macOS-specific: builds interp + algebra under
+  # SBCL on ubuntu-latest via the Makefile.LINUX target, then runs the same
+  # sharded regression suite.  Two Linux-specific facts drive the differences
+  # from the macOS jobs:
+  #   - The distro SBCL (2.2.9 on 24.04) miscompiles the algebra (a category
+  #     compile dies "Value of CVEC in (LENGTH CVEC) ... not a SEQUENCE"), so we
+  #     install the official 2.6.3 x86_64 binary -- the version the port is
+  #     validated on.
+  #   - The platform dir is mnt/LINUX (AXIOM basename selects SYS=LINUX), built
+  #     with native gcc + system X11; no SDK/CPATH hack and no XQuartz.
+  # The cache key carries runner.arch, so the X64 Linux cache never collides
+  # with the ARM64 macOS cache even though the hashFiles() inputs match.
+  linux-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      cache-key: ${{ steps.key.outputs.value }}
+    env:
+      LISPFLAVOR: sbcl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: false
+
+      - name: Install build dependencies (+ SBCL 2.6.3 binary)
+        run: |
+          set -ex
+          sudo apt-get update -qq
+          # gawk: the Makefile uses gawk.  build-essential: gcc/make for tanglec
+          # and the algebra C.  perl: the SRCDIRS edit.  curl/bzip2: fetch SBCL.
+          sudo apt-get install -y --no-install-recommends \
+            gawk build-essential perl curl bzip2 ca-certificates
+          # The distro SBCL miscompiles the algebra; install the validated 2.6.3.
+          curl -fsSL -o /tmp/sbcl.tar.bz2 \
+            https://downloads.sourceforge.net/project/sbcl/sbcl/2.6.3/sbcl-2.6.3-x86-64-linux-binary.tar.bz2
+          tar -C /tmp -xjf /tmp/sbcl.tar.bz2
+          ( cd /tmp/sbcl-*-x86-64-linux && sudo sh install.sh )
+          sbcl --version
+
+      - name: Compute cache key
+        id: key
+        run: |
+          echo "value=axiom-sbcl-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore build cache (obj/int/mnt/lsp)
+        id: cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          key: ${{ steps.key.outputs.value }}
+
+      - name: Build axiom (SBCL, interp + algebra only)
+        run: |
+          set -ex
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          export PATH="$AXIOM/bin:$PATH"
+          if [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
+            # Exact key hit: reuse the restored tree, touch it newer than the
+            # checkout so make has nothing to do, then verify the binaries.
+            find obj int mnt lsp -exec touch {} + 2>/dev/null || true
+            test -x obj/LINUX/bin/interpsys
+            test -x mnt/LINUX/bin/AXIOMsys
+            echo "exact cache hit -- reused built tree, skipped rebuild"
+          else
+            set -o pipefail
+            rm -rf obj int mnt
+            # interp + algebra only (no graphics/hyperdoc); SYS=LINUX is selected
+            # by AXIOM's basename, which tangles the Makefile.LINUX stanza.
+            make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=gcc \
+              2>&1 | tee /tmp/build.log | tail -n 200
+            books/tanglec Makefile.pamphlet "Makefile.LINUX" > Makefile.LINUX
+            perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="interpdir sharedir algebradir"/m' Makefile.LINUX
+            make -f Makefile.LINUX LISPFLAVOR=sbcl CC=gcc \
+              2>&1 | tee -a /tmp/build.log | tail -n 4000
+            test -x obj/LINUX/bin/interpsys
+            test -x mnt/LINUX/bin/AXIOMsys
+          fi
+
+      - name: Smoke test (1+1, factor, integrate)
+        run: |
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          printf '%s\n' ')set messages time off' '1 + 1' 'factor(120)' 'integrate(x^2,x)' ')quit' \
+            | mnt/LINUX/bin/AXIOMsys 2>&1 | tee /tmp/smoke.log
+          grep -q 'Type: PositiveInteger' /tmp/smoke.log
+
+      - name: Save build cache
+        if: success() && steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          key: ${{ steps.key.outputs.value }}
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: linux-build-log
+          path: |
+            /tmp/build.log
+            /tmp/smoke.log
+          if-no-files-found: ignore
+
+  linux-test:
+    needs: linux-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+    env:
+      LISPFLAVOR: sbcl
+      SHARD_INDEX: ${{ matrix.shard }}
+      SHARD_TOTAL: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: false
+
+      - name: Install test dependencies (+ SBCL 2.6.3 binary)
+        run: |
+          set -ex
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            gawk build-essential perl curl bzip2 ca-certificates
+          curl -fsSL -o /tmp/sbcl.tar.bz2 \
+            https://downloads.sourceforge.net/project/sbcl/sbcl/2.6.3/sbcl-2.6.3-x86-64-linux-binary.tar.bz2
+          tar -C /tmp -xjf /tmp/sbcl.tar.bz2
+          ( cd /tmp/sbcl-*-x86-64-linux && sudo sh install.sh )
+          sbcl --version
+
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          key: ${{ needs.linux-build.outputs.cache-key }}
+          fail-on-cache-miss: true
+
+      - name: Verify restored build
+        run: |
+          test -x obj/LINUX/bin/interpsys
+          test -x obj/LINUX/bin/lisp
+          test -x mnt/LINUX/bin/AXIOMsys
+
+      - name: Run regression shard ${{ matrix.shard }}/5
+        run: |
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          chmod +x ci/run-regression.sh
+          ./ci/run-regression.sh
+
+      - name: Upload shard log on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: linux-regression-shard-${{ matrix.shard }}
+          path: /tmp/axci/results.txt
+          if-no-files-found: ignore
+
+  # ---- Linux GUI build + headless (Xvfb) draw E2E -----------------------------
+  # The macOS runner has no X server, so mac-gui-build can only prove the GUI
+  # compiles + links.  The Linux runner can start a virtual X server (Xvfb), so
+  # this job goes further: it builds the full system + GUI and then actually RUNS
+  # the graphics stack -- driving `axiom -gr -ht -ihere` to draw a plot and
+  # asserting the X11 viewport window appears.  Self-contained (no cache) so the
+  # algebra build runs in parallel with linux-build rather than serialised behind
+  # it; restoring linux-build's cache instead is a possible future optimisation.
+  linux-gui-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LISPFLAVOR: sbcl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          submodules: false
+
+      - name: Install build + X11 + Xvfb deps (+ SBCL 2.6.3 binary)
+        run: |
+          set -ex
+          sudo apt-get update -qq
+          # X11 -dev: the graphics + HyperDoc C links -lX11 -lXpm -lXt -lSM -lICE.
+          # xvfb: a virtual X server for the headless draw.  x11-utils (xwininfo)
+          # + x11-apps (xwd) + netpbm let the E2E inspect/capture the viewport.
+          sudo apt-get install -y --no-install-recommends \
+            gawk build-essential perl curl bzip2 ca-certificates \
+            libx11-dev libxpm-dev libxt-dev libsm-dev libice-dev \
+            xvfb x11-utils x11-apps netpbm
+          curl -fsSL -o /tmp/sbcl.tar.bz2 \
+            https://downloads.sourceforge.net/project/sbcl/sbcl/2.6.3/sbcl-2.6.3-x86-64-linux-binary.tar.bz2
+          tar -C /tmp -xjf /tmp/sbcl.tar.bz2
+          ( cd /tmp/sbcl-*-x86-64-linux && sudo sh install.sh )
+          sbcl --version
+
+      - name: Build full system + GUI (graphics + HyperDoc + sman)
+        run: |
+          set -exo pipefail
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          export PATH="$AXIOM/bin:$PATH"
+          make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=gcc \
+            2>&1 | tee /tmp/gui.log | tail -n 80
+          # libspad.a (X11-coupled C archive) + libspadsock.so (the SBCL socket
+          # FFI the Lisp image dlopens at runtime).
+          make libspad LISPFLAVOR=sbcl CC=gcc \
+            2>&1 | tee -a /tmp/gui.log | tail -n 40
+          # Build the whole system in one tree: core (interp+algebra, needed to RUN
+          # a draw) plus the GUI dirs.  Edit the SRCDIRS:= line, not a cmdline
+          # override (whose quotes leak through MAKEFLAGS and break sub-makes).
+          books/tanglec Makefile.pamphlet "Makefile.LINUX" > Makefile.LINUX
+          perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="interpdir sharedir algebradir graphdir hyperdir smandir"/m' Makefile.LINUX
+          make -f Makefile.LINUX srcdir LISPFLAVOR=sbcl CC=gcc \
+            2>&1 | tee -a /tmp/gui.log | tail -n 300
+
+      - name: Verify GUI binaries + libspadsock.so + native X11 links
+        run: |
+          set -e
+          # The standalone viewer tangles to lowercase `viewalone`; the macOS job's
+          # `viewAlone` check only matches there via the case-insensitive HFS volume.
+          for b in lib/viewman lib/view2d lib/view3d bin/viewalone \
+                   bin/hypertex bin/htadd bin/sman bin/clef \
+                   lib/session lib/spadclient bin/AXIOMsys; do
+            test -x "mnt/LINUX/$b" && echo "ok  $b" || { echo "MISSING $b"; exit 1; }
+          done
+          test -s mnt/LINUX/doc/ht.db && echo "ok  ht.db ($(wc -c < mnt/LINUX/doc/ht.db) bytes)"
+          # Without libspadsock.so the draw returns a viewport object but never
+          # reaches viewman -- gate on it, like the macOS .dylib check.
+          test -f mnt/LINUX/lib/libspadsock.so && echo "ok  libspadsock.so" \
+            || { echo "MISSING libspadsock.so (socket FFI)"; exit 1; }
+          # Sanity-check the X11 linkage (informational, never fatal).  On Linux
+          # viewman links only libX11; libXpm is pulled by view2d/view3d/hypertex
+          # (on macOS viewman links libXpm too -- a platform linkage difference).
+          ldd mnt/LINUX/bin/hypertex | grep -q libX11 && echo "ok  hypertex -> libX11" || echo "note: libX11 not in hypertex ldd"
+          ldd mnt/LINUX/lib/view2d   | grep -q libXpm && echo "ok  view2d -> libXpm"   || echo "note: libXpm not in view2d ldd"
+
+      - name: Headless draw E2E under Xvfb
+        run: |
+          set -e
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          export PATH="$AXIOM/bin:$PATH" DISPLAY=:99
+          Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1 &
+          sleep 3
+          chmod +x ci/xvfb-draw-e2e.sh
+          ./ci/xvfb-draw-e2e.sh
+
+      - name: Upload GUI build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: linux-gui-build-log
+          path: |
+            /tmp/gui.log
+            /tmp/xvfb.log
           if-no-files-found: ignore
