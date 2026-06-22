@@ -1,9 +1,9 @@
 name: axiom SBCL build + regression
 
-# Builds Axiom from source under SBCL on Apple Silicon (the only LISPFLAVOR=sbcl
-# path is Makefile.MACOSX), then runs the src/input regression suite (excluding
-# six non-portable tests, see ci/run-regression.sh) SHARDED across 5 parallel
-# macOS jobs.
+# Builds Axiom from source under SBCL and runs the src/input regression suite
+# (excluding a few non-portable tests, see ci/run-regression.sh) sharded across
+# 5 parallel jobs -- on BOTH macOS arm64 (Makefile.MACOSX) and Ubuntu x86_64
+# (Makefile.LINUX), so the SBCL port is exercised on two OSes and two arches.
 #
 # Why this shape:
 #  - The suite is dominated by ~106 rich*/richder* (Risch integration) tests at
@@ -315,4 +315,177 @@ jobs:
         with:
           name: gui-build-log
           path: /tmp/gui.log
+          if-no-files-found: ignore
+
+  # ---- Linux (Ubuntu x86_64) SBCL build + regression -------------------------
+  # Proves the SBCL port is not macOS-specific: builds interp + algebra under
+  # SBCL on ubuntu-latest via the Makefile.LINUX target, then runs the same
+  # sharded regression suite.  Two Linux-specific facts drive the differences
+  # from the macOS jobs:
+  #   - The distro SBCL (2.2.9 on 24.04) miscompiles the algebra (a category
+  #     compile dies "Value of CVEC in (LENGTH CVEC) ... not a SEQUENCE"), so we
+  #     install the official 2.6.3 x86_64 binary -- the version the port is
+  #     validated on.
+  #   - The platform dir is mnt/LINUX (AXIOM basename selects SYS=LINUX), built
+  #     with native gcc + system X11; no SDK/CPATH hack and no XQuartz.
+  # The cache key carries runner.arch, so the X64 Linux cache never collides
+  # with the ARM64 macOS cache even though the hashFiles() inputs match.
+  linux-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      cache-key: ${{ steps.key.outputs.value }}
+    env:
+      LISPFLAVOR: sbcl
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Install build dependencies (+ SBCL 2.6.3 binary)
+        run: |
+          set -ex
+          sudo apt-get update -qq
+          # gawk: the Makefile uses gawk.  build-essential: gcc/make for tanglec
+          # and the algebra C.  perl: the SRCDIRS edit.  curl/bzip2: fetch SBCL.
+          sudo apt-get install -y --no-install-recommends \
+            gawk build-essential perl curl bzip2 ca-certificates
+          # The distro SBCL miscompiles the algebra; install the validated 2.6.3.
+          curl -fsSL -o /tmp/sbcl.tar.bz2 \
+            https://downloads.sourceforge.net/project/sbcl/sbcl/2.6.3/sbcl-2.6.3-x86-64-linux-binary.tar.bz2
+          tar -C /tmp -xjf /tmp/sbcl.tar.bz2
+          ( cd /tmp/sbcl-*-x86-64-linux && sudo sh install.sh )
+          sbcl --version
+
+      - name: Compute cache key
+        id: key
+        run: |
+          echo "value=axiom-sbcl-${{ runner.arch }}-${{ hashFiles('src/interp/**', 'src/algebra/**', 'books/**.pamphlet', 'Makefile*', 'lsp/Makefile.pamphlet') }}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore build cache (obj/int/mnt/lsp)
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          key: ${{ steps.key.outputs.value }}
+
+      - name: Build axiom (SBCL, interp + algebra only)
+        run: |
+          set -ex
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          export PATH="$AXIOM/bin:$PATH"
+          if [ "${{ steps.cache.outputs.cache-hit }}" = "true" ]; then
+            # Exact key hit: reuse the restored tree, touch it newer than the
+            # checkout so make has nothing to do, then verify the binaries.
+            find obj int mnt lsp -exec touch {} + 2>/dev/null || true
+            test -x obj/LINUX/bin/interpsys
+            test -x mnt/LINUX/bin/AXIOMsys
+            echo "exact cache hit -- reused built tree, skipped rebuild"
+          else
+            set -o pipefail
+            rm -rf obj int mnt
+            # interp + algebra only (no graphics/hyperdoc); SYS=LINUX is selected
+            # by AXIOM's basename, which tangles the Makefile.LINUX stanza.
+            make rootdirs axiom.sty tanglec lspdir LISPFLAVOR=sbcl CC=gcc \
+              2>&1 | tee /tmp/build.log | tail -n 200
+            books/tanglec Makefile.pamphlet "Makefile.LINUX" > Makefile.LINUX
+            perl -0pi -e 's/^SRCDIRS:="[^"]*"/SRCDIRS:="interpdir sharedir algebradir"/m' Makefile.LINUX
+            make -f Makefile.LINUX LISPFLAVOR=sbcl CC=gcc \
+              2>&1 | tee -a /tmp/build.log | tail -n 4000
+            test -x obj/LINUX/bin/interpsys
+            test -x mnt/LINUX/bin/AXIOMsys
+          fi
+
+      - name: Smoke test (1+1, factor, integrate)
+        run: |
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          printf '%s\n' ')set messages time off' '1 + 1' 'factor(120)' 'integrate(x^2,x)' ')quit' \
+            | mnt/LINUX/bin/AXIOMsys 2>&1 | tee /tmp/smoke.log
+          grep -q 'Type: PositiveInteger' /tmp/smoke.log
+
+      - name: Save build cache
+        if: success() && steps.cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          key: ${{ steps.key.outputs.value }}
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build-log
+          path: |
+            /tmp/build.log
+            /tmp/smoke.log
+          if-no-files-found: ignore
+
+  linux-test:
+    needs: linux-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4, 5]
+    env:
+      LISPFLAVOR: sbcl
+      SHARD_INDEX: ${{ matrix.shard }}
+      SHARD_TOTAL: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Install test dependencies (+ SBCL 2.6.3 binary)
+        run: |
+          set -ex
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            gawk build-essential perl curl bzip2 ca-certificates
+          curl -fsSL -o /tmp/sbcl.tar.bz2 \
+            https://downloads.sourceforge.net/project/sbcl/sbcl/2.6.3/sbcl-2.6.3-x86-64-linux-binary.tar.bz2
+          tar -C /tmp -xjf /tmp/sbcl.tar.bz2
+          ( cd /tmp/sbcl-*-x86-64-linux && sudo sh install.sh )
+          sbcl --version
+
+      - name: Restore build artifacts
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            obj
+            int
+            mnt
+            lsp/Makefile
+          key: ${{ needs.linux-build.outputs.cache-key }}
+          fail-on-cache-miss: true
+
+      - name: Verify restored build
+        run: |
+          test -x obj/LINUX/bin/interpsys
+          test -x obj/LINUX/bin/lisp
+          test -x mnt/LINUX/bin/AXIOMsys
+
+      - name: Run regression shard ${{ matrix.shard }}/5
+        run: |
+          export AXIOM="$PWD/mnt/LINUX" DAASE="$PWD/src/share"
+          chmod +x ci/run-regression.sh
+          ./ci/run-regression.sh
+
+      - name: Upload shard log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-regression-shard-${{ matrix.shard }}
+          path: /tmp/axci/results.txt
           if-no-files-found: ignore
