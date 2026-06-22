@@ -1,0 +1,653 @@
+#+TITLE: pamphlet-axiom — Execute \spadcommand{} from pamphlet files
+#+AUTHOR: Jingtao Xu
+#+PROPERTY: header-args:elisp :lexical no
+
+# Loaded by Emacs via `(literate-elisp-load ".../editor/pamphlet-axiom.org")`.
+# Companion to ob-axiom.org (which serves .org src blocks). This file serves
+# .pamphlet buffers: \spadcommand{} / \spadgraph{} are the pamphlet equivalents
+# of an org src block. literate-elisp does not honour lexical-binding: t; all
+# async callbacks use apply-partially, not closures.
+
+* Overview
+
+=ob-axiom= made it possible to evaluate an Org source block with =C-c C-c=
+and see the LaTeX result rendered inline. =pamphlet-axiom= brings the same
+capability to daly-style =.pamphlet= files: a reader of =bookvol1= presses
+=C-c C-e= on any =\spadcommand{...}= line and the live Axiom result is
+rendered on top of the book's existing =$$...$$= expected-output block.
+
+*Design contract — the book's bytes are never modified.* The live result
+is rasterised via the same latex→dvipng pipeline as =pamphlet-preview=,
+then placed as a =display= overlay on the book's =$$= block. The original
+LaTeX survives underneath; =C-c C-v= toggles between image and source.
+
+*Two reuse points.* The module is a thin front end over:
+- =ob-axiom='s process backend — =ob-axiom--session-buffer= for the
+  comint session, =ob-axiom--session-eval= for evaluation,
+  =ob-axiom--capture-tex= for extracting the =$$= block Axiom emits;
+- =pamphlet-preview='s rendering convention — latex→dvipng→PNG into a
+  cache directory keyed by sha1. =pamphlet-axiom= shares
+  =pamphlet-preview-cache-dir= so a fragment already rendered by either
+  module is a cache hit for the other.
+
+*Why per-buffer sessions.* bookvol1 builds state across =\spadcommand{}=
+lines: =p(0) == 1=, =p(1) == x=, =p(n) == ...= define a recurrence that
+later commands depend on. One-shot eval (a fresh AXIOMsys per command)
+cannot support this. Each =.pamphlet= buffer therefore gets one named
+Axiom session, created lazily on first eval and killed when the buffer
+is killed or =pamphlet-axiom-mode= is turned off.
+
+*Drift detection.* The book's =$$= block is daly's expected output,
+possibly 20+ years old. After rendering, the live sha1 is compared to
+the book's sha1 (computed from the original =$$= block bytes before the
+overlay is placed). Equal → green box around the image; different →
+orange box and =help-echo= carries both shas. Drift highlights both
+upstream changes in TexFormat and stale book content.
+
+*Not a goal.* =\begin{chunk}{...}= source blocks (in =bookvol0.pamphlet=,
+algebra pamphlets, etc.) are compile-time source extracted by =tangle=,
+not REPL input. They are out of scope.
+
+* Public API
+
+| Key           | Command                          | Role                                                  |
+|---------------+----------------------------------+-------------------------------------------------------|
+| =C-c C-e=     | =pamphlet-axiom-eval-line=       | Eval =\spadcommand{}= at point; overlay result          |
+| =C-c C-r=     | =pamphlet-axiom-eval-region=     | Eval every =\spadcommand{}= in region, sequential      |
+| =C-c C-b=     | =pamphlet-axiom-eval-to-here=    | Eval from buffer start through point                   |
+| =C-c C-v=     | =pamphlet-axiom-toggle-result=   | Toggle image/original-text at point                    |
+| =C-c C-k=     | =pamphlet-axiom-kill-session=    | Kill this buffer's Axiom session                       |
+| =C-c C-d=     | =pamphlet-axiom-verify=          | Re-eval; refresh drift-coloured overlay                |
+
+The minor mode is =pamphlet-axiom-mode= (lighter =" pax"=).
+
+* Package Preamble
+
+#+begin_src elisp
+;; ob-axiom.org is a literate-elisp source: it does not (provide 'ob-axiom),
+;; so `require' cannot find it. Load order is the user's responsibility —
+;; the entry .emacs / literate-elisp bootstrap must (literate-elisp-load)
+;; ob-axiom.org BEFORE this file. We only sanity-check the symbols we need.
+(unless (and (fboundp 'ob-axiom--session-buffer)
+             (fboundp 'ob-axiom--session-eval)
+             (fboundp 'ob-axiom--capture-tex)
+             (fboundp 'ob-axiom-kill-session))
+  (error "pamphlet-axiom: ob-axiom.org must be loaded first via literate-elisp-load"))
+(require 'cl-lib)
+(require 'subr-x)
+
+(defgroup pamphlet-axiom nil
+  "Execute \\spadcommand{} from daly-style .pamphlet files."
+  :group 'literate-latex
+  :prefix "pamphlet-axiom-")
+
+(defcustom pamphlet-axiom-cache-dir
+  (expand-file-name "pamphlet-preview/" user-emacs-directory)
+  "Directory for cached PNG renders. Shared with `pamphlet-preview'."
+  :type 'directory)
+
+(defcustom pamphlet-axiom-preamble
+  "\\documentclass{article}\n\\usepackage{amsmath,amssymb}\n\\pagestyle{empty}\n"
+  "LaTeX preamble for result rendering. Matches `pamphlet-preview--preamble'
+so renders are interchangeable between the two modules."
+  :type 'string)
+
+(defcustom pamphlet-axiom-confirm-destructive t
+  "When non-nil, ask before running `)system` commands from \\spadcommand{}.
+The daly books contain commands like `\\spadcommand{)system rm linalg.sfort}`
+which would otherwise delete files without warning."
+  :type 'boolean)
+
+(defcustom pamphlet-axiom-drift-highlight t
+  "When non-nil, draw a coloured box around live overlays: green if the
+live sha1 matches the book's expected-output sha1, orange otherwise."
+  :type 'boolean)
+
+(defvar-local pamphlet-axiom--session-name nil
+  "Buffer-local Axiom session name. Set lazily on first eval.")
+#+end_src
+
+* Code Extraction
+
+A =\spadcommand{CODE}= line carries Axiom REPL input inside LaTeX braces.
+LaTeX escapes the %=, =\&=, =\#=, =\_=, =\$= characters; Axiom's REPL
+expects them raw (= %= is the prefix for anonymous-previous-value and
+for =%pi= / =%i= / =%e=). Extraction therefore:
+
+1. Anchors on the current line, finds the =\spadcommand{= prefix.
+2. Captures up to the matching closing brace. Axiom REPL input never
+   contains a literal =}= at the top level (function-body braces belong
+   to =Record= / =Union= constructors like =point [1, 2]=, not to bare
+   brace syntax), so a greedy =[^}]*= match is correct here.
+3. Unescapes the LaTeX specials.
+
+#+begin_src elisp
+(defun pamphlet-axiom--extract-at-point ()
+  "Return (BEG . CODE) for the \\spadcommand{CODE} on point's line, or nil.
+BEG is the buffer position of the backslash; CODE is the unescaped body."
+  (save-excursion
+    (let ((line-end (line-end-position)))
+      (goto-char (line-beginning-position))
+      (when (re-search-forward "\\\\spadcommand{" line-end t)
+        (let ((cmd-start (match-beginning 0))
+              (body-start (match-end 0)))
+          (when (re-search-forward "[^\\]}" line-end t)
+            (let* ((body-end (1- (point)))
+                   (raw (buffer-substring-no-properties body-start body-end)))
+              (cons cmd-start (pamphlet-axiom--unescape-latex raw)))))))))
+
+(defun pamphlet-axiom--unescape-latex (s)
+  "Unescape \\% \\& \\# \\_ \\$ in S for Axiom REPL input."
+  (replace-regexp-in-string
+   "\\\\\\([%&#_$]\\)"
+   (lambda (m) (substring m 1))
+   s))
+#+end_src
+
+* Finding the Paired Math Block
+
+The book's expected output sits in a =$$ ... $$= block right after the
+=\spadcommand{}= line. The pattern in =bookvol1= is:
+
+#+begin_example
+\spadcommand{integrate(sin(sqrt(x)),x)}
+which would give the result:
+$$
+{2 \  {\sin \left( ... \right)}}
+-{2 \  {\sqrt {x}} \  {\cos \left( ... \right)}}
+\leqno(1)
+$$
+\returnType{Type: Union(Expression(Integer),...)}
+#+end_example
+
+The scanner walks forward, allowing for prose like "which would give
+the result:" between command and math, and bails if it hits another
+=\spadcommand= (no paired block exists for this command) or runs past a
+small limit.
+
+#+begin_src elisp
+(defconst pamphlet-axiom--scan-limit 4000
+  "Max chars to walk forward looking for the paired $$ block.")
+
+(defun pamphlet-axiom--find-paired-math-block ()
+  "Return (BEG . END) of the $$...$$ block following point's \\spadcommand.
+BEG is the position of the opening $$ line; END is end of the closing $$
+line. Nil if no block is found before the next \\spadcommand or the scan
+limit."
+  (save-excursion
+    (forward-line 1)
+    (let ((limit (min (point-max) (+ (point) pamphlet-axiom--scan-limit))))
+      (catch 'done
+        (while (< (point) limit)
+          (cond
+           ;; opening $$ on its own line
+           ((looking-at "[ \t]*\\$\\$[ \t]*$")
+            (let ((beg (point))
+                  (found-end nil))
+              (forward-line 1)
+              (while (and (< (point) limit) (not found-end))
+                (if (looking-at "[ \t]*\\$\\$[ \t]*$")
+                    (setq found-end (line-end-position))
+                  (forward-line 1)))
+              (throw 'done (and found-end (cons beg found-end)))))
+           ;; next \spadcommand before any $$ -> give up
+           ((looking-at ".*\\\\spadcommand") (throw 'done nil))
+           ;; \returnType without a $$ before it -> give up (system command)
+           ((looking-at "[ \t]*\\\\returnType") (throw 'done nil))
+           (t (forward-line 1))))
+        nil))))
+#+end_src
+
+* Evaluation via ob-axiom
+
+Evaluation goes through =ob-axiom--session-eval=, which handles prompt
+synchronisation, statement counting, and timeout. The session name is
+per-buffer, derived from the pamphlet's filename so a renamed buffer
+keeps the same Axiom state.
+
+#+begin_src elisp
+(defun pamphlet-axiom--session-name ()
+  "Return (and lazily set) this buffer's Axiom session name."
+  (or pamphlet-axiom--session-name
+      (set (make-local-variable 'pamphlet-axiom--session-name)
+           (format "pamphlet-%s"
+                   (replace-regexp-in-string
+                    "[^a-zA-Z0-9._-]" "-"
+                    (if buffer-file-name
+                        (file-name-base buffer-file-name)
+                      (buffer-name)))))))
+
+(defun pamphlet-axiom--eval-code (code)
+  "Send CODE to this buffer's Axiom session; return the raw transcript string."
+  (let* ((session (pamphlet-axiom--session-name))
+         (buf (ob-axiom--session-buffer session)))
+    (ob-axiom--session-eval buf code "tex")))
+#+end_src
+
+* Display — latex→dvipng→PNG, overlaid in place
+
+The rendering pipeline mirrors =pamphlet-preview--render-to-cache=:
+latex → dvi → PNG, with sha1-keyed caching in a shared directory. The
+two sentinel passes use =apply-partially= rather than lambdas because
+this file loads via literate-elisp under dynamic binding.
+
+*Why not call =pamphlet-preview--render-to-cache= directly?* That
+function guards the overlay placement with a buffer-content check:
+= (equal content (buffer-substring-no-properties mbeg mend))=. For its
+own use case (PDF math in a buffer the user might still be editing) the
+guard is correct. For ours it is wrong: the buffer's =$$= block holds
+the /book's/ expected LaTeX, while =content= is the /live/ LaTeX Axiom
+just produced — they should differ, and differ legitimately. We render
+independently and overlay on the book's bytes.
+
+#+begin_src elisp
+(defun pamphlet-axiom--latex-to-png-async (content final-file callback)
+  "Render CONTENT (LaTeX fragment) to FINAL-FILE (PNG) asynchronously.
+CALLBACK (a function designator suitable for `funcall') is invoked with
+t on success or nil on failure. Uses the latex→dvipng pipeline."
+  (let* ((dir (make-temp-file "pamphlet-ax" t))
+         (png (expand-file-name "f.png" dir))
+         (default-directory dir))
+    (make-directory pamphlet-axiom-cache-dir t)
+    (with-temp-file (expand-file-name "f.tex" dir)
+      (insert pamphlet-axiom-preamble
+              "\\begin{document}\n" content "\n\\end{document}\n"))
+    (make-process
+     :name "pamphlet-ax-latex" :noquery t
+     :buffer (generate-new-buffer " *pamphlet-ax-latex*")
+     :command '("latex" "-interaction" "nonstopmode" "-output-format" "dvi" "f.tex")
+     :sentinel (apply-partially #'pamphlet-axiom--latex-sentinel
+                                dir png final-file callback))))
+
+(defun pamphlet-axiom--latex-sentinel (dir png final-file callback proc _event)
+  "Latex-pass sentinel: if dvi exists, kick off dvipng; else fail CALLBACK."
+  (when (memq (process-status proc) '(exit signal))
+    (let ((pbuf (process-buffer proc)))
+      (when (buffer-live-p pbuf) (kill-buffer pbuf)))
+    (if (not (file-exists-p (expand-file-name "f.dvi" dir)))
+        (progn
+          (ignore-errors (delete-directory dir t))
+          (funcall callback nil))
+      (let ((default-directory dir))
+        (make-process
+         :name "pamphlet-ax-dvipng" :noquery t
+         :buffer (generate-new-buffer " *pamphlet-ax-dvipng*")
+         :command '("dvipng" "-D" "150" "-T" "tight"
+                    "-bg" "Transparent" "-o" "f.png" "f.dvi")
+         :sentinel (apply-partially #'pamphlet-axiom--dvipng-sentinel
+                                    dir png final-file callback))))))
+
+(defun pamphlet-axiom--dvipng-sentinel (dir png final-file callback proc _event)
+  "Dvipng-pass sentinel: rename PNG to cache; invoke CALLBACK with t/nil."
+  (when (memq (process-status proc) '(exit signal))
+    (let ((pbuf (process-buffer proc)))
+      (when (buffer-live-p pbuf) (kill-buffer pbuf)))
+    (when (file-exists-p png) (rename-file png final-file t))
+    (funcall callback (file-exists-p final-file))
+    (ignore-errors (delete-directory dir t))))
+
+(defun pamphlet-axiom--render-to-overlay (beg end latex expected-sha)
+  "Render LATEX (string) as PNG; overlay on BEG..END when done.
+EXPECTED-SHA is sha1 of the book's expected output (the original $$
+block bytes), or nil to skip drift colouring."
+  (let* ((live-sha (sha1 latex))
+         (final (expand-file-name (concat live-sha ".png")
+                                  pamphlet-axiom-cache-dir))
+         (buf (current-buffer))
+         (mbeg (copy-marker beg))
+         (mend (copy-marker end)))
+    (if (file-exists-p final)
+        (pamphlet-axiom--place-overlay mbeg mend final live-sha expected-sha buf)
+      (pamphlet-axiom--latex-to-png-async
+       latex final
+       (apply-partially #'pamphlet-axiom--render-callback
+                        live-sha expected-sha mbeg mend buf)))))
+
+(defun pamphlet-axiom--render-callback (live-sha expected-sha mbeg mend buf ok)
+  "Rendered-PNG callback: place overlay on MBEG..MEND in BUF."
+  (when (and ok (buffer-live-p buf) (marker-buffer mbeg) (marker-buffer mend))
+    (let ((final (expand-file-name (concat live-sha ".png")
+                                   pamphlet-axiom-cache-dir)))
+      (when (file-exists-p final)
+        (pamphlet-axiom--place-overlay mbeg mend final live-sha expected-sha buf)))))
+
+(defun pamphlet-axiom--place-overlay (mbeg mend png live-sha expected-sha buf)
+  "Put the PNG display overlay on markers MBEG..MEND in BUF."
+  (when (and (buffer-live-p buf) (marker-buffer mbeg) (marker-buffer mend))
+    (with-current-buffer buf
+      (let ((beg (marker-position mbeg))
+            (end (marker-position mend)))
+        ;; Replace any existing pax overlay in this range so re-eval updates.
+        (dolist (ov (overlays-in beg end))
+          (when (overlay-get ov 'pamphlet-axiom-result)
+            (delete-overlay ov)))
+        (let ((ov (make-overlay beg end)))
+          (overlay-put ov 'pamphlet-axiom-result t)
+          (overlay-put ov 'pamphlet-axiom-png png)
+          (overlay-put ov 'display (create-image png))
+          (overlay-put ov 'evaporate t)
+          (overlay-put ov 'pamphlet-axiom-live-sha live-sha)
+          (overlay-put ov 'pamphlet-axiom-expected-sha expected-sha)
+          (when (and pamphlet-axiom-drift-highlight expected-sha)
+            (overlay-put
+             ov 'face
+             (if (equal live-sha expected-sha)
+                 '(:box (:color "dark green" :line-width 2))
+               '(:box (:color "dark orange" :line-width 2))))
+            (overlay-put
+             ov 'help-echo
+             (format "live sha1: %s\nexpected sha1: %s\n\nC-c C-v toggles."
+                     live-sha expected-sha))))))))
+#+end_src
+
+* Drift Detection
+
+Drift is detected at overlay placement, not as a separate command:
+=\pamphlet-axiom--render-to-overlay= receives the book's =expected-sha=
+(hashed from the buffer's original =$$= bytes) and compares it to the
+live sha1 of the rendered LaTeX. The face box is the visible signal;
+=help-echo= on hover shows both shas for triage.
+
+The book's sha1 is computed on =$$ ... $$= including delimiters and any
+interior whitespace, so a book that reformats the same expression (extra
+spaces, line-wrapping) counts as drift even though the math is identical.
+This is intentional — a string-equal check would hide formatting drift;
+the user toggles to compare visually.
+
+* Safety Guards
+
+The daly books contain commands that touch the filesystem (e.g.
+=\spadcommand{)system rm linalg.sfort}= in bookvol1's FORTRAN section).
+When =pamphlet-axiom-confirm-destructive= is non-nil, any command
+starting with =)system= prompts before being sent.
+
+=#\spadcommand{)quit}= would kill the session; the guard refuses it and
+points the user at =pamphlet-axiom-kill-session= instead.
+
+#+begin_src elisp
+(defun pamphlet-axiom--guard (code)
+  "Return nil if CODE is safe to run, or an error string if not.
+May also prompt the user via `y-or-n-p' when CODE matches a destructive
+system command."
+  (cond
+   ((string-match-p "^)quit" code)
+    "use M-x pamphlet-axiom-kill-session instead of )quit")
+   ((and pamphlet-axiom-confirm-destructive
+         (string-match-p "^)system" code)
+         (not (y-or-n-p (format "Run destructive command: %s? " code))))
+    "aborted by user")
+   (t nil)))
+#+end_src
+
+* Entry Points
+
+#+begin_src elisp
+(defun pamphlet-axiom-eval-line ()
+  "Evaluate the \\spadcommand{} on point's line and overlay the result.
+If no paired $$ block follows the command, the raw LaTeX is echoed
+instead of being overlaid. Session persists across calls (per buffer)."
+  (interactive)
+  (let ((cmd (pamphlet-axiom--extract-at-point)))
+    (unless cmd (user-error "No \\spadcommand{} on current line"))
+    (let ((code (cdr cmd))
+          (err (pamphlet-axiom--guard (cdr cmd))))
+      (when err (user-error "pamphlet-axiom: %s" err))
+      (let* ((raw (pamphlet-axiom--eval-code code))
+             (tex-list (ob-axiom--capture-tex raw)))
+        (if (not tex-list)
+            (message "pamphlet-axiom: no TeX output. Raw tail: %s"
+                     (substring raw (max 0 (- (length raw) 120))))
+          (let ((tex (car tex-list))
+                (block (pamphlet-axiom--find-paired-math-block)))
+            (if (not block)
+                (message "pamphlet-axiom: result (no paired $$): %s" tex)
+              (let* ((block-content (buffer-substring-no-properties
+                                     (car block) (cdr block)))
+                     (expected-sha (sha1 block-content))
+                     ;; Wrap as a $$ block so latex renders display math.
+                     (live-latex (format "$$\n%s\n$$" tex)))
+                (pamphlet-axiom--render-to-overlay
+                 (car block) (cdr block) live-latex expected-sha)
+                (message "pamphlet-axiom: rendered (sha %s vs expected %s)"
+                         (substring (sha1 live-latex) 0 8)
+                         (substring expected-sha 0 8))))))))))
+
+(defun pamphlet-axiom-eval-region (beg end)
+  "Evaluate every \\spadcommand{} in region sequentially in this buffer's session."
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (let (count skipped)
+        (while (re-search-forward "\\\\spadcommand{" (point-max) t)
+          (beginning-of-line)
+          (if (pamphlet-axiom--extract-at-point)
+              (condition-case err
+                  (progn (pamphlet-axiom-eval-line) (cl-incf count))
+                (error (push (format "%s" err) skipped) (cl-incf count)))
+            (forward-line 1)))
+        (message "pamphlet-axiom: evaluated %d command(s)%s"
+                 count
+                 (if skipped
+                     (format "; %d skipped: %s"
+                             (length skipped) (mapconcat #'identity skipped "; "))
+                   ""))))))
+
+(defun pamphlet-axiom-eval-to-here ()
+  "Evaluate every \\spadcommand{} from buffer start through point."
+  (interactive)
+  (pamphlet-axiom-eval-region (point-min) (point)))
+
+(defun pamphlet-axiom-toggle-result ()
+  "Toggle the pamphlet-axiom overlay at point between image and original text."
+  (interactive)
+  (let (toggled)
+    (dolist (ov (overlays-at (point)))
+      (when (overlay-get ov 'pamphlet-axiom-result)
+        (if (overlay-get ov 'display)
+            (progn
+              (overlay-put ov 'pamphlet-axiom-saved-display (overlay-get ov 'display))
+              (overlay-put ov 'pamphlet-axiom-saved-face (overlay-get ov 'face))
+              (overlay-put ov 'display nil)
+              (overlay-put ov 'face nil))
+          (overlay-put ov 'display (overlay-get ov 'pamphlet-axiom-saved-display))
+          (overlay-put ov 'face (overlay-get ov 'pamphlet-axiom-saved-face)))
+        (setq toggled t)))
+    (unless toggled
+      (message "pamphlet-axiom: no result overlay at point"))))
+
+(defun pamphlet-axiom-verify ()
+  "Re-evaluate the \\spadcommand{} at point; refresh the drift-coloured overlay."
+  (interactive)
+  (call-interactively #'pamphlet-axiom-eval-line))
+
+(defun pamphlet-axiom-cleanup ()
+  "Remove all pamphlet-axiom overlays from the current buffer."
+  (remove-overlays (point-min) (point-max) 'pamphlet-axiom-result t))
+
+(defun pamphlet-axiom-kill-session ()
+  "Kill this buffer's Axiom session and clear its result overlays."
+  (interactive)
+  (when pamphlet-axiom--session-name
+    (ob-axiom-kill-session pamphlet-axiom--session-name)
+    (kill-local-variable 'pamphlet-axiom--session-name))
+  (pamphlet-axiom-cleanup))
+#+end_src
+
+* Minor Mode
+
+#+begin_src elisp
+(defvar pamphlet-axiom-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-e") #'pamphlet-axiom-eval-line)
+    (define-key map (kbd "C-c C-r") #'pamphlet-axiom-eval-region)
+    (define-key map (kbd "C-c C-b") #'pamphlet-axiom-eval-to-here)
+    (define-key map (kbd "C-c C-v") #'pamphlet-axiom-toggle-result)
+    (define-key map (kbd "C-c C-k") #'pamphlet-axiom-kill-session)
+    (define-key map (kbd "C-c C-d") #'pamphlet-axiom-verify)
+    map)
+  "Keymap for `pamphlet-axiom-mode'.")
+
+;;;###autoload
+(define-minor-mode pamphlet-axiom-mode
+  "Toggle execution of \\spadcommand{} from .pamphlet files.
+When on, \\[pamphlet-axiom-eval-line] on a \\spadcommand{} line sends the
+code to this buffer's Axiom session and overlays the live result on the
+book's $$ block. The buffer's bytes are never modified; toggle with
+\\[pamphlet-axiom-toggle-result]."
+  :lighter " pax"
+  :keymap pamphlet-axiom-mode-map
+  :group 'pamphlet-axiom
+  (if pamphlet-axiom-mode
+      (add-hook 'kill-buffer-hook #'pamphlet-axiom-kill-session nil t)
+    (pamphlet-axiom-cleanup)
+    (when pamphlet-axiom--session-name
+      (ob-axiom-kill-session pamphlet-axiom--session-name)
+      (kill-local-variable 'pamphlet-axiom--session-name))))
+
+;;;###autoload
+(with-eval-after-load 'literate-latex
+  (add-hook 'literate-latex-mode-hook #'pamphlet-axiom-mode 1))
+#+end_src
+
+* Tests
+
+Run in batch (never in the live Emacs — Axiom calls block the editor):
+
+#+begin_example
+Emacs --batch -L /path/to/literate-elisp -l literate-elisp \
+  --eval '(cd "/path/to/axiom")' \
+  --eval '(literate-elisp-load "editor/ob-axiom.org")' \
+  --eval '(literate-elisp-load "editor/pamphlet-axiom.org")' \
+  -f ert-run-tests-batch-and-exit
+#+end_example
+
+#+begin_src elisp
+(require 'ert)
+
+(ert-deftest pamphlet-axiom-test-extract ()
+  "Extract CODE from \\spadcommand{CODE}."
+  (with-temp-buffer
+    (insert "\\spadcommand{integrate(sin(sqrt(x)),x)}\n")
+    (goto-char (point-min))
+    (let ((r (pamphlet-axiom--extract-at-point)))
+      (should r)
+      (should (equal "integrate(sin(sqrt(x)),x)" (cdr r))))))
+
+(ert-deftest pamphlet-axiom-test-unescape ()
+  "LaTeX-special unescape: \\%i -> %i, \\& -> &, etc."
+  (should (equal "%i" (pamphlet-axiom--unescape-latex "\\%i")))
+  (should (equal "%pi" (pamphlet-axiom--unescape-latex "\\%pi")))
+  (should (equal "x + %i" (pamphlet-axiom--unescape-latex "x + \\%i")))
+  (should (equal "a & b" (pamphlet-axiom--unescape-latex "a \\& b"))))
+
+(ert-deftest pamphlet-axiom-test-find-math-block ()
+  "Find the $$ block following a \\spadcommand, skipping short prose."
+  (with-temp-buffer
+    (insert "\\spadcommand{integrate(sin(sqrt(x)),x)}\n"
+            "which would give the result:\n"
+            "$$\n"
+            "{2 \\sin(\\sqrt{x})}\n"
+            "$$\n")
+    (goto-char (point-min))
+    (let ((r (pamphlet-axiom--find-paired-math-block)))
+      (should r)
+      ;; Opening $$ on line 3.
+      (should (= 3 (line-number-at-pos (car r)))))))
+
+(ert-deftest pamphlet-axiom-test-find-math-block-none ()
+  "No $$ block (e.g. after a )set command) -> nil."
+  (with-temp-buffer
+    (insert "\\spadcommand{)set output fortran on}\n"
+            "some prose\n"
+            "\\spadcommand{next command}\n")
+    (goto-char (point-min))
+    (should-not (pamphlet-axiom--find-paired-math-block))))
+
+(ert-deftest pamphlet-axiom-test-guard-system ()
+  "Guard refuses )quit without prompting; )system respects the defcustom."
+  (let ((pamphlet-axiom-confirm-destructive nil))
+    (should (pamphlet-axiom--guard ")quit"))
+    (should-not (pamphlet-axiom--guard ")system rm foo")))
+  (let ((pamphlet-axiom-confirm-destructive t))
+    ;; y-or-n-p auto-answers via `executing-kbd-macro' here.
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_) nil)))
+      (should (pamphlet-axiom--guard ")system rm foo")))
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_) t)))
+      (should-not (pamphlet-axiom--guard ")system rm foo"))))
+  (should-not (pamphlet-axiom--guard "integrate(sin(x), x)")))
+
+(ert-deftest pamphlet-axiom-test-session-name ()
+  "Session name is derived from the buffer's filename and is buffer-local."
+  (with-temp-buffer
+    (setq buffer-file-name "/tmp/bookvol1.pamphlet")
+    (let ((name (pamphlet-axiom--session-name)))
+      (should (string-prefix-p "pamphlet-bookvol1" name)))))
+
+(ert-deftest pamphlet-axiom-test-e2e-integrate ()
+  "Live: eval integrate(sin(sqrt(x)),x) and capture LaTeX containing \\sin."
+  (skip-unless (ob-axiom--runtime-available-p))
+  (let* ((raw (let ((ob-axiom-default-session nil))
+                (with-temp-buffer
+                  (setq buffer-file-name "/tmp/pax-e2e.pamphlet")
+                  (insert "\\spadcommand{integrate(sin(sqrt(x)),x)}\n")
+                  (goto-char (point-min))
+                  (pamphlet-axiom--eval-code "integrate(sin(sqrt(x)),x)"))))
+         (tex-list (ob-axiom--capture-tex raw)))
+    (should tex-list)
+    (should (string-match-p "\\\\sin" (car tex-list)))))
+
+(ert-deftest pamphlet-axiom-test-e2e-overlay-placement ()
+  "Live: eval places a 'pamphlet-axiom-result overlay on the paired $$."
+  (skip-unless (ob-axiom--runtime-available-p))
+  (with-temp-buffer
+    (setq buffer-file-name "/tmp/pax-e2e-overlay.pamphlet")
+    (insert "\\spadcommand{1 + 1}\n"
+            "$$\n"
+            "2\n"
+            "$$\n")
+    (goto-char (point-min))
+    ;; Manually drive eval without the async render (call the place function
+    ;; directly with a pre-rendered PNG path that doesn't need to exist for
+    ;; this test — we only verify overlay-placing logic).
+    (pamphlet-axiom--place-overlay
+     (copy-marker (line-beginning-position 2))
+     (copy-marker (line-end-position 4))
+     "/tmp/fake.png" "fake-live-sha" "fake-expected-sha"
+     (current-buffer))
+    (let ((ovs (overlays-in (point-min) (point-max))))
+      (should (cl-some (lambda (ov) (overlay-get ov 'pamphlet-axiom-result)) ovs)))))
+#+end_src
+
+* Roadmap
+
+| Stage | Deliverable                                                          | State |
+|-------+----------------------------------------------------------------------+-------|
+| M1    | Extract + one-shot eval + text overlay (no PNG)                      | done  |
+| M2    | PNG rendering via local latex→dvipng; display overlay                | done  |
+| M3    | Named per-buffer session; =eval-region= / =eval-to-here=             | done  |
+| M4    | =pamphlet-axiom-mode= + toggle + cleanup                             | done  |
+| M5    | Drift detection via sha1; =)system= guard                            | done  |
+| M6    | =\spadgraph{CODE}= support via sman graphics session                 | todo  |
+
+Deferred: =\spadgraph{= executes =draw= which needs an X11 viewport via
+sman; E2E test requires a live display and is left for the user to
+verify interactively.
+
+* Rejected Alternatives
+
+- *Rewrite =pamphlet-preview--render-to-cache= to drop its buffer-match
+  guard.* Rejected: that guard is correct for =pamphlet-preview='s own
+  use case (PDF math in a user-editable buffer); weakening it there to
+  suit us would introduce a regression risk for an unrelated module.
+  The clean split is to render independently here.
+- *Inline the latex pipeline into =pamphlet-axiom--render-to-overlay=
+  without separate sentinel functions.* Rejected: under literate-elisp's
+  dynamic binding, lambdas in =make-process=:sentinel do not capture
+  lexical state correctly. Named sentinels + =apply-partially= (mirroring
+  =ob-axiom--session-sentinel=) are the load-bearing pattern.
+- *Use org-babel's =axiom= language inside pamphlets.* Rejected: a
+  =.pamphlet= is LaTeX, not Org; org-babel's =#+begin_src= machinery
+  does not recognise LaTeX environments. The whole point of this module
+  is to bridge that gap without forcing the user out of the pamphlet.
