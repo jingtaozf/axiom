@@ -300,6 +300,12 @@ jobs:
           done
           test -s mnt/MACOSX/doc/ht.db && echo "ok  ht.db ($(wc -c < mnt/MACOSX/doc/ht.db) bytes)"
           test -f obj/MACOSX/lib/libspad.a && echo "ok  libspad.a"
+          # libspadsock.dylib is the socket FFI the SBCL image dlopens at
+          # runtime; if -dynamiclib silently failed the GUI binaries still
+          # link but every sman AXIOMsys falls back to stubs and HyperDoc
+          # never connects -- the exact bug this work fixed, so gate on it.
+          test -f mnt/MACOSX/lib/libspadsock.dylib && echo "ok  libspadsock.dylib" \
+            || { echo "MISSING libspadsock.dylib (socket FFI)"; exit 1; }
           otool -L mnt/MACOSX/bin/hypertex | grep -q '/opt/X11/lib/libX11' && echo "ok  hypertex -> libX11"
           otool -L mnt/MACOSX/lib/viewman  | grep -q '/opt/X11/lib/libXpm' && echo "ok  viewman -> libXpm"
 

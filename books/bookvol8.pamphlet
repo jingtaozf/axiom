@@ -30195,7 +30195,13 @@ libspad.a: ${BOOK}
 	 ${CC} ${CCF} -c xspadfill.c ; \
 	 ar ru libspad.a *.o ; \
 	 ${RANLIB} libspad.a ; \
-	 ${CC} -dynamiclib -o ${OUTLIB}/libspadsock.dylib sockio-c.o bsdsignal.o )
+	 : "libspadsock is the SBCL socket FFI shared object; -dynamiclib is a" ; \
+	 : "macOS-only clang flag, so guard on SYS -- a Linux/GCL build links the" ; \
+	 : "socket C statically and needs no shared object (see sockio prose)." ; \
+	 if [ "${SYS}" = "MACOSX" ] ; then \
+	   ${CC} -dynamiclib -install_name @rpath/libspadsock.dylib \
+	     -o ${OUTLIB}/libspadsock.dylib sockio-c.o bsdsignal.o ; \
+	 fi )
 	@ ( cd ${LIB} ; \
 	 ${BOOKS}/tanglec ${BOOK} "edible.c"  >edible.c ; \
 	 ${CC} ${CCF} -c edible.c )
