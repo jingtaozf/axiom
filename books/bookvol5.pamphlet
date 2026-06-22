@@ -13605,8 +13605,19 @@ do not want to reset all of the user variables.
   (initroot)
 #+:akcl
   (when (and $openServerIfTrue (zerop (openserver $SpadServerName)))
-    (setq $openServerIfTrue nil) 
+    (setq $openServerIfTrue nil)
     (setq |$SpadServer| t))
+;; GCL gated the SpadServer-socket open on #+:akcl, so the SBCL image never
+;; created /tmp/.d and HyperDoc reported "Couldn't connect to AXIOM server".
+;; Open it when sman has marked us a server via $SPADSERVER; openserver binds
+;; /tmp/.d and returns 0 only when that env is set, so the console/regression
+;; image -- which never sets it -- stays a non-server with no stray socket.
+#+:sbcl
+  (when (sb-ext:posix-getenv "SPADSERVER")
+    (setq $openServerIfTrue t)
+    (when (zerop (openserver $SpadServerName))
+      (setq $openServerIfTrue nil)
+      (setq |$SpadServer| t)))
   (setq |$IOindex| 1)
   (setq |$printLoadMsgs| nil)
   (setq $current-directory (get-current-directory))

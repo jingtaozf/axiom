@@ -30194,7 +30194,8 @@ libspad.a: ${BOOK}
 	 ${BOOKS}/tanglec ${BOOK} "xspadfill.c"  >xspadfill.c ; \
 	 ${CC} ${CCF} -c xspadfill.c ; \
 	 ar ru libspad.a *.o ; \
-	 ${RANLIB} libspad.a )
+	 ${RANLIB} libspad.a ; \
+	 ${CC} -dynamiclib -o ${OUTLIB}/libspadsock.dylib sockio-c.o bsdsignal.o )
 	@ ( cd ${LIB} ; \
 	 ${BOOKS}/tanglec ${BOOK} "edible.c"  >edible.c ; \
 	 ${CC} ${CCF} -c edible.c )
