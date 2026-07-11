@@ -96,16 +96,75 @@ previous definition.
   (setq |$highlightAllowed| |$saveHighlight|)
   (setq |$specialCharacters| |$saveSpecialchars|))
 
+\end{chunk}
+
+\section{The spool command under SBCL}
+
+Historically \verb|)spool| was one line: call the host's \verb|dribble|.
+That was sufficient on GCL for two reasons, and both silently fail on
+SBCL, breaking the regression workflow of the ``adding new algebra''
+chapter of bookvol10 (\verb|)spool| $\rightarrow$ \verb|)read| a test file
+$\rightarrow$ \verb|(regress ...)|).
+
+First, GCL's \verb|dribble| writes a header line
+\begin{verbatim}
+Starts dribbling to foo.output (2012/2/28, 12:25:7).
+\end{verbatim}
+into the spool file. The \verb|regress| reader in bookvol5 depends on
+that exact line: \verb|getspoolname| takes the test name from columns
+20--dot of the \emph{first line} of the file. SBCL's \verb|dribble|
+writes no such header, so \verb|getspoolname| returns \verb|nil| and
+\verb|regress| silently reports nothing.
+
+Second, and more fundamentally: Axiom captures its output stream
+\emph{object} at boot --- bookvol5 does
+\verb!(defvar |$algebraOutputStream| *standard-output*)! --- and
+\verb|recordAndPrint| writes results through that saved object. SBCL's
+\verb|dribble| works by rebinding the \verb|*standard-output*|
+\emph{variable}; the saved stream object is unaffected, so every actual
+result bypasses the spool file. The file ends up holding only the echoed
+input lines: a regression file with no answers in it. GCL's
+\verb|dribble| hooked the stream at a lower level, which is why the
+classic system never noticed the difference.
+
+The ANSI-portable replacement below drops \verb|dribble| entirely: open
+the file, write the GCL-shaped header ourselves (so \verb|regress| keeps
+working unchanged), then point \emph{both} \verb|*standard-output*| and
+\verb!|$algebraOutputStream|! at broadcast streams that mirror everything
+to the console and the file. \verb|)spool| with no argument restores the
+saved streams and closes the file. A side benefit: SBCL compiler noise
+on \verb|*error-output*| (autoload warnings) no longer pollutes the spool
+file, so freshly autoloaded domains regress cleanly.
+
+\begin{chunk}{*}
+
+(defvar |$spoolStream| nil "the open spool file stream, or nil")
+(defvar |$spoolSaved| nil  "saved (stdout algebraOutputStream) to restore")
+
 (defun |spool| (filename)
   (cond ((null filename)
-         (dribble) (TERPRI)
+         (when |$spoolStream|
+           (setq *standard-output* (car |$spoolSaved|))
+           (setq |$algebraOutputStream| (cadr |$spoolSaved|))
+           (close |$spoolStream|)
+           (setq |$spoolStream| nil))
+         (TERPRI)
          (reset-highlight))
         ((probe-file (string (car filename)))
          (error (format nil "file ~a already exists" (car filename))))
-        (t (dribble (string (car filename)))
-           (TERPRI)
-           (clear-highlight))
-    ))
+        (t (setq |$spoolStream|
+                 (open (string (car filename)) :direction :output
+                       :if-does-not-exist :create))
+           (setq |$spoolSaved| (list *standard-output* |$algebraOutputStream|))
+           (multiple-value-bind (s min h d mo y) (get-decoded-time)
+             (format |$spoolStream|
+                     "Starts dribbling to ~a (~d/~d/~d, ~d:~d:~d).~%"
+                     (string (car filename)) y mo d h min s))
+           (setq *standard-output*
+                 (make-broadcast-stream (car |$spoolSaved|) |$spoolStream|))
+           (setq |$algebraOutputStream|
+                 (make-broadcast-stream (cadr |$spoolSaved|) |$spoolStream|))
+           (clear-highlight))))
 
 \end{chunk}
 We need to repatch this for GCL-2.6.8pre2. There appears to be an issue

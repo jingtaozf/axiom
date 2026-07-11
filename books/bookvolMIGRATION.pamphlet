@@ -491,6 +491,18 @@ cross-checked against fricas/open-axiom, were:
   \texttt{*print-circle* t}.
 \item \textbf{improper-list display message}, \textbf{nil output
   stream}, \textbf{latin-1 pamphlet decoding in the tangler}.
+\item \textbf{spool/dribble divergence} --- \texttt{)spool} relied on
+  GCL's \texttt{dribble}, which wrote the header line \texttt{regress}
+  parses for the test name \emph{and} captured Axiom's saved output
+  stream object. SBCL's \texttt{dribble} does neither (it rebinds only
+  the \texttt{*standard-output*} variable, which
+  \texttt{\$algebraOutputStream} captured at boot), so spool files held
+  echoed input but no results and \texttt{regress} silently returned
+  nil. Reimplemented \texttt{spool} in \texttt{patches.lisp.pamphlet}
+  with broadcast streams and an explicit GCL-shaped header; the
+  bookvol10 ``adding new algebra'' regression loop
+  (\texttt{)spool} / \texttt{)read} / \texttt{regress}) now passes end
+  to end.
 \end{itemize}
 
 \subsection{The remaining six: not portable here}
