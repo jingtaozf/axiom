@@ -320,6 +320,17 @@ tanglec: books/tanglec.c
 # Start the built AXIOMsys REPL interactively.  Detects the platform
 # automatically from the existing mnt/* tree and ensures the algebra
 # database files are present on first run.
+#
+# DIR=<path> starts the REPL with that working directory.  DIR is
+# passed to the recipe via the environment (the "export" line below),
+# never spliced into the shell command text, so quoting characters in
+# DIR cannot inject shell commands.  The process cwd is where
+# )compile writes its *.NRLIB output and where )read and )spool
+# resolve relative names ()cd only redirects the interpreter's file
+# lookup, not compiler output), so pointing DIR at a project folder
+# keeps all artifacts there:
+#     make run DIR=~/projects/xjt-doc/mathematics/study/bsd
+run: export AXIOM_RUN_DIR = $(DIR)
 run:
 	@SYS=$$(ls -d mnt/*/bin/AXIOMsys 2>/dev/null | sed 's|mnt/||;s|/bin/AXIOMsys||' | head -1); \
 	if [ -z "$$SYS" ]; then \
@@ -329,7 +340,12 @@ run:
 	  if [ ! -f "$$AX/algebra/$$f.daase" ]; then \
 	    cp src/share/algebra/$$f.daase "$$AX/algebra/$$f.daase"; fi; \
 	done; \
-	exec "$$AX/bin/AXIOMsys" --noinform
+	dir="$$AXIOM_RUN_DIR"; \
+	case "$$dir" in \
+	  "~/"*) dir="$$HOME/$${dir#\~/}";; \
+	  "~") dir="$$HOME";; \
+	esac; \
+	cd "$${dir:-.}" && exec "$$AX/bin/AXIOMsys" --noinform
 
 install:
 	@echo 78 installing Axiom in ${DESTDIR}

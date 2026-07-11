@@ -99,20 +99,20 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	   ( echo p4 starting parallel make of input files ; \
 	     ${ENV} ${MAKE} input ${NOISE} & ) ; \
 	  else \
-           if [ "${BUILD}" = "full" ] ; then \
+	   if [ "${BUILD}" = "full" ] ; then \
 	   ( echo s4 starting serial make of input files ; \
-             cd ${MNT}/${SYS}/doc/src/input ; \
+	     cd ${MNT}/${SYS}/doc/src/input ; \
 	     cp ${BOOKS}/axiom.sty . ; \
-             cp ${SRC}/input/*.eps . ; \
+	     cp ${SRC}/input/*.eps . ; \
 	     for i in `ls ${SRC}/input/*.input.pamphlet` ; do \
 	      if [ .${NOISE} = . ] ; \
 	      then \
-               latex $$i ; \
+	       latex $$i ; \
 	      else \
 	       ( echo p4a making $$i ; \
-	         latex $$i >${TMP}/trace ) ; \
+		 latex $$i >${TMP}/trace ) ; \
 	      fi ; \
-             done ; \
+	     done ; \
 	     rm -f *~ ; \
 	     rm -f *.pamphlet~ ; \
 	     rm -f *.log ; \
@@ -123,19 +123,19 @@ all: rootdirs axiom.sty tanglec libspad lspdir
 	@ if [ "${RUNTYPE}" = "parallel" ] ; then \
 	    ( echo s2 starting parallel make of books ; \
 	      echo s3 ${SPD}/books/Makefile from \
-                   ${SPD}/books/Makefile.pamphlet ; \
+		   ${SPD}/books/Makefile.pamphlet ; \
 	      cd ${SPD}/books ; \
-              ${EXTRACT} Makefile ; \
-              cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
+	      ${EXTRACT} Makefile ; \
+	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
 	      ${ENV} ${MAKE} & ) ; \
 	  else \
 	    ( echo s2 starting serial make of books ; \
 	      echo s3 ${SPD}/books/Makefile from \
-                   ${SPD}/books/Makefile.pamphlet ; \
+		   ${SPD}/books/Makefile.pamphlet ; \
 	      cd ${SPD}/books ; \
-              ${EXTRACT} Makefile ; \
-              cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
-              if [ "${BUILD}" = "full" ] ; then \
+	      ${EXTRACT} Makefile ; \
+	      cp Makefile.pdf ${MNT}/${SYS}/doc/src/books.Makefile.pdf ; \
+	      if [ "${BUILD}" = "full" ] ; then \
 	      ${ENV} ${MAKE} ; fi ) ; \
 	  fi
 	@ echo p7 starting make of src
@@ -148,7 +148,7 @@ libspad:
 	@ echo 11a making libspad
 	@ ( cd ${OBJ}/${SYS}/lib ; \
 	    ${BOOKS}/tanglec ${BOOKS}/bookvol8.pamphlet Makefile >Makefile ; \
-            ${ENV} ${MAKE} libspad.a )
+	    ${ENV} ${MAKE} libspad.a )
 
 axiom.sty:
 	@ echo 11c copying books/axiom.sty
@@ -195,8 +195,8 @@ input:
 	  ( cd ${MNT}/${SYS}/doc/src/input ; \
 	    cp ${BOOKS}/axiom.sty . ; \
 	    for i in `ls ${SRC}/input/*.input.pamphlet` ; \
-              do latex $$i ; \
-              done ; \
+	      do latex $$i ; \
+	      done ; \
 	     rm -f *~ ; \
 	     rm -f *.pamphlet~ ; \
 	     rm -f *.log ; \
@@ -212,6 +212,7 @@ input:
 \getchunk{parallel}
 \getchunk{book}
 \getchunk{tanglec.c}
+\getchunk{run}
 \getchunk{literate commands}
 \getchunk{install}
 
@@ -485,7 +486,7 @@ TMP:=${OBJ}/tmp
 ZIPS:=${SPD}/zips
 BOOKS:=${SPD}/books
 SRCDIRS:="interpdir sharedir algebradir etcdir docdir \
-          graphdir smandir hyperdir browserdir inputdir"
+	  graphdir smandir hyperdir browserdir inputdir"
 
 SYS:=$(notdir $(AXIOM))
 DAASE:=${SRC}/share
@@ -529,7 +530,7 @@ LISP:=lsp
 
 ##### command line control
 NOISE:="-o ${TMP}/trace"
-PART:=	cprogs
+PART:=  cprogs
 SUBPART:= everything
 RUNTYPE:=serial
 # can be richtests, catstests, regresstests (see src/input/Makefile)
@@ -610,7 +611,7 @@ book:
 	@ cp ${SRC}/doc/book.pamphlet ${MNT}/${SYS}/doc
 	@ cp -pr ${SRC}/doc/ps ${MNT}/${SYS}/doc
 	@ (cd ${MNT}/${SYS}/doc ; \
-          if [ .${NOISE} = . ] ; then \
+	  if [ .${NOISE} = . ] ; then \
 	    ( latex book.pamphlet --interaction nonstopmode ; \
 	      latex book.pamphlet --interaction nonstopmode ) ; \
 	   else \
@@ -630,6 +631,81 @@ book:
 tanglec: books/tanglec.c
 	@echo t01 making tanglec from books/tanglec.c
 	@( cd books ; gcc -o tanglec tanglec.c )
+
+\end{chunk}
+
+\subsection{run}
+
+Once the system is built, starting it by hand needs three details a
+newcomer should not have to remember: the platform directory under
+\verb|mnt/|, the \verb|AXIOM| environment variable, and the algebra
+\verb|.daase| database files that a fresh tree lacks. The \verb|run|
+target packages all three and starts the raw \verb|AXIOMsys| image
+(the \verb|sman| launcher wants a real terminal and is not needed for
+console work).
+
+The optional \verb|DIR=<path>| argument selects the working directory
+the REPL starts in. This matters because the \emph{process} working
+directory is where \verb|)compile| writes its \verb|*.NRLIB| output
+and where \verb|)read| and \verb|)spool| resolve relative names ---
+the interpreter's \verb|)cd| command redirects only its own file
+lookup, not the compiler's output. Pointing \verb|DIR| at a project
+folder therefore keeps every artifact of a compile/test session in
+that folder:
+\begin{verbatim}
+    make run DIR=~/projects/xjt-doc/mathematics/study/bsd
+\end{verbatim}
+A leading tilde is expanded to \verb|$HOME| in the recipe, because the
+invoking shell does not expand it inside a \verb|DIR=~/...| argument.
+Only a bare \verb|~| or a \verb|~/...| path is recognized; a
+\verb|~user| form is left untouched, so \verb|cd| fails with a plain
+``No such file or directory'' instead of silently landing somewhere
+unintended.
+
+\verb|DIR| reaches the recipe as an environment variable, not as text
+spliced into the shell command line. \verb|make| performs
+\verb|$(DIR)| substitution \emph{before} the shell parses any
+quoting, so a naive \verb|dir='$(DIR)'| assignment let a single quote
+inside \verb|DIR| terminate the string early and inject arbitrary
+shell commands --- confirmed with
+\verb|make run DIR="x'; echo pwned; echo '"|. The \verb|run:| rule
+below therefore declares \verb|AXIOM_RUN_DIR| as a target-specific
+\verb|export| of \verb|$(DIR)|: make places the value in the
+recipe's environment untouched, and the recipe reads it back via
+\verb|$$AXIOM_RUN_DIR|, an ordinary shell variable. A single quote
+(or any other shell metacharacter) arriving that way is just data;
+there is no textual substitution left for it to break out of.
+
+\begin{chunk}{run}
+# Start the built AXIOMsys REPL interactively.  Detects the platform
+# automatically from the existing mnt/* tree and ensures the algebra
+# database files are present on first run.
+#
+# DIR=<path> starts the REPL with that working directory.  DIR is
+# passed to the recipe via the environment (the "export" line below),
+# never spliced into the shell command text, so quoting characters in
+# DIR cannot inject shell commands.  The process cwd is where
+# )compile writes its *.NRLIB output and where )read and )spool
+# resolve relative names ()cd only redirects the interpreter's file
+# lookup, not compiler output), so pointing DIR at a project folder
+# keeps all artifacts there:
+#     make run DIR=~/projects/xjt-doc/mathematics/study/bsd
+run: export AXIOM_RUN_DIR = $(DIR)
+run:
+	@SYS=$$(ls -d mnt/*/bin/AXIOMsys 2>/dev/null | sed 's|mnt/||;s|/bin/AXIOMsys||' | head -1); \
+	if [ -z "$$SYS" ]; then \
+	  echo "No AXIOMsys found. Run 'make' first to build the system." >&2; exit 1; fi; \
+	AX=$${SPD:-$$PWD}/mnt/$$SYS; export AXIOM=$$AX; \
+	for f in interp browse category operation; do \
+	  if [ ! -f "$$AX/algebra/$$f.daase" ]; then \
+	    cp src/share/algebra/$$f.daase "$$AX/algebra/$$f.daase"; fi; \
+	done; \
+	dir="$$AXIOM_RUN_DIR"; \
+	case "$$dir" in \
+	  "~/"*) dir="$$HOME/$${dir#\~/}";; \
+	  "~") dir="$$HOME";; \
+	esac; \
+	cd "$${dir:-.}" && exec "$$AX/bin/AXIOMsys" --noinform
 
 \end{chunk}
 
@@ -698,7 +774,7 @@ ${LSP}/Makefile: ${LSP}/Makefile.pamphlet
 	 ${EXTRACT} Makefile.pamphlet ; \
 	 if [ "${GCLVERSION}" != "gcl-2.4.1" ] ; then \
 	 ${BOOKS}/tanglec Makefile.pamphlet ${GCLVERSION} >Makefile ; \
-         fi ; \
+	 fi ; \
 	 cp Makefile.pdf ${MNT}/${SYS}/doc/src/lsp.Makefile.pdf )
 
 \end{chunk}
@@ -761,7 +837,7 @@ else
 	@echo =====================================
 	@echo lsp BUILDING GCL COMMON LISP
 	@echo =====================================
-	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir ) 
+	(cd lsp ; ${ENV} DESTDIR= ${MAKE} gcldir )
 	@(cp ${GCLDIR}/unixport/saved_gcl ${SPADBIN}/${GCLVERSION})
 endif
 
