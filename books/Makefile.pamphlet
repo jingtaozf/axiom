@@ -415,6 +415,78 @@ ${PDF}/%.pdf: ${IN}/%.pamphlet ${PDF}/axiom.bib ${PDF}/axiom.bst
 
 
 \end{chunk}
+\section{HTML rendition of the books}
+The books are also rendered as HTML, into \verb|${PDF}/html/<book>/|.
+We translate from the TeX sources, never from the PDF files. The PDF
+is a typeset endpoint; by the time a page exists the chapter
+structure, the anchors, and the chunk boundaries have been flattened
+into page coordinates. The pamphlet sources still carry all of that
+structure explicitly, so HTML generated from them keeps working
+hyperlinks, per-chapter pages, and searchable text.
+
+The translator is make4ht (the tex4ht front end shipped with texlive).
+It was chosen over the alternatives because it runs the real TeX
+engine, so the macros in axiom.sty execute natively and need no
+reimplementation. The ``mathjax,2'' options render mathematics with
+MathJax and split the output one file per chapter, which matters for
+the algebra volumes whose single-file size would otherwise be
+unusable in a browser.
+
+Three adjustments proved necessary when this was piloted on
+bookvol10 (July 2026):
+\begin{itemize}
+\item The \verb|[dvipdfm]| documentclass option names a PDF driver
+that conflicts with the driver tex4ht supplies, so we strip it from
+a copy of the pamphlet; the source itself is not touched.
+\item bookheader.tex reads a file called ``master'' to print the git
+hash on the title page. The PDF flow gets it from the
+\verb|${PDF}/master| target; here we generate it into the work
+directory directly.
+\item The two PostScript cover images defeat the tex4ht image chain
+(and pstoedit silently writes empty SVGs), so we render them to PNG
+with ghostscript and patch the img references afterwards. This is an
+interim measure until a proper tex4ht cfg file handles images.
+\end{itemize}
+
+Cross-volume references still point at
+\verb|bookvolN.pdf#nameddest=X| in the HTML output; rewriting them to
+HTML anchors needs a conditional in axiom.sty and is future work.
+
+Only volumes vetted by hand are listed in HTMLBOOKS; add a volume
+here after checking its output renders sanely.
+\begin{chunk}{*}
+MAKE4HT=make4ht
+GS=gs
+HTML=${PDF}/html
+HTMLBOOKS=${HTML}/bookvol10
+
+html: ${HTMLBOOKS}
+
+${HTML}/%: ${IN}/%.pamphlet
+	@ echo ===========================================
+	@ echo making ${HTML}/$* from ${IN}/$*.pamphlet
+	@ echo ===========================================
+	@ mkdir -p ${HTML}/$*.tmp
+	@(cd ${HTML}/$*.tmp ; \
+	  cp ${BOOKS}/*.sty . ; \
+	  cp ${IN}/bookheader.tex . ; \
+	  cp -pr ${IN}/ps . ; \
+	  git -C ${SPD} rev-parse master >master ; \
+	  touch signatures.tex ; touch $*.sigs ; \
+	  sed -e 's/\\documentclass\[dvipdfm\]{book}/\\documentclass{book}/' \
+	      ${IN}/$*.pamphlet >$*.tex ; \
+	  ${MAKE4HT} -u -d ${HTML}/$* $*.tex "mathjax,2" ; \
+	  ${GS} -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r150 -dEPSCrop \
+	     -o ${HTML}/$*/axiomfront.png ps/axiomfront.ps ; \
+	  ${GS} -q -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -r150 -dEPSCrop \
+	     -o ${HTML}/$*/bluebayou.png ps/bluebayou.ps ; \
+	  sed -i.bak -e 's|src="ps/axiomfront.ps"|src="axiomfront.png"|' \
+	      -e 's|src="ps/bluebayou.ps"|src="bluebayou.png"|' \
+	      ${HTML}/$*/$*.html ; \
+	  ${RM} ${HTML}/$*/$*.html.bak )
+	@ ${RM} -r ${HTML}/$*.tmp
+
+\end{chunk}
 \section{Combined Table of Contents}
 This is the table of contents from the existing volumes combined into
 one document for easy reference.
@@ -445,6 +517,9 @@ The sed patterns to match and remove them (in order) are:
             -e 's/{section.[A-Z]*.[0-9]*}//' \
             -e 's/{subsection.[A-Z]*.[0-9]*.[0-9]*}//' \
 \end{chunk}
+With the cleanup patterns in hand, the combined table of contents is
+built by concatenating each volume's .toc file, applying the patterns,
+and typesetting the result:
 \begin{chunk}{*}
 ${PDF}/toc.pdf: ${BOOKPDF}
 	@echo b3 making ${PDF}/toc.pdf
@@ -616,6 +691,9 @@ ${PDF}/toc.pdf: ${BOOKPDF}
 	fi )
 
 \end{chunk}
+The interpreter's )edit command shells out to a script called
+SPADEDIT. The script itself is literate code, a chunk in bookvol5;
+we extract it here and install it executable in the lib directory:
 \begin{chunk}{*}
 spadedit:
 	@echo b4 making spadedit from ${BOOKS}/bookvol5 to ${OUT1}
