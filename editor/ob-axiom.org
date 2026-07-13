@@ -492,6 +492,158 @@ alone.
 (add-to-list 'auto-mode-alist '("\\.spad\\'" . axiom-mode))
 #+end_src
 
+* Jump to Definition
+:PROPERTIES:
+:CUSTOM_ID: goto-definition
+:END:
+
+No system in the Axiom family offers symbol-level source navigation.
+What they all track — verified in daly (=GETDATABASE ctor 'SOURCEFILE=,
+bookvol5), FriCAS (=gdata.boot=, resolves into =src/algebra/=), and
+OpenAxiom (=database.boot=) — is one fact per constructor: the file it
+was compiled from. =)edit= hands that bare file to =$EDITOR= via the
+SPADEDIT script; no line, no operations.
+
+=axiom-goto-definition= (bound to =M-.= in =axiom-mode=) does better by
+splitting the work between the live image and Emacs:
+
+- The *image* answers the semantic question over the sly connection:
+  a constructor name or abbreviation resolves through the daase to
+  =(full-name abbreviation source-file)=; an operation name resolves
+  through =getAllModemapsFromDatabase= to the constructors implementing
+  it (offered via =completing-read=, then treated as a constructor).
+  A daase modemap is =((dc target args...) pred)= where =dc= is a
+  pattern variable (=*1=), so the implementing constructor is *not*
+  the head of the signature — it must be dug out of the predicate's
+  =(|isDomain| *1 (|Ctor| ...))= clause.  Both image-side forms are
+  wrapped in =handler-case=: an error escaping a slynk request opens
+  the sly debugger and blocks the synchronous =sly-eval= indefinitely.
+- *Emacs* supplies the line-level precision the daase lacks: the file
+  is located (buffer directory first, then =books/= derived from the
+  image's own =$AXIOM=), and point lands on the
+  =\begin{chunk}{domain ABBREV Name}= header (pamphlets) or the
+  =)abbrev= line (plain =.spad=).
+
+The daase is the build's source of truth, so this never needs an index
+rebuild and works for user domains the moment they are =)co='d.
+Requires a sly connection to the running AXIOMsys; without one the
+command aborts with a clear message rather than guessing.  =M-,= pops
+back (the jump pushes the xref marker stack).  Evil users: =M-.= works
+in normal state, or add a thin wrapper to
+=evil-goto-definition-functions= in personal config.
+
+#+begin_src elisp
+(defun axiom--symbol-at-point ()
+  "Symbol at point, Axiom-style: letters, digits, ! ? _ %."
+  (save-excursion
+    (let* ((chars "A-Za-z0-9!?_%")
+           (beg (progn (skip-chars-backward chars) (point)))
+           (end (progn (skip-chars-forward chars) (point))))
+      (unless (= beg end) (buffer-substring-no-properties beg end)))))
+
+(defun axiom--sly-eval-output (expr)
+  "Eval EXPR (Lisp source string) in the image, package BOOT.
+Return what it princs to standard output; nil when offline, on error,
+or when nothing was printed."
+  (when (and (fboundp 'sly-connected-p) (ignore-errors (sly-connected-p)))
+    (let ((res (ignore-errors
+                 (sly-eval `(slynk:eval-and-grab-output ,expr) "BOOT"))))
+      (when (and (consp res) (stringp (car res)) (> (length (car res)) 0))
+        (car res)))))
+
+(defun axiom--constructor-location (name)
+  "Resolve NAME (constructor name or abbreviation) via the daase.
+Return (FULL-NAME ABBREV FILE) as strings, or nil."
+  (let ((out (axiom--sly-eval-output
+              (format "(handler-case
+                         (let* ((s (intern %S \"BOOT\"))
+                                (c (or (getdatabase s 'constructor) s))
+                                (f (getdatabase c 'sourcefile))
+                                (a (getdatabase c 'abbreviation)))
+                           (when f (princ (format nil \"~a ~a ~a\" c a f))))
+                         (error (c) nil))"
+                      name))))
+    (when out (split-string out))))
+
+(defun axiom--operation-constructors (op)
+  "Constructors implementing operation OP, per the daase modemaps."
+  (let ((out (axiom--sly-eval-output
+              (format "(handler-case
+                         (let (seen)
+                           (dolist (mm (|getAllModemapsFromDatabase|
+                                        (intern %S \"BOOT\") nil))
+                             (let ((dc (caar mm)) (pred (cadr mm)))
+                               (labels ((scan (p)
+                                          (cond ((atom p) nil)
+                                                ((and (eq (car p) '|isDomain|)
+                                                      (eq (cadr p) dc)
+                                                      (consp (caddr p)))
+                                                 (car (caddr p)))
+                                                (t (some #'scan p)))))
+                                 (let ((c (scan pred)))
+                                   (when (and c (not (member c seen)))
+                                     (push c seen)
+                                     (princ (format nil \"~a \" c))))))))
+                         (error (c) nil))"
+                      op))))
+    (when out (split-string out))))
+
+(defun axiom--resolve-source (file)
+  "Find FILE from the daase on disk; nil when it cannot be located."
+  (if (file-name-absolute-p file)
+      (and (file-exists-p file) file)
+    (let* ((axiom-home
+            (axiom--sly-eval-output
+             "(let ((h (sb-ext:posix-getenv \"AXIOM\"))) (when h (princ h)))"))
+           (books (and axiom-home
+                       (expand-file-name "../../books/" axiom-home))))
+      (seq-some (lambda (dir)
+                  (and dir
+                       (let ((p (expand-file-name file dir)))
+                         (and (file-exists-p p) p))))
+                (list default-directory books)))))
+
+(defun axiom--locate-definition (full abbrev file)
+  "Visit FILE and land on the definition header of FULL/ABBREV."
+  (let ((path (axiom--resolve-source file)))
+    (unless path (user-error "Cannot find %s locally" file))
+    (xref-push-marker-stack)
+    (find-file path)
+    (goto-char (point-min))
+    (let ((case-fold-search nil))
+      (if (re-search-forward
+           (format "^\\\\begin{chunk}{\\(?:domain\\|category\\|package\\) %s %s}\\|^)abbrev +\\(?:domain\\|category\\|package\\) +%s +%s\\_>"
+                   (regexp-quote abbrev) (regexp-quote full)
+                   (regexp-quote abbrev) (regexp-quote full))
+           nil t)
+          (beginning-of-line)
+        (message "Header not found; at top of %s"
+                 (file-name-nondirectory path))))))
+
+(defun axiom-goto-definition (&optional name)
+  "Jump to the definition of the Axiom symbol at point.
+Constructor names and abbreviations resolve directly; operation names
+offer their implementing constructors."
+  (interactive)
+  (let ((name (or name (axiom--symbol-at-point))))
+    (unless name (user-error "No symbol at point"))
+    (unless (and (fboundp 'sly-connected-p) (ignore-errors (sly-connected-p)))
+      (user-error "No sly connection to a running Axiom (start one, then )read slynk)"))
+    (let ((loc (axiom--constructor-location name)))
+      (if loc
+          (apply #'axiom--locate-definition loc)
+        (let ((ctors (axiom--operation-constructors name)))
+          (unless ctors
+            (user-error "No constructor or operation %s in the daase" name))
+          (apply #'axiom--locate-definition
+                 (axiom--constructor-location
+                  (completing-read (format "%s implemented in: " name)
+                                   ctors nil t))))))))
+
+(define-key axiom-mode-map (kbd "M-.") #'axiom-goto-definition)
+(define-key axiom-mode-map [remap xref-find-definitions] #'axiom-goto-definition)
+#+end_src
+
 * Language Registration
 
 Registering =axiom= as a Babel language and mapping it to =axiom-mode= makes
