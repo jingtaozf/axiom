@@ -1,0 +1,349 @@
+
+
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,pdfborderstyle={/S/U/W 1},
+citecolor=red}
+%\usepackage[utf8]{inputenc} % handle unicode
+\usepackage[toc,page]{appendix}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{axiom}
+\usepackage{makeidx}
+\usepackage{enumitem} % for noitemsep in itemize
+\usepackage{bussproofs} % for prooftree environment
+\usepackage[margin=1in]{geometry} % for white pages
+\usepackage{catmac} % for Weber chapter in vol 10.1
+\usepackage{dissdef} % for Weber chapter in vol 10.1
+\usepackage{stmaryrd} % for llbracket
+\usepackage{tikz}     % for finite state diagrams
+\usetikzlibrary{automata, positioning, arrows}
+\tikzset{
+ ->,                     % make the edges directed
+ >=stealth',             % make arrow heads bold
+ node distance=2cm,      % min distance between nodes
+ every state/.style={thick,fill=gray!10},
+ initial text=$\epsilon$ % set text on start arrow
+}
+
+\newtheorem{DoyeTheorem}[subsection]{Theorem}
+\newtheorem{DoyeDefinition}[subsection]{Definition}
+\newtheorem{DoyeExample}[subsection]{Example}
+\newtheorem{DoyeNotation}[subsection]{Notation}
+\newtheorem{DoyeConjecture}[subsection]{Conjecture}
+\newtheorem{DoyeCorollary}[subsection]{Corollary}
+\newtheorem{DoyeLemma}[subsection]{Lemma}
+\newtheorem{DoyeAssumption}[subsection]{Assumption}
+\newtheorem{DoyeAlgorithm}[subsection]{Algorithm}
+\newcommand*{\QED}{\hfill\ensuremath{\blacksquare}} % for qed
+
+\setlength{\textwidth}{400pt}
+\makeindex
+\usepackage{graphicx}
+\usepackage{changepage} % for adjustwidth environment
+\usepackage{pst-node} % for commutative diagrams
+
+%%% ---- 中文版注入块(books/cn 独有;原因见 books/cn/Makefile.pamphlet)----
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{Heiti SC}
+\setCJKmonofont{Songti SC}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+% 插图是 ps/ 下的 PostScript 位图: 不要用 epstopdf 宏包 -- 它是
+% pdfTeX 专用, 在 XeTeX 下不定义任何 API, 反而报错;
+% xelatex 的后端 xdvipdfmx 自带 gs 委托, .ps/.eps 直接可用
+%
+% ch6 HyperDoc 的四个按钮图标(\ExitBitmap 等, axiom.sty:187-201)
+% 在成书里是空白。查过了: 不是渲染路线的问题, 而是
+% books/ps/{exit,home,help,up}.ps 这四个 1980 年代 xwd2ps 导出的
+% 资产本身就是空白图(gs 渲染出全白)。英文版同样空白, 属上游既有
+% 缺陷, 不在译本范围内修 —— 曾试过重定义为 \includegraphics,
+% 只会改变版式而补不出内容, 已撤回。
+%%% ---- 注入块结束 ----
+
+\newwrite\sigfile
+
+%\usepackage{breakurl}
+%\def\UrlBreaks{\do\/\do\-} % line-breaking urls
+
+\begin{document}
+\immediate\openout\sigfile=signatures.tex
+\frontmatter
+\setcounter{secnumdepth}{2}
+\begin{titlepage}
+\center{\includegraphics{ps/axiomfront.ps}}
+\vskip 0.1in
+\includegraphics{ps/bluebayou.ps}\\
+\vskip 0.1in
+{\Huge{The 30 Year Horizon}}
+\vskip 0.1in
+$$
+\begin{array}{lll}
+Manuel\ Bronstein      & William\ Burge   & Timothy\ Daly \\
+James\ Davenport       & Michael\ Dewar   & Martin\ Dunstan \\
+Albrecht\ Fortenbacher & Patrizia\ Gianni & Johannes\ Grabmeier \\
+Jocelyn\ Guidry        & Richard\ Jenks   & Larry\ Lambe \\
+Michael\ Monagan       & Scott\ Morrison  & William\ Sit \\
+Jonathan\ Steinbach    & Robert\ Sutor    & Barry\ Trager \\
+Stephen\ Watt          & Jim\ Wen         & Clifton\ Williamson
+\end{array}
+$$
+\center{\large{\VolumeName}}
+\vskip 0.1in
+\center{\today}
+\vskip 0.1in
+\center{\input{master}}
+\end{titlepage}
+\pagenumbering{roman}
+\begin{verbatim}
+Portions Copyright (c) 2005 Timothy Daly
+
+The Blue Bayou image Copyright (c) 2004 Jocelyn Guidry
+
+Portions Copyright (c) 2004 Martin Dunstan
+Portions Copyright (c) 2007 Alfredo Portes
+Portions Copyright (c) 2007 Arthur Ralfs
+Portions Copyright (c) 2005 Timothy Daly
+
+Portions Copyright (c) 1991-2002, 
+The Numerical ALgorithms Group Ltd.
+All rights reserved.
+
+This book and the Axiom software is licensed as follows:
+
+Redistribution and use in source and binary forms, with or 
+without modification, are permitted provided that the following 
+conditions are
+met:
+
+    - Redistributions of source code must retain the above 
+      copyright notice, this list of conditions and the 
+      following disclaimer.
+
+    - Redistributions in binary form must reproduce the above
+      copyright notice, this list of conditions and the 
+      following disclaimer in the documentation and/or other 
+      materials provided with the distribution.
+
+    - Neither the name of The Numerical ALgorithms Group Ltd. 
+      nor the names of its contributors may be used to endorse 
+      or promote products derived from this software without 
+      specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND 
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
+SUCH DAMAGE.
+
+\end{verbatim}
+
+\vfill
+\newpage
+Inclusion of names in the list of credits is based on historical
+information and is as accurate as possible. Inclusion of names
+does not in any way imply an endorsement but represents historical
+influence on Axiom development.
+
+\begin{tabular}{lll}
+Roy Adler              & Christian Aistleitner  & Michael Albaugh\\
+Cyril Alberga          & Jason Allen            & Richard Anderson\\
+George Andrews         & Jerry Archibald        & S.J. Atkins\\
+Jeremy Avigad          & Brent Baccala          & Knut Bahr\\
+Henry Baker            & Martin Baker           & Stephen Balzac\\
+Yurij Baransky         & David R. Barton        & Thomas Baruchel\\
+Gerald Baumgartner     & Gilbert Baumslag       & Michael Becker\\
+Nelson H. F. Beebe     & Jay Belanger           & Siddharth Bhat\\
+David Bindel           & Fred Blair             & Vladimir Bondarenko\\
+Ed Borasky             & Mark Botch             & Raoul Bourquin\\
+Alexandre Bouyer       & Karen Braman           & Wolfgang Brehm\\
+Peter A. Broadbery     & Martin Brock           & Manuel Bronstein\\
+Christopher Brown      & Stephen Buchwald       & Florian Bundschuh\\
+Luanne Burns           & William Burge          & Ralph Byers\\
+Quentin Carpent        & Jacques Carette        & Pierre Casteran\\
+Robert Cavines         & Pablo Cayuela          & Bruce Char\\
+Ondrej Certik          & Tzu-Yi Chen            & Bobby Cheng\\
+Cheekai Chin           & David V. Chudnovsky    & Gregory V. Chudnovsky\\
+Mark Clements          & Roland Coeurjoly       & Emil Cohen\\
+Hirsh Cohen            & Josh Cohen             & James Cloos\\
+Jia Zhao Cong          & Christophe Conil       & Don Coppersmith\\
+George Corliss         & Robert Corless         & Gary Cornell\\
+Frank Costa            & Meino Cramer           & Karl Crary\\
+Jeremy Du Croz         & David Cyganski         & Nathaniel Daly\\
+Timothy Daly Sr.       & Timothy Daly Jr.       & James H. Davenport\\
+David Day              & James Demmel           & Didier Deshommes\\
+Michael Dewar          & Inderjit Dhillon       & Jack Dongarra\\
+Jean Della Dora        & Gabriel Dos Reis       & Claire DiCrescendo\\
+Sam Dooley             & Pierre Doucy           & Nicolas James Doye\\
+Zlatko Drmac           & Lionel Ducos           & Iain Duff\\
+Lee Duhem              & Martin Dunstan         & Brian Dupee\\
+Dominique Duval        & Robert Edwards         & Hans-Dieter Ehrich\\
+Heow Eide-Goodman      & Alexandra Elbakyan     & Carl Engelman\\
+Lars Erickson          & Mark Fahey             & William Farmer\\
+Richard Fateman        & Bertfried Fauser       & Stuart Feldman\\
+John Fletcher          & Brian Ford             & Albrecht Fortenbacher\\
+George Frances         & Constantine Frangos    & Timothy Freeman\\
+Korrinn Fu             & Marc Gaetano           & Rudiger Gebauer\\
+Van de Geijn           & Kathy Gerber           & Patricia Gianni\\
+Eitan Gurari           & Gustavo Goertkin       & Samantha Goldrich\\
+Max Goldstein          & Holger Gollan          & Teresa Gomez-Diaz\\
+Ralph Gomory           & Laureano Gonzalez-Vega & Stephen Gortler\\
+Johannes Grabmeier     & Matt Grayson           & Martin Griss\\
+Andrey G. Grozin       & Klaus Ebbe Grue        & James Griesmer\\
+Vladimir Grinberg      & Oswald Gschnitzer      & Ming Gu\\
+Fred Gustavson         & Jocelyn Guidry         & Gaetan Hache\\
+Steve Hague            & Satoshi Hamaguchi      & Sven Hammarling\\
+Mike Hansen            & Richard Hanson         & Richard Harke\\
+Joseph Harry           & Bill Hart              & Vilya Harvey\\
+Martin Hassner         & Arthur S. Hathaway     & Dan Hatton\\
+Waldek Hebisch         & Karl Hegbloom          & Ralf Hemmecke\\
+Tony Hearn             & Henderson              & Antoine Hersen\\
+Nicholas J. Higham     & Lou Hodes              & Alan Hoffman\\
+Hoon Hong              & Roger House            & Joris van der Hoeven\\
+Gernot Hueber          & Pietro Iglio           & Joan Jaffe\\
+Alejandro Jakubi       & Richard Jenks          & Bo Kagstrom\\
+William Kahan          & Kyriakos Kalorkoti     & Kai Kaminski\\
+Matt Kaufmann          & Grant Keady            & Tom Kelsey\\
+Wilfrid Kendall        & Tony Kennedy           & David Kincaid\\
+Keshav Kini            & Knut Korsvold          & Ted Kosan\\
+Paul Kosinski          & Igor Kozachenko        & Fred Krogh\\
+Klaus Kusche           & Bernhard Kutzler       & Tim Lahey\\
+Larry Lambe            & Magnus Larsson         & Kaj Laurson\\
+\end{tabular}
+\vfill
+\newpage
+\begin{tabular}{lll}
+Charles Lawson         & George L. Legendre     & Franz Lehner\\
+Frederic Lehobey       & Michel Levaud          & Howard Levy\\
+J. Lewis               & Ren-Cang Li            & Xin Li\\
+John Lipson            & Rudiger Loos           & Craig Lucas\\
+Michael Lucks          & Richard Luczak         & Camm Maguire\\
+Dave Mainey            & Francois Maltey        & William Martin\\
+Ursula Martin          & Dan Martins            & Osni Marques\\
+Alasdair McAndrew      & Bob McElrath           & Michael McGettrick\\
+Roland McGrath         & Paul McJones           & Bob McNeill\\
+Edi Meier              & Ian Meikle             & David Mentre\\
+Simon Michael          & Jonathan Millen        & Victor S. Miller\\
+Gerard Milmeister      & William Miranker       & Mohammed Mobarak\\
+H. Michael Moeller     & Michael Monagan        & Marc Moreno-Maza\\
+Scott Morrison         & Joel Moses             & Mark Murray\\
+William Naylor         & Patrice Naudin         & C. Andrew Neff\\
+John Nelder            & Godfrey Nolan          & Arthur Norman\\
+Jinzhong Niu           & Michael O'Connor       & Summat Oemrawsingh\\
+Kostas Oikonomou       & Humberto Ortiz-Zuazaga & Julian A. Padget\\
+Bill Page              & David Parnas           & Igor Pashev\\
+Norm Pass              & Susan Pelzel           & Michel Petitot\\
+Didier Pinchon         & Ayal Pinkus            & Frederick H. Pitts\\
+Frank Pfenning         & Erik Poll              & Jose Alfredo Portes\\
+E. Quintana-Orti       & Gregorio Quintana-Orti & Beresford Parlett\\
+A. Petitet             & Andre Platzer          & Peter Poromaas\\
+Greg Puhak             & Claude Quitte          & Arthur C. Ralfs\\
+Norman Ramsey          & Anatoly Raportirenko   & Guilherme Reis\\
+Huan Ren               & Albert D. Rich         & Michael Richardson\\
+Jason Riedy            & Renaud Rioboo          & Robert Risch\\
+Wilken Rivera          & Jean Rivlin            & Nicolas Robidoux\\
+Simon Robinson         & Raymond Rogers         & Michael Rothstein\\
+Martin Rubey           & Jeff Rutter            & R.W Ryniker II\\
+Philip Santas          & Grigory Sarnitskiy     & David Saunders\\
+Aleksej Saushev        & Alfred Scheerhorn      & William Schelter\\
+Gerhard Schneider      & Martin Schoenert       & Marshall Schor\\
+Frithjof Schulze       & Fritz Schwartz         & Jens Axel Segaard\\
+Steven Segletes        & Srinivasan Seshan      & V. Sima\\
+Nick Simicich          & Peter Simons           & William Sit\\
+Elena Smirnova         & Jacob Nyffeler Smith   & Matthieu Sozeau\\
+Richard Stallman       & Ken Stanley            & William Stein\\
+Jonathan Steinbach     & Alexander Stepanov     & Doug Stewart\\
+Fabio Stumbo           & Christine Sundaresan   & Ben Collins-Sussman\\
+Klaus Sutner           & Robert Sutor           & Moss E. Sweedler\\
+Eugene Surowitz        & Yong Kiam Tan          & Max Tegmark\\
+T. Doug Telford        & James Thatcher         & Laurent Thery\\
+Balbir Thomas          & Mike Thomas            & Carol Thompson\\
+Simon Thompson         & Dylan Thurston         & Francoise Tisseur\\
+Steve Toleque          & Dick Toupin            & Raymond Toy\\
+Barry Trager           & Hale Trotter           & Themos T. Tsikas\\
+Gregory Vanuxem        & Kresimir Veselic       & Christof Voemel\\
+E.G. Wagner            & Bernhard Wall          & Justin Walker\\
+Paul Wang              & Stephen Watt           & Andreas Weber\\
+Jaap Weel              & Al Weis                & Juergen Weiss\\
+M. Weller              & Mark Wegman            & James Wen\\
+Thorsten Werther       & Michael Wester         & R. Clint Whaley\\
+James T. Wheeler       & John M. Wiley          & Berhard Will\\
+Clifton J. Williamson  & Stephen Wilson         & Shmuel Winograd\\
+Robert Wisbauer        & Sandra Wityak          & Waldemar Wiwianka\\
+Knut Wolf              & Hans Peter Wuermli     & Yanyang Xiao\\
+Liu Xiaojun            & Clifford Yapp          & David Yun\\
+Qian Yun               & Vadim Zhytnikov        & Paul Zimmermann\\
+Richard Zippel         & Wolfgang Zocher        & Evelyn Zoernack\\
+Bruno Zuercher         & Dan Zwillinger\\
+\end{tabular}
+\newpage
+
+\tableofcontents
+\vfill
+\eject
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1ex}
+{\Large{\bf New Foreword}}
+\vskip .25in
+
+On October 1, 2001 Axiom was withdrawn from the market and ended
+life as a commercial product.
+On September 3, 2002 Axiom was released under the Modified BSD
+license, including this document.
+On August 27, 2003 Axiom was released as free and open source
+software available for download from the Free Software Foundation's
+website, Savannah.
+
+Work on Axiom has had the generous support of the Center for 
+Algorithms and Interactive Scientific Computation (CAISS) at
+City College of New York. Special thanks go to Dr. Gilbert 
+Baumslag for his support of the long term goal.
+
+The online version of this documentation is roughly 1000 pages.
+In order to make printed versions we've broken it up into three
+volumes. The first volume is tutorial in nature. The second volume
+is for programmers. The third volume is reference material. We've
+also added a fourth volume for developers. All of these changes
+represent an experiment in print-on-demand delivery of documentation.
+Time will tell whether the experiment succeeded.
+
+Axiom has been in existence for over thirty years. It is estimated to
+contain about three hundred man-years of research and has, as of
+September 3, 2003, 143 people listed in the credits. All of these
+people have contributed directly or indirectly to making Axiom
+available.  Axiom is being passed to the next generation. I'm looking
+forward to future milestones.
+
+With that in mind I've introduced the theme of the ``30 year horizon''.
+We must invent the tools that support the Computational Mathematician
+working 30 years from now. How will research be done when every bit of
+mathematical knowledge is online and instantly available? What happens
+when we scale Axiom by a factor of 100, giving us 1.1 million domains?
+How can we integrate theory with code? How will we integrate theorems
+and proofs of the mathematics with space-time complexity proofs and
+running code? What visualization tools are needed? How do we support
+the conceptual structures and semantics of mathematics in effective
+ways? How do we support results from the sciences? How do we teach
+the next generation to be effective Computational Mathematicians?
+
+The ``30 year horizon'' is much nearer than it appears.
+
+\vskip .25in
+%\noindent
+Tim Daly\\
+CAISS, City College of New York\\
+November 10, 2003 ((iHy))
+\vfill
+\eject
+%\pagenumbering{arabic}
+\setcounter{chapter}{1} % Chapter 1

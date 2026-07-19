@@ -1,0 +1,335 @@
+\documentclass{article}
+\usepackage{axiom}
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{Heiti SC}
+\setCJKmonofont{Songti SC}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\usepackage{longtable}
+\begin{document}
+\title{\$SPAD/books/cn 术语对照表(en-cn Glossary Cheatmap)}
+\author{Jingtao Xu}
+\maketitle
+\begin{abstract}
+本表是 Axiom 图书中文译本的术语总纲:规定哪些术语保留英文、
+哪些采用固定中文译名、以及全书统一的翻译体例。所有翻译与审校
+工作均以本表为准;正文中任何与本表冲突的译法都算缺陷。
+术语底本取自 bookvol0 附录 G Glossary 的 205 个 \verb|\ourGloss|
+词条,并补充了书中高频出现的系统专名。
+\end{abstract}
+\tableofcontents
+
+\section{为什么不能"按含义直译"}
+
+Axiom 的类型系统词汇在中文数学与计算机文献里几乎全部撞车:
+
+\begin{itemize}
+\item {\bf category} 数学译"范畴",但 Axiom 的 category 是"一族
+  domain 共享的接口规范",与范畴论既有渊源又不等同;若译"范畴",
+  读者会带入范畴论直觉;若译"类别",又与 class 撞车。
+\item {\bf domain} 可译"域""整环""定义域"——而 field(域)、
+  integral domain(整环)、domain of definition(定义域)都是
+  本书里真实出现的数学对象,任何一种译法都会与其中之一同名。
+\item {\bf package} 译"包"与软件工程的 package(软件包)混同,
+  但 Axiom 的 package 特指"无表示的 domain"(仅导出操作)。
+\end{itemize}
+
+一旦 domain/category/package 各自的中文译名与数学名词互相污染,
+读者将无法从字面区分"Axiom 类型系统概念"与"数学概念"。
+因此本译本的总原则是:{\bf Axiom 类型系统的核心专名一律保留英文;
+数学名词按中文数学界标准译名翻译;二者由字面语言天然区分}。
+这恰好利用了中英混排的优势——英文词在中文散文里自带"这是
+系统专名"的视觉标记。
+
+\section{三级术语策略}
+
+\begin{description}
+\item[T1 保留英文] Axiom 专名与专有名词,散文中原样保留,
+  永不翻译。首次出现不加括注(全书凡例统一说明,见第
+  \ref{sec:conventions} 节)。
+\item[T2 固定译名] 有无歧义标准中文译名的术语,全书统一用
+  表中译名;{\bf 每章}首次出现时括注英文,如"强制转换
+  (coercion)"。同一英文词在全书只允许一个中文译名,
+  同一中文译名只对应一个英文词(双射,审校时机械可查)。
+\item[T3 常规直译] 无歧义的普通技术词与数学词(function 函数、
+  equation 方程、polynomial 多项式……),按通行译法直译,
+  不入表、不括注。译者拿不准时升级为 T2 记入本表。
+\end{description}
+
+代码永远不属于任何一级:\verb|\spadcommand{}|、
+\verb|\returnType{}|、verbatim 块、数学公式、类型名、函数名、
+文件名、命令行,逐字节保留,一个字符都不译。
+
+\section{T1:保留英文的 Axiom 专名}
+
+\begin{longtable}{ll}
+{\bf 术语} & {\bf 说明(为何不译)} \\
+\hline
+domain & Axiom 类型载体;任何中文译名都与 field/整环/定义域撞车 \\
+category & 与范畴论之"范畴"貌合神离,保留英文以免直觉错位 \\
+Category & 大写:所有 category 构成的那个 category \\
+package & 特指无表示的 domain,非软件工程之"包" \\
+mode & 解释器的类型推断模式概念,"模式"会与 pattern 撞车 \\
+Rep & domain 实现中表示的保留字 \\
+capsule & domain/package 定义体,译"胶囊"徒增困惑 \\
+pile & Axiom 缩进成块的语法,专名 \\
+frame & 交互会话的独立工作空间单元,译"帧/框架"均误导 \\
+Join & category 组合算子,保留字 \\
+add-chain & domain 继承链专名 \\
+benefactor & browser 术语:为某 domain 提供操作的 domain \\
+lineage & browser 术语:domain 的构造谱系 \\
+Spad, BOOT & Axiom 的两种实现语言名 \\
+HyperDoc & 联机文档系统名 \\
+NRLIB, daase & 编译产物/数据库文件格式名 \\
+LISP, Common LISP, AKCL, KCL, GCL, SBCL & 语言与实现名 \\
+Aldor & 语言名 \\
+\end{longtable}
+
+T1 词参与中文语序时按名词使用,如"每个 domain 都导出一组操作
+(operation)"。类型名作复数时不加英文复数 s(中文无复数):
+写"多个 domain",不写"多个 domains"。
+
+\section{T2:固定译名表}
+\label{sec:t2}
+
+双射约束:一个英文词 $\leftrightarrow$ 一个中文译名。
+审校脚本按本表 grep,任何偏离(同词异译、异词同译、漏括注)
+都是缺陷。
+
+\subsection{类型系统与语言}
+
+\begin{longtable}{lll}
+{\bf English} & {\bf 中文} & {\bf 备注} \\
+\hline
+type & 类型 & domain 的 Type(大写)不译 \\
+datatype & 数据类型 & \\
+abstract datatype & 抽象数据类型 & \\
+constructor & 构造子 & domain constructor = domain 构造子 \\
+operation & 操作 & domain 导出的函数 \\
+signature & 签名 & \\
+export(名/动) & 导出 & \\
+exposed / unexposed & 公开的 / 未公开的 & 指构造子对解释器可见性 \\
+representation & 表示 & 与保留字 Rep 相对的散文概念 \\
+coercion / coerce & 强制转换 & 系统自动进行 \\
+conversion / convert & 转换 & 泛指(可自动可显式);当与 coercion 对举、
+  强调用户经 \verb|::| 等显式请求时,由上下文补"显式",
+  不写进固定译名(2026-07-19 修订,原定"显式转换"致节标题自相矛盾)\\
+retraction & 回缩 & 强制转换的逆向(如从多项式取回整数)\\
+resolve & 类型合一 & 解释器为两个类型找公共类型 \\
+overloading & 重载 & \\
+polymorphic & 多态的 & \\
+pattern matching & 模式匹配 & \\
+type inference & 类型推断 & \\
+type checking & 类型检查 & \\
+subdomain & 子 domain & 混排:保留 domain \\
+underlying domain & 底层 domain & \\
+default definition & 缺省定义 & category 中给出的默认实现 \\
+default package & 缺省 package & \\
+attribute & 属性 & \\
+declaration & 声明 & \\
+binding & 绑定 & \\
+environment & 环境 & \\
+instantiate / instantiation & 实例化 & \\
+generic function & 泛型函数 & \\
+parameterized datatype & 参数化数据类型 & \\
+dynamic lookup & 动态查找 & \\
+\end{longtable}
+
+\subsection{语法与程序结构}
+
+\begin{longtable}{lll}
+{\bf English} & {\bf 中文} & {\bf 备注} \\
+\hline
+expression & 表达式 & \\
+statement & 语句 & \\
+block & 语句块 & \\
+body & 体 & 函数体、循环体 \\
+assignment & 赋值 & \\
+definition & 定义 & \\
+declaration & 声明 & \\
+conditional & 条件语句 & \\
+loop & 循环 & \\
+iteration & 迭代 & \\
+recursion / recursive & 递归 / 递归的 & \\
+macro & 宏 & \\
+comment & 注释 & \\
+documentation & 文档 & \\
+delimiter & 定界符 & \\
+literal & 字面量 & \\
+identifier & 标识符 & \\
+reserved word & 保留字 & \\
+keyword & 关键字 & \\
+prefix / infix / postfix & 前缀 / 中缀 / 后缀 & 记法位置 \\
+suffix character & 词尾字符 & 如 ! 与 ?;避免与 postfix 后缀混淆 \\
+precedence & 优先级 & \\
+quote & 引用 & 撇号算子 \\
+tuple & 元组 & \\
+list & 列表 & \\
+record & 记录 & Record 类型本身不译 \\
+string & 字符串 & \\
+symbol & 符号 & \\
+variable & 变量 & \\
+local variable / global variable & 局部变量 / 全局变量 & \\
+free variable & 自由变量 & \\
+constant & 常量 & \\
+function & 函数 & \\
+argument & 实参 & 泛指亦可作"参数" \\
+formal parameter & 形式参数 & \\
+parameter & 参数 & \\
+arity & 元数 & \\
+nullary / unary / binary & 零元 / 一元 / 二元 & \\
+predicate & 谓词 & \\
+operand / operator & 操作数 / 算子 & operator 数学语境译"算子" \\
+wild card & 通配符 & \\
+such that clause & such that 子句 & 保留关键字面 \\
+\end{longtable}
+
+\subsection{系统与运行时}
+
+\begin{longtable}{lll}
+{\bf English} & {\bf 中文} & {\bf 备注} \\
+\hline
+interpreter & 解释器 & \\
+compiler & 编译器 & \\
+workspace & 工作区 & 交互会话的变量区 \\
+history & 历史 & \\
+evaluation & 求值 & \\
+compile-time / run-time & 编译期 / 运行期 & \\
+run-time check & 运行期检查 & \\
+library & 库 & \\
+browser & 浏览器 & 指 HyperDoc 的 Browse 设施 \\
+system commands & 系统命令 & 以 )开头的命令 \\
+input area & 输入区 & HyperDoc 界面元素 \\
+step number & 步号 & 交互提示符编号 \\
+cache & 缓存 & \\
+hash table & 哈希表 & \\
+heap & 堆 & \\
+pointer & 指针 & \\
+reference & 引用 & \\
+garbage collection / collector & 垃圾回收 / 垃圾回收器 & \\
+side effect & 副作用 & \\
+destructive operation & 破坏性操作 & \\
+mutable / immutable & 可变的 / 不可变的 & \\
+copying semantics & 复制语义 & \\
+pointer semantics & 指针语义 & \\
+semantics & 语义 & \\
+syntax & 语法 & \\
+parse & 解析 & \\
+trace & 跟踪 & )trace 命令语境保留原文 \\
+object code & 目标代码 & \\
+source & 源码 & \\
+top-level & 顶层 & \\
+stream & 流 & 泛指;Stream 类型不译 \\
+file & 文件 & \\
+\end{longtable}
+
+\subsection{数学名词(按中文数学界标准译名)}
+
+\begin{longtable}{lll}
+{\bf English} & {\bf 中文} & {\bf 备注} \\
+\hline
+ring & 环 & \\
+group & 群 & \\
+semigroup & 半群 & \\
+monoid & 幺半群 & \\
+field & 域 & 注意:domain 保留英文正是为给"域"让路 \\
+integral domain & 整环 & \\
+ideal & 理想 & \\
+basis & 基 & \\
+partially ordered set & 偏序集 & \\
+totally ordered set & 全序集 & \\
+polynomial & 多项式 & \\
+rational number & 有理数 & \\
+integer & 整数 & Integer 类型不译 \\
+float / floating point & 浮点数 / 浮点 & Float 类型不译 \\
+small integer / small float & 小整数 / 小浮点数 & 各章首现括注英文 \\
+precision & 精度 & \\
+accuracy & 准确度 & 与 precision 严格区分 \\
+recurrence relation & 递推关系 & \\
+Gaussian & Gauss 的/复整数语境按上下文 & 人名不译为"高斯的"时统一"Gauss" \\
+\end{longtable}
+
+人名一律保留西文原名(Jenks、Sutor、Daly、Euler、Gauss……),
+不用中文音译——检索友好,且与参考文献一致。
+
+\section{全书翻译体例(凡例)}
+\label{sec:conventions}
+
+以下体例写入每个翻译任务书,审校按条核查:
+
+\begin{enumerate}
+\item 只译散文。\verb|\spadcommand{}|、\verb|\returnType{}|、
+  数学环境、verbatim、\verb|\label|/\verb|\ref|/\verb|\index|/
+  \verb|\cite| 及其参数,逐字节保留。章节命令只译标题文字,
+  不动命令与 label。
+\item T1 词保留英文;T2 词用表中译名,每章首现括注英文;
+  T3 词按通行译法直译。遇到表外疑难术语:按最稳妥直译处理,
+  并记入该段的 terms-new 旁注文件,由 planner 裁决后回填本表。
+\item 中文标点用全角(,。;:""''《》),但英文术语相邻的
+  括号采用半角并前后各留一个半角空格,如"强制转换 (coercion)"。
+  代码与数学环境内的标点一律不动。
+\item 中英文之间不手工加空格,交给 xeCJK 排版;
+  但半角括注前后的空格按上条保留。
+\item 语序服从中文表达习惯,允许拆并句;不允许增删信息,
+  不允许把作者的第一人称叙述改成无人称说明文。原书的语气
+  (如"We finally come to..."的娓娓道来)在中文里同样要有。
+\item 疑问句、条件句、强调保持原修辞力度;拿不准的数学表述
+  宁可直译也不意译。
+\end{enumerate}
+
+\section{翻译中裁决的补充词条(seg01--10 回填)}
+
+\begin{longtable}{lll}
+{\bf English} & {\bf 中文} & {\bf 来源} \\
+\hline
+Literate Programming & 文学编程 (括注) & seg01 \\
+interactive language & 交互式语言 & seg02 \\
+domain tower & domain 塔 & seg02 \\
+code-economy & 代码的经济性 & seg02 \\
+ordered set & 全序集 (ordered set) & seg02(OrderedSet category 语义即全序)\\
+immediate / delayed assignment & 立即赋值 / 延迟赋值 & seg03 \\
+undo & 撤销 (undo) & seg05 \\
+segmented list & 分段列表 & seg05 \\
+lazy list & 惰性列表 & seg05 \\
+flexible array & 柔性数组 & seg05 \\
+loop body & 循环体 & seg06 \\
+row-major order & 行主序 & seg06 \\
+Roman numeral & 罗马数字 & seg06 \\
+balanced binary tree & 平衡二叉树 & seg07 \\
+decision procedure & 判定过程 (decision procedure) & seg09 \\
+space curve & 空间曲线 & seg11 \\
+colormap & 色彩映射表 & seg11 \\
+pixmap & 位图 & seg11 \\
+view volume & 视景体 & seg11 \\
+hither clipping plane & 近裁剪面 & seg11 \\
+dithering & 抖动 & seg11 \\
+modemap & modemap(保留英文)& seg15 \\
+syntax pattern & 语法模式 & seg15(pattern 译"模式"不与 T1 的 mode 冲突)\\
+\end{longtable}
+
+\subsection{语义辨析原则(判例固化)}
+
+T2 双射只约束{\bf 术语义};同一英文词在日常义/别义下按语境直译,
+不套用 T2 译名,也不计入双射核对:
+
+\begin{itemize}
+\item package 作日常英语"软件/系统"泛义时(如"a computer algebra
+  package")译"系统",不套 T1 保留规则(seg04 判例)。
+\item block:语句块(T2)/ 光标块(seg03)/ 内存块(seg05)三义分立。
+\item constant:常量(名词,T2)/ 固定不变(形容词,seg05)。
+\item cycle 译"循环引用",与 loop(循环)、ring(环)三词三译,
+  互不占用(seg05 判例)。
+\item 系统真实打印的提示文本保留英文;作者对代码的散文解读要译
+  (seg03/seg04 判例)。
+\item UI 按钮/菜单/面板名保留英文(seg10 判例)。
+\end{itemize}
+
+\section{维护}
+
+本表随翻译推进增补:各段翻译产生的 terms-new 旁注由 planner
+审定后合入 T1/T2 表,再同步到后续任务书。表的任何改动都要
+回溯检查已译章节(grep 即可,译名双射保证机械可查)。
+
+\end{document}

@@ -1,0 +1,144 @@
+\documentclass{article}
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/books/cn Makefile}
+\author{Jingtao Xu}
+\maketitle
+\begin{abstract}
+本目录存放 Axiom 图书的简体中文译本(散文翻译,代码、公式与
+Axiom 术语保持英文原样)及其独立的构建装置。本 pamphlet 解释中文版
+为何需要一条与英文版不同的编译路线,并给出完整的 Makefile。
+\end{abstract}
+\tableofcontents
+
+\section{为什么存在 books/cn}
+
+英文原书由 \verb|books/Makefile| 用经典 DVI 路线编译:
+\verb|latex| 三遍,再经 \verb|dvipdfm| 转成 PDF
+(见 \verb|books/Makefile| 的 \verb|${PDF}/%.pdf| 通用规则)。
+这条路线无法排版中文——经典 \verb|latex| 引擎不识别 UTF-8 中文字符,
+也无法使用系统的 CJK 字体。
+
+中文译本因此需要三样东西:与英文同名但内容已翻译的 pamphlet 副本、
+一份注入了 CJK 支持的 \verb|bookheader.tex|、以及一条基于
+\verb|xelatex| 的编译配方。三者都收在 \verb|books/cn/| 下,
+与英文源完全隔离:英文书的构建一个字节都不受影响,
+而中文书可以独立重建。产物落在 \verb|mnt/MACOSX/doc/cn/|,
+与英文 PDF 平行。
+
+\section{与英文配方的差异}
+
+中文配方以英文的通用规则为蓝本,差异有五处,每处都有明确原因:
+
+\begin{enumerate}
+\item {\bf 引擎换成 xelatex}。\verb|xelatex| 原生支持 UTF-8 与
+  OpenType 字体,配合 \verb|xeCJK| 宏包即可正确排版中文并按中文
+  规则断行。它直接输出 PDF,因此英文配方末尾的 \verb|dvipdfm|
+  一步整个消失。
+\item {\bf 类选项去掉 dvipdfm}。英文书首行是
+  \verb|\documentclass[dvipdfm]{book}|,该全局选项会被
+  \verb|hyperref|/\verb|graphicx| 当作驱动声明,在 xelatex 下是
+  错误驱动。中文副本改为 \verb|\documentclass{book}|,
+  两个宏包即可自动探测 XeTeX。这是译本对原书唯一的结构性改动。
+\item {\bf PostScript 插图交给 xdvipdfmx 处理}。原书插图是
+  \verb|ps/| 下的 PostScript 位图。第一版配方曾用
+  \verb|epstopdf| 宏包做转换——这是个陷阱:该宏包是 pdfTeX
+  专用,在 XeTeX 下不定义任何 API,只会制造
+  Undefined control sequence。正确做法是什么都不做:
+  xelatex 的后端 xdvipdfmx 自带 ghostscript 委托,
+  \verb|.ps|/\verb|.eps| 图直接可用(编译机需装 gs)。
+\item {\bf 只拷入 Axiom 私有的六个 .sty}。daly 在 \verb|books/|
+  捆绑了 27 个 2012 年的宏包快照。英文配方照单全拷
+  (\verb|cp ${BOOKS}/*.sty|),但其中 21 个 texlive 本身就有,
+  且 2012 年的旧版在现代 texlive 上会硬性报错——本目录第一次
+  smoke 编译就栽在这里:旧 \verb|hyperref.sty| 报
+  Version mismatch,旧 \verb|amsmath.sty| 与内核预定义的
+  \verb|\negmedspace| 冲突,PDF 只出了 2 页。
+  中文配方因此改为白名单:只拷 texlive 里不存在的六个私有宏包
+  (axiom、catmac、dissdef、multind、selatex、slatex,
+  用 \verb|kpsewhich| 逐一核实),其余全部使用系统版本——
+  xelatex 路线也正需要现代版的 hyperref/graphicx 驱动探测。
+\item {\bf 保留编译日志}。英文配方编译后把 \verb|*.log| 一并删除;
+  中文书处于持续翻译中,译文改动引入的 LaTeX 错误要靠日志定位,
+  所以这里不删 \verb|.log|,只清理其余中间文件。
+\end{enumerate}
+
+英文书带有少量潜伏的 LaTeX 错误(只在 nonstopmode 下能继续编译),
+译本从原书复制而来自然继承了它们,所以 \verb|xelatex| 同样带
+\verb|-interaction=nonstopmode| 运行;判定编译成功的标准是
+PDF 产出且日志无新增 error,而不是退出码。
+
+除上述五处外还有一个易踩的坑:\verb|bookheader.tex| 的扉页
+用 \verb|\input{master}| 排出当前源码的 git 提交号,这个
+\verb|master| 文件由英文构建生成在 \verb|mnt/MACOSX/doc/| 里;
+中文配方直接从那里拷入,因此{\bf 中文书要求英文书先构建过一次}
+(axiom.bib、axiom.bst 同理)。
+
+\section{使用方法}
+
+在仓库任意位置执行:
+\begin{verbatim}
+make -C books/cn
+\end{verbatim}
+所有路径变量都有相对本目录的缺省值,无需从顶层 Makefile 传入;
+也可以按英文书的习惯用 \verb|AXIOM=| 等变量覆盖。
+Makefile 本身由本 pamphlet 抽取:
+\begin{verbatim}
+./books/tanglec books/cn/Makefile.pamphlet '*' > books/cn/Makefile
+\end{verbatim}
+两者保持字节一致,改动一律先改 pamphlet。
+
+\section{The Makefile}
+
+\begin{chunk}{*}
+# 由 books/cn/Makefile.pamphlet 抽取,勿直接编辑;
+# 重建: ./books/tanglec books/cn/Makefile.pamphlet '*' > books/cn/Makefile
+SPD?=$(abspath ../..)
+BOOKS?=${SPD}/books
+IN?=${SPD}/books/cn
+AXIOM?=${SPD}/mnt/MACOSX
+PDF?=${AXIOM}/doc/cn
+XELATEX?=xelatex -interaction=nonstopmode
+MAKEINDEX?=makeindex
+BIBTEX?=bibtex
+RM?=rm -f
+# texlive 缺失的 Axiom 私有宏包白名单;其余 books/*.sty 是 2012 快照,
+# 在现代 texlive 上会压住系统版本导致硬错误,一律不拷
+CNSTY=axiom.sty catmac.sty dissdef.sty multind.sty selatex.sty slatex.sty
+
+all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf
+
+${PDF}:
+	mkdir -p ${PDF}
+
+${PDF}/axiom.bib: ${AXIOM}/doc/axiom.bib | ${PDF}
+	cp $< $@
+
+${PDF}/axiom.bst: ${AXIOM}/doc/axiom.bst | ${PDF}
+	cp $< $@
+
+${PDF}/%.pdf: ${IN}/%.pamphlet ${IN}/bookheader.tex ${PDF}/axiom.bib ${PDF}/axiom.bst
+	@ echo ===========================================
+	@ echo making ${PDF}/$*.pdf from ${IN}/$*.pamphlet
+	@ echo ===========================================
+	@(cd ${PDF} ; \
+	  (cd ${BOOKS} ; cp ${CNSTY} ${PDF}) ; \
+	  cp ${AXIOM}/doc/master ${PDF} ; \
+	  cp ${IN}/$*.pamphlet ${PDF} ; \
+	  cp ${IN}/bookheader.tex ${PDF} ; \
+	  cp -pr ${BOOKS}/ps ${PDF} ; \
+	  ${RM} $*.toc ; \
+	  touch signatures.tex ; \
+	  touch $*.sigs ; \
+	  ${XELATEX} $*.pamphlet >/dev/null ; \
+	  ${MAKEINDEX} $*.idx 1>/dev/null 2>/dev/null ; \
+	  ${BIBTEX} $*.aux ; \
+	  ${XELATEX} $*.pamphlet >/dev/null ; \
+	  ${XELATEX} $*.pamphlet >/dev/null ; \
+	  ${RM} $*.aux $*.idx $*.ilg $*.ind $*.pamphlet ; \
+	  ${RM} $*.sigs signatures.tex signatures.sort bookheader.tex )
+
+.PHONY: all
+\end{chunk}
+
+\end{document}
