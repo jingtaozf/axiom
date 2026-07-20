@@ -68,6 +68,7 @@ drawer is still an ordinary LaTeX fragment, so =org-latex-preview= (or the
 |----------------------------+---------------------------------------------------|
 | =org-babel-execute:axiom=  | Org calls this to run a block; returns the result |
 | =ob-axiom-render-result=   | Wrap captured Axiom LaTeX as a previewable fragment |
+| =ob-axiom-clear-log=       | Erase one instance's verbose log (=*ob-axiom-log:<name>*=) |
 
 *Caching and async — use Org's own machinery, no ob-axiom code.* Re-running
 an unchanged block can reuse Org's built-in =:cache yes=, which hashes the
@@ -91,6 +92,7 @@ auto-preview.
 (require 'seq)
 (require 'comint)
 (require 'subr-x)
+(require 'xref)   ; xref-push-marker-stack has no autoload of its own
 
 (defgroup ob-axiom nil
   "Org-Babel backend for the Axiom computer algebra system."
@@ -206,8 +208,9 @@ Two pieces of noise must be filtered. A freshly started =AXIOMsys= prints
 =WARNING: redefining BOOT::|...|= lines (a side effect of the in-progress
 GCL→SBCL migration, emitted the first time each algebra constructor loads),
 and the REPL echoes =(N) -> = prompts. Both are removed before capture. The
-=$$= blocks come over stdout, so discarding the subprocess's stderr already
-removes most warnings; the line filter is the belt-and-braces second layer.
+=$$= blocks come over stdout, and the one-shot path routes stderr to the
+[[#verbose-logging][verbose log]], so most warnings never reach capture; the line filter remains
+for session transcripts, where the streams arrive merged.
 
 * Runtime Resolution
 
@@ -266,12 +269,113 @@ Keys: :program (the bare AXIOMsys REPL, for one-shot), :axiom-program (the
     (and p (or (file-executable-p p) (executable-find p)))))
 #+end_src
 
+* Verbose Logging
+:PROPERTIES:
+:CUSTOM_ID: verbose-logging
+:END:
+
+Every evaluation appends its full raw transcript to a per-instance log
+buffer =*ob-axiom-log:<instance>*= — the =:session= name for session
+blocks, =one-shot= for the fresh-process path (whose processes are
+throwaway; a buffer per run would litter Emacs with dead logs). The
+capture layer strips banners, prompts, and migration warnings before Org
+sees a result, which is right for the document and wrong for debugging:
+when a block misbehaves, the stripped lines are exactly the evidence.
+The log keeps them.
+
+Logging is unconditional and unbounded — no toggle, no size cap. During
+the GCL→SBCL migration a truncated transcript is worse than none, so the
+bound is manual: =M-x ob-axiom-clear-log= erases one instance's log. A
+deliberate exception to the append-and-trim pattern used elsewhere in
+this repo's tooling.
+
+The log is also the only place a timed-out session's transcript
+survives: the abort path kills the comint buffer to avoid a
+desynchronised REPL, which used to destroy the evidence with it.
+
+stderr handling differs by path, because separation must happen at the
+process API — once merged, the streams cannot be split after the fact:
+
+- *one-shot* — true separation: =call-process-region='s BUFFER argument
+  takes the list form =(t err-file)=, landing stderr in a temp file that
+  is logged under a =---- stderr ----= marker in
+  =ob-axiom-log-stderr-face=.
+- *session* — inseparable: a graphics session is a pty, where the merge
+  happens at the file-descriptor level; a pipe session goes through
+  comint, which exposes no =:stderr=. Lines matching known diagnostic
+  shapes (=WARNING:=, =STYLE-WARNING=, semicolon-prefixed compiler
+  notes, =>>= error banners) are heuristically highlighted with the same
+  face — a best guess, not fd-level truth.
+
+To find stderr: search =^---- stderr= (one-shot, exact) or scan for the
+red =ob-axiom-log-stderr-face= (session, heuristic).
+
+#+begin_src elisp
+(defface ob-axiom-log-header-face
+  '((t :inherit font-lock-comment-face :weight bold))
+  "Face for entry headers and the stderr marker in ob-axiom log buffers.")
+
+(defface ob-axiom-log-stderr-face
+  '((t :inherit font-lock-warning-face))
+  "Face for stderr (and stderr-shaped) lines in ob-axiom log buffers.")
+
+(defconst ob-axiom--log-stderr-line-re
+  "^\\(?:WARNING\\|STYLE-WARNING\\|;;? \\|>> \\).*"
+  "Diagnostic-shaped lines heuristically highlighted in merged transcripts.")
+
+(defun ob-axiom--log-buffer (instance)
+  "Return, creating if needed, the log buffer for INSTANCE."
+  (get-buffer-create (format "*ob-axiom-log:%s*" instance)))
+
+(defun ob-axiom--log (instance label raw &optional stderr)
+  "Append RAW to INSTANCE's log buffer under a LABEL header line.
+When STDERR is a non-blank string (one-shot separation), append it under
+a =---- stderr ----= marker in `ob-axiom-log-stderr-face'; independently,
+highlight diagnostic-shaped lines inside RAW per
+`ob-axiom--log-stderr-line-re'."
+  (with-current-buffer (ob-axiom--log-buffer instance)
+    (goto-char (point-max))
+    (insert (propertize (format "==== [%s] %s\n"
+                                (format-time-string "%F %T") label)
+                        'face 'ob-axiom-log-header-face))
+    (let ((beg (point)))
+      (insert raw)
+      (unless (bolp) (insert "\n"))
+      (save-excursion
+        (goto-char beg)
+        (while (re-search-forward ob-axiom--log-stderr-line-re nil t)
+          (put-text-property (match-beginning 0) (match-end 0)
+                             'face 'ob-axiom-log-stderr-face))))
+    (when (and stderr (not (string-blank-p stderr)))
+      (insert (propertize "---- stderr ----\n" 'face 'ob-axiom-log-header-face)
+              (propertize stderr 'face 'ob-axiom-log-stderr-face))
+      (unless (bolp) (insert "\n")))))
+
+(defun ob-axiom-clear-log (instance)
+  "Erase the verbose log buffer for INSTANCE."
+  (interactive
+   (list (completing-read
+          "Clear Axiom log: "
+          (delq nil (mapcar
+                     (lambda (b)
+                       (and (string-match "\\`\\*ob-axiom-log:\\(.*\\)\\*\\'"
+                                          (buffer-name b))
+                            (match-string 1 (buffer-name b))))
+                     (buffer-list)))
+          nil t)))
+  (let ((buf (get-buffer (format "*ob-axiom-log:%s*" instance))))
+    (when buf (with-current-buffer buf (erase-buffer)))))
+#+end_src
+
 * One-Shot Evaluation
 
 One-shot evaluation builds an input script — a format prelude, the user's
 body, then =)quit= — and feeds it to a throwaway process via
-=call-process-region=, returning the raw stdout. stderr is discarded, which
-strips most migration warnings at the source.
+=call-process-region=, returning the raw stdout. stderr is captured to a
+temp file and routed to the [[#verbose-logging][verbose log]]. The list-form BUFFER argument
+=(t err-file)= is what separates the streams — a plain =t= *mixes* stderr
+into stdout (discarding needs =(t nil)=), which is why migration warnings
+used to reach the capture filters at all.
 
 #+begin_src elisp
 (defun ob-axiom--prelude (show)
@@ -282,18 +386,28 @@ strips most migration warnings at the source.
    (t                   ")set output algebra off\n)set output tex on\n")))
 
 (defun ob-axiom--eval-one-shot (body show)
-  "Run BODY in a fresh Axiom process under format SHOW; return raw stdout."
+  "Run BODY in a fresh Axiom process under format SHOW; return raw stdout.
+stderr goes to a temp file and from there to the one-shot verbose log."
   (let* ((rt (ob-axiom--runtime))
          (program (plist-get rt :program))
          (process-environment (plist-get rt :env))
-         (script (concat (ob-axiom--prelude show) body "\n)quit\n")))
+         (script (concat (ob-axiom--prelude show) body "\n)quit\n"))
+         (err-file (make-temp-file "ob-axiom-stderr-")))
     (unless (or (file-executable-p program) (executable-find program))
       (error "ob-axiom: no Axiom executable (%s); set `ob-axiom-axiom-home'"
              program))
-    (with-temp-buffer
-      (insert script)
-      (call-process-region (point-min) (point-max) program t t nil "--noinform")
-      (buffer-string))))
+    (unwind-protect
+        (with-temp-buffer
+          (insert script)
+          (call-process-region (point-min) (point-max) program t
+                               (list t err-file) nil "--noinform")
+          (let ((raw (buffer-string))
+                (err (with-temp-buffer
+                       (insert-file-contents err-file)
+                       (buffer-string))))
+            (ob-axiom--log "one-shot" (car (split-string body "\n")) raw err)
+            raw))
+      (delete-file err-file))))
 #+end_src
 
 * Output Capture
@@ -522,12 +636,22 @@ splitting the work between the live image and Emacs:
   is located (buffer directory first, then =books/= derived from the
   image's own =$AXIOM=), and point lands on the
   =\begin{chunk}{domain ABBREV Name}= header (pamphlets) or the
-  =)abbrev= line (plain =.spad=).
+  =)abbrev= line (plain =.spad=). An operation jump continues forward
+  from that header to the implementation line in the capsule. The
+  pattern =^[ \t]*op[ \t(:].*=== is what keeps this precise without an
+  index: the SIG signature line (=op : (…) -> …=) carries no ====, and
+  =++= doc lines never start with the bare operation name, so neither
+  false-matches; if the line is not found, point stays at the header.
 
 The daase is the build's source of truth, so this never needs an index
 rebuild and works for user domains the moment they are =)co='d.
 Requires a sly connection to the running AXIOMsys; without one the
-command aborts with a clear message rather than guessing.  =M-,= pops
+command aborts with a clear message rather than guessing. The liveness
+check is =sly-current-connection=, not =sly-connected-p=: when the
+image dies (=connection broken by remote peer=) a stale entry can
+linger in =sly-net-processes=, making =sly-connected-p= answer t while
+every =sly-eval= fails — which used to surface as a misleading "not in
+the daase" instead of "no connection".  =M-,= pops
 back (the jump pushes the xref marker stack).  Evil users: =M-.= works
 in normal state, or add a thin wrapper to
 =evil-goto-definition-functions= in personal config.
@@ -541,11 +665,16 @@ in normal state, or add a thin wrapper to
            (end (progn (skip-chars-forward chars) (point))))
       (unless (= beg end) (buffer-substring-no-properties beg end)))))
 
+(defun axiom--sly-connection-live-p ()
+  "Non-nil when sly has a usable default connection, not a stale process."
+  (and (fboundp 'sly-current-connection)
+       (ignore-errors (sly-current-connection))))
+
 (defun axiom--sly-eval-output (expr)
   "Eval EXPR (Lisp source string) in the image, package BOOT.
 Return what it princs to standard output; nil when offline, on error,
 or when nothing was printed."
-  (when (and (fboundp 'sly-connected-p) (ignore-errors (sly-connected-p)))
+  (when (axiom--sly-connection-live-p)
     (let ((res (ignore-errors
                  (sly-eval `(slynk:eval-and-grab-output ,expr) "BOOT"))))
       (when (and (consp res) (stringp (car res)) (> (length (car res)) 0))
@@ -603,8 +732,11 @@ Return (FULL-NAME ABBREV FILE) as strings, or nil."
                          (and (file-exists-p p) p))))
                 (list default-directory books)))))
 
-(defun axiom--locate-definition (full abbrev file)
-  "Visit FILE and land on the definition header of FULL/ABBREV."
+(defun axiom--locate-definition (full abbrev file &optional op)
+  "Visit FILE and land on the definition header of FULL/ABBREV.
+When OP is non-nil, continue forward from the header to OP's
+implementation line in the capsule (`op(...) =='); when that line is
+not found, point stays at the header."
   (let ((path (axiom--resolve-source file)))
     (unless path (user-error "Cannot find %s locally" file))
     (xref-push-marker-stack)
@@ -618,7 +750,12 @@ Return (FULL-NAME ABBREV FILE) as strings, or nil."
            nil t)
           (beginning-of-line)
         (message "Header not found; at top of %s"
-                 (file-name-nondirectory path))))))
+                 (file-name-nondirectory path)))
+      (when op
+        (if (re-search-forward
+             (format "^[ \t]*%s[ \t(:].*==" (regexp-quote op)) nil t)
+            (beginning-of-line)
+          (message "%s: implementation line not found; at header" op))))))
 
 (defun axiom-goto-definition (&optional name)
   "Jump to the definition of the Axiom symbol at point.
@@ -627,18 +764,20 @@ offer their implementing constructors."
   (interactive)
   (let ((name (or name (axiom--symbol-at-point))))
     (unless name (user-error "No symbol at point"))
-    (unless (and (fboundp 'sly-connected-p) (ignore-errors (sly-connected-p)))
-      (user-error "No sly connection to a running Axiom (start one, then )read slynk)"))
+    (unless (axiom--sly-connection-live-p)
+      (user-error "No live sly connection to a running Axiom (start one, then )read slynk)"))
     (let ((loc (axiom--constructor-location name)))
       (if loc
           (apply #'axiom--locate-definition loc)
         (let ((ctors (axiom--operation-constructors name)))
           (unless ctors
             (user-error "No constructor or operation %s in the daase" name))
-          (apply #'axiom--locate-definition
-                 (axiom--constructor-location
-                  (completing-read (format "%s implemented in: " name)
-                                   ctors nil t))))))))
+          (let ((cloc (axiom--constructor-location
+                       (completing-read (format "%s implemented in: " name)
+                                        ctors nil t))))
+            (unless cloc (user-error "Constructor lost from the daase"))
+            (apply #'axiom--locate-definition
+                   (append cloc (list name)))))))))
 
 (define-key axiom-mode-map (kbd "M-.") #'axiom-goto-definition)
 (define-key axiom-mode-map [remap xref-find-definitions] #'axiom-goto-definition)
@@ -854,7 +993,9 @@ otherwise launch the bare `AXIOMsys' REPL over a pipe (no window)."
 
 Evaluation records the prompt number and buffer end before sending, then
 returns the transcript that appeared after the send — which the same capture
-helpers as the one-shot path turn into LaTeX.
+helpers as the one-shot path turn into LaTeX. The slice is also appended to
+the session's [[#verbose-logging][verbose log]]; on timeout the log write happens *before* the
+comint buffer is killed, so the partial transcript survives the abort.
 
 #+begin_src elisp
 (defun ob-axiom--count-statements (body)
@@ -887,16 +1028,25 @@ its own duration then restores, so later blocks stay on TeX."
 (defun ob-axiom--session-eval (buffer body show)
   "Send BODY (under format SHOW) to session BUFFER; return its raw transcript.
 On timeout the session is abandoned (killed) and an error string returned,
-rather than leaving a desynchronised process behind."
+rather than leaving a desynchronised process behind; the partial
+transcript is logged first — the log is its only surviving copy."
   (let* ((proc (get-buffer-process buffer))
+         (instance (replace-regexp-in-string
+                    "\\`\\*ob-axiom:\\(.*\\)\\*\\'" "\\1" (buffer-name buffer)))
+         (label (car (split-string body "\n")))
          (baseline (or (ob-axiom--last-prompt-number buffer) 0))
          (target (+ baseline (max 1 (ob-axiom--count-statements body))))
          (start (with-current-buffer buffer (point-max)))
          (r (progn (process-send-string proc (ob-axiom--wrap-show body show))
-                   (ob-axiom--session-wait proc ob-axiom-session-timeout target))))
+                   (ob-axiom--session-wait proc ob-axiom-session-timeout target)))
+         (slice (if (buffer-live-p buffer)
+                    (with-current-buffer buffer
+                      (buffer-substring-no-properties start (point-max)))
+                  "")))
     (if (numberp r)
-        (with-current-buffer buffer
-          (buffer-substring-no-properties start (point-max)))
+        (progn (ob-axiom--log instance label slice)
+               slice)
+      (ob-axiom--log instance (format "ABORTED (%s) %s" r label) slice)
       (let ((kill-buffer-query-functions nil))
         (when (buffer-live-p buffer) (kill-buffer buffer)))
       (format "ob-axiom: session aborted (%s); re-run for a fresh session" r))))
@@ -928,6 +1078,7 @@ rather than leaving a desynchronised process behind."
 | M2    | Persistent comint session; variables/types shared across blocks     | done  |
 | M3    | Multi-line/continuation input; abort-on-hang; =:show= toggle in session | done  |
 | M4    | =axiom-mode= font-lock; cache + async via Org's own machinery        | done  |
+| M5    | Per-instance verbose logs; one-shot stderr separation; timeout evidence | done  |
 
 Deferred (not speculative work until a real need appears): regenerating the
 full =axiom.vim= domain/operation/category/package tables into font-lock; and
@@ -1309,4 +1460,140 @@ Emacs --batch -L /path/to/literate-elisp -l literate-elisp \
     (should-not (string-match-p "->" out))      ; no prompt arrows survive
     (should (string-match-p "(3)  3" out))      ; the 2d value line is kept
     (should (string-match-p "Fraction(Integer)" out))))
+
+(ert-deftest ob-axiom-test-log-append-and-faces ()
+  "Log entries append; stderr text and diagnostic lines get the stderr face."
+  (unwind-protect
+      (progn
+        (ob-axiom--log "t-unit" "first" "plain line\nWARNING: redefining X\n")
+        (ob-axiom--log "t-unit" "second" "ok\n" "boom on stderr\n")
+        (with-current-buffer "*ob-axiom-log:t-unit*"
+          (goto-char (point-min))
+          ;; two appended entries, each under its own header
+          (should (search-forward "] first" nil t))
+          (should (search-forward "] second" nil t))
+          ;; separated stderr sits under its marker, in the stderr face
+          (should (search-forward "---- stderr ----" nil t))
+          (should (search-forward "boom" nil t))
+          (should (eq (get-text-property (match-beginning 0) 'face)
+                      'ob-axiom-log-stderr-face))
+          ;; diagnostic-shaped line inside merged stdout is highlighted too
+          (goto-char (point-min))
+          (should (search-forward "WARNING: redefining" nil t))
+          (should (eq (get-text-property (match-beginning 0) 'face)
+                      'ob-axiom-log-stderr-face))))
+    (when (get-buffer "*ob-axiom-log:t-unit*")
+      (kill-buffer "*ob-axiom-log:t-unit*"))))
+
+(ert-deftest ob-axiom-test-clear-log ()
+  "ob-axiom-clear-log empties the buffer but keeps it alive."
+  (unwind-protect
+      (progn
+        (ob-axiom--log "t-clear" "x" "content\n")
+        (ob-axiom-clear-log "t-clear")
+        (with-current-buffer "*ob-axiom-log:t-clear*"
+          (should (= (point-min) (point-max)))))
+    (when (get-buffer "*ob-axiom-log:t-clear*")
+      (kill-buffer "*ob-axiom-log:t-clear*"))))
+
+(ert-deftest ob-axiom-test-e2e-log-one-shot-stderr ()
+  "Live: one-shot separates stderr; the mark lands after the stderr marker."
+  (skip-unless (ob-axiom--runtime-available-p))
+  (when (get-buffer "*ob-axiom-log:one-shot*")
+    (kill-buffer "*ob-axiom-log:one-shot*"))
+  (unwind-protect
+      (progn
+        (ob-axiom--eval-one-shot
+         (concat ")lisp (progn (format *error-output* \"OBAXIOM-ERR-MARK~%\")"
+                 " (finish-output *error-output*))\n1 + 1")
+         "tex")
+        (with-current-buffer "*ob-axiom-log:one-shot*"
+          (goto-char (point-min))
+          (should (search-forward "---- stderr ----" nil t))
+          (should (search-forward "OBAXIOM-ERR-MARK" nil t))))
+    (when (get-buffer "*ob-axiom-log:one-shot*")
+      (kill-buffer "*ob-axiom-log:one-shot*"))))
+
+(ert-deftest ob-axiom-test-e2e-log-session ()
+  "Live: a session eval's slice lands in its log, which outlives the session."
+  (skip-unless (ob-axiom--runtime-available-p))
+  (let ((s (format "t-log-%d" (random 1000000))))
+    (unwind-protect
+        (progn
+          (org-babel-execute:axiom
+           "6*120" (list (cons :session s) (cons :show "tex")))
+          (ob-axiom-kill-session s)
+          (let ((log (get-buffer (format "*ob-axiom-log:%s*" s))))
+            (should (buffer-live-p log))
+            (with-current-buffer log
+              (goto-char (point-min))
+              (should (search-forward "6*120" nil t))    ; header label
+              (should (search-forward "720" nil t)))))   ; transcript content
+      (ob-axiom-kill-session s)
+      (let ((b (get-buffer (format "*ob-axiom-log:%s*" s))))
+        (when b (kill-buffer b))))))
+
+(ert-deftest ob-axiom-test-e2e-log-session-timeout ()
+  "Live: a timed-out eval logs its partial transcript before the kill."
+  (skip-unless (ob-axiom--runtime-available-p))
+  (let ((s (format "t-logto-%d" (random 1000000))))
+    (unwind-protect
+        (progn
+          (let ((ob-axiom-session-timeout 0.001))
+            (org-babel-execute:axiom
+             "factorial(2000)" (list (cons :session s) (cons :show "tex"))))
+          (let ((log (get-buffer (format "*ob-axiom-log:%s*" s))))
+            (should (buffer-live-p log))
+            (with-current-buffer log
+              (goto-char (point-min))
+              (should (search-forward "ABORTED" nil t)))))
+      (ob-axiom-kill-session s)
+      (let ((b (get-buffer (format "*ob-axiom-log:%s*" s))))
+        (when b (kill-buffer b))))))
+
+(defconst ob-axiom-test--goto-fixture
+  (concat ")abbrev domain FOO FooDomain\n"
+          "FooDomain() : SIG == CODE where\n"
+          "  SIG ==> OrderedSet with\n"
+          "    introduce! : (Symbol,Symbol) -> Union(%, \"failed\")\n"
+          "      ++X introduce!(t,dt)\n"
+          "  CODE ==> Symbol add\n"
+          "    introduce!(X,dX) ==\n"
+          "      42\n")
+  "A minimal .spad shape: signature (no ==), ++X doc, capsule == line.")
+
+(defmacro ob-axiom-test--with-goto-fixture (var &rest body)
+  "Run BODY with VAR bound to a temp .spad file of the goto fixture."
+  `(let ((,var (make-temp-file "ob-axiom-goto-" nil ".spad"
+                               ob-axiom-test--goto-fixture)))
+     (unwind-protect (progn ,@body)
+       (let ((b (find-buffer-visiting ,var))) (when b (kill-buffer b)))
+       (delete-file ,var))))
+
+(ert-deftest ob-axiom-test-goto-definition-op-line ()
+  "An operation jump lands on the capsule == line, not sig or doc lines."
+  (ob-axiom-test--with-goto-fixture f
+    (axiom--locate-definition "FooDomain" "FOO" f "introduce!")
+    (should (looking-at "[ \t]*introduce!(X,dX) =="))
+    (should (= 7 (line-number-at-pos)))))
+
+(ert-deftest ob-axiom-test-goto-definition-header ()
+  "A constructor jump (no op) lands on the )abbrev header line."
+  (ob-axiom-test--with-goto-fixture f
+    (axiom--locate-definition "FooDomain" "FOO" f)
+    (should (looking-at ")abbrev domain FOO FooDomain"))))
+
+(ert-deftest ob-axiom-test-goto-definition-op-missing ()
+  "A missing operation leaves point at the header rather than erroring."
+  (ob-axiom-test--with-goto-fixture f
+    (axiom--locate-definition "FooDomain" "FOO" f "nosuchop")
+    (should (looking-at ")abbrev domain FOO FooDomain"))))
+
+(ert-deftest ob-axiom-test-goto-definition-no-connection ()
+  "Without a live sly connection the abort names the connection, not the
+daase — the misleading error a stale `sly-connected-p' used to produce."
+  (skip-unless (not (axiom--sly-connection-live-p)))
+  (let ((err (should-error (axiom-goto-definition "introduce!")
+                           :type 'user-error)))
+    (should (string-match-p "sly connection" (cadr err)))))
 #+end_src
