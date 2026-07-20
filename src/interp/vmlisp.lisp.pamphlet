@@ -1384,6 +1384,53 @@ In GCL 2.5:
 (defun MAKE-BVEC (n)
  (make-array (list n) :element-type 'bit :initial-element 0))
 
+;; MAKE-PRIM-ARRAY -- sample-driven element-type for PrimitiveArray.
+;;
+;; Historical context: PRIMARR (bookvol10.3, domain PRIMARR PrimitiveArray)
+;; constructed its storage with bare (MAKE-ARRAY n), which on SBCL produces a
+;; boxed (SIMPLE-VECTOR T) regardless of the element type.  That representation
+;; was always at odds with the ftype proclamations Tim Daly hand-wrote for the
+;; BLAS Level 1 Lisp reference implementation (bookvol10.5, e.g. dasum's
+;; (FTYPE (FUNCTION (FIXNUM (SIMPLE-ARRAY DOUBLE-FLOAT (*)) FIXNUM) ...)).
+;; Under GCL those proclamations were advisory -- treated as optimisation
+;; hints, never enforced at call sites -- so the mismatch was latent.  Under
+;; SBCL they are enforced, and the first BLAS1 call rejects the boxed vector
+;; with "The value #(1.0d0 ...) is not of type (SIMPLE-ARRAY DOUBLE-FLOAT (*))".
+;;
+;; The root-cause fix is to make PRIMARR produce a specialised array for
+;; primitive-numeric element types, so the proclamations become true.  This
+;; function picks :element-type from a sample element: a double-float sample
+;; yields (VECTOR DOUBLE-FLOAT), complex-double yields (VECTOR (COMPLEX
+;; DOUBLE-FLOAT)), fixnum yields (VECTOR (SIGNED-BYTE 32)), and anything else
+;; (arbitrary-precision Float, bignum Integer, String, symbols, mixed) falls
+;; back to T -- preserving the historical boxed representation everywhere it
+;; is still load-bearing.  PRIMARR's new(n,x) passes the fill element as the
+;; sample; empty() stays on bare MAKE-ARRAY(0) since there is no sample to
+;; read and an empty T-vector accepts any subsequent setelt.
+;;
+;; Once an array is created its element-type is fixed.  Storing an element of
+;; the wrong type will signal a type error -- which is the desired behaviour:
+;; it surfaces real bugs rather than silently boxing.  Callers that need a
+;; heterogeneous array should use a non-numeric element type, which gets T.
+;; Defined in BOOT (not VMLISP) because PrimitiveArray's new(n,x) calls it
+;; via SPAD's $Lisp escape, which resolves in BOOT.  Defining in VMLISP and
+;; exporting is insufficient: the SPAD compiler interns MAKE-PRIM-ARRAY into
+;; BOOT at PRIMARR compile time, and that internal symbol shadows any
+;; VMLISP inheritance.  Defining here makes the BOOT symbol fbound directly.
+(in-package "BOOT")
+(defun MAKE-PRIM-ARRAY (n sample)
+  (declare (ignorable sample))
+  (make-array (the fixnum n)
+              :element-type
+              (typecase sample
+                (double-float 'double-float)
+                (single-float 'single-float)
+                ((complex double-float) '(complex double-float))
+                (fixnum '(signed-byte 32))
+                (t t))))
+(export 'MAKE-PRIM-ARRAY)
+(in-package "VMLISP")
+
 (DEFUN LEXGREATERP (COMPERAND-1 COMPERAND-2)
     ;;  "Order of types: pair NIL vec ivec/rvec cvec ident num fbpi mbpi other"
     (COND

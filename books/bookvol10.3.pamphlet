@@ -160373,6 +160373,24 @@ o )show PrimitiveArray
 \cross{PRIMARR}{?$>=$?} &&
 \end{tabular}
 
+{\bf Specialised storage.}
+{\tt PrimitiveArray} historically constructed its storage with bare
+{\tt (MAKE-ARRAY n)}, which on SBCL yields a boxed {\tt (SIMPLE-VECTOR T)}
+regardless of the element type.  That representation was always at odds
+with the ftype proclamations on the BLAS Level 1 Lisp routines in
+{\tt bookvol10.5} (which assert {\tt (SIMPLE-ARRAY DOUBLE-FLOAT (*))} for
+{\tt PrimitiveArray(DoubleFloat)} arguments); GCL treated those
+proclamations as advisory, so the mismatch slept for fourteen years,
+but SBCL enforces them and rejects the boxed vector at the call site.
+
+The fix is local to {\tt new}: when a fill element is available we ask
+the Lisp helper {\tt MAKE-PRIM-ARRAY} (defined in {\tt vmlisp.lisp}) to
+pick an {\tt :element-type} from the sample.  Numeric samples yield a
+specialised, unboxed vector; everything else falls back to {\tt T},
+preserving the historical representation for code that relies on it.
+{\tt empty()} keeps bare {\tt MAKE-ARRAY} since no sample exists; an
+empty {\tt T}-vector accepts any subsequent {\tt setelt}.
+
 \begin{chunk}{domain PRIMARR PrimitiveArray}
 )abbrev domain PRIMARR PrimitiveArray
 ++ Author: Mark Botch
@@ -160387,19 +160405,29 @@ PrimitiveArray(S) : SIG == CODE where
 
   CODE ==> add
 
-   Qmax ==> QVMAXINDEX$Lisp
-   Qsize ==> QVSIZE$Lisp
    Qelt ==> ELT$Lisp
    Qsetelt ==> SETELT$Lisp
    Qnew ==> MAKE_-ARRAY$Lisp
+
+   -- Qsize/Qmax deliberately bypass QVSIZE/QVMAXINDEX: those vmlisp macros
+   -- declare (the simple-vector x), which is true for domain shells but not
+   -- for a specialised PrimitiveArray(DoubleFloat) (which is (vector
+   -- double-float)).  CL LENGTH is sequence-generic and carries no such
+   -- assertion, so size/maxindex work on both representations.  elt/setelt
+   -- above already use the generic ELT/SETELT for the same reason.
+   Qsize ==> LENGTH$Lisp
 
    #x == Qsize x
 
    minIndex x == 0
 
    empty() == Qnew(0$Lisp)
- 
-   new(n, x) == fill_!(Qnew n, x)
+
+   -- new(n,x) specialises storage via MAKE-PRIM-ARRAY: the fill element x
+   -- is the sample that picks :element-type, so PrimitiveArray(DoubleFloat)
+   -- produces (VECTOR DOUBLE-FLOAT) and the BLAS1 ftype proclamations in
+   -- bookvol10.5 become true.  Non-numeric samples fall back to T.
+   new(n, x) == fill_!(MAKE_-PRIM_-ARRAY(n, x)$Lisp, x)
 
    qelt(x, i) == Qelt(x, i)
 
@@ -160409,7 +160437,7 @@ PrimitiveArray(S) : SIG == CODE where
 
    setelt(x:%, i:Integer, s:S) == Qsetelt(x, i, s)
 
-   fill_!(x, s) == (for i in 0..Qmax x repeat Qsetelt(x, i, s); x)
+   fill_!(x, s) == (for i in 0..((Qsize x) - 1) repeat Qsetelt(x, i, s); x)
 
 \end{chunk}
 
