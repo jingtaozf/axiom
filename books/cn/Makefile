@@ -13,7 +13,7 @@ RM?=rm -f
 # 在现代 texlive 上会压住系统版本导致硬错误,一律不拷
 CNSTY=axiom.sty catmac.sty dissdef.sty multind.sty selatex.sty slatex.sty
 
-all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf
+all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf ${PDF}/bookvol0.pdf
 
 ${PDF}:
 	mkdir -p ${PDF}
