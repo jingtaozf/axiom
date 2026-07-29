@@ -13,7 +13,9 @@ RM?=rm -f
 # 在现代 texlive 上会压住系统版本导致硬错误,一律不拷
 CNSTY=axiom.sty catmac.sty dissdef.sty multind.sty selatex.sty slatex.sty
 
-all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf ${PDF}/bookvol0.pdf
+all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf ${PDF}/bookvol0.pdf \
+	${PDF}/bookvol2.pdf ${PDF}/bookvol3.pdf ${PDF}/bookvol4.pdf \
+	${PDF}/bookvol5.pdf ${PDF}/bookvol9.pdf
 
 ${PDF}:
 	mkdir -p ${PDF}
@@ -36,6 +38,7 @@ ${PDF}/%.pdf: ${IN}/%.pamphlet ${IN}/bookheader.tex ${PDF}/axiom.bib ${PDF}/axio
 	  cp -pr ${BOOKS}/ps ${PDF} ; \
 	  ${RM} $*.toc ; \
 	  touch signatures.tex ; \
+	  touch signatures.sort ; \
 	  touch $*.sigs ; \
 	  ${XELATEX} $*.pamphlet >/dev/null ; \
 	  ${MAKEINDEX} $*.idx 1>/dev/null 2>/dev/null ; \

@@ -1,0 +1,663 @@
+\documentclass{book}
+\newcommand{\VolumeName}{Volume 3: Axiom Programmers Guide}
+\input{bookheader.tex}
+\pagenumbering{arabic}
+\mainmatter
+\setcounter{chapter}{0} % Chapter 1
+\chapter[面向计算代数的语言]
+{面向计算代数的语言 —— Jenks 与 Trager 著}
+
+\section{引言}
+
+Jenks 与 Trager\cite{Jenk81} 描述了一种语言,它带有参数化的类型 (type)
+和通用的算子 (operator),特别适合计算代数。文中给出了一个灵活的框架,
+用来构建代数结构、定义能在尽可能一般的场景下工作的算法。本节将概览
+我们的两个核心概念:"domain"与"category"。
+
+面向计算代数的语言,应当能够在代数对象最自然的抽象层次上表达处理
+它们的算法。我们可以用两个简单的算法来说明这个概念。首先,我们想写
+一个函数 (function) {\sl max},计算某个定义了排序谓词 (predicate) 的
+集合中两个元素的最大值。解决这个问题的一种办法,是把排序谓词作为
+额外的实参 (argument) 显式传给 max。于是 max 可能被定义为
+\begin{verbatim}
+   max(x,y,lessThan) == if lessThan(x,y) then y else x
+\end{verbatim}
+其中 lessThan 就是排序谓词。在更复杂的算法里,所需额外实参的数目会
+变得难以控制。我们采用的做法则是要求 max 的实参 $x$ 与 $y$ 是某个
+特定代数结构的元素,该结构带有一个由某个函数实现的"小于"操作 (operation)
+'$<$'。我们把这样的代数结构称为 {\bf domain}。于是 '$<$' 就是一个
+"通用的"操作,在不同 domain 里有不同的函数定义。加上合适的声明
+(declaration) 后,我们对 max 的定义 (definition) 就变成:
+\begin{verbatim}
+   max(x,y) == if x < y then y else x
+\end{verbatim}
+
+要求一个通用操作具有特定的名字,并不能刻画它的代数性质。在上面 max
+的定义里,隐含假设了 '$<$' 在其 domain 的元素上给出了一个全序。为此,
+我们的 domain 还会带有一组 {\sl 属性 (attribute)},用来描述其操作的
+代数性质(例如,借此区分全序集 (totally-ordered set) 与偏序集
+(partially-ordered set))。
+
+再举第二个例子,我们来看计算两个整数 {\sl gcd}(最大公约数)的经典
+算法:
+\begin{verbatim}
+   gcd(x,y) == if x = 0 then y else gcd(y,remainder(x,y))
+\end{verbatim}
+
+虽然这个算法本来只打算用在整数上,但稍加考察就会发现,它实际用到
+的整数性质并不多。事实上,同样的算法也可以用在 Gauss 整数、域上的
+多项式,或者任何其他带有合适 remainder 函数的 domain 上。我们希望
+刻画出使 gcd 算法适用的代数结构所需的最低要求。为此,我们引入一种
+domain 的分组,称为 {\bf category},此处即"Euclidean domain 的
+category"。这个 category 里的任何 domain 都会是一个整环
+(integral domain),并带有一个满足两条要求的通用函数 {\sl remainder}。
+第一条要求是
+\begin{verbatim}
+   remainder(x,y) = x - q*x*y
+\end{verbatim}
+对 domain 中某个 $q$ 成立,由此可以推出
+\begin{verbatim}
+   gcd(x,y) - gcd(y,remainder(x,y))
+\end{verbatim}
+remainder 函数还必须满足:由 domain 中任意两个元素生成的余数序列,
+总能在有限步内达到 0。这两条要求足以保证我们的 gcd 算法是正确的。
+
+category 提供一组必需的通用操作,以及一组描述这些操作所需代数性质
+的属性;domain 则提供实现这些操作、并满足这些属性的具体函数。因此
+我们可以说"全序集的 category"是指所有具备上述带特定代数性质的
+'$<$' 操作的 domain 构成的类;而"整数的 domain"则是该 category 里
+的一个成员实例,因为它有一个函数 'integer$<$' 提供了这个操作并满足
+那些性质。
+
+一旦写好了一个抽象算法,作者就要指明它适用的 domain 的
+category——要么显式列出所需的操作和属性,要么引用一个预先定义好的
+category。例如,定义好 category EuclideanDomain("Euclidean domain
+的 category")之后,gcd 函数的完整定义就可以写成:
+\begin{verbatim}
+   gcd(x:R,y:R):R where R:EuclideanDomain ==
+       if x=0 then y else gcd(y,remainder(x,y))
+\end{verbatim}
+
+形如"A:B"的表达式称为 {\sl 声明}。gcd 的实参 $x$ 与 $y$ 被
+{\sl 声明} 为某个 domain R 的元素,而 R 本身又被声明为 EuclideanDomain
+的成员。声明"A:B"的含义,按下面的意思来理解,就是"A 是 B 的成员"。
+把一个 domain 声明为某个 category 的成员,意味着该 category 的全部
+操作,都已在这个 domain 里实现为满足该 category 属性的函数。类似地,
+把一个对象声明为某个 domain 的成员,意味着该 domain 提供的全部函数
+都适用于这个对象。
+
+domain 与 category 都是可以计算得到的对象,可以被赋给变量
+(variable)、作为实参传递、也可以从函数中返回。一个 category 可以
+通过显式列出操作和属性来生成,也可以通过调用一个返回 category 的
+函数来生成。多个 category 之间可以彼此增补、削减,或者相互 Join,
+得到一个包含各个 category 全部操作与属性的新 category。
+
+domain 总是由我们称为 {\bf functor} 的函数创建出来的。像"整数"和
+"布尔值"这样一些简单的 domain,是由不带参数的 functor 产生的。而像
+"模 7 的整数"这样的其他 domain,则是由带参数(比如模数 7)的 functor
+产生的。大多数代数 domain,都是由其他 domain 构建而成的——这些
+domain 连同其他参数一起,作为实参传给构造它们的 functor。举例来说,
+domain "整数上以 X 为元的多项式",是由一个多项式 functor 创建的,
+这个 functor 接受一个变量(例如"X")和一个底层 domain
+(underlying domain)(例如"整数")作为实参。除了下一节要指出的少数
+几个例外,functor 和 category 在这门语言里都是可定义的,并且可以
+自由修改。用户可以自由地引入新的 category、定义新的 functor,让更多
+domain 可供计算使用。
+
+max 和 gcd 都是借助隐式传入的 domain 所提供的通用操作来定义的。正如
+某些代数算法所要求的那样,domain 可以被动态创建并赋给局部变量。这些
+新创建的局部 domain 的对象,可以被创建、操纵,并转换成其他 domain
+的对象。
+
+\begin{center}
+图 1:代数 category 一览\\
+\begin{tabular}{|l|l|l|}
+\hline
+{\bf category}            & {\bf 扩展自}    & {\bf 操作}\\
+\hline
+Set                       &                  & $=$\\
+AbelianGroup              & Set              & $0,+,-$\\
+OrderedSet                & Set              & $<$\\
+QuotientObject(S:Set)     & Set              & reduce,lift\\
+SemiGroup                 & Set              & $\times$\\
+Finite                    & Set              & size,random\\
+Monoid                    & SemiGroup        & 1\\
+Group                     & Monoid           & inv\\
+Ring                      & (Monoid,AG)      & characteristic, recip\\
+Module(R:Ring)            & AbelianGroup     & scalar$\times$\\
+Algebra(R:Ring)           & (Ring,Module(R)) &\\
+DifferentialRing          & Ring             & deriv\\
+IntegralDomain            & Ring             & isAssociate./ /\\
+SkewField                 & Ring             & /\\
+UniqueFactorizationDomain & IntegralDomain   & gcd, factor, isPrime\\
+EuclideanDomain           & UFD              & size<, quo, rem\\
+Field                     & (ED, SkewField)  &\\
+GaloisField               & (Field, Finite)  &\\
+VectorSpace(S:Field)      & Module(S)        &\\
+\hline
+\end{tabular}
+\end{center}
+
+category 和 domain 都可以组织成层级结构。图 1 展示了 category 的
+一个代数层级,列出了各级 category 依次引入的操作(但不包括属性)。
+Set 是只带一个操作 '$=$' 的 category。SemiGroup 通过添加操作
+'$\times$' 来扩展 Set,等等。更复杂的情形将在下一节讨论。我们也
+允许一个 domain 扩展另一个 domain。
+
+举例来说,可以写一个"自由模 functor",提供多项式环模论层面的性质
+(加法与数量乘法)。然后就可以把各种多项式、代数扩张、稀疏矩阵
+functor,写成自由模 functor 的扩展。比如多项式 functor,就会在
+自由模 functor 提供的函数基础上做增补,只显式定义乘法之类其他的
+多项式函数。类似地,也可以写一个"局部化 functor",用来处理分母
+可能来自与分子不同 domain 的计算,比如"奇整数""2 的幂""X 的已
+因式分解多项式之积"。这样,局部化 functor 就是一个带两个实参的
+函数,一个是分子的 domain,另一个是分母的 domain。在此基础上,还
+可以写一个"商域 functor",在两个实参 domain 是同一个整环这一特殊
+情形下,对局部化 functor 加以扩展。由商域 functor 出发,可以把
+所有的有理函数 domain,以及"有理数"这个特殊情形,都构造出来。
+
+总结一下,我们的语言设计为计算代数算法的抽象描述,提供了"domain"
+与"category"这两个有用的概念。category 这一设施为我们的语言所
+独有,在描述计算代数算法时看起来是不可或缺的。我们的 domain
+类似于 EL1\cite{Wegb74} 里的"mode",以及 RUSSELL\cite{Deme79} 和
+ADAPT\cite{Leve80} 里的"type"。和 EL1 一样,但与 Ada\cite{ADAx83}
+不同的是,domain 是可以计算得到的值。我们关于 category 与 functor
+的概念,建立在泛代数 (universal algebra) \cite{Cohn65} 的概念之上,
+这些概念由 ADJ 小组 \cite{That82} 以及 Burstall 和 Goguen
+\cite{Burs77} 发展而来。此外,category 还扩展了 CLU \cite{Lisk79} 与 Alphard
+\cite{Wulf76} 中"类型约束"的思想,在那里,函数可以要求它们的实参
+具备某些可用的操作。计算代数领域的相关工作,可参见 \cite{Ausi79}、
+\cite{Gris76}、\cite{Jenk74} 和 \cite{Loos74}。
+
+\section{概念}
+
+在这一节里,我们给出 domain、category 与 functor 这几个概念的精确
+定义和示例。
+
+{\bf Domain}。所谓 {\sl 计算的 domain},简称 {\bf domain},我们
+指的是:
+\begin{enumerate}
+\item 一组通用的 {\bf 操作}
+\item 一个 {\bf 表示 (representation)}
+\item 一组 {\bf 函数},用表示实现这些操作
+\item 一组 {\bf 属性},指出诸如公理和数学定理这样一些有用的
+事实,这些事实对由函数实现的操作而言是成立的。
+\end{enumerate}
+
+最简单的 domain 例子,是那些对应于底层系统提供的基本数据类型
+(datatype) 的 domain,比如 Integer("整数")、Boolean("布尔值")
+等等。domain 的其他例子还有 RationalNumber("有理数")、
+Matrix(Integer)("元素为整数的矩形矩阵"),以及
+Polynomial(X,RationalNumber)("以 X 为元、系数为有理数的多项式")。
+
+通用操作由 {\bf 签名 (signature)} 给出,签名是由一个 {\sl 操作名}、
+一个 {\sl 源}、和一个 {\sl 目标} 组成的表达式。举例来说,domain
+Integer 就带有一个"小于"操作,用如下签名表示:
+\[`<`: ({\rm Integer},{\rm Integer}) \rightarrow {\rm Boolean}\]
+这里 '$<$' 是操作名,(Integer,Integer) 是源,Boolean 是目标。签名
+的源部分可以是任意一串 domain,目标部分则可以是任意一个 domain。
+
+一个 domain 的表示,描述的是用来表示该 domain 对象的一种数据结构。
+
+函数这一部分,是一组编译好的函数,为每个通用操作提供针对特定
+domain 的实现。举例来说,domain Integer 就有一个函数"Integer$<$",
+实现了"小于"。如果一个 domain 具有操作签名
+\[{\rm op:}(D_1,\ldots,Dn) \rightarrow D_0\]
+那么相应的函数就必须分别取 $D_1,\ldots,D_n$ 表示形式的实参,并返回
+一个 $D_0$ 表示形式的结果。
+
+一个 domain 的属性部分,要么用一个名字来描述,比如"finite",要么
+用一个以算子名作为参数的形式来描述,比如"distributive('$\times$',
+'$+$')"。属性的目的不是给出某个操作完整的公理化描述,而是断言一些
+程序可以查询的事实。
+
+{\bf Category}。一个"category"指的是一族拥有共同操作和属性、但
+函数和表示各不相同的 domain。这里我们关心的 category,是像
+Ring("所有环构成的类")、Field("所有域构成的类")、Set("所有集合
+构成的类")这样的代数结构 category。
+
+所谓 {\bf category},我们指的是:
+\begin{enumerate}
+\item 一组通用的 {\bf 操作}
+\item 一组 {\bf 属性},指出对该操作的任何实现都必须成立的事实。
+\end{enumerate}
+
+和 domain 一样,category 的通用操作也由签名给出,由一个操作名、
+一个源和一个目标组成。除了源和目标里可能出现的那些 domain 之外,
+还用一个特殊符号 \$(或者后面会用到的 \%)来表示该 category 里任意
+一个成员 domain。这组操作和属性,是各个成员 domain 共同具备的。
+category 的一个简单例子是 Set,它只有一个操作
+\[=: (\$,\$) \rightarrow Boolean\]
+没有属性。另一个例子是 SemiGroup,除了 '$=$' 操作之外,它还有操作
+\[\times: (\$,\$) \rightarrow \$\]
+以及属性 associative('$\times$')。
+
+如果一个 domain D 包含了 C 的每一个操作和属性(其中 \$ 替换为
+D),我们就说 domain D 是 category C 的"成员",等价地说,D 属于
+C。举例来说,Integer 属于 Set,因为它包含了一个操作
+\[=: ({\rm Integer},{\rm Integer}) \rightarrow {\rm Boolean}\]
+如果 category A 的全部操作和属性都包含在 category B 里,我们就说
+B 扩展了 A。SemiGroup 扩展了 Set,因为 Set 的操作('$=$')都包含
+在 SemiGroup 里。
+
+\begin{center}
+图 2. category 定义示例
+\end{center}
+
+\hrulefill
+
+Set: Category == {\bf category}\\
+\hbox{\hskip 0.5cm} [{\sl operations}] =:(\$,\$) $\rightarrow$ Boolean
+
+SemiGroup: Category == Set with\\
+\hbox{\hskip 0.5cm} [{\sl operations}] $\times$:(\$,\$) $\rightarrow$ \$\\
+\hbox{\hskip 0.5cm} [{\sl attributes}] {\rm associative}('$\times$')
+[($x \times y) \times z = x \times (y \times z)$]
+
+\hrulefill
+
+图 2 展示了我们用来定义 category 的语言。Set 是通过显式列出它的
+操作('$=$')和它的属性(没有)来定义的。SemiGroup 则被定义为
+Set 的一个扩展。方括号里的表达式是注释。'$==$' 表示 category Set
+的一个重写规则定义。对"Set"求值,会使"Set"被 '$==$' 右边给出的
+category 值重写。对"SemiGroup"求值,同样会使"SemiGroup"被相应的
+右侧表达式重写。进一步求值,会使 Set 被替换成它自己的值——一个通过
+{\bf with} 操作,添加了 '$\times$' 操作和 associative('$\times$')
+属性的 category。这种求值机制意味着,两个 category 只要拥有等价
+的操作集和属性集,无论它们是如何创建的,都是等价的。
+
+\begin{center}
+图 3. category 定义示例
+\end{center}
+
+\hrulefill
+
+Module(R:Ring) : Category == AbelianGroup with\\
+\hbox{\hskip 0.5cm} [{\sl operations}] $\times$:(R,\$) $\rightarrow$ \$\\
+\hbox{\hskip 0.5cm} [{\sl attributes}] $\ldots$
+
+Algebra(R:Ring) : Category == (Ring,Module(R)) with\\
+\hbox{\hskip 0.5cm} [{\sl attributes}] $\ldots$
+
+\hrulefill
+
+图 3 给出了参数化 category 的两个例子,也就是由带一个或多个实参的
+函数产生的 category。函数 Module 创建了所有 R-module 构成的
+category,也就是给定环 R 上全体 module 构成的 category。举例来说,
+函数 Module 作用到 Integer 上,会产生所有 $Z$-module 构成的
+category,即带有额外操作
+\[\times: ({\rm Integer,D}) \rightarrow {\rm Integer}\].
+的交换群 (abelian group) domain D。
+
+这个 category 包含 domain Integer,因为 Integer 是一个交换群,
+并且带有操作
+\[\times: ({\rm Integer,Integer}) \rightarrow {\rm Integer}\].
+
+函数 Algebra(R) 扩展了 Ring 与 Module(R) 的 {\sl join},记作
+(Ring,Module(R))。这个 join,指的是把 Ring 的操作和属性,与
+Module(R) 的操作和属性直接合并所形成的 category。
+
+参数化 category 的另一种方式,是用算子名作参数。举例来说,上面
+SemiGroup 的定义,就可以扩展成接受一个二元操作 (binary operation)
+作为参数:\\
+\hbox{\hskip 0.5cm}SemiGroup(op) : Category == Set with\\
+\hbox{\hskip 1.0cm}[{\sl operations}] op: (\$,\$) $\rightarrow$ \$\\
+\hbox{\hskip 1.0cm}[{\sl attributes}] associative(op)
+[$op(op(x,y),z) = op(x,op(y,z))$]
+
+这样一来,我们就可以用 SemiGroup('$\times$') 来指代图 2 里
+SemiGroup 的乘法形式。
+
+{\bf Functor}。所谓 {\bf functor},我们指的是任何返回一个 domain
+的函数。一个 functor 创建一个 domain,即某个 category 的一个成员。
+category 本身从不创建任何东西:它只是充当 domain 的一个模板,描述
+必须具备哪些操作和属性。functor 通过把函数填入其目标 category
+给出的模板中来创建 domain。category 从不为对象指定表示;functor
+则总是如此。
+
+domain 只能由 functor 产生。基本的 domain(比如"整数")是通过
+绑定到标识符 (identifier)(比如 Integer)上的 functor 产生的。此外,
+还有四个内置的 functor——List、Vector、Struct 和 Union——可以由
+作为实参传入的其他 domain 构建出聚合 domain。functor List 可以
+作用在任何 domain 上(比如 Integer),产生一个复合 domain(比如
+List(Integer)),带有一组提供列表操作的函数(比如 first、rest、
+cons)。functor Vector 接受两个实参,一个正整数 $n$ 和一个 domain
+$D$,产生 domain "所有长度为 $n$、元素取自 $D$ 的向量构成的集合"。
+Struct 产生的 domain,由一组名字-值对表示,比如
+Struct(real:Integer,imag:Integer) 就描述了"Gauss 整数"的一种
+恰当表示。Union(A,$\ldots$,B) 由 domain $A,\ldots,B$ 创建出一个
+新 domain $D$,它是 domain $A,\ldots,B$ 的不交并。
+
+这门语言允许在这些基本 functor 的基础上构建新的 functor。图 4 中
+的 FiniteField 就是一个简单的例子。
+\begin{center}
+图 4. functor 定义示例
+\end{center}
+
+\hrulefill
+
+FiniteField(p:PrimeNumber) : GaloisField ==\\
+\hbox{\hskip 0.5cm} {\bf capsule}\\
+\hbox{\hskip 1.0cm} [{\sl representation}]\\
+\hbox{\hskip 1.5cm} Rep := Integer\\
+\hbox{\hskip 1.0cm} [{\sl declarations}]\\
+\hbox{\hskip 1.5cm} x,y : \$\\
+\hbox{\hskip 1.0cm} [{\sl definitions}]\\
+\hbox{\hskip 1.5cm} 0 == Integer.0\\
+\hbox{\hskip 1.5cm} 1 == Integer.1\\
+\hbox{\hskip 1.5cm} x+y == {\bf if} (w $\leftarrow$ x Integer.$+$ y) $>$ p\\
+\hbox{\hskip 3.0cm} {\bf then} w - p\\
+\hbox{\hskip 3.0cm} {\bf else} w\\
+\hbox{\hskip 1.5cm} $\cdots$
+
+\hrulefill
+
+functor FiniteField 作用在素数 p 上,创建出 domain "模 p 的整数",
+它是其目标 category GaloisField("所有 Galois 域构成的类")的一个
+成员。这个 domain 的操作集和属性集由 GaloisField 给出;它的表示和
+函数集,则由定义中出现在 '$==$' 右边的 {\sl capsule} 部分给出。
+表示总是通过特殊符号 Rep,用某个"更底层"的 functor 来定义。对
+FiniteField 来说,Rep 被定义为 Integer(也就是说,有限域的元素用
+整数来表示)。在更复杂的例子里,Rep 可能是用 functor Matrix 来
+定义的,而 Matrix 的 Rep,又可能是用内置的 functor Vector 来
+定义的。
+\begin{center}
+图 5. functor 定义示例
+\end{center}
+
+\hrulefill
+
+IntegerMod(m:Integer | m $>$ 1): T == C {\bf where}\\
+\hbox{\hskip 0.5cm} T == (Ring,Finite) {\bf with}\\
+\hbox{\hskip 2.5cm} {\bf if} isPrime m {\bf then} GaloisField\\
+\hbox{\hskip 0.5cm} C == {\bf capsule}\\
+\hbox{\hskip 1.5cm} $\cdots$\\
+\hbox{\hskip 1.0cm} [{\sl definitions}]\\
+\hbox{\hskip 1.5cm} {\bf if} isPrime m {\bf then}\\
+\hbox{\hskip 2.0cm} x / y == $\ldots$\\
+\hbox{\hskip 1.5cm} $\cdots$
+
+\hrulefill
+
+图 5 展示了如何用条件表达式,让一个 functor 的目标 category 依赖
+于该 functor 的参数。这里,图 4 中的 FiniteField functor 被推广
+成了 IntegerMod——对任意正整数(模数)m,都能产生 domain "模 m 的
+整数"的一个 functor。IntegerMod functor 产生的 domain,当 m 为
+素数时是一个 Galois 域,不是素数时则是一个有限环。条件表达式也被
+用在 functor 的 capsule 部分,用来有条件地提供函数(比如,只有
+当 m 为素数时,IntegerMod 才会提供操作 '/'),或者提供函数的另
+一版本(比如,当模数较小时,为某些函数提供更高效的实现)。
+
+图 6 展示了一系列用于局部化的 functor,说明了 domain 也和 category
+一样可以被扩展。Localize 接受一个 R-module M,以及一个分母 domain
+D——D 是包含在 R 内的一个幺半群 (monoid)。它产生一个"分式"的
+R-module。LocalAlgebra 在此基础上补充了分式的乘法定义,产生一个
+R-algebra 的局部化。QuotientField 利用 LocalAlgebra,在分子和
+分母都来自同一个整环这一特殊情形下,产生一个"分式域"。当 R 带有
+gcd 函数时,QuotientField 会重新定义(由 LocalAlgebra 提供的)
+算术操作,以产生约简后的分式。类似地,如果 R 定义了求导,
+QuotientField 也会把这个求导扩展到分式域上。
+
+{\bf 结论}。我们的语言为计算代数算法的抽象描述,提供了"domain"和
+"category"这两个有用的概念。domain 是执行计算所依托的代数结构。
+category 则是把拥有共同操作和属性的 domain 分组而成的。
+
+我们这套设计有好几个优点。算法可以写成能在任何 group、ring 或
+field 上运作,而不必管这个代数结构在计算机里是怎么定义或表示的。
+算法的实现者不需要知道到底创建了哪些 domain,只需要指明一个
+category,给出该算法所需的操作和基本代数性质就够了。此外,正如
+许多代数算法所要求的那样,domain 和 category 都是动态计算出来
+的对象。
+
+我们所展示的这门语言,造就了一个能被任何用户轻松扩展的计算机代数
+系统。所有 category 都是用这门语言定义的,可供用户修改。所有
+domain 都是由函数创建的,除了少数内置的以外,这些函数同样是用这门
+语言定义的,用户也可以修改。通过扩展或组合已有的结构,新的 domain
+和 category 都能以最小的代价设计和实现出来。
+
+这门语言还允许相当程度的代码的经济性 (code economy)。一个算法由
+单独一个函数实现,这个函数适用于某个声明 category 下的任何
+domain。举例来说,一个矩阵 functor 会用同一个编译好的函数来计算
+两个矩阵的乘积,不管实际的矩阵系数是整数、多项式,还是其他矩阵。
+参数化的 functor 通过为它们能产生的所有 domain,提供一组预编译好
+的函数,帮助把冗余代码减到最少。像 QuotientField 这样的 functor
+所具有的普遍适用性,为构造新的代数对象,提供了强大的方法。
+
+我们提出这门处理代数对象的语言时,主要目标是尽可能地利用问题
+领域中隐含的结构。domain 相互扩展、把拥有共同性质的 domain 归入
+category 这些自然的代数概念,已经被证明是有用的计算手段。通过
+保留这种自然结构,我们希望能减轻为代数结构寻找计算模型这项工作
+的难度。
+
+\newpage
+\begin{center}
+图 6. 局部化 functor 的定义
+\end{center}
+\vskip -0.2cm
+\hrulefill
+
+Localize(isZeroDivisor,M,D) : Module(R) == C {\bf where}\\
+\hbox{\hskip 0.5cm} R:Ring\\
+\hbox{\hskip 0.5cm} M: Module(R)\\
+\hbox{\hskip 0.5cm} D: Monoid $\vert$ D $\subseteq$ R\\
+\hbox{\hskip 0.5cm} isZeroDivisor: M $\rightarrow$ Boolean\\
+\hbox{\hskip 0.5cm} C == {\bf capsule} $\ldots$\\
+\hbox{\hskip 1.5cm} [{\sl representation}]\\
+\hbox{\hskip 2.0cm} Rep := Struct(num:M, den:D)\\
+\hbox{\hskip 1.5cm} [{\sl declarations}]\\
+\hbox{\hskip 2.0cm} x,y: \$\\
+\hbox{\hskip 2.0cm} n: Integer\\
+\hbox{\hskip 2.0cm} r:R ; d:D\\
+\hbox{\hskip 1.5cm} [{\sl definitions}]\\
+\hbox{\hskip 2.0cm} 0 == Rep(0,1)\\
+\hbox{\hskip 2.0cm} -x == Rep(-x.num,x.den)\\
+\hbox{\hskip 2.0cm} x=y == isZeroDivisor(y.den $\times$ x.num -
+x.den $\times$ y.num)\\
+\hbox{\hskip 2.0cm} x+y == Rep(y.den $\times$ x.num + x.den $\times$ y.num,
+x.den $\times$ y.den)\\
+\hbox{\hskip 2.0cm} n $\times$ x == Rep(n $\times$ x.num,x.den)\\
+\hbox{\hskip 2.0cm} r $\times$ x == {\bf if} r=x.den {\bf then}
+Rep(x.num,1) {\bf else} Rep(r $\times$ x.num,x.den)\\
+\hbox{\hskip 2.0cm} x / d == Rep(x.num,d $\times$ x.den)
+\vskip 0.2cm
+LocalAlgebra(isZeroDivisor,A,D): T == C {\bf where}\\
+\hbox{\hskip 0.5cm} R: Ring\\
+\hbox{\hskip 0.5cm} A: Algebra(R)\\
+\hbox{\hskip 0.5cm} isZeroDivisor: A $\rightarrow$ Boolean\\
+\hbox{\hskip 0.5cm} D: Monoid $\vert$ D $\subseteq$ R\\
+\hbox{\hskip 0.5cm} T == Algebra(R) {\bf with if} A {\bf has}
+commutative('$\times$') {\bf then} commutative('$\times$')\\
+\hbox{\hskip 0.5cm} C == Localize(isZeroDivisor,A,D) {\bf add} $\ldots$\\
+\hbox{\hskip 2.0cm} 1 == Rep(1,1)\\
+\hbox{\hskip 2.0cm} x $\times$ y == Rep(x.num $\times$ y.num,
+x.den $\times$ y.den)\\
+\hbox{\hskip 2.0cm} characteristic == A.characteristic
+\vskip 0.2cm
+QuotientField(R; IntegralDomain) : T == C {\bf where}\\
+\hbox{\hskip 0.5cm} T == (Field,Algebra(R)) {\bf with if}
+R of DifferentialRing {\bf then} DifferentialRing\\
+\hbox{\hskip 0.5cm} C == LocalAlgebra(\$1 = 0,R,R) {\bf add} $\ldots$\\
+\hbox{\hskip 2.0cm} {\bf if} R {\bf has} gcd: (R,R) $\rightarrow$ R
+{\bf then}\\
+\hbox{\hskip 2.5cm} x + y == $\ldots$\\
+\hbox{\hskip 2.5cm} x $\times$ y == $\ldots$\\
+\hbox{\hskip 2.5cm} {\bf where} cancelGcd(x:\$):\$ == $\ldots$\\
+\hbox{\hskip 2.0cm} {\bf if} R of DifferentialRing {\bf then}\\
+\hbox{\hskip 2.5cm} {\bf if} R {\bf has} gcd: (R,R) $\rightarrow$ R\\
+\hbox{\hskip 3.0cm} {\bf then} deriv(x) == $\ldots$\\
+\hbox{\hskip 3.0cm} {\bf else} deriv(x) == $\ldots$
+\vskip 0.2cm
+RationalFunction(x:Expression, R:Ring) == QuotientField(Polynomial(x,R))
+\vskip 0.2cm
+RationalNumber == QuotientField(Integer)
+\vskip -0.2cm
+\hrulefill
+
+
+\chapter{给程序员的细节}
+Axiom 为 domain 维护着内部表示 (representation)。针对某个特定
+domain 的对象,有一些函数 (function) 可以用来查看其内部结构。
+\section{查看内部结构}
+一个有用的函数是 {\bf devaluate},它接受一个对象,返回一个 Lisp
+pair。这个 pair 的 CAR 是 Axiom 的类型 (type),CDR 则是对象的
+表示。举例来说,来看这样一个会话:我们用 domain {\bf List(Any)}
+创建一个对象列表。
+\begin{verbatim}
+(1) -> w:=[1,7.2,"luanne",3*x^2+5,_
+           (3*x^2+5)::FRAC(POLY(INT)),_
+           (3*x^2+5)::POLY(FRAC(INT)),_
+           (3*x^2+5)::EXPR(INT)]$LIST(ANY)
+
+                          2       2       2       2
+   (1)  [1,7.2,"luanne",3x  + 5,3x  + 5,3x  + 5,3x  + 5]
+                                                              Type: List(Any)
+
+\end{verbatim}
+第一个对象 {\bf 1} 是一个原始对象,它的 domain 是 {\bf PI},使用
+底层 Lisp 对该数字的表示。
+\begin{verbatim}
+(2) -> devaluate(1)$Lisp
+
+   (2)  1
+                                                            Type: SExpression
+\end{verbatim}
+第二个对象 {\bf 7.2} 是一个原始对象,它的 domain 是 {\bf FLOAT},
+使用底层 Lisp 对该数字的表示——在这里,这个表示本身是一个 pair,
+其 CAR 是浮点 (floating point) 的基数,CDR 是尾数,
+\begin{verbatim}
+(3) -> devaluate(7.2)$Lisp
+
+   (3)  (265633114661417543270 . - 65)
+                                                            Type: SExpression
+\end{verbatim}
+第三个对象 {\tt {\bf "luanne"}} 来自 domain {\bf STRING},使用
+Lisp 的字符串 (string) 表示。
+\begin{verbatim}
+(4) -> devaluate("luanne")$Lisp
+
+   (4)  luanne
+                                                            Type: SExpression
+\end{verbatim}
+
+现在情况变得复杂一些。我们来说明公式 $3x^2+5$ 在不同 domain 里的
+各种存储方式。每个 domain 都选定了一种表示。
+
+\begin{verbatim}
+(5) -> devaluate(3*x^2+5)$Lisp
+
+   (5)  (1 x (2 0 . 3) (0 0 . 5))
+                                                            Type: SExpression
+\end{verbatim}
+第四个对象 $3x^2+5$ 来自 domain {\bf POLY(INT)}。它被存成如下
+列表
+\begin{verbatim}
+   (1 x (2 0 . 3) (0 0 . 5))
+\end{verbatim}
+从 domain {\bf POLY}(参见 Vol 10.3,POLY)中可以看到
+\begin{verbatim}
+   Polynomial(R:Ring): ...
+      == SparseMultivariatePolynomial(R, Symbol) add ...
+\end{verbatim}
+所以这个 domain 里的对象,表示为 {\bf SMP(INT,SYMBOL)}。从这个
+domain 我们可以看到
+\begin{verbatim}
+   SparseMultivariatePolynomial(R: Ring,VarSet: OrderedSet): ...
+     == add
+       --representations
+       D := SparseUnivariatePolynomial(%)
+\end{verbatim}
+所以这个 domain 里的对象,表示为一个 {\bf SUP(INT)}
+\begin{verbatim}
+   SparseUnivariatePolynomial(R:Ring): ...
+     == PolynomialRing(R,NonNegativeInteger) add
+\end{verbatim}
+所以这个 domain 里的对象,表示为 {\bf PR(INT,NNI)}
+\begin{verbatim}
+   PolynomialRing(R:Ring,E:OrderedAbelianMonoid): ...
+     FreeModule(R,E) add
+       --representations
+       Term:=  Record(k:E,c:R)
+       Rep:=  List Term
+\end{verbatim}
+所以这个 domain 里的对象,表示为 {\bf FM(INT,NNI)}
+\begin{verbatim}
+   FreeModule(R:Ring,S:OrderedSet):
+      == IndexedDirectProductAbelianGroup(R,S) add
+        --representations
+        Term:=  Record(k:S,c:R)
+        Rep:=  List Term
+\end{verbatim}
+所以这个 domain 里的对象,表示为 {\bf IDPAG(INT,NNI)}
+\begin{verbatim}
+   IndexedDirectProductAbelianGroup(A:AbelianGroup,S:OrderedSet):
+     ==  IndexedDirectProductAbelianMonoid(A,S) add
+\end{verbatim}
+所以这个 domain 里的对象,表示为 {\bf IDPAM(INT,NNI)}
+\begin{verbatim}
+   IndexedDirectProductAbelianMonoid(A:AbelianMonoid,S:OrderedSet):
+     ==  IndexedDirectProductObject(A,S) add
+       --representations
+       Term:=  Record(k:S,c:A)
+       Rep:=  List Term
+\end{verbatim}
+所以这个 domain 里的对象,表示为 {\bf IDPO(INT,NNI)}
+\begin{verbatim}
+IndexedDirectProductObject(A:SetCategory,S:OrderedSet):
+ == add
+       -- representations
+       Term:=  Record(k:S,c:A)
+       Rep:=  List Term
+\end{verbatim}
+
+\begin{verbatim}
+(6) -> devaluate((3*x^2+5)::FRAC(POLY(INT)))$Lisp
+
+   (6)  ((1 x (2 0 . 3) (0 0 . 5)) 0 . 1)
+                                                            Type: SExpression
+\end{verbatim}
+\begin{verbatim}
+(7) -> devaluate((3*x^2+5)::POLY(FRAC(INT)))$Lisp
+
+   (7)  (1 x (2 0 3 . 1) (0 0 5 . 1))
+                                                            Type: SExpression
+\end{verbatim}
+\begin{verbatim}
+(8) -> devaluate((3*x^2+5)::EXPR(INT))$Lisp
+
+   (8)  ((1 [[x,0,%symbol()()()],NIL,1,1024] (2 0 . 3) (0 0 . 5)) 0 . 1)
+                                                            Type: SExpression
+\end{verbatim}
+\begin{verbatim}
+(9) -> devaluate(w)$Lisp
+
+   (9)
+   (((PositiveInteger) . 1)  ((Float) 265633114661417543270 . - 65)
+    ((String) . luanne)  ((Polynomial (Integer)) 1 x (2 0 . 3) (0 0 . 5))
+    ((Fraction (Polynomial (Integer))) (1 x (2 0 . 3) (0 0 . 5)) 0 . 1)
+    ((Polynomial (Fraction (Integer))) 1 x (2 0 3 . 1) (0 0 5 . 1))
+
+     ((Expression (Integer))
+      (1 [[x,0,%symbol()()()],NIL,1,1024] (2 0 . 3) (0 0 . 5))  0  .  1)
+     )
+                                                            Type: SExpression
+\end{verbatim}
+
+
+\section{Makefile}
+本书实际上就是一份文学编程 (literate program) 的成果\cite{Knut92},
+可以包含可执行的源代码。具体来说,本书的 Makefile 就是本书源码的
+一部分,收录在下面。
+\eject
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{axiom}
+\bibliography{axiom}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Index}
+\printindex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

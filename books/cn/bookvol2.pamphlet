@@ -1,0 +1,2786 @@
+\documentclass{book}
+\newcommand{\VolumeName}{Volume 2: Axiom Users Guide}
+\input{bookheader.tex}
+\pagenumbering{arabic}
+\mainmatter
+\setcounter{chapter}{0} % Chapter 1
+
+\chapter{Axiom 系统(James H. Davenport 著)}
+本章内容(大部分)经许可逐字引自 Davenport\cite{Dave92a}。
+
+\section{小史}
+
+1978 年,笔者在 IBM Yorktown Heights 度过了两个月,作为计算机代数组(Computer
+Algebra Group)的一员参与其中,该小组当时已经开发出了 Scratchpad-1 计算机代数系统。
+这个系统虽然从未在 IBM 之外问世,但在当时确实是 Macsyma 与 Reduce 的有力竞争者。
+所有这些系统都苦于同一个问题:代数算法越写越复杂,系统本身也越长越大,难以驾驭。
+Zippel 曾估计,Macsyma 在鼎盛时期内部竟并存着六种不同的 Gauss 消元算法——或许是因为
+它们各自处理不同的数据类型,或许是作者们彼此并不知道对方已经实现过,又或许出于更
+微妙的原因。Davenport\cite{Dave81} 在 Reduce 里也遇到过类似的问题,算法实现者之间
+普遍弥漫着一种不满情绪。
+
+计算机代数系统的构建者们各自如何应对这种复杂性,是很值得列出来比较一番的。
+
+\begin{tabular}{rp{11cm}}
+Macsyma & 启动了那个最终归于失败的"新有理函数"项目,打算用更符合数学结构的方式
+重写代数内核的大部分,却未能保持向后兼容。\\
+Reduce & 发展成了 Reduce 3,引入了 domain 的概念,使得添加新的常量 domain 相对
+简单——参见 Bradford 等\cite{Brad86}\\
+Waterloo's & 新组建的团队认为现有方案都不对路,于是选择了一种新设计:一个通常
+完全不懂代数的极小内核,加上承载系统全部代数知识的可加载模块。这就是后来的 Maple
+系统。多年间内核的定义几经变化,因为人们逐渐发现某些算法(例如取模算法)无法在
+被解释执行的模块中高效实现。\\
+MuMath & 及其后继者 Derive 秉持这样的哲学:"能装进一台 PC 里的东西"远比"数学上
+最好的方案"更贴近大多数用户的需求——就用户数量而论,它们确实是对的。\\
+IBM &则经历了一段漫长的代数反思、原型设计与实验过程,其间的成果零星见诸文献——
+Davenport \& Jenks\cite{Dave81a} 与 Jenks \& Trager\cite{Jenk81} 便是这一过程
+最早的产物。Axiom 正是这段反思历程的最终产物。
+\end{tabular}
+
+\section{Axiom 的设计哲学}
+
+Axiom 与 Maple 有一个共同的追求:构建一个由内核加可加载模块组成的系统,并用某种
+足够高级的语言来实现——内核只懂很少一点(经典意义上的)代数,具体提供哪些代数
+功能则由模块来定义。但相似之处也仅限于此。Maple 的模块是被解释执行的,牺牲了
+极致性能以换取体积小、加载快;而 Axiom 的模块则被编译成机器码,这既是为了速度
+(与 Reduce 或 Macsyma 类似的考虑),也是为了类型分析以及为信息系统构建数据库。
+Maple 的做法当然有其道理,只是它要求设计者能够{\sl a priori}(预先)就知道该把
+哪些原语内置进内核,才能做出一个快速的代数系统。因此 Maple 在它专门设计过的那些
+操作上确实很快,但若想把它变成——比如说——一个计算群论系统包,就不那么成功了,
+因为内层循环终究是在被解释执行的代码里进行的。另一个区别令人遗憾:Axiom 的内核
+目前比 Maple 的大得多,这在很大程度上是因为它所实现的类型系统具有更强的通用性。
+
+Axiom 内核的设计者们认为,他们无法预知用户会需要哪些代数功能,也无法预知这些
+功能将如何被编程实现。唯一真正的假设是:计算大多是符号性的,因此大整数、列表、
+向量和树这些结构被格外强调,而定精度浮点数的高效编译等则相对靠后——这类需求
+留给外部编译的代码去处理。用户界面上也有一些假设,比如希望在适当场合能把符号
+自动转换成多项式,但这些假设实际上并非固定不变。系统提供的图形设施更偏向于
+绘制函数图像,而非其他类型的插图,不过新的设施可以很容易地添加进来。
+
+{\bf 原理 1}。{\sl AXIOM 备有一个供交互使用的解释器,和其他系统大同小异,同时
+还有一个用来创建新的用户自定义数据类型的编译器。编译器强调严格的类型检查,而
+解释器则更偏重于易用性。}
+
+Axiom 所设想的代数功能之复杂,要求有一套超越 Lisp 本身所提供的数据类型机制。
+举一个非常简单的例子:$1 + x + x^2$ 既可以是一个多项式,也可以是一个截断的
+Taylor 级数,但作为多项式它的平方是 $1 +2x +3x^2 +2x^3 + x^4$,而作为级数它的
+平方却是 $1+2x +3x^2$。类似地,如果 2 代表整数 2,那么 $2+2 = 4$;但如果 2
+代表"模 3 同余于 2"这一同余类,那么 $2 + 2 = 1$(当然,$4 = 1$ 在这个语境下
+同样成立)。同样,列表 (1,2) 与列表 (2,1) 不是同一回事,但如果它们代表的是
+(无序的)集合,那就该被视为相同,如此等等。事实上,计算机代数对数据类型的
+要求实在太过动态——作者们无法预知用户将会显式或隐式地要求哪些类型——也实在
+太过丰富,以至于没有任何一门现成的语言足以表达它们。于是 Axiom 决定拥有一套
+自己独立的类型系统。
+
+这套类型系统支撑着 Axiom 的大部分其余部分,它必须解决 Macsyma 与 Reduce 各自
+遇到的问题。Macsyma 的类型系统本质上受困于 $n^2$ 问题——每种类型都得知道其他
+每一种类型。这在类型不多时还行得通,Macsyma 有"通用表达式"、"有理函数"
+(以 /R/ 打印)和"Taylor 级数"(以 /T/ 打印):再添加更多类型就会变得困难。
+
+Reduce 指定 domain 的方式基本上是全局性的:比如通过发出 {\tt on modular;}
+命令来指定模 domain。这样一来,用户就必须确保所有计算都确实打算在模意义下
+进行,并且确保正在计算的值以后不会被当作多项式指数、循环下标或别的什么来用。
+这个领域里潜藏着大量难以察觉的 bug。Reduce 这套方案的另一个缺陷是,它实际上
+只适用于{\sl 常量}domain。这对浮点数或复数系数还算管用,但一旦要处理 Taylor
+级数,弱点就暴露出来了。例如
+\begin{verbatim}
+1: load tps;    % truncated power series;
+
+\end{verbatim}
+\begin{verbatim}
+2: ps(cos x,x,0);
+
+       1    2      1     4       1     6       7
+{1 - (---)*X   + (----)*X   - (-----)*X   + O(X )}
+       2           24           720
+
+\end{verbatim}
+\begin{verbatim}
+3: ws-1;
+
+      1    2      1     4       1     6       7
+{ - (---)*X   + (----)*X   - (-----)*X   + O(X )}
+      2           24           720
+
+\end{verbatim}
+\begin{verbatim}
+4: ps(sin x,x,0);
+
+       1    3      1     5     7
+{X - (---)*X  + (-----)*X  +O(X )}
+       6          120
+
+\end{verbatim}
+\begin{verbatim}
+5:ws-x;
+
+              1    3      1     5     7
+ - X + {X - (---)*X  + (-----)*X  +O(X )}
+              6          120
+
+\end{verbatim}
+\begin{verbatim}
+6: ws 4 - ps(x,x,0);
+
+     1    3      1     5     7
+ - (---)*X  + (-----)*X  +O(X )}
+     6          120
+
+\end{verbatim}
+
+第 6 行那个看似多余的幂级数展开,其实是必需的,为的是避免第 5 行出现的混淆——
+在那里,变量 $x$ 被从"以 $x$ 为变量的幂级数"中割裂了出来。
+
+\section{Axiom 的类型方案}
+
+Axiom 的类型方案可以描述为一种两层类型方案:类型是单继承的,而元类型是多继承的。
+剥去这些行话,这句话到底是什么意思?首先要拿掉的行话是"类型"(type)一词——它
+在计算机科学里用得实在太滥,以至于几乎已经不再有任何确切含义。在 Axiom 里与之
+最接近的词是 domain,下面我们就会看到这一点。
+
+{\bf 定义 1}。{\sl 一个 domain 就是一个(可能无穷的)值的集合,加上可以在这些值
+上执行的操作。}
+
+这和现代编程语言理论中"数据类型"(data type)的概念相当接近。
+
+{\bf 原理 2}。{\sl 每一个 Axiom 内部数据对象只属于唯一一个 domain。}
+
+于是整数"2"属于 domain {\tt Integer},而模 3 意义下的同余类"2"则属于 domain
+{\tt IntegerMod(3)}——多亏了下面这条约定,它也可以写成 {\tt IntegerMod 3}。
+
+{\bf 约定 1}。
+{\sl 并置(juxtaposition)对应于(一元)函数作用。}
+
+这与传统数学记法中"$\sin x$ 就是 $\sin(x)$"是一致的。不过要提醒用户,并置的
+优先级很高,{\bf sin x**2} 解析成 {\bf (sin x)**2},而不是 {\bf sin(x**2)}。
+这恰恰说明了数学记法的丰富程度,任何形式的形式文法都很难将其完全捕捉。
+
+原理 2 可以在下面这个与 Axiom 的迷你交互会话中看到:
+\begin{verbatim}
+->a:Integer
+->b:IntegerMod(3)
+\end{verbatim}
+\begin{verbatim}
+->a:=2
+
+  (3)  2
+\end{verbatim}
+\begin{verbatim}
+->a:=a+a
+
+  (4)  4
+\end{verbatim}
+\begin{verbatim}
+->b:=2
+
+  (5)  2
+\end{verbatim}
+\begin{verbatim}
+->b:=b+b
+
+  (6) 1
+\end{verbatim}
+
+前两行声明了 a 与 b 的取值可能属于的 domain——不严格地说,也就是变量 $a$ 与
+$b$ 的类型——随后它们被赋值,再相加。正如前面所说,$a + a = 4$,而 $b + b = 1$。
+这可能显得令人费解,不妨用系统命令 {\tt )set message type on},让 Axiom
+把每个值所属的 domain 都打印出来,重新走一遍同样的会话。
+
+{\bf 约定 2(借自 APL)}。{\sl 一切系统命令——也就是那些本身不执行、也不影响
+代数运算的命令——都以 {\bf )} 开头。一般来说,它们可以在不产生歧义的前提下
+任意缩写,因此 {\tt )set message type on} 可以缩写到 {\tt )se m ty on} 这么短。}
+
+除了 Hyperdoc 帮助系统之外,还可以用 {\tt )help} 查询系统命令的相关信息。
+
+\begin{verbatim}
+->a:Integer
+                                         Type: Void
+->b:IntegerMod(3)
+                                         Type: Void
+\end{verbatim}
+\begin{verbatim}
+->a:=2
+
+  (3)  2
+                                         Type: Integer
+\end{verbatim}
+\begin{verbatim}
+->a:=a+a
+
+  (4)  4
+                                         Type: Integer
+\end{verbatim}
+\begin{verbatim}
+->b:=2
+
+  (5)  2
+                                         Type: IntegerMod 3
+\end{verbatim}
+\begin{verbatim}
+->b:=b+b
+
+  (6) 1
+                                         Type: IntegerMod 3
+\end{verbatim}
+
+注意,声明语句本身也是代数命令,因此它们的结果同样必须属于某个 domain:此处
+即为 {\tt Void} domain。值前面的编号可以用来在之后引用这些值。
+
+{\bf 约定 3}。{\sl 符号 {\bf \pct} 代表最近一次计算出的非空(proper)值(即不属于
+{\tt Void} domain 的值)。{\bf \pct\pct(n)},或 {\bf \pct\pct n},代表编号为 $n$
+的值,前提是 $n$ 是正整数。若 $n$ 是负整数,{\bf \pct\pct (n)} 则代表倒数第
+$\vert{}n\vert$ 步的值。此外,{\bf \pct{}pi} 代表 $\pi$,{\bf \pct{}e} 代表
+$e \approx 2.718281828$,{\bf \pct{}i} 代表 $\sqrt{-1}$。}
+
+注意 {\bf \pct{}} 并不是 {\bf \pct{}\pct{}(-1)} 的同义词:如果上一步是一条
+声明语句,那么 {\bf \pct{}\pct{}(-1)} 会属于 {\bf Void} domain,而 {\bf \pct{}}
+指向的却是最后一个非空对象。
+
+原理 2 有一个表面上的例外,可以在上面的例子中看到:如果我们不写 {\bf a:=a+a},
+而只是试着写 {\bf a+a}——也就是要求计算出这个值,但不把它赋回旧的 {\bf a}。
+\begin{verbatim}
+->a+a
+  (4)   4
+                                         Type: PositiveInteger
+\end{verbatim}
+
+这里的 {\bf 4} 属于 {\tt PositiveInteger},而不再属于 {\tt Integer},可我们
+进行的却是同一个计算。答案是:{\tt PositiveInteger} 其实并不是与 {\tt Integer}
+分立的另一个 domain,而是一个{\bf 子 domain}(这个概念我们稍后会正式给出定义)。
+虽然用户可以自行给 Axiom 添加新的子 domain,但系统内置了两个,它们之间存在
+如下的包含关系
+\[ PositiveInteger \subset NonNegativeInteger \subset Integer \]
+此外还有一条关于 {\tt Union} domain 的一般规则,后面会解释。一个既属于某
+domain、又属于其某个子 domain 的元素,可以在需要时自由地移动到更大的子
+domain,乃至整个 domain。设立这些子 domain 的理由,是为了实现更彻底的类型
+检查:比如一个方阵的维数必须是 {\tt NonNegativeInteger},而多项式的幂次也
+只有取 {\tt NonNegativeInteger} 才有意义。类似地,{\tt IntegerMod} 的参数
+必须是 {\tt PositiveInteger}。为了让{\sl 交互式}使用更加轻松,解释器会自动
+把子 domain 的元素转换进这些子 domain。这一点可以总结如下。
+
+{\bf 原理 3}。{\sl 值可以自由地从子 domain 移动到更大的 domain;而仅在解释器
+里,只要这种转换是合法的,也可以反方向移动。}
+
+编译器显然无法从大 domain 移动到小 domain,因为它无从得知这样的收缩是否
+永远可行——如果程序员自己知道这一点总是成立,那就得由他们自己声明这个事实。
+
+\subsection{这么多类型,不觉得让人犯迷糊吗?}
+
+普通用户其实不必操心这套类型系统:那些大多数其他系统也提供的功能,也就是对应
+普通代数与微积分的那部分,同样是借助这套类型系统在背后运作的。比如下面这段
+会话,放在任何一个代数系统里都说得通。
+\begin{verbatim}
+->sin(x)
+
+   (1)  sin(x)
+\end{verbatim}
+\begin{verbatim}
+->integrate(%,x)
+
+   (2)  - cos(x)
+\end{verbatim}
+\begin{verbatim}
+->series (%,x=%pi/2)
+
+   (3)
+
+          %pi    1      %pi 3     1       %pi 5     1        %pi 7
+     (x - ---) - - (x - ---)   + --- (x - ---)   - ---- (x - ---)
+           2     6       2       120       2       5040       2
+   +
+
+       1         %pi 9        1         %pi 11            %pi 12
+     ------ (x - ---)   - -------- (x - ---)     + O((x - ---)  )
+     362880       2       39916800       2                 2
+\end{verbatim}
+\begin{verbatim}
+->integrate %
+
+   (4)
+     1     %pi 2    1       %pi 4     1       %pi 6      1        %pi 8
+     - ( - ---)   - -- (x - ---)   + --- (x - ---)   - ----- (x - ---)
+     2      2       24       2       720       2       40320       2
+   +
+
+        1         %pi 10        1          %pi 12           %pi 13
+     ------- (x - ---)    - --------- (x - ---)    + O((x - ---)  )
+     3628800       2        479001600       2                2
+\end{verbatim}
+
+注意第二次使用 integrate 时,并不需要——事实上也不能——给出变量。既然这个
+表达式是关于 $x-\pi/2$ 的级数,它就只能对 $x$ 积分,类型系统保证了这一点。
+事实上,这几个结果的 domain 分别是 {\tt Expression Integer}(微积分的绝大部分
+工作都靠它完成)、{\tt Union(Expression Integer,List Expression Integer)},
+以及最后两个结果所属的\\
+{\tt UnivariatePuiseuxSeries(Expression Integer,x,\pct{}pi/2)}。
+后两者需要一些解释,详见第 \pageref{Some AXIOM facilities} 页的
+\ref{Some AXIOM facilities} 节"Axiom 的一些设施"。
+
+Axiom 天然地能够操纵各种复合数据结构:列表、向量、集合,等等。
+
+{\bf 约定 4(属于库而非内核的约定)}。
+{\sl 圆括号——{\bf ()}——用于分组与函数作用,方括号——{\bf []}——用于构造
+列表,花括号——{\bf \{\}}——用于构造集合。}
+
+列表与集合的区别在于:列表可以包含重复元素,顺序也有意义;而集合和数学中一样,
+是无序且不含重复元素的。
+\begin{verbatim}
+->[2,1,2,1]
+ 
+   (1)  [2,1,2,1]
+                                       Type: List PositiveInteger
+\end{verbatim}
+\begin{verbatim}
+->{2,1,2,1}
+
+   (2)  {1,2}
+                                       Type: Set PositiveInteger
+\end{verbatim}
+
+设想我们手里有一个由若干对象组成的列表,想把它转换成集合——比如就上面这个
+例子来说,我们并不想把 2,1,2,1 重新输入一遍。Axiom 里有一套非常通用的机制
+来处理这种情况。
+
+{\bf 约定 5}。{\sl 中缀算子 {\bf ::},用法如下}
+\[Axiom\thinspace{} object :: Axiom\thinspace{} domain\]
+{\sl 可以用来把对象转换进指定的 domain。}
+
+{\bf ::} 算子有一部分是内置在 Axiom 内核里的。定义新的数据类型时,其定义中会
+包含一些新类型与若干既有类型之间的 coerce 函数。不过,{\bf ::} 算子远不止是
+这些已编程转换中的某一个:它至少相当于代数学家所说的这些操作的传递闭包——也
+就是说,如果存在从 A 到 B 的 {\tt coerce} 函数,以及从 B 到 C 的 {\tt coerce}
+函数,那么 {\bf ::} 就能把 A 转换成 C。事实上还不止如此:如果某个 functor(如
+{\tt List})拥有签名为
+\[( A \rightarrow B , List\thinspace{} A ) \rightarrow List\thinspace{} B\]
+的 {\tt map} 操作,并且对象可以从 A 强制转换到 B,那么系统就能够把
+{\tt List A} 的对象强制转换成 {\tt List B}。更多细节参见 Sutor \&
+Jenks\cite{Jenk92}。
+
+{\bf 原理 4}。{\sl 解释器负责执行理解用户意图所需的整条强制转换链,或者在用户
+显式使用 {\bf ::} 时执行相应的转换。编译器则会在被编译代码中的 {\bf ::} 算子
+指示下,执行一整条强制转换链。}
+
+于是我们可以把上面的命令 (2) 换成
+\begin{verbatim}
+->%::Set PositiveInteger
+
+   (2)  {1,2}
+                                          Type: Set PositiveInteger
+\end{verbatim}
+
+大量的强制转换是自动进行的。即便是简单的计算 $x+1$,也会引发三次强制转换:
+\begin{itemize}
+\item[(1)] 变量 x 从 domain {\tt Variable} 转换到 domain {\tt Polynomial
+Integer};
+\item[(2)] 数字 1 从 domain {\tt PositiveInteger} 转换到 domain
+{\tt Polynomial Integer},途中经过 {\tt Integer};
+\item[(3)] 结果 $x + 1$ 从 domain {\tt Polynomial Integer} 转换到 domain
+OutputForm,借助了 $x$ 与 1 各自向 {\tt OutputForm} 的子转换。
+\end{itemize}
+
+所有打印实际上都是从 domain {\tt OutputForm} 出发的,它同时也是转换成 TeX
+格式、Fortran 等格式的起点。这意味着,只要一个新 domain 能够被打印
+(也就是说能够强制转换到 {\tt OutputForm}),它就能被打印成 TeX、Fortran,
+乃至日后新增的任何其他格式,而完全不需要修改这个 domain 本身。
+
+\section{Axiom 的一些设施}
+\label{Some AXIOM facilities}
+
+计算机代数常常也被称作"符号运算"(symbolic manipulation),而 Axiom 尤其
+擅长操纵符号本身。一个符号可以像 $x$ 那样简单,也可以像下面这样复杂
+\begin{verbatim}
+
+       Omega (theta)
+   (1)      x       (a,b )
+           7 1,2        1
+\end{verbatim}
+它是通过下面这条命令得到的:
+\begin{verbatim}
+   script(x,[[1,2],[paren theta],[Omega],[7], [a,script(b, [[1]])]])
+\end{verbatim}
+借助 {\tt outputAsTex} 函数,这个符号可以被转换成 TEX 格式,结果如下所示。
+\[{{} \sb {7} \sp {Omega}x \sb {{1, \: 2}} \sp {{\left( theta
+\right)}}}
+\left(
+{a, \: {b \sb {1}}}
+\right)
+\]
+它仍然只是单独一个符号,而下面这条命令
+\begin{verbatim}
+->integrate(sin %,%)
+
+              Omega (theta)
+   (4)  - cos(     x       (a,b ))
+                  7 1,2        1
+                                         Type: Union(Expression(Integer),...)
+\end{verbatim}
+与 {\tt integrate(sin(x),x)} 并无不同。
+
+Axiom 拥有一个功能强大的积分器,基于 Bronstein\cite{Bron90a} 的研究成果。
+正如前面以及刚才所见,它给出的结果似乎属于一个相当复杂的 domain——为什么不
+干脆就是 {\tt Expression Integer} 呢?这个表达式看上去确实像是一个系数为
+整数的表达式,行为也确实如此。首先,我们需要解释一下 {\bf Union} 是什么。
+
+{\bf 原理 5}。{\sl 任意一组 Axiom domain $D_1,\ldots,D_n$ 都可以组合成一个
+(不相交的)union domain,记作 {\tt Union}($D_1,\ldots,D_n$)。这些 $D_i$
+称为该 union 的{\bf 分支}(branch)。这个 union domain 上可用的操作有:}
+\begin{itemize}
+\item {\sl 相等判断——两个元素相等,当且仅当它们来自同一分支,且在该分支内
+相等;}
+\item {\sl 到 OutputForm 的强制转换;}
+\item {\sl 从每个 $D_i$ 到该 union domain 的强制转换;}
+\item {\sl 从该 union domain 到每个 $D_i$ 的强制转换——如果这个 union 对象
+不在正确的分支上,这个转换可能失败;}
+\item {\sl 一个中缀谓词 case,用来测试某个 union 对象究竟是否落在某个特定
+分支上。}
+\end{itemize}
+{\sl 这些 union domain 相当于其他一些语言里所说的"和类型"(sum type)。
+一个特别有用的例子是 {\tt Integer} 上的"精确商"(exact quotient)操作:它
+的返回类型是 {\tt Union(Integer,"failed")},当除法不能整除时,就返回特殊
+记号 {\tt failed}。}
+
+所以我们是在说,Axiom 的积分器既可能返回一个表达式,也可能返回一个表达式的
+列表。下面就是一个它返回后者的简单例子。
+\begin{verbatim}
+-> integrate(1/(x**2-a),x)
+
+               2      +-+
+             (x  + a)\|a  - 2a x           +---+
+         log(-------------------)        x\|- a
+                     2              atan(-------)
+                    x  - a                  a
+   (4)  [------------------------,- -------------]
+                     +-+                 +---+
+                   2\|a                 \|- a
+\end{verbatim}
+
+这里出现了两个可能的答案,取决于 $a$ 的符号。既然 Axiom 无法得知哪一个才是
+所需的,它便把两者都返回,而把选用哪一个的更高层判断留给用户,或者留给
+{\tt integrate} 命令的调用者(而且这个更高层判断也不见得每次都选同一个)。
+从某种意义上说,这两个答案同样正确,我们可以通过对它们求导来验证这一点。
+\begin{verbatim}
+-> [differentiate(f,x) for f in %]
+
+            1      1
+   (5)  [------,------]
+          2      2
+         x  - a x  - a
+\end{verbatim}
+
+注意这里处理列表的漂亮方式。类似的列表处理手法还有很多,用户也可以使用
+{\tt map}——这是库里大多数复合数据类型都提供的一个函数。下面演示了如何
+用 map 对这个列表求导。
+\begin{verbatim}
+-> map(f+->differentiate(f,x),%% 4)
+
+            1      1
+   (6)  [------,------]
+          2      2
+         x  - a x  - a
+\end{verbatim}
+
+{\bf 约定 6(库作者的约定)}。{\sl 记法}
+\[list\thinspace{} of\thinspace{} variables +-> expression\]
+{\sl 定义了关于这些变量的一个匿名函数,对应于 lambda 演算里的表达式
+"$\lambda$variables.expression"。}
+
+正如我们已经看到的,Axiom 具备强大的级数运算能力。正如 Norman\cite{Norm75}
+在 Scratchpad-1 中率先做到的那样,这些级数是{\sl 惰性}的:各项只在打印时才
+按需求值,而且总是可以按需计算出更多的项。
+\begin{verbatim}
+-> series(sin(x),x=0)
+
+            1  3    1   5     1   7      1    9       1     11      12
+   (1)  x - - x  + --- x  - ---- x  + ------ x  - -------- x   + O(x  )
+            6      120      5040      362880      39916800
+\end{verbatim}
+\begin{verbatim}
+(2) -> %/x
+
+        1      1  3     1   5     1    7      1     9       1      11      12
+   (2)  - x - -- x  + ---- x  - ----- x  + ------- x  - --------- x   + O(x  )
+        x     6x      120x      5040x      362880x      39916800x
+\end{verbatim}
+\begin{verbatim}
+(3) -> %-1
+
+              1      1  3     1   5     1    7      1     9      11
+   (3)  - 1 + - x - -- x  + ---- x  - ----- x  + ------- x  + O(x  )
+              x     6x      120x      5040x      362880x
+\end{verbatim}
+
+最初计算(因而也是显示)出的项数,由系统命令 {\tt )set streams calculate}
+控制。这个结果的类型是\\
+{\tt UnivariatePuiseuxSeries(Expression Integer,x,0)}。\\
+最后两个参数显然分别是变量和展开点,但 Puiseux 级数究竟是什么?为什么 Axiom
+不能直接给出我们熟悉的、看上去正是如此的 Taylor 级数呢?Taylor 级数表示的是
+一个连续函数 $a_0x^0+a_1x^1+\cdots$。推广这一概念的一种方式,是允许出现
+{\sl 亚纯}(meromorphic)函数,也就是那些带有 $1/x$(更一般地是 $1/x^n$)
+型点奇点的函数。为了表示这些函数,我们必须允许级数中出现(有限个)负指数——
+这就是所谓的 Laurent 级数。
+\begin{verbatim}
+-> series(1/sin(x),x=0)
+
+         - 1   1      7   3     31   5     127   7      73    9      10
+   (4)  x    + - x + --- x  + ----- x  + ------ x  + ------- x  + O(x  )
+               6     360      15120      604800      3421440
+\end{verbatim}
+
+然而即便是这些也还不够一般,因为它们无法表示像 $\sqrt{x}$ 这样的多值函数。
+要做到这一点,我们必须允许出现分数指数(分母有界),这就给出了 Puiseux 级数。
+\begin{verbatim}
+-> sqrt %
+
+           1       3        7
+         - -       -        -
+           2    1  2    1   2      5
+   (5)  x    + -- x  + --- x  + O(x )
+               12      160
+\end{verbatim}
+\begin{verbatim}
+-> %**2
+
+                                 9
+                                 -
+         - 1   1      7   3      2
+   (6)  x    + - x + --- x  + O(x )
+               6     360
+\end{verbatim}
+\begin{verbatim}
+(7) -> %%(4)-%
+
+           19
+           --
+            2
+   (7)  O(x  )
+\end{verbatim}
+
+注意,Axiom 和任何其他代数系统一样,无法证明这两个级数之差恒等于零,它只能
+证明:在 {\tt )set streams calculate} 所要求的上限之内,找不到任何非零项。
+Puiseux 级数在代数几何中有许多用途,参见 Davenport\cite{Dave81}。
+
+\subsection{要怎么记住这一切?}
+
+Axiom 系统里似乎有太多不同的名字和 domain 了。要怎么才能把它们都记住,并且
+知道该用哪一个?系统提供了一个在线帮助系统 Hyperdoc,里面有按主题编排的教程
+材料与说明信息,但系统本身也提供了一些帮助。
+
+{\bf 约定 7}。{\sl Axiom 函数的名字要么是特殊符号(比如 $+$),要么是若干个
+完整英文单词连写在一起。后一种情况下,第一个词之后的每个词首字母都要大写。
+因此有 {\tt integrate},但也有 {\tt complexIntegrate}。此外:}
+\begin{itemize}
+\item {\sl 所有布尔谓词都以 {\bf ?} 结尾,如 {\tt odd?},用来测试一个数是
+否为奇数}
+\item {\sl 所有作用于数据结构上的破坏性函数都以 {\bf !} 结尾,如
+{\tt reverse!},会破坏性地反转一个列表。}
+\end{itemize}
+{\sl 反过来,domain(以及我们稍后会讲到的其他 constructor)的名字则是若干个
+英文单词连写在一起,且每个词都要大写,如 {\tt IntegerMod} 或
+{\tt UnivariatePuiseuxSeries}。}
+
+借助系统命令 {\tt )what operations}(可缩写为 {\tt )w o}),可以(不区分
+大小写地)搜索所有名字中包含某个特定单词的函数,例如
+\begin{verbatim}
+->)what operations series
+
+Operations whose names satisfy the above pattern(s):
+
+series        seriesSolve
+
+  To get more information about an operation, say series , issue the
+  command )display op series
+\end{verbatim}
+
+正如提示所说,命令 {\tt )display operations}(可缩写为 {\tt )d o})可以用来
+查明某个操作的参数应该是什么。不过,要解释清楚这一点,我们得先更深入地钻研
+一下 Axiom 的类型系统。Nag Fortran 库的用户不会觉得"要为乘实矩阵和乘复矩阵
+分别写一个子程序"有什么奇怪的——事实上,在 Fortran 77 里也很难有别的做法。
+相比之下,Nag Ada 库的用户则会期望有一个通用的矩阵乘法例程,它可以用于任意
+内置的实数或复数类型,乃至用户自定义的额外类型。Axiom 的类型系统比起 Fortran
+式的做法要更接近 Ada 式的做法,但事实上它甚至比 Ada 的模型更加通用。
+
+正如可以通过把 functor\footnote{这是 Axiom 从范畴论借来的术语:"functor"
+专指那些以 domain 为返回值的函数,而"function"则专指那些以 Axiom 对象为
+返回值的操作} {\tt IntegerMod} 应用到不同的整数上、从而得到各种不同的模
+domain 一样,我们也可以把 functor {\tt Matrix} 应用到不同的系数 domain
+上,从而得到各种不同的矩阵 domain。
+\begin{verbatim}
+-> [[1,2],[3,4]]::Matrix IntegerMod 3
+
+        +1  2+
+   (1)  |    |
+        +0  1+
+                                                  Type: Matrix(IntegerMod(3))
+\end{verbatim}
+\begin{verbatim}
+-> [[1,2],[3,4]]::Matrix IntegerMod 5
+
+        +1  2+
+   (2)  |    |
+        +3  4+
+                                                  Type: Matrix(IntegerMod(5))
+\end{verbatim}
+\begin{verbatim}
+(3) -> [[1,2],[3,4]]::Matrix Float
+
+        +1.0  2.0+
+   (3)  |        |
+        +3.0  4.0+
+                                                          Type: Matrix(Float)
+\end{verbatim}
+
+在每种情况下,系数运算都是按照该系数 domain 各自正确的规则来进行的。
+\begin{verbatim}
+(4) -> %%(1)**2
+
+        +1  1+
+   (4)  |    |
+        +0  1+
+                                                  Type: Matrix(IntegerMod(3))
+\end{verbatim}
+\begin{verbatim}
+(5) -> %%(2)**2
+
+        +2  0+
+   (5)  |    |
+        +0  2+
+                                                  Type: Matrix(IntegerMod(5))
+\end{verbatim}
+\begin{verbatim}
+(6) -> %%(3)**2
+
+        +7.0   10.0+
+   (6)  |          |
+        +15.0  22.0+
+                                                          Type: Matrix(Float)
+\end{verbatim}
+
+不过,矩阵的元素能是哈希表这种东西吗?显然不行:我们要求矩阵的系数必须能够
+相加、相减、相乘,等等。事实上,我们必须对作为 {\tt Matrix} 参数的 domain
+设定一些要求,就像我们对 {\tt IntegerMod} 的参数设定要求一样。{\tt )show}
+命令会告诉我们这些要求具体是什么(以及更多其他信息)。
+\begin{verbatim}
+->)show IntegerMod
+  IntegerMod p: PositiveInteger is a domain constructor
+  Abbreviation for IntegerMod is ZMOD
+\end{verbatim}
+\begin{verbatim}
+->)show Matrix
+  Matrix R: Ring is a domain constructor
+  Abbreviation for Matrix is MATRIX
+\end{verbatim}
+我们已经规定了,作为 {\tt IntegerMod} 参数的 Axiom 对象 $p$ 必须属于
+(子)domain {\tt PositiveInteger};类似地,我们也规定了作为 {\tt Matrix}
+参数的 domain $R$ 必须属于第二阶类型系统 {\tt Ring}。
+
+\section{Category}
+
+{\bf 原理 6}。{\sl Axiom 库声明了一族第二阶类型,称为{\bf category}。这些
+category 组织成一个有向无环图,每个 domain 都属于某个特定的 category,同时
+也属于该 category 的所有祖先。一个 category 的规格说明包括}
+\begin{itemize}
+\item {\sl 它所有的直接祖先,}
+\item {\sl 该 category 支持的任何额外操作,以及}
+\item {\sl 这些操作必须满足的任何额外公理。}
+\end{itemize}
+{\sl 操作 {\tt Join} 用来构造新的 category。}
+
+
+这听上去可能有点抽象,让我们从 Axiom 库的基础出发看一个例子。Axiom 中最基本
+的 category 是 {\tt SetCategory}。
+
+{\bf 约定 8}。{\sl 每当在 Axiom 里讨论某个 category 或 domain 时,符号
+\pct{} 就代表该 domain,或该 category 中的任意一个 domain。}
+
+借助这个记法,我们可以让 Axiom 告诉我们 {\tt SetCategory} 的定义是什么。
+\begin{verbatim}
+->)show SetCategory
+  SetCategory is a category constructor.
+  Abbreviation for SetCategory is SETCAT
+  This constructor is exposed in this frame.
+  Issue )edit bookvol10.2.pamphlet to see algebra source code for SETCAT 
+
+------------------------------- Operations --------------------------------
+
+ ?=? : (%,%) -> Boolean                coerce : % -> OutputForm
+\end{verbatim}
+
+这段输出表明:凡是属于 category {\tt SetCategory}(记作 \pct{})的 domain,
+上面都定义了两个操作——一个中缀操作 $=$,接受来自 \pct{} 的两个参数,返回一个
+{\tt Boolean} 结果;以及一个叫 {\tt coerce} 的操作,接受一个 \pct{} 的元素,
+返回一个 {\tt OutputForm}。这要如何扩展成更多有用的 category 呢?下面给出了
+最初几步扩展中一部分的图示。
+\[\begin{array}{ccc}
+SetCategory      &          &\\
+\downarrow       & \searrow &\\
+AbelianSemiGroup &          & OrderedSet\\
+\downarrow       & \searrow & \downarrow\\
+AbelianMonoid    &          & OrderedAbelianMonoid\\
+\downarrow       & \searrow & \downarrow\\
+CancellationAbelianMonoid & & OrderedAbelianMonoid\\
+\downarrow       & \searrow & \downarrow\\
+AbelianGroup     &          & OrderedCancellationAbelianMonoid\\
+                 & \searrow & \downarrow\\
+                 &          &OrderedAbelianGroup\\
+\end{array}\]
+箭头表示"直接后代"关系。
+
+{\tt AbelianSemiGroup} 定义了一个新操作符:
+\[+ : \pct{} \times \pct{} \mapsto \pct\]
+满足结合律与交换律公理:
+\[a+(b+c)=(a+b)+c\]
+\[a+b=b+a\]
+
+{\tt AbelianMonoid} 引入了一个新的零元操作符\footnote{严格来说,这其实是
+一个常量,而不是一个零元操作符,意思是这个值在 domain 创建时就一次性计算好了。
+两者的区别本质上是效率问题,这里不再进一步讨论。}
+\[0 :\thinspace{} \mapsto \pct{}\]
+满足显然的公理
+\[0 + a = a\]
+
+{\tt CancellationAbelianMonoid} 是满足消去律公理的 abelian monoid 所构成
+的 category:
+\[a+b = a+c \Rightarrow b = c\]
+
+从构造性的角度看,这是由一个部分减法操作符来表示的,其签名定义为:
+\[- : \pct{} \times \pct{} \mapsto {\tt\ Union}(\pct{},{\rm "failed"})\]
+
+虽然这样的操作对任何 {\tt AbelianMonoid},甚至任何 {\tt AbelianSemiGroup}
+都可以定义,但正是消去律公理保证了 {\bf $-$} 有唯一的值。这个操作符被
+{\tt AbelianGroup} 上定义的 {\bf $-$} 操作所涵盖。
+
+{\tt AbelianGroup} 又添加了一个一元操作符\footnote{实际上,它还添加了一个
+二元操作符
+\[- : \pct{} \times \pct{} \mapsto \pct{}\]
+满足公理
+\[a-b = a+(-b)\]
+从逻辑上看,这个二元操作符是多余的。它之所以出现在 Axiom 里,有两个原因。
+第一是程序的可读性:$a-b$ 比 $a+(-b)$ 更易读。第二是效率:虽然这个二元操作符
+{\sl 总是}可以用一元操作符来实现,而且确实有一个默认定义正是这样做的,但这样
+实现未必很高效。比如,如果 \pct{} 是一种矩阵类型,用一元操作符来实现二元
+操作符,就会导致分配两个新矩阵而不是一个。}
+\[ - : \pct{} \mapsto \pct{}\]
+这个操作符满足公理
+\[a+(-a)=0\]
+
+第一个 $\searrow$ 引入了一个操作符
+\[< : \pct{} \times \pct{} \mapsto Boolean\]
+满足通常的公理:
+\[a < b \vee b < c \Rightarrow a < c\]
+\[\neg (a < b) \vee \neg (b < a) \Rightarrow a = b\]
+\[ a < b \Rightarrow \neg (b < a)\]
+
+图中后续的 $\searrow$ 都没有引入新的操作符,但在定义 {\tt
+OrderedAbelianSemiGroup} 时又多了一条公理:
+\[a < b \Rightarrow a + c < b + c\]
+这正是把两个 category 合并成一个新的、有名字的 category 时通常会发生的
+情况:我们保留同一批操作符,但开始关心它们之间的相互作用,这就需要引入新的
+公理来定义这种相互作用。图中后续的 $\searrow$ 代表的都是祖先的直接合并。
+
+值得注意的是,这些定义没有一条是硬编码在 Axiom 内核里的:内核里只有理解
+它们所需的机制。这些定义是用 Axiom 的 category 定义语言写成的,可以被修改
+或扩展,以适应不同种类的数学。参见 Lambe\cite{Lamb89}、Schwarz\cite{Schw88}。
+下面给出的代码,本质上就是这样写的。
+
+{\bf 约定 9}。{\sl Axiom 的注释可以用 {\bf $--$} 或 {\bf $++$} 引入。以
+{\bf $++$} 开头的注释是给用户看的,可以被在线帮助系统检索到。}
+
+举例来说,{\tt AbelianMonoid} 里紧跟在 {\tt zero?} 之后的那条注释,在用户
+搜索操作名 {\tt zero?} 时就会被检索出来。
+
+\begin{verbatim}
+SetCategory(): Category == Join(Object, CoercibleTo OutputForm) with
+
+   "=": (%,%) -> Boolean
+
+\end{verbatim}
+\begin{verbatim}
+++ Axioms:
+++  associative("+":(%,%)->%) || \space{ (x+y)+z = x+(y+z) }
+++  commutative("+":(%,%)->%) || \spad{ x+y = y+x }
+AbelianSemiGroup(): Category == SetCategory with
+
+   "+": (%,%) -> %
+\end{verbatim}
+\begin{verbatim}
+++ Axioms:
+++  leftIdentity("+":(%,%)->%,0)  || \spad{ 0+x=x }
+++  rightIdentity("+":(%,%)->%,0) || \spad{ x+x=x }
+AbelianMonoid(): Category == AbelianSemiGroup with
+
+   0: constant -> %     ++ 0 is the additive identity element
+
+   zero?: % -> Boolean  ++zero?(x) tests if x is equal to 0
+
+ add
+
+   zero? x == x = 0
+\end{verbatim}
+
+add 之后的从句给出了 {\tt zero?} 用 $=$ 与 0 表出的一个缺省定义。
+
+{\bf 原理 7}。{\sl category 可以引入操作的{\bf 缺省定义},这些定义会在属于
+该 category 的任何 domain 上生效,除非该 domain 自身、或某个更具体的
+category 给出了覆盖它的定义。}
+
+这套一般机制的更多细节可参见 Jenks 等\cite{Jenk92},Axiom 库中实际实现的
+各个 category 则在 Davenport \& Trager\cite{Dave90} 和 Davenport
+等\cite{Dave91} 中有所描述。不过,我们已经可以看到,确实可以定义出这样一套
+category 体系,让它实际上充当 domain 本身的类型系统。
+
+{\bf 原理 8}。
+{\sl Axiom 的 functor 是强类型的:每一个作为 Axiom 对象的参数,都规定要来自
+某个特定的 domain;每一个作为 Axiom domain 的参数,都规定要属于某个特定的
+Axiom category。类似地,某个 functor 返回的 domain,也规定要属于某个特定的
+category。domain 的一切构造都必须满足这些对 functor 的约束。}
+
+以 {\tt Matrix} 为例,这个 functor 的定义可以这样开头:
+\begin{verbatim}
+  Matrix(R:Ring): MatrixCategory(R, Vector R, Vector R) ==
+\end{verbatim}
+这里 {\tt MatrixCategory} 是一个 category,它本身带有三个参数,定义了各种
+矩阵——不只是 {\tt Matrix} 定义的那种——都必须满足的各项操作;而
+{\tt Matrix} 定义的是存储在二维数组中、不带任何特殊性质的稠密矩阵。我们可以
+看看 Axiom 目前对 ring 上各操作的定义。
+\begin{verbatim}
+-> )show Ring
+ Ring  is a category constructor
+ Abbreviation for Ring is RING 
+ This constructor is exposed in this frame.
+ Issue )edit bookvol10.2.pamphlet to see algebra source code for RING 
+
+------------------------------- Operations --------------------------------
+ ?*? : (%,%) -> %                      ?*? : (Integer,%) -> %
+ ?*? : (NonNegativeInteger,%) -> %     ?*? : (PositiveInteger,%) -> %
+ ?**? : (%,NonNegativeInteger) -> %    ?**? : (%,PositiveInteger) -> %
+ ?+? : (%,%) -> %                      ?-? : (%,%) -> %
+ -? : % -> %                           ?=? : (%,%) -> Boolean
+ 1 : () -> %                           0 : () -> %
+ ?^? : (%,NonNegativeInteger) -> %     ?^? : (%,PositiveInteger) -> %
+ coerce : Integer -> %                 coerce : % -> OutputForm
+ hash : % -> SingleInteger             latex : % -> String
+ one? : % -> Boolean                   recip : % -> Union(%,"failed")
+ sample : () -> %                      zero? : % -> Boolean
+ ?~=? : (%,%) -> Boolean              
+ characteristic : () -> NonNegativeInteger
+ subtractIfCan : (%,%) -> Union(%,"failed")
+\end{verbatim}
+
+其中特别有加法、减法与乘法这些操作,它们对于给出"系数取自 $R$ 的矩阵"这个
+定义来说是必需的。事实上 {\tt Matrix} 的实际定义更复杂一些,其结果所属的
+category 定义为
+\begin{verbatim}
+Matrix(R:Ring): MatrixCategory(R,Row,Col) with
+
+    diagonalMatrix : Vector R -> %
+      ++ \spad{diagonalMatrix(v)} returns a diagonal matrix where the elements
+      ++ of v appear on the diagonal.
+
+    if R has Field then
+
+      inverse : % -> Union(%,"failed")
+
+\end{verbatim}
+
+注意这里的条件定义:系数 $R$ 只需是一个 {\tt Ring},但如果它还进一步是一个
+{\tt Field}——也就是说除法是可行的——那么谈论矩阵的逆就有意义了。当然,如果
+矩阵是奇异的,{\tt inverse} 操作可能失败,所以 {\tt inverse} 的返回 domain
+被定义为 {\tt Union}(\pct{},"failed")。{\tt MatrixCategory} 本身并不是
+{\tt Ring} 的后代,因为矩阵只有在维数相符的情况下才能相加、相乘等等。不过,
+方阵确实构成一个 ring,Axiom 也知道这一点。
+
+{\bf 约定 10}。{\sl 中缀二元谓词 {\tt has} 可以用来测试某个 domain 是否属于
+某个 category,或者是否具有某些指定的属性。}
+\begin{verbatim}
+-> SquareMatrix(2,Integer) has Ring
+
+   (7)  true
+                                                                Type: Boolean
+\end{verbatim}
+
+这说明方阵 domain 本身就可以作为 matrix 的合法参数。
+\begin{verbatim}
+-> [[ [[1,2],[3,4]],1,0],[0,[[5,6],[7,8]],1]]::Matrix SquareMatrix(2,Integer)
+
+        ++1  2+  +1  0+  +0  0++
+        ||    |  |    |  |    ||
+        |+3  4+  +0  1+  +0  0+|
+   (8)  |                      |
+        |+0  0+  +5  6+  +1  0+|
+        ||    |  |    |  |    ||
+        ++0  0+  +7  8+  +0  1++
+                                        Type: Matrix(SquareMatrix(2,Integer))
+\end{verbatim}
+\begin{verbatim}
+-> transpose %
+
+        ++1  2+  +0  0++
+        ||    |  |    ||
+        |+3  4+  +0  0+|
+        |              |
+        |+1  0+  +5  6+|
+   (9)  ||    |  |    ||
+        |+0  1+  +7  8+|
+        |              |
+        |+0  0+  +1  0+|
+        ||    |  |    ||
+        ++0  0+  +0  1++
+                                        Type: Matrix(SquareMatrix(2,Integer))
+\end{verbatim}
+\begin{verbatim}
+-> %%(8)*%
+
+         ++8   10+   +5  6+  +
+         ||      |   |    |  |
+         |+15  23+   +7  8+  |
+   (10)  |                   |
+         | +5  6+   +68  78 +|
+         | |    |   |       ||
+         + +7  8+   +91  107++
+                                        Type: Matrix(SquareMatrix(2,Integer))
+\end{verbatim}
+\begin{verbatim}
+-> square? %
+
+   (11)  true
+                                                                Type: Boolean
+\end{verbatim}
+
+这未必是 Axiom 最令人惊叹的应用,但它确实说明了这套类型系统能够用来构造出
+一些相当出人意料的对象。我们还注意到,类型系统把某些出现的 1 和 0 解释成
+需要对应的矩阵来充当它们的值,以使这条命令在类型上保持一致。
+
+实践中,这些极其复杂的类型往往是在计算过程中间出现的,即便最终结果相当简单
+或直截了当。Grabmeier\cite{Grab91a} 给出了一个来自遗传学的例子,其构造中
+某个中间对象属于 domain
+\begin{verbatim}
+List PolynomialIdeals(Fraction Integer,
+                      DirectProduct(4,NonNegativeInteger),
+                      [x1,x2,x3,x4],
+                      DistributedMultivariatePolynomial([x1,x2,x3,x4],
+                                                        Fraction Integer))
+\end{verbatim}
+
+{\bf 约定 11}。{\sl 每一个 Axiom {\bf constructor}——也就是 functor 或
+category——都有一个{\bf 缩写},由至多八个大写字母组成(category 则是七个)。
+这有两个用途:一是可以在输入输出时用来缩短类型的名字,二是它们标识了对应的
+Axiom 库所在的目录。category {\tt Cat} 的缺省版本,缩写为 {\tt CAT},名为
+{\tt Cat\&},缩写为 {\tt CAT-}。}
+
+举例来说,{\tt Integer} 的缩写是 {\tt INT},编译后的库就存放在目录
+{\tt INT.nrlib} 里。因此 Grabmeier 的那个类型也可以写成
+\begin{verbatim}
+List IDEAL(FRAC INT,DIRPROD(4,NNI),[x1,x2,x3,x4],DMP([x1,x2,x3,x4],FRAC INT)
+\end{verbatim}
+这样固然短了不少,但仍然算不上简洁。
+
+\subsection{使用 {\tt )display} 命令}
+
+我们先从 {\tt )display} 命令一个非常简单的例子说起。
+\begin{verbatim}
+-> )d op pop!
+\end{verbatim}
+\begin{verbatim}
+There are 4 exposed functions called pop! :
+   [1] ArrayStack(D1) -> D1 from ArrayStack(D1) if D1 has SETCAT
+   [2] Dequeue(D1) -> D1 from Dequeue(D1) if D1 has SETCAT
+   [3] D -> D1 from D if D has SKAGG(D1) and D1 has TYPE
+   [4] Stack(D1) -> D1 from Stack(D1) if D1 has SETCAT
+\end{verbatim}
+\begin{verbatim}
+Examples of pop! from ArrayStack
+
+a:ArrayStack INT:= arrayStack [1,2,3,4,5] 
+pop! a 
+a
+\end{verbatim}
+\begin{verbatim}
+Examples of pop! from Dequeue
+
+a:Dequeue INT:= dequeue [1,2,3,4,5] 
+pop! a 
+a
+\end{verbatim}
+\begin{verbatim}
+Examples of pop! from StackAggregate
+
+a:Stack INT:= stack [1,2,3,4,5] 
+pop! a 
+a
+\end{verbatim}
+\begin{verbatim}
+Examples of pop! from Stack
+
+a:Stack INT:= stack [1,2,3,4,5] 
+pop! a 
+a
+\end{verbatim}
+这里列出了 4 个已公开的函数,连同它们的参数类型、结果类型,以及(紧跟在
+{\tt from} 之后的)实现来源——这几项合在一起统称为一个{\bf 签名}。一旦知道
+{\tt SKAGG} 是 {\tt StackAggregate} 的缩写——这一点也很容易查到——
+\begin{verbatim}
+->)d abbrev SKAGG
+   SKAGG abbreviates category StackAggregate
+\end{verbatim}
+
+Axiom 的函数有一种特殊语法(称为{\bf 带标签的注释})\index{tagged comment},
+可以从代数源代码里给出函数的示例。举例来说,{\tt Stack} domain 里的
+{\tt pop!} 函数。
+\begin{verbatim}
+    pop_! : % -> S
+      ++ pop! returns the top element of the stack, destructively
+      ++ modifying the stack to remove that element.
+      ++
+      ++X a:Stack INT:= stack [1,2,3,4,5]
+      ++X pop! a
+      ++X a
+\end{verbatim}
+{\bf $++$} 注释的特殊形式,也就是 {\bf ++X},给出了这个函数的用法示例。所以
+在上面的输出里,我们看到
+\begin{verbatim}
+Examples of pop! from Stack
+
+a:Stack INT:= stack [1,2,3,4,5] 
+pop! a 
+a
+\end{verbatim}
+这展示了用户可以执行的三条命令,用来演示这个函数
+\begin{verbatim}
+-> a:Stack INT:= stack [1,2,3,4,5] 
+
+   (1)  [1,2,3,4,5]
+                                                         Type: Stack(Integer)
+\end{verbatim}
+\begin{verbatim}
+(2) -> pop! a 
+
+   (2)  1
+                                                        Type: PositiveInteger
+\end{verbatim}
+\begin{verbatim}
+(3) -> a
+
+   (3)  [2,3,4,5]
+                                                         Type: Stack(Integer)
+\end{verbatim}
+清楚地表明栈 $a$ 已被修改。
+
+一个更复杂一点的例子是 {\tt )d op integrate},这里我们只解释其中一部分条目。
+Axiom 库里有 32 个已公开的积分函数和 10 个未公开的。
+\begin{verbatim}
+   [29] D -> D from D
+             if D has UPXSCAT(D1) and D1 has RING and D1 has ALGEBRA(
+            FRAC(INT))
+   [7] (D2,Symbol) -> Union(D2,List(D2)) from FunctionSpaceIntegration(
+            D4,D2)
+             if D4 has Join(EuclideanDomain,OrderedSet,
+            CharacteristicZero,RetractableTo(Integer),
+            LinearlyExplicitRingOver(Integer)) and D2 has Join(
+            TranscendentalFunctionCategory,PrimitiveFunctionCategory,
+            AlgebraicallyClosedFunctionSpace(D4))
+\end{verbatim}
+函数 [29] 正是我们用来对 Puiseux 级数积分的那个:{\tt UPXSCAT} 是
+{\tt UnivariatePuiseuxSeriesCategory} 的缩写,而 $D1$——也就是级数的
+系数——必须是有理数上的一个 algebra(否则我们就无法把指数当作系数来处理,
+而这在对 $x^{p/q}$ 积分得到 $\frac{q}{p+q}x^{1+p/q}$ 时是必须的),同时
+还得是一个 ring。
+
+函数 [7] 则是我们目前为止用于其他大多数积分的那个。虽然这条签名看上去相当
+冗长,但我们已经分析过,它本质上是
+\[{\tt (D2,Symbol)} \rightarrow {\tt Union(D2,List D2)}\]
+这样的形式。
+
+剩下那些行不过是在说明 D2 必须具备哪些性质。D4 则在被积函数中扮演系数的
+角色。到目前为止我们用的一直是 {\tt Integer},但这并非严格必需。
+\begin{verbatim}
+-> 2*cos(4*x)**3::Expression RomanNumeral
+
+                    3
+   (1)  II cos(IV x)
+                                               Type: Expression(RomanNumeral)
+\end{verbatim}
+\begin{verbatim}
+(2) -> integrate(%,x)
+
+                  2
+        (cos(IV x)  + II)sin(IV x)
+   (2)  --------------------------
+                    VI
+       Type: Union(Expression(RomanNumeral),List(Expression(RomanNumeral)))
+\end{verbatim}
+可以清楚地看到,在 {\tt Expression RomanNumeral} 中,系数确实属于
+{\tt RomanNumeral},而指数却不是。
+\chapter{在 Axiom 系统中该如何编程(James H. Davenport 著)}
+本章内容(大部分)逐字引自 Davenport\cite{Dave92b},已获授权使用。
+
+\section{引言}
+
+Axiom 基本上可以在三种方式下使用。第一种对应"袖珍计算器"式的用法——键入简单的命令,系统打印出答案。这些命令既可以按传统方式从键盘输入,也可以通过 Hyperdoc 菜单系统发出,或者放在".input"文件里执行,统称由"Axiom 解释器 (interpreter)"来处理。这个解释器所做的事情比传统计算机代数系统要多,因为 Axiom 是一个带类型的系统,解释器必须完成类型推断 (type inference)。
+
+第二种方式可以称为"可编程的袖珍计算器"式用法,用户在其中定义一些简单的函数,或者给变量赋值以供以后使用。一个简单函数的例子是
+\begin{verbatim}
+fac n == if n < 3 then n else n*fac(n-1)
+\end{verbatim}
+这是阶乘函数的定义。再看一个稍微复杂一点的例子(取自 IBM\cite{IBMx91} 与 Jenks \& Sutor\cite{Jenk92}),如下所示。
+\begin{verbatim}
+mersenne i == 2**i - 1
+\end{verbatim}
+这一行定义了一个用来计算第 $i$ 个梅森数的函数
+\begin{verbatim}
+mersenneIndex := [n for n in 1.. | prime?(mersenne(n))]
+This line, which produces the following output from Axiom,
+\begin{verbatim}
+   (2)  [2,3,5,7,13,17,19,31,61,89,...]
+                                         Type: Stream(PositiveInteger)
+\end{verbatim}
+它计算出的是一个(惰性求值的)无穷列表,列出使对应梅森数为素数的那些下标。
+\begin{verbatim}
+mersennePrime n == mersenne mersenneIndex(n)
+\end{verbatim}
+这定义了一个产生第 $n$ 个梅森素数的函数。它可以像下面这样在输入行中使用(附带相应输出)。
+\begin{verbatim}
+mersennePrime 5
+
+   (4)  8191
+                                         Type: PositiveInteger
+\end{verbatim}
+
+在这种方式下,我们会用到各种彼此配合的"单行式"(one-liner),就像袖珍计算器上编好的函数一样。
+
+第三种方式下,我们向 Axiom 定义全新的完整数据类型。本文所要讨论的正是这第三种编程方式。
+
+\section{编程概念}
+
+Axiom 有几个基本概念,我们要先简要说明一下。
+
+\begin{tabular}{rp{11cm}}
+{\bf Domain} & domain 就是许多其他语言所说的{\sl 抽象数据类型 (abstract data type)},即对某些数据对象及其上操作 (operation) 的一份规格说明。一个典型的 domain 是 {\tt Integer},它的元素就是实现中所用的底层整数(当然是无穷精度的),支持下面这些操作——可以通过 Axiom 命令 {\tt )show Integer} 得到,也可以用 Hyperdoc 浏览器查看。提醒读者,\pct{} 是 Axiom 用来表示"当前 domain"的记号,此处即 {\tt Integer};除非另有说明(如中缀的 {\tt *} 与 {\tt quo}),所有操作均为前缀记法。
+\end{tabular}
+
+\begin{verbatim}
+ Integer  is a domain constructor
+ Abbreviation for Integer is INT 
+ This constructor is exposed in this frame.
+ Issue )edit bookvol10.3.pamphlet to see algebra source code for INT 
+
+------------------------------- Operations --------------------------------
+ ?*? : (%,%) -> %                      ?*? : (Integer,%) -> %
+ ?*? : (NonNegativeInteger,%) -> %     ?*? : (PositiveInteger,%) -> %
+ ?**? : (%,NonNegativeInteger) -> %    ?**? : (%,PositiveInteger) -> %
+ ?+? : (%,%) -> %                      ?-? : (%,%) -> %
+ -? : % -> %                           ?<? : (%,%) -> Boolean
+ ?<=? : (%,%) -> Boolean               ?=? : (%,%) -> Boolean
+ ?>? : (%,%) -> Boolean                ?>=? : (%,%) -> Boolean
+ D : % -> %                            D : (%,NonNegativeInteger) -> %
+ OMwrite : (%,Boolean) -> String       OMwrite : % -> String
+ 1 : () -> %                           0 : () -> %
+ ?^? : (%,NonNegativeInteger) -> %     ?^? : (%,PositiveInteger) -> %
+ abs : % -> %                          addmod : (%,%,%) -> %
+ associates? : (%,%) -> Boolean        base : () -> %
+ binomial : (%,%) -> %                 bit? : (%,%) -> Boolean
+ coerce : Integer -> %                 coerce : % -> %
+ coerce : Integer -> %                 coerce : % -> OutputForm
+ convert : % -> String                 convert : % -> DoubleFloat
+ convert : % -> Float                  convert : % -> Pattern(Integer)
+ convert : % -> InputForm              convert : % -> Integer
+ copy : % -> %                         dec : % -> %
+ differentiate : % -> %                even? : % -> Boolean
+ factor : % -> Factored(%)             factorial : % -> %
+ gcd : List(%) -> %                    gcd : (%,%) -> %
+ hash : % -> %                         hash : % -> SingleInteger
+ inc : % -> %                          init : () -> %
+ invmod : (%,%) -> %                   latex : % -> String
+ lcm : List(%) -> %                    lcm : (%,%) -> %
+ length : % -> %                       mask : % -> %
+ max : (%,%) -> %                      min : (%,%) -> %
+ mulmod : (%,%,%) -> %                 negative? : % -> Boolean
+ nextItem : % -> Union(%,"failed")     odd? : % -> Boolean
+ one? : % -> Boolean                   permutation : (%,%) -> %
+ positive? : % -> Boolean              positiveRemainder : (%,%) -> %
+ powmod : (%,%,%) -> %                 prime? : % -> Boolean
+ ?quo? : (%,%) -> %                    random : % -> %
+ random : () -> %                      rational : % -> Fraction(Integer)
+ rational? : % -> Boolean              recip : % -> Union(%,"failed")
+ ?rem? : (%,%) -> %                    retract : % -> Integer
+ sample : () -> %                      shift : (%,%) -> %
+ sign : % -> Integer                   sizeLess? : (%,%) -> Boolean
+ squareFree : % -> Factored(%)         squareFreePart : % -> %
+ submod : (%,%,%) -> %                 symmetricRemainder : (%,%) -> %
+ unit? : % -> Boolean                  unitCanonical : % -> %
+ zero? : % -> Boolean                  ?~=? : (%,%) -> Boolean
+ OMwrite : (OpenMathDevice,%,Boolean) -> Void
+ OMwrite : (OpenMathDevice,%) -> Void
+ characteristic : () -> NonNegativeInteger
+ differentiate : (%,NonNegativeInteger) -> %
+ divide : (%,%) -> Record(quotient: %,remainder: %)
+ euclideanSize : % -> NonNegativeInteger
+ expressIdealMember : (List(%),%) -> Union(List(%),"failed")
+ exquo : (%,%) -> Union(%,"failed")
+ extendedEuclidean : (%,%) -> Record(coef1: %,coef2: %,generator: %)
+ extendedEuclidean : (%,%,%) -> Union(Record(coef1: %,coef2: %),"failed")
+ gcdPolynomial : (SparseUnivariatePolynomial(%),SparseUnivariatePolynomial(%))
+                   -> SparseUnivariatePolynomial(%)
+ lcmCoef : (%,%) -> Record(llcmres: %,coeff1: %,coeff2: %)
+ multiEuclidean : (List(%),%) -> Union(List(%),"failed")
+ patternMatch : (%,Pattern(Integer),PatternMatchResult(Integer,%))
+                   -> PatternMatchResult(Integer,%)
+ principalIdeal : List(%) -> Record(coef: List(%),generator: %)
+ rationalIfCan : % -> Union(Fraction(Integer),"failed")
+ reducedSystem : Matrix(%) -> Matrix(Integer)
+ reducedSystem : (Matrix(%),Vector(%))
+                   -> Record(mat: Matrix(Integer),vec: Vector(Integer))
+ retractIfCan : % -> Union(Integer,"failed")
+ subtractIfCan : (%,%) -> Union(%,"failed")
+ unitNormal : % -> Record(unit: %,canonical: %,associate: %)
+\end{verbatim}
+\begin{tabular}{rp{11cm}}
+{\hskip 1.5cm}
+& 必须强调,使用 {\tt )show} 或浏览器,对于理解 Axiom 中已经具备哪些东西、以及要生成一个合法的 domain 还需要添加什么,是必不可少的。事实上,用户并不能直接写出一个 domain,只能写一个函数(见后文),调用它时才会创建出一个 domain。
+\end{tabular}
+
+\begin{tabular}{rp{11cm}}
+{\bf Category} & 属于这个 category 的全部 domain 的集合(即声明属于它的 domain),也就是说,这些 domain 都具备所述的操作与相应的公理。例如,domain {\tt Integer} 属于 category {\tt Ring},其操作如下,同样可以通过 {\tt )show Ring} 或浏览器得到。
+\end{tabular}
+\begin{verbatim}
+ Ring  is a category constructor
+ Abbreviation for Ring is RING 
+ This constructor is exposed in this frame.
+ Issue )edit bookvol10.2.pamphlet to see algebra source code for RING 
+
+------------------------------- Operations --------------------------------
+ ?*? : (%,%) -> %                      ?*? : (Integer,%) -> %
+ ?*? : (NonNegativeInteger,%) -> %     ?*? : (PositiveInteger,%) -> %
+ ?**? : (%,NonNegativeInteger) -> %    ?**? : (%,PositiveInteger) -> %
+ ?+? : (%,%) -> %                      ?-? : (%,%) -> %
+ -? : % -> %                           ?=? : (%,%) -> Boolean
+ 1 : () -> %                           0 : () -> %
+ ?^? : (%,NonNegativeInteger) -> %     ?^? : (%,PositiveInteger) -> %
+ coerce : Integer -> %                 coerce : % -> OutputForm
+ hash : % -> SingleInteger             latex : % -> String
+ one? : % -> Boolean                   recip : % -> Union(%,"failed")
+ sample : () -> %                      zero? : % -> Boolean
+ ?~=? : (%,%) -> Boolean              
+ characteristic : () -> NonNegativeInteger
+ subtractIfCan : (%,%) -> Union(%,"failed")
+\end{verbatim}
+\begin{tabular}{rp{11cm}}
+{\hskip 1.5cm}
+& 注意 0 和 1 是{\sl 零元操作 (nullary operation)},因为它们的实际取值在属于 category {\tt Ring} 的不同 domain 中可能大不相同,例如在 $n\times n$ 方阵环中,1 是单位矩阵,而不是元素全为 1 的矩阵。\\
+& category 也可以带参数,如 {\tt Algebra($R$)},其中 $R$ 是某个 {\tt CommutativeRing},它给出的是 $R$ 上全体代数构成的 category。
+\end{tabular}
+
+\begin{tabular}{rp{11cm}}
+{\bf functor} & 一种函数,其参数要么是单个对象——这时要指明它们来自哪个 domain,要么是 domain 本身——这时要指明它们来自哪个 category;它返回的是一个 domain,并声明该 domain 属于某个特定的 category。举例如下:
+\begin{tabular}{rp{9cm}}
+{\bf Z=Integer} & 是把函数 {\tt Integer} 应用到零个参数上得到的结果;\\
+{\bf Q} & 是把函数 {\tt Fraction}(它需要一个 {\tt IntegralDomain} 作为参数)应用到 {\tt IntegralDomain Integer} 上得到的结果。结果是一个 {\tt Field}。\\
+{\bf Z}[$y$] & 是把 functor {\tt UnivariatePolynomial} 应用到对象 $y$(来自 domain {\tt Symbol})和 domain {\tt Integer}(来自 category {\tt Ring})上得到的结果。该结果被声明为一个 {\tt Ring},或者更确切地说,属于 category {\tt UnivariatePolynomialCategory($R$)},其中 $R$ 就是所给的那个 {\tt Ring}。
+\end{tabular}
+\end{tabular}
+
+\begin{tabular}{rp{11cm}}
+{\bf Package} & 很像一个函数,但它并不指定新的数据对象,只是提供一些新的函数。典型的例子是 {\tt UnivariatePolynomialFunctions2},它定义了下面这个操作
+\begin{verbatim}
+map:(R -> S, UnivariatePolynomial(x,R)) -> UnivariatePolynomial(y,S)
+\end{verbatim}
+其中 $x$、$y$ 是 {\tt Symbol} 的元素,$R$、$S$ 属于 category {\tt Ring}。用数学语言来说,这个函数接受一个从 $R$ 到 $S$ 的函数 $\theta$,并给出相应的一个从 $R[x]$ 到 $S[y]$ 的函数。要得到从 $R[x]$ 到 $S[y]$ 的具体函数,需要借助 Axiom 表示"lambda 表达式"的记法,即 {\tt map(f,\#1)},也就是说:给定 {\tt UnivariatePolynomial(x,R)} 的一个元素 $p$,该函数计算出 {\tt map(f,$p$)}。
+\end{tabular}
+
+\begin{tabular}{rp{11cm}}
+{\bf Constructor} & 一个统称,涵盖 category、functor与 package。
+\end{tabular}
+
+\section{第一个问题——带权多项式}
+
+\subsection{问题的定义}
+
+我们这里的目标是效仿 CAMAL(Fitch\cite{Fitc74})对"带权多项式"的处理方式,这个概念在 Reduce(Hearn\cite{Hear87})里也有,通过 {\tt weight} 和 {\tt wtlevel} 这两个命令体现。对不熟悉这个想法的读者,这里先做个简要说明。随后我们会逐步给出两种不同的实现。完整的定义将在附录中给出。
+
+某些多项式变量带有一个(正整数的){\tt weight}(权)。若 $x$ 的权为 $k$,则 $x^n$ 的权为 $kn$;一个单项式的权,是它所含各个幂次的权之和。由此可知,两个单项式之积的权,就是它们各自权的和。选定一个整数(称为 {\tt weight level} 即权层级),权超过这个层级的所有单项式都会被丢弃。如果把这种丢弃操作记作 $\lfloor\rfloor$(借用整数取整的写法),就能看到 $\lfloor{}f+g\rfloor=\lfloor{}f\rfloor+\lfloor{}g\rfloor$,并且 $\lfloor{}fg\rfloor=\lfloor\lfloor{}f\rfloor\lfloor{}g\rfloor\rfloor$。
+
+我们建议的实现方案,在概念上与 Reduce(Hearn\cite{Hear87})的做法相似:权被存成一个虚拟变量(Reduce 里叫 {\bf k*})的指数,单项式则存成这个变量相应幂次的系数。Reduce 并不保证 {\bf k*} 在多项式排序中一定是最高位的变量,因此截断操作的效率不如理想情况高。
+
+下面简要说明我们需要用到的几个关键 Axiom 函数。
+\begin{itemize}
+\item {\bf Polynomial} 是 Axiom 默认赋给多项式类对象的类型。每次算出一个对象后,都能在 Axiom 里看到它的类型(如果没有显示出来,用系统命令 {\tt )set message type on} 打开即可)。这是一个 functor,给定一个 {\tt Ring} $R$,它返回 category {\tt PolynomialCategory(R,Symbol,IndexedExponents(Symbol))} 中的一个 domain,也就是说,变量取自 {\tt Symbol} 这个 domain(对应普通的符号),指数则取自 {\tt IndexedExponents}——它给每个符号指定一个非负整数(对取值非零的符号而言)。因此这个类型是传统意义上的稀疏多元多项式,也是 Axiom 的默认类型。此外还有别的类型,尤其是稠密多项式,以及按分布式(而非递归式)方式表示的多项式,但除非显式指定,否则它们不会出现。
+\item {\bf PolynomialCategory} 是 {\tt Polynomial} 的结果所属的 category,浏览器里 {\tt Polynomial} 的 {\tt Parents} 选项可以看到这一点。这个 category 接受三个参数:一个 {\tt Ring} $R$;一个 {\tt OrderedSet},通常记作 {\tt VarSet},表示多项式结构里的"变量";以及一个 {\tt OrderedAbelianMonoidSup}\footnote{一个 {\tt OrderedCancellationAbelianMonoid} 是既满足消去律又是全序集的 abelian monoid,且序与加法相容:$x\le{}y\Rightarrow{}x+z\le{}y+z$。因为它满足消去律,即 $x+y=y+z\Rightarrow{}x=y$,所以存在一个部分减法操作:若存在满足 $z+y=x$ 的 $z$,则 $x-y$ 就是这个唯一的 $z$。一个 {\tt OrderedAbelianMonoidSup} 则是在此基础上,还带有相对于减法诱导出的偏序的一个 {\tt sup} 操作的 {\tt OrderedCancellationAbelianMonoid}。换句话说,${\tt sup}(x,y)-x$ 与 ${\tt sup}(x,y)-y$ 都存在,并且在这个性质下 ${\tt sup}(x,y)$(相对于 $<$)是最小的。},记作 $E$,表示多项式结构的指数。因此,category {\tt PolynomialCategory(R,E,VarSet)} 中的一个 domain,就是以 {\tt VarSet} 为变量、系数取自 $R$、用 $E$ 表示指数的一种多项式表示。
+\item {\bf PolynomialRing} 被用在 {\tt Polynomial} 的实现里(经由 {\tt SparseMultivariatePolynomial},在浏览器的 {\tt Lineage} 选项里可以看到这条链)。这个 functor 接受两个参数:系数环 {\tt Ring} $R$,以及作为指数集合的 {\tt OrderedAbelianMonoid} $E$,由此产生形式多项式。特别地,若 $E$ 就是 $\mathbb{N}$(Axiom 里对应 domain {\tt NonNegativeInteger}),得到的就是标准的一元多项式,变量甚至没有被赋予名字。
+\item {\bf FreeModule} 被用在 {\tt PolynomialRing} 的实现里,同样可以通过浏览器的 {\tt Lineage} 选项找到。它接受一个 {\tt Ring} $R$ 和一个 {\tt OrderedSet} $S$ 作为参数,生成 $R$ 上以 $S$ 的元素为指标的自由模。{\tt PolynomialRing} 在此基础上构建:保留加法等定义不变,补充乘法的定义,借助指数之间的加法来定义多项式的乘法。让我们确切看看这是怎么定义的(为了突出讲解的重点,我们删掉了一些无关紧要的行)
+\end{itemize}
+\begin{verbatim}
+PolynomialRing(R:Ring,E:OrderedAbelianMonoid):
+  FiniteAbelianMonoidRing(R,E) with
+    if R has canonicalUnitNormal then canonicalUnitNormal
+ == FreeModule(R,E) add
+    Term:= Record(k:E,c:R)
+    Rep:= List Term
+    1 == [[0$E,1$R]]
+    p1,p2: %
+    if R has EntireRing then
+      p1 * p2 ==
+        null p1 => 0
+        null p2 => 0
+        p1.first.k = 0 => p1.first.c * p2
+        ps = 1 => p1
+        +/[[[t1.k+t2.k,t1.c*t2.c]$Term for t2 in p2]
+                                       for t1 in reverse(p1)]
+               -- This 'reverse' is an efficiency improvemant:
+               -- reduces both time and space [Abbot/Bradford/Davenport]
+    else
+      p1 * p2 ==
+        null p1 => 0
+        null p2 => 0
+        p1.first.k = 0 => p1.first.c * p2
+        p2 = 1 => p1
+        +/[[[t1.k+t2.k,r]$Term for t2 in p2 | (r:=t1.c*t2.c) ^= 0]
+                               for t1 in reverse(p1)]
+               -- This 'reverse' is an efficiency improvemant:
+               -- reduces both time and space [Abbot/Bradford/Davenport]
+
+    if R has CommutativeRing then
+      p ** nn ==
+        null p => 0
+        nn = 0 => 1
+        p.rest = [] => [[nn * p.first.k, p.first.c ** nn]]
+        binomThmExpt([p.first],p.rest,nn)
+
+      binomThmExpt(x,y,nn) ==
+        nn = 0 => 1$%
+        ans,xn,yn:%
+        bincoef: Integer
+        powl: List(%):= [x]
+        for i in 2..n repeat pow1:=[x * powl.first, :powl]
+        yn:=y; ans:=powl.first; i:=1; bincoef:=nn
+        for xn in powl.rest repeat
+          ans:= bincoef * xn * yn + ans
+          bincoef:= (nn-1) * bincoef quo (i+1); i:=i+1
+          -- last I and BINCOEF unused
+          yn:= y * yn
+        ans + yn
+    else
+      p ** nn == repeatMultExpt(p,nn)
+
+      repeatNultExpt(x,nn) ==
+        nn = 0 => 1
+        y:= x
+        for i in 2..nn repeat y:= x * y
+        y
+\end{verbatim}
+
+返回的 domain 属于 category {\tt FiniteAbelianMonoidRing}\footnote{"abelian monoid ring"(交换幺半群环)与"group ring"(群环)显然有类比关系:它就是以 abelian monoid 的元素为指标、环元素的形式和的集合,加法等按分量定义,乘法则借助 abelian monoid 指标之间的加法来定义。这里用"finite"(有限)一词,是要强调我们只考虑{\sl 有限}和,也就是说,环元素在 abelian monoid 的元素上,除有限多个之外都取零。},如果基环 $R$ 具有 {\tt canonicalUnitNormal} 这个附加性质(该性质的说明见 Davenport \& Trager\cite{Dave90}),那么返回的 domain 也具有这个性质。它的实现方式是取 {\tt FreeModule($R$,$E$)},再"添加"(add,故而用到这个关键字)若干额外的操作——我们上面只引用了单位元与乘法的定义,实际上还有更多。我们发现,借助 {\tt FreeModule} 的内部表示 (representation) 来处理会比较方便,这就是那行 {\tt Rep} 的由来(它又依赖于 {\tt Term} 的定义)。稍后我们还会看到这种手法的更多例子,即定义 Axiom functor的方法 (4)。
+
+\subsection{问题的规格说明}
+
+按自顶向下的方式来看,我们需要构造这样一个东西:它接受一个 {\tt Ring} $R$、若干符号的权、以及一个初始权层级作为参数,返回一个 {\tt Ring} 作为结果——这就是(至少在所指定的符号上)$R$ 上、按给定权层级截断的带权多项式环。此时,有几个设计决策需要确定。
+\begin{itemize}
+\item 权层级是否应当可以改变?在 Reduce 里它是可变的,来自逐次逼近理论方面的建议(例如见 Barton \& Fitch\cite{Bart72})也让我们相信权层级应当是可变的。
+\item 权本身是否应当可以改变?在 Reduce 里不行,要让它可变,就得重新计算所有乘积的权。当然,Axiom 的用户完全可以构造两个权各不相同的 domain,这种灵活性是 Reduce 做不到的,我们相信这已经足够。
+\item 权应当如何表示?我们可以专门造一个 Axiom 数据类型,也可以把它们当作方程接受,在运行期强制要求形如"symbol=non-negative integer",或者把它们处理成一个符号列表和一个对应的非负整数列表。为简单起见,我们在用户接口上选择了最后一种方式(内部处理方式见后文)。
+\item 带权多项式是否应当只包含权列表中指定的符号,还是也可以包含其他符号?这一点见仁见智,但随着实现的推进,允许出现其他符号(它们的权实际上就是 0)看起来更简单一些。
+\end{itemize}
+
+现在我们大概可以写出这个 functor 的规格说明部分了。
+\begin{verbatim}
+)abbrev domain OWP OrdinaryWeightedPolynomials
+
+OrdinaryWeightedPolynomials(R:RIng,
+                            vl:List Symbol,
+                            wl:List NonNegativeInteger,
+                            wtlevel:NonNegativeInteger):
+  Ring with
+
+    if R has CommutativeRIng then Algebra(R)
+
+    coerce : % -> Polynomial(R)
+      ++ coerce will convert back into a Polynomial(R), ignoring weights
+
+    coerce : Polynomial(R) -> %
+      ++ coerce a Polynomial(R) into Weighted form,
+      ++ applying weights and ignoring terms
+
+    if R has Field then 
+
+      "/" : (%,%) -> Union(%,"failed")
+        ++ a / b, the division only works if minimum weight
+        ++ of divisor is zero, and if R is a Field
+
+    changeWeightLevel : NonNegativeInteger -> Void
+      ++ changeWeightLevel changes the weight level to the new value given:
+      ++ NB: previously calculated terms are not affected
+\end{verbatim}
+
+{\tt )abbrev} 这一行对任何 functor 的定义都是必需的,因为这个缩写(至多八个字母,category 则至多七个)除了别的用途外,还确定了编译代码存放目录的名字。
+
+Axiom 的注释以 $--$ 或 $++$ 开头。前者承担传统的程序注释功能。后者只能出现在特定的上下文里,会被构建 HyperDoc 数据库的程序挑出来,并在 HyperDoc 用来描述操作(如上面引用的 {\tt changeWeightLevel} 操作)或整个 constructor 时被取出显示。
+
+Axiom 会检查函数上 $++$ 注释的第一个词,确认它就是函数名;如果不是,就会报错。
+
+一般来说,每个函数都应当用 $++{\rm X}$ 这种写法给出示例。以这三个字符开头的注释行,会在用户用 {\tt )display operation} 查询某个函数时,作为帮助文本显示出来。
+
+现在我们本可以着手实现这个数据类型了,但转念一想:虽然 {\tt Polynomial} 是 Axiom 的默认表示,却并非唯一的表示,如果"带权多项式"这个设施不能用于其他实现方式,未免可惜。因此我们决定,把 {\tt OrdinaryWeightedPolynomials} 用一个更通用的 constructor 来实现,让这个 constructor 把多项式类型作为参数接受进来。由此得到 {\tt OrdinaryWeightedPolynomials} 主体部分的如下实现。
+\begin{verbatim}
+  == WeightedPolynomials(R,Symbol,IndexedExponents(Symbol),
+                         Polynomal(R),vl,wl,wtlevel)
+\end{verbatim}
+这本质上是一种什么都没有添加的 {\tt add} 形式:{\tt OrdinaryWeightedPolynomials} 的操作,将恰好就是 {\tt WeightedPolynomials} 的操作。
+
+这样一来,{\tt WeightedPolynomials} 的头部几乎是自然而然就写出来了。
+\begin{verbatim}
+)abbrev domain WP WeightedPolynomials
+
+WeightedPolynomials(R:RIng,VarSet: OrderedSet, E:OrderedAbelianMonoidSup,
+                    P:PolynomialCategory(R,E,Varset),
+                    vl:List Varset, wl:List NonNegativeInteger,
+                    wtlevel:NonNegativeInteger):
+  Ring with
+    if R has CommutativeRing then Algebra(R)
+
+    coerce : % -> P
+      ++ coerce convers back into a "P", ignoring weights
+
+    if R has Field then
+
+      "/": (%,%) -> Union(%,"failed")
+        ++ a / b division only works if minimum weight 
+        ++ of divisor is zero, and if R is a Field
+
+    coerce : P -> %
+      ++ coerce a "P" into Weighted form, applying weights and ignoring terms
+ 
+    changeWeightLevel : NonNegativeInteger -> Void
+      ++ changeWeightLevel changes the weight level to the new value given:
+      ++ NB: previously calculated terms are not affected
+\end{verbatim}
+
+我们要怎样实现这个类型呢?在 Axiom 里实现一个 functor 有多种可能的做法。
+\begin{itemize}
+\item[(1)] 直接复用另一个 domain,就像 {\tt OrdinaryWeightedPolynomials} 复用 {\tt WeightedPolynomials} 那样
+\item[(2)] 在已有的 domain 上,通过 {\tt add} 子句添加新的操作符。上一种方法可以看作这种方法的一个平凡特例。
+\item[(3)] 全新实现:定义数据对象的表示,但所有操作都从零开始定义(或者由某些 category 给出的缺省定义提供)
+\item[(4)] 混合做法:在某个 domain 上 add,但同时也引用它的表示,以便深入到它的内部去。这种做法相当常见(例如前面用 {\tt FreeModule} 定义 {\tt PolynomialRing} 就是如此),但也最危险,因为被 add 的那个 domain 不再被当作"黑盒"对待,而是可以随意深入进去的东西。被 add 的那个 domain 的表示一旦发生变化,新构建的 domain 就可能失效。
+\end{itemize}
+
+\subsection{问题的实现}
+
+我们先来试试第三种方法,把 {\tt PolynomialRing} 用作我们的表示。这样一来,我们实现的核心部分大致如下(其中 {\tt coerce (p\pageref{coerce})} 等的细节留到后面讨论)。
+\begin{verbatim}
+  Rep := PolynomialRing(P,NonNegativeInteger)
+  w,x1,x2:%
+
+  0 == 0$Rep
+
+  1 == 1$Rep
+
+  x1 = x2 ==
+    -- Note that we must strip out any terms greater than wtlevel
+    while degree x1 > wtlevel repeat
+      x1 := reductum x1
+    while degree x2 > wtlevel repeat
+      x1 := reductum x2
+    x1 =$Rep x2
+
+  x1 + x2 == x1 +$Rep x2
+
+  -x1 == -$Rep x1
+
+  x1 * x2 ==
+    -- Note that this is probalby an extremely inefficient definition
+    w:=x1 * $Rep x2
+    while degree(w) > wtlevel repeat
+      w:=reductum w
+    w
+\end{verbatim}
+
+这里出现了一个重要问题,就是必须把表示 ({\tt PolynomialRing}) 的操作,和正在定义的这个类型自身的操作区分开。由于元素既可以看作属于这个数据类型,也可以看作属于它的表示,当数据类型与表示具有相同签名 (signature) 的操作时,就存在产生歧义的可能。这种情况下,不加限定的操作名指的是数据类型的操作,而表示上的操作则要用 {\tt \$Rep} 这种写法来获取——意思是使用数据类型 {\tt Rep} 上的操作。上面给出的 $+$ 定义就是一个简单的例子,用中文可以这样转述:"要把两个 {\tt WeightedPolynomials} 的元素相加,就把它们当作表示的元素,即 {\tt PolynomialRing} 的元素来相加。"稍微复杂一点的是相等性的定义,可以这样转述:"要检验两个 {\tt WeightedPolynomials} 的元素是否相等,先去掉所有权大于当前权层级的项,再把它们当作表示的元素,即 {\tt PolynomialRing} 的元素来检验是否相等。"这里也许值得一提的是,由此产生的一个副作用是:调用 {\tt changeWeightLevel} 可能会影响相等性检验的结果。
+
+读者也许会问:"{\tt Ring} 应当定义的操作远不止你上面写的这些——其余的在哪里?"答案是:这些由各个 category 里的缺省操作提供。例如,我们没有定义的第一个操作,是签名为 {\tt "*":(Integer,\pct) -> \pct} 的乘法操作。它由缺省从 category {\tt AbelianGroup}(是 {\tt Ring} 的祖先)那里获得,在那里这个操作的定义是
+\begin{verbatim}
+AbelianGroup() : Category == SIG where
+
+  SIG ==> CancellationAbelianMonoid with
+
+    "*" : (Integer,%) -> %            
+      ++ n*x is the product of x by the integer n.
+\end{verbatim}
+
+\subsection{{\tt PolynomialRing} 的实现}
+
+这里我们把 {\tt PolynomialRing} 既当作基类型,又当作我们的表示,对应前面所列方法中的方法 (4)。同样,{\tt coerce (p\pageref{coerce})} 等的各种定义留到后面再考虑;这里我们只关注这种实现和前一种实现的差异。
+\begin{verbatim}
+   == PolynomialRing(P,NonNegativeIntger)
+ add
+   --representations
+   Term := Record(k:NonNegativeInteger,c:P)
+   Rep  := List Term
+   w,x1,x2:%
+  
+   x1 * x2 ==
+     null x1 => 0
+     null x2 => 0
+     r:P
+     x1.first.k = 0 =>
+       [[t2.k,r]$Term for t2 in x2 | (r:=x1.first.c * t2.c) ^= 0]
+     x2 = 1 => x1
+     +/[[[n,r]$Term for t2 in x2 | (n:=t1.k+t2.k) <= wtlevel and
+                                   (r:=t1.c*t2.c) ^= 0]
+                    for t1 in reverse(x1)]
+           -- This 'reverse' is an efficiency improvement:
+           -- reduces both time and space [Abbott/Bradford/Davenport]
+
+   import RepeatedSquaring(%)
+
+   x:% ** n:NonNegativeInteger ==
+     zero? n => 1
+     expt(x,n pretend PositiveInteger)
+\end{verbatim}
+
+我们仍然需要一个相等性的定义,因为 {\tt PolynomialRing} 给出的定义不够用,它没有考虑当前权层级的取值。虽然算法本身很相似,但实现必须改用新定义的 {\tt Rep}(一个由项组成的列表)来表达。因此 {\tt degree(x1)} 要换成 {\tt x1.first.k}。类似地,{\tt =\$Rep} 这种写法也不再适用,因为现在的 {\tt Rep} 只是一个对象列表,必须换成把 {\tt PolynomialRing} 里相等性定义显式复制过来——而这个定义实际上是从 {\tt IndexedDirectProductAbelianGroup} 继承来的。
+
+我们不再需要 0 和 1 的定义,它们从 {\tt PolynomialRing} 那里获取即可,加法和减法的定义也是如此。不过,我们仍然需要乘法的定义,因为 {\tt PolynomialRing} 里的定义不会丢弃权大于权层级的项。这个定义是在前面给出的 {\tt PolynomialRing} 乘法定义基础上写出的。
+
+此外,我们现在还需要乘方的定义。这一点的原因,涉及人们在用 Axiom 编程时常遇到的一大难点,所以我们要仔细分析一下。前面已经说过,一个数据类型并不需要提供全部所需的定义,因为可以从缺省 package 那里获取。使用方法 (2) 或方法 (4) 时,实际上有两处可以获取这些缺失的定义:缺省 package,或者所谓的 {\tt add} 链——即 {\tt add} 子句里引用的那个 functor,或者递归地,它的 {\tt add} 子句里引用的那个 functor,如此等等。我们该用哪一处呢?Axiom 里的规则相当简单,但它的含义却很深远。
+
+{\bf 原理 9}: {\sl 系统首先在给定 functor 的实现里查找某个函数,然后沿着 {\tt add} 链递归向上查找,期间不检查缺省 package;如果这样仍然找不到定义,才会在缺省 package 里查找,从最具体的到最一般的依次进行。}
+
+
+这条规则对乘方运算的含义如下。
+\begin{itemize}
+\item[(i)] {\tt Monoid} 里有乘方的缺省定义(因此 {\tt Ring} 里也有),它用的是重复平方法。这个定义本来完全可以满足我们的需要(只要用我们刚在 {\tt WeightedPolynomials} 里定义的乘法)
+\item[(ii)] 而 {\tt PolynomialRing} 里还有别的乘方定义,正如我们前面看到的那样:系数环可交换时用二项式定理,否则用重复乘法算法。
+\item[(iii)] 因此,按照上面所引的规则,实际用到的会是 (ii) 中的某个定义。这样一来,它们用的就是 {\tt PolynomialRing} 里定义的乘法,也就不会利用权层级。
+\end{itemize}
+因此,为了得到一个令人满意的乘方实现,我们需要重复一遍那个缺省定义,或者另外提供一个会用到 {\tt WeightedPolynomials} 乘法的定义。
+
+一个相关的问题出现在 {\tt zero?} 和 {\tt one?} 的定义里。它们分别在 {\tt AbelianMonoid} 和 {\tt Monoid} 中带有缺省定义 {\tt zero? x == x=0} 和 {\tt one? x == x=1}。由于这些定义在 {\tt add} 链中恰好没有被覆盖,它们就是 {\tt WeightedPolynomials} 中实际生效的定义,因而用到的是 {\tt WeightedPolynomials} 自己的相等性定义。
+
+{\sl 不过},如果日后 {\sl PolynomialRing} 的作者添加了其他定义,那么实际生效的就会换成那些定义。
+
+\subsection{杂项定义}
+
+这里我们给出一些零散的定义,它们都应当是 {\tt WeightedPolynomials} 实现的一部分。前三行是 {\tt changeWeightLevel} 的定义。
+\begin{verbatim}
+  n:NonNegativeInteger
+
+  changeWeightLevel(n) ==
+    wtlevel:=n
+\end{verbatim}
+
+前面我们已经决定用一个变量列表和一个对应的权列表来表示权,但这种表示在内部操作起来相当笨拙。因此接下来几行定义了一个叫 {\tt lookupList} 的内部数据结构,对它做初始化,并提供一个局部函数(也就是在 functor 体之外用不到的函数),用来查找某个特定变量所对应的权。
+\begin{verbatim}
+  lookupList: List Record(var:VarSet, weight:NonNegativeInteger)
+
+  if #vl ^= #wl then error "incompatible length lists in WeightedPolynomial"
+
+  lookupList:=[[v,n] for v in vl for n in wl]
+
+  lookup:Varset -> NonNegativeInteger
+  lookup v ==
+    l:=lookupList
+    while l ^= [] repeat
+      v = l.first.var => return l.first.weight
+      l:=l.rest
+    0
+\end{verbatim}
+现在我们需要某种方法来创建 domain {\tt WeightedPolynomials} 的元素。显而易见的做法,是提供一个从 $P$(对 {\tt OrdinaryWeightedPolnomials} 而言,就是 Axiom 通常的 {\tt Polynomial} 类型)到 {\tt WeightedPolynomials} 的强制转换 (coercion) 操作符。这就是接下来几行的作用。{\tt coerce} 本身很简单:它只是调用 {\tt innercoerce},把权层级传给它。{\tt innercoerce} 递归地拆解输入的多项式,并适当地递减权层级。
+\begin{verbatim}
+  p:P
+  z:Integer
+
+  innercoerce:(p,z) -> %
+  innercoerc(p,z) ==
+    z < 0 => 0
+    zero? p => 0
+    mv:= mainVariable p
+    mv case "failed" => [[0,p]]
+    n:=lookup(mv)
+    up:=univariate(p,mv)
+    ans:%
+    ans:=0
+    while not zero? up repeat
+      d:=degree up
+      f:=n*d
+      lcup:=leadingCoefficient up
+      up:=up-leadingMonomial up
+      mon:=monomial(1,mv,d)
+      f <= z => ans:=ans+[[tm.k+f,mon*tm.c] for tm in innercoerce(lcup,z-f)]
+    ans
+
+    coerce(p):% == innercoerce(p,wtlevel)
+\end{verbatim}
+\label{coerce}
+逆操作要简单得多:我们只需要把系数加起来。
+\begin{verbatim}
+  coerce(w):P == "+"/[tm.c for tm in w]
+\end{verbatim}
+最后一个定义,是从 {\tt WeightedPolynomials} 到 {\tt OutputForm}(Axiom 用于输出、以及转换成 TeX 等格式的类型)的强制转换。这个定义相当简单,主要的复杂性在于规格说明本身。这里我们决定:权为零的单个项按原样打印,而其余情形下,每一组具有特定权的项都会带括号打印(哪怕这一权层只有一项也是如此)。显然,这个定义几乎可以按需要改成任何其他行为。
+\begin{verbatim}
+  coerce(p:%):OutputForm ==
+    zero? p => (0$Integer)::OutputForm
+    p.first.k = 0 => p.first.c::OutputForm
+    reduce("+",(reverse [paren(t1.c::OutputForm) for t1 in p])::List OutputForm
+\end{verbatim}
+
+\section{第二个问题——FourierSeries}
+
+\subsection{问题的定义}
+
+我们这里的目标,是实现一个等价于 CAMAL(Fitch\cite{Fitc74})处理截断 Fourier 级数的功能。我们需要某个"角"的 domain——在 CAMAL 里,这是八个角度变量 $s,\ldots,z$、系数为整数(取值范围 $-63\ldots 63$)的线性组合。我们可以构造这些变量的 sin 或 cos,把它们用作多项式表达式里的系数,其中三角函数的乘积总是被线性化处理。CAMAL 里还提供更多操作,例如对某个角度变量求积分,但为了讲解简单起见,这里就不涉及这些了。
+
+因此在 CAMAL 里,这些三角函数表达式的系数本身不会再涉及别的三角函数,而会涉及带权多项式。我们已经定义过带权多项式,虽然它们在实践中确实是最常见的系数类型,但似乎并非绝对必须使用它们。不过,我们大概需要假设系数彼此可交换、并且与三角项也可交换,否则乘积的线性化就无法良好定义。此外,由于
+\[\sin(A)\sin(B)=\frac{\cos(A-B)-\cos(A+B)}{2}\]
+我们必须能够除以 2。因此为简单起见,我们要求可以除以任意非零整数,也就是说,系数应当是 $\mathbb{Q}$ 上的一个代数,对应 Axiom 类型 {\tt Fraction Integer}。
+
+\subsection{问题的规格说明}
+
+这样一来,我们的类型 Fourier 级数(FourierSeries)的头部几乎是自然而然就写出来了。三角函数的参数最好是一个全序集,这样才能对各种三角函数排序;同时也最好是一个 abelian group,这样才能进行加法和减法。因此我们本可以要求这些参数的 domain 是一个 {\tt OrderedAbelianGroup},但这可能要求过强,我们只限定使用 {\tt Join(OrderedSet,AbelianGroup)}\footnote{一个 {\tt OrderedAbelianGroup} 还会具有 $a<b\Rightarrow{}a+c<b+c$ 这一性质,但我们大概用不到这一点}
+\begin{verbatim}
+FourierSeries(R:Join(CommutativeRing,Algebra(Fraction Integer)),
+              E:Join(OrderedSet,AbelianGroup)):
+  Algebra(R) with
+    
+   if E has canonical and R has canonical then canonical
+
+   coerce : R -> %
+     ++ coerce convers coefficients into Fourier Series
+
+   coerce : FourierCompoents(E) -> %
+     ++ coerce converts sin/cos terms into Fourier Series
+
+   makeSin : (E,R) -> %
+     ++ makeSin makes a sin expression with given argument and coefficient
+
+   makeCos : (E,R) -> %
+     ++ makeCos makes a cos expression with given argument and coefficent
+\end{verbatim}
+这里的操作(除了最后一个 {\tt coerce (p\pageref{coerce2})} 会在下一节解释以外)都相当直观。那含有"{\tt canonical}"这个词的一行是什么意思呢?
+\index{canonical}
+Axiom 对属性 {\tt canonical}(规范的)的定义是:一个 domain 若满足数学上的相等能推出数据结构上的相等,就称为 canonical。这尤其意味着可以使用基于哈希的技术。这一点在 Davenport \& Trager\cite{Dave90} 里有讨论,更详细的内容可参见 Davenport et al.\cite{Dave88}。在我们这个情形里,这句话的意思是:如果系数与参数都是 canonical 的,那么返回的数据类型也会是 canonical 的。
+
+实现这一点的显然做法,是借助某种 {\tt FreeModule},以 $R$ 为系数、以三角函数为指标。不过,我们首先需要定义三角函数本身,这就是下一节的目的。我们会在再下一节回到类型 {\tt FourierSeries}。
+
+\subsection{{\tt FourierComponent} 的实现}
+
+本来可以用 Axiom 通用类型 {\tt Expression} 来表示三角函数,但出于教学上的考虑,也有部分是为了让代码保持相对自成一体,我们选定了一个单独的数据类型。
+
+对这个数据类型的要求相当直接:它应当提供构造 sin 和 cos 函数的方式,并且结果应当是一个 {\tt OrderedSet},以便可以传给 {\tt FreeModule}。这样一来,它的头部也就同样直接了。
+\begin{verbatim}
+FourierComponent(E:OrderedSet):
+
+  OrderedSet with
+
+    sin : E -> %
+      ++ sin makes a sin kernel for use in Fourier series
+
+    cos : E -> %
+      ++ cos makes a cos kernel for use in Fourier series
+
+    sin? : % -> Boolean
+      ++ sin? is true if term is a sin, otherwise false
+
+    argument : % -> E
+      ++ argument returns the argument of a given sin/cos expression
+ ==
+\end{verbatim}
+
+这里用方法 (3) 来定义这个数据类型看起来比较合适——我们只需要存储参数,以及一个标志位,指示这是 sin 表达式还是 cos 表达式。实现的第一部分很简单。
+\begin{verbatim}
+  add
+
+    --representations
+    Rep:=Record(SinIfTrue:Boolean, arg:E)
+    e:E
+    x,y:%
+
+    sin e == [true,e]
+
+    cos e == [false,e]
+
+    sin? x == x.SinIfTrue
+
+    argument x == x.arg
+\end{verbatim}
+比较棘手的问题,是要给 {\tt FourierComponent} 强加一个什么样的序。我们选择了(说不上有什么特别充分的理由)按参数的序来排,遇到相同参数时,把 cos $a$ 排在 sin $a$ 之前来打破平局。显然这个定义可以按任何其他策略来调整。
+\begin{verbatim}
+    x < y ==
+      x.arg < y.arg => true
+      y.arg < x.arg => false
+      x.SinIfTrue => false
+      y.SinIfTrue
+\end{verbatim}
+最后一项任务,是打印结果的方式——同样是借助转换到 {\tt OutputForm} 来实现。我们用了 constructor {\tt bracket},它把参数放进方括号里,这样是为了把这些元素和 Axiom 里普通的 {\tt Expression} 构造区分开来。
+\begin{verbatim}
+    coerce(x):OutputForm ==
+      hconcat((if x.SinIfTrue then "sin" else "cos")::OutputForm,
+              bracket((x.arg)::OutputForm))
+\end{verbatim}
+
+\subsection{{\tt FourierSeries} 的实现}
+
+现在有了 {\tt FourierComponent},我们就可以定义 {\tt FourierSeries} 了。我们再次选用方法 (4),把定义建立在 {\tt FreeModule(R,FourierComponent(E)) 之上。于是定义的开头如下所示。
+\begin{verbatim}
+ == FreeModule(R,FourierComponent(E)) add
+    -- representations
+    Term := Record(k:FourierComponent(E),c:R)
+    Rep  := List Term
+    multiply : (Term,Term) -> %
+    w,x1,x2 : %
+    t1,t2 : Term
+    n : NonNegativeInteger
+    z : Integer
+    e : FourierComponent(E)
+    a : E
+    r : R
+\end{verbatim}
+{\tt multiply (p\pageref{multiply})} 是一个局部函数,定义留到后面,用来把两个项相乘。由于线性化的缘故,结果很可能不是单独一项,但它是 FourierSeries 这个 domain 的一个元素。我们知道 cos 0 = 1、sin 0 = 0。此外,为了保证"canonical"这一部分成立,我们必须小心处理带负参数的三角函数("负"这个概念是有意义的:一个元素如果小于 0,就说它是负的)。下面这些定义正是用来实现这项策略的。
+\label{coerce2}
+\begin{verbatim}
+    1 == [[cos 0,1]]
+
+    coerce e ==
+      sin? e and zero? argument e => 0
+      if argument e < 0 then
+        not sin? e => e:=cos(- argument e)
+        return [[sin(- argument e),-1]]
+      [[e,1]]
+ 
+    makeCos(a,r) ==
+      a < 0 => [[cos(-a),r]]
+      [[cos a,r]]
+
+    makeSin(a,r) ==
+      zero? a => []
+      a < 0 => [[sin(-a),-r]]
+      [[sin a,r]]
+\end{verbatim}
+加法与减法操作,以及用 $R$ 的元素做乘法,都可以很好地从 {\tt FreeModule} 继承而来。不过,我们仍然需要定义两个 Fourier 级数相乘,这一点在下面完成。
+\label{multiply}
+\begin{verbatim}
+    multiply(t1,t2) ==
+      r:=(t1.c*t2.c)*(1/2)
+      s1:=argument t1.k
+      s2:=argument t2.k
+      sum:=s1+s2
+      diff:=s1-s2
+      sin? t1.k =>
+        sin? t2.k =>
+          makeCos(diff,r)+makeCos(sum,-r)
+        makeSin(sum,r) + makeSin(diff,r)
+      sin? t2.k =>
+        makeSin(sum,r) + makeSin(diff,r)
+      makeCos(diff,r) + makeCos(sum,r)
+
+    x1+x2 ==
+      null x1 => 0
+      null x2 => 0
+      +/[+/[multiply(t1,t2) for t2 in x2] for t1 in x1]
+\end{verbatim}
+\chapter{Axiom 与类型论(Albrecht Fortenbacher 著)}
+
+Fortenbacher\cite{Fort90} 曾参与 IBM Research 的 SCRATCHPAD 项目,并就类型推断与强制转换 (coercion) 撰写过一篇早期论文。
+
+\section{计算机代数中的类型推断}
+
+早期的计算机代数系统并没有精细的类型系统,主要原因是当时可计算的 domain 数量还很少。随着计算机代数的发展,应用范围不断扩大,domain 的数量也随之大幅增长。这时就需要一个类型概念,理由有二:其一是按代数关系组织各个计算 domain,其二是支持多态性 (polymorphism) 与泛型函数 (generic function)——例如多项式加法只需实现一次,让所有多项式 domain 共用,内部再调用底层系数 domain 的函数即可。
+
+下文将借助 SCRATCHPAD 的类型系统来呈现类型推断与强制转换的问题。SCRATCHPAD 是一个实验性的计算机代数系统,其数学数据类型的概念十分清晰。不过,下文给出的结果与算法——尤其是下一节的不可判定性结果——并不依赖于 SCRATCHPAD 这一具体选择,对任何同类计算机代数系统都成立。
+
+SCRATCHPAD 的编程语言融合了抽象数据类型理论与面向对象编程的概念。{\sl category} 由函数签名与属性组成,例如 {\bf Monoid} 由函数 ``$+$'' 与 ``0''(一个常量)构成,并带有一条表明 ``$+$'' 满足结合律的属性。更复杂的 category,如 {\bf Ring},则从 {\bf Monoid} 继承上述函数签名。
+
+每个 {\sl domain} 都可以看作某个 category(抽象数据类型)的一种具体实现,也就是说,一个 domain 要为该 category 中定义的全部函数提供数据表示与实现。例如,domain {\bf Polynomial} 实现了多项式运算,包括多项式加法。{\bf Polynomial} 以属于 category {\bf Ring} 的系数 domain 为参数,因此该 {\sl 泛型} 函数 ``$+$'' 就是用 category {\bf Ring} 中的函数来定义的。
+
+domain、category 与 {\sl package}(本文不作展开)共同构成了这门编程语言的类型概念,足以用来实现代数算法。但这门语言的解释器 (interpreter) 能否同时充当交互式用户界面呢?
+
+要求强类型的用户界面并不太方便。要处理类型 (type) 为 {\bf Polynomial(Integer)} 的 $3+x$,用户得先定义两个多项式 5 和 $x$,再调用多项式加法。对于更复杂的计算,这会变得相当繁琐。用户真正想要的,是摆脱这些类型信息,而挑选合适函数的工作应当交给类型推断 (type inference) 机制去完成。不过,省略类型信息绝不能导致错误的结果。
+
+更麻烦的是,一个公式的结果未必唯一。若某个字符串 domain 中也实现了(来自 category {\bf Monoid} 的)函数 ``$+$'',那么上面那个公式的结果同样可以是拼接后的字符串 $3x$。因此,用于挑选函数的类型推断算法并不是(也不可能是)``精确的''——它不会总是得出唯一确定的``最佳''函数调用。SCRATCHPAD 的解释器实际上是启发式地在若干个合适的函数定义中选一个,若用户不满意这一选择,可以提供更多类型信息加以纠正。这是一种保守的策略:解释器给出的所有答案都是正确的,因为它只会调用那些相对于自底向上过程推导出的类型信息而言确实适用的函数。\cite{Suto87}
+
+为挑选合适的函数,解释器会先从一些基本类型入手(很像数学家的做法)。在公式 $3 + x$ 中,数字 3 被假定为 {\bf Integer} 类型,符号 $x$ 被假定为 {\bf Variable} 类型。但无论在计算 domain {\bf Integer} 还是 domain {\bf Variable} 中,都不存在可用的函数 ``$+$''。于是下一步就是把 $x$ 或 3 {\sl 强制转换} 成其他类型。从数学上说,这意味着换一个角度看待这些对象,而不改变它们本身。{\bf Integer} 与 {\bf Variable} 之间没有强制转换(无论哪个方向),但存在一个``公共''的 domain,即 {\bf Polynomial(Integer)}。$x$ 与 3 都可以强制转换成多项式,再用相应的加法就能得到多项式 $3+x$。
+
+在 SCRATCHPAD 中,若没有提供类型信息,函数挑选(及类型推断)过程就要依赖内置的启发式规则。这与计算机代数的基本理念之一——精确计算——如何相容呢?类型推断的语义可以针对一个受限的类型系统来定义,这个受限系统排除了所有``不规则''情形\cite{Calm89},这与现有计算机代数系统那种五花八门的计算 domain 形成对比。但函数挑选中的歧义,看来正是直接继承自数学记法本身——数学记法里函数符号大量重载 (overloading),一个公式的语义在很大程度上取决于上下文。
+
+强制转换作为类型推断的一种特殊情形,规律性要强得多。下一节我们将基于重写规则 (rewrite rule) 定义它的语义,由此就能判定``可强制转换性''这一谓词,乃至更多结论。
+
+\section{强制转换图}
+
+如上一节所述,强制转换是类型推断的基本工具。而且,在一个拥有成百上千个计算 domain 的系统里,强制转换会带来实实在在的性能问题,因此高效地判定``可强制转换性''就变得至关重要。
+
+下文给出的强制转换算法建立在明确定义的语义之上,它使强制转换对用户变得透明(而不像纯启发式算法那样),也有助于理解类型推断与函数挑选。另一方面,我们还会给出``可容许的强制转换''应满足的条件,以便得到一个可判定的``可强制转换性''谓词以及一个高效的强制转换算法。
+
+上一节已经直观地引入了强制转换,这里我们来给出它的正式定义。先约定一个说法:一个对象所处的计算 domain,称为该对象的 {\sl 类型}(type)。从数学意义上说,把一个对象从一个 domain 强制转换到另一个 domain,是指改变它的类型而不改变它的值。举例来说,数字 3(类型为 {\bf Integer})可以被强制转换成 {\bf Fraction(Integer)} 或 {\bf Polynomial(Integer)},也就是说,它既可以被看作有理数,也可以被看作多项式。
+
+在 SCRATCHPAD 中,若存在函数 {\sl coerce}:$D\rightarrow D*\prime$,domain $D$ 就可以强制转换成 domain $D*\prime$。这样,强制转换就可以在这门强类型语言内部表述出来。
+
+自然,我们希望 domain 之间的强制转换是唯一的,不因所用的强制转换函数不同而改变。给定下列(重载的!)强制转换函数
+\[\begin{array}{lccc}
+coerce: & Integer & \rightarrow & Fraction(Integer)\\
+coerce: & Integer & \rightarrow & Polynomial(Integer)\\
+coerce: & Fraction(Integer) & \rightarrow &
+Polynomial(Fraction(Integer))\\
+coerce: & Polynomial(Integer) & \rightarrow &
+Polynomial(Fraction(Integer))\\
+\end{array}\]
+这意味着下面这张图必须交换:
+
+\[\begin{array}{c@{\hspace{3cm}}c}
+\Rnode{N1}{Integer} & \Rnode{N2}{Fraction(Integer)}\\
+&\\
+&\\
+&\\
+&\\
+&\\
+\Rnode{N3}{Polynomial(Integer)} &
+\Rnode{N4}{Polynomial(Fraction(Integer))}
+\end{array}
+\psset{nodesep=0.3cm}
+\everypsbox{\scriptstyle}
+\ncLine{->}{N1}{N2}
+\Aput{\displaystyle {\tt coerce}}
+\ncLine{->}{N1}{N3}
+\Aput{\displaystyle {\tt coerce}}
+\ncLine{->}{N2}{N4}
+\Bput{\displaystyle {\tt coerce}}
+\ncLine{->}{N3}{N4}
+\Bput{\displaystyle {\tt coerce}}
+\]
+
+一个支持参数化类型与泛型性的计算机代数系统可以拥有无穷多个 domain,也可以拥有无穷多个强制转换函数。我们的目标是给出一个算法:给定两个 domain $D$ 和 $D^\prime$,判定从 $D$ 到 $D^\prime$ 是否存在强制转换,也就是判定能否通过依次应用若干强制转换函数,从 $D$ 到达 $D^\prime$。
+
+强制转换函数在 domain 上定义了一个二元关系 $\Rightarrow$:若存在函数 coerce: $D \rightarrow D^\prime$,则 $D \Rightarrow D^\prime$。domain 上的谓词 {\sl canCoerce} 可以定义为该关系的自反传递闭包 $\Rightarrow^{\prime\prime}$。按定义,$\Rightarrow^{\prime\prime}$ 是一个(偏)预序,但未必是一个序:可能存在两个不同的 domain $D$ 与 $D^\prime$,彼此都能强制转换到对方。
+
+关系 $\Rightarrow$ 可以表示成一张有向的 {\sl 强制转换图}(coercion graph)。节点标以 domain,边标以强制转换函数。``可强制转换性''现在就归结为:是否存在一条从某个 domain 到 $D$ 再到 $D^\prime$ 的 {\sl 强制转换路径}(coercion path)。
+
+这个问题(一般而言)是不可判定的,因为 Chomsky-0 型语言的字问题可以归约到它。不过,只要强制转换图满足一些(合理的)条件,我们不仅能获得可判定性,还能得到一个高效算法。本节余下部分就讨论这些条件。
+
+给定两个 domain $D$ 与 $D^\prime$,我们希望构造出一条从 $D$ 到 $D^\prime$ 的强制转换路径(如果 $D \Rightarrow^{\prime\prime} D^\prime$ 成立),否则就要判定不存在这样的路径。如果这件事能够算法化地完成,我们就称这张强制转换图是 {\sl 可容许的}(admissible)。
+
+下一节我们会看到,SCRATCHPAD 中的强制转换函数如何被当作带条件的重写规则来构造强制转换路径。因为强制转换是唯一的(参见上一节的那张图),它可以沿着从 $D$ 到 $D^\prime$ 的任意一条路径应用。构造强制转换路径是谓词 {\sl canCoerce} 的一个半判定过程 (semidecision procedure);要真正判定它,我们还需要进一步限制需要检查的路径数目。
+
+设 $\iota$ 是从全体 domain 构成的集合到自然数集的任意映射({\sl 解释值}(interpretation)),$f:{\mathcal N}\times {\mathcal N}\rightarrow {\mathcal N}$ 是任意函数。若一条强制转换路径 $D_1\Rightarrow\ldots\Rightarrow D_n$ 上所有 domain 的解释值都被 $D_1$ 与 $D_n$ 的解释值所限制,就称它相对 $\iota$ 和 $f$ 是 {\sl 有界的}(bounded):
+\[\forall~1\le i\le n: \iota(D_i)\le f(\iota(D_1),\iota(D_n))\]
+
+定义了有界强制转换路径之后,我们就可以给出可容许性的一个充分条件:如果存在函数 $\iota$ 和 $f$,满足
+\begin{enumerate}
+\item 对任意两个可以互相强制转换的 domain(即 $D\Rightarrow^{\prime\prime}D^\prime$),都存在一条有界的强制转换路径 $D\Rightarrow\ldots\Rightarrow D^\prime$;并且
+\item 构造有界强制转换路径的过程(对任意 domain $D$ 与 $D^\prime$)总会终止
+\end{enumerate}
+那么这张强制转换图就是可容许的。
+
+依赖于函数 $\iota$ 和 $f$ 的有界强制转换路径这一概念,看起来相当一般。例如,SCRATCHPAD 的类型系统就代表了一张可容许的强制转换图:其中 $f$ 取为最大值函数,解释值 $\iota$ 取为深度函数,即非参数化的 domain 解释值为 0,否则解释值为 $1+n$,其中 $n$ 是其所有参数 domain 解释值中的最大者。
+
+最后再说明一点:与其通过关系 $\Rightarrow^{\prime\prime}$ 在完全一般的意义下定义谓词 {\sl canCoerce}、再给出可容许图的条件,我们也可以换一种做法——只考虑那些有界路径构造过程会终止的强制转换图。这样一来,``可强制转换性''就必须改由``存在一条有界路径''(而非``存在任意一条路径'')来定义。实践中,这两种做法似乎是一致的,因为可容许性本身相当一般,很容易满足。
+
+\section{把强制转换函数当作重写规则}
+
+面对无穷多个 domain 与强制转换函数,该如何构造 domain $D$ 与 $D^\prime$ 之间的强制转换路径呢?显然,这取决于强制转换函数的表示方式。在一个类似 SCRATCHPAD 的类型系统中(见第一节),强制转换函数可以看作带条件的重写规则。因此,只要把重写规则应用到 domain 上,我们就能以一种透明而高效的方式构造出强制转换路径。这些规则都标注着对应的强制转换函数,当我们沿着强制转换路径真正对值做强制转换时,就会调用这些函数。
+
+参数化 domain 上的一元函数,可以很容易地表示成重写规则,其中变量代表参数 domain。为保证相对于 category 信息而言是有效的,应用一条规则之前必须先满足若干条件。例如,从系数 domain 到多项式的强制转换可以写成
+\[x\Rightarrow {\tt Polynomial(}x{)\ if\ }x
+{\tt\ is\ of\ category\ {\bf Ring}}\]
+
+一条{\sl 强制转换规则}(coercion rule)可以有两个应用方向。从左到右(如上面所写)应用到 domain $D$ 上,会得到一个新的 domain $\overline{D}$,满足 $D\Rightarrow\overline{D}$,并产生一个从 $\overline{D}$ 到 $D^\prime$ 的新强制转换问题。但它也可以从右到左应用,得到 $\overline{D}^\prime$,满足 $\overline{D}^\prime\Rightarrow D^\prime$,并产生一个从 $D$ 到 $\overline{D}^\prime$ 的新强制转换问题。下面举一个例子来说明。
+
+对计算机代数系统而言,高效地挑选出合适的函数至关重要。在像 SCRATCHPAD 这样拥有成百上千个 domain 的系统中,谓词 {\sl canCoerce} 会被非常频繁地调用。可以通过两种方式提升该算法的效率:
+\begin{enumerate}
+\item 避免计算不必要的强制转换路径,尤其是走入死胡同的路径
+\item 把已经算出的顶点保存进哈希表 (hash table)
+\end{enumerate}
+
+每条强制转换重写规则都可以被限制为只能从左到右(或只能从右到左)应用。例如,规则 $I\Rightarrow D$(其中 $D$ 是某个不常用的 domain)应当只在需要强制转换到 $D$ 时才被应用,也就是只能从右到左应用。这能显著减少不必要路径的数目。但强制转换重写规则的限制必须非常谨慎,因为这会减少可构造出的强制转换路径的数目,从而改变强制转换实际的运作方式。
+
+最后,我们勾勒出一个用强制转换重写规则实现谓词 {\sl canCoerce} 的算法。给定两个 domain $D$ 与 $D^\prime$,我们想判定 $D$ 中的对象能否强制转换到 $D^\prime$。首先,把强制转换规则从左到右应用到 $D$ 上(或者在表示该图的哈希表中查找从 $D$ 出发的顶点)。如果由此得到 domain $D^\prime$,就说明找到了一条强制转换。否则,再把规则从右到左应用到 $D$ 上。如果仍然没有找到强制转换,就用所有不违反有界路径条件的新 domain 构造新的强制转换问题,并递归求解。
+
+一旦找到从 $D$ 到 $D^\prime$ 的强制转换路径,真正执行强制转换就很直接了:把该路径上的所有强制转换函数依次作用于类型为 $D$ 的对象即可。
+
+这个算法目前正在为 SCRATCHPAD 的类型系统实现。初步测试的结果相当令人鼓舞:该算法不仅速度很快,而且对所有 SCRATCHPAD 用户都是透明的,因为强制转换的行为完全取决于强制转换重写规则(以及用来陈述有界路径条件的函数 $\iota$ 与 $f$)。
+\chapter{Axiom 与 category 理论}
+\section{协变与逆变}
+
+Axiom 在类型之间维护着一种序关系。类型之间可能处于以下五种关系之一。
+
+一个类型可以比另一个类型更一般。例如 Integer 比 PositiveInteger 更一般。
+
+一个类型可以比另一个类型更特殊。反过来,PositiveInteger 比 Integer 更特殊。
+
+一个类型可以与另一个类型相等。
+
+一个类型可以转换 (converted) 或强制转换 (coerced) 为另一个类型。例如,
+Fraction(Polynomial(Integer)) 可以强制转换为 Polynomial(Fraction(Integer))。
+
+一个类型可以与另一个类型无关。String 与 Expression 就互不相关。
+
+协变 (covariance) 指从较宽的类型转换到较窄的类型,例如从 Matrix(Float)
+转换到 Matrix(Integer)。
+
+逆变 (contravariance) 指从较窄的类型转换到较宽的类型,例如从 Matrix(Integer)
+转换到 Matrix(Float)。
+
+不变性 (invariance) 指一个类型无法转换为另一个类型。例如,一个 Matrix(Float)
+若含有无法表示为 Integer 的数,就无法转换为 Matrix(Integer)。
+
+这些关系构成一个序关系,按定义它是自反的、传递的、反对称的。
+
+自反 (reflexive) 是指 Integer = Integer。
+
+传递 (transitive) 是指 PositiveInteger $<$ Integer $<$ Float 蕴含
+PositiveInteger $<$ Float。
+
+反对称 (antisymmetric) 是指 PositiveInteger $<$ Float 蕴含
+not(Float $<$ PositiveInteger)。
+
+\section{Axiom 类型格}
+
+Axiom 中的类型基于这一序关系构成一个格 (lattice)。之所以是格,是因为
+Axiom 支持多重继承。
+
+值得参考的文献包括:
+
+Michael Barr and Charles Wells
+``Category Theory for Computing Science'' 1998\\
+\verb|www.math.mcgill.ca/triples/Barr-Wells-ctcs.pdf|
+
+Saunders Mac Lane
+``Catogories for the Working Mathematician''\\
+Springer-Verlag 2010 ISBN 978-1-4419-3123-8
+
+Steve Awodey
+``Category Theory''\\
+\verb|ftp://sumin.in.ua/Books/DVD-021/Awodey_S._Category_Theory(en)(305s).pdf|
+
+``Introduction to Category Theory''\\
+\verb|www.youtube.com/watch?v=eu0rj5C2Otg|
+
+Luca Cardelli and Peter Wegner
+``On understanding types, data abstraction and polymorphism''
+Computing Surveys, Vol 17 no 4 pp471-522 Dec. 1985\\
+\verb|lucacardelli.name/Papers/OnUnderstanding.A4.pdf|
+
+A. J. H. Simons,
+``Adding Axioms to Cardelli-Wegner Subtyping'' 1994\\
+\verb|staffwww.dcs.shef.ac.uk/people/A.Simons/research/reports/addaxiom.pdf|
+
+Dana Scott
+``Data Types as Lattices''\\
+\verb|www.cs.ox.ac.uk/files/3287/PRG05.pdf|
+
+Roland Backhouse and Marcel Bijsterveld
+``Category Theory as Coherently Constructive Lattice Theory''
+November 1994
+
+\section{需要理解的术语}
+
+假设我们想把 Complex 与 Polynomial(Integer) 拼合起来,这个组合的元素会是
+什么样子?
+
+二者的并集是拓扑空间的上积 (co-product)。
+
+单纯相加并不构成合法的组合,因为
+\[i + x^2\]
+不是一个合法的组合。
+
+我们需要的是代数意义上的上积,也就是张量积 (tensor product)。最终得到的
+是 Complex(Polynomial(Integer)) 这个 domain。
+
+\begin{verbatim}
+-> a:Complex(POLY(INT)):=%i+3*x
+
+     3x + %i
+                                           Type: Complex(Polynomial(Integer))
+-> a::POLY(COMPLEX(INT))
+
+     3x + %i
+                                           Type: Polynomial(Complex(Integer))
+\end{verbatim}
+
+\section{Category 的定义}
+一个 category 由四部分组成。我们需要一组对象,通常画作点。我们需要一组
+从点到点的箭头(arrows,也称 morphisms/态射)。我们需要一种以结合的方式
+复合箭头的方法。我们需要一个从点到自身的恒等箭头。
+
+从点 A 到点 B 的全体箭头记作 $Hom_c(A,B)$,有时也写作 $C(A,B)$。注意集合
+$C(A,B)$ 与 $C(A,D)$ 是不相交的,因为每个箭头都有唯一确定的 domain 与
+上域 (co-domain)。
+
+以 category Set 为例,它的对象是集合,箭头是集合之间的函数。以 category
+Ring 为例,它的对象是环,箭头是环同态。类似地,对 category Group 而言,
+点是群 (group),箭头是群同态。对一个固定的 Ring $R$,category R-Mod
+的点是左 $R$-模,箭头是 $R$-模同态。我们也可以考察 category Mod-R,它的
+点是右 $R$-模,箭头是 $R$-模同态。对于 category $K$——若 $K$ 是一个
+field——点是 $K$-向量空间,箭头是 $K$-线性变换。
+
+在 Axiom 中,点是 Types(例如 Integer 或 Character),箭头是它们之间带有
+如下签名的函数:
+\begin{verbatim}
+   f : Integer -> Character
+\end{verbatim}
+
+category 之间的关系称为 {\bf functor}。一个 functor $F$ 把 category C
+中的东西映射到 category D 中的东西。我们需要一个作用在对象上的函数,把
+C 的对象映射为 D 的对象;还需要一个作用在箭头上的函数,把 C 的箭头映射
+为 D 的箭头。
+
+category C 与 D 都有良好定义的结构:它们各自有箭头的 domain 与
+co-domain;它们都有恒等箭头;都存在箭头的复合规则,这些规则构成交换图
+(commutative diagrams)。
+
+首先我们要确保 functor $F$ 保持 C 的 domain 与 co-domain 结构。当我们把
+functor $F$ 作用到 C 上时,需要保持全部结构,所以 $F$ 必须对所有这些性质
+都有定义。如果我们看 category C 中的两个点,以及 C 中的一个箭头 $f$
+\begin{verbatim}
+          f
+      A ----> B
+\end{verbatim}
+那么 functor $F$ 就必须作用到这一切之上,于是我们得到:
+\begin{verbatim}
+         Ff
+      FA ----> FB
+\end{verbatim}
+这意味着,如果 $dom$ 是 C 中的 domain 函数,那么 functor $F$ 与 $dom$
+可交换,也就是说 $F(dom(f)) = dom(F(f))$ 成立。
+
+其次我们要确保 functor $F$ 保持 C 的恒等箭头。由上文可知
+$F(identity(x)) = identity(F(x))$。
+
+最后我们还要确保 C 中箭头的复合规则得到保持。也就是说,functor $F$
+必须保证 C 中可复合的箭头,在 D 中沿同一张图也可复合。
+
+一些标准的 functor 包括恒等 functor $1_c$,它只是把 C 映到自身。我们可以
+构造遗忘掉某些性质的 functor,例如把 category Group 映到它的底层集合。
+我们也可以通过遗忘性质来"提升"一个 category,例如把 Abelian Group 这个
+category C 通过"遗忘"其交换性质而提升到 Group 这个 category D。类似地,
+category Ring 或 category Module 也可以映到其底层的 Abelian Group。此外
+还有常值 (Constant) functor,它把 C 中所有的点都映到 D 中的同一个点,把
+C 中所有的箭头都映到 D 中的恒等箭头。
+
+category CommutativeRing $R$ 可以用 functor $GL_n$ 映到一个 Group,
+$GL_n$ 是以 CommutativeRing $R$ 中的元素为项的、全体可逆 $N\times N$
+矩阵构成的群 (group)。
+
+\section{幺半群与群}
+
+给定一个单元素集合以及从该元素到自身的一组箭头,由结合性质我们知道
+$(fg)h = f(gh)$,由恒等性质我们知道 $ef = f = fe$。
+
+一个只有一个对象的 category 就是一个幺半群 (monoid)。
+一个只有一个对象、且所有箭头都可逆的 category 就是一个群。
+
+如果我们限制这个 category,使得集合中任意两个对象之间至多只有一个箭头,
+那么我们得到的就是一个全序集 (ordered set)。
+
+一个从 category C 到 category D 的 functor $F$ 由以下部分组成:
+\begin{itemize}
+\item  作用在对象上的函数,把 C 的对象映射为 D 的对象
+\item  作用在箭头上的函数,把 C 的箭头映射为 D 的箭头
+\end{itemize}
+
+从结构上看,我们需要保持三样东西。
+\begin{itemize}
+\item domain 与 co-domain 的箭头。
+为了保持结构,functor $F$ 必须与 domain 函数、co-domain 函数可交换,
+也就是说 $F(dom(f)) = dom(F(f))$ 且 $F(co-dom(f)) = co-dom(F(f))$。
+\item 恒等箭头。
+functor $F$ 必须保持恒等,即 $F(id(x)) = id(F(x))$。
+\item 箭头的复合性质。
+functor $F$ 必须把交换图映为交换图。
+\end{itemize}
+
+\chapter{Axiom 实现细节}
+\section{Makefile}
+本书实际上是一个文学程序 (literate program)\cite{Knut92},其中可以包含
+可执行的源代码。特别地,本书的 Makefile 就是本书源码的一部分,附于下文。
+\chapter{编写 Spad 代码}
+\section{Description: 标签与 )describe 命令}
+describe 命令会打印出与 Axiom 源代码元素相关联的注释。对于 category、
+domain、package 这几类小节而言,这段文字取自 Description: 关键字。
+
+这一信息存储在一个数据库中,可以用下面的方式查询,例如对 Integer 这个
+domain:
+\begin{verbatim}
+  )lisp (getdatabase '|Integer| 'documentation)
+\end{verbatim}
+不过,这份信息在系统中还有其他用途,所以其中带有标签与控制信息。由于
+describe 函数的输出是要以 ASCII 形式显示在终端上的,大多数标签会被它
+去掉。
+
+Description: 关键字位于缩写命令之后的注释块中。它是自由格式的,系统会
+自动将段落重排,使每行大约 60 个字符(并按空格微调)。Description: 小节
+应写在 ``++'' 注释里、紧跟在关键字之后,如下所示:
+\begin{verbatim}
+)abbrev package D03AGNT d03AgentsPackage
+++ Description:
+++ This package does some interesting stuff. We can write multiple
+++ lines but they should all line up with the first character of
+++ the Description keyword. Special \spad{terms} will be removed.
+++
+++ The above line will force a newline. So will ending a line with \br
+++ \tab{5}This will allow primitive formatting\br
+++ \tab{5}So you can align text\br
+++ \tab{10}Start in column 11\tab{5}and skip 5 spaces\br
+++ \tab{10}End in column 11\tab{7}and count out the needed spaces\br
+++ \tab{5} note that the last line will not need the br command
+\end{verbatim}
+正如注释里所说,Description 的内容都要对齐在 Description 这个词的
+``D'' 下面。可以用 \verb|\tab{n}| 缩进,它会插入 $n$ 个空格。要强制换行
+有两种办法:要么在 ``++'' 注释之间留一个空行,要么使用 \verb|\br| 关键字。
+
+由于解析注释的算法写得并不高明,这里有好几种出错的方式。
+
+Description: 小节与定义正文开始之间不应该出现任何宏。下面这样写是错误
+的,它会导致
+\begin{verbatim}
+   )describe package d03AgentsPackage
+\end{verbatim}
+给出错误的输出,因为它无法正确找到 description 小节的结尾。
+\begin{verbatim}
+)abbrev package D03AGNT d03AgentsPackage
+++ Description:
+++ This description does not work
+
+LEDF  ==> List Expression DoubleFloat
+
+d03AgentsPackage(): E == I where
+\end{verbatim}
+
+在 Description: 小节中,\verb|\tab{nn}| 函数会被转换成 nn 个空格。如果
+每行都以 \verb|\br| 结尾,就可以控制对齐方式。
+\begin{verbatim}
+++ Description:
+++ This is an example of a table alignment\br
+++ \tab{5}First Item\tab{5} This will line up with the following line\br
+++ \tab{5}Second Item\tab{4} This will line up with the following line\br
+++ \tab{5}Third Item\tab{5} This will line up with the following line
+\end{verbatim}
+
+如果 category、domain 或 package 的主体一开始是属性而不是函数,
+Description 就会被错误地记录下来。这是查找 Description 小节结尾时的
+一个已知 bug。例如,下面这段
+\begin{verbatim}
+++ Description:
+++ The category of Lie Algebras.
+++ It is used by the domains of non-commutative algebra,
+++ LiePolynomial and XPBWPolynomial. 
+
+LieAlgebra(R: CommutativeRing): Category ==  Module(R) with
+    NullSquare 
+      ++ \axiom{NullSquare} means that \axiom{[x,x] = 0} holds.
+    JacobiIdentity 
+      ++ \axiom{JacobiIdentity} means that 
+      ++ \axiom{[x,[y,z]]+[y,[z,x]]+[z,[x,y]] = 0} holds.
+    construct:  ($,$) -> $
+      ++ \axiom{construct(x,y)} returns the Lie bracket of \axiom{x} 
+      ++ and \axiom{y}.
+\end{verbatim}
+会给出这样的输出
+\begin{verbatim}
+{JacobiIdentity} means that} [x,[y,z]]+[y,[z,x]]+[z,[x,y]] = 0 holds.
+\end{verbatim}
+但只要把它重新排序为:
+\begin{verbatim}
+++ Description:
+++ The category of Lie Algebras.
+++ It is used by the domains of non-commutative algebra,
+++ LiePolynomial and XPBWPolynomial. 
+
+LieAlgebra(R: CommutativeRing): Category ==  Module(R) with
+    construct:  ($,$) -> $
+      ++ \axiom{construct(x,y)} returns the Lie bracket of \axiom{x} 
+      ++ and \axiom{y}.
+    NullSquare 
+      ++ \axiom{NullSquare} means that \axiom{[x,x] = 0} holds.
+    JacobiIdentity 
+      ++ \axiom{JacobiIdentity} means that 
+      ++ \axiom{[x,[y,z]]+[y,[z,x]]+[z,[x,y]] = 0} holds.
+\end{verbatim}
+就会给出这样的输出
+\begin{verbatim}
+The category of Lie Algebras. It is used by the domains of 
+non-commutative algebra, LiePolynomial and XPBWPolynomial. 
+\end{verbatim}
+这才是正确的结果。
+\chapter{编写测试用例}
+
+\appendix
+\chapter{Axiom 的原理}
+{\bf 原理 1}。{\sl AXIOM 拥有一个用于交互式使用的解释器 (interpreter),这一点与其他大多数系统类似;此外还有一个编译器 (compiler),用于创建新的用户自定义数据类型。编译器强调严格的类型检查,而解释器则更偏重易用性。}
+
+{\bf 原理 2}。{\sl 每一个 Axiom 内部数据对象都且仅属于一个 domain。}
+
+{\bf 原理 3}。{\sl 值可以自由地从子 domain 移动到更大的 domain;而反方向的移动仅在解释器中才允许,前提是这种转换是合法的。}
+
+{\bf 原理 4}。{\sl 解释器负责执行理解用户意图所需的一连串强制转换 (coercion),或者在用户通过 {\bf ::} 显式要求时执行。编译器则在编译代码中出现 {\bf ::} 算子的指示时,执行一连串强制转换。}
+
+{\bf 原理 5}。{\sl 任意一组 Axiom domain $D_1,\ldots,D_n$ 都可以组合成一个(不相交的)并 (union) domain,记作 {\tt Union}($D_1,\ldots,D_n$)。各个 $D_i$ 称为该并的{\bf 分支 (branch)}。这个并 domain 上可用的操作 (operation) 有:}
+\begin{itemize}
+\item {\sl 相等性——两个元素相等,当且仅当它们来自同一分支且在该分支内相等;}
+\item {\sl 到 OutputForm 的强制转换;}
+\item {\sl 从每个 $D_i$ 到该并 domain 的强制转换;}
+\item {\sl 从该并 domain 到每个 $D_i$ 的强制转换,若该并对象不在正确的分支上则可能失败;}
+\item {\sl 一个中缀 (infix) 谓词 case,用于检验该并对象是否确实位于某个特定分支上。}
+\end{itemize}
+{\sl 这些并 domain 对应于其他一些语言中所谓的"和类型 (sum type)"。一个特别有用的例子是 {\tt Integer} 上的"精确商"操作:它的返回类型是 {\tt Union(Integer,"failed")},当除法不能整除时就返回特殊记号 {\tt failed}。}
+
+{\bf 原理 6}。{\sl Axiom 库声明了一族二阶类型,称为 {\bf category}。这些 category 排列成一个有向无环图,每个 domain 都属于一个特定的 category,并且属于该 category 的所有祖先。一个 category 的规格说明包括:}
+\begin{itemize}
+\item {\sl 它的所有直接祖先,}
+\item {\sl 该 category 支持的任何附加操作,以及}
+\item {\sl 这些操作必须满足的任何附加公理。}
+\end{itemize}
+{\sl 操作 {\tt Join} 用来构造新的 category。}
+
+{\bf 原理 7}。{\sl category 可以引入操作的{\bf 缺省定义 (default definition)},它会在属于该 category 的任何 domain 中生效,除非被该 domain 自身、或某个更具体的 category 中的定义所覆盖。}
+
+{\bf 原理 8}。
+{\sl Axiom 的 functor 是强类型的:凡是 Axiom 对象的参数,都被规定来自某个特定 domain;凡是 Axiom domain 的参数,都被规定属于某个特定的 Axiom category。同样,某个 functor 返回的 domain 也被规定属于某个特定的 category。domain 的一切构造都必须满足 functor 的这些约束。}
+
+{\bf 原理 9}。
+{\sl 一个函数首先在给定 functor 的实现中查找,然后沿着 {\tt add} 链递归向上查找,而不检查缺省 package。如果这样仍未找到定义,才会在缺省 package 中查找,顺序是从最具体到最一般。}
+
+\chapter{Axiom 的约定}
+{\bf 约定 1}。
+{\sl 并置 (juxtaposition) 对应于(一元)函数调用。}
+
+{\bf 约定 2(借自 APL)}。{\sl 所有系统命令 (system command)——即不执行代数运算、也不影响代数运算执行的那些命令——都以 {\bf )} 开头。一般来说,它们可以缩写到不产生歧义为止,例如 {\tt )set message type on} 可以缩写为 {\tt )se m ty on}}
+
+{\bf 约定 3}。{\sl 符号 {\bf \pct} 表示最近一次计算出的正常值(即不属于 {\tt Void} domain 的值)。{\bf \pct\pct(n)},或写作 {\bf \pct\pct n},表示编号为 $n$ 的那个值(若 $n$ 为正整数)。
+若 $n$ 为负整数,{\bf \pct\pct (n)} 表示倒数第
+$\vert{}n\vert$'th 步的值。此外,{\bf \pct{}pi} 表示 $\pi$,
+{\bf \pct{}e} 表示 $e \approx 2.718281828$,{\bf \pct{}i} 表示 $\sqrt{-1}$}
+
+{\bf 约定 4(这是库的约定,而非内核 (kernel) 的约定)}。
+{\sl 圆括号——{\bf ()}——用于分组和函数调用;方括号——{\bf []}——用于构造列表,
+花括号——{\bf \{\}}——用于构造集合。}
+
+{\bf 约定 5}。{\sl {\bf ::} 中缀 (infix) 算子,用法如}
+\[Axiom\thinspace{} object :: Axiom\thinspace{} domain\]
+{\sl 可用来把对象转换到指定的 domain 中。}
+
+{\bf 约定 6(库作者的约定)}。{\sl 记法}
+\[list\thinspace{} of\thinspace{} variables +-> expression\]
+{\sl 定义了这些变量的一个匿名函数。它对应
+于 lambda 演算表达式"$\lambda$variables.expression"。}
+
+{\bf 约定 7}。{\sl Axiom 函数的名字要么是特殊符号(如 $+$),要么是若干个完整
+英文单词串接而成;后一种情况下,第一个单词之后的每个单词首字母都要大写。因此有 {\tt integrate}
+但也有 {\tt complexIntegrate}。此外:}
+\begin{itemize}
+\item {\sl 所有布尔谓词都以 {\bf ?} 结尾,如 {\tt odd?},
+用来检验一个数是否为奇数}
+\item {\sl 所有作用于数据结构的破坏性 (destructive) 函数都
+以 {\bf !} 结尾,如 {\tt reverse!} 会破坏性地反转一个列表。}
+\end{itemize}
+{\sl 反过来,domain 的名字(以及我们后面会讲到的其他 constructor 的名字)
+由若干英文单词串接而成,全部首字母大写,如 {\tt IntegerMod} 或 {\tt UnivariatePuiseuxSeries}。}
+
+{\bf 约定 8}。{\sl 每当在 Axiom 中讨论某个 category 或 domain 时,符号
+\pct{} 就代表该 domain 本身,或者代表该 category 中的任意一个 domain。}
+
+{\bf 约定 9}。{\sl Axiom 的注释 (comment) 可以用 {\bf $--$} 或
+{\bf $++$} 引出。以 {\bf $++$} 开头的注释是给用户看的,可以
+被在线帮助系统检索到。}
+
+{\bf 约定 10}。{\sl 中缀二元谓词 {\tt has} 可用来检验
+domain 是否属于某个 category,或者是否具有指定的属性 (attribute)。}
+
+{\bf 约定 11}。{\sl 每一个 Axiom {\bf constructor}——即 functor 或
+category——都有一个{\bf 缩写 (abbreviation)},最多由八个
+大写字母组成(category 的缩写最多七个字母)。缩写有两个用途:一是在输入输出时用来缩短
+类型的名字,二是标识对应的
+Axiom 库所在的目录。category {\tt Cat}(缩写为
+{\tt CAT})的缺省 package 名为 {\tt Cat\&},缩写为 {\tt CAT-}。}
+\chapter{示例代码}
+\section{domain WP WeightedPolynomials}
+--Copyright The Numerical Algorithms Group Limited 1992.
+\begin{chunk}{domain WP WeightedPolynomials}
+)abbrev domain WP WeightedPolynomials
+++ Author: James Davenport
+++ Date Created: 17 April 1992
+++ Date Late Updated: 13 July 2016 by Tim Daly
+++ Basic Functions: Ring, changeWeightLevel
+++ Related Constructors: PolynomialRing
+++ Also See: OrdinaryWeightedPolynomials
+++ AMS Classificaitons:
+++ Keywords:
+++ References:
+++ Description:
+++ This domain represents truncated weighted polynomials over a general
+++ (not necessarily commutative) polynomial type. The variables must be
+++ specified, as must the weights.
+++ The representation is sparse
+++ in the sense that only non-zero terms are represented
+WeightedPolynomials(R,VarSet,E,P,vl,wl,wtlevel) : SIG == CODE where
+  R : Ring
+  Varset : OrderedSet
+  E : OrderedAbelianMonoidSup
+  P : PolynomialCategory(R,E,Varset)
+  vl : List Varset
+  wl : List NonNegativeInteger
+  wtlevel : NonNegativeInteger
+
+  SIG ==> Ring with
+
+    if R has CommutativeRing then Algebra(R)
+
+    coerce : % -> P
+      ++ coerce converts back into "P", ignoring weights
+
+    if R has Field then
+
+      "/" : (%,%) -> Union(%,"failed")
+
+    coerce : P -> %
+      ++ coerce a "P" into Weighted form, applying weights and ignoring terms
+
+    changeWeightLevel : NonNegativeInteger -> Void
+      ++ changeWeightLevel changes the weight level to the new value given:
+      ++ NB: previously calculated terms are not affected
+
+  CODE ==> add
+
+    -- representations
+    Rep := PolynomialRIng(P,NonNegativeInteger)
+    p : P
+    w,x1,x2 : %
+    n : NonNegativeInteger
+    z : Integer
+
+    changeWeightLevel(n) ==
+      wtlevel := n
+
+    lookupList : List Record(var:Varset, weight:NonNegativeInteger)
+
+    if #vl ^= #wl then error "incompatible length lists in WeightedPolynomial"
+
+    lookupList := [[v,n] for v in vl for n in wl]
+
+    -- local operations
+
+    lookup : Varset -> NonNegativeInteger
+    loopkup v ==
+      l := lookupList
+      while l ^= [] repeat
+        v = l.first.var => return l.first.weight
+        l := l.rest
+      0
+
+    innercoerce : (p,z) -> %
+    innercoerce(p,z) ==
+      z < 0 => 0
+      zero? p => 0
+      mv := mainVariable p
+      mv case "failed" => monomial(p,0)
+      n := lookup(mv)
+      up := univariate(p,mv)
+      ans : %
+      ans := 0
+      while not zero? up repeat
+        d := degree up
+        f := n*d
+        lcup := leadingCoefficient up
+        up := up-leadingMonomial up
+        mon := monomial(1,mv,d)
+        f <= z =>
+          tmp := innercoerce(lcup,z-f)
+          while not zero? tmp repeat
+            ans := ans+monomial(mon*leadingCoefficent(tmp),degree(tmp)+f)
+            tmp := reductum tmp
+      ans
+
+    coerce(p):% == innercoerce(p,wtlevel)
+
+    coerce(w):P == "+"/[c for c in coefficients w]
+
+    coerce(p:%):OutputForm ==
+      zero? p => (0$Integer)::OutputForm
+      degree p = 0 => leadingCoefficient(p)::OutputForm
+      reduce("+",(reverse [paren(c::OutputForm) for c in coefficients p])
+                    ::List OutputForm)
+
+    0 == 0$Rep
+
+    1 == 1$Rep
+
+    x1 = x2 ==
+      -- Note that we must strip out any terms greater than wtlevel
+      while degree x1 > wtlevel repeat
+        x1 := reductum x1
+      while degree x2 > wtlevel repeat
+        x2 := reductum x2
+      x1 = $Rep x2
+
+    x1 + x2 == 
+      x1 +$Rep x2
+
+    x1 * x2 ==
+      -- Note that this is probably an extremely inefficient definition
+      w := x1 *$Rep x2
+      while degree(2) > wtlevel repeat
+        w := reductum w
+      w
+\end{chunk}
+
+\section{domain OWP OrdinaryWeightedPolynomials}
+--Copyright The Numerical Algorithms Group Limited 1992.
+
+\begin{chunk}{domain OWP OrdinaryWeightedPolynomials}
+)abbrev domain OWP OrdinaryWeightedPolynomials
+++ Author: James Davenport
+++ Date Created: 17 April 1992
+++ Date Last Updated 13 July 2016 by Tim Daly
+++ Basic Functions: Ring, changeWeightLevel
+++ Related Constructors: WeightedPolynomials
+++ Also See: PolynomialRing
+++ AMS classifications:
+++ Keywords:
+++ References:
+++ Description:
+++ This domain represents truncated weighted polynomials over the
+++ "Polynomial" type. The variables must be
+++ specified, as must the weights.
+++ The representation is sparse
+++ in the sense that only non-zero terms are represented
+OrdinaryWeightedPolynomials(R,vl,wl,wtlevel) : SIG == CODE where
+  R : Ring
+  vl : List Symbol
+  wl : List NonNegativeInteger
+  wtlevel : NonNegativeInteger
+
+  SIG ==> Ring with
+
+    if R has CommutativeRing then Algebra(R)
+
+    coerce : % -> Polynomial(R)
+      ++ coerce converts back into a Polynomial(R), ignoring weights
+
+    coerce : Polynomial(R) -> %
+      ++ coerce a Polynomial(R) into Weighted form,
+      ++ applying weights and ignoring terms
+
+    if R has Field then
+
+      "/": (%,%) -> Union(%,"failed")
+        ++ a / b only works if minimum weight of divisor is zero,
+        ++ and if R is a Field
+
+    changeWeightLevel : NonNegativeInteger -> Void
+      ++ This changes the weight level to the new value given:
+      ++ NB: previously calculated terms are not affected
+  
+  CODE ==> WeightedPolynomials(R,Symbol,IndexedExponents(Symbol),
+                         Polynomial(R),vl,wl,wtlevel)
+\end{chunk}
+
+\section{domain WP2 WeightedPolynomials2}
+\begin{chunk}{domain WP2 WeightedPolynomials2}
+)abbrev domain WP2 WeightedPolynomials2
+++ Author: James Davenport
+++ Date Created: 17 April 1992
+++ Date Last Updated 13 July 2016 by Tim Daly
+++ Basic Functions: Ring, changeWeightLevel
+++ Related Constructors: PolynomialRing
+++ Also See: OrdinaryWeightedPolynomials
+++ AMS classifications:
+++ Keywords:
+++ References:
+++ Description:
+++ This domain represents truncated weighted polynomials over a general
+++ (not necessarily commutative) polynomial type. The variables must be
+++ specified, as must the weights.
+++ The representation is sparse
+++ in the sense that only non-zero terms are represented
+WeightedPolynomials2(R,Varset,E,P,vl,wl,wtlevel) : SIG == CODE where
+  R : Ring
+  Varset : OrderedSet
+  E : OrderedAbelianMonoidSup
+  P : PolynomialCategory(R,E,VarSet)
+  vl : List VarSet
+  wl : List NonNegativeInteger
+  wtlevel : NonNegativeInteger
+
+  SIG ==> Ring with
+
+    if R has CommutativeRing then Algebra(R)
+
+    coerce : % -> P
+      ++ coerce converts back into a "P", ignoring weights
+
+    if R has Filed then
+
+      "/" : (%,%) -> Union(%,"failed")
+        ++ a / b division only works if minimum weight of divisor is zero,
+        ++ and if R is a Field
+
+    coerce : P -> %
+      ++ coerce a "P" into Weighted form, applying weights and ignoring terms
+
+    changeWeightLevel : NonNegativeInteger -> Void
+      ++ This changes the weight level to the new value given:
+      ++ NB: previously calculated terms are not affected
+
+  CODE ==> PolynomialRing(P,NonNegativeInteger) add
+
+    -- representations
+    Term := Record(k:NonNegativeInteger,c:P)
+    Rep  := List Term
+    p : P
+    w,x1,x2 : %
+    n : NonNegativeInteger
+    z : Integer
+  
+    changeWeightLevel(n) ==
+      wtlevel := n
+
+    lookupList : List Record(var: VarSet, weight:NonNegativeInteger)
+
+    if #vl ^= #wl then error "incompatible length lists in WeightedPolymonial"
+
+    lookupList := [[v,n] for v in vl for n in wl]
+
+    -- local operation
+
+    lookup : VarSet -> NonNegativeIntger
+    lookup v ==
+      l := lookupList
+      while l ^= [] repeat
+        v = l.first.var => return l.first.weight
+        l := l.rest
+      0
+
+    innercoerce:(p,z) -> %
+    innercoerce(p,z) == 
+      z < 0 => 0
+      zero? p => 0
+      mv := mainVariable p
+      mv case "failed" => [[0,p]]
+      n := lookup(mv)
+      up := univariate(p,mv)
+      ans : %
+      ans := 0
+      while not zero? up repeat
+        d := degree up
+        f := n*d
+        lcup := leadingCoefficient up
+        up := up - leadingMonomial up
+        mon := monomial(1,mv,d)
+        f < z => ans:=ans+[[tm.k+f,mon*tm.c] for tm in innercoerce(lcup,z-f)]
+      ans
+
+    coerce(p):% ==
+      innercoerce(p,wtlevel)
+
+    coerce(w):P ==
+      "+"/[tm.c for tm in w]
+
+    x1 = x2 ==
+      -- Not that we must strip out any terms greater than wtlevel
+      while not null x1 and x1.first.k > wtlevel repeat
+        x1 := x1.rest
+      while not null x2 and x2.first.k > wtlevel repeat
+        x2 := x2.rest
+      while not null x1 and not null x2 repeat
+        x1.first.k ^= x2.first.k => return false
+        x1.first.c ^= x2.first.c => return false
+        x1 := x1.rest
+        x2 := x2.rest
+      null x1 and null x2
+
+    x1 * x2 ==
+      null x1 => 0
+      null x2 => 0
+      r : P
+      x1.first.k = 0 =>
+        [[t2.k,r]$Term for t2 in x2 | (r:=x1.first.c * t2.c) ^=0 ]
+      x2 = 1 => x1
+      +/[[[n,r]$Term for t2 in x2 | (n:=t1.k+t2.k) <= wtlevel and
+                                    (r:=t1.c*t2.c) ^= 0]
+                     for t1 in reverse(x1)]
+         -- This 'reverse' is an efficiency improvement:
+         -- reduces both time and space [Abbott/Bradford/Davenport]
+
+    import RepeatedSquaring(%)
+
+    x:% ** n:NonNegativeInteger ==
+      zero? n => 1
+      expt(x,n pretend PositiveInteger)
+
+    coerce(p:%):OutputForm ==
+      zero? p => (0$Integer)::OutputForm
+      p.first.k = 0 => p.first.c::OutputForm
+      reduce("+",(reverse [paren(t1.c::OutputForm) for t1 in p])
+             ::List OutputForm)
+\end{chunk}
+
+\section{domain FCOMP FourierComponent}
+--Copyright The Numerical Algorithms Group Limited 1992
+\begin{chunk}{domain FCOMP FourierComponent}
+)abbrev domain FCOMP FourierComponent
+++ Author: James Davenport
+++ Date Created: 17 April 1992
+++ Date Last Updated: 13 July 2016 by Tim Daly
+++ Basic Functions:
+++ Related Constructors:
+++ Also See:
+++ AMS Classifications:
+++ Keywords:
+++ References:
+++ Description:
+FourierComponent(E) : SIG == CODE where
+  E : OrderedSet
+
+  SIG ==> OrderedSet with
+
+    sin : E -> %
+      ++ sin makes a sin kernel for use in Fourier series
+
+    cos : E -> %
+      ++ cos makes a cos kernel for use in Fourier series
+
+    sin? : % -> Boolean
+      ++ sin? true if term is a sin, otherwise false
+
+    argument : % -> E
+      ++ argument returns the argument of a given sin/cos expression
+
+  CODE ==> add
+
+    -- representations
+    Rep := Record(SinIfTrue:Boolean, arg:E)
+    e : E
+    x,y : %
+    
+    sin e ==
+      [true,e]
+
+    cos e ==
+      [false,e]
+
+    sin? x ==
+      x.arg
+
+    argument x ==
+      x.arg
+
+    coerce(x):OutputForm ==
+      hconcat((if x.SinIfTrue then "sin" else "cos")::OutputForm,
+              bracket((x.arg)::OutputForm))
+
+    x < y ==
+      x.arg < y.arg => true
+      y.arg < x.arg => false
+      x.SinIfTrue => false
+      y.SinIfTrue
+\end{chunk}
+
+\section{domain FSERIES FourierSeries}
+\begin{chunk}{domain FSERIES FourierSeries}
+)abbrev domain FSERIES FourierSeries
+++ Author: James Davenport
+++ Date Created: 17 April 1992
+++ Date Last Updated: 13 July 2016 by Tim Daly
+++ Basic Functions:
+++ Related Constructors:
+++ Also See:
+++ AMS Classifications:
+++ Keywords:
+++ References:
+++ Description:
+FourierSeries(R,E) : SIG == CODE where
+  R : Join(CommutativeRing,Algebra(Fraction Integer))
+  E : Join(OrderedSet,AbelianGroup)
+
+  SIG ==> Algebra(R) with
+
+    if E has canonical and R has canonical the canonical
+
+    coerce : R -> %
+      ++ coerce converts coefficents into Fourier Series
+
+    coerce : FourierComponent(E) -> %
+      ++ coerc converts sin/cos terms into Fourier Series
+
+    makeSin : (E,R) -> %
+      ++ makeSin makes a sin expression with given argument and coefficient
+
+    makeCos : (E,R) -> %
+      ++ makeCos makes a cos expression with given argument and coefficient
+
+  CODE ==> FreeModule(R,FourierCompoent(E)) add
+
+    -- representations
+    Term := Record(k:FourierComponent(E),c:R)
+    Rep  := List Term
+    w,x1,x2 : %
+    t1,t2 : Term
+    n : NonNegativeInteger
+    z : Integer
+    e : FourierComponent(E)
+    a : E
+    r : R
+  
+    1 ==
+      [[cos 0,1]]
+
+    coerce e ==
+      sin? e and zero? argument e => 0
+      if argument e < 0 then
+        not sin? e => e:=cos(- argument e)
+        return [[sin(- argument e),-1]]
+      [[e,1]]
+
+    multiply : (Term,Term) -> %
+    multiply(t1,t2) ==
+      r := (t1.c*t2.c)*(1/2)
+      s1 := argument t1.k
+      s2 := argument t2.k
+      sum := s1+s2
+      diff := s1-s2
+      sin? t1.k =>
+        sin? t2.k =>
+          makeCos(diff,r) + makeCos(sum,-r)
+        makeSin(sum,r) + makeSin(diff,r)
+      sin? t2.k =>
+        makeSin(sum,r) + makeSin(diff,r)
+      makeCos(diff,r) + makeCos(sum,r)
+
+    x1*x2 ==
+      null x1 => 0
+      null x2 => 0
+      +/[+/[multiply(t1,t2) for t2 in x2] for t1 in x1]
+
+    makeCos(a,r) ==
+      a < 0 => [[cos(-a),r]]
+      [[cos a,r]]
+
+    makeSing(a,r) ==
+      zero? a => []
+      a < 0 => [[sin(-a),-r]]
+      [[sin a,r]]
+\end{chunk}  
+
+\chapter{Makefile}
+\begin{chunk}{*}
+PROJECT=bookvol2
+TANGLE=/usr/local/bin/NOTANGLE
+WEAVE=/usr/local/bin/NOWEAVE
+LATEX=/usr/bin/latex
+MAKEINDEX=/usr/bin/makeindex
+
+all: 
+	${WEAVE} -t8 -delay ${PROJECT}.pamphlet >${PROJECT}.tex
+	${LATEX} ${PROJECT}.tex 2>/dev/null 1>/dev/null
+	${MAKEINDEX} ${PROJECT}.idx
+	${LATEX} ${PROJECT}.tex 2>/dev/null 1>/dev/null
+
+\end{chunk}
+\eject
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{参考文献}
+\bibliographystyle{axiom}
+\bibliography{axiom}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+%\addcontentsline{toc}{chapter}{Index}
+\printindex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

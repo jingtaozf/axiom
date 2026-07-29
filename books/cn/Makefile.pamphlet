@@ -58,6 +58,14 @@ Axiom 术语保持英文原样)及其独立的构建装置。本 pamphlet 解释
   (axiom、catmac、dissdef、multind、selatex、slatex,
   用 \verb|kpsewhich| 逐一核实),其余全部使用系统版本——
   xelatex 路线也正需要现代版的 hyperref/graphicx 驱动探测。
+\item {\bf 空的 signatures 占位要多 touch 一个文件}。英文配方
+  只 \verb|touch signatures.tex|;但 bookvol5 在卷尾(紧邻
+  \verb|\bibliography| 之前)还 \verb|\input{signatures.sort}|,
+  该文件由英文构建的 .sigs 机制生成。中文文档构建不跑那套机制,
+  缺文件会让 xelatex 在文档末尾 Emergency stop——正文页数看似
+  齐全,aux 却没写出 \verb|\bibdata|,bibtex 随之空转,整卷
+  参考文献消失。修法与 signatures.tex 相同:touch 一个空的
+  \verb|signatures.sort| 占位。
 \item {\bf 保留编译日志}。英文配方编译后把 \verb|*.log| 一并删除;
   中文书处于持续翻译中,译文改动引入的 LaTeX 错误要靠日志定位,
   所以这里不删 \verb|.log|,只清理其余中间文件。
@@ -106,7 +114,9 @@ RM?=rm -f
 # 在现代 texlive 上会压住系统版本导致硬错误,一律不拷
 CNSTY=axiom.sty catmac.sty dissdef.sty multind.sty selatex.sty slatex.sty
 
-all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf ${PDF}/bookvol0.pdf
+all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf ${PDF}/bookvol0.pdf \
+	${PDF}/bookvol2.pdf ${PDF}/bookvol3.pdf ${PDF}/bookvol4.pdf \
+	${PDF}/bookvol5.pdf ${PDF}/bookvol9.pdf
 
 ${PDF}:
 	mkdir -p ${PDF}
@@ -129,6 +139,7 @@ ${PDF}/%.pdf: ${IN}/%.pamphlet ${IN}/bookheader.tex ${PDF}/axiom.bib ${PDF}/axio
 	  cp -pr ${BOOKS}/ps ${PDF} ; \
 	  ${RM} $*.toc ; \
 	  touch signatures.tex ; \
+	  touch signatures.sort ; \
 	  touch $*.sigs ; \
 	  ${XELATEX} $*.pamphlet >/dev/null ; \
 	  ${MAKEINDEX} $*.idx 1>/dev/null 2>/dev/null ; \
