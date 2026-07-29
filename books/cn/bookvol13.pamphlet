@@ -1,0 +1,5885 @@
+\documentclass{book}
+\newcommand{\VolumeName}{Volume 13: Proving Axiom Correct}
+\usepackage{bbold}
+\usepackage{amsmath}
+\usepackage{turnstile}
+\usepackage{mathrsfs}
+\input{bookheader.tex}
+\pagenumbering{arabic}
+\mainmatter
+\setcounter{chapter}{0} % Chapter 1
+归根结底,我们希望 Axiom 能够证明某个算法所给出的结果是正确的。从
+现在的起点到这个目标之间还有许多步骤要走,其中包括要证明某一个
+Axiom 算法在从 Spad 代码,到 Lisp 代码,到 C 代码,直至机器码的
+每一个层次上都是正确的——这本身就是一项令人望而生畏的任务。
+
+对单个 Axiom 算法的证明,是着眼于让这一过程实现自动化而进行的。
+自动化的机器证明在一般情形下是不可能的,但对于已知的算法则是
+可以做到的。
+
+\begin{quote}
+{\bf 这是一场"凝视肚脐"(Omphaloskepsis)式的自我沉思}\\
+—— Tim Daly
+\end{quote}
+
+\begin{quote}
+{\bf 用程序去证明四色定理,并不会改变数学本身——它只不过说明了,
+这个困扰数学界整整一个世纪的难题,或许对数学而言并不那么重要。}\\
+—— Alan J. Perlis
+\end{quote}
+
+\begin{quote}
+{\bf 思考、分析与发明并非反常之举;它们是智能正常的呼吸。}\\
+—— Zero HP Lovecraft (The Gig Economy)
+\end{quote}
+
+\begin{quote}
+{\bf 做研究,你必须要有内在的驱动力、发自内心的兴趣。你必须愿意
+去承受煎熬,可以先放下一个问题,过后再回来面对它。做理论研究
+有点让人心生畏惧,因为你永远不知道自己正试图解决的问题究竟能
+不能解出来。}\\
+—— Robert E. Tarjan
+\end{quote}
+
+\begin{quote}
+{\bf 一个算术命题的真,独立于它的证明。}\\
+—— Kurt G\"odel
+\end{quote}
+
+\begin{quote}
+{\bf Coq 就像编程界的战术核武器。你得相当聪明才能用得动它。而且
+确实,人们刚开始用它的时候,你会有整整两年听不到他们的消息,他们
+仿佛「销声匿迹」了,然后再度出现时,他们所有的痛觉感受器都已被
+摧毁殆尽,还会说 Coq 才是唯一的生活方式,什么都要用 Coq 来做。
+"我再也不写程序了,我只写 Coq 证明"}\\
+—— Simon Peyton-Jones \cite{Peyt17}
+\end{quote}
+
+\begin{quote}
+{\bf 研究,就是去看见人人都看见过的东西,却去思考无人曾想过的
+东西。}\\
+—— Max Jammer \cite{Jamm66}
+\end{quote}
+
+\begin{quote}
+{\bf 对每一个自称在编写算法的人来说,提供证明——证明自己写下的
+文本确实代表了一个恰当的算法——本就是其职责中不可分割的一部分。}\\
+—— Edsgar Dijkstra \cite{Dijk71}
+\end{quote}
+
+\begin{quote}
+当对正确性的关切是事后才想起、正确性证明只能在程序已经完成之后
+才补给出来时,程序员确实理应预料到严重的麻烦。然而,倘若他坚持
+这样一条纪律——在编程的同时就给出正确性证明[着重号为引者所加]
+——那么他花在写出程序与证明上的总精力,反而会比单单写程序本身
+所耗费的还要少。
+—— Edsgar Dijkstra \cite{Dijk70}
+\end{quote}
+
+\begin{quote}
+{\bf 如果你正在做的事情并不重要,那你为什么要去做它?}\\
+—— Richard Hamming \cite{Hamm95}
+\end{quote}
+
+\begin{quote}
+{\bf 问:何必费心去为编程语言做证明?只要定义是对的,证明几乎
+总是枯燥无味的。}
+
+{\bf 答:定义几乎总是错的。}
+\end{quote}
+
+\begin{quote}
+{\bf 三位数学家使用计算机代数系统的不幸遭遇:我们能信任它们吗?}\\
+—— Dur{\'a}n, P{\'e}rez, and Varona \cite{Dura14}\\
+{\bf 当然不能。} —— Tim Daly\\
+{\bf 呃,那不过就是,你懂的,你自己的看法罢了,老兄}\\
+—— Jeff Bridges, The Big Lebowski
+\end{quote}
+
+\begin{quote}
+{\bf 如果编程被理解的不是为这台或那台计算机器编写指令,而是设计
+出应当由计算机负责去执行的计算方法,那么编程这门学科似乎就再也
+无法与构造性数学区分开来了。}\\
+—— Per Martin-L\"of \cite{Mart79}
+\end{quote}
+
+\begin{quote}
+{\bf 我们的基本前提是:若不对整个编程过程作一番全新而全面的审视,
+构造和修改程序的能力就不会得到提升。以往的理论研究——比如在程序
+逻辑方面的研究——往往集中于对单个程序进行推理的方法;而在我们
+看来,几乎没有什么工作是致力于建立起对编程这一过程本身的透彻
+理解的——也就是程序在概念上和实践中演化的这一过程。就目前而言,
+我们还缺乏这样的手段:用一种能把验证、文档记录与可适应性恰当
+联系起来的方式,去描述程序构造与改进的技术。}\\
+—— Scherlis and Scott (1983) in \cite{Maso86}
+\end{quote}
+
+\begin{quote}
+{\bf 符号处理本质上的离散性质,使得编程成为一件如此棘手的工作,
+以至于运用形式化技术已成为必需。}\\
+—— Edsger W. Dijkstra \cite{Dijk83}
+\end{quote}
+
+\begin{quote}
+{\bf 证明这一概念的作用,不仅在于组织信息,更在于引导对问题的
+分析、催生必要的洞见。它既是一件分析工具,也同样是一件最终产物。}\\
+—— Bates and Constable \cite{Bate85}
+\end{quote}
+
+\begin{quote}
+{\bf 到 1949 年 6 月,人们已经开始意识到,把程序写对并不像当初
+看起来那么容易。……我猛然彻底地意识到,自己往后人生的很大一部分
+时间,都将耗费在寻找自己程序里的错误上。}\\
+—— Maurice Wilkes \cite{Wilk85a}
+\end{quote}
+
+\begin{quote}
+{\bf 我相信,构建软件真正困难的部分,在于对这一概念构造进行规约、
+设计与测试,而不在于把它表示出来、并检验这种表示是否忠实这一
+劳动本身。如果这一判断是对的,那么构建软件将永远是困难的。天生
+就不存在什么银弹。}\\
+—— Fredrick P. Brooks Jr. \cite{Broo87}
+\end{quote}
+
+\begin{quote}
+{\bf 我认为,构造计算机程序是一项数学活动,就如同求解微分方程
+一样;程序可以借助数学洞见、计算与证明,从其规约中推导出来,
+所用的代数法则可以像初等算术那样简单而优雅。}\\
+—— C. A. R. Hoare \cite{Fetz88}
+\end{quote}
+
+\begin{quote}
+{\bf 可以说,程序就是猜想,而执行则是试图对其加以反驳。}\\
+—— James Fetzer \cite{Fetz88}
+\end{quote}
+
+\begin{quote}
+{\bf 计算机的存在,正在推动人们去发现能生成证明的算法。1970 年
+那项公告——不存在判定多项式 Diophantine 方程是否存在整数解的
+通用算法,即 Hilbert 第十问题无解——发布之时那一片如释重负的
+叹息声,我至今仍似能听见回响。然而,当我审视自己所在的领域时,
+我发现,创造出能生成证明的算法,正构成了当下正在进行的一些最
+重要的数学工作。万能的证明机器或许已经死了,但那些针对性极强
+的机器却蒸蒸日上。}\\
+—— Dave Bressoud \cite{Bres93}
+\end{quote}
+
+\begin{quote}
+{\bf 与人类不同,计算机擅长执行形式化的过程。已经有人在努力用
+计算机把数学的一部分真正形式化,做出真正形式正确的形式推演。
+我认为这是一项非常宏大、但也非常值得去做的工程,而且我相信我们
+会从中学到许多东西。这一过程将有助于简化和厘清数学。我预期,
+用不了太多年,我们就会拥有交互式的计算机程序,能帮助人们编译
+出大段形式上完备且正确的数学(建立在少数或许并不牢靠、但至少
+是明确陈述出来的假设之上),而且它们将成为数学家标准工作环境的
+一部分。}\\
+—— William P. Thurston \cite{Thur94}
+\end{quote}
+
+\begin{quote}
+{\bf ……构造性数学提供了一种把逻辑命题的语言视为程序的{\sl 规约}
+语言的方式。计算机科学中一直有一股持续的研究推力,致力于开发
+程序规约语言与形式体系,以便系统性地从规约推导出程序。要让
+构造性数学提供这样一套方法论,就需要能从构造性证明中系统性地
+提取出程序的技术。这一领域的早期工作包括 Bishop 与 Constable
+的工作 \cite{Cons98}。Martin-L\"of 82 年的类型论与众不同之处
+在于,它为程序综合所提出的方法异常简单:在数理逻辑的构造与
+函数式编程语言的构造之间,建立起了一一对应的直接关系。具体
+来说,每一个命题都被视为与某个类型表达式同构,而一个命题的
+证明会精确地指出应当如何构造出该类型的一个居留元,这个居留元
+便是函数式编程语言中的一个项。这个居留于某命题所对应类型之中
+的项,常被称为该命题的{\sl 计算内容}。}\\
+—— Paul Bernard Jackson \cite{Jack95}
+\end{quote}
+
+\begin{quote}
+{\bf 写作,是大自然让你知道自己的思维有多么草率的方式。}\\
+—— Guindon \cite{Lamp02}
+\end{quote}
+
+\begin{quote}
+{\bf 数学,是大自然让你知道自己的写作有多么草率的方式。}\\
+—— Leslie Lamport \cite{Lamp02}
+\end{quote}
+
+\begin{quote}
+{\bf 类型论完全称得上是把计算与数学统一起来的大统一理论,以至于
+归根结底,数学与代码之间并无区别。}\\
+—— Robert Harper \cite{Harp13}
+\end{quote}
+
+\begin{quote}
+{\bf 非形式化的证明就是算法。形式化的证明就是代码。}\\
+—— Benjamin Pierce \cite{Pier17}
+\end{quote}
+
+\chapter{为什么这项努力不会成功}
+
+\begin{quote}
+当一件事情足够重要时,即便胜算不在你这一边,你也要去做它。\\
+—— Elon Musk
+\end{quote}
+
+\begin{quote}
+{\bf 古希腊人给(西方)文明带来了不少馈赠,但我们应当提防那些
+带着礼物来的希腊人。戏剧与民主这两份馈赠无疑是好的,或许连
+哲学这份馈赠也是好的,但所谓"公理化方法"以及"严格"证明这一
+观念的这份"馈赠",造成的害处却远大于好处。如果我们想要让数学
+知识及其管理最大化,我们就必须把这份可疑的馈赠还给 Euclid,
+放弃我们对完美严格性的狂热执念。当然,我们也不应走向另一个
+极端,要求一切都不必严格。我们应当鼓励证明风格与严格程度的
+多样性,并牢记这个世界上没有什么是绝对确定的,不存在绝对严格
+的证明,也不存在绝对的确定性,而"真理"有着许多层次与色调。}\\
+—— Doron Zeilberger \cite{Zeil10}
+\end{quote}
+
+\begin{quote}
+{\bf 区分出一个科学家的,纯粹是一种近乎艺术的鉴别能力——能分辨
+出什么是好的想法,什么是美的想法,什么值得花时间去做,而最
+重要的是,能分辨出什么问题足够有趣、却又足够困难,以至于它
+至今尚未被解决,但解决它的时机现在已经到来。}\\
+—— Savas Dimopoulos; Stanford University
+\end{quote}
+
+\begin{quote}
+{\bf 每天早晨醒来,都应当反思一下自己工作在概念与基础层面上的
+意义。}\\
+—— Harvey Friedman
+\end{quote}
+
+这是一项旨在证明 Axiom 正确的努力。也就是说,我们希望证明,这些
+算法给出的答案是正确的、值得信赖的。
+
+此前所有把计算机代数系统与证明系统结合起来的尝试,都会引出一个
+问题:该 CAS 是不可信的。
+
+Axiom 试图对数学算法进行编码。与其他系统不同,它建立在群论这一
+脚手架之上,而群论提供了一个健全的数学基础。正因如此,似乎完全
+合乎情理地认为,Axiom 中的算法是可以被证明为正确的,于是便有了
+"证明 Axiom 是清醒的"(Prove Axiom Sane,PAS)这一项目。
+
+PAS 项目不会成功。这一点从一开始就完全显而易见。但是,鉴于排中律
+(即 $A \lor ~A$)在这种情形下并不适用,该项目"不成功"这一事实,
+并不意味着失败。学习总会发生。
+
+话虽如此,我们仍能列举出不少 PAC 不会成功的理由,其中大多数都在
+\cite{Cyph17} 中有更详细的阐述。我们为那里提出的可能的批评意见
+起了一些便于使用的名字,并把这些批评意见转述、套用到我们自己的
+语境之中。
+\begin{enumerate}
+\item {\bf 信仰之跃} 所有这些努力,要么需要从已验证的代码跃迁到
+现实世界问题时做出一次信仰的飞跃,要么就需要使用一个人为受限的
+系统才能运作(即"新话"式的做法——创造出一种语言,使人根本不
+可能用它去想出坏念头),这表明,把形式化验证一路做到二进制代码
+这一层级,在任何普遍接受的形式化方法意义上,都不太可能行得通。
+\item {\bf 玩具问题的工具} 用来支持形式化方法的这些工具,诞生于
+一个以少数高技能用户为特征的学术研究环境之中。这些工具是在一些
+小问题上测试的(通常被略带贬义地称为"玩具问题"),而这些小问题
+与其说是针对问题本身,倒不如说更针对的是工具的练习。
+\item {\bf 晦涩的规约} 另一个使形式化方法的使用变得复杂的因素
+在于,软件工程师所能用到的数学方法往往非常难用,并且深受笨重、
+难读难懂的记号之累。
+\item {\bf 任务过于庞大} 支撑这一级别任务所需的国家级技术基础,
+基本上并不存在。放眼全世界,能够完成其中关键步骤的人似乎连 20
+个都不到。"要得到一个具有卓越系统完整性的系统,你必须确保它是
+由天才来设计和构建的。而天才,供给短缺" \cite{Blak96}。
+\item {\bf 虚假的公理} 当一个证明不得不靠人工添入一些"不证自明"
+的真理来补充时,问题就出现了——这些"真理"有时最终被证明是假的,
+进而把证明者引入歧途。
+\item {\bf 智力成本} 要求给出算法的证明,会进一步增加在 Axiom
+中创建该算法本已过高的成本——毕竟这样一个系统本身就已经呈现出
+一座陡峭的智力高山。
+\item {\bf 涟漪成本} 从一个证明走到它的实现,需要经过多层抽象,
+而其中任何一层的变动都可能引发连锁反应,随着改动不断传播开去。
+如果某个改动一路传播,渗透进了一段已被形式证明过的代码之中,
+那么该证明的一部分,甚至有可能是全部,都可能需要重做。
+\item {\bf 非形式化的实现细节} 当前的技术很少能深入到高层规约
+以下的层次,结果导致大量的时间与精力都被投入到生产一份不含任何
+实现细节的设计规约上。
+\item {\bf 规约不匹配} 对某规约正确性的形式证明,并不能表明证明
+中所做的假设,在实际的物理系统中也是正确的。如果本应实现该形式
+规约的代码与规约并不完全相符,或者编译器无法生成一个与代码中
+原本意图完全吻合的可执行文件,那么无论做多少形式证明,都无法
+保证代码的执行行为。
+\item {\bf 自然语言与形式语言不匹配} 用自然语言描述的意图,可能
+与用形式语言描述的内容并不相符。在许多情况下,起作用的是一些
+从未被形式化陈述过的"常识性"假设。
+\item {\bf 规约本身的缺陷} 代码可能完全按照规约所陈述的内容去
+实现,但规约本身却可能是有缺陷的。
+\item {\bf 实现有误的规约} 规约本身可能是正确的,但实现却与规约
+不相符。
+\item {\bf 规约的收窄} 规约语言可能不足以陈述所有必需的概念,
+于是就对规约做出一种"收窄",以近似地表达原本的意图。
+\item {\bf 规约的放宽} 规约语言可能会把所需的概念一般化,于是
+就对规约做出一种超出原本意图之外的"放宽"。
+\item {\bf 规约的阻抗失配} 规约语言并不能覆盖所关注 domain 中的
+那些概念,需要花费相当大的力气去为该 domain 建"模"。
+\item {\bf 规约的盲区} 规约的撰写者不可能把日后会出现的每一种
+意外情况都考虑进去。结果,对一份规约的实现,并不只是单纯地实现
+它,还会为了适应规约原作者未曾预见到的现实世界约束而对其加以
+改动。
+\item {\bf 相互矛盾的证明} 如果系统是不一致的,那么就有可能找到
+两个相互矛盾的证明。这样的一处不一致很可能不会被察觉,而其中
+只有一个证明会被接受下来,因为另一个证明根本不会被生成出来。
+\item {\bf 大概率会被无视} 已发表的证明数以千计,其中大多数都是
+"只写不读"的,从来没有人去核验它们。Axiom 的证明大概率也会是
+这种情况。
+\item {\bf 已证明的程序仍然是错的} 一个程序完全可能已经被证明
+是正确的,却依然得出错误的结果。测试仍然是必需的。
+\item {\bf 证明是一种社会性过程} Axiom 的"社交圈子"小得几近于无。
+\item {\bf 鸡生蛋还是蛋生鸡} 究竟是证明源自程序,还是程序源自
+证明?
+\item {\bf 烧开整片海洋} 这项任务实在太过庞大。
+\item {\bf 元理论成本} 为新的数据类型开发理论是要付出代价的;
+这些都是不必要的"元"级成本。
+\item {\bf 偏函数} 并非所有函数都是全函数,因此很难就它们证明
+定理。
+\item {\bf 不可判定的理论} 已知有些理论是不可判定的,因此在为
+它们做证明时会出现问题。
+\end{enumerate}
+
+Fenton \cite{Fent93} 指出,没有确凿证据能够表明
+\begin{enumerate}
+\item 形式化方法已经在真实的安全攸关系统开发中得到了具有成本
+效益的运用
+\item 使用形式化方法所带来的可靠性,比传统的结构化方法辅以加强
+测试更具成本效益
+\item 无论是开发者还是用户,都能被培训出足够多的人手来恰当地
+运用形式化方法
+\end{enumerate}
+
+Calude 等人 \cite{Calu07} 对证明与编程这一议题采取了截然不同的
+进攻角度,具体而言:
+\begin{enumerate}
+\item(数学中的)定理对应的是算法,而不是(计算机科学中的)程序;
+算法要接受数学证明(例如正确性证明)
+\item 证明在数学建模中所扮演的角色非常小:充分性才是主要问题
+\item(计算机科学中的)程序对应的是数学模型。它们要接受的不是
+证明,而是充分性与相关性分析;在这类分析中,某些证明或许会
+出现。计算机科学中的正确性证明(如果有的话)并不具备成本效益。
+\item 编程中的严格性优于数学证明中的严格性。
+\item 编程赋予了数学一种新的理解方式
+\item 尽管 Hilbert 式的证明观念几乎没有改变的可能,但未来的证明
+将会有多种不同的类型,扮演不同的角色,其真实性也将以不同的方式
+加以核验。
+\item 一般而言,正确性是不可判定的
+\item 对于大多数非平凡的情形,正确性是一项浩大的工程,它所带来
+的额外信心,是以不成比例的代价换来的。
+\end{enumerate}
+
+还有一次进攻来自 Hoare \cite{Hoar96},他指出:
+"通过考察当前的软件工程实践,本文揭示出,用来实现可靠性的技术,
+与在现代工程其他各个分支中已被证明行之有效的技术相比,并无太大
+差别:对设计审查与复核流程的严格管理;基于大量针对性测试的质量
+保证;通过从已被广泛使用的产品中剔除错误来实现的持续演化;以及
+防御性编程,还有其他形式的刻意的过度工程。形式化方法与证明,在
+大规模编程中所起的直接作用很小;但它们确实提供了一个概念框架和
+基本的理解,能够促进当下最佳实践,并为未来的改进指明方向。"
+
+Fetzer \cite{Fetz88} 补充道:
+"程序验证这一概念,似乎是靠一种模棱两可的说法在做文章。算法,
+作为逻辑结构,是演绎验证的恰当对象。程序,作为这些结构的因果
+模型,却不是。把程序验证当作一种普遍适用、完全可靠、能够保证
+程序性能的方法而使其获得成功,这甚至连理论上的可能性都不存在。"
+
+一位写信给 CACM 的匿名读者说道:"是时候有人把这话说出来了——
+响亮而清晰地说出来——形式化的软件验证方法现在行不通,而且很
+可能永远都行不通。" \cite{Glas02}
+
+DeMillo 等人 \cite{Demi79} 说道:
+"本文论证认为,程序的形式化验证,无论是通过何种方式得到的,都
+不会像证明在数学中那样,在计算机科学与软件工程的发展中扮演同等
+关键的角色。此外,连续性的缺失、变化的不可避免,以及许多现实
+程序规约的复杂性,都使得形式化验证过程难以证成其合理性、难以
+管理。有一种看法认为,形式化验证的便易程度,不应主导程序设计
+语言的设计。",
+
+DeMillo 主张证明是一种社会建构。"数学证明只有在经受住数学界的
+各种社会机制的检验之后,才会增进我们对数学命题之真实性的信心。
+正是这些同样的机制,注定了软件的所谓证明——那些冗长的形式化
+验证——走向失败;这些验证所对应的,并不是那种真正管用的数学
+证明,而是数学家为描摹自己心中信念之感而凭空召唤出来的一种
+想象中的逻辑结构。验证不是消息:一个跑到走廊里去宣告自己最新
+验证成果的人,很快就会发现自己成了社交上的弃儿。验证根本无法
+被真正阅读;一个读者或许能凭着英雄般的努力,硬撑着读完其中较
+短的一篇,但那不叫阅读。由于不可读、而且从字面意义上说不可
+言说,验证便无法被内化、无法被转化、无法被推广、无法被使用、
+无法与其他学科建立联系,也终究无法被纳入一种共同体的意识之中。
+它们无法像数学定理那样逐步赢得可信度;人们要么盲目地相信它们,
+把这当作一种纯粹的信仰行为,要么就干脆完全不信。"
+
+此外还有更多说法:"针对验证,存在一种根本性的逻辑上的反对意见,
+这一反对意见就建立在形式主义严格性自身的基础之上。既然对一个
+程序的需求是非形式化的,而程序本身是形式化的,那么其间必定
+存在一次过渡,而这次过渡本身也必定是非形式化的。"
+
+还有:"那么,暂且悬置一切理性的怀疑,让我们假设程序员收到了
+"已验证"这条消息。再让我们进一步假设,这条消息并非源于验证系统
+本身的失灵。这时程序员知道些什么呢?他知道自己的程序在形式上、
+逻辑上、可证明地、可认证地是正确的。然而他并不知道它在多大程度
+上是可靠的、值得信赖的、安全的;他不知道它会在什么样的限度之内
+起作用;他也不知道一旦超出这些限度会发生什么。可他却握有那枚
+神秘莫测的"已验证"认可印章。"
+
+Manna 与 Waldinger \cite{Mann78} 提到
+\begin{enumerate}
+\item 我们永远无法确定规约是正确的
+\item 没有哪个验证系统能够验证每一个正确的程序
+\item 我们永远无法确信一个验证系统本身是正确的
+\end{enumerate}
+
+Hall \cite{Hall90} 提出了关于形式化方法的 7 个迷思。
+\begin{enumerate}
+\item 形式化方法能保证软件是完美的。
+\item 它们的原理是证明程序是正确的。
+\item 只有高度关键的系统才能从它们的使用中受益。
+\item 它们涉及复杂的数学。
+\item 它们会提高开发成本。
+\item 它们让客户难以理解。
+\item 没有人在真实项目中使用它们。
+\end{enumerate}
+
+Bowen 与 Hinchey \cite{Bowe95} 又接着提出了 7 个迷思。
+\begin{enumerate}
+\item 形式化方法会拖慢开发进程
+\item 形式化方法缺乏工具支持
+\item 形式化方法取代了传统的工程设计方法
+\item 形式化方法只适用于软件
+\item 形式化方法是不必要的
+\item 形式化方法得不到支持
+\item 搞形式化方法的人总是在用形式化方法
+\end{enumerate}
+
+Murray 与 Oorschot \cite{Murr18} 给出了一些评论,这些评论虽然是
+针对与安全相关的证明而写的,但同样适用于一般意义上的证明。我们
+把其中我们认为适用于所有证明的评论转述如下。
+
+证明,在至少过去五十年里,一直被用作辅助系统开发的一种手段。
+围绕证明在软件与系统开发中所扮演的角色,一直存在大量争论,包括
+它对主流软件的实用性,以及它对于就现实世界进行推理的相关性。
+
+近来涌现出一大批大规模的软件验证项目,它们最终构建出了一些软件
+系统,而这些系统的保障,由针对该软件行为的(经机器核验的)证明
+来支撑。
+
+作为一种保障机制,证明在多大程度上被人们理解,仍然十分有限,
+在形式化验证的从业者与研究者圈子之外尤其如此。
+
+证明无疑带来了许多好处,不乏这样的例子:在证明一个系统(某项
+性质)的过程中发现了缺陷与漏洞,进而促成了该系统的改进,而这些
+改进若非如此本来很可能不会发生。证明也带来了它自身的{\sl 副
+作用}(代码改动与部署约束),这些副作用并非全都对系统有利,其中
+有些甚至可能是负面的(且不论对性能的影响)。
+
+关于形式化证明在系统构建中的价值与作用,不同的利益相关方与不同
+的群体之间,既存在困惑,也存在着形形色色的各种解读。
+
+如果一个形式化证明无法确立关于真实系统的性质,那它又有什么
+价值呢?
+
+对证明之含义最普遍的一种解读是,它为一个系统提供了{\sl 保障}。
+这种看法,或许在形式化方法圈子{\sl 之外}最为强烈。而在形式化
+方法圈子{\sl 之内}——也就是那些真正从事形式化验证工作的人当中
+——情况就更为微妙。这种表面上的矛盾——在文献中很常见,也不能
+被轻视为一个造成困惑的来源——可以这样化解:一个证明所提供的
+保障,是要以模型与证明假设的准确性为前提的,也就是说,唯有当
+系统的形式模型,就所要证明的那项性质而言,与系统在现实世界中
+的行为相吻合时,该证明才会为现实世界提供保障,而且也只有在
+这种情况下才会。
+
+一切证明都有其假设。然而,正如 DeMillo、Lipton 与 Perlis 在他们
+那篇对形式化方法赫赫有名的批判文章 \cite{Demi79} 中所指出的那样,
+把软件的形式化验证与纯数学中的证明区分开来的,正是其假设数量
+的庞大程度。
+
+关于形式化证明的价值,有一个结论是:它们能让评估者把精力集中在
+验证证明假设的准确性上,从而使他们得以忽略实现中的大部分内容。
+形式化保障的价值就在于,它把余下的疑虑都集中到了这些假设之上。
+
+另一种看法是,证明的价值不在于提供(有条件的)保障,而在于迫使
+人们对一个系统及其运作方式形成审慎而严格的理解。证明过程会产出
+更为健壮的代码,这一点毫无疑问。然而,普遍的共识似乎是,这种
+健壮性,与其说是证明得以完成的结果,倒不如说更多是严格理解问题
+这件事所涌现出来的一个后果。如果说把整个证明完成只不过是一种
+副作用,那么我们注意到,在这种观点之下,即便是{\sl 部分}证明也
+具有价值。而对于把证明视为有条件保障的这种观点而言,这一点就
+不那么清楚了,因为一个未完成的证明,对于所研究的形式化对象而言,
+并不提供任何保障。
+
+交互式证明提供了一种关键机制,可以(借助一个形式化模型)对一个
+系统进行结构化的、交互式的探索。执行证明这件事,迫使人类去仔细
+审视系统模型的每一个部分,并让人类的直觉得以揭示出那些可能被
+证明本身所遗漏的问题。
+
+关于证明的好处,已经形成了一些确立下来的看法:提供有条件的保障;
+让审计者得以把精力集中在验证证明假设与形式模型上;提供一种手段,
+让人们能够对一个系统进行结构化的探索,从而更好地理解和改进它。
+
+然而,与这些好处相对的,是证明的种种弊端,而这些弊端和证明本身
+一样,人们对其的理解也十分有限,在形式化方法圈子之外尤其如此。
+其一是证明的{\sl 脆性}:比如说,改动一行代码就有可能使大量的
+形式化推理归于无效。当哪怕只有{\sl 一条}证明假设偏离了现实,要
+判断该证明所提供的保障究竟是什么,就变得十分困难。其二是缺乏
+能够可靠地预测形式化方法成本的技术。还有一点是,无论是非专家
+还是专家,要精确辨明一个证明所确立的那项形式化性质究竟是什么
+性质,都存在困难,而要验证这类证明所依赖的大规模形式模型中的
+隐含假设,同样存在困难。这就留下了充分的空间,使得非专家{\sl
+以为}已经被证明的内容,与{\sl 实际}被证明的那项精确的形式性质
+之间,可能存在差距。
+
+存在着一些{\sl 作用于系统之上}的效应,有好有坏,而证明正是其
+近因——也就是说,这些是由于执行证明这一行为而直接带来的、作用
+于系统之上的具体效应。我们把这些称为证明的{\sl 副作用}。
+
+一个证明可能会在系统上{\sl 诱发}两类副作用。其一是{\sl 对代码
+的改动}——要么是为了修复证明过程中发现的某个 bug,要么是为了
+修改设计或实现的某个方面,从而开辟出一条能够完成证明的路径。
+其二是施加在系统之上的{\sl 部署约束},用以强制满足证明所必需的
+{\sl 环境假设}。
+
+\section{形式化验证的一般性问题}
+
+在 Moy 与 Wallenburg \cite{Moyx10} 中我们可以看到:
+\begin{enumerate}
+\item 形式化验证并不会施加于一个系统的所有部分。在一个经过
+形式化验证的核心周围,系统中通常还存在一些无法被形式化验证的
+部分,原因或是它们涉及与其他系统或用户之间的接口交互,或是
+因为验证它们的代价(精力/时间/金钱)太过高昂。对于那些不那么
+关键的部分,形式化验证的成本/收益比尤其值得纳入考量。
+\item 形式化验证的强度,取决于规约本身的强度。在对程序中不存在
+运行期错误进行形式化验证时,规约是由编程语言的语义给出的。然而,
+一般而言,没有办法"猜出"系统某个部分的本意,开发者必须在一份
+规约中把它明确指出来。撰写规约可能和编写程序一样容易出错。在
+实践中,这些规约并不是完整的功能规约,因为那样做代价会过于
+高昂。只有开发者明确指定过的那些性质,才能被形式化验证。
+\item 形式化验证技术并不能覆盖程序所有值得关注的性质。大多数
+形式化验证框架验证的是不存在运行期错误,而开发者所表达出来的
+性质则是不变式或函数契约。尤其是,形式化验证技术通常并不擅长
+检测死代码与"怪异"的代码(低效或不合惯用法的代码),也不擅长
+检测隐蔽信道。
+\item 形式化验证方法本身也可能是有缺陷的,比如说,如果其底层的
+定理证明器或静态分析器的实现本身存在问题的话。
+\end{enumerate}
+
+\chapter{进步终将发生}
+
+在最底层,朝着对底层实现细节进行形式化验证这一方向,已经出现了
+一些确实令人印象深刻的进展。
+
+Reid \cite{Reid17} 为 ARM 处理器创建并验证了一份庞大的规约
+(超过 50 万个节点)。该规约几乎通过了他们那庞大的(11k 条)测试
+套件中的每一项测试。把该规约与 SMT 求解器结合使用,能够实现
+诸如"给定一个已知的输出,反问什么样的输入会产生它"之类的能力,
+举例来说。
+
+Chlipala 既做过机器级别 \cite{Chli17a} 的形式化证明,也做过更
+高层级 \cite{Chli17} 的形式化证明。他断言,在 10 年之内,拥有
+从头到脚都经过正确性证明、且该证明经过算法核验的已部署计算机
+系统,将会成为一件寻常之事。
+
+确立某个算法(例如 Groebner)是正确的,这显然属于计算数学中
+证明的一侧。
+
+确立存在一个 Groebner 的实现,这显然属于计算数学中计算机代数
+的一侧。
+
+这场博弈的关键,就在于把这两者统一起来。
+
+这样一个证明,就成了实现该算法的程序——比如在 Axiom 中——其
+规约的{\bf 一部分}。
+
+该证明所用的定义与公理,必须被放入系统之中,在 category 层级与
+domain 层级都要有;它们需要在实现代码这一层面上是可用的。
+
+另一方面,category 与 domain 也存在一些非逻辑性的"公理",比如
+浮点数大小的限制。
+
+Axiom 的做法是拥有多个 FLOAT domain,例如 Gustafson 的 UNUM
+\cite{Gust16a}。
+
+另一种选择,是拥有一个符号化的 Integer domain,它使用符号而非
+数字。
+
+实现还存在一些非逻辑性的限制,比如中间表达式膨胀,把内存全部
+耗尽。要写出一份能在这类失败发生之前就把它们全都检测出来的
+规约,是不可能的。但确实存在处理这类边界的逻辑手段。
+
+在逻辑中存在"积类型",它们基本上就是多字段的记录。也存在"和
+类型",它们是不相交的并集。
+
+Axiom 应对触及计算极限这一情形的做法,是返回一个和类型,它要么
+是结果,要么是"failed"。这个失败的结果需要被显式地带入证明之中。
+由于 failed 也是一个有效的结果,规约就可以被扩展,把它也囊括为
+一种有效结果。
+
+仅仅因为一个程序可能会失败,并不能就此说它无法被证明——既然
+"failed"本身就是一个有效的结果。
+
+甚至还可以把这个和类型进一步扩展,纳入关于失败原因的信息,使得
+"failed"成为一个能说明其失败原因的积类型。这样一来,就可以使用
+另一个 domain 了。
+
+事实上,完全可以在 Axiom 中引入一个 FAILED domain,并配上一个
+'why?' 函数。各个局部的 domain 可以扩展 FAILED,加上各自针对
+自身可能出现的失败情形而定制的 'why?' 函数。
+
+Axiom 有能力拥有多个能够克服这些限制的 domain,例如小浮点数、
+大浮点数、unum。这些 domain 将允许用户以不同的假设去'重试'一次
+计算。
+
+由 william Sit 提出的这个问题很重要。Axiom 中有些算法带着"挥手
+带过"式的规约,需要被扩展,才能在预期应当返回 'failed' 时正确地
+返回它。这是一件'好事',也是把证明与计算机代数结合起来的一个
+有用的副产品。
+\chapter{这里有一个问题}
+
+\begin{quote}
+这个世界既需要逻辑学家,也需要验证者,而我们彼此都离不开对方。逻辑学家需要验证者,才能让自己的工作保持现实意义;验证者也需要逻辑学家,才能让自己保持诚实。(以人类惯常的做派,大多数逻辑学家自认为对开发理论所需的真实验证问题已经了解得足够多,而大多数验证者也自认为对逻辑懂得足够多,足以验证程序。他们大概都错了。)\\
+-- Lamport 与 Owicki \cite{Lamp81}
+\end{quote}
+
+Axiom 拥有一门面向数学计算的领域特定语言,名为 Spad。它是用 Common Lisp 实现的。我们所用的这版 Common Lisp 会编译为 C。C 代码随后被编译成机器码。机器码由物理机器执行。
+
+针对上述每一个环节,都存在各种可以下手的攻克路径。我们最终都会一一处理——从数学规范出发,经过 Spad 代码,一路深入到硬件时序信号。
+
+Myreen、Slind 与 Gordon \cite{Myre09a} 提到了一种值得借鉴的有效技术。他们把代码“正向编译 (forward compile)”为 $f$,将结果记作 $f^\prime$,然后证明 $f=f^\prime$。这个证明足以说明该编译步骤是正确的。
+
+\section{证明代数}
+\subsection{定义 Spad 语法}
+\subsection{定义 Spad 语义}
+
+Gordon \cite{Gord89} 描述了如何对程序进行形式化推理——既可以直接基于程序设计语言的语义 (semantics),也可以在诸如 Hoare 逻辑这样的专用逻辑中完成。
+
+O'Donnell \cite{Odon81} 对 Hoare 逻辑推理中所用规则的逻辑可靠性 (soundness) 提出了质疑。
+
+Manna 与 Waldinger \cite{Mann78a} 引入了 {\sl 有时} (sometime) 这一概念,将其视为一个有时为真的条件不变式。
+
+Floyd \cite{Floy67}、Back \cite{Back81}、Caldwell \cite{Cald97}、Filliatre \cite{Fill03}、Filliatre 与 Paskevich \cite{Fill13}
+
+\subsection{类型解析}
+
+在 Kaes \cite{Kaes88} 中我们发现,重载 (overloading) 与多态 (polymorphism) 之间存在语义上的差异:以重载的 $+$ 算子 (operator) 为例,我们期望整数加法与实数加法分别执行不同的代码;而对于 $len$,我们却期望同一份代码能用于任意类型 (type) 的列表。这一区别催生了“临时多态 (ad-hoc polymorphism)”这个名称。
+
+{\bf 参数化多态 (Parametric Polymorphism)}:同一个语义对象在每次使用时可以具有不同的类型,这些类型都是关于若干变量 (variable) 的某个单一类型表达式 (type expression) 的实例。
+
+{\bf 重载 (Overloading)}(“临时多态”):单个名字可以用来指代不同的语义对象,这些对象的类型彼此完全无关。
+
+{\bf 参数化重载 (Parametric Overloading)}:单个名字可以用来指代多个对象,这些对象的类型都是关于某个扩展类型变量集合的单一类型表达式的实例。
+
+Cardelli 与 Wegner \cite{Card85} 在 Strachey 的基础上加以细化,引入了一种新的多态形式,称为 {\sl 包含多态} (inclusion polymorphism),用来对子类型与继承进行建模。参数化多态与包含多态被归为“普适多态 (universal polymorphism)”的两个主要子类,与之相对的是非普适的、亦即临时多态。
+\begin{verbatim}
+                               |- parametric
+                 |- universal -|
+                 |             |- inclusion
+   polymorphism -|
+                 |             |- overloading
+                 |- ad hoc    -|
+                               |- coercion
+\end{verbatim}
+
+参数化多态之所以如此命名,是因为其类型结构的一致性通常是靠类型参数来实现的;但一致性也可以用别的方式取得,这个更一般的概念便称为 {\sl 普适多态} (universal polymorphism)。普适多态的 (polymorphic) 函数 (function) 通常能够作用于无穷多种类型(所有这些类型都具有某种共同结构),而临时多态的函数则只能作用于有限的一组彼此不同、甚至可能互不相关的类型。
+
+在 {\sl 参数化多态} 中,一个多态函数具有一个隐式或显式的类型参数,它决定了该函数每次应用时实参 (argument) 的类型。在 {\sl 包含多态} 中,一个对象可以被看作属于多个不必互不相交的类;也就是说,类之间可以存在包含关系。
+
+至少有 4 种脱离单态类型的方式。
+\begin{itemize}
+\item {\sl 重载 (Overloading)}:整数常量 (constant) 既可以具有整数类型,也可以具有实数类型。
+\item {\sl 强制转换 (Coercion)}:整数值可以用在需要实数的地方,反之亦然。
+\item {\sl 子类型化 (Subtyping)}:子范围类型的元素也属于超范围类型。
+\item {\sl 值共享 (Value Sharing)}:Pascal 中的 {\tt nil} 是一个被所有指针 (pointer) 类型共享的常量。
+\end{itemize}
+
+Wadler 与 Blott \cite{Wadl88} 指出,如果多态相等性能够扩展到包含用户自定义的、作用于抽象类型上的相等性操作 (operation),那将是件好事。要实现这一点,我们需要让每个对象都随身携带一个指向 {\sl 方法} (method) 的指针,即执行相等性测试的那个过程。如果这一性质要求不止一个操作,那么每个对象就应当随身携带一个指向相应 {\sl 字典} (dictionary) 的指针,字典中收纳着这些方法。
+
+就多态相等性而言,这意味着相等性函数的{\sl 两个}实参都会包含一个指向同一字典的指针(因为它们的类型相同)。这就提示我们,或许应当让字典独立于对象单独传递——这样一来,多态相等性就会被传入一个字典和两个(去掉了字典的)对象。这正是类型类 (type classes) 以及他们所描述的那种转换方法背后共同的直觉。
+
+很自然地,我们会想到在类声明 (declaration) 中添加断言,用以指定每个实例都必须满足的性质:
+\begin{verbatim}
+   class EQ a where
+     (==) :: a -> a -> Bool
+     % (==) is an equivalence relation
+
+   class Num a where
+     zero, one :: a
+     (+), (*) :: a -> a -> a
+     negate :: a -> a
+     % (zero, one, (+), (*), negate) form a ring
+
+\end{verbatim}
+
+只要能证明这些性质对每一个实例声明都成立,任何证明都可以依赖这些性质。这里的断言只是简单地写成了注释 (comment);更精细一些的系统或许能够验证或利用这些断言。
+
+允许一个类作用于不止一个类型变量,这是合理的。举例来说,我们可能会有:
+\begin{verbatim}
+   class Coerce a b where
+     coerce :: a -> b
+
+   instance Coerce Int Float where
+     coerce - convertIntToFloat
+
+\end{verbatim}
+
+在这种情况下,断言 {\tt Coerce a b} 可以被看作等价于“{\tt a} 是 {\tt b} 的子类型”这一断言。这提示了这项工作与有界量化 (bounded quantification) 及子类型 (subtype) 方面工作之间的联系。
+
+\section{证明逻辑}
+
+可靠性有两个层面:封闭世界的可靠性与开放世界的可靠性。\cite{Bonn18}
+
+封闭世界可靠性假定所有程序都由同一个类型系统做类型检查 (type checking)。开放世界可靠性不仅要求封闭世界可靠性成立,还要求封闭世界假设下所维持的那些保证不会被外部代码 (foreign code) 打破。引入并考虑外部代码,正是开放世界可靠性与封闭世界可靠性之间的本质区别。参见 gradual-typing(渐进类型)。
+
+要证明程序的正确性,需要借助第二种程序设计语言——证明语言,它建立在某个良基 (well-founded) 理论之上。证明(也就是程序)可以在这门新语言里被归约(即编译)为最基本的构造——机器语言。
+
+理想情况下,所使用的程序设计语言(比如 Spad)可以与证明语言同构 (isomorphic),或者更好——在语法上就是同一种语言。遗憾的是,就 Spad 而言,目前(还)并非如此。
+
+COQ 系统的语言 Gallina,是与 Spad 最接近的匹配。
+
+Barras 与 Werner \cite{Barr18} 借助证明助手 (proof assistant) Coq,对构造演算 (Calculus of Constructions, CC) 的定义及其元理论 (metatheory) 做了形式化。具体而言,他们证明了强正规化 (strong normalization) 以及类型推断 (type inference) 的可判定性 (decidability)。从后一个证明出发,他们提取出一段经过验证的 Objective Caml 程序,用来在 CC 中执行类型推断,并用这段代码构建了一个小规模的、经过验证的证明检查器 (proof-checker)。
+
+Gordon \cite{Gord89} 从一门简单命令式程序设计语言 (imperative programming language) 的语义出发,{\sl 机械地}推导出了 Hoare 逻辑的规则。
+
+Igarashi 等 \cite{Igar75} 定义了一个程序,用来根据某个程序及其后置条件 (post-condition) 计算出子目标 (subgoal)。
+
+Katz 与 Manna \cite{Katz75} 考察了证明终止性 (termination) 的多种方法,包括
+\begin{itemize}
+\item 利用良基集合的“无无穷下降链”性质(Floyd 的方法)
+\item 为每个循环关联一个计数器并证明其有界(即 {\sl loop} 方法)
+\item 证明每个循环终会走到某个出口(即 {\sl exit} 方法)
+\item 对数据 domain 的结构做归纳(Burstall 的方法)
+\end{itemize}
+
+Davis \cite{Davi09}、Myreen 与 Davis \cite{Myre11}、Myreen 与 Davis \cite{Myre14}、Davis 与 Myreen \cite{Davi15}
+
+\subsection{类型标注与子类型化}
+
+Dolan 的博士论文 \cite{Dola16},主题是代数子类型化 (Algebraic Subtyping)。
+Henri Tuhola \cite{Tuho18} 指出,解决了子类型化的问题,并不能直接解决强制转换的问题。强制转换只会扩展类型,而不会收窄它。
+
+Dolan 与 Mycroft \cite{Dola17} 指出,给定
+\begin{verbatim}
+   select p v d = if (p v) then v else d
+\end{verbatim}
+只有忽略数据流的方向,我们才能得出“$d$ 的类型会流向 $p$ 的实参”这一结论——即便 $p$ 根本没有提到 $d$。ML 的类型推断会把数据流转化为类型之间的相等约束,因此有关数据流{\sl 方向}的信息被忽略了。由于相等关系是对称的,数据流也就被当成了单向的。但是对子类型化的支持却在意数据流的方向。在子类型化下,数据的来源方至少必须提供目的方所要求的那些保证,但可以自由地提供更多。
+
+\subsection{定义代数规范}
+
+Talpin 与 Jouvelot \cite{Talp92}
+
+\subsection{终止性}
+
+Hughes \cite{Hugh90} 谈到了一种在将多个程序粘合在一起时,处理终止性问题的惰性 (lazy) 方法。函数式语言 (functional language) 允许把整个程序粘合在一起。一个完整的函数式程序,不过就是一个从其输入到其输出的函数。如果 $f$ 和 $g$ 都是这样的程序,那么 $(g \cdot f)$ 就是这样一个程序:把它应用到输入上时,计算的是
+\[g (f {\rm\ input})\]
+程序 $f$ 计算出自己的输出,这个输出被用作程序 $g$ 的输入。按传统做法,这可以通过把 $f$ 的输出存进一个临时文件来实现。这样做的问题在于,临时文件可能会占用大量内存,以至于用这种方式粘合程序变得不切实际。函数式语言为这个问题提供了一种解决办法。$f$ 和 $g$ 这两个程序会在严格同步下一起运行。只有当 $g$ 试图读取时,$f$ 才会启动;随后 $f$ 被挂起,$g$ 继续运行,直到它再次试图读取下一个输入。这样做还有一个额外的好处:如果 $g$ 在读完 $f$ 的全部输出之前就终止了,那么 $f$ 会被中止。程序 $f$ 甚至可以是一个不终止的程序,产生无穷多的输出,因为一旦 $g$ 结束,$f$ 就会被强制终止。这使得终止条件得以与循环体分离——这是一种强有力的模块化 (modularization) 手段。
+
+由于这种求值 (evaluation) 方式让 $f$ 尽可能少运行,它被称为“惰性求值 (lazy evaluation)”。这使得把一个程序模块化为一个生成器——用来构造大量可能的答案——和一个选择器——用来挑出合适的那一个——变得切实可行。
+
+{\bf 想法:}为不终止的程序写 (lazy $f$),以简化证明。
+
+Sites \cite{Site74} 对证明程序的干净终止 (clean termination) 提出了一些想法。
+
+Katz 与 Manna \cite{Katz75} 更仔细地考察了终止性问题。
+
+\section{证明 Lisp}
+
+Guttman 等 \cite{Gutt95} 在 VL!SP 项目中展示了如何为一门程序设计语言——即 Scheme——产出一个经过全面验证的实现。
+
+Leroy \cite{Lero09} 描述了如何借助 Coq 证明助手,开发并形式化验证一个从 Cminor(一种简单的命令式中间语言)到 PowerPC 汇编代码的编译器后端 (compiler back-end)——这一验证即语义保持性 (semantic preservation) 的证明。
+
+Manolios 与 Moore \cite{Mano03} 描述了一种把“偏函数 (partial function)”引入 ACL2 的方法。这对 Common Lisp 而言是必要的,因为大多数函数都不是全函数 (total function)。
+
+Myreen \cite{Myre12}
+
+\section{证明编译器}
+
+Myreen \cite{Myre10}
+
+\section{证明到硬件底层}
+
+Myreen、Slind 与 Gordon \cite{Myre09a} 展示了一个编译器,它能从某个定理证明器 (theorem prover) 的逻辑中定义的函数出发生成机器码,并同时证明所生成的代码确实执行了源函数。
+
+Myreen 与 Gordon \cite{Myre09},
+
+Gordon 等 \cite{Gord06} 描述了一个编译器,它能把高阶逻辑 (higher order logic) 中的递归函数定义自动翻译成带时钟的同步硬件;编译过程通过 HOL4 系统中的机械化证明 (mechanised proof) 完成。具体来说,这里把函数建模成电路。
+
+Domipheus \cite{Domi18} 提供了一个用 VHDL(硬件描述语言,hardware description language)描述的 CPU,它给出了信号的真实电气时序,一路对应到由以下内容构成的机器语言:
+
+\begin{tabular}{ll}
+\hline
+OPERATION & FUNCTION\\
+\hline
+Add & D = A + B\\
+Substrct & D = A - B\\
+Bitwise Or & D = A or B\\
+Bitwise Xor & D = A xor B\\
+Bitwise And & D = A and B\\
+Bitwise Not & B = not A\\
+Read & D = Memory[A]\\
+Write & Memory[A] = B\\
+Load & D = 8-bit immediate value\\
+Compare & D = cmp(A,B)\\
+Shift Left & D = A $<<$ B\\
+Shift Right & D = A $>>$ B\\
+Jump/Branch & PC = A Register or Immediate Value\\
+Jump/Brance conditionally & PC = Register if (condition) else nop\\
+\hline
+\end{tabular}
+
+\section{设定问题}
+
+GCD 函数将是我们证明的第一个示例。
+
+目标是证明 Axiom 对 Euclid GCD 算法的实现是正确的。
+
+我们需要弄清楚到底要证明什么。在这个例子中,给定 GCD(a,b),我们需要证明:
+\begin{enumerate}
+\item {\bf GCD} 是一个从 $a\times b \Rightarrow c$ 的函数
+\item {\bf a} 与 {\bf b} 都是正确类型的元素
+\item 结果 {\bf c} 是正确的类型
+\item {\bf 除数 (divisor)} 的含义
+\item {\bf 公约数 (common divisor)} 的含义
+\item {\bf GCD} 会终止
+\end{enumerate}
+
+接下来,我们需要把我们已知的东西安置到“全局环境 (the global environment)”里——在 Coq 中,这通常记作 {\bf E}。
+
+Axiom 的 GCD 是按 category 的方式定义的,可以作用于任意 Euclid 整环。这意味着 Euclid 整环的公理是全局可用的。事实上,这比我们真正需要的更强,因为
+\begin{itemize}
+\item 交换环 $\subset$ 整环
+\item 整环 $\subset$ 整闭整环
+\item 整闭整环 $\subset$ GCD 整环
+\item GCD 整环 $\subset$ 唯一分解整环
+\item 唯一分解整环 $\subset$ 主理想整环
+\item 主理想整环 $\subset$ Euclid 整环
+\end{itemize}
+
+$R$ 上的一个 Euclid 函数,是一个从 $\mathbb{R}\\\{0\}$ 到非负整数的函数 $f$,满足下述基本的带余除法性质 \cite{WikiED}:
+
+$D(a,b)$ = $a$ 与 $b$ 的公约数集合。
+
+$\gcd(a,b) = \max{D(a,b)}$
+
+
+\section{Axiom 的 NNI GCD}
+
+NonNegativeInteger 沿着“add chain”从 {\tt Integer} 那里继承了 {\tt gcd},因为它是 {\tt Integer} 的一个子类型 (subtype)。{\tt Integer} 有 {\tt EuclideanDomain} 作为其祖先 \cite{Book103}:
+\begin{verbatim}
+(1) -> getAncestors "Integer"
+
+   (1)
+   {AbelianGroup, AbelianMonoid, AbelianSemiGroup, Algebra, BasicType,
+    BiModule, CancellationAbelianMonoid, CharacteristicZero, CoercibleTo,
+    CombinatorialFunctionCategory, CommutativeRing, ConvertibleTo,
+    DifferentialRing, EntireRing, EuclideanDomain, GcdDomain,
+    IntegerNumberSystem, IntegralDomain, LeftModule, LeftOreRing,
+    LinearlyExplicitRingOver, Module, Monoid, OpenMath, OrderedAbelianGroup,
+    OrderedAbelianMonoid, OrderedAbelianSemiGroup,
+    OrderedCancellationAbelianMonoid, OrderedIntegralDomain, OrderedRing,
+    OrderedSet, PatternMatchable, PrincipalIdealDomain, RealConstant,
+    RetractableTo, RightModule, Ring, Rng, SemiGroup, SetCategory, StepThrough,
+    UniqueFactorizationDomain}
+                                                            Type: Set(Symbol)
+\end{verbatim}
+
+从 category {\tt EuclideanDomain}(EUCDOM)中,我们能找到 Euclid GCD 算法的实现 \cite{Book102}:
+\begin{verbatim}
+      gcd(x,y) ==                --Euclidean Algorithm
+         x:=unitCanonical x
+         y:=unitCanonical y
+         while not zero? y repeat
+            (x,y):= (y,x rem y)
+            y:=unitCanonical y   -- this doesn't affect the
+                                 -- correctness of Euclid's algorithm,
+                                 -- but
+                                 -- a) may improve performance
+                                 -- b) ensures gcd(x,y)=gcd(y,x)
+                                 --    if canonicalUnitNormal
+         x
+\end{verbatim}
+{\tt unitCanonical} 函数来自 category {\tt IntegralDomain}(INTDOM),在那里我们能找到:
+\begin{verbatim}
+    unitNormal: % -> Record(unit:%,canonical:%,associate:%)
+        ++ unitNormal(x) tries to choose a canonical element
+        ++ from the associate class of x.
+        ++ The attribute canonicalUnitNormal, if asserted, means that
+        ++ the "canonical" element is the same across all associates of x
+        ++ if \spad{unitNormal(x) = [u,c,a]} then
+        ++ \spad{u*c = x}, \spad{a*u = 1}.
+    unitCanonical: % -> %
+        ++ \spad{unitCanonical(x)} returns \spad{unitNormal(x).canonical}.
+\end{verbatim}
+实现如下:
+\begin{verbatim}
+      UCA ==> Record(unit:%,canonical:%,associate:%)
+      if not (% has Field) then
+        unitNormal(x) == [1$%,x,1$%]$UCA -- the non-canonical definition
+      unitCanonical(x) == unitNormal(x).canonical -- always true
+      recip(x) == if zero? x then "failed" else _exquo(1$%,x)
+      unit?(x) == (recip x case "failed" => false; true)
+      if % has canonicalUnitNormal then
+         associates?(x,y) ==
+           (unitNormal x).canonical = (unitNormal y).canonical
+       else
+         associates?(x,y) ==
+           zero? x => zero? y
+           zero? y => false
+           x exquo y case "failed" => false
+           y exquo x case "failed" => false
+           true
+\end{verbatim}
+
+Coq 证明了下述 GCD 函数:
+\begin{verbatim}
+  Fixpoint gcd a b :=
+    match a with
+      | 0 => b
+      | S a' => gcd (b mod (S a')) (S a')
+    end.
+\end{verbatim}
+
+这可以被直接翻译成可运行的 Spad 代码:
+\begin{verbatim}
+  GCD(x:NNI,y:NNI):NNI ==
+    zero? x => y
+    GCD(y rem x,x)
+\end{verbatim}
+其测试用例的结果如下:
+\begin{verbatim}
+(1) -> GCD(2415,945)
+   Compiling function mygcd2 with type (NonNegativeInteger,
+      NonNegativeInteger) -> NonNegativeInteger
+
+   (1)  105
+                                                        Type: PositiveInteger
+(2) -> GCD(0,945)
+
+   (2)  945
+                                                        Type: PositiveInteger
+(3) -> GCD(2415,0)
+
+   (3)  2415
+                                                        Type: PositiveInteger
+(4) -> GCD(17,15)
+
+   (4)  1
+                                                        Type: PositiveInteger
+\end{verbatim}
+
+\section{数学}
+
+取自 Buchberger \cite{Buch97}:
+
+定义“整除 (divides)”
+\[ t\vert a \Longleftrightarrow \exists u (t \cdot u = a)\]
+
+定义“最大公约数 (greatest common divisor)”
+\[ {\rm GCD}(a,b) = \forall t\ max(t\vert a \land t\vert b)\]
+
+定理:
+\[ (t\vert a \land t\vert b) \Longleftrightarrow t\vert (a-b) \land t\vert b\]
+
+Euclid 算法
+\[ a > b \Rightarrow {\rm GCD}(a,b) = {\rm GCD}(a-b,b)\]
+
+根据 GCD 的定义,我们需要证明
+\[\forall t\ max(t\vert a \land t\vert b) =
+  \forall t\ max(t\vert (a-b) \land t\vert b)\]
+
+因此我们需要证明
+\[(t\vert a \land t\vert b) \Longleftrightarrow (t\vert (a-b) \land t\vert b)\]
+
+设 $t$ 是任意但固定的,并假设
+\begin{equation}\label{eq1}(t\vert a \land t\vert b)\end{equation}
+
+我们需要证明
+\begin{equation}\label{eq2}t\vert (a-b)\end{equation}
+
+以及
+\begin{equation}\label{eq3}t\vert b\end{equation}
+
+方程 \ref{eq3} 可由命题逻辑直接得出。至于方程 \ref{eq2},根据“整除”的定义,我们需要找到一个 $w$,使得
+\begin{equation}\label{eq4}t \cdot w = a-b\end{equation}
+
+根据 \ref{eq1} 以及“整除”的定义,我们知道存在某些 $u$ 和 $v$,使得
+\[t \cdot u = a\]
+
+以及
+\[t \cdot v - b\]
+
+因此,
+\[ a-b = t \cdot u - t \cdot v\]
+
+但
+\[t \cdot u - t \cdot v = t \cdot (u - v)\]
+
+因此我们需要找到
+\[w = u - v\]
+
+以及
+\[\textrm{Find w such that }t \cdot u - t \cdot v = t \cdot w\]
+
+
+\section{方案}
+有几种系统都可以用来着手做这个证明。
+
+计划是先看 Coq 与 ACL2。Coq 似乎适用于 Spad 这一层;ACL2 似乎适用于 Lisp 这一层。要做出一个完整的证明,这两个层次都是必需的。
+
+Coq 在精神上与 Spad 非常接近,因此我们可以用它来做高层证明。
+
+ACL2 是一种 Lisp 层面的证明技术,可以用来证明从 Spad 到 Lisp 这一层的转换。
+
+存在一个从 LLVM 到 ACL2 的翻译器 (translator),可以用来从 GCL Lisp 这一层一直推进到硬件层,因为 GCL 会编译为 C。其中,“Vellvm: Verifying the LLVM”\cite{Zdan14} 这个项目尤为重要。
+
+引用 Hardin \cite{Hard14} 的话:
+\begin{quote}
+LLVM 是一种采用静态单赋值 (Static Single Assignment, SSA) 形式的、基于寄存器的中间表示。因此,LLVM 支持任意数量的寄存器,每个寄存器在静态意义下只被赋值一次(当然,在动态意义下,一个给定的寄存器可以被赋值任意多次)。Appel 曾指出“SSA 形式是一种函数式编程 (functional programming)”;这一观察进而启发我们构建了一个从 LLVM 到 ACL2 定理证明器所接受的 Common Lisp 应用式子集 (applicative subset) 的翻译器。我们的翻译器生成一份可执行的 ACL2 规范,由于生成的 ACL2 代码具备尾递归 (tail recursion) 特性,并借助 ACL2 的单线程对象 (single-threaded object, stobj) 机制支持原地更新,因此它能高效地支持通过测试进行验证。为了简化对这些翻译后函数性质的证明过程,我们还开发了一种技术,用来对那些原地执行的尾递归 ACL2 函数进行推理,其手段是借助一座经过形式化证明的“桥梁 (bridge)”,把它们与作用于列表上的原始递归 (primitive-recursive) 版本函数联系起来。
+\end{quote}
+
+{\center{\includegraphics{ps/v13llvmtoacl2.eps}}}
+
+Hardin \cite{Hard13} 如此描述这条工具链 (toolchain):
+\begin{quote}
+我们的翻译工具链架构如图 1 所示。图的左侧描绘了一个典型的编译器前端 (compiler frontend),它产生 LLVM 中间代码。LLVM 的输出既可以是二进制的“字节码 (bitcode)”(.bc)文件,也可以是文本形式的(.ll)文件。我们选择解析文本形式,生成 LLVM 程序的抽象语法树 (abstract syntax tree, AST) 表示 (representation)。随后,我们的翻译器把 AST 转换成 ACL2 源码。这份 ACL2 源文件随后可以连同人们想要针对该代码证明的猜想 (conjecture) 一起被载入一个 ACL2 会话,而 ACL2 大多能自动完成处理。除了对翻译后的 LLVM 代码证明定理之外,ACL2 还可以用来以合理的速度执行测试向量 (test vector)。
+\end{quote}
+
+注意,你可以用下面的方式看到 clang 生成的中间形式:
+\begin{verbatim}
+clang -O4 -S -emit-llvm foo.c
+\end{verbatim}
+
+Coq 与 Hardin 的翻译器都使用 OCAML \cite{OCAM14},因此我们得学习这门语言。
+
+\chapter{理论}
+Euclid 算法的证明,自 Euclid 本人以来就已为人所知。我们需要研究一个现成的证明,并尽可能沿着同样的思路来指导我们对 Coq 的使用。有些“显而易见”的自然语言陈述,可能需要用 Coq 引理 (lemma) 才能表达。
+
+从 WikiProof \cite{Wiki14a} 我们引用:
+
+设 \[a, b \in \Z\] 且 $a \ne 0$ 或 $b \ne 0$。
+
+该算法的步骤是:
+\begin{enumerate}
+\item 从满足 $\abs{a} \ge \abs{b}$ 的 $(a,b)$ 开始。
+如果 $b = 0$,任务就完成了,GCD 即为 $a$。
+\item 如果 $b \ne 0$,就取 $a/b$ 的余数 $r$。
+\item 令 $a \leftarrow b$、$b \leftarrow r$(于是又有
+$\abs{a} \ge \abs{b}$)。
+\item 重复这些步骤,直到 $b = 0$
+\end{enumerate}
+因此,$a$ 与 $b$ 的 GCD,就是算法结束时变量 (variable) $a$
+的值。
+
+证明如下:
+
+假设 \[a, b \in \Z\] 且 $a or b \ne 0$。
+
+根据{\bf 除法定理 (division theorem)},$a = qb + r$
+其中 $0 \le r \le \abs{b}$
+
+根据{\bf 带余数的 GCD (GCD with Remainder)},$a$ 与 $b$ 的 GCD,也是
+$b$ 与 $r$ 的 GCD。
+
+因此,我们可以转而求 $gcd(b,r)$。
+
+由于 $\abs{r} \ge \abs{b}$ 且 \[b \in \Z\],
+我们会在有限多步之后达到 $r = 0$。
+
+此时,根据{\bf 零的 GCD (GCD with Zero)},$gcd(r,0) = r$。
+
+我们引用{\bf 除法定理}的证明 \cite{Wiki14b}:
+
+对每一对整数 $a$、$b$(其中 $b \ne 0$),都存在唯一的整数 $q,r$,使得
+$a = qb + r$ 且 $0 \le r \le \abs{b}$。
+
+\subsection{Hoare 的公理与 gcd 证明}
+取自 Hoare \cite{Hoar69}
+
+\begin{tabular}{rll}
+A1 & $x+y = y+x$ & 加法满足交换律\\
+A2 & $x\times y = y\times x$ & 乘法满足交换律\\
+A3 & $(x+y)+z = x+(y+z)$ &  加法满足结合律\\
+A4 & $(x\times y)\times z = x\times (y\times z)$ &
+乘法满足结合律\\
+A5 & $x\times (y+z) = x\times y + x\times z$ &
+乘法对加法满足分配律\\
+A6 & $y \le x \to (x-y) + y = x$ & 加法可以抵消减法\\
+A7 & $x + 0 = x$ &\\
+A8 & $x\times 0 = 0$ &\\
+A9 & $x\times 1 = x$ &\\
+\end{tabular}
+
+{\bf D0 赋值公理 (Axiom of Assignment)}
+\[\vdash P_0 \{x:=f\} P\]
+其中
+\begin{itemize}
+\item $x$ 是一个变量标识符 (identifier)
+\item $f$ 是一个表达式 (expression)
+\item $P_0$ 是把 $P$ 中所有出现的 $x$ 都替换成 $f$ 后得到的
+\end{itemize}
+
+\section{除法算法}
+取自 Judson \cite{Juds15}:
+
+良序原理 (Principle of Well-Ordering) 的一个我们会经常用到的应用,就是除法算法。
+
+{\bf 定理 2.9(除法算法)} 设 $a$ 与 $b$ 是整数,且
+$b > 0$。那么存在唯一的整数 $q$ 与 $r$,使得
+\[a=bq+r\]
+其中 $0 \le r < b$。
+
+{\bf 证明}
+
+设 $a$ 与 $b$ 是整数。如果对某个整数 $k$ 有 $b = ak$,我们记作
+$a \vert b$。如果 $d \vert a$ 且 $d \vert b$,就称整数 $d$ 是 $a$ 与
+\index{common divisor}
+$b$ 的一个{\sl 公约数 (common divisor)}。整数 $a$ 与 $b$ 的
+\index{greatest common divisor}
+{\sl 最大公约数 (greatest common divisor)},是这样一个正整数 $d$:它是
+$a$ 与 $b$ 的一个公约数,并且如果 $d^{'}$ 是 $a$ 与 $b$ 的任何其他公约
+数,那么 $d^{'} \vert d$。我们记 $d=gcd(a,b)$;举例来说,$gcd(24,36)=12$,
+$gcd(120,102)=6$。如果 $gcd(a,b)=1$,我们就说两个整数 $a$ 与 $b$
+是{\sl 互素的 (relatively prime)}。
+\index{relatively prime}
+
+{\bf 定理 2.10} 设 $a$ 与 $b$ 是非零整数。那么存在整数 $r$ 与 $s$,
+使得
+\[gcd(a,b)=ar+bs\]
+此外,$a$ 与 $b$ 的最大公约数是唯一的。
+
+{\bf 证明}
+
+{\bf 推论 2.11} 设 $a$ 与 $b$ 是两个互素的整数。那么存在整数 $r$ 与
+$s$,使得
+\[ar+bs=1\]
+
+{\bf Euclid 算法}
+\index{The Euclidean Algorithm}
+
+除了别的以外,定理 2.10 使我们能够计算两个整数的最大公约数。
+
+{\bf 例 2.1.2} 让我们计算 945 与 2415 的最大公约数。首先注意到
+\[
+\begin{array}{rcl}
+2415 & = & 945 \cdot 2 + 525\\
+945 & = & 525 \cdot 1 + 420\\
+525 & = & 420 \cdot 1 + 105\\
+420 & = & 105 \cdot 4 + 0\\
+\end{array}
+\]
+
+把我们的步骤反过来看,105 整除 420,105 整除 525,105 整除 945,105
+也整除 2415。因此,105 同时整除 945 与 2415。如果 $d$ 是 945 与 2415
+的另一个公约数,那么 $d$ 也必须整除 105。所以,$gcd(945,2415)=105$。
+
+如果我们把上面这一串方程反过来推,还可以求出数 $r$ 与 $s$,使得
+\[945r + 2415s = 105\]
+
+\[
+\begin{array}{rcl}
+105 & = & 525 + (-1)\cdot 420\\
+105 & = & 525 + (-1)\cdot [945+(-1)\cdot 525]\\
+105 & = & 2\cdot 525+(-1)\cdot 945\\
+105 & = & 2\cdot[2415+(-2)\cdot 945]+(-1)\cdot 945\\
+105 & = & 2*2415+(-5)\cdot 945
+\end{array}
+\]
+于是 $r=-5$ 且 $s-2$。注意 $r$ 与 $s$ 并不是唯一的,因为
+$r=41$、$s=-16$ 同样也行。
+
+要计算 $gcd(a,b)=d$,我们要靠重复做除法,得到一个递减的正整数序列
+$r_1 > r_2 > \ldots > r_n = d$;也就是
+
+\[
+\begin{array}{rcl}
+b & = & aq_1+r_1\\
+a & = & r_1q_2+r_2\\
+r_1 & = & r_2q_3+r_3\\
+\vdots\\
+r_{n-2} & = & r_{n-1}q_n+r_n\\
+r_{n-1} & = & r_nq_{n+1}
+\end{array}
+\]
+
+要找到满足 $ar+bs=d$ 的 $r$ 与 $s$,我们从最后一个方程开始,代入前面
+各个方程所得到的结果:
+
+\[
+\begin{array}{rcl}
+d & = & r_n\\
+d & = & r_{n-2} - r_{n-1}q_n\\
+d & = & r_{n-2} - q_n(r_{n-3}-q_{n-1}r_{n-2}\\
+d & = & -q_nr_{n-3}+(1+q_nq_{n-1})r_{n-2}\\
+\vdots\\
+d & = & ra+sb
+\end{array}
+\]
+
+\section{浮点数证明}
+
+Bagnara、Bagnara、Biselli、Chiara 与 Gori \cite{Bagn19}
+{\bf IEEE 754 浮点算术在程序验证中的正确近似 (Correct Approximation of
+IEEE 754 Floating-Point Arithmetic for Program Verification)}
+
+\chapter{Miranda 中的 GCD(Broda 等人)}
+
+在 Broda 等人 \cite[p. 55]{Brod94} 一文中,他们考察了两个自然数的
+最大公约数(greatest common divisor)——也就是 {\tt gcd}：
+\begin{verbatim}
+   gcd :: num -> num -> num
+   ||pre:   nat(x) & nat(y)
+   ||post:  nat(z) & z|x & z|y (ie z is a common divisor)
+   ||       &(A)n:nat(n|x & n|y -> n|z) 
+   ||            (ie any other common divisor divides it)
+   ||       where z = (gcd x y)
+\end{verbatim}
+
+我们在前置条件和后置条件中引入了一些记号：
+\begin{itemize}
+\item (A) 就表示 $\forall$,也就是"对所有"(for all),用标准键盘
+字符写出。$\exists$ 则会写作 (E)。
+\item $|$表示"整除"(divides),或者说"是……的因子"(is a factor of)。
+(注意它与除号"$/$"并不是同一个符号。)
+\[z~|~x \Leftrightarrow \exists y: nat. (x=z \times y)\]
+\item 当我们写下"$y:nat$"时,我们是把谓词 $nat$ 当作 Miranda 类型
+来使用,尽管它实际上并不是。你可以认为"$nat(y)$"和"$y:nat$"的含义
+完全相同,都是说 $y$ 是一个自然数。但类型式的记法在配合量词使用时
+特别有用：
+\[\begin{array}{lr}
+\exists y : nat, P & {\rm means\ }\exists y. (nat(y) \land P)\\
+&({\rm 'there\ is\ a\ natural\ number\ } y {\rm\ for\ which\ }
+P {\rm\ holds}')\\
+\forall y : nat, P & {\rm means\ }\forall y. (nat(y) \implies P)\\
+&({\rm 'for\ all\ natural\ numbers\ } y, P {\rm\ holds}')\\
+\end{array}\]
+\end{itemize}
+
+务必理解这些内容,尤其要弄清楚为什么 $\exists$ 自然地与 $\land$
+搭配,而 $\forall$ 自然地与 $\implies$ 搭配。当你把英语翻译成逻辑式
+时,这些是非常常见的模式。
+
+这里有一个出人意料的小细节。你可能会以为后置条件会说"任何其他
+公约数都{\sl 小于} $z$",而不是"整除 $z$"——换句话说,$z$ 确实是
+{\sl 最大}公约数。只有一种情况会使这两种说法产生区别,那就是当
+$x$ 和 $y$ 都为 0 时。所有数都能整除 0,所以在 $x$ 和 $y$ 的公约数
+中并不存在最大的那一个。上面给出的规格说明实际上等于规定了：
+\begin{verbatim}
+   gcd 0 0 = 0
+\end{verbatim}
+
+{\bf 命题 1}:对任意两个自然数 $x$ 和 $y$,至多存在一个 $z$ 满足
+$(gcd x y)$ 的规格说明。
+
+{\bf 证明}:设 $z1$ 和 $z2$ 是满足 $(gcd x y)$ 规格说明的两个值;
+我们要证明它们相等。$x$ 和 $y$ 的所有公约数都整除 $z2$,所以特别地,
+$z1$ 也整除 $z2$。同理,$z2$ 也整除 $z1$。于是存在正自然数 $p$ 和
+$q$,使得 $z1=z2 \times p$、$z2=z1 \times q$,从而
+$z1 = z1 \times p \times q$。由此可知,要么 $z1 = 0$(此时 $z2=0$
+也成立),要么 $p\times q=1$(此时 $p=q=1$)。无论哪种情况,都有
+$z1=z2$。
+
+请注意,我们其实并没有证明{\sl 存在}满足该规格说明的 $z$ 值,
+只是证明了这样的值不会多于一个。不过我们很快就会给出一种实现,
+展示如何找到合适的 $z$,到那时我们就会知道恰好存在一个可能的结果。
+
+{\sl Euclid 算法}依赖于下述事实。
+
+{\bf 命题 2}:设 $x$ 和 $y$ 为自然数,且 $y\ne 0$。那么 $x$ 和 $y$
+的公约数与 $y$ 和 $(x{\rm\ mod\ }y)$ 的公约数完全相同。
+
+{\bf 证明}:对于自然数 $x$ 和 $y$,整数除法有两条基本性质,而且这
+两条性质实际上足以唯一地确定它:如果 $y\ne 0$(前置条件),那么
+(后置条件)
+\[x=u\times (x{\rm\ div\ }y) + (x{\rm\ mod\ }y)\]
+\[0 \le (x{\rm\ mod\ }y) < y\]
+设 $n$ 是 $y$ 和 $(x{\rm\ mod\ y}y)$ 的一个公约数。也就是说,存在
+$p$ 使得 $y=n\times p$,也存在 $q$ 使得 $(x{\rm\ mod\ }y)=n\times q$。
+于是
+\[x=y\times(x{\rm\ div\ }y)+(x{\rm\ mod\ }y)=
+n\times (p\times (x{\rm\ div\ }y)+q)\]
+所以 $n$ 也整除 $z$。因此 $y$ 和 $(x{\rm\ mod\ }y)$ 的每个公约数
+也都是 $x$ 和 $y$ 的公约数。反过来也同样成立,证明方法类似。
+$\quad\blacksquare$
+
+由此可知,只要 $y\ne 0$,$(gcd x y)$ 就必定等于
+$(gcd y (x{\rm\ mod\ }y))$。另一方面,$(gcd x 0)$ 必定等于 $x$。
+这是因为 $x~|~x$ 且 $x~|~0$,而 $x$ 和 0 的任何公约数显然都整除
+$x$,所以 $x$ 满足 $(gcd x 0)$ 的规格说明。因此我们可以写出以下
+定义：
+\[\begin{array}{rcl}
+gcd x y & = x                        & {\rm if\ }y=0\\
+        & = gcd y (x {\rm\ mod\ } y) & {\rm otherwise}
+\end{array}\]
+
+{\tt 问题}：这个定义是否满足该规格说明？
+
+设 $x$ 和 $y$ 为自然数,并设 $z=(gcd x y)$。我们要证明 $z$ 具有
+后置条件所给出的性质,对应定义中的两个分支,分两种情况讨论：
+
+$y=0：z = x$。我们已经指出过,这满足该规格说明。
+
+$y\ne 0：z = (gcd y (x{\rm\ mod\ }y))$。我们已经看到,{\sl 只要 $z$}
+满足 $(gcd y (x{\rm\ mod\ }y))$ 的规格说明,它就也满足 $(gcd x y)$
+的规格说明,这正是我们所要求的。$\quad\blacksquare$
+
+但我们怎么知道递归调用给出的是正确答案呢?我们又怎么知道它一定
+会给出某个答案呢?(理论上,递归可能永远不会到底。)看起来,我们
+似乎不得不先{\sl 假设} {\tt gcd} 满足其规格说明,才能{\sl 证明}它
+满足其规格说明。
+
+答案是:我们{\sl 确实}被允许作这样的假设!但这里有一个关键点。
+这种看似神奇的循环推理必须得到合理的说明,而关键在于注意到递归
+调用所使用的实参更"简单":实参对 $y$ 与 $x{\rm\ mod\ }y)$ 比实参
+对 $x$ 与 $y$ 更"简单",这里"简单"的意思是第二个实参更小:
+$x{\rm\ mod\ }y < y$。
+
+随着递归不断深入,第二个实参——始终是一个自然数——会变得越来越
+小,但永远不会为负。这种情况不可能永远持续下去,所以递归必定最终
+终止。这不仅证明了终止性,也为{\sl 循环推理}提供了正当理由。因为
+假设 {\tt gcd} 并不总是能正确工作。使得 $gcd x y$(对某个 $x$)可能
+出错的最小的"坏" $y$ 会是什么呢?不会是 0——$gcd x 0$ 总是能正确
+工作。设 $Y$ 是最小的坏 $y$ 值,且 $gcd X Y$ 出错。那么 $Y > 0$,于是
+\begin{verbatim}
+   gcd X Y = gcd Y (X mod Y)
+\end{verbatim}
+但 $X{\rm\ mod\ }Y$ 是"好的"(因为 $X{\rm\ mod\ }Y < Y$),所以
+递归调用能正确工作,于是(正如我们已经论证过的)$gcd X Y$ 也能正确
+工作——这就产生了矛盾。
+
+我们把 $gcd x y$ 中的值 $y$ 称为我们对 {\tt gcd} 定义的一个
+{\sl 递归变式(recursion variant)}。它大致衡量了所需递归的深度,
+并且在递归调用中总是递减。
+
+现在让我们把这一点表述为一条推理原则：
+\begin{verbatim}
+   In proving that a recursive function satisfies its specificaiton,
+   you are allowed to assume that the recursive calls work correclty
+   -- provided that you can define a recursion variant for the function. 
+\end{verbatim}
+ 
+一个函数的递归变式必须遵守以下规则：
+\begin{itemize}
+\item 它是根据函数的实参计算得到的
+\item 它是一个自然数(至少在函数的前置条件成立时是如此)。例如,
+在 {\tt gcd} 中,递归变式就是 $y$。
+\item 它是(平凡地)根据函数的实参 $x$ 和 $y$ 计算得到的)
+\item 它在递归调用中总是递减。对于递归调用 $gcd y (x{\rm\ mod\ }y)$
+而言,递归变式 $x{\rm\ mod\ }y$ 小于 $gcd x y$ 的变式 $y$。
+\end{itemize}
+
+\chapter{COQ 中的 GCD}
+
+\begin{verbatim}
+Fixpoint Pgcdn (n: nat) (a b : positive) : positive :=
+  match n with
+    | O => 1
+    | S n =>
+      match a,b with
+        | xH, _ => 1
+        | _, xH => 1
+        | xO a, xO b => xO (Pgcdn n a b)
+        | a, xO b => Pgcdn n a b
+        | xO a, b => Pgcdn n a b
+        | xI a', xI b' =>
+          match Pcompare a' b' Eq with
+            | Eq => a
+            | Lt => Pgcdn n (b'-a') a
+            | Gt => Pgcdn n (a'-b') b
+          end
+      end
+  end.
+
+Definition Zgcd (a b : Z) : Z :=
+  match a,b with
+    | Z0,_ => Zabs b
+    | _,Z0 => Zabs a
+    | Zpos a, Zpos b => Zpos (Pgcd a b)
+    | Zpos a, Zneg b => Zpos (Pgcd a b)
+    | Zneg a, Zpos b => Zpos (Pgcd a b)
+    | Zneg a, Zneg b => Zpos (Pgcd a b)
+  end.
+
+Lemma Zgcd_is_gcd : forall a b, Zis_gcd a b (Zgcd a b).
+
+\end{verbatim}
+
+\chapter{Nuprl 中的 GCD(Anne Trostle)}
+
+引自 \cite{Tros13}：
+
+在这里我们展示如何使用 Nuprl 证明助手,为两个自然数的最大公约数
+构造一个存在性证明。接着我们把证明再向前推进一步,说明最大公约数
+(即 GCD)可以表示为这两个数的一个线性组合来计算。对每个证明,我们
+还会展示 Nuprl 如何从证明中提取出一段可用来实际计算的{\sl 程序}。
+
+最大公约数在 Nuprl 中定义如下：
+
+{\bf 定义 1:gcd\_p}
+
+$GCD(m:n:g) == (g | m) \land (g | n) \land (\forall z:Z.
+(((z | m) \land (z | m)) \to (z | g)))$
+
+{\bf 定义 2:divides}
+
+$b | a == \exists c : Z. (a = (b * c))$
+
+用文字来说,定义 1 的意思是:当 $g$ 同时整除 $m$ 和 $n$,且 $m$
+和 $n$ 的任何其他公约数都整除 $g$ 时,$g$ 就是 $m$ 和 $n$ 的最大
+公约数。
+
+为了证明 GCD 存在,我们将使用 Euclid 算法,它基于这样一条性质:
+对两个整数 $m$ 和 $n$ 来说,$m$ 和 $n$ 的 GCD 等价于 $n$ 与
+$m \div n$ 所得余数的 GCD：
+
+{\bf 引理 1:div\_rem\_gcd\_anne}
+
+$\forall m:Z. \quad\forall n:\mathbb{Z}^{-0},\quad\forall g:\mathbb{Z}.
+(GCD(m;n;g) \iff GCD(n;m {\rm\ rem\ } n;g))$
+
+关于 GCD 的另一个有用事实是:整数 $z$ 与 0 的 GCD 就是 $z$ 本身。
+这条性质的证明可以通过说明定义 1 的每一部分都得到满足来完成。
+
+{\bf 引理 2:gcd\_p\_zero}
+
+$\forall z:\mathbb{Z}.\quad GCD(z;0;z)$
+
+从这些性质中,我们可以看出计算两个数的最大公约数的一种方法:
+不断求余数,直到得到 0 为止,然后利用"整数 $z$ 与 0 的 GCD 就是
+$z$"这一事实。由于在逐步化简这些项的过程中 GCD 保持不变,所以
+$z$ 也就是最初那对数的 GCD。这正是 Euclid 算法。下面用 18 和 12
+举例说明它是如何运作的：
+
+\begin{tabular}{rcl}
+GCD(18;12;g) & = & GCD(12;18 rem 12;g)\\
+             & = & GCD(12;6;g\\
+             & = & GCD(6;12 rem 6;g)\\
+             & = & GCD(6;0;g)\\
+	     & $\to$ & g = 6
+\end{tabular}
+
+借助这一想法,我们不仅能证明 GCD 存在,还能构造出一种实际计算
+GCD 的方法。Nuprl 的一个出色特性在于:当我们运行一个构造性存在性
+证明时,可以从中提取出一段程序,并用这段程序来执行计算。在下一节中,
+我们将详细展示如何用归纳法为 GCD 构造一个构造性存在性证明。归纳
+证明常常与递归程序携手并进,果不其然,从这个证明中可以提取出一段
+非常简洁的递归程序,而且这段程序正好遵循我们刚刚得出的方法：
+
+$\lambda n. letrc gcd(n) =\\
+\quad \lambda m. if n = 0 then m\\
+\quad\quad\quad else (gcd (m rem n) n)\\
+\quad in gcd(n)$
+
+这里的程序是{\sl 柯里化(currying)}的一个例子:它是一个关于 $n$
+的函数,其结果是另一个函数,而这个函数再使用 $m$。这未必是直观的,
+因为当我们想到 GCD 时,通常会想到一个关于一对(或更多个)数的函数,
+因此我们可能会期望程序以类似"gcd$(m,n)=\ldots$"这样的形式开头。
+但接下来的证明使用的是对单个变量的自然归纳,过程非常流畅,这也正是
+此处更倾向于采用柯里化函数的原因。若要构造出一个作用于数对 $(m,n)$
+的函数的证明,就需要对数对本身进行归纳,这远不如对单个变量作自然
+归纳那样直观、易懂。
+
+\chapter{软件细节}
+\section{已安装软件}
+安装 CLANG、LLVM
+\begin{verbatim}
+http://llvm.org/releases/download.html
+\end{verbatim}
+安装 OCAML
+\begin{verbatim}
+sudo apt-get install ocaml
+\end{verbatim}
+
+gcd 的一个 OCAML 版本可以这样写
+\begin{verbatim}
+let rec gcd a b = if b = 0 then a else gcd b (a mod b)
+val gcd : int -> int -> int = <fun>
+\end{verbatim}
+
+\chapter{动作时序逻辑(Temporal Logic of Actions,TLA)}
+\begin{quote}
+{\bf 马虎行事比精确严谨更容易}
+——Leslie Lamport \cite{Lamp14a}
+\end{quote}
+
+Leslie Lamport \cite{Lamp14} \cite{Lamp16} 谈 $21^{st}$ 世纪的证明。
+
+本文描述了一种撰写证明的方法,这种方法使得证明不真实的命题变得
+更加困难。该方法基于层次化结构,简单而实用。文中还讨论了作者二十
+年撰写此类证明的经验。
+
+Lamport 指出,证明需要严谨性与精确性。结构与命名都很重要。
+证明中的每一步都要指明它所使用的事实。
+
+引自 \cite{Lamp16}：
+
+概括地说,一个 TLA+ 证明是由一组{\sl 声称(claim)}构成的集合,
+按照我们下面描述的层次结构排列,其中每个声称都有一个
+{\sl 断言(assertion)},这个断言要么{\sl 未加论证(unjustified)},
+要么由一组{\sl 引用的事实(cited fact)}加以论证。TLAPS 的目的是
+检查用户提供的定理证明,也就是说,先检查如果这些声称都为真,声称
+的层次结构是否确实确立了该定理的真实性,然后再检查每个已加论证
+的声称的断言,是否确实{\sl 由}其所引用的事实推出。如果一个 TLA+
+定理的证明中不含任何未加论证的声称,那么通过对该证明的检查,
+TLAPS 就验证了该定理的真实性。
+
+\section{算法}
+
+广为人知的 Euclid 算法可以用 PlusCal 语言写成如下形式：
+\begin{verbatim}
+--algorithm Euclid {
+  variables x \in 1..M, y \in 1..N, x0 = x, y0 = y;
+  {
+    while (x # y) {
+      if (x < y) { y := y - x; }
+      else { x := x-y; }
+    };
+    assert x = GCD(x0, y0) /\ y = GCD(x0, y0)
+  }
+\end{verbatim}
+
+PlusCal 翻译器会把这个算法翻译成一份 TLA+ 规格说明,我们可以对其
+证明正确性。不过,在本教程中,我们将直接用 TLA+ 写出一份稍微简单
+一些的 Euclid 算法规格说明。
+
+\subsection{创建新的 TLA+ 模块}
+
+为了获得算术算子($+$、$-$ 等)的定义,我们将让本规格说明
+{\sl 扩展(extend)} {\tt Integers} 标准模块。
+
+\begin{verbatim}
+--------------------- Module Euclid ----------------------
+EXTENDS Integers
+\end{verbatim}
+
+\subsection{定义}
+
+接下来我们要定义两个整数的 GCD。为此,让我们先如下定义谓词
+"p divides q"(p 整除 q):p 整除 q 当且仅当在区间 1..q 中存在某个
+整数 d,使得 q 等于 p 乘以 d。
+
+\begin{verbatim}
+p | q == \E d \in 1..q : q = p * d
+\end{verbatim}
+
+然后我们把整数 q 的因子集合定义为:既属于区间 1..q、又能整除 q
+的那些整数构成的集合：
+\begin{verbatim}
+Divisors(q) == {d \in 1..q : d | q}
+\end{verbatim}
+
+我们把集合 S 的最大值定义为:该集合中大于或等于所有其他元素的
+那个元素：
+\begin{verbatim}
+Maximum(S) == CHOOSE x \in S : \A y \in S : x >= y
+\end{verbatim}
+
+最后,我们把两个整数 p 和 q 的 GCD 定义为 Divisors(p) 与 Divisors(a)
+的交集的最大值：
+\begin{verbatim}
+GCD(p,q) == Maximum(Divisors(p) \cap Divisors(q))
+\end{verbatim}
+
+为方便起见,我们还将把所有正整数的集合定义为：
+\begin{verbatim}
+Number = Nat \ {0}
+\end{verbatim}
+
+\subsection{常量与变量}
+接下来我们定义描述 Euclid 算法所需的两个常量和两个变量,其中
+M 和 N 是要计算其 GCD 的那两个值：
+\begin{verbatim}
+CONSTANTS M, N
+VARIABLES x, y
+\end{verbatim}
+
+\subsection{规格说明}
+我们如下定义 Euclid 算法的初始状态：
+\begin{verbatim}
+Init == (x = M) /\ (y = N)
+\end{verbatim}
+
+在 Euclid 算法中,可以执行两种动作：
+\begin{itemize}
+\item 若 x $<$ y,则把 y 的值设为 y - x
+\item 若 x $>$ y,则把 x 的值设为 x - y
+\end{itemize}
+
+这些动作同样被写成 {\tt Next} 的一个定义,它规定了下一状态关系
+(next-state relation)。在 TLA+ 中,带撇号的变量指的是它在算法下一
+状态时的取值。
+\begin{verbatim}
+Next == \/ /\ x < y
+           /\ y' = y - x
+           /\ x' = x
+        \/ /\ y < x
+           /\ x' = x-y
+           /\ y' = y
+\end{verbatim}
+
+该算法的规格说明断言:变量具有正确的初始值,并且在每个执行步骤中,
+要么执行一个 {\tt Next} 动作,要么 x 和 y 保持相同的值：
+\begin{verbatim}
+Spec == Init /\ [][Next]_<<x,y>>
+\end{verbatim}
+
+(出于一些与本算法无关的原因,TLA 规格说明总是允许{\sl 原地踏步
+步骤(stuttering step)},即让所有变量保持不变的步骤。)
+
+我们希望证明该算法始终满足以下性质：
+\begin{verbatim}
+ResultCorrect == (x = y) => x = GCD(M, N)
+\end{verbatim}
+
+因此我们希望证明下面这条名为 Correctness 的定理：
+\begin{verbatim}
+THEOREM Correctness == Spec => []ResultCorrect
+\end{verbatim}
+
+\subsection{小结}
+
+\begin{verbatim}
+--------------------- Module Euclid ----------------------
+EXTENDS Integers
+
+p | q == \E d \in 1..q : q = p * d
+Divisors(q) == {d \in 1..q : d | q}
+Maximum(S) == CHOOSE x \in S : \A y \in S : x >= y
+GCD(p,q) == Maximum(Divisors(p) \cap Divisors(q))
+Number == Nat \ {0}
+
+CONSTANTS M, N
+VARIABLES x, y
+
+Init == (x = M) /\ (y = N)
+
+Next == \/ /\ x < y
+           /\ y' = y - x
+           /\ x' = x
+        \/ /\ y < x
+           /\ x' = x-y
+           /\ y' = y
+
+Spec == Init /\ [][Next]_<<x,y>>
+
+ResultCorrect == (x = y) => x = GCD(M,N)
+
+THEOREM Correctness == Spec => []ResultCorrect
+\end{verbatim}
+
+\section{一个简单的证明}
+\subsection{不变式}
+
+直观地说,定理 Correctness 成立,是因为该实现保证了下面这条
+{\sl 不变式(invariant)}
+\begin{verbatim}
+InductiveInvariant == /\ x \in Number
+                      /\ y \in Number
+                      /\ GCD(x, y) = GCD(M, N)
+\end{verbatim}
+
+也就是说,{\tt InductiveInvariant} 在初始状态(即由 {\tt Init} 所
+指定的状态)下成立,并且在下一状态关系 {\tt [Next]\_}$<<x,y>>$ 下
+保持不变。
+
+\subsection{验证证明}
+
+首先我们需要假设常量 M 和 N 都不等于零
+\begin{verbatim}
+ASSUME NumberAssumption == M \in Number /\ N \in Number
+\end{verbatim}
+
+接下来让我们证明 {\tt InductiveInvariant} 在初始状态下成立。
+\begin{verbatim}
+THEOREM InitProperty == Init => InductiveInvariant
+\end{verbatim}
+
+为了检验 TLAPS 能否独力证明该定理,我们把它的证明声明为 obvious。
+\begin{verbatim}
+THEOREM InitProperty == Init => InductiveInvariant
+  OBVIOUS
+\end{verbatim}
+
+现在我们让 TLAPS 来证明该定理。但 TLAPS 并不知道如何证明该证明
+所对应的证明义务(proof obligation)。它会打印出该义务,并把失败情况
+报告给三个后端:Zenon、Isabelle 和 SMT。TLAPS 的默认行为是先把义务
+发送给一个 SMT 求解器(默认为 CVC3),如果失败,再交给自动证明器
+Zenon,如果 Zenon 也失败,再交给 Isabelle(使用 ``auto'' 策略)。
+
+\subsection{使用事实与定义}
+该义务无法被证明,因为 TLAPS 会把符号 {\tt Init} 和
+{\tt InductiveInvariant} 当作不透明的标识符,除非明确指示它使用
+{\tt DEF} 指令展开这些定义。这样处理定义的主要目的,是让证明检查
+保持可控,因为展开定义可能会使表达式的规模任意增大。显式使用定义
+对(人类)读者也是一个很好的提示,让读者只需查看所列出的定义就能
+理解某个证明步骤。在这个具体的例子里,我们可以让 TLAPS 展开
+{\tt Init} 和 {\tt InductiveInvariant} 的定义,做法是把证明
+{\tt OBVIOUS} 换成证明\\
+{\tt BY DEF Init, InductiveInvariant}。在发送给各后端的义务中,
+{\tt Init} 和 {\tt InductiveInvariant} 的定义已经被展开。
+
+遗憾的是,没有一个后端能够证明这条义务。和 {\tt definitions} 的
+情况一样,我们必须指明哪些事实是{\sl 可用的(usable)}。在这个例子
+中,我们必须把事实 {\tt NumberAssumption} 变为可用,做法是把证明
+改为
+\begin{verbatim}
+THEOREM InitProperty == Init => InductiveInvariant
+  BY NumberAssumption DEF Init, InductiveInvariant
+\end{verbatim}
+
+一个 {\tt BY} 证明的一般形式是:
+\[ {\tt BY\ } e_1,\ldots,e_m {\tt \ DEF\ } d_1,\ldots,d_n\]
+它声称:在假设 $e_1,\ldots,e_m$ 并展开定义 $d_1,\ldots,d_n$ 之后,
+该断言即可得出。随后由 TLAPS 负责检查这一声称,并且还要检查所
+引用的事实 $e_1,\ldots,e_m$ 是否确实为真。
+
+最终,SMT 成功证明了这条义务。
+\begin{verbatim}
+--------------------- Module Euclid ----------------------
+EXTENDS Integers
+
+p | q == \E d \in 1..q : q = p * d
+Divisors(q) == {d \in 1..q : d | q}
+Maximum(S) == CHOOSE x \in S : \A y \in S : x >= y
+GCD(p,q) == Maximum(Divisors(p) \cap Divisors(q))
+Number == Nat \ {0}
+
+CONSTANTS M, N
+VARIABLES x, y
+
+Init == (x = M) /\ (y = N)
+
+Next == \/ /\ x < y
+           /\ y' = y - x
+           /\ x' = x
+        \/ /\ y < x
+           /\ x' = x-y
+           /\ y' = y
+
+Spec == Init /\ [][Next]_<<x,y>>
+
+ResultCorrect == (x = y) => x = GCD(M,N)
+
+InductiveInvariant == /\ x \in Number
+                      /\ y \in Number
+                      /\ GCD(x, y) = GCD(M, N)
+
+ASSUME NumberAssumption == M \in Number /\ N \in Number
+
+THEOREM InitProperty == Init => InductiveInvariant
+  BY NumberAssumption DEF Init, InductiveInvariant
+
+THEOREM Correctness == Spec => []ResultCorrect
+\end{verbatim}
+
+
+\section{整除性定义}
+在 Shoup \cite{Sho08} 中,我们找到了整除性的定义。
+
+给定整数 $a$ 和 $b$
+\[ a {\rm \ divides\ } b \implies az = b {\rm \ for\ some\ } z\]
+于是对所有 $a$、$b$ 和 $c$
+\[ a | a,\quad 1 | a,\quad and \quad a | 0\]
+因为 $a\cdot 1 = a$、$1\cdot a = a$,且 $a\cdot 0 = 0$
+\[ 0 | a \iff a = 0\]
+\[a | b \iff -a | b \iff a | -b\]
+\[ a | b {\rm \ and\ } a | c \implies a | (b+c)\]
+\[a | b {\rm \ and\ } b | c \implies a | c\]
+\[a | b {\rm \ and\ } b \ne 0 \implies 1 \le |a| \le |b|\]
+\[az = b \ne 0 {\rm \ and\ } a \ne 0 {\rm \ and\ }z \ne 0 
+\implies |a| \ge 1 {\rm \ and\ } |z| \ge 1\]
+\[ a | b {\rm \ and\ } b | a \implies a = \pm b\]
+证明: \[ a | b \implies |a| \le |b|; b | a \implies |b| \le |a|;
+{\rm \ therefore\ } |a|=|b| \implies a = \pm b\]
+\[ a | 1 \iff a = \pm 1\]
+
+\chapter{COQ 的 GCD 证明}
+\section{构造演算 (Calculus of Constructions) 基础}
+Coquand \cite{Coqu86} \cite{Wiki17}
+提出了构造演算,可以将其视为 Curry-Howard 同构的一种扩展。
+其组成部分包括
+\subsection{项 (term)}
+构造演算中的{\sl 项}是按照下列规则构造出来的:
+\begin{itemize}
+\item {\bf T} 是一个项(也称为 {\sl Type})
+\item {\bf P} 是一个项(也称为 {\sl Prop},即所有命题 (proposition) 的类型)
+\item 变量($x,y,\ldots$)都是项
+\item 如果 {\bf A} 和 {\bf B} 是项,那么下列各项也是项
+\begin{itemize}
+\item {\bf $(A,B)$}
+\item {\bf $(\lambda x: A,B)$}
+\item {\bf $(\forall x: A,B)$}
+\end{itemize}
+\end{itemize}
+
+构造演算有五类对象:
+\begin{enumerate}
+\item {\sl 证明 (proof)},即类型为{\sl 命题}的项
+\item {\sl 命题},也称为{\sl 小类型 (small type)}
+\item {\sl 谓词 (predicate)},即返回命题的函数
+\item {\sl 大类型 (large type)},即谓词的类型。{\bf P} 就是大类型的一个例子)
+\item {\bf T} 本身,它是大类型的类型。
+\end{enumerate}
+
+\subsection{判断 (judgement)}
+
+构造演算允许证明{\bf 类型判断 (typing judgement)}
+\[x_1:A_1, x_2:A_2, \ldots \vdash t:B\]
+可以将其读作如下蕴含式:
+\[{\rm\ if\ }{\rm\ variables\ }x_1, x_2, \ldots,
+{\rm\ have\ types\ }A_1, A_2,\ldots,
+{\rm\ then\ term\ }t{\rm\ has\ type\ }B\]
+
+构造演算的有效判断均可由一组推导规则 (inference rule) 推出。下文中,我们用 $\Gamma$
+表示一串类型指派
+$x_1:A_1$, $x_2:A_2,\ldots$,
+并用 {\bf K} 表示 {\bf P} 或 {\bf T} 二者之一。
+我们将 {\bf $A:B:C$} 记作
+"{\bf $A$} 的类型为 {\bf $B$},而 {\bf $B$} 的类型为 {\bf $C$}"。
+我们将 {\bf $B(x:=N)$} 记作用项 {\bf $N$} 替换项 {\bf $B$} 中的变量 {\bf $x$} 所得的结果。
+
+一条推导规则写成如下形式
+\[\frac{{\bf \Gamma} \vdash {\bf A : B}}
+{{\bf \Gamma^\prime} \vdash {\bf C : D}}\]
+其含义是
+\[{\rm\ if\ }{\bf \Gamma} \vdash {\bf A : B}
+{\rm\ is\ a\ valid\ judgement,\ then\ so\ is\ }
+{\bf \Gamma^\prime} \vdash {\bf C : D}\]
+
+\subsection{推导规则}
+
+在 Frade \cite{Frad08} 中我们可以找到:
+
+\[\begin{array}{lcl}
+
+({\rm axiom}) &
+() \vdash s_1 : s_2
+& {\rm\ if\ }(s_1,s_2)\in A\\
+&&\\
+
+({\rm start}) &
+\displaystyle{\frac{\Gamma \vdash A : s}{\Gamma,x : A \vdash x : A}}
+& {\rm\ if\ }x\notin {\rm\ dom}(\Gamma) \\
+&&\\
+
+({\rm weakening}) &
+\displaystyle{\frac{\Gamma \vdash M : A\quad\quad\Gamma\vdash B : s}
+{\Gamma,x : B \vdash M : A}}
+& {\rm\ if\ }x\notin {\rm\ dom}(\Gamma) \\
+&&\\
+
+({\rm product}) &
+\displaystyle{\frac{\Gamma\vdash A : s_1\quad\quad\Gamma,x : A\vdash B : s_2}
+{\Gamma\vdash(\prod x:A. B) : s_3}}
+& {\rm\ if\ }(s_1,s_2,s_3) \in \mathbb{R}\\
+&&\\
+
+({\rm application}) &
+\displaystyle{\frac{\Gamma\vdash M:(\prod x : A. B)\quad\quad\Gamma \vdash N:A}
+{\Gamma \vdash MN : B[x:=N]}} & \\
+&&\\
+
+({\rm abstraction}) &
+\displaystyle{\frac{\Gamma,x:A\vdash M:B\quad\quad\Gamma\vdash(\prod x:A. B):s}
+{\Gamma\vdash\lambda x : A.M : (\prod x:A.B)}} & \\
+&&\\
+
+({\rm conversion}) &
+\displaystyle{\frac{\Gamma\vdash M : A\quad\quad\Gamma\vdash B : s}
+{\Gamma\vdash M : B}}
+& {\rm\ if\ }A =_\beta B\\
+
+\end{array}\]
+
+\subsection{定义逻辑算子}
+
+\[\begin{array}{cccc}
+A\Rightarrow B & \equiv & \forall x:A.B & (x\notin B)\\
+A\wedge B & \equiv & \forall C:P.(A\Rightarrow B\Rightarrow C)\Rightarrow C &\\
+A\vee B & \equiv & \forall C:P.(A\Rightarrow C)\Rightarrow(B\Rightarrow C)
+\Rightarrow C &\\
+\neg A & \equiv & \forall C : P.(A\Rightarrow C) &\\
+\exists x : A. B & \equiv & \forall C : P.(\forall x : A.(B\Rightarrow C))
+\Rightarrow C &\\
+\end{array}\]
+
+\subsection{定义类型}
+
+计算机科学中使用的基本数据类型都可以在构造演算内部定义:
+
+{\bf 布尔值 (Booleans)}
+
+\[\forall A : P.A \Rightarrow A \Rightarrow A\]
+
+{\bf 自然数 (Naturals)}
+
+\[\forall A : P.(A \Rightarrow A) \Rightarrow (A \Rightarrow A)\]
+
+{\bf 积 (Product)} $A\times B$
+
+\[A \wedge B\]
+
+{\bf 不交并 (Disjoint Union)} $A + B$
+
+\[A \vee B\]
+
+请注意,布尔值和自然数的定义方式与 Church 编码中相同。然而,命题外延性 (propositional extensionality) 和证明无关性 (proof irrelevance) 会带来额外的问题。
+
+\section{为什么 COQ 有 Prop?}
+
+来自 stackexchange 上一篇帖子 \cite{Stac17} 中的问题:
+
+"Coq 有一个类型 {\tt Prop},专门存放那些在抽取 (extraction) 时会被丢弃的、证明无关的命题。如果我们用 Coq 只是为了做证明,那么设置这个类型的理由何在? Prop 是非直谓的 (impredicative),不过 Coq 会自动推断宇宙 (universe) 下标,我们完全可以在任何地方都改用 {\tt Type(i)} 来代替。看起来 {\tt Prop} 把一切都复杂化了不少。"
+
+Prop 对程序抽取非常有用,因为它让我们能够删掉代码中没用的部分。例如,要抽取一个排序算法,我们需要证明这样一个命题:``对每个列表 $l$,都存在一个列表 $k$,使得 $k$ 是有序的,且 $k$ 是 $l$ 的一个排列''。如果我们在 Coq 中写下这个命题,并且不使用 Prop 来抽取,我们会得到:
+\begin{enumerate}
+\item ``对所有 $l$ 都存在一个 $k$''会给出一个映射 {\bf sort},它把列表映到列表,
+\item ``使得 $k$ 是有序的''会给出一个函数 {\bf verify},它遍历 $k$ 并检查它是否有序,以及
+\item ``$k$ 是 $l$ 的一个排列会给出一个排列 {\bf p1},它把 $l$ 映到 $k$。注意 {\bf p1} 不只是一个映射,还包括逆映射,以及验证这两个映射确实互逆的程序。
+\end{enumerate}
+
+虽然这些额外的东西并非完全无用,但在许多应用中我们想要去掉它们,只保留 {\bf sort}。要做到这一点,可以用 {\tt Prop} 来陈述``$k$ 是有序的''和``$k$ 是 $l$ 的一个排列'',但{\sl 不}用它来陈述``对所有 $l$ 都存在 $k$''。
+
+一般来说,抽取代码的常见做法是考虑如下形式的命题
+\[\forall x : A. \exists y : B. \phi(x,y)\]
+其中 $x$ 是输入,$y$ 是输出,而 $\phi(x,y)$ 说明了 $y$ 成为正确输出意味着什么。(在上面的例子中,$A$ 和 $B$ 是列表的类型,而 $\phi(l,k)$ 就是``$k$ 是有序的,且 $k$ 是 $l$ 的一个排列。'')如果 $\phi$ 属于 {\tt Prop},那么抽取会给出一个映射
+$f : A\Rightarrow B$,使得对所有 $x\in A$,$\phi(x,f(x))$ 都成立。
+如果 $\phi$ 属于 {\tt Set},那么我们还会得到一个函数 $g$,使得对所有 $x\in A$,$g(x)$ 就是 $\phi(x,f(x))$ 成立的证明。这个证明往往在计算上是没用的,我们更愿意去掉它,尤其是当它深深嵌套在其他某个命题内部时。{\tt Prop} 让我们有可能做到这一点。
+
+有一个问题是:我们能否通过自动优化掉``无用的被抽取代码''而彻底避开 {\tt Prop}?在一定程度上我们可以做到这一点,例如从逻辑的否定片段(由空类型、单位类型、积构造出的东西)中抽取出来的所有代码都是无用的,因为它们只是在搬弄那个单位元。但使用 {\tt Prop} 时,确实存在需要做出的实实在在的设计决策。这里有一个简单的例子,其中 $\sum$ 表示我们处于 {\tt Type} 中,而 $\exists$ 表示我们处于 {\tt Prop} 中。如果我们从
+\[\prod_{n:N}\sum_{b:[0,1]}\sum_{k:N}\quad n=2\cdot k+b\]
+抽取,我们会得到一个归纳式程序,它把 $n$ 分解成其最低位 $b$ 和
+其余各位 $k$,也就是说,它把一切都计算出来。如果我们从
+\[\prod_{n:N}
+\sum_{b:[0,1]}
+\underset{k:N}{\scalebox{2}{\raisebox{-2pt}{\ensuremath{\exists}}}}
+\quad n=2\cdot k+b\]
+
+抽取,那么这个程序就只会计算出最低位 $b$。机器无法判断哪一个是正确的,用户必须告诉它自己想要什么。
+
+\section{COQ GCD 证明的源代码}
+这是 GCD \cite{Coqu16a} 在 COQ \cite{Coqu16} 源码中的证明:
+\begin{verbatim}
+Library Coq.ZArith.Znumtheory
+
+Require Import ZArith_base.
+Require Import ZArithRing.
+Require Import Zcomplements.
+Require Import Zdiv.
+Require Import Wf_nat.
+
+For compatibility reasons, this Open Scope isn't local as it should
+
+Open Scope Z_scope.
+
+This file contains some notions of number theory upon Z numbers:
+
+    a divisibility predicate Z.divide
+    a gcd predicate gcd
+    Euclid algorithm euclid
+    a relatively prime predicate rel_prime
+    a prime predicate prime
+    properties of the efficient Z.gcd function
+
+
+Notation Zgcd := Z.gcd (compat "8.3").
+Notation Zggcd := Z.ggcd (compat "8.3").
+Notation Zggcd_gcd := Z.ggcd_gcd (compat "8.3").
+Notation Zggcd_correct_divisors := Z.ggcd_correct_divisors (compat "8.3").
+Notation Zgcd_divide_l := Z.gcd_divide_l (compat "8.3").
+Notation Zgcd_divide_r := Z.gcd_divide_r (compat "8.3").
+Notation Zgcd_greatest := Z.gcd_greatest (compat "8.3").
+Notation Zgcd_nonneg := Z.gcd_nonneg (compat "8.3").
+Notation Zggcd_opp := Z.ggcd_opp (compat "8.3").
+
+The former specialized inductive predicate Z.divide is now a generic existential predicate.
+
+Notation Zdivide := Z.divide (compat "8.3").
+
+Its former constructor is now a pseudo-constructor.
+
+Definition Zdivide_intro a b q (H:b=q*a) : Z.divide a b := ex_intro _ q H.
+
+Results concerning divisibility
+
+Notation Zdivide_refl := Z.divide_refl (compat "8.3").
+Notation Zone_divide := Z.divide_1_l (compat "8.3").
+Notation Zdivide_0 := Z.divide_0_r (compat "8.3").
+Notation Zmult_divide_compat_l := Z.mul_divide_mono_l (compat "8.3").
+Notation Zmult_divide_compat_r := Z.mul_divide_mono_r (compat "8.3").
+Notation Zdivide_plus_r := Z.divide_add_r (compat "8.3").
+Notation Zdivide_minus_l := Z.divide_sub_r (compat "8.3").
+Notation Zdivide_mult_l := Z.divide_mul_l (compat "8.3").
+Notation Zdivide_mult_r := Z.divide_mul_r (compat "8.3").
+Notation Zdivide_factor_r := Z.divide_factor_l (compat "8.3").
+Notation Zdivide_factor_l := Z.divide_factor_r (compat "8.3").
+
+Lemma Zdivide_opp_r a b : (a | b) -> (a | - b).
+
+Lemma Zdivide_opp_r_rev a b : (a | - b) -> (a | b).
+
+Lemma Zdivide_opp_l a b : (a | b) -> (- a | b).
+
+Lemma Zdivide_opp_l_rev a b : (- a | b) -> (a | b).
+
+Theorem Zdivide_Zabs_l a b : (Z.abs a | b) -> (a | b).
+
+Theorem Zdivide_Zabs_inv_l a b : (a | b) -> (Z.abs a | b).
+
+Hint Resolve Z.divide_refl Z.divide_1_l Z.divide_0_r: zarith.
+Hint Resolve Z.mul_divide_mono_l Z.mul_divide_mono_r: zarith.
+Hint Resolve Z.divide_add_r Zdivide_opp_r Zdivide_opp_r_rev Zdivide_opp_l
+  Zdivide_opp_l_rev Z.divide_sub_r Z.divide_mul_l Z.divide_mul_r
+  Z.divide_factor_l Z.divide_factor_r: zarith.
+
+Auxiliary result.
+
+Lemma Zmult_one x y : x >= 0 -> x * y = 1 -> x = 1.
+
+Only 1 and -1 divide 1.
+
+Notation Zdivide_1 := Z.divide_1_r (compat "8.3").
+
+If a divides b and b divides a then a is b or -b.
+
+Notation Zdivide_antisym := Z.divide_antisym (compat "8.3").
+Notation Zdivide_trans := Z.divide_trans (compat "8.3").
+
+If a divides b and b<>0 then |a| <= |b|.
+
+Lemma Zdivide_bounds a b : (a | b) -> b <> 0 -> Z.abs a <= Z.abs b.
+
+Z.divide can be expressed using Z.modulo.
+
+Lemma Zmod_divide : forall a b, b<>0 -> a mod b = 0 -> (b | a).
+
+Lemma Zdivide_mod : forall a b, (b | a) -> a mod b = 0.
+
+Z.divide is hence decidable
+
+Lemma Zdivide_dec a b : {(a | b)} + {~ (a | b)}.
+
+Theorem Zdivide_Zdiv_eq a b : 0 < a -> (a | b) -> b = a * (b / a).
+
+Theorem Zdivide_Zdiv_eq_2 a b c :
+ 0 < a -> (a | b) -> (c * b) / a = c * (b / a).
+
+Theorem Zdivide_le: forall a b : Z,
+ 0 <= a -> 0 < b -> (a | b) -> a <= b.
+
+Theorem Zdivide_Zdiv_lt_pos a b :
+ 1 < a -> 0 < b -> (a | b) -> 0 < b / a < b .
+
+Lemma Zmod_div_mod n m a:
+ 0 < n -> 0 < m -> (n | m) -> a mod n = (a mod m) mod n.
+
+Lemma Zmod_divide_minus a b c:
+ 0 < b -> a mod b = c -> (b | a - c).
+
+Lemma Zdivide_mod_minus a b c:
+ 0 <= c < b -> (b | a - c) -> a mod b = c.
+
+Greatest common divisor (gcd).
+There is no unicity of the gcd; hence we define the predicate Zis_gcd a b g expressing that g is a gcd of a and b. (We show later that the gcd is actually unique if we discard its sign.)
+
+Inductive Zis_gcd (a b g:Z) : Prop :=
+ Zis_gcd_intro :
+  (g | a) ->
+  (g | b) ->
+  (forall x, (x | a) -> (x | b) -> (x | g)) ->
+  Zis_gcd a b g.
+
+Trivial properties of gcd
+
+Lemma Zis_gcd_sym : forall a b d, Zis_gcd a b d -> Zis_gcd b a d.
+
+Lemma Zis_gcd_0 : forall a, Zis_gcd a 0 a.
+
+Lemma Zis_gcd_1 : forall a, Zis_gcd a 1 1.
+
+Lemma Zis_gcd_refl : forall a, Zis_gcd a a a.
+
+Lemma Zis_gcd_minus : forall a b d, Zis_gcd a (- b) d -> Zis_gcd b a d.
+
+Lemma Zis_gcd_opp : forall a b d, Zis_gcd a b d -> Zis_gcd b a (- d).
+
+Lemma Zis_gcd_0_abs a : Zis_gcd 0 a (Z.abs a).
+
+Hint Resolve Zis_gcd_sym Zis_gcd_0 Zis_gcd_minus Zis_gcd_opp: zarith.
+
+Theorem Zis_gcd_unique: forall a b c d : Z,
+ Zis_gcd a b c -> Zis_gcd a b d -> c = d \/ c = (- d).
+
+Extended Euclid algorithm.
+Euclid's algorithm to compute the gcd mainly relies on the following property.
+
+Lemma Zis_gcd_for_euclid :
+  forall a b d q:Z, Zis_gcd b (a - q * b) d -> Zis_gcd a b d.
+
+Lemma Zis_gcd_for_euclid2 :
+  forall b d q r:Z, Zis_gcd r b d -> Zis_gcd b (b * q + r) d.
+
+We implement the extended version of Euclid's algorithm, i.e. the one computing Bezout's coefficients as it computes the gcd. We follow the algorithm given in Knuth's "Art of Computer Programming", vol 2, page 325.
+
+Section extended_euclid_algorithm.
+
+  Variables a b : Z.
+
+The specification of Euclid's algorithm is the existence of u, v and d such that ua+vb=d and (gcd a b d).
+
+  Inductive Euclid : Set :=
+    Euclid_intro :
+    forall u v d:Z, u * a + v * b = d -> Zis_gcd a b d -> Euclid.
+
+The recursive part of Euclid's algorithm uses well-founded recursion of non-negative integers. It maintains 6 integers u1,u2,u3,v1,v2,v3 such that the following invariant holds: u1*a+u2*b=u3 and v1*a+v2*b=v3 and gcd(u3,v3)=gcd(a,b).
+
+  Lemma euclid_rec :
+    forall v3:Z,
+      0 <= v3 ->
+      forall u1 u2 u3 v1 v2:Z,
+        u1 * a + u2 * b = u3 ->
+        v1 * a + v2 * b = v3 ->
+        (forall d:Z, Zis_gcd u3 v3 d -> Zis_gcd a b d) -> Euclid.
+
+We get Euclid's algorithm by applying euclid_rec on 1,0,a,0,1,b when b>=0 and 1,0,a,0,-1,-b when b<0.
+
+  Lemma euclid : Euclid.
+
+End extended_euclid_algorithm.
+
+Theorem Zis_gcd_uniqueness_apart_sign :
+  forall a b d d':Z, Zis_gcd a b d -> Zis_gcd a b d' -> d = d' \/ d = - d'.
+
+Bezout's coefficients
+
+Inductive Bezout (a b d:Z) : Prop :=
+  Bezout_intro : forall u v:Z, u * a + v * b = d -> Bezout a b d.
+
+Existence of Bezout's coefficients for the gcd of a and b
+
+Lemma Zis_gcd_bezout : forall a b d:Z, Zis_gcd a b d -> Bezout a b d.
+
+gcd of ca and cb is c gcd(a,b).
+
+Lemma Zis_gcd_mult :
+  forall a b c d:Z, Zis_gcd a b d -> Zis_gcd (c * a) (c * b) (c * d).
+
+Relative primality
+
+Definition rel_prime (a b:Z) : Prop := Zis_gcd a b 1.
+
+Bezout's theorem: a and b are relatively prime if and only if there exist u and v such that ua+vb = 1.
+
+Lemma rel_prime_bezout : forall a b:Z, rel_prime a b -> Bezout a b 1.
+
+Lemma bezout_rel_prime : forall a b:Z, Bezout a b 1 -> rel_prime a b.
+
+Gauss's theorem: if a divides bc and if a and b are relatively prime, then a divides c.
+
+Theorem Gauss : forall a b c:Z, (a | b * c) -> rel_prime a b -> (a | c).
+
+If a is relatively prime to b and c, then it is to bc
+
+Lemma rel_prime_mult :
+  forall a b c:Z, rel_prime a b -> rel_prime a c -> rel_prime a (b * c).
+
+Lemma rel_prime_cross_prod :
+  forall a b c d:Z,
+    rel_prime a b ->
+    rel_prime c d -> b > 0 -> d > 0 -> a * d = b * c -> a = c /\ b = d.
+
+After factorization by a gcd, the original numbers are relatively prime.
+
+Lemma Zis_gcd_rel_prime :
+  forall a b g:Z,
+    b > 0 -> g >= 0 -> Zis_gcd a b g -> rel_prime (a / g) (b / g).
+
+Theorem rel_prime_sym: forall a b, rel_prime a b -> rel_prime b a.
+
+Theorem rel_prime_div: forall p q r,
+ rel_prime p q -> (r | p) -> rel_prime r q.
+
+Theorem rel_prime_1: forall n, rel_prime 1 n.
+
+Theorem not_rel_prime_0: forall n, 1 < n -> ~ rel_prime 0 n.
+
+Theorem rel_prime_mod: forall p q, 0 < q ->
+ rel_prime p q -> rel_prime (p mod q) q.
+
+Theorem rel_prime_mod_rev: forall p q, 0 < q ->
+ rel_prime (p mod q) q -> rel_prime p q.
+
+Theorem Zrel_prime_neq_mod_0: forall a b, 1 < b -> rel_prime a b -> a mod b <> 0.
+
+Primality
+
+Inductive prime (p:Z) : Prop :=
+  prime_intro :
+    1 < p -> (forall n:Z, 1 <= n < p -> rel_prime n p) -> prime p.
+
+The sole divisors of a prime number p are -1, 1, p and -p.
+
+Lemma prime_divisors :
+  forall p:Z,
+    prime p -> forall a:Z, (a | p) -> a = -1 \/ a = 1 \/ a = p \/ a = - p.
+
+A prime number is relatively prime with any number it does not divide
+
+Lemma prime_rel_prime :
+  forall p:Z, prime p -> forall a:Z, ~ (p | a) -> rel_prime p a.
+
+Hint Resolve prime_rel_prime: zarith.
+
+As a consequence, a prime number is relatively prime with smaller numbers
+
+Theorem rel_prime_le_prime:
+ forall a p, prime p -> 1 <= a < p -> rel_prime a p.
+
+If a prime p divides ab then it divides either a or b
+
+Lemma prime_mult :
+  forall p:Z, prime p -> forall a b:Z, (p | a * b) -> (p | a) \/ (p | b).
+
+Lemma not_prime_0: ~ prime 0.
+
+Lemma not_prime_1: ~ prime 1.
+
+Lemma prime_2: prime 2.
+
+Theorem prime_3: prime 3.
+
+Theorem prime_ge_2 p : prime p -> 2 <= p.
+
+Definition prime' p := 1<p /\ (forall n, 1<n<p -> ~ (n|p)).
+
+Lemma Z_0_1_more x : 0<=x -> x=0 \/ x=1 \/ 1<x.
+
+Theorem prime_alt p : prime' p <-> prime p.
+
+Theorem square_not_prime: forall a, ~ prime (a * a).
+
+Theorem prime_div_prime: forall p q,
+ prime p -> prime q -> (p | q) -> p = q.
+
+we now prove that Z.gcd is indeed a gcd in the sense of Zis_gcd.
+
+Notation Zgcd_is_pos := Z.gcd_nonneg (compat "8.3").
+
+Lemma Zgcd_is_gcd : forall a b, Zis_gcd a b (Z.gcd a b).
+
+Theorem Zgcd_spec : forall x y : Z, {z : Z | Zis_gcd x y z /\ 0 <= z}.
+
+Theorem Zdivide_Zgcd: forall p q r : Z,
+ (p | q) -> (p | r) -> (p | Z.gcd q r).
+
+Theorem Zis_gcd_gcd: forall a b c : Z,
+ 0 <= c -> Zis_gcd a b c -> Z.gcd a b = c.
+
+Notation Zgcd_inv_0_l := Z.gcd_eq_0_l (compat "8.3").
+Notation Zgcd_inv_0_r := Z.gcd_eq_0_r (compat "8.3").
+
+Theorem Zgcd_div_swap0 : forall a b : Z,
+ 0 < Z.gcd a b ->
+ 0 < b ->
+ (a / Z.gcd a b) * b = a * (b/Z.gcd a b).
+
+Theorem Zgcd_div_swap : forall a b c : Z,
+ 0 < Z.gcd a b ->
+ 0 < b ->
+ (c * a) / Z.gcd a b * b = c * a * (b/Z.gcd a b).
+
+Notation Zgcd_comm := Z.gcd_comm (compat "8.3").
+
+Lemma Zgcd_ass a b c : Z.gcd (Z.gcd a b) c = Z.gcd a (Z.gcd b c).
+
+Notation Zgcd_Zabs := Z.gcd_abs_l (compat "8.3").
+Notation Zgcd_0 := Z.gcd_0_r (compat "8.3").
+Notation Zgcd_1 := Z.gcd_1_r (compat "8.3").
+
+Hint Resolve Z.gcd_0_r Z.gcd_1_r : zarith.
+
+Theorem Zgcd_1_rel_prime : forall a b,
+ Z.gcd a b = 1 <-> rel_prime a b.
+
+Definition rel_prime_dec: forall a b,
+ { rel_prime a b }+{ ~ rel_prime a b }.
+
+Definition prime_dec_aux:
+ forall p m,
+  { forall n, 1 < n < m -> rel_prime n p } +
+  { exists n, 1 < n < m /\ ~ rel_prime n p }.
+
+Definition prime_dec: forall p, { prime p }+{ ~ prime p }.
+
+Theorem not_prime_divide:
+ forall p, 1 < p -> ~ prime p -> exists n, 1 < n < p /\ (n | p).
+
+\end{verbatim}
+
+\chapter{GCD 的 LEAN 证明}
+这是 GCD \cite{Avig14} 在 LEAN \cite{Avig16} 源码中的证明:
+\begin{verbatim}
+/-
+Copyright (c) 2014 Jeremy Avigad. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jeremy Avigad, Leonardo de Moura
+
+Definitions and properties of gcd, lcm, and coprime.
+-/
+import .div
+open eq.ops well_founded decidable prod
+
+namespace nat
+
+/- gcd -/
+
+private definition pair_nat.lt : nat × nat → nat × nat → Prop := measure pr₂
+private definition pair_nat.lt.wf : well_founded pair_nat.lt :=
+intro_k (measure.wf pr₂) 20  -- we use intro_k to be able to execute gcd efficiently in the kernel
+
+local attribute pair_nat.lt.wf [instance]      -- instance will not be saved in .olean
+local infixl ` ≺ `:50 := pair_nat.lt
+
+private definition gcd.lt.dec (x y₁ : nat) : (succ y₁, x % succ y₁) ≺ (x, succ y₁) :=
+!mod_lt (succ_pos y₁)
+
+definition gcd.F : Π (p₁ : nat × nat), (Π p₂ : nat × nat, p₂ ≺ p₁ → nat) → nat
+| (x, 0)      f := x
+| (x, succ y) f := f (succ y, x % succ y) !gcd.lt.dec
+
+definition gcd (x y : nat) := fix gcd.F (x, y)
+
+theorem gcd_zero_right [simp] (x : nat) : gcd x 0 = x := rfl
+
+theorem gcd_succ [simp] (x y : nat) : gcd x (succ y) = gcd (succ y) (x % succ y) :=
+well_founded.fix_eq gcd.F (x, succ y)
+
+theorem gcd_one_right (n : ℕ) : gcd n 1 = 1 :=
+calc gcd n 1 = gcd 1 (n % 1)  : gcd_succ
+         ... = gcd 1 0        : mod_one
+
+theorem gcd_def (x : ℕ) : Π (y : ℕ), gcd x y = if y = 0 then x else gcd y (x % y)
+| 0        := !gcd_zero_right
+| (succ y) := !gcd_succ ⬝ (if_neg !succ_ne_zero)⁻¹
+
+
+theorem gcd_self : Π (n : ℕ), gcd n n = n
+| 0         := rfl
+| (succ n₁) := calc
+    gcd (succ n₁) (succ n₁) = gcd (succ n₁) (succ n₁ % succ n₁) : gcd_succ
+                      ...   = gcd (succ n₁) 0                     : mod_self
+
+theorem gcd_zero_left : Π (n : ℕ), gcd 0 n = n
+| 0         := rfl
+| (succ n₁) := calc
+    gcd 0 (succ n₁) = gcd (succ n₁) (0 % succ n₁) : gcd_succ
+                ... = gcd (succ n₁) 0               : zero_mod
+
+theorem gcd_of_pos (m : ℕ) {n : ℕ} (H : n > 0) : gcd m n = gcd n (m % n) :=
+gcd_def m n ⬝ if_neg (ne_zero_of_pos H)
+
+theorem gcd_rec (m n : ℕ) : gcd m n = gcd n (m % n) :=
+by_cases_zero_pos n
+  (calc
+          m = gcd 0 m       : gcd_zero_left
+        ... = gcd 0 (m % 0) : mod_zero)
+  (take n, assume H : 0 < n, gcd_of_pos m H)
+
+theorem gcd.induction {P : ℕ → ℕ → Prop}
+                   (m n : ℕ)
+                   (H0 : ∀m, P m 0)
+                   (H1 : ∀m n, 0 < n → P n (m % n) → P m n) :
+                 P m n :=
+induction (m, n) (prod.rec (λm, nat.rec (λ IH, H0 m)
+   (λ n₁ v (IH : ∀p₂, p₂ ≺ (m, succ n₁) → P (pr₁ p₂) (pr₂ p₂)),
+      H1 m (succ n₁) !succ_pos (IH _ !gcd.lt.dec))))
+
+theorem gcd_dvd (m n : ℕ) : (gcd m n ∣ m) ∧ (gcd m n ∣ n) :=
+gcd.induction m n
+  (take m, and.intro (!one_mul ▸ !dvd_mul_left) !dvd_zero)
+  (take m n (npos : 0 < n), and.rec
+     (assume (IH₁ : gcd n (m % n) ∣ n) (IH₂ : gcd n (m % n) ∣ (m % n)),
+    have H : (gcd n (m % n) ∣ (m / n * n + m % n)), from
+      dvd_add (dvd.trans IH₁ !dvd_mul_left) IH₂,
+    have H1 : (gcd n (m % n) ∣ m), from !eq_div_mul_add_mod⁻¹ ▸ H,
+    show (gcd m n ∣ m) ∧ (gcd m n ∣ n), from !gcd_rec⁻¹ ▸ (and.intro H1 IH₁)))
+
+theorem gcd_dvd_left (m n : ℕ) : gcd m n ∣ m := and.left !gcd_dvd
+
+theorem gcd_dvd_right (m n : ℕ) : gcd m n ∣ n := and.right !gcd_dvd
+
+theorem dvd_gcd {m n k : ℕ} : k ∣ m → k ∣ n → k ∣ gcd m n :=
+gcd.induction m n (take m, imp.intro)
+  (take m n (npos : n > 0)
+    (IH : k ∣ n → k ∣ m % n → k ∣ gcd n (m % n))
+    (H1 : k ∣ m) (H2 : k ∣ n),
+    have H3 : k ∣ m / n * n + m % n, from !eq_div_mul_add_mod ▸ H1,
+    have H4 : k ∣ m % n, from nat.dvd_of_dvd_add_left H3 (dvd.trans H2 !dvd_mul_left),
+    !gcd_rec⁻¹ ▸ IH H2 H4)
+
+theorem gcd.comm (m n : ℕ) : gcd m n = gcd n m :=
+dvd.antisymm
+  (dvd_gcd !gcd_dvd_right !gcd_dvd_left)
+  (dvd_gcd !gcd_dvd_right !gcd_dvd_left)
+
+theorem gcd.assoc (m n k : ℕ) : gcd (gcd m n) k = gcd m (gcd n k) :=
+dvd.antisymm
+  (dvd_gcd
+    (dvd.trans !gcd_dvd_left !gcd_dvd_left)
+    (dvd_gcd (dvd.trans !gcd_dvd_left !gcd_dvd_right) !gcd_dvd_right))
+  (dvd_gcd
+    (dvd_gcd !gcd_dvd_left (dvd.trans !gcd_dvd_right !gcd_dvd_left))
+    (dvd.trans !gcd_dvd_right !gcd_dvd_right))
+
+theorem gcd_one_left (m : ℕ) : gcd 1 m = 1 :=
+!gcd.comm ⬝ !gcd_one_right
+
+theorem gcd_mul_left (m n k : ℕ) : gcd (m * n) (m * k) = m * gcd n k :=
+gcd.induction n k
+  (take n, calc gcd (m * n) (m * 0) = gcd (m * n) 0 : mul_zero)
+  (take n k,
+    assume H : 0 < k,
+    assume IH : gcd (m * k) (m * (n % k)) = m * gcd k (n % k),
+    calc
+      gcd (m * n) (m * k) = gcd (m * k) (m * n % (m * k)) : !gcd_rec
+                      ... = gcd (m * k) (m * (n % k))     : mul_mod_mul_left
+                      ... = m * gcd k (n % k)             : IH
+                      ... = m * gcd n k                   : !gcd_rec)
+
+theorem gcd_mul_right (m n k : ℕ) : gcd (m * n) (k * n) = gcd m k * n :=
+calc
+  gcd (m * n) (k * n) = gcd (n * m) (k * n) : mul.comm
+                  ... = gcd (n * m) (n * k) : mul.comm
+                  ... = n * gcd m k         : gcd_mul_left
+                  ... = gcd m k * n         : mul.comm
+
+theorem gcd_pos_of_pos_left {m : ℕ} (n : ℕ) (mpos : m > 0) : gcd m n > 0 :=
+pos_of_dvd_of_pos !gcd_dvd_left mpos
+
+theorem gcd_pos_of_pos_right (m : ℕ) {n : ℕ} (npos : n > 0) : gcd m n > 0 :=
+pos_of_dvd_of_pos !gcd_dvd_right npos
+
+theorem eq_zero_of_gcd_eq_zero_left {m n : ℕ} (H : gcd m n = 0) : m = 0 :=
+or.elim (eq_zero_or_pos m)
+  (assume H1, H1)
+  (assume H1 : m > 0, absurd H⁻¹ (ne_of_lt (!gcd_pos_of_pos_left H1)))
+
+theorem eq_zero_of_gcd_eq_zero_right {m n : ℕ} (H : gcd m n = 0) : n = 0 :=
+eq_zero_of_gcd_eq_zero_left (!gcd.comm ▸ H)
+
+theorem gcd_div {m n k : ℕ} (H1 : k ∣ m) (H2 : k ∣ n) :
+  gcd (m / k) (n / k) = gcd m n / k :=
+or.elim (eq_zero_or_pos k)
+  (assume H3 : k = 0, by subst k; rewrite *nat.div_zero)
+  (assume H3 : k > 0, (nat.div_eq_of_eq_mul_left H3 (calc
+        gcd m n = gcd m (n / k * k)             : nat.div_mul_cancel H2
+            ... = gcd (m / k * k) (n / k * k) : nat.div_mul_cancel H1
+            ... = gcd (m / k) (n / k) * k     : gcd_mul_right))⁻¹)
+
+theorem gcd_dvd_gcd_mul_left (m n k : ℕ) : gcd m n ∣ gcd (k * m) n :=
+dvd_gcd (dvd.trans !gcd_dvd_left !dvd_mul_left) !gcd_dvd_right
+
+theorem gcd_dvd_gcd_mul_right (m n k : ℕ) : gcd m n ∣ gcd (m * k) n :=
+!mul.comm ▸ !gcd_dvd_gcd_mul_left
+
+theorem gcd_dvd_gcd_mul_left_right (m n k : ℕ) : gcd m n ∣ gcd m (k * n) :=
+dvd_gcd  !gcd_dvd_left (dvd.trans !gcd_dvd_right !dvd_mul_left)
+
+theorem gcd_dvd_gcd_mul_right_right (m n k : ℕ) : gcd m n ∣ gcd m (n * k) :=
+!mul.comm ▸ !gcd_dvd_gcd_mul_left_right
+
+/- lcm -/
+
+definition lcm (m n : ℕ) : ℕ := m * n / (gcd m n)
+
+theorem lcm.comm (m n : ℕ) : lcm m n = lcm n m :=
+calc
+  lcm m n = m * n / gcd m n : rfl
+      ... = n * m / gcd m n : mul.comm
+      ... = n * m / gcd n m : gcd.comm
+      ... = lcm n m           : rfl
+
+theorem lcm_zero_left (m : ℕ) : lcm 0 m = 0 :=
+calc
+  lcm 0 m = 0 * m / gcd 0 m : rfl
+      ... = 0 / gcd 0 m     : zero_mul
+      ... = 0                 : nat.zero_div
+
+theorem lcm_zero_right (m : ℕ) : lcm m 0 = 0 := !lcm.comm ▸ !lcm_zero_left
+
+theorem lcm_one_left (m : ℕ) : lcm 1 m = m :=
+calc
+  lcm 1 m = 1 * m / gcd 1 m : rfl
+      ... = m / gcd 1 m     : one_mul
+      ... = m / 1           : gcd_one_left
+      ... = m                 : nat.div_one
+
+theorem lcm_one_right (m : ℕ) : lcm m 1 = m := !lcm.comm ▸ !lcm_one_left
+
+theorem lcm_self (m : ℕ) : lcm m m = m :=
+have H : m * m / m = m, from
+  by_cases_zero_pos m !nat.div_zero (take m, assume H1 : m > 0, !nat.mul_div_cancel H1),
+calc
+  lcm m m = m * m / gcd m m : rfl
+      ... = m * m / m       : gcd_self
+      ... = m                 : H
+
+theorem dvd_lcm_left (m n : ℕ) : m ∣ lcm m n :=
+have H : lcm m n = m * (n / gcd m n), from nat.mul_div_assoc _ !gcd_dvd_right,
+dvd.intro H⁻¹
+
+theorem dvd_lcm_right (m n : ℕ) : n ∣ lcm m n :=
+!lcm.comm ▸ !dvd_lcm_left
+
+theorem gcd_mul_lcm (m n : ℕ) : gcd m n * lcm m n = m * n :=
+eq.symm (nat.eq_mul_of_div_eq_right (dvd.trans !gcd_dvd_left !dvd_mul_right) rfl)
+
+theorem lcm_dvd {m n k : ℕ} (H1 : m ∣ k) (H2 : n ∣ k) : lcm m n ∣ k :=
+or.elim (eq_zero_or_pos k)
+  (assume kzero : k = 0, !kzero⁻¹ ▸ !dvd_zero)
+  (assume kpos : k > 0,
+    have mpos : m > 0, from pos_of_dvd_of_pos H1 kpos,
+    have npos : n > 0, from pos_of_dvd_of_pos H2 kpos,
+    have gcd_pos : gcd m n > 0, from !gcd_pos_of_pos_left mpos,
+    obtain p (km : k = m * p), from exists_eq_mul_right_of_dvd H1,
+    obtain q (kn : k = n * q), from exists_eq_mul_right_of_dvd H2,
+    have ppos : p > 0, from pos_of_mul_pos_left (km ▸ kpos),
+    have qpos : q > 0, from pos_of_mul_pos_left (kn ▸ kpos),
+    have H3 : p * q * (m * n * gcd p q) = p * q * (gcd m n * k), from
+    calc
+      p * q * (m * n * gcd p q)
+            = m * p * (n * q * gcd p q)       : by rewrite [*mul.assoc, *mul.left_comm q,
+                                                             mul.left_comm p]
+        ... = k * (k * gcd p q)               : by rewrite [-kn, -km]
+        ... = k * gcd (k * p) (k * q)         : by rewrite gcd_mul_left
+        ... = k * gcd (n * q * p) (m * p * q) : by rewrite [-kn, -km]
+        ... = k * (gcd n m * (p * q))         : by rewrite [*mul.assoc, mul.comm q, gcd_mul_right]
+        ... = p * q * (gcd m n * k)           : by rewrite [mul.comm, mul.comm (gcd n m), gcd.comm,
+                                                             *mul.assoc],
+    have H4 : m * n * gcd p q = gcd m n * k,
+      from !eq_of_mul_eq_mul_left (mul_pos ppos qpos) H3,
+    have H5 : gcd m n * (lcm m n * gcd p q) = gcd m n * k,
+      from !mul.assoc ▸ !gcd_mul_lcm⁻¹ ▸ H4,
+    have H6 : lcm m n * gcd p q = k,
+      from !eq_of_mul_eq_mul_left gcd_pos H5,
+    dvd.intro H6)
+
+theorem lcm.assoc (m n k : ℕ) : lcm (lcm m n) k = lcm m (lcm n k) :=
+dvd.antisymm
+  (lcm_dvd
+    (lcm_dvd !dvd_lcm_left (dvd.trans !dvd_lcm_left !dvd_lcm_right))
+    (dvd.trans !dvd_lcm_right !dvd_lcm_right))
+  (lcm_dvd
+    (dvd.trans !dvd_lcm_left !dvd_lcm_left)
+    (lcm_dvd (dvd.trans !dvd_lcm_right !dvd_lcm_left) !dvd_lcm_right))
+
+/- coprime -/
+
+definition coprime [reducible] (m n : ℕ) : Prop := gcd m n = 1
+
+lemma gcd_eq_one_of_coprime {m n : ℕ} : coprime m n → gcd m n = 1 :=
+λ h, h
+
+theorem coprime_swap {m n : ℕ} (H : coprime n m) : coprime m n :=
+!gcd.comm ▸ H
+
+theorem dvd_of_coprime_of_dvd_mul_right {m n k : ℕ} (H1 : coprime k n) (H2 : k ∣ m * n) : k ∣ m :=
+have H3 : gcd (m * k) (m * n) = m, from
+  calc
+    gcd (m * k) (m * n) = m * gcd k n : gcd_mul_left
+                    ... = m * 1       : H1
+                    ... = m           : mul_one,
+have H4 : (k ∣ gcd (m * k) (m * n)), from dvd_gcd !dvd_mul_left H2,
+H3 ▸ H4
+
+theorem dvd_of_coprime_of_dvd_mul_left {m n k : ℕ} (H1 : coprime k m) (H2 : k ∣ m * n) : k ∣ n :=
+dvd_of_coprime_of_dvd_mul_right H1 (!mul.comm ▸ H2)
+
+theorem gcd_mul_left_cancel_of_coprime {k : ℕ} (m : ℕ) {n : ℕ} (H : coprime k n) :
+   gcd (k * m) n = gcd m n :=
+have H1 : coprime (gcd (k * m) n) k, from
+  calc
+    gcd (gcd (k * m) n) k
+         = gcd (k * gcd 1 m) n : by rewrite [-gcd_mul_left, mul_one, gcd.comm, gcd.assoc]
+     ... = 1                   : by rewrite [gcd_one_left, mul_one, ↑coprime at H, H],
+dvd.antisymm
+  (dvd_gcd (dvd_of_coprime_of_dvd_mul_left H1 !gcd_dvd_left) !gcd_dvd_right)
+  (dvd_gcd (dvd.trans !gcd_dvd_left !dvd_mul_left) !gcd_dvd_right)
+
+theorem gcd_mul_right_cancel_of_coprime (m : ℕ) {k n : ℕ} (H : coprime k n) :
+   gcd (m * k) n = gcd m n :=
+!mul.comm ▸ !gcd_mul_left_cancel_of_coprime H
+
+theorem gcd_mul_left_cancel_of_coprime_right {k m : ℕ} (n : ℕ) (H : coprime k m) :
+   gcd m (k * n) = gcd m n :=
+!gcd.comm ▸ !gcd.comm ▸ !gcd_mul_left_cancel_of_coprime H
+
+theorem gcd_mul_right_cancel_of_coprime_right {k m : ℕ} (n : ℕ) (H : coprime k m) :
+   gcd m (n * k) = gcd m n :=
+!gcd.comm ▸ !gcd.comm ▸ !gcd_mul_right_cancel_of_coprime H
+
+theorem coprime_div_gcd_div_gcd {m n : ℕ} (H : gcd m n > 0) :
+  coprime (m / gcd m n) (n / gcd m n) :=
+calc
+  gcd (m / gcd m n) (n / gcd m n) = gcd m n / gcd m n : gcd_div !gcd_dvd_left !gcd_dvd_right
+     ... = 1 : nat.div_self H
+
+theorem not_coprime_of_dvd_of_dvd {m n d : ℕ} (dgt1 : d > 1) (Hm : d ∣ m) (Hn : d ∣ n) :
+  ¬ coprime m n :=
+assume co : coprime m n,
+have d ∣ gcd m n, from dvd_gcd Hm Hn,
+have d ∣ 1, by rewrite [↑coprime at co, co at this]; apply this,
+have d ≤ 1, from le_of_dvd dec_trivial this,
+show false, from not_lt_of_ge `d ≤ 1` `d > 1`
+
+theorem exists_coprime {m n : ℕ} (H : gcd m n > 0) :
+  exists m' n', coprime m' n' ∧ m = m' * gcd m n ∧ n = n' * gcd m n :=
+have H1 : m = (m / gcd m n) * gcd m n, from (nat.div_mul_cancel !gcd_dvd_left)⁻¹,
+have H2 : n = (n / gcd m n) * gcd m n, from (nat.div_mul_cancel !gcd_dvd_right)⁻¹,
+exists.intro _ (exists.intro _ (and.intro (coprime_div_gcd_div_gcd H) (and.intro H1 H2)))
+
+theorem coprime_mul {m n k : ℕ} (H1 : coprime m k) (H2 : coprime n k) : coprime (m * n) k :=
+calc
+  gcd (m * n) k = gcd n k : !gcd_mul_left_cancel_of_coprime H1
+            ... = 1       : H2
+
+theorem coprime_mul_right {k m n : ℕ} (H1 : coprime k m) (H2 : coprime k n) : coprime k (m * n) :=
+coprime_swap (coprime_mul (coprime_swap H1) (coprime_swap H2))
+
+theorem coprime_of_coprime_mul_left {k m n : ℕ} (H : coprime (k * m) n) : coprime m n :=
+have H1 : (gcd m n ∣ gcd (k * m) n), from !gcd_dvd_gcd_mul_left,
+eq_one_of_dvd_one (H ▸ H1)
+
+theorem coprime_of_coprime_mul_right {k m n : ℕ} (H : coprime (m * k) n) : coprime m n :=
+coprime_of_coprime_mul_left (!mul.comm ▸ H)
+
+theorem coprime_of_coprime_mul_left_right {k m n : ℕ} (H : coprime m (k * n)) : coprime m n :=
+coprime_swap (coprime_of_coprime_mul_left (coprime_swap H))
+
+theorem coprime_of_coprime_mul_right_right {k m n : ℕ} (H : coprime m (n * k)) : coprime m n :=
+coprime_of_coprime_mul_left_right (!mul.comm ▸ H)
+
+theorem comprime_one_left : ∀ n, coprime 1 n :=
+λ n, !gcd_one_left
+
+theorem comprime_one_right : ∀ n, coprime n 1 :=
+λ n, !gcd_one_right
+
+theorem exists_eq_prod_and_dvd_and_dvd {m n k : nat} (H : k ∣ m * n) :
+  ∃ m' n', k = m' * n' ∧ m' ∣ m ∧ n' ∣ n :=
+or.elim (eq_zero_or_pos (gcd k m))
+ (assume H1 : gcd k m = 0,
+    have H2 : k = 0, from eq_zero_of_gcd_eq_zero_left H1,
+    have H3 : m = 0, from eq_zero_of_gcd_eq_zero_right H1,
+    have H4 : k = 0 * n, from H2 ⬝ !zero_mul⁻¹,
+    have H5 : 0 ∣ m, from H3⁻¹ ▸ !dvd.refl,
+    have H6 : n ∣ n, from !dvd.refl,
+    exists.intro _ (exists.intro _ (and.intro H4 (and.intro H5 H6))))
+  (assume H1 : gcd k m > 0,
+    have H2 : gcd k m ∣ k, from !gcd_dvd_left,
+    have H3 : k / gcd k m ∣ (m * n) / gcd k m, from nat.div_dvd_div H2 H,
+    have H4 : (m * n) / gcd k m = (m / gcd k m) * n, from
+      calc
+        m * n / gcd k m = n * m / gcd k m   : mul.comm
+                      ... = n * (m / gcd k m) : !nat.mul_div_assoc !gcd_dvd_right
+                      ... = m / gcd k m * n   : mul.comm,
+    have H5 : k / gcd k m ∣ (m / gcd k m) * n, from H4 ▸ H3,
+    have H6 : coprime (k / gcd k m) (m / gcd k m), from coprime_div_gcd_div_gcd H1,
+    have H7 : k / gcd k m ∣ n, from dvd_of_coprime_of_dvd_mul_left H6 H5,
+    have H8 : k = gcd k m * (k / gcd k m), from (nat.mul_div_cancel' H2)⁻¹,
+    exists.intro _ (exists.intro _ (and.intro H8 (and.intro !gcd_dvd_right H7))))
+
+end nat
+
+\end{verbatim}
+
+\chapter{形式化的前置条件与后置条件}
+在 Boldo \cite{Bold11} 中,我们看到一项使用前置条件 (precondition)、后置条件 (postcondition) 与断言来验证浮点 (floating point) 软件的工作。引述如下:
+
+“这些推测可以通过如下注解来加以正式描述。
+\begin{verbatim}
+/*@ requires \abs(x) <= 0x1p-5;
+  @ ensures \abs(\result - \cos(x)) <= 0x1p-23;
+  @*/
+float my_cosine(float x) {
+  //@ assert \abs(1.0 - x*x*0.5 - \cos(x)) < 0x1p-24;
+  return 1.0f - x * x * 0.5f;
+}
+\end{verbatim}
+由 {\bf requires} 引入的{\sl 前置条件},表明我们期望实参 (argument) {\sl x} 落在区间 [-1/32; 1/32] 内。由 {\bf ensures} 引入的{\sl 后置条件},表明函数返回值(用关键字 {\bf \verb|\result|} 表示)与程序模型之间的距离——这里的程序模型即 ACSL 中用 {\bf \verb|\cos|} 表示的真实数学余弦函数——不超过 $2^{-23}$。需要注意的是,在注解中,像 $+$ 或 $*$ 这样的运算符表示的是实数上的运算,而非浮点数上的运算。特别是,注解中不存在舍入误差,也不存在溢出,这与 Leavens 早期的方案不同。本例中类型为 {\tt float} 的 C 变量,如 {\tt x} 和 {\tt \verb|\result|},都被解释为它们所代表的那个实数。因此,代码内部以断言形式给出的最后一条注解,是将我们上面所做的推理显式表达出来的一种方式,它使总误差成为方法误差与舍入误差之和:该注解表明方法误差小于 $2^{-24}$。同样,正是由于选择在注解中使用精确运算,我们才能够陈述关于方法误差的这一性质。”
+
+在 Boldo \cite{Bold07,Bold07a} 中,我们能找到“数组查找”的标注示例:
+\begin{verbatim}
+/*@ requires \valid_range(t,0,n-1)
+  @ ensures
+  @  (0 <= \result < n => t[\result] == v) &&
+  @  (\result == n =>
+  @    \forall int i; 0 <= i < n => t[i] != v) */
+int index(int t[], int n, int v) {
+  int i = 0;
+  /*@ invariant 0 <= i &&
+    @  \forall int k; 0 <= k <i => t[k] != v
+    @ variant n - i */
+  while (i < n) {
+    if (t[i] == v) break;
+    i++;
+  }
+  return i;
+}
+\end{verbatim}
+
+\chapter{类型与签名}
+
+我们需要以 Common Lisp 中现有类型 (type) 为基础出发,最终给出 Axiom 的组合或特化形式。Common Lisp 具有以下标准类型说明符符号。
+\begin{center}
+{\bf Common Lisp 类型层次结构} \cite{Pfei12}\\
+\includegraphics[scale=0.5]{ps/v13cltypehierarchy.eps}
+\end{center}
+
+Axiom 增加了以下类型:
+\begin{itemize}
+\item Command = String
+\end{itemize}
+
+根据 Carette 等人 \cite{Care11a} 的工作,我们得到:
+\begin{verbatim}
+LeftNearSemiRing := Theory {
+  U : type;
+  * : (U, U) -> U;
+  + : (U, U) -> U;
+  0 : U;
+  axiom right_Identity_+_0: forall x : U. x + 0 = x;
+  axiom leftIdentity_+_0 := forall x : U. 0 + x = x;
+  axiom leftDistributive_*_+ :=
+    forall x,y,z : U. x * (y + z) = (x * y) + (x * z);
+  axiom left0 := forall x : U. 0 * x = 0;
+  axiom associative_+ :=
+    forall x,y,z : U. (x + y) + z = x + (y + z);
+  axiom associative_* :=
+    forall x,y,z : U. (x * y) * z = x * (y * z);
+\end{verbatim}
+
+\chapter{COQ nat 与 Axiom NNI 对比}
+
+COQ 的 nat domain 中包含一个 GCD 的证明。
+
+我们想要展示 Coq 中的类型与 Axiom 中的类型之间的一个同构。这样的同构将使引理可以复用,并简化以后的证明。
+
+注意,Coq 的 {\tt nat} domain 在 O(符号化的 0)处终止,Axiom 的 NNI 也是如此。Axiom 解释器 (interpreter) 会把减法结果提升为 Integer,而 Coq 不会。
+
+COQ 的 nat domain \cite{COQnat} 为:
+
+\subsection{Coq.Init.Nat 库}
+
+\begin{verbatim}
+Require Import Notations Logic Datatypes.
+
+Local Open Scope nat_scope.
+\end{verbatim}
+
+{\bf Peano 自然数及其运算定义}
+
+本文件旨在作为一个整体模块使用,而不对其做导入,从而得到限定名形式的定义(例如 Nat.pred)。
+
+\begin{verbatim}
+Definition t := nat.
+\end{verbatim}
+
+{\bf 常量}
+
+\begin{verbatim}
+Definition zero := 0.
+Definition one := 1.
+Definition two := 2.
+\end{verbatim}
+
+{\bf 基本操作}
+
+\begin{verbatim}
+Definition succ := S.
+
+Definition pred n :=
+  match n with
+    | 0 => n
+    | S u => u
+  end.
+
+Fixpoint add n m :=
+  match n with
+  | 0 => m
+  | S p => S (p + m)
+  end
+
+where "n + m" := (add n m) : nat_scope.
+
+Definition double n := n + n.
+
+Fixpoint mul n m :=
+  match n with
+  | 0 => 0
+  | S p => m + p * m
+  end
+
+where "n * m" := (mul n m) : nat_scope.
+
+\end{verbatim}
+
+注意,当减法结果为负时,Axiom 的 NNI domain 会被自动提升为 Integer;而 Coq 在这种情况下会返回 O。
+
+\begin{verbatim}
+Truncated subtraction: n-m is 0 if n<=m
+
+Fixpoint sub n m :=
+  match n, m with
+  | S k, S l => k - l
+  | _, _ => n
+  end
+
+where "n - m" := (sub n m) : nat_scope.
+
+\end{verbatim}
+{\bf 比较}
+\begin{verbatim}
+
+Fixpoint eqb n m : bool :=
+  match n, m with
+    | 0, 0 => true
+    | 0, S _ => false
+    | S _, 0 => false
+    | S n', S m' => eqb n' m'
+  end.
+
+Fixpoint leb n m : bool :=
+  match n, m with
+    | 0, _ => true
+    | _, 0 => false
+    | S n', S m' => leb n' m'
+  end.
+
+Definition ltb n m := leb (S n) m.
+
+Infix "=?" := eqb (at level 70) : nat_scope.
+Infix "<=?" := leb (at level 70) : nat_scope.
+Infix "<?" := ltb (at level 70) : nat_scope.
+
+Fixpoint compare n m : comparison :=
+  match n, m with
+   | 0, 0 => Eq
+   | 0, S _ => Lt
+   | S _, 0 => Gt
+   | S n', S m' => compare n' m'
+  end.
+
+Infix "?=" := compare (at level 70) : nat_scope.
+
+\end{verbatim}
+{\bf 最小值、最大值}
+\begin{verbatim}
+
+Fixpoint max n m :=
+  match n, m with
+    | 0, _ => m
+    | S n', 0 => n
+    | S n', S m' => S (max n' m')
+  end.
+
+Fixpoint min n m :=
+  match n, m with
+    | 0, _ => 0
+    | S n', 0 => 0
+    | S n', S m' => S (min n' m')
+  end.
+
+\end{verbatim}
+{\bf 奇偶性测试}
+\begin{verbatim}
+
+Fixpoint even n : bool :=
+  match n with
+    | 0 => true
+    | 1 => false
+    | S (S n') => even n'
+  end.
+
+Definition odd n := negb (even n).
+
+\end{verbatim}
+{\bf 幂}
+\begin{verbatim}
+
+Fixpoint pow n m :=
+  match m with
+    | 0 => 1
+    | S m => n * (n^m)
+  end
+
+where "n ^ m" := (pow n m) : nat_scope.
+
+\end{verbatim}
+{\bf Euclid 除法}
+\begin{verbatim}
+This division is linear and tail-recursive. In divmod, y is the 
+predecessor of the actual divisor, and u is y minus the real remainder
+
+Fixpoint divmod x y q u :=
+  match x with
+    | 0 => (q,u)
+    | S x' => match u with
+                | 0 => divmod x' y (S q) y
+                | S u' => divmod x' y q u'
+              end
+  end.
+
+Definition div x y :=
+  match y with
+    | 0 => y
+    | S y' => fst (divmod x y' 0 y')
+  end.
+
+Definition modulo x y :=
+  match y with
+    | 0 => y
+    | S y' => y' - snd (divmod x y' 0 y')
+  end.
+
+Infix "/" := div : nat_scope.
+Infix "mod" := modulo (at level 40, no associativity) : nat_scope.
+
+\end{verbatim}
+{\bf 最大公约数}
+\begin{verbatim}
+We use Euclid algorithm, which is normally not structural, but Coq is 
+now clever enough to accept this (behind modulo there is a subtraction, 
+which now preserves being a subterm)
+
+Fixpoint gcd a b :=
+  match a with
+   | O => b
+   | S a' => gcd (b mod (S a')) (S a')
+  end.
+
+\end{verbatim}
+{\bf 平方}
+\begin{verbatim}
+
+Definition square n := n * n.
+
+\end{verbatim}
+{\bf 平方根}
+\begin{verbatim} 
+
+The following square root function is linear (and tail-recursive). 
+With Peano representation, we can't do better. For faster algorithm, 
+see Psqrt/Zsqrt/Nsqrt...  We search the square root of 
+n = k + p^2 + (q - r) with q = 2p and 0<=r<=q. We start with
+p=q=r=0, hence looking for the square root of n = k. Then we
+progressively decrease k and r. When k = S k' and r=0, it means we can
+use (S p) as new sqrt candidate, since (S k')+p^2+2p = k'+(S
+p)^2. When k reaches 0, we have found the biggest p^2 square contained
+in n, hence the square root of n is p.
+
+Fixpoint sqrt_iter k p q r :=
+  match k with
+    | O => p
+    | S k' => match r with
+                | O => sqrt_iter k' (S p) (S (S q)) (S (S q))
+                | S r' => sqrt_iter k' p q r'
+              end
+  end.
+
+Definition sqrt n := sqrt_iter n 0 0 0.
+
+\end{verbatim}
+{\bf 以 2 为底的对数}
+\begin{verbatim}
+This base-2 logarithm is linear and tail-recursive.  In
+log2_iter, we maintain the logarithm p of the counter q, while r is
+the distance between q and the next power of 2, more precisely q + S r
+= 2^(S p) and r<2^p. At each recursive call, q goes up while r goes
+down. When r is 0, we know that q has almost reached a power of 2, and
+we increase p at the next call, while resetting r to q.  Graphically
+(numbers are q, stars are r) :
+
+                    10
+                  9
+                8
+              7   *
+            6       *
+          5           ...
+        4
+      3   *
+    2       *
+  1   *       *
+0   *   *       *
+
+We stop when k, the global downward counter reaches 0. At that moment,
+q is the number we're considering (since k+q is invariant), and p its
+logarithm.
+
+Fixpoint log2_iter k p q r :=
+  match k with
+    | O => p
+    | S k' => match r with
+                | O => log2_iter k' (S p) (S q) q
+                | S r' => log2_iter k' p (S q) r'
+              end
+  end.
+
+Definition log2 n := log2_iter (pred n) 0 1 0.
+
+Iterator on natural numbers
+
+Definition iter (n:nat) {A} (f:A->A) (x:A) : A :=
+ nat_rect (fun _ => A) x (fun _ => f) n.
+
+Bitwise operations We provide here some bitwise operations for unary
+numbers. Some might be really naive, they are just there for
+fullfiling the same interface as other for natural representations. As
+soon as binary representations such as NArith are available, it is
+clearly better to convert to/from them and use their ops.
+
+Fixpoint div2 n :=
+  match n with
+  | 0 => 0
+  | S 0 => 0
+  | S (S n') => S (div2 n')
+  end.
+
+Fixpoint testbit a n : bool :=
+ match n with
+   | 0 => odd a
+   | S n => testbit (div2 a) n
+ end.
+
+Definition shiftl a := nat_rect _ a (fun _ => double).
+Definition shiftr a := nat_rect _ a (fun _ => div2).
+
+Fixpoint bitwise (op:bool->bool->bool) n a b :=
+ match n with
+  | 0 => 0
+  | S n' =>
+    (if op (odd a) (odd b) then 1 else 0) +
+    2*(bitwise op n' (div2 a) (div2 b))
+ end.
+
+Definition land a b := bitwise andb a a b.
+Definition lor a b := bitwise orb (max a b) a b.
+Definition ldiff a b := bitwise (fun b b' => andb b (negb b')) a a b.
+Definition lxor a b := bitwise xorb (max a b) a b.
+\end{verbatim}
+
+\chapter{COQ 中的二进制幂(作者:Casteran 与 Sozeau)}
+
+摘自 Casteran 与 Sozeau \cite{Cast16}:
+
+\begin{verbatim}
+(* About integer powers (monomorphic version) *)
+
+Set Implicit Arguments.
+Require Import ZArith.
+Require Import Div2.
+Require Import Program.
+Open Scope Z_scope.
+\end{verbatim}
+我们来考虑一个简单的算术运算:把某个整数 $x$ 乘幂到第 $n$ 次,其中 $n$ 是一个自然数。下面这个函数定义是对这一数学概念的直接翻译:
+\begin{verbatim}
+Fixpoint power (a:Z)(n:nat) :=
+  match n with 0%nat => 1
+             | S p =>  a * power a p
+  end.
+
+Eval vm_compute in power 2 40.
+ = 1099511627776 : Z
+\end{verbatim}
+这个定义可以看作一种非常朴素的编程方式,因为计算 $x^n$ 需要 $n$ 次乘法。尽管如此,这个定义读起来非常简单,人人都能认同它相对于数学定义而言是正确的。因此,我们可以把它当作一份{\sl 规约}:当我们写出效率更高但可读性较差的求幂函数时,应当能够通过在 Coq 中证明它们与朴素 power 函数的等价性,来证明其正确性。
+
+下面这个函数可以计算 $x^n$,所需乘法次数与 $\log_2(n)$ 成正比:
+\begin{verbatim}
+Program
+Fixpoint binary_power_mult (acc x:Z) (n:nat) {measure (fun i=>i) n} : Z
+  (* acc * (power x n) *) :=
+  match n with 
+    | 0%nat => acc
+    | _ => if Even.even_odd_dec n
+           then binary_power_mult acc (x * x) (div2 n)
+           else binary_power_mult (acc * x) (x * x) (div2 n)
+  end.
+
+Solve Obligations with program_simpl; intros; apply lt_div2; auto with arith.
+
+Definition binary_power (x:Z)(n:nat) := binary_power_mult 1 x n.
+
+Eval vm_compute in binary_power 2 40.
+ = 1099511627776 : Z
+
+Goal binary_power 2 234 = power 2 234.
+reflexivity.
+Qed.
+\end{verbatim}
+
+我们现在想要{\sl 证明} {\tt binary\_power} 的正确性,也就是说,这个函数与朴素的 {\tt power} 函数是逐点等价的。
+
+在 Coq 中证明这个等价性可能需要大量工作。因此,专门为整数的幂运算写一个证明完全不值得。事实上,{\tt binary\_power} 相对于 {\tt power} 的正确性,在任何由某个集合上的结合二元运算、并带有一个幺元所构成的结构中都成立。举例来说,我们可以用这两种算法中效率更高的那一种来计算方阵的幂。
+
+因此,让我们抛开前面的定义,尝试在一个更通用的框架中重新定义它们。
+
+\section{论幺半群}
+
+{\bf 定义 2.1} {\sl 幺半群是一个由以下部分组成的数学结构:}
+\begin{itemize}
+\item {\sl 一个载体 A}
+\item {\sl A 上一个二元的结合运算} $\circ$
+\item {\sl 针对 $\circ$ 的一个幺元} $1 \in A$
+\end{itemize}
+
+这样一个数学结构可以在 Coq 中定义为一个类型类 (type class)。\cite{Soze08}。在下面这个以类型 $A$(隐式)、二元运算 {\tt dot} 和幺元 {\tt unit} 为参数的定义中,三个字段描述了 {\tt dot} 和 {\tt unit} 必须满足的性质。
+\begin{verbatim}
+Class Monoid {A:Type}(dot : A -> A -> A)(one : A) : Prop := {
+  dot_assoc : forall x y z:A, dot x (dot y z) = dot (dot x y) z;
+  unit_left : forall x, dot one x = x;
+  unit_right : forall x, dot x one = x }.
+\end{verbatim}
+
+注意,对于表示这个数学结构,原本也可以给出其他定义。
+
+从实现的角度来看,这样一个类型类只是一个记录类型,也就是说,是一个只有单个构造子 {\tt Build\_Monoid} 的归纳类型:
+\begin{verbatim}
+Print Monoid.
+
+Record Monoid (A:Type)(dot : A -> A -> A)(one : A) : Prop := Build_Monoid
+  { dot_assoc : forall x y z:A, dot x (dot y z) = dot (dot x y) z;
+    one_left : forall x, dot one x = x;
+    one_right : forall x, dot x one = x }
+
+For Monoid: Argument A is implicit and maximally inserted
+For Build_Monoid: Argument A is implicit
+For Monoid: Argument scopes are [type_scope _ _]
+For Build_Monoid: Argument scopes are [type_scope _ _ _ _ _]
+\end{verbatim}
+
+尽管如此,M. Sozeau 对类型类的实现提供了若干专用工具——比如专门的策略(tactic)——因此我们建议读者不要把 {\tt Class} 关键字替换成 {\tt Record} 或 {\tt Inductive}。
+
+使用 {\tt About} 命令,我们可以看到 {\tt Monoid} 类中各字段的多态类型:
+\begin{verbatim}
+About one_left
+
+one_left:
+forall (A : Type) (dot : A -> A -> A) (one : A),
+Monoid dot one -> forall x : A, dot one x = x
+
+Arguments A, dot, one, Monoid are implicit and maximally inserted
+Argument scopes are [type_scope _ _ _ _]
+one_left is transparent
+\end{verbatim}
+
+\subsection{类与实例}
+
+给定类的成员称为该类的{\sl 实例}。实例是通过 {\tt Instance} 关键字向 Coq 系统定义的。我们的第一个例子是在整数集合 $\mathbb{Z}$ 上定义幺半群结构,配上整数乘法,并以 1 作为幺元。因此我们把这些参数交给 {\tt Monoid} 类(注意 $\mathbb{Z}$ 是隐式给出的)。
+\begin{verbatim}
+Instance ZMult : Monoid Zmult 1
+\end{verbatim}
+
+要创建这个实例,我们需要证明二元运算 {\tt Zmult} 满足结合律,并且以 1 作为幺元。应用构造子 {\tt Build\_Monoid}——比如用 {\tt split} 策略——会生成三个子目标。
+\begin{verbatim}
+split.
+3 subgoals
+ =================================================
+  forall x y z : Z, x * (y * z) = x * y * z
+
+subgoal 2 is:
+  forall x : Z, 1 * x = x
+subgoal 3 is:
+  forall x : Z, x * 1 = x
+\end{verbatim}
+
+每个子目标都可以简单地用 {\tt intros; ring} 解决。
+
+证明完成后,我们只需用一个简单的 {\tt Qed} 来注册这个实例。注意,这里之所以用 {\tt Qed},是因为我们考虑的是一个 {\tt Prop} 类型的类。在某些实例必须存储一些信息性常量的情形下,可能需要用 {\tt Defined} 来结束实例的构造。
+
+\begin{verbatim}
+Check Zmult.
+ZMult : Monoid Zmult 1
+\end{verbatim}
+
+我们在前一页解释过,为什么用 {\tt Class} 关键字比用 {\tt Record} 或 {\tt Inductive} 更好。出于同样的理由,某个类的实例定义应当用 {\tt Instance} 来写,而不是 {\tt Lemma}、{\tt Theorem}、{\tt Example} 等等,也不是 {\tt Definition}。
+
+\subsection{{\tt power} 的通用定义}
+
+现在我们能够给出函数 {\tt power} 的一个定义,它可以应用于 {\tt Monoid} 类的任何实例:
+
+第一个定义可以是
+\begin{verbatim}
+Fixpoint power {A:Type}{dot:A->A->A}{one:A}{M: Monoid dot one}
+               (a:A)(n:nat) :=
+  match n with 0:nat => one
+             | S p => dot a (power a p)
+  end.
+
+Compute power 2 10.
+ = 1024 : Z
+\end{verbatim}
+
+令人高兴的是,借助 {\tt Generalizable Variables} 命令,我们可以把前三个参数的声明变成隐式的:
+\begin{verbatim}
+Reset power.
+
+Generalizable Variables A dot one.
+
+Fixpoint power `{M: Monoid A dot one}(a:A)(n:nat) :=
+  match n with 0%nat => one
+             | S p => dot a (power a p)
+  end.
+
+Compute power 2 10.
+ = 1024 : Z
+\end{verbatim}
+
+出现在 {\tt M} 的绑定符中的变量 {\tt A dot one},会在 {\tt M} 的绑定符之前被隐式绑定,它们的类型则从 {\tt Monoid A dot one} 这个类型中推断出来。这种语法糖有助于简化带参数的类的绑定写法。最终得到的 Coq 内部项与前面第一个定义完全相同。
+
+\subsection{实例消解}
+
+细心的读者想必已经注意到,在最近一次计算中,二元运算 {\tt Zmult} 和幺元 1 都不需要显式给出。这种让 Coq 能够推断出应用 {\tt power} 函数所需全部参数的机制,称为{\sl 实例消解 (instance resolution)}。
+
+为了理解它是如何运作的,我们来看一下 {\tt power} 的类型:
+\begin{verbatim}
+About power.
+power :
+forall (A : Type) (dot : A -> A -> A) (one : A),
+Monoid dot one -> A -> nat -> A
+
+Arguments A, dot, one, M are implicit and maximally inserted
+
+Compute power 2 100.
+= 1267650600228229401496703205376 : Z
+
+Set Printing Implicit.
+Check power 2 100.
+@power Z Zmult 1 Zmult 2 100 : Z
+Unset Printing Implicit.
+\end{verbatim}
+
+我们看到,{\sl 实例} {\tt ZMult} 是从 2 的类型推断出来的。我们目前处在一种简单情形下:只有一个载体为 {\tt Z} 的幺半群被声明为 {\tt Monoid} 类的实例。
+
+Coq 中类型类的实现可以从类型 {\tt Z} 找回实例 {\tt ZMult},然后根据 {\tt ZMult} 的定义来填入参数 {\tt ZMult} 和 1。
+
+\section{更多幺半群}
+\subsection{某个环上的矩阵}
+
+我们都知道,方阵的乘法满足结合律,并且以单位矩阵作为幺元。为简单起见,我们把研究范围限制在某个环上的 $2\times 2$ 矩阵。
+
+我们首先加载 {\tt Ring} 库,然后打开一个包含若干有用声明和记法的 section。
+\begin{verbatim}
+Require Import Ring.
+
+Section matrices.
+  Variables (A:Type)
+            (zero one : A)
+            (plus mult minus : A -> A -> A)
+            (sym : A -> A).
+  Notation "0" := zero.
+  Notation "1" := one.
+  Notation "x + y" := (plus x y).
+  Notation "x * y" := (mult x y).
+
+  Variable rt : ring_theory zero one plus mult minus sym (@eq A).
+
+  Add Ring Aring : rt.
+\end{verbatim}
+
+现在我们可以为 $2\times 2$ 矩阵定义一个载体类型,以及矩阵乘法和单位矩阵。
+\begin{verbatim}
+Structure M2 : Type := {c00 : A; c01 : A; c10 : A; c11 : A}.
+
+Definition Id2 : M2 := Build_M2 1 0 0 1.
+
+Definition M2_mult (m m':M2) : M2 :=
+  Build_M2 (c00 m * c00 m' + c01 m * c10 m')
+           (c00 m * c01 m' + c01 m * c11 m')
+           (c10 m * c00 m' + c11 m * c10 m')
+           (c10 m * c01 m' + c11 m * c11 m').
+\end{verbatim}
+
+和整数乘法一样,现在我们可以为类型 {\tt M2} 定义一个 {\tt Monoid} 的实例。
+\begin{verbatim}
+Global Instance M2_Monoid : Monoid (M2_mult plus mult) (Id2 0 1).
+split.
+destruct x; destruct y; destruct z; simpl.
+unfold M2_mult. apply M2_eq_intros; simpl; ring.
+destruct x; simpl;
+unfold M2_mult; apply M2_eq_intros; simpl; ring.
+destruct x; simpl;
+unfold M2_mult; apply M2_eq_intros; simpl; ring.
+Qed.
+
+End matrices.
+\end{verbatim}
+
+现在我们想在 $\mathbb{Z}$ 上摆弄 $2\times 2$ 矩阵。为此我们声明一个实例 {\bf M2Z},然后就可以直接使用函数 {\tt power}。
+\begin{verbatim}
+Instance M2Z : Monoid _ _ := M2_Monoid Zth.
+
+Compute power (Build_M2 1 1 1 0) 40.
+ = {|
+     c00 := 165580141;
+     c01 := 102334155;
+     c10 := 102334155;
+     c11 := 63245986 |}
+   : M2 Z
+
+Definition fibonacci (n:nat) :=
+  C00 (power (Build_M2 1 1 1 0) n).
+
+Compute fibonacci 20.
+ = 10946
+ :Z
+\end{verbatim}
+
+\section{在类型类内部推理}
+
+现在我们能够重新考虑两个计算幂函数之间的等价性。让我们为任意幺半群定义二进制算法。
+
+首先,我们定义一个辅助函数。我们用 {\tt Program} 扩展来定义一个使用累加器的高效求幂版本。该函数通过对指数 $n$ 的良基递归来定义。
+\begin{verbatim}
+Function binary_power_mult (A:Type) (dot:A->A->A) (one:A)
+     (M: @Monoid A dot one) (acc x:A)(n:nat){measure (fun i=>i) n} : A
+  (* acc * (x ** n) *) :=
+  match n with 
+    | 0%nat => acc
+    | _ => if Even.even_odd_dec n
+             then binary_power_mult _ acc (dot x x) (div2 n)
+             else binary_power_mult _ (dot acc x) (dot x x) (div2 n)
+  end.
+intros; apply lt_div2; auto with arith.
+intros; apply l2_div2; auto with arith.
+Defined.
+
+Definition binary_power `{M:Monoid} x n := binary_power_mult M one x n.
+
+Compute binary_power 2 100.
+ = 1267650600228229401496703205376 : Z
+\end{verbatim}
+
+\subsection{等价性证明}
+
+{\tt power} 与 {\tt binary\_power} 之间等价性的证明相当长,可以拆分成若干引理。因此,打开一个 section 会很有用,在其中我们固定某个任意的幺半群 M。这样的声明是用 {\tt Context} 命令做出的,它可以看作是 {\tt Variables} 的一个变体,专门用来声明给定类的任意实例。
+\begin{verbatim}
+
+Section About_power.
+
+Require Import Arith.
+ Context `(M:Monoid A dot one ).
+\end{verbatim}
+
+定义一些局部专用的记法和策略,是一种良好的实践。
+\begin{verbatim}
+
+Ltac monoid_rw :=
+    rewrite (@one_left A dot one M) || 
+    rewrite (@one_right A dot one M)|| 
+    rewrite (@dot_assoc A dot one M).
+
+
+Ltac monoid_simpl := repeat monoid_rw.
+
+Local Infix "*" := dot.
+Local Infix "**" := power (at level 30, no associativity).
+\end{verbatim}
+
+\subsection{关于 {\tt power} 的一些有用引理}
+
+我们首先证明幺半群中关于幂的一些广为人知的等式。其中一些等式随后会被整合进化简策略中。
+
+\begin{verbatim}
+Lemma power_x_plus : forall x n p, x ** (n + p) =  x ** n *  x ** p.
+Proof.
+ induction n as [| p IHp];simpl.
+   intros;  monoid_simpl;trivial.
+  intro q;rewrite (IHp q);  monoid_simpl;trivial. 
+Qed.
+
+Ltac power_simpl := repeat (monoid_rw || rewrite <- power_x_plus).
+
+Lemma power_commute : forall x n p,  
+               x ** n * x ** p = x ** p * x ** n. 
+Proof.
+  intros x n p;power_simpl; rewrite (plus_comm n p);trivial.
+Qed.
+
+Lemma power_commute_with_x : forall x n ,  
+        x * x ** n = x ** n * x.
+Proof.
+  induction n;simpl;power_simpl;trivial.
+  repeat rewrite <- (@dot_assoc A dot one M); rewrite IHn; trivial.
+Qed.
+
+Lemma power_of_power : forall x n p,  (x ** n) ** p = x ** (p * n).
+Proof.
+   induction p;simpl;[| rewrite power_x_plus; rewrite IHp]; trivial.
+Qed.
+
+Lemma power_S : forall x n, x *  x ** n = x ** S n.
+Proof. intros;simpl;auto. Qed.
+
+Lemma sqr : forall x, x ** 2 =  x * x.
+Proof.
+ simpl;intros;monoid_simpl;trivial.
+Qed.
+
+Ltac factorize := repeat (
+                rewrite <- power_commute_with_x ||
+                rewrite  <- power_x_plus  ||
+                rewrite <- sqr ||
+                rewrite power_S ||
+                rewrite power_of_power).
+
+Lemma power_of_square : forall x n, (x * x) ** n = x ** n * x ** n.
+  induction n;simpl;monoid_simpl;trivial.
+  repeat rewrite dot_assoc;rewrite IHn; repeat rewrite dot_assoc.
+ factorize; simpl;trivial.
+Qed.
+\end{verbatim}
+
+\subsection{最后步骤}
+
+现在我们能够证明,辅助函数 {\tt binary\_power\_mult} 满足其直观含义。这个证明用到了良基归纳法,以及前一节中已经证明的那些引理。
+
+\begin{verbatim}
+Lemma binary_power_mult_ok :
+  forall n a x,  binary_power_mult a x n = a * x ** n.
+Proof.
+  intro n; pattern n;apply lt_wf_ind.
+  clear n; intros n Hn;   destruct n.
+   intros;simpl; monoid_simpl;  trivial.
+  intros; rewrite binary_power_mult_equation. 
+     destruct (Even.even_odd_dec (S n)).
+   rewrite Hn.   rewrite power_of_square;  factorize.
+   pattern (S n) at 3;replace (S n) with (div2 (S n) + div2 (S n))%nat;auto.
+   generalize (even_double _ e);simpl;auto. 
+   apply lt_div2;auto with arith.
+   rewrite Hn. 
+  rewrite power_of_square ; factorize.
+  pattern (S n) at 3;replace (S n) with (S (div2 (S n) + div2 (S n)))%nat;auto.
+
+  rewrite <- dot_assoc; factorize;auto.
+  generalize (odd_double _ o);intro H;auto.
+  apply lt_div2;auto with arith.
+Qed.
+\end{verbatim}
+
+于是主定理立即得证:
+\begin{verbatim}
+Lemma binary_power_ok : forall (x:A) (n:nat), binary_power x n = x ** n.
+Proof.
+  intros n x;unfold binary_power;rewrite binary_power_mult_ok;
+  monoid_simpl;auto.
+Qed.
+\end{verbatim}
+
+\subsection{释放上下文}
+
+现在是时候关闭我们为撰写等价性证明而打开的 section 了。定理 {\tt binary\_power\_ok} 现在带有对任意幺半群全部参数的全称量化。
+
+\begin{verbatim}
+End About_power.
+
+About binary_power_ok.
+binary_power_ok :
+forall (A : Type) (dot : A -> A -> A) (one : A) (M : Monoid dot one)
+  (x : A) (n : nat), binary_power x n = power x n
+
+Arguments A, dot, one M are implicit and maximally inserted
+Argument scopes are [type_scope _ _ _ _ nat_scope]
+binary_power_ok is opaque
+Expands to Constant Top.binary_power_ok
+
+Check binary_power_ok 2 20.
+binary_power_ok 2 20
+  : binary_power 2 20 = power 2 20
+
+Let Mfib := Build_M2  1 1 1 0.
+
+Check  binary_power_ok Mfib 56.
+binary_power_ok Mfib 56
+  : binary_power Mfib 56 = power Mfib 56
+
+\end{verbatim}
+
+\subsection{子类}
+
+我们在 {\tt about\_power} 这个 section 中能够证明许多有用的等式。然而,我们无法证明等式 $(xy)^n=x^ny^n$,因为它在一般情形下是假的——比如考虑字符串的自由幺半群,或者干脆考虑矩阵乘法。但这个等式在每一个交换(亦称 Abelian)幺半群中都成立。
+
+因此我们说,Abelian 幺半群构成幺半群这个类的一个{\sl 子类},并且在声明该子类任意实例的一个上下文中证明这个等式。
+
+在结构上,我们用 {\tt Monoid} 的一个任意实例 {\sl M} 来参数化新的类 {\tt Abelian\_Monoid},并添加一个陈述 {\tt dot} 满足交换律的新字段。请记住,我们已经把 {\tt A}、{\tt dot} 和 {\tt one} 声明为{\sl 可推广变量(generalizable variables)},所以这里可以使用反引号符号。
+\begin{verbatim}
+Class Abelian_Monoid `(M:Monoid A dot one) := {
+  dot_comm : forall x y, dot x y = dot y x}.
+\end{verbatim}
+
+快速看一下 {\sl Abelian\_Monoid} 作为记录类型的表示,有助于我们理解这个类是如何实现的。
+\begin{verbatim}
+Print Abelian_Monoid.
+Record Abelian_Monoid (A : Type) (dot : A -> A -> A)
+  (one : A) (M : Monoid dot one) : Prop := Build_Abelian_Monoid
+  {dot_comm : forall x y : A, dot x y = dot y x }
+
+For Abelian_Monoid: Arguments A, dot, one are implicit and maximally inserted
+For Build_Abelian_Monoid: Arguments A, dot, one are implicit
+For Abelian_Monoid: Arguemnt scopes are [type_scope _ _ _]
+For Build_Abelian_Monoid: Argument scopes are [type_scope _ _ _ _]
+\end{verbatim}
+
+要构建 {\tt Abelian\_Monoid} 的一个实例,我们可以从 {\tt Z} 上的幺半群 {\tt ZMult} 出发,添加一个整数乘法满足交换律的证明。
+\begin{verbatim}
+Instance ZMult_Abelian : Abelian_Monoid ZMult.
+split. 
+ exact Zmult_comm.
+Qed.
+\end{verbatim}
+
+现在我们可以通过构建一个合适的上下文来证明我们的等式。注意,这里我们在 Abelian 幺半群的绑定符中只需指定幺半群的参数,针对这些相同参数的幺半群实例会被自动推广。超类的参数会在反引号绑定符内部被自动推广。同样地,这只是语法糖而已。
+\begin{verbatim}
+Section Power_of_dot.
+ Context `{M: Monoid A} {AM:Abelian_Monoid M}.
+ 
+Theorem power_of_mult : forall n x y, 
+    power (dot x y)  n =  dot (power x  n) (power y n). 
+Proof.
+ induction n;simpl.
+ rewrite one_left;auto.
+ intros; rewrite IHn; repeat rewrite dot_assoc.
+  rewrite <- (dot_assoc  x y (power x n)); rewrite (dot_comm y (power x n)).
+ repeat rewrite dot_assoc;trivial.
+Qed.
+
+End Power_of_dot.
+
+Check power_of_mult 3 4 5.
+power_of_mult 3 4 5
+     : power (4 * 5) 3 = power 4 3 * power 5 3
+\end{verbatim}
+
+\chapter{证明塔层:使用 CH$_2$O 的 C11}
+
+摘自 Krebbers \cite{Kreb17}
+
+{\bf Module example\_gcd}
+
+Require Import String axiomatic\_simple.
+
+Section gcd.\\
+Context `\{EnvSpec K\}.
+
+Hint Extern 10 (Some Readable $\subseteq$ \_) $\Rightarrow$ transitivity (Some Writable).\\
+Hint Extern 0 (perm\_locked \_ = \_) $\Rightarrow$\\
+\hspace*{0.5cm}apply perm\_Readable\_locked; auto : typeclass\_instances.\\
+
+Hint Resolve ax\_load' ax\_var' assert\_memext\_l' assert\_eval\_int\_cast\_self'\\
+\hspace*{0.5cm}assert\_memext\_r' assert\_and\_l assert\_singleton\_eval assert\_int\_typed\_eval\\
+\hspace*{0.5cm}assert\_eval\_singleton\_r assert\_eval\_singleton\_l assert\_and\_intro : exec.
+
+Ltac exec :=\\
+\hspace*{0.5cm}repeat match goal with A := \_ : assert \_ $\vdash$ \_ $\Rightarrow$ progress unfold A end;\\
+\hspace*{0.5cm}simpl; eauto 20 with exec.
+
+Definition gcd\_stmt : stmt K :=\\
+\hspace*{0.5cm}"l" :; if\{load (var 1)\} local\{uintT\} (\\
+\hspace*{1.0cm}!(var 2 ::= (\\
+\hspace*{1.5cm}var 0 ::= load (var 1) @\{ArithOp ModOp\} load (var 2),,\\
+\hspace*{1.5cm}var 1 ::= load (var 2),,\\
+\hspace*{1.5cm}load (var 0)));;\\
+\hspace*{1.0cm}goto "l"\\
+\hspace*{0.5cm}) else skip.
+  
+Lemma gcd\_typed : ($\varnothing$,$\varnothing$,[uintT\%T;uintT\%T]) $\vdash$ gcd\_stmt : (false,None).\\
+Proof.\\
+Lemma gcd\_correct $\Gamma$ $\delta$ R J T C y z $\mu$1 $\gamma$1 $\mu$2 $\gamma$2 :\\
+\hspace*{0.5cm}sep\_valid $\gamma$1 $\to$ Some Writable $\subseteq$ perm\_kind $\gamma$1 $\to$\\
+\hspace*{0.5cm}sep\_valid $\gamma$2 $\to$ Some Writable $\subseteq$ perm\_kind $\gamma$2 $\to$\\
+\hspace*{0.5cm}J "l"\%string $\equiv$ \{$\Gamma$,$\delta$\} ($\exists$ y' z',\\
+\hspace*{1.0cm}$\ulcorner$ Z.gcd y' z' = Z.gcd y z $\urcorner$\%Z ★\\
+\hspace*{1.0cm}var 0 $\mapsto$ \{$\mu$1,$\gamma$1\} \#intV\{uintT\} y' : uintT ★\\
+\hspace*{1.0cm}var 1 $\mapsto$ \{$\mu$2,$\gamma$2\} \#intV\{uintT\} z' : uintT)\%A $\to$\\
+\hspace*{0.5cm}$\Gamma$\ $\delta$\ R\ J\ T\ C $\models_s$\\
+\hspace*{1.0cm}\{\{ var 0 $\mapsto$ \{$\mu$1,$\gamma$1\} \#intV\{uintT\} y : uintT ★\\
+\hspace*{1.5cm}var 1 $\mapsto$ \{$\mu$2,$\gamma$2\} \#intV\{uintT\} z : uintT \}\}\\
+\hspace*{1.5cm}gcd\_stmt\\
+\hspace*{1.0cm}\{\{ var 0 $\mapsto$ \{$\mu$1,$\gamma$1\} \#intV\{uintT\} (Z.gcd y z) : uintT ★\\
+\hspace*{1.5cm}var 1 $\mapsto$ \{$\mu$2,$\gamma$2\} \#intV\{uintT\} 0 : uintT \}\}.\\
+Proof.\\
+End gcd.\\
+\chapter{待探索的其他想法}
+
+\section{Aczel \cite{Acze13}}
+同伦类型论 (Homotopy Type Theory)
+
+\section{Chlipala \cite{Chli15}}
+给出了一种处理 COQ 的务实方法。
+
+\section{Dijkstra \cite{Dijk72a}}
+
+与后来的文献不同,Dijkstra 并不要求用一个递减的值来进行归纳。相反,他是这样说的:
+
+让我们考虑如下一列值
+\[d_0,d_1,d_2,d_3,\ldots\eqno{1}\]
+它由下式给出
+\[{\rm for\ }i=0 d_i=D\eqno{2a}\]
+\[{\rm for\ }i>0 d_i=f(d_{i-1}\eqno{2b}\]
+其中 $D$ 是给定的值,$f$ 是给定的(可计算)函数。要求使变量``$d$''的值,等于该序列中第一个满足给定(可计算)条件``prop''的值 $d_k$。已知对某个有限的 $k$,这样的值是存在的。这一要求更形式化的定义,是要建立如下关系
+\[d=d_k\eqno{3}\]
+其中 $k$ 由下述(为真的)表达式给出
+\[prop(d_k)\eqno{4}\]
+以及
+\[{\rm {\bf non}\ prop} (d_i){\rm\ for\ all\ }i{\rm\ satisfying\ }
+0 \le i < k\eqno{5}\]
+
+现在我们来看下面这段程序:
+\[\begin{array}{l}
+``d:=D ;\\
+{\rm {\bf\ while\ non}\ prop} (d){\rm\ do\ }d:=f(d)\\
+\end{array}\]
+其中第一行表示初始化,第二行表示循环,该循环由(想必不言自明的)重复结构 {\bf while...do} 控制。
+
+该重复子句语义更形式化的定义,是陈述如下等价关系:
+\[``{\bf while\ }B{\bf\ do\ }S''\]
+在语义上等价于
+\[``{\bf if\ }B{\bf\ do\ begin\ }S;{\bf\ while\ }B{\bf\ do\ }S{\bf\
+end}''\]
+表示``{\bf non} B''是该重复终止的充要条件。)
+
+\section{Feferman \cite{Fefe95}}
+
+可定义性 (definedness) 问题在数学中无处不在。非形式地说,这涉及对可能有值也可能没有值的表达式进行推理。本文综述了能够直接进行此类推理的各种逻辑,尤其是在计算语境下的相关工作。它先从一种关于``偏项''(partial terms)的一般逻辑讲起,接着讨论偏组合演算与 lambda 演算,最后归结为一种表达能力恰到好处的偏函数(partial function)与多态类型(polymorphic type)理论,在其中可以用自然的方式证明函数式程序的终止性。
+
+在递归论(recursion theory)与计算机科学中,可定义性问题通常要处理算法的终止性;这类算法通常是递归给出的,而非显式给出的,例如自然数 $a,b$ 的 $gcd(a,b)$ 的 Euclid 算法:
+\[gcd(a,b)=[a {\rm\ if\ }b=0 {\rm\ else\ }gcd(b,rem(a,b))]\eqno{(1)}\]
+对 $b$ 作完全归纳,可以证明
+\[{\rm forall\ }a, gcd(a,b){\rm\ is\ defined}\]
+当然,这类推理要成立,必须以递归定义的一套语义理论为前提。具体而言,表面上看,(1) 要求把泛函 $F(b)=\lambda a.gcd(a,b)$ 按如下递归形式定义:
+\[F(b)=G(b,F~\uparrow~b)\]
+而要证明{\sl 这一点},则需要对自然数作归纳,证明:对每个 $x$,都存在唯一的函数(泛函)$F_x$,其定义域为 $[0,x]$,使得对所有 $y\le x$
+\[F_x(y)=G(y,F_x~\uparrow~y)\]
+如此一来,$F(b)$ 就被定义为 $F_b(b)$,其中 $F_b$ 是满足 ${\rm dom}(F_b)=[0,b]$ 的唯一这样的函数。
+
+\subsection{Homann  \cite{Homa94}}
+算法模式
+
+名称: gcd(?a,?b)=?g\\
+签名: ?A $\times$ ?A $\rightarrow$ ?A\\
+约束: (?A, EuclideanRing)\\
+定义: $(?g \vert ?a)\land(?g \vert ?b) \land
+(\forall c \in ?A: (c \vert ?a) \land
+(c \vert ?b)\Rightarrow (c\vert ?g))$\\
+定理:\\
+gcd(u,v) = gcd(v,u)\\
+gcd(u,v) = gcd(v, u mod v)\\
+gcd(u,0) = u
+
+\section{Igarashi 等人 [Igar75]}
+
+Igarashi 等人 \cite{Igar75}
+
+验证一个带断言的程序的基本思路,是把这个问题归结为:某些相关的逻辑条件,在若干标准一阶理论中是否是可证明的定理。
+
+从后面的例子可以看出,对验证条件进行大量的初等化简,既是必要的,也是容易做到的。许多条件的真值,会在化简阶段就得到确定。
+
+已经清楚的一点是,验证条件生成器(Verification Condition Generator,VCG)在这类验证系统中绝非无关紧要的部件。要让这样的系统真正可用,用户需要为其程序提供的文档量,应当限制在人类理解该程序及其子程序功能所自然需要的范围之内。
+
+在含有断言的程序逻辑中,断言分为三类
+\begin{enumerate}
+\item 断言
+\item 形如 P\{A\}Q 的语句,其中 P、Q 是断言,A 是一个程序或带断言的程序。P\{A\}Q 的含义是``若 P 在输入状态下为真,且 A 终止,则 Q 在输出状态下为真''
+\item 形如 $p(x;y)$ PROC K 的过程声明 (procedure declaration),其中 $p$ 是过程名,$x$ 与 $y$ 分别是变量形参与值形参的列表,$K$ 是一个程序或带断言的程序(即过程体),其中由 $y$ 指代的变量既不出现在某条赋值 (assignment) 语句的左边,也不作为变量形参出现在某条过程语句中。
+\end{enumerate}
+
+如果某个原语过程名(比如 $q$)出现在我们要证明某条定理的程序中,那么我们必须要么给出一组形如 $P\{q(x;y)\}R$ 的(非逻辑)公理,要么给出 $q$ 的一条定义公理。
+
+这里我们研究 VCG 所使用的公理与推理规则集合 V 的性质。我们主要关心的一点是:V 中的推理规则应当是无歧义的,即对任意给定的目标,只有一条规则可以生成子目标。只要没有两条规则的结论存在公共的代入实例,这一点就必然成立,而 V 恰好具有这一性质。
+
+核心规则:
+
+\begin{tabular}{ll}
+{\sl 公理} &\\
+C1. 赋值公理: & $\displaystyle
+P\vert_t^x\{x\leftarrow t\}P$\\
+&\\
+C2. 框架公理: & $\displaystyle
+P\{q(x;t)\}P$ provided $\lnot(x\in VAR(P))$\\
+&\\
+C3. 过程声明: & $\displaystyle
+p(x;y)$ PROC K\\
+&\\
+C4. 逻辑定理: & $P$ for all $P$ s.t. $\vdash P$\\
+&\\
+{\sl 规则}&\\
+C5. 推论: &
+$\displaystyle\frac{P\supset Q\quad Q\{A\}R}{P\{A\}R}\quad
+\displaystyle\frac{P\{A\}Q\quad Q\supset R}{P\{A\}R}$\\
+&\\
+C6. 与/或: &
+$\displaystyle\frac{P\{A\}Q\quad R\{A\}S}{P\land R\{A\}Q\land S}\quad
+\displaystyle\frac{P\{A\}Q\quad R\{A\}S}{P\lor R\{A\}Q\lor S}$\\
+&\\
+C7. 复合: &
+$\displaystyle\frac{P\{A\}Q\quad Q\{B\}R}{P\{A;B\}R}$\\
+&\\
+C8. 条件语句 (conditional): &
+$\displaystyle\frac{P\land R\{A\}Q\quad P\land\lnot R\{B\}Q}
+{P\{if\ R\ then\ A\ else\ B\}Q}$\\
+&\\
+C9. 代入:
+& $\displaystyle(L)\quad\frac{P(x;y)\{q(x;y)\}Q(x;y)}
+{P(z;y)\{q(z;y)\}Q(z;y)}$\\
+&\\
+& $\displaystyle(R)\quad\frac{P(x;y)\{q(x;y)\}Q(x;y)}
+{P(x;s)\{q(x;s)\}Q(x;s)}$\\
+&\\
+C10. 过程调用: &
+$\displaystyle\frac{p(x;y){\rm\ PROC\ }K(p)\quad P\{r(x;y)\}Q
+\dststile{}{} P\{K(r)\}Q}
+{P\{p(x;y)\}Q}$\\
+\end{tabular}
+
+注意在 C9 中,(1) $s$ 不包含 $x$ 的成员;(ii) $x$ 的成员必须互不相同,且 $x$ 中不得含有出现在 $P(x;y)$ 或 $Q(x;y)$ 中的变量,除非该变量恰好是 $x$ 的成员。
+
+注意在 C10 中,$p$ 不出现在右侧前提的证明中,且 $r$ 不出现在该证明的任何其他假设中。
+
+下表中的规则,是按它们被用来生成子目标时的形式陈述的。因此,例如在赋值规则 V1 中,公理 $Q(e)\{x\leftarrow e\}Q(x)$ 因为本身为真,不会作为子目标生成,故从前提中省略。复合规则不用于生成子目标(那样会成为歧义的来源),但会被用在其他规则之中。VCG 并不要求在条件语句处给出断言,而是在条件规则的子目标中对条件测试作``标记''(mark),并把这些标记当作断言使用,从而允许采用一条略有不同的推论规则。按通常的推论规则 V3(ii),往往会得到形如 $Q\supset R^\prime$ 的验证条件,其中 $R^\prime$ 是涉及 $R$ 的某个公式。而 $R^\prime$ 的证明很可能依赖于前提 $P$,在这种情况下 $Q\supset R^\prime$ 多半是不可证的。
+
+V1. {\sl 简单赋值}
+\[\frac{P\{A\}Q(e)}{P\{A;x\leftarrow e\}Q(x)}\]
+
+V2. 数组赋值
+\[\frac{P\{A\}R (if\ i=j\ then\ e\ else\ B[i])}
+{P\{A;B[j]\leftarrow e\}R(B[i])}\]
+
+V3. 推论
+\[(i)\frac{P\supset Q}{P\{Null\}Q^\prime}
+\quad\frac{P\{A\}Q\quad Q\supset R}{P\{A;Q\}R}
+\quad\frac{P\{A\}Q\supset R}{P\{A;Q-if\}R}\]
+
+V4. 迭代 (iteration)
+\[\frac{P\{A\}R\quad R\land S\{B\}R\quad R\land\lnot S\supset Q}
+{P\{A; R;\ while\ S\ do\ B\}Q}\quad{\rm\ where\ R\ is\ an\ assertion}\]
+
+V5. 条件语句
+\[\frac{P\{A; Q-if; B\}R\quad P\{A;\lnot Q-if; C\}R}
+{P\{A;\ if\ Q\ then\ B\ else\ C\}R}\]
+
+V6. Goto
+\[\frac{P\{A\}\ assertion\ (L)}{P\{A; goto\ L\}Q}\]
+
+V7. 过程调用
+\[U(x;v)\{q(x;v)\}W(x;v)\dststile{}{}
+\frac{P\{A\}U(a;e)\land\forall a(W(a;e)\supset R)}
+{P\{A;q(a;e)\}R}\]
+
+V8. 过程声明
+\[\frac{P\{q(x;v)\}R\dststile{}{} P\{K\}R}
+{P\{procedure\ q(x;v); K\}R}\]
+
+记号约定:P、Q、R、S 均为布尔断言。Null 表示空程序。Q(e) 表示用 e 替换 Q(x) 中的 x。在 V6 中,``assertion (L)''表示标号 L 处的断言。
+
+B[i] 表示数组 B 的第 $i^{th}$ 个元素。在每条规则中 A 都可以是 Null。Q-if 表示一个``打了标记''的布尔断言 Q。
+
+\section{Kamareddine [Kama15]}
+
+Kamareddine \cite{Kama15}
+Computerising Mathematical Text 探讨了多种捕捉数学推理的方式。
+
+\section{Mahboubi \cite{Mahb18}}
+Mathematical Components。本书使用 COQ 给出了 Euclid 算法的一个证明。
+
+\section{Medina-Bulo 等人 \cite{Bulo04}}
+使用 ACL2 与 Common Lisp 对 Buchberger 算法给出了形式化验证。
+
+\section{Pierce \cite{Pier15}}
+开设了一门 COQ 的 Software Foundations 课程,下载文件见 Pier15.tgz。
+
+\section{Santas \cite{Sant95}}
+A Type System for Computer Algebra
+
+\section{Spitters \cite{Spit11}}
+Type Classes for Mathematics in Coq。另见
+\verb|http://www.eelis.net/research/math-classes/|
+
+\section{Th\'ery \cite{Ther01}}
+使用 COQ 校验了 Buchberger 算法的一个实现。
+
+\appendix
+
+\chapter{全局环境}
+
+设 $S$ 为一个集合。设 $\circ$ 为一个二元操作 (binary operation)。
+设 $+$ 为一个加法操作。设 $*$ 为一个乘法操作。
+
+\begin{axiom}[Magma]
+{\bf Magma} 是配有一个 {\bf 封闭二元操作}
+$S \circ S \rightarrow S$ 的集合 $S$,使得
+\[\forall a,b \in S \Rightarrow a \circ b \in S\].
+\end{axiom}
+
+\begin{axiom}[半群]
+{\bf 半群 (semigroup)} 是操作 $\circ$ {\bf 满足结合律} 的
+{\bf Magma},使得
+\[\forall a,b,c \in S \Rightarrow (a \circ b) \circ c = a \circ (b \circ c)\]
+\end{axiom}
+
+\begin{axiom}[Abelian 半群]
+{\bf Abelian 半群} 是操作
+$\circ$ {\bf 满足交换律} 的 {\bf 半群},使得
+\[\forall a,b \in S \Rightarrow a \circ b = b \circ a\]
+\end{axiom}
+
+\begin{axiom}[幺半群]
+{\bf 幺半群 (monoid)} 是带有一个 {\bf 单位元} $e \in S$ 的
+{\bf 半群},使得
+\[\forall a \in S \Rightarrow e \circ a = a \circ e = a\]
+\end{axiom}
+
+\begin{axiom}[群]
+{\bf 群 (group)} 是带有一个 {\bf 逆元} $b \in S$
+以及一个单位元 $i \in S$ 的
+{\bf 幺半群},使得
+\[\forall a \in S~\exists b \in S \Rightarrow a \circ b = b \circ a = i\]
+\end{axiom}
+
+\begin{axiom}[群的唯一单位元]
+{\bf 群} 有一个 {\bf 唯一单位元} $e \in S$,使得
+\[\exists e \land \forall a,b \in S \land a \ne e \land b \ne e \Rightarrow
+a \circ b \ne e\]
+\end{axiom}
+
+\begin{axiom}[群的唯一逆元]
+{\bf 群} 有一个 {\bf 唯一逆元} $i \in S$,使得
+\[\exists i \land \forall a,b \in S \land a \ne i \land b \ne i \Rightarrow
+a \circ b \ne i\]
+\end{axiom}
+
+\begin{axiom}[群的右商]
+{\bf 群} 有一个 {\bf 右商}(右除法)运算,使得
+\[x \circ a = b \Rightarrow x \circ a \circ a^{-1} = b \circ a^{-1}
+\Rightarrow x = b \circ a^{-1}\]
+\end{axiom}
+
+\begin{axiom}[群的左商]
+{\bf 群} 有一个 {\bf 左商}(左除法)运算,使得
+\[a \circ x = b \Rightarrow a^{-1} \circ a \circ x = a^{-1} \circ b
+\Rightarrow x = a^{-1} \circ b\]
+\end{axiom}
+
+\begin{axiom}[Abelian 群]
+{\bf Abelian 群} 是操作 $\circ$
+{\bf 满足交换律} 的 {\bf 群},使得
+\[\forall a,b \in S \Rightarrow a \circ b = b \circ a\]
+\end{axiom}
+
+\begin{axiom}[Abelian 群的商]
+{\bf Abelian 群} 有一个 {\bf 商}(除法)运算,使得
+\[a^{-1} \circ a \circ x = a \circ a^{-1} \circ x\]
+\end{axiom}
+
+
+
+\begin{axiom}[Euclid 整环]
+设 $R$ 为一个 {\bf 整环 (integral domain)}。设 $f$ 为一个从
+$R\backslash \{0\}$ 到 NonNegativeInteger domain 的函数。
+若 $a$ 与 $b$ 属于 $R$ 且 $b$ 非零,则存在
+$q$ 与 $r$ 属于 $R$,使得 $a=bq+r$,且 $r=0$ 或
+$f(r)<f(b)$ 二者之一成立
+\end{axiom}
+
+\chapter{相关工作}
+
+\section{相关工作概览}
+
+\subsection{Adams \cite{Adam01}}
+
+\subsection{Ballarin \cite{Ball95}}
+
+\subsection{Basu, Pollack,and Roy \cite{Basu10}}
+
+\subsection{Cloostermans \cite{Cloo12}}
+
+拟线性 GCD 计算与 RSA 模数分解(Quasi-Linear GCD Computation and Factoring RSA Moduli)
+
+\subsubsection{欧几里得除法与最大公因式}
+
+我们研究欧几里得除法,计算最大公因式,并说明如何利用它们判定 C 的一个基本可构造集是否为空。
+
+在本节中,C 是一个代数封闭域 (field),D 是 C 的一个子环,K 是 D 的分式域。这种情形的一个典型例子是复数域 $\mathbb{C}$、整数 (integer) 环 (ring) $\mathbb{Z}$,以及有理数 (rational number) 域 $\mathbb{Q}$。
+
+设 $P$ 是一个非零多项式 (polynomial)
+\[P=a_pX^p+\ldots+a_1X+a_0\in D[X]\]
+其中 $a_p\ne 0$。
+
+我们把 $P$ 的{\bf 次数},即 $p$,记为 deg($P$)。按照约定,零多项式的次数定义为
+$-\infty$。若 $P$ 非零,我们把 $P$ 中 $X^j$ 的{\bf 系数}记为 ${\rm cof}_j(P)=a_j$(当
+$j>{\rm deg}(P))$ 时该系数为 0),并把它的{\bf 首项系数} $a_p={\rm cof}_{{\rm deg}(P)}(P)$
+记为 lcof($P$)。按照约定 ${\rm lcof}(0)=1$。
+
+设 $P$ 和 $Q$ 是 $D[X]$ 中的两个多项式。若存在 $A\in K[X]$ 使得 $P=AQ$,则称多项式
+$Q$ 是 $P$ 的{\bf 因式}。由此可见,每个 $P$ 都能整除 0,而 0 只能整除 0,不能整除其他
+任何多项式。
+
+若 $Q\ne 0$,{\bf $P$ 被 $Q$ 作欧几里得除法}所得的{\bf 余式},记作 ${\rm Rem}(P,Q)$,
+是唯一满足 $P=AQ+R$(其中 $A\in K[X]$)且次数小于 $Q$ 的次数的多项式 $R\in K[X]$。
+$P$ 被 $Q$ 作欧几里得除法所得的{\bf 商式},记作 ${\rm Quo}(P,Q)$,即为 $A$。
+
+{\bf 练习} 证明:若 $Q\ne 0$,则存在唯一的一对 $K[X]$ 中的多项式 $(R,A)$,满足
+$P=AQ+R$,${\rm deg}(R)<{\rm deg}(Q)$。
+
+显然,对任意 $a,b\in K$ 且 $b\ne 0$,有 ${\rm Rem}(aP,bQ)=a{\rm Rem}(P,Q)$。在 $Q$ 的
+根 $x$ 处,${\rm Rem}(P,Q)(x)=P(x)$。
+
+{\bf 练习}:
+证明 $x$ 是 $P$ 在 $K$ 中的根,当且仅当 $X-x$ 是 $P$ 在 $K[X]$ 中的因式。
+
+{\bf 练习}:
+证明若 $C$ 代数封闭,则每个 $P\in C[X]$ 都可唯一地写成
+\[P=a(X-x_1)^{\mu_1}\cdots(X-x_k)^{\mu_k}\]
+其中 $x_1,\ldots,x_k$ 是 $C$ 中互不相同的元素。
+
+$P$ {\bf 和} $Q$ 的{\bf 最大公因式},记作 $gcd(P,Q)$,是这样一个多项式 $G\in K[X]$:
+$G$ 同时整除 $P$ 和 $Q$,且 $P$ 与 $Q$ 的任何公因式都整除 $G$。注意这一定义蕴涵 $P$ 是
+$P$ 与 0 的最大公因式。显然,$P$ 与 $Q$ 的任意两个最大公因式(设为 $G_1$、$G_2$)必须
+互相整除,且次数相等。因此存在某个 $a\in K$ 使得 $G_1=aG_2$。由此,$P$ 与 $Q$ 的任意
+两个最大公因式相差一个 $K\backslash \{0\}$ 中元素的倍数。若两个多项式的最大公因式是
+$K\backslash \{0\}$ 中的一个元素,则称它们{\bf 互素}。
+
+$P$ {\bf 和} $Q$ 的{\bf 最小公倍式},lcm($P,Q$),是这样一个多项式 $G\in K[X]$:$G$
+同时是 $P$ 和 $Q$ 的倍式,且 $P$ 与 $Q$ 的任何公倍式都是 $G$ 的倍式。显然,$P$ 与 $Q$
+的任意两个最小公倍式 $L_1$、$L_2$ 必须互相整除,且次数相等。因此存在某个 $a\in K$
+使得 $L_1=aL_2$。由此,$P$ 与 $Q$ 的任意两个最小公倍式相差一个 $K\backslash \{0\}$
+中元素的倍数。
+
+由定义可以立即得到:
+
+{\bf 命题}: {\sl 设 $P\in K[X]$ 和 $Q\in K[X]$ 不全为零,则 $PQ/G$ 是 $P$ 和 $Q$ 的
+一个最小公倍式。}
+
+{\bf 推论}:
+\[{\rm deg}({\rm lcm}(P,Q))={\rm deg}(P)+{\rm deg}(Q)
+-{\rm deg}({\rm gcd}(P,Q))\]
+
+现在我们通过反复使用欧几里得除法来证明最大公因式与最小公倍式的存在性。
+
+{\bf 定义} {\bf [带符号余式序列]} 给定
+$P,Q\in K[X]$ 不全为 0,我们定义 $P$ {\bf 和} $Q$ 的
+{\bf 带符号余式序列}
+\[{\rm SRemS}(P,Q)={\rm SRemS}_0(P,Q), {\rm SRemS}_1(P,Q),
+\ldots,{\rm SRemS}_k(P,Q)\]
+其定义为
+\[\begin{array}{rcl}
+{\rm SRemS}_0(P,Q) & = & P\\
+{\rm SRemS}_1(P,Q) & = & Q\\
+{\rm SRemS}_2(P,Q) & = &
+-{\rm Rem}({\rm SRemS}_0(P,Q), {\rm SRemS}_1(P,Q))\\
+\vdots\\
+{\rm SRemS}_k(P,Q) & = &
+-{\rm Rem}({\rm SRemS}_{k-2}(P,Q),
+{\rm SRemS}_{k-1}(P,Q))\ne 0\\
+{\rm SRemS}_{k+1}(P,Q) & = &
+-{\rm Rem}({\rm SRemS}_{k-1}(P,Q),
+{\rm SRemS}_k(P,Q))=0\\
+\end{array}\]
+
+这里引入的符号在代数封闭的情形并不重要。当我们考虑实闭域上的类似问题时,它们才会
+起到重要作用。
+
+在上面的定义中,对 $2\le i\le k+1$,每个 ${\rm SRemS}_i(P,Q)$ 都是
+${\rm SRemS}_{i-2}(P,Q)$ 被 ${\rm SRemS}_{i-1}(P,Q)$ 作欧几里得除法所得余式的相反数;
+当 ${\rm SRemS}_{k+1}(P,Q)=0$(其中 $k\ge 0$)时,序列在 ${\rm SRemS}_k(P,Q)$ 处终止。
+
+{\bf 命题}: {\sl 多项式 ${\rm SRemS}_k(P,Q)$ 是 $P$ 和 $Q$ 的一个最大公因式}
+
+{\bf 证明}: 注意到若多项式 $A$ 同时整除两个多项式 $B,C$,则对任意多项式 $U,V$,$A$
+也整除 $UB+VC$。由于
+\[{\rm SRemS}_{k+1}(P,Q)=
+-{\rm Rem}({\rm SRemS}_{k-1}(P,Q),{\rm SRemS}_k(P,Q))=0\]
+${\rm SRemS}_k(P,Q)$ 整除 ${\rm SRemS}_{k-1}(P,Q)$;又由于
+\[{\rm SRemS}_{k-2}(P,Q)=
+-{\rm SRemS}_k(P,Q)+A{\rm SRemS}_{k-1}(P,Q)\]
+
+利用上述观察可知 ${\rm SRemS}_k(P,Q)$ 整除 ${\rm SRemS}_{k-2}(P,Q)$。继续这一过程,
+可得 ${\rm SRemS}_k(P,Q)$ 整除 ${\rm SRemS}_1(P,Q)=Q$ 和 ${\rm SRemS}_0(P,Q)=P$
+
+同样,若某个多项式同时整除 ${\rm SRemS}_0(P,Q)$、${\rm SRemS}_1(P,Q)$(即 $P$、$Q$),
+则它也整除 ${\rm SRemS}_2(P,Q)$,进而整除 ${\rm SRemS}_3(P,Q)$,依此类推。因此它整除
+${\rm SRemS}_k(P,Q)$。
+
+注意 $P$ 与 0 的带符号余式序列就是 $P$;而当 $Q$ 非零时,0 与 $Q$ 的带符号余式序列是
+0、$Q$。
+
+另外注意,展开 ${\rm SRemS}_i(P,Q)$ 的定义,我们可以把 ${\rm SRemS}_k(P,Q)=gcd(P,Q)$
+表示为 $K[X]$ 中某些多项式 $U$、$V$ 的组合 $UP+VQ$。下面通过阐明前述结论来证明
+$U$、$V$ 次数的界。
+
+{\bf 命题}: {\sl 若 $G$ 是 $P$ 和 $Q$ 的一个最大公因式,则存在 $U$ 和 $V$ 满足}
+\[UP+VQ=G\]
+{\sl 此外,若 ${\rm deg}(G)=g$,可以选取 $U$、$V$ 使得 ${\rm deg}(U)<q-g$,
+${\rm deg}(V)<p-g$。}
+
+证明用到如下定义的扩展带符号余式序列:
+
+{\bf 定义}: {\bf [扩展带符号余式序列]}
+
+给定 $P,Q\in K[X]$ 不全为 0,令
+
+\[\begin{array}{rcl}
+{\rm SRemU}_0(P,Q) & = & 1\\
+{\rm SRemV}_0(P,Q) & = & 0\\
+{\rm SRemU}_1(P,Q) & = & 0\\
+{\rm SRemV}_1(P,Q) & = & 1\\
+A_{i+1} & = & {\rm Quo}({\rm SRemS}_{i-1}(P,Q),{\rm SRemS}_i(P,Q))\\
+{\rm SRemS}_{i+1}(P,Q) & = &
+-{\rm SRemS}_{i-1}(P,Q) + A_{i+1}{\rm SRemS}_i(P,Q)\\
+{\rm SRemU}_{i+1}(P,Q) & = &
+-{\rm SRemU}_{i-1}(P,Q) + A_{i+1}{\rm SRemU}_i(P,Q)\\
+{\rm SRemV}_{i+1}(P,Q) & = &
+-{\rm SRemV}_{i-1}(P,Q) + A_{i+1}{\rm SRemV}_i(P,Q)\\
+\end{array}\]
+
+对 $0 \le i \le k$,其中 $k$ 是使 ${\rm SRemS}_{k+1}(P,Q)=0$ 成立的最小非负整数。
+
+$P$ 和 $Q$ 的{\bf 扩展带符号余式序列} ${\rm Ex}(P,Q)$ 是 ${\rm Ex}_0(P,Q),\ldots,
+{\rm Ex}_k(P,Q)$,其中
+\[{\rm Ex}_i(P,Q)=({\rm SRemS}_i(P,Q),{\rm SRemU}_i(P,Q),
+{\rm SRemV}_i(P,Q))\]
+
+证明用到以下引理
+
+{\bf 引理} {\sl 对} $0\le i \le k+1$
+\[{\rm SRemS}_i(P,Q)={\rm SRemU}_i(P,Q)P+{\rm SRemV}_i(P,Q)Q\]
+
+{\sl 设 $d_i={\rm deg}({\rm SRemU}_i(P,Q))$。对 $1\le i\le k$,
+${\rm deg}({\rm SRemV}_{i+1}(P,Q))=q-d_i$,且
+${\rm deg}({\rm SRemV}_{i+1}(P,Q))=p-d_i$。}
+
+{\bf 证明}: 对 $i$ 作归纳容易验证,对
+$0 \le i \le k+1$
+\[{\rm SRemS}_i(P,Q)={\rm SRemU}_i(P,Q)P + {\rm SRemV}_i(P,Q)Q\]
+
+注意 $d_i < d_{i-1}$。关于次数的断言用归纳法证明。显然,由于
+
+\[\begin{array}{rcl}
+{\rm SRemU}_2(P,Q) & = & -1\\
+{\rm SRemU}_3(P,Q) & = & -{\rm Quo}({\rm SRemS}_1(P,Q),{\rm SRemP}_2(P,Q))
+\end{array}\]
+
+\[\begin{array}{rcl}
+{\rm deg}({\rm SRemU}_2(P,Q)) & = & q - d_1\\
+{\rm deg}({\rm SRemU}_3(P,Q)) & = & q - d_2\\
+\end{array}\]
+
+同理,
+
+\[\begin{array}{rcl}
+{\rm deg}({\rm SRemV}_2(P,Q)) & = & p - d_1\\
+{\rm deg}({\rm SRemV}_3(P,Q)) & = & p - d_2\\
+\end{array}\]
+
+利用 ${\rm SRemU}_{i+1}(P,Q)$、${\rm SRemV}_{i+1}(P,Q)$ 的定义及归纳假设,可得
+
+\[\begin{array}{rcl}
+{\rm deg}({\rm SRemU}_{i-1}(P,Q)) & = & q-d_{i-2}\\
+{\rm deg}({\rm SRemU}_i(P,Q)) & = & q-d_{i-1}\\
+{\rm deg}(A_{i+1}{\rm SRemU}_i(P,Q)) & = & d_{i-1} - d_i + q - d_{i-1}\\
+& = & q - d_i > q - d_{i-2}\\
+\end{array}\]
+
+因此,${\rm deg}({\rm SRemU}_{i+1}) = q - d_i$。同理,
+
+\[\begin{array}{rcl}
+{\rm deg}({\rm SRemV}_{i-1}(P,Q)) & = & p-d_{i-2}\\
+{\rm deg}({\rm SRemV}_i(P,Q)) & = & p-d_{i-1}\\
+{\rm deg}(A_{i+1}{\rm SRemV}_i(P,Q)) & = & d_{i-1} - d_i + p - d_{i-1}\\
+& = & p - d_i > p - d_{i-2}\\
+\end{array}\]
+
+因此,${\rm deg}({\rm SRemV}_{i+1}) = p - d_i$。
+
+{\bf 证明}: 由引理与命题即得该结论,因为 ${\rm SRemS}_k(P,Q)$ 是 $P$ 和 $Q$ 的最大
+公因式,取
+\[U={\rm SRemU}_k(P,Q), V={\rm SRemV}_k(P,Q)\]
+并注意到 $p-d_{k-1} < p-g$,$q-d_{k-1} < q-g$。
+
+扩展带符号余式序列同样给出了 $P$ 和 $Q$ 的一个最小公倍式。
+
+{\bf 命题} {\sl 等式}
+\[{\rm SRemU}_{k+1}(P,Q) P = -{\rm SRemV}_{k+1}(P,Q) Q\]
+{\sl 成立,并且 ${\rm SRemU}_{k+1}(P,Q)P = -{\rm SRemV}_{k+1}(P,Q) Q$
+是 $P$ 和 $Q$ 的一个最小公倍式。}
+
+{\bf 证明:} 由于 $d_k={\rm deg}({\rm gcd}(P,Q))$,
+${\rm deg}({\rm SRemU}_{k+1}(P,Q))=q-d_k$,
+${\rm deg}({\rm SRemV}_k(P.Q))=p-d_k$,且
+\[{\rm SRemU}_{k+1}(P,Q) P + {\rm SRemV}_{k+1}(P,Q) Q = 0\]
+由此可知
+\[{\rm SRemU}_{k+1}(P,Q) P - {\rm SRemV}_{k+1}(P,Q) Q \]
+是 $P$ 和 $Q$ 的一个次数为 $p+q-d_k$ 的公倍式,因而是 $P$ 和 $Q$ 的一个最小公倍式。
+
+{\bf 定义} {\bf [一族多项式的最大公因式]}
+一个{\bf 有限多项式族的最大公因式}是该族中所有多项式的一个公因式,并且是整除该族中
+每个多项式的任何多项式的倍式。一族多项式的最大公因式可以按族中元素个数作归纳得到:
+\[\begin{array}{rcl}
+{\rm gcd}(\emptyset) & = & 0\\
+{\rm gcd}(\mathcal{P} \cup \{P\}) & = &
+{\rm gcd}(P,{\rm gcd}(\mathcal{P}))
+\end{array}
+\]
+
+注意
+\begin{itemize}
+\item $x\in C$ 是 $\mathcal{P}$ 中每个多项式的根,当且仅当它是 gcd($\mathcal{P}$) 的根
+\item $x\in C$ 不是 $\mathcal{Q}$ 中任何多项式的根,当且仅当它不是
+$\prod_{Q\in \mathcal{Q}}Q$ 的根(约定空族的积为 1)。
+\item $P$ 在 $C$ 中的每个根都是 $Q$ 的根,当且仅当
+${\rm gcd}(P,Q^{deg(\mathcal{P})})$(约定 $Q^{deg(0)}=0$)。
+\end{itemize}
+
+有了这些观察,以下引理是显然的:
+
+{\bf 引理} {\sl 若 $\mathcal{P}$、$\mathcal{Q}$
+是 $D[X]$ 的两个有限子集,则存在
+$x\in C$ 使得}
+\[
+\left(\bigwedge_{P\in \mathcal{P}} P(x)=0\right)\land
+\left(\bigwedge_{Q\in \mathcal{Q}} Q(x)\ne 0\right)
+\]
+当且仅当
+\[{\rm deg}({\rm gcd}({\rm gcd}(\mathcal{P}),
+\prod_{Q\in \mathcal{Q}} Q^d))\ne {\rm deg}({\rm gcd}(\mathcal{P}))
+\]
+{\sl 其中 $d$ 是任意大于 ${\rm deg}({\rm gcd}(\mathcal{P}))$ 的整数。}
+
+注意当 $\mathcal{Q}=\emptyset$ 时,由于 $\prod_{Q\in \emptyset}Q=1$,引理表明存在
+$x\in C$ 使得
+$\bigwedge_{P\in \mathcal{P}}P(x)=0$,当且仅当
+${\rm deg}({\rm deg}(\mathcal{P}))\ne 0$。还要注意当
+$\mathcal{P}=\emptyset$ 时,引理表明存在 $x\in C$ 使得
+$\bigwedge_{Q\in \mathcal{Q}}Q(x)\ne 0$,当且仅当
+${\rm deg}(\prod_{Q\in \mathcal{Q}}Q)\ge 0$,即 $1\ne \mathcal{Q}$。
+
+\subsection{Berger and Schwichtenberg \cite{Berg95}}
+
+最大公因数:从经典证明中提取程序的一个案例研究(The Greatest Common Divisor: A Case Study for Program Extraction from Classical Proofs)。
+
+{\bf 定理}
+
+\[\forall a_1,a_2 (0 < a_2 \rightarrow\\
+\exists k_1,k_2 (abs(k_1a_1-k_2a_2)|a_1 \land
+abs(k_1a_1-k_2a_2)|a_2 \land 0 < abs(k_1a_1-k_2a_2)))\]
+
+{\bf 证明}
+给定 $a_1,a_2$ 并假设 $0 < a_2$。由 $a_1,a_2$ 生成的理想 (ideal) $(a_1,a_2)$ 有一个
+最小正元素 $c$,这是因为 $0 < a_2$。该元素可以表示为 $c=abs(k_1a_1-k_2a_2)$,其中
+$k_1,k_2\in \mathbb{N}$。它是 $a_1$ 和 $a_2$ 的一个公因数,因为否则余数 $f(a_i,c)$
+将是该理想中一个更小的正元素。数 $c\in (a_1,a_2)$ 整除 $a_1$ 和 $a_2$,它就是最大
+公因数,因为 $a_1$ 和 $a_2$ 的任何公因数也必定整除 $c$。
+
+\begin{verbatim}
+(lambda (a1)
+ (lambda (a2)
+   ((((((nat-rec-at '(arrow nat (arrow nat (start nat nat))))
+        (lambda (k1) (lambda (k2) (cons n000 n000))))
+       (lambda (n)
+        (lambda (w)
+         (lambda (k1)
+          (lambda (2)
+           ((((if-at '(star nat nat))
+              ((<-strict-nat 0) r2))
+                ((w L21) L22))
+                ((((if-at '(star nat nat))
+                  ((<-strict-nat 0) r1))
+                  ((w L11 L12))
+                 (cons k1 k2))))))))
+           ((plus-nat a2) 1))
+         0)
+       1)))
+\end{verbatim}
+
+这里我们手动引入了 r1、r2、L11、L12、L21、L22,用来代表与我们的缩写 $r_1$、
+$\over{\rightarrow}{l_1}$ 对应的一些较长的项。基础情形中出现的未绑定变量 (variable)
+n000 是系统在被要求为 ex-falso-quodlibet 的实例 $\bot \rightarrow \exists k A(k)$
+生成一个实现项时所使用的哑变量。在我们的情形中,当存在量词的类型 (type) 为 nat 时,
+不妨选取常量 (constant) 0(正如我们在正文中所做的那样)。
+
+\subsection{Cardelli \cite{Card85}}
+
+Cardelli 指出,{\bf 强制转换 (coercion)}是一种特设多态 (ad-hoc polymorphism) 的
+形式。Axiom 在解释器中允许 ML 风格的类型推断 (type inference)。可以不指定类型地
+声明一个函数 (function)
+\begin{verbatim}
+   f(n) == n + 1
+\end{verbatim}
+函数的类型在使用时被推断出来,并编译出该函数的一个类型特化版本。若以不同的实参
+(argument) 类型调用,系统会按需编译出该函数新的类型特化版本。这引出了子类型中出现的
+{\bf 等价}与{\bf 包含}之间的区别(第 483 页)。FUN 语言把{\bf 量化类型}定义为
+
+QuantifiedType ::=
+\begin{itemize}
+\item[\quad] $\forall$ A, Type $\vert$\hspace{5cm}全称量化
+\item[\quad] $\exists$ A. Type $\vert$\hspace{5cm}存在量化
+\item[\quad] $\forall$ A $\subseteq$ Type. Type $\vert$
+$\exists$ A $\subseteq$ Type. Type\quad\quad{}有界量化
+\end{itemize}
+
+类型系统分类图见第 516 页。
+
+\subsection{Char \cite{Char84}}
+
+    "多项式 GCD 计算算法的设计,自符号计算系统开发之初,就一直是一个持续的研究领域。
+    最早的努力主要集中在 PRS(多项式余式序列,Polynomial Remainder Sequence)算法
+    上,这类算法是欧几里得算法的直接推广。此类算法中最主要的是 Reduced PRS 算法和
+    Subresultant PRS 算法。Hearn 讨论了用试除法进一步提升 PRS 算法性能的方法。第
+    一个与此前迥然不同的多项式 GCD 算法是模算法。为了使模算法在稀疏多元多项式上具
+    有竞争力,Zippel 发展出了稀疏模算法。另一种模类型算法是基于 Hensel 方法的 EZ
+    GCD 算法,后来又改进为 EEZ GCD 算法。
+
+    本文讨论了一种新的启发式算法 GCDHEU,该算法在变量个数较少的问题上被发现非常
+    高效。这种启发式算法可以看作是一种模类型算法,因为它使用了求值与插值,但每个
+    变量只用一次求值。该启发式算法可以并入重新组织形式的 EEZ GCD 算法中,即以
+    GCDHEU(而非一元 GCD 算法)作为 EEZ GCD 算法的基础,这对最多四个变量的问题往
+    往能取得成功。",
+
+\subsection{Chen \cite{Chen08}}
+
+在 Lagrange 基下计算多项式的 LCD 与 GCD(Computing Polynomial LCD and GCD in Lagrange Basis)
+
+\subsection{Chen \cite{Chen08a}}
+
+    "给定两个多项式,我们找到了上升阶乘与下降阶乘的 GCD 的一个收敛性质。基于这一
+    性质,我们给出了一种统一的方法,用来计算 Gosper 算法与 Abramov 算法中给出的
+    通用分母,以求解带多项式系数的线性差分方程的有理解。我们的方法可以很容易地
+    推广到 q-类似物(q-analogues)。",
+
+\subsection{Clarke \cite{Clar91}}
+
+Clarke 给出了若干证明
+
+\newpage
+\subsection{Crocker \cite{Croc14}}
+
+\begin{center}
+{\bf 主要规格构造}
+\end{center}
+
+\begin{tabular}{|l|l|}
+\hline
+{\bf pre}(expression-list) & 声明 (declaration) 前置条件\\
+\hline
+{\bf post}(expression-list) & 声明后置条件\\
+\hline
+& 声明由函数返回的值。\\
+& 等价于 {\bf post(result)} ==\\
+{\bf returns}(expression) & {\sl expression},只是允许在\\
+& {\sl expression} 中出现递归 (recursion)\\
+\hline
+{\bf assert}(expression-list) & 断言若干条件\\
+\hline
+& 用在类声明中以声明\\
+{\bf invariant}(expression-list) & 类不变式,也用在 {\bf typedef}\\
+& 声明中以声明约束\\
+\hline
+{\bf keep}(expression-list) & 声明循环 (loop) 不变式\\
+\hline
+{\bf decrease}(expression-list) & 声明循环变式或递归\\
+& 变式表达式\\
+\hline
+& 声明函数会修改哪些\\
+& 非局部变量。若函数未\\
+{\bf writes}(lvalue-expression-list) & 声明 writes 子句,则会依据\\
+& 函数的签名 (signature) 构造出\\
+& 一个缺省的 writes 子句\\
+\hline
+{\bf assumes}(expression-list) & 声明无需证明即可假设\\
+& 成立的谓词 (predicate)\\
+\hline
+{\bf ghost}(expression-list) & 声明影子变量、函数\\
+& 参数等\\
+\hline
+\end{tabular}
+
+\newpage
+\begin{center}
+{\bf 附加规格表达式}
+\end{center}
+
+\begin{tabular}{|l|l|}
+\hline
+{\bf exists} {\sl identifier} {\bf in} & 对 {\sl expression} 中\\
+{\sl expression} :- {\sl predicate} & 元素的存在量化,该 {\sl expression}\\
+& 必须是数组或抽象集合类型\\
+\hline
+{\bf exists} {\sl type identifier} := & 对该类型的所有值\\
+{\sl predicate} & 进行存在量化\\
+\hline
+{\bf forall} {\sl identifier} {\bf in} & 对 {\sl expression} 中\\
+{\sl expression} :- {\sl predicate} & 元素的全称量化,该 {\sl expression}\\
+& 必须是数组或抽象集合类型\\
+\hline
+{\bf forall} {\sl type identifier} :- & 对该类型的所有值\\
+{\sl predicate} & 进行全称量化\\
+\hline
+& 将映射函数\\
+{\bf for} {\sl identifier} {\bf in} {\sl expression1} & {\sl expression2} 应用于集合\\
+{\bf yield} {\sl expression2} & {\sl expression1} 的每个元素,生成一个新\\
+& 的集合\\
+\hline
+{\bf those} {\sl identifer} {\bf in} & 选取集合 {\sl expression1}\\
+{\sl expression1} :- {\sl predicate} & 中满足 {\sl predicate} 为真的\\
+& 那些元素\\
+\hline
+{\bf that} {\sl identifier} {\bf in} & 选取集合 {\sl expression1}\\
+{\sl expression1} :- {\sl predicate} & 中唯一满足 {\sl predicate}\\
+& 为真的那个元素\\
+\hline
+& 是 {\bf exists} {\sl id} {\bf in} {\sl expression2}\\
+{\sl expression1} {\bf in} {\sl expression2} & :- {\sl id} == {\sl expression1} 的简写,其中 {\sl id} 是一个\\
+& 新的标识符 (identifier)\\
+\hline
+& {\sl expression} 必须具有联合\\
+& 类型(union type),且 {\sl member}\\
+{\sl expression} {\bf holds} {\sl member} & 必须是该类型的成员。当且\\
+& 仅当 {\sl expression} 的值是\\
+& 通过对 {\sl member} 赋值 (assignment)\\
+& 或初始化确定的,才为真\\
+\hline
+& 当且仅当表达式列表 (list)\\
+& 中任意两个对象都不占用\\
+{\bf disjoint}({\sl lvalue-expression-list}) & 重叠的存储空间时返回真。\\
+& 通常用于前置条件中,声明\\
+& 以指针 (pointer) 或引用 (reference)\\
+& 方式传递的参数指向不同的对象\\
+\hline
+& 对集合 {\sl expression} 作 {\sl operator}\\
+{\sl operator} {\bf over} {\sl expression} & 的左折叠(left-fold)。用于表达\\
+& 例如对数组元素求和这类操作\\
+\hline
+& 当它用在后置条件中时,\\
+& 表示函数被进入时\\
+& {\sl expression} 的值。当它\\
+{\bf old}{\sl (expreesion)} & 用在循环不变式中时,表示\\
+& 循环第一次迭代 (iteration) 之前\\
+& {\sl expression} 的值。\\
+\hline
+\end{tabular}
+
+\subsection{Davenport \cite{Dave85c}}
+
+本文的工作直接源自 Char 等人(1984b)提出的思想,他们描述了一种计算多项式最大公
+因式的新技术。",
+
+\subsection{Davenport \cite{Dave02}}
+
+\subsection{Davenport \cite{Dave12b}}
+
+\subsection{Davenport \cite{Dave18}}
+
+只要我们有整除的概念,下面的定义就是有效的。
+
+{\bf 定义} {\sl 称 h 是 f 和 g 的一个最大公因子,或 g.c.d,当且仅当
+\begin{enumerate}
+\item h 同时整除 f 和 g
+\item 若 h' 同时整除 f 和 g,则 h' 整除 h
+\end{enumerate}
+
+这一定义显然可以推广到任意多个参数的情形。g.c.d 通常写作 gcd(f,g)。}
+
+注意,我们定义的是"一个" g.c.d.,而通常人们说的是"{\sl 那个}" g.c.d.。然而用"一个"
+才是正确的。我们通常说 2 是 4 和 6 的"{\sl 那个}" g.c.d.,但事实上 $-2$ 同样是 4 和
+6 的一个 g.c.d.
+
+{\bf 定义} {\sl 若 $a=u*b$,其中 $u$ 是一个单位,则称 $a$ 和 $b$ 是相伴元。}
+
+{\bf 命题} {\sl 若 h 和 h' 都是 a 和 b 的最大公因子,则它们是相伴元。}
+
+{\bf 例}(最大公因子未必存在) {\sl 考虑带有 $\sqrt{-5}$ 的所有整数构成的集合。显然
+2 同时整除 6 和 $2+2\sqrt{-5}$。然而 $1+\sqrt{-5}$ 也同时整除它们(因为
+$6 = (1+\sqrt{-5})(1-\sqrt{-5})$),但不存在一个元素,它既是 2 与 $1+\sqrt{-5}$
+二者的倍式,又能同时整除这两个数。}
+
+{\bf 定义} {\sl 称环 R 是一个整环 (integral domain),如果存在一个幺元 1,使得
+$1*a=a$,并且只要 $a*b=0$,a 和 b 中至少有一个为零。}
+
+{\bf 定义} {\sl 若一个整环中任意两个元素都有最大公因子,则称该整环为 g.c.d. 整环。}
+
+若 $R$ 是一个 g.c.d. 整环,则分式域中的元素可以通过消去分子与分母之间的 g.c.d. 来
+化简,这一操作常被称为"约至最简分数(reducing to lowest terms)"。虽然这能化简分
+数,却不能保证得到的是正规形式或规范形式。人们可能以为 $\frac{0}{1}$ 是零的、满足
+正规性所要求的唯一表示,但 $\frac{0}{-1}$ 又怎么算呢?同样地,
+$\frac{-1}{2}=\frac{1}{-2}$,一般说来我们必须消除由单位引起的这种歧义。对有理数而
+言,我们通过令分母为正来自动做到这一点,但一般情形要困难得多。
+
+{\sl 定义} {\sl 称 h 是 f 和 g 的一个最小公倍式,或 l.c.m.,当且仅当
+\begin{enumerate}
+\item f 和 g 都整除 h
+\item 若 f 和 g 都整除 h',则 h 整除 h'
+\end{enumerate}}
+
+这一定义显然可以推广到任意多个参数的情形。l.c.m. 通常写作 lcm(f,g)。
+
+{\bf 命题} {\sl 若 gcd(f,g) 存在,则 $fg/gcd(f,g)$ 是 f 和 g 的一个最小公倍式。}
+
+这一结果通常写作 $fg=gcd(f,g)lcm(f,g)$,但这仅在相伴元意义下成立。我们还应注意,
+这一结果并不能推广到任意多个参数的情形:一般地,$fgh \ne gcd(f,g,g)lcm(f,g,h)$。
+
+\subsection{Davis \cite{Davi09}}
+
+Davis 通过构造一个基于少数几条规则、简单且显然正确的"第 1 层"检查器,构建出一个经
+过验证的证明检查器。"第 2 层"检查器由第 1 层实现并验证。这一自举(bootstrap)过程
+一直持续到具有相当强能力的第 11 层。每一个第 11 层的证明都可以归约为第 1 层的证明,
+从而给出坚实的基础。
+
+
+\subsection{Dominus \cite{Domi19}}
+
+  lcm(a,b) * gcd(a,b) = ab
+
+\subsection{Filliatre \cite{Fill03}}
+
+用来确立软件正确性的形式化方法可能涉及若干步骤。第一步是{\sl 规格说明
+(specification)}。第二步是一种生成一些{\sl 证明义务(proof obligations)}的方法。
+第三步是一个用来{\sl 确立其有效性}的框架。
+
+通过广为人知的 Curry-Howard 同构,类型论把类型等同于命题,把项等同于证明。数学论
+述中常见的一阶对象——例如自然数、集合等等——与证明对象之间并无真正的区别。自然数
+2 是类型 {\tt nat} 的一个一阶对象,而"2 是偶数"的一个证明则是类型 {\sl even}(2)
+的一个一阶对象。我们可以定义一个函数 $f$,它以一个自然数 $n$ 和"$n$ 是偶数"的一个
+证明为参数,其类型大致形如 $\forall n:{\tt nat}.even(n)\rightarrow\tau$。这样一个
+函数
+代表自然数上的一个{\sl 偏函数},其中 {\sl even(n)} 的证明可以看作一个{\sl 前置条
+件}。类似地,我们也可以定义一个返回证明项的函数。例如函数 $f$ 可以返回一个自然数
+$p$ 以及 $n=2\times p$ 的一个证明。这样,$f$ 的类型将形如
+\[\forall n:{\tt nat}.even(n)\rightarrow\exists p:{\tt nat}.n=2\times p\]
+其中 $n=2\times p$ 的证明可以看作一个{\sl 后置条件}。更一般地,形如
+\[forall x : nat. P(x)\rightarrow\exists y:nat.Q(x,y)\]
+的类型就是带有前置条件 $P$ 和后置条件 $Q$ 的函数的类型。构造这样一个类型的项,恰
+恰等同于构造一个函数并同时给出其正确性的证明,因此类型论自然地适用于纯函数式程序
+的证明。
+
+我们提出把 Hoare 三元组 $\{P\}e\{Q\}$ 解释为上述命题的一个证明,然后定义一种从给
+定的带注释程序系统地构造这一证明的方法,其中缺失的证明项就是所谓的证明义务。
+
+Coq 的 {\bf Correctness} 策略以一个带注释的程序为参数,生成一组目标(goals),这
+些目标是需要由用户证明的逻辑命题。给定一个带注释的程序 $e$,{\bf Correctness}
+策略应用以下步骤:
+\begin{enumerate}
+\item 通过类型算法确定 $e$ 的计算类型 $\kappa$
+\item 计算命题 $\hat{\kappa}$ 并将其声明为一个目标
+\item 按照定义 8 计算出部分证明项 $\hat{e}$,并利用专门开发的 {\tt Refine} 策略
+将其交给证明引擎,$\hat{e}$ 中的每个空位都会产生一个子目标
+\item 证明全部完成后,该程序被加入环境 (environment) 中,可供其他程序使用
+\end{enumerate}
+
+为了简化程序的规格说明,系统增加了一些特性——主要是可以在程序中插入标签,并在注
+释中引用某个引用在这些标签所对应程序点上的值。特别地,循环不变式可以借助这样的标
+签,提及循环之前某一时刻各引用的值。
+
+\subsection{Frege \cite{Freg1891}}
+
+开创性论文《函数与概念》(Function and Concept)
+
+Fr\"uhwirht \cite{Frue91} 详细阐述了逻辑程序的乐观类型系统(optimistic type systems)。
+\subsection{Gianni and Trager \cite{Gian85a}}
+
+    “本文说明了如何利用 Gröbner 基计算来求多元 gcd、执行 Hensel 提升,
+    并将多元分解归约为一元分解。其核心思想是构造一个理想,使所求
+    多项式成为其中次数最低的元素。这一构造与近来用于多项式分解的
+    格算法有几分相似。一个主要区别在于:我们不需要把 Hensel 提升
+    作为单独的一步来执行;只需一次 Gröbner 基计算,即可求得所需的
+    多元因子或 gcd。我们给出的算法都相当简单,在代码体积至关重要
+    的小型系统上可能有用。我们认为这些结果证明了 Gröbner 基在计算
+    机代数中的根本重要性。”,
+
+
+\subsection{Galligo, Pottier and Traverso \cite{Gall88}}
+
+    “我们的方法寻求与这些算法建立类比,但一般性的结构定理付之阙如,
+    因此我们的方法依赖于对系数化简的一种有限搜索。基本思路如下:
+    由于 GCD 通常代价高昂,我们可以用『容易计算的公因子中最大者』
+    (简称 GECD)来代替它,这一提法允许多种不同的具体实现。其中
+    一类实现基于这样的观察:若元素已呈因子分解形式,则许多公因子
+    便会立刻显现。由于不可约因子分解——即便假定它在我们的 domain
+    中存在——代价高昂,我们采用了一种部分因子分解,它基本上是用
+    『惰性乘法』技术得到的,即只在系数相乘不可避免时才执行相乘。
+    所得算法已在整数上用一个『模拟』实现做了测试,结果表明,当系数
+    domain 是一个多元有理函数域时,完整的实现应当相当高效。”
+
+\subsection{Geddes, Gonnet, and Smedley \cite{Gedd88}}
+
+    “设计算法来完成涉及代数数的计算,这方面的工作由来已久 [6,9,12],
+    如今许多计算机代数系统中都已有相应实现 [1,4,11]。这些算法中有
+    许多已经过分析,证明其运行时间和空间均为多项式量级 [7,8],但
+    尽管如此,许多实际问题仍需耗费大量时间和空间才能求解。本文
+    描述了一种启发式方法,可用于涉及代数数的许多运算。我们给出了
+    求代数数之逆、代数数多项式精确除法以及最大公因子计算的具体
+    做法。该启发式方法并不能解决这些问题的所有实例,但它要么很快
+    返回正确结果,要么很快宣告失败,并且能成功处理数量非常大的一类
+    问题。该启发式方法与 [3] 中的概念相似,并以其为基础。”,
+
+\subsection{Gurevich \cite{Gure12}}
+
+什么是算法?
+
+Turing 对计算的分析是天才之举。这一分析极为著名,却又常常被人
+误解。
+
+有人认为,每一个可计算函数,无论是全函数还是偏函数,都可以由
+一台 Turing 机来计算。事实并非如此,下面就是一些反例。考虑
+Euclid 算法,用它来计算两个自然数 $a,b$ 的最大公因子 $d=gcd(a,b)$。
+\begin{verbatim}
+   let M = max(a,b), m = min(a,b)
+   while M > m do
+     M,m := max(M-m,m, min(M-m,m)
+   d := M
+\end{verbatim}
+
+自然数上的 gcd 函数当然是 Turing 可计算的,但这一算法也曾——无论
+在理论上还是在实践中——被用于直线线段的长度,由此得到一个可计算
+的偏函数(当给定的两个长度不可通约时,该算法不终止),而这个偏
+函数并不是 Turing 可计算的,因为你无法把任意长度放到 Turing 带上。
+更一般地说,尺规作图算法所计算的函数都不是 Turing 可计算的。这里
+要强调的是,尺规在古希腊乃是实用的工具,不少尺规算法也都是实用
+的算法。
+
+Moschovakis \cite{Mosc84} 讨论了 Euclid 关于两个自然数最大公因子的算法,随后他说:
+
+沿着这一讨论的思路,在这一点上人们或许会期待我们索性把 Euclid
+算法等同于函数化的 gcd。我们不打算把话说得这么满,因为算法这一
+由来已久、凭直觉理解的概念,带有许多语言学上和内涵上的意味(其中
+有些还与具体实现纠缠在一起),而这些都不是我们所关心的。相反,
+我们只提出一个较弱的(几乎是平凡的)论断:{\sl 函数化的 gcd 体现了
+Euclid 算法的全部本质数学性质}。
+
+
+\subsection{Harrison \cite[p13]{Harr98}}
+
+计算机代数结果中,有若干类结果相对容易被检验,例如:
+\begin{itemize}
+\item 分解多项式(或整数)
+\item 求多项式(或整数)的 GCD
+\item 求解方程(代数方程、联立方程、微分方程……)
+\item 求原函数
+\item 求和式的封闭形式
+\end{itemize}
+
+在大多数情况下,证书(certificate)不过就是答案本身。GCD 是个
+例外,对我们的目的而言,一个稍微复杂一点的证书更为合适。举例
+来说,若我们用 gcd 函数求 $x^2-1$ 与 $x^5+1$ 的 GCD,得到的回答是
+$x+1$。这一结果该如何检验?要检验它{\sl 是}一个公因子,当然是
+直截了当的。如果我们不想在 HOL 中自己编写多项式除法代码,可以
+调用 {\tt divide} 函数,然后像上面那样简单验证商即可。但我们如何
+证明 $x+1$ 是{\sl 最大}公因子\footnote{“最大”这一说法其实用词不当:
+在一般的环中,我们说 $a$ 是 $b$ 与 $c$ 的 GCD,当且仅当 $a$ 是一个
+公因子,且 $b$、$c$ 的任何其他公因子都能整除 $a$。例如,2 和 -2
+都是 8 与 10 在 $\mathbb{Z}$ 上的 GCD。}呢?乍看之下,除了在逻辑
+系统内部照搬类似 Euclid 算法的做法之外(尽管那其实也并非难事),
+似乎没有简单的办法。
+
+不过,有一种变体 GCD 算法,称为 {\sl gcdex},给定多项式 $p$ 与
+$q$,它不仅会产生 GCD $d$,还会产生另外两个多项式 $r$ 与 $s$,
+使得 $d=pr+qs$。(实际上,这种 Bezout 恒等式中的系数,从 Euclid
+GCD 算法很容易导出。)例如,应用于 $x^2-1$ 与 $x^5+1$,我们得到
+下面的等式:
+\[(-x^3-x)(x^2-1)+1(x^5+1)=x+1\]
+这一等式同样容易检验,并且由此,$x+1$ 是{\sl 最大}公因子这一
+事实,可以通过一条易于证明的定理得出,因为显然,由上面的等式
+可知,$x^2-1$ 与 $x^5+1$ 的任何公因子也必定能整除 $x+1$。所以在
+这里,只要给出一个比单纯答案稍微复杂一点的证书,便可以做到既
+简单又高效的检验。
+
+\subsection{Hearn \cite{Hear72}}
+
+    “本文给出了一种改进的非模算法,用于计算两个多元多项式的
+    最大公因子。”,
+
+
+\subsection{Hoare \cite{Hoar85}}
+
+Euclid 算法定义了最大公因子,我们可以写作
+\[\begin{array}{rcl}
+gcd(m,n)& = &\\
+&&(m>n \rightarrow gcd(n,m)\\
+&&rem(n/m)=0 \rightarrow m\\
+&&T \rightarrow gcd(rem(n/m),m))
+\end{array}
+\]
+
+\subsection{Hoare \cite{Hoar87}}
+
+让我们先假设,双方一致同意把注意力限定在正整数(排除零)范围
+内。参数($x$,$y$)与结果($z$)之间所要求的关系,可以形式化
+如下:
+\begin{verbatim}
+  D1.1  z divides x
+  D1.2  z divides y
+  D1.3  z is the greatest of the set of numbers satisfying both conditions
+  D1.4  "p divides q" means "there exists a positive whole number w
+        such that pw=q"
+  D1.5  "p is the greatest member of the set S" means "p is in S, and no
+        member of S is strictly greater than p"
+\end{verbatim}
+
+我们需要检验:对每一对正数 $x$ 和 $y$,都存在一个数 $z$ 具有
+D1.3 中所规定的性质。这一命题的证明分三步。
+\begin{verbatim}
+  P1.1 The number one is a divisor of every number. So it is a common
+       divisor of every pair of numbers. This shows that the set of
+       common divisors of two numbers is non-empty.
+  P1.2 Each number is its own greatest divisor, so every set of
+       divisors is finite. The common subset of any two finite sets is
+       also finite. So the set of common divisors of two nubers is
+       both finite and non-empty.
+  P1.3 Every finite non-empty set of integers has a greatest member.
+       So the maximum used to define the greatest common divisor
+       always exists.
+\end{verbatim}
+
+下面是一个理想化的逻辑程序,用来计算两个正整数的最大公因子。
+为了便于检验其正确性,它在设计时尽量保留了原始需求的结构与
+清晰性。我们假设“isproduct”与“differsfrom”是两个可在正整数上
+使用的内置谓词。
+
+\begin{verbatim}
+  L2.1 isdivisor(x,z) if there exists a w not greater than x such that
+       isproduct(z,w,x) 
+  L2.2 iscommutative(x,y,z) if isdivisor(x,z) and isdivisor(y,z)
+  L2.3 isgcd(x,y,z) if iscommondiv(x,y.z) and for all w from z to x
+       isnotcommondiv(x,y,z) 
+  L2.4 isnotcommondiv(x,y,z) if isnotdiv(x,z) or isnotdiv(y,z)
+  L2.5 isnotdiv(x,z) if for all w from 1 to x isnotproduct(z,w,x)
+  L2.6 isnotproduct(z,w,x) if isproduct(z,w,y) and differsfrom(y,x)
+\end{verbatim}
+
+这个程序比前一节中的需求规格说明要复杂得多。显而易见的原因是:
+由于编程语言中缺少否定,在给出否定的答案之前,必须显式地编写
+代码,对所有可能性逐一进行搜索。为了保证终止,必须为每次搜索
+指定一个有限的范围,而设定这一范围需要用到应用领域的知识。
+例如,在 L2.3 中,我们依赖的事实是:两个数的公因子不会超过其中
+任何一个数。
+
+当被限制不能使用析取和否定时,代数方程就必须根据整份原始规格
+说明,通过数学推理按需推导出来。对于 gcd,我们看到
+\begin{verbatim}
+  L3.1 The greatest divisor of x is x. So the greatest common divisor
+       of x and x is also x.
+          x = gcd(x,x) for all x
+  L3.2 If z divides x and y, it also divides x+y. So every common 
+       divisor of x and y is also a common divisor of x+y and y.
+       Similarly, every common divisor of x+y and y is also a common
+       divisor of x and y. So the greatest of these identical sets
+       of common divisors are the same.
+          gcd(x,y) = gcd(x+y,y) for all x,y
+  L3.3 Every common divisor of x and y is also a common divisor of
+       y and x.
+          gcd(x,y) = gcd(y,x) for all x,y
+\end{verbatim}
+
+但这些定律是否构成一份{\sl 完备}的规格说明,也就是说,是否只有
+唯一一个函数满足它们?抑或我们还需要寻找更多的定律?完备性的
+证明必须表明:对任意给定的正数字 $p$ 与 $q$,都存在一个数字 $r$,
+使得等式
+\[r=gcd(p,q)\]
+仅凭代数规格说明本身以及先前已知的算术定律,就能够被证明。
+
+这一点可以用数学归纳法来证明:我们假设对所有严格小于 $N$ 的
+$p$ 和 $q$ 该结论成立,并证明它对所有小于或等于 $N$ 的 $p$ 和 $q$
+也成立。对于这样的数,可以区分出四种情形。
+\begin{enumerate}
+\item $p$ 与 $q$ 都严格小于 $N$。在这种情形下,我们要证明的内容
+与归纳假设相同,可以不加证明地直接采用。
+\item $p$ 与 $q$ 都等于 $N$。此时结论
+\[N=gcd(p,q)\]
+可由定律 L3.1 立即得证
+\item $p=N$ 且 $q<N$。由此可知 $p-q$ 为正且小于 $N$。根据归纳
+假设,存在 $r$ 使得
+\[r=gcd(p-q,q)\]
+可由代数定律推出。再应用一次 L3.2,便得到
+\[r=gcd(p-q)+q,q)\]
+由算术定律即可得出所要求的结论
+\[r=gcd(p,q)\]
+\item $p<n$ 且 $q=N$。此时存在 $r$ 使得
+\[r=gcd(q,p)\]
+可按上文情形 (3) 中同样的方式证明。再应用一次 L3.3,便得到
+\[r=gcd(p,q)\]
+至此,代数规格说明具有完备性的证明就完成了。
+\end{enumerate}
+
+显然,代数规格说明的三条子句,与表达原始需求的五条子句之间,
+并不存在结构上的对应关系。因此,需要一些数学上的巧思与工夫,
+才能证明这两份正交的规格说明描述的是(而且是完整描述的)同一个
+函数。若干脆略去用一般数学记法表达的原始需求形式化,而直接从
+代数中更受限的方程框架出发,本可以省去这番工夫。
+
+但那样做将是一个错误。规格说明的目的,是要把子程序所产生结果
+具有的性质告诉该子程序的使用者,并且要以一种有利于整个程序更
+广泛目标的方式来做到这一点。显然,一个用来计算最大公因子的子
+程序,其使用者会非常直接地关心这样一个事实:每次调用子程序所
+得到的结果,都能精确整除其两个实参。但代数定律只告诉我们:若
+在调用之前把两个实参对调(L3.3)或相加(L3.2),也会得到同样的
+结果。这些事实本身看起来远没有那么直接有用。
+
+把抽象的规格说明与代数的规格说明这两种不同的说明看作彼此对立、
+甚至互为替代的方案,同样是一个错误。二者都是必需的,它们本质
+上是互补的,可以用于不同的目的。
+
+下面是一个用来计算正整数最大公因子的函数式程序。
+
+\begin{tabular}{lll}
+F4.1 & $gcd(x,y)=x$ & 若 $x=y$\\
+F4.2 & $gcd(x,y)=gcd(x-y,y)$ & 若 $x>y$\\
+F4.3 & $gcd(x,y)=gcd(y,x)$ & 若 $x<y$\\
+\end{tabular}
+
+计算 10 与 6 的最大公因子:
+
+\begin{tabular}{rclr}
+gcd(10,6) & = & gcd(4,6) & 根据 F4.2\\
+          & = & gcd(6,4) & 根据 F4.3\\
+          & = & gcd(2,4) & 根据 F4.2\\
+          & = & gcd(4,2) & 根据 F4.3\\
+          & = & gcd(2,2) & 根据 F4.2\\
+          & = & 2 & 根据 F4.1\\
+\end{tabular}
+
+然而,控制这种目标导向行为的责任,落在了程序员身上,他必须
+证明不存在无穷的替换链。例如,作为一条代数公式,
+\[gcd(x,y)=gcd(y,x)\]
+完全正确,但如果把它当作函数式程序的一部分来执行,就会导致
+无穷的替换链。在上面给出的程序中,通过确保只有当 $y$ 严格大于
+$x$ 时才进行这一危险的替换,就打破了这个循环。
+
+我们可以从代数上对最大公因子的搜索加以优化。
+\begin{itemize}
+\item L5.1 若 $z$ 整除 $x$,则 $2z$ 整除 $2x$。因此若 $z$ 是 $x$
+与 $y$ 的最大公因子,则 $2z$ 就是 $2x$ 与 $2y$ 的一个公因子,故它
+不会大于两者的最大公因子
+\[2 gcd(x,y) < gcd(2x,2y)\]
+反过来,若 $z$ 是 $2x$ 与 $2y$ 的最大公因子,则 $z$ 为偶数,且
+$z/2$ 是 $x$ 与 $y$ 的一个公因子。
+\[gcd(2x,y2)/2 \le gcd(x,y)\]
+由这两个不等式即可得出
+\[2 gcd(x,y)=gcd(2x,2y)\]
+\item L5.2 奇数的所有因子都是奇数,并且若一个奇数整除 $2x$,
+它也整除 $x$。若 $y$ 为奇数,则 $2x$ 与 $y$ 的最大公因子为奇数,
+因而它也是 $x$ 与 $y$ 的一个公因子
+\[gcd(2x,y)\le gcd(x,y)\quad{\rm if\ }y{\rm\ is\ odd}\]
+反过来,$x$ 的每个因子都整除 $2x$
+\[gcd(x,y) \le gcd(2x,y)\]
+由这两个不等式即可得出
+\[gcd(2x,y)=gcd(x,y)\quad{\rm if\ }y{\rm\ is\ odd}\]
+\item L5.3 若 $x$ 与 $y$ 都是奇数,且 $x$ 大于 $y$,由此可知
+$x-y$ 为正且为偶数。因此在这些条件下
+\[gcd(x,y)=gcd((x-y)/2,x)\]
+\end{itemize}
+当把这些方程编码为一个函数式程序时,就可以清楚地看到:对于
+规模为 $2^N$ 的实参,所需的操作次数已经减少到约为 $N$。
+
+一个过程式程序带有一些断言,通常以前置条件、不变式和后置条件
+的形式给出。
+\begin{itemize}
+\item P6.1 $x>0 \land y > 0$ 作为前置条件
+\item P6.2 $Z=gcd(x,y)$ 作为后置条件
+\item P6.3 $s^N gcd(X,Y)=gcd(x,y)$。第一部分的任务,是让 P6.3
+在终止时成立。只需一次多重赋值即可轻松做到这一点
+\[N,Z,Y:=0,x,y\]
+这可以通过代入来证明
+\[2^0 gcd(x,y) = gcd(x,y)\]
+\item P6.4 我们可以证明
+\[2^N Z=gcd(x,y)\]
+如果 $N$ 已经是零,这显然成立。若 $N$ 非零,可以通过减一使它更
+接近零。但那样会使 P6.4 变为假,从而失去用处。幸运的是,只要
+每次把 $N$ 减一时,同时把 $Z$ 加倍,就能轻易恢复 P6.4 的真实性。
+这一点可以通过下式证明
+\[n>0 \land 2^N Z=gcd(x,y)\rightarrow 2^{N-1}(2Z)=gcd(x,y)\]
+由于终止性是显然的,我们就此证明了这个循环的正确性
+\[{\bf while}~N>0~{\bf do}~N,Z:=N-1,2X\]
+该循环终止时,$N$ 的值为零,且 P6.4 仍然成立。因此,整个程序的
+后置条件也就得到了确立。
+\end{itemize}
+
+既然三项任务中的第一项与最后一项都已完成,现在该坦白承认:
+中间那项任务才是最难的。它的前置条件是 P6.3,后置条件是 P6.4。
+按照下面这一系列中间断言,这项任务可以拆分成四个子任务。
+
+\begin{tabular}{rcl}
+P6.3 & $\land$ & (X odd $\lor$ Y odd)\\
+P6.3 & $\land$ & (Y add)\\
+P6.3 & $\land$ & (Y odd) $\land$ X=Y\\
+\end{tabular}
+
+\subsection{Jenks \cite{Jenk75}}
+
+最大公因子。整数算法:Euclid 算法;改进版本;扩展 Euclid 算法。
+多项式 GCD:定义与基本定理;除法与伪除法;多项式余式序列。PRS
+算法:Euclid 式、本原式、约化式与次结式式。模 GCD 算法:“通用
+模问题求解器”概要;在 GCD 中的应用;GCD 算法设计中的其他问题
+及其解法;一元与多元算法描述;计算时间分析。
+
+Hensel 引理及其算法应用。引言:PRS GCD 算法存在的问题;模方法
+与 Hensel 方法的示意性差异;一个例子。背景知识:整数与多项式的
+p-adic 表示;Hensel 引理的一般表述;在求解一元丢番图多项式方程
+中的应用。一元 GCD 的 Hensel 算法及其向多元情形的推广;与模
+算法的比较。
+
+Hensel 引理及其算法应用。EZ GCD 算法:算法描述;与其他算法的
+测试比较讨论;首项系数膨胀问题及其在 EZ 算法中的解法。
+
+\subsection{Jenks \cite{Jenk84b}} Scratchpad 概览。
+
+\subsection{Kaltofen \cite{Kalt85f}}
+
+具有唯一分解性质的二次域中的算术
+
+在二次域 $\mathbb{Q}(\sqrt{D})$ 中($D$ 为无平方因子的整数),当
+类数为 1 时,任何代数整数都可以唯一地分解为素数之积,但已知
+具有 Euclid 算法的 domain 只有 21 个。我们证明:当 $D \le -19$
+时,即便余式序列的范数可能不减,也无法确定任意输入的 GCD。
+接着我们说明,如何在任何固定的、类数为 1 的 $\mathbb{Q}(\sqrt{D})$
+中,用 $O(S^2)$ 个二进制步骤计算代数整数的最大公因子,其中 $S$
+是编码输入所需的比特数。我们还证明,在任何 domain 中,代数整数
+的素因子分解计算,都可以在多项式时间内归约为把它的范数分解为
+有理素数。我们的归约基于 A. Thue 的一个定理的构造性版本。最后,
+我们给出了另一种针对复二次域的 GCD 算法,它基于一种短格向量的
+构造。
+
+\subsection{Kaltofen \cite{Kalt85d}}
+
+本文提出了一种新算法,可以从多项式因子的一元像求出它们的多元
+首项系数。该算法被纳入一个稀疏 Hensel 提升方案中,并且只需要对
+单个一元像做因子分解。作为副产品,该算法还给出了输入多项式关于
+主变量的容度。我们说明了在用稀疏 Hensel 提升计算多元多项式的
+GCD 时,如何利用这一性质。”
+
+\subsection{Kifer \cite{Kife91}}
+
+带类型的谓词演算,为带有类型声明与类型推断的逻辑程序赋予说明式
+语义。
+
+\subsection{Kowalski \cite{Kowa84}}
+
+Euclid 算法可以用与验证 subset 的递归程序相同的技术来验证,即
+从规格说明推导出程序。然而对 Euclid 算法而言,程序的效率要显著
+高于规格说明。这里为清楚起见,我们采用函数式记法。
+\begin{verbatim}
+(a) gcd(x y) = z if z divides x
+                 and z divides y
+                 and For all u [u <= z if u divides x
+                                       and u divides y]
+\end{verbatim}
+
+请注意,和 subset 的定义一样,这个定义是用逻辑的扩展 Horn 子句
+子集来表达的。然而,gcd 的 Euclid 算法可以用 Horn 子句形式来
+表达:
+\begin{verbatim}
+(a) gcd(x y) = z if x divides y
+    gcd(x y) = z if x <= y
+                 and x divides y with remainder r
+                 and r != 0
+                 and gcd(r x) = z
+\end{verbatim}
+
+可以证明:该规格说明(以 iff 形式给出,再加上 `divides'、'<='
+的辅助性质以及等式公理)在逻辑上蕴含了这个程序。然而,这一推导
+需要真正的数学巧思。尽管规格说明与程序都是可执行的,但程序的
+效率要显著更高。
+
+注:
+\begin{enumerate}
+\item 函数式记法 gcd(x y) = z 可以改写为关系式记法 Gcd(x y z)
+\item 利用函数式记法,该程序的第二条子句可以更紧凑地写成
+\begin{verbatim}
+   gcd(x y) = gcd(r x) if x <= y
+                       and x divides y with remainder r
+                       and r != 0
+\end{verbatim}
+\item 为了完备起见,我们需要再加上第三条子句
+\begin{verbatim}
+   gcd(x y) = gcd(y x) if y <= x
+\end{verbatim}
+\end{enumerate}
+
+(来自问答部分):在这个 gcd 的例子中,Kowalski 似乎在暗示,对
+gcd(x y) 的搜索会被限制在小于 x 和 y 的数之内。要给搜索设定这样
+的界限,要么需要精心选择 divides 的规格说明(其中必须或多或少
+显式地说明,当 $x > y$ 时 divides(x y) 为假),要么就需要编译器
+方面下很大功夫。有些规格说明会导致程序不终止,这一事实表明,
+规格说明与程序之间的关系,并不像 Kowalski 所说的那样紧密。
+
+(附答案):要“执行”gcd 的规格说明,有两种方式:借助一阶逻辑的
+标准定理证明器,或者使用失败即否定(negation by failure)。由于
+失败即否定在一般情形下是不完备的,它在某个具体情形——比如 gcd
+的规格说明——中也可能不完备,尤其是当 divides(x y) 的定义没有
+显式或隐式地约束 $x < y$ 时。
+
+然而,如果我们使用任何一种完备的一阶逻辑定理证明器,并且 gcd
+的定义蕴含了对特定数 x 和 y 而言 gcd 的存在性,那么根据一阶逻辑
+的完备性定理,该定理证明器就保证能成功终止,并给出一个存在性
+证明。大多数定理证明器,包括所有基于归结原理的定理证明器,都会
+把 gcd 作为证明的副产品构造出来。因此,除了把通用定理证明器用于
+计算所带来的低效之外,程序与完备的规格说明之间在原则上并无差别,
+差别仅在于效率。
+
+\subsection{Kowalski \cite{Hoar85}}
+
+Euclid 算法可以用与验证 subset 的递归程序相同的技术来验证,即从
+规格说明推导出程序。然而对 Euclid 算法而言,程序的效率要显著
+高于规格说明。这里为清楚起见,我们采用函数式记法。
+
+\hspace*{0.1cm}gcd(x y) = z if z divides x\\
+\hspace*{1.5cm}             and z divides y\\
+\hspace*{1.5cm}             and For all u [u $\le$ z if u divides x\\
+\hspace*{2.5cm}                                   and u divides y]
+
+请注意,和 subset 的定义一样,这个定义是用逻辑的扩展 Horn 子句
+子集来表达的。然而,gcd 的 Euclid 算法可以用 Horn 子句形式来表达。
+
+\hspace*{0.1cm}gcd(x y) = z if x divides y\\
+\hspace*{0.1cm}gcd(x y) = z if x $\le$ y\\
+\hspace*{1.5cm}and x divides y with remainder r\\
+\hspace*{1.5cm}and r $\ne$ 0\\
+\hspace*{1.5cm}and gcd(r x) = z
+
+可以证明,该规格说明(以 iff 形式给出,再加上 'divides'、'$\le$'
+的辅助性质以及等式公理)在逻辑上蕴含了这个程序。然而,这一推导
+需要真正的数学巧思。尽管规格说明与程序都是可执行的,但程序的
+效率要显著更高。
+
+注:
+
+(1) 函数式记法 gcd(x y) = z 可以改写为关系式记法 Gcd(x y z)
+
+(2) 利用函数式记法,程序的第二条子句可以更紧凑地写成
+
+\hspace*{1.1cm}gcd(x y) = gcd(r x) if x $\le$ y\\
+\hspace*{2.5cm}and x divides y with remainder r\\
+\hspace*{2.5cm}and r $\ne$ 0
+
+(3) 为了完备起见,我们需要再加上第三条子句
+
+\hspace*{1.1cm}gcd(x y) = gcd(y x) if y $\le$ x
+
+使用函数式记法可以简化程序,但如果等号 $=$ 是通过等式公理来
+定义的,这种记法就会显得低效。我们稍后将说明,如何把函数式记法
+转换为不带等号的关系式记法。这样我们就既能享有函数式记法的便利,
+又能保留关系式的语义。关系式语义把偏函数和非确定性函数都作为
+特殊情形囊括在内。
+
+\subsection{Lamport \cite{Lamp09}}
+
+Euclid 算法(第 4--6 页)
+
+第一个例子是 Sedgewick 教科书 \cite{Sedg88} 中 Euclid 算法的一个
+简单版本。该算法通过把 $u$ 置为 $m$、把 $v$ 置为 $m$,并执行以下
+伪代码,来计算两个自然数 $m$ 与 $n$ 的 GCD:
+
+\hspace*{0.5cm}while $u \ne 0$ do\\
+\hspace*{1.0cm}if $u < v$ then $swap\ u\ and\ v$ end if;
+\hspace*{1.0cm}u := u - v
+\hspace*{0.5cm}end while
+
+终止时,$v$ 等于 $m$ 与 $n$ 的 GCD。对应的 PlusCal 版本是
+
+\hspace*{0.5cm}--algorithm EuclidSedgewick\\
+\hspace*{0.5cm}variables $m\in 1\ldots K$, $n\in 1\ldots K$,
+$u=m$, $v=n$\\
+\hspace*{0.5cm}begin while $u\ne 0$ do\\
+\hspace*{1.5cm}if $u < v$ then $u := v || v := u$ end if;\\
+\hspace*{1.5cm}$u := u - v$\\
+\hspace*{1.0cm}end while;\\
+\hspace*{1.0cm}assert $IsGCD(v,m,n)$\\
+\hspace*{0.5cm}end algorithm
+
+变量声明表明,$m$ 与 $n$ 的初始值取自从 1 到 $K$ 的整数集合
+$1\ldots K$,并且 $u$ 与 $v$ 的初始值分别等于 $m$ 与 $n$。(我们
+稍后会看到 $K$ 在何处声明。)用 $||$ 隔开的赋值语句构成一次多重
+赋值,其执行方式是先求出全部右侧表达式的值,再统一执行全部
+赋值。{\bf assert} 语句用来检验算法的正确性,其中 $IsGCD(v,m,n)$
+将被定义为:对自然数 $v$、$m$、$n$ 而言,当且仅当 $v$ 是 $m$ 与
+$n$ 的 GCD 时为真。
+
+该算法以注释的形式出现在一个 TLA+ 模块中:
+
+\hspace*{3.0cm}MODULE Euclid\\
+\hspace*{0.5cm}EXTENDS $Naturals$, TLC
+\hspace*{0.5cm}CONSTANT $K$
+\hspace*{0.5cm}$Divides(i,j)\over{\Delta}{=} \exists k\in 0\ldots j :
+j = i*k$\\
+\hspace*{0.5cm}$ISGCD(i,j,k)\over{\Delta}{=} Divides(i,j)$\\
+\hspace*{2.0cm}$\land Divides(i,j)$\\
+\hspace*{2.0cm}$\land \forall r\in 0..j \cup 0..k :$\\
+\hspace*{2.5cm}$Divides(r,j)\land Divides(r,k) \Rightarrow Divides(r,i)$\\
+\hspace*{0.5cm}(* --algorithm $EuclidSedgewick$\\
+\hspace*{1.0cm}$\ldots$\\
+\hspace*{0.5cm}end algorithm *)\\
+\hspace*{0.5cm}\\* BEGIN TRANSLATION\\
+\hspace*{1.0cm}Translator puts TLA+ specification here\\
+\hspace*{0.5cm}\\* END TRANSLATION
+
+该模块的 EXTENDS 语句引入了 $Naturals$ 模块,该模块定义了诸如
+减法和“$\ldots$”之类的算术算子,以及一个特殊的 TLC 模块,由于
+算法中的 {\bf assert} 语句,需要用到这个模块。CONSTANT 声明声明
+了算法参数 $K$。接下来,该模块把 $Divides(i,j)$ 定义为:对自然数
+$i$ 与 $j$ 而言,当且仅当 $i$ 整除 $j$ 时为真,并利用 $Divides$
+来定义 $IsGCD$。
+
+翻译器把算法的翻译结果——即一份 TLA+ 规格说明——插入到 BEGIN
+TRANSLATION 与 END TRANSLATION 这两行注释之间,并替换掉之前的
+任何版本。翻译器还会写出一个配置文件,用来控制 TLC 模型检验器。
+我们必须在该文件中加入一条命令,指定 $K$ 的值。TLC 会检验:对于
+变量初值的全部 $K^2$ 种可能取值,断言都得到满足,且执行都会
+终止。
+
+备注
+
+交换 $u$ 与 $v$ 的操作,当然也可以不借助多重赋值来表达,只需再
+声明一个变量 $t$,写成:
+
+\hspace*{0.5cm}$t:=u; u:=v; v:=t$
+
+它也可以写成下面这样
+
+\hspace*{0.5cm}with $t = u$ do $u:=v$; $v:=t$ end with
+
+WITH 语句把 $t$ 声明为局部于 DO 子句的变量。
+
+与其把 $m$ 与 $n$ 限制在 $1\ldots K$ 这一范围内,更自然的做法是
+允许它们取任意正整数。为此,我们把 $1\ldots K$ 替换为正整数集合;
+下面给出在 TLA+ 中表达这一集合的三种写法,其中 $Nat$ 在
+$Naturals$ 模块中被定义为全体自然数的集合。
+
+\hspace*{0.5cm}\[Nat \\ \{0\}\quad
+\{i\in Nat : i > 0\}\quad
+\{i+1 : i\in Nat\}\]
+
+为了检验所得到的算法,我们会告诉 TLC,用一个有限的数集来替换
+$Nat$。
+
+正如这个例子所示,PlusCal 是无类型的。类型正确性是算法的一种
+不变式性质,它断言:在任何一次执行过程中,各变量的取值都始终
+属于某些特定的集合。对算法 $EuclidSedgewick$ 而言,一个类型
+不变式就是 $u$ 与 $v$ 的取值都是整数。对于这种证明起来平凡的
+类型不变式,带类型的语言可以通过类型检查来验证类型正确性。但
+如果证明并不完全平凡——比如 $u$ 与 $v$ 是自然数这一类型不变式——
+普通的类型检查就无法验证类型正确性。(如果“自然数”本身是一个
+类型,那么对于一个具有减法的图灵完全语言而言,类型检查是不可
+判定的。)而这些类型不变式,TLC 都可以轻松检验。
+
+从 PlusCal 到 TLA+ 的翻译结果是
+
+\hspace*{0.5cm}--algorithm EuclidSedgewick\\
+\hspace*{0.5cm}variables $m\in 1\ldots K$, $n\in 1\ldots K$, $u=m$,
+$v=n$\\
+\hspace*{0.5cm}begin $L1$: while $u\ne 0$ do\\
+\hspace*{2.5cm}if $u < v$ then $u:=v || v:=u$ end if;\\
+\hspace*{2.3cm}$L2$: $u:=u-v$\\
+\hspace*{2.0cm}end while;\\
+\hspace*{2.0cm}assert $IsGCD(v,m,n)$\\
+\hspace*{0.7cm}$Done$:\\
+\hspace*{0.5cm}end algorithm
+
+\subsection{lion137 \cite{lion137}} 
+
+{\bf 基础算法:多项式最大公因式(GCD)}
+
+基础算法系列的又一篇;今天讲多项式除法。我们假设多项式定义在某个域
+(field)上,这是件好事,因为域上有很多漂亮的性质,说得明确一点:
+若 $a$ 和 $b$ 都在这个域中且 $b$ 不为零,那么域中总存在一个元素
+$c$,使得 $a=bc$。
+
+所以除法很容易,只要把它“推”到域上去做,就像按位除法或多精度
+除法那样。算法可参见 Knuth 的《The Art of Computer Programming Vol 4》
+及其他文献。
+
+\begin{verbatim}
+# input: coefficients of polynomials as a lists u, v != 0
+# in order u[0] = free coefficient of u(x), ....
+# returns polynomials q, r such that u = vq + r(rest)
+# length u >= length v >= 0
+def poly_divide(u, v)
+  m = len(u) - 1
+  n = len(v) - 1
+  q = [0] * (m - n + 1)
+  lim = m - n
+  for k in range (lim, -1, -1):
+    q[k] = u[n + k] / v[n]
+    for j in range(n + k - 1, k - 1, -1):
+      u[j] = u[j] - q[k] * v[j - k]
+  return q, u[:n]
+\end{verbatim}
+
+有了除法,我们就能计算最大公因式(Greatest Common Divisor),这也
+说明欧几里得整环(Euclidean Domain)比人们通常以为的要大。
+
+\begin{verbatim}
+def poly_gcd(u, v):
+  if not any(v): return u
+  else: return poly_gcd(v,poly_mod(u,v))
+\end{verbatim}
+
+$poly\_mod$ 不过是除法算法返回的余式。
+
+\begin{verbatim}
+# a polynomial u modulo v
+def poly_mod(u, v):
+  return poly_divide(u,v)[1]
+\end{verbatim}
+
+\subsection{Makkai \cite{Makk07}}
+
+给出了 GCD 的一个形式化定义
+
+\subsection{Manna and Waldinger \cite{Mann78a}}
+
+{\bf 两个数的最大公约数}
+
+在前两个例子中,我们把间歇断言法(intermittent-assertion method)用于
+只含一个循环的程序。下面这个程序用来计算两个正整数的最大公约数
+(gcd),用它来展示间歇断言法如何应用于循环结构更复杂的程序。
+
+我们把 $gcd(y,y)$(其中 $x$ 和 $y$ 为正整数)定义为同时整除 $x$ 和
+$y$ 的最大整数,亦即
+\[gcd(x,y) = max\{u:u~\vert~x and u~\vert~y\}\]
+
+举例来说,$gcd(9,12)=3$,$gcd(12,25)=1$。程序如下:
+\begin{verbatim}
+       input(x,y)
+start:
+more:  if x = y
+       then finish: output(y)
+       else reducex: if x > y
+                     then x <- x - y
+                          goto reducex
+            reducey: if y > x
+                     then y <- y - x
+                          goto reducey
+            goto more
+\end{verbatim}
+
+这个程序的动机来自 $gcd$ 的如下性质:
+\[\begin{array}{l}
+gcd(x,y) = y{\rm\ if\ } x = y\\
+gcd(x,y) = gcd(x-y,y){\rm\ if\ } x > y\\
+gcd(x,y) = gcd(x,y-x){\rm\ if\ } y > x
+\end{array}\]
+
+我们想用间歇断言法来证明这个程序的完全正确性(total correctness)。
+完全正确性可以表述如下:
+
+{\bf 定理}:若{\sl 在某时刻} $x=a$,$y=b$ 且 $b>0$ 于 start 处成立,
+则{\sl 在某时刻} $y=gcd(a,b)$ 于 finish 处成立。
+
+为了证明这个定理,我们需要一条引理来刻画程序的内部行为。
+
+{\bf 引理}:若\\
+{\sl 在某时刻} $x=a$,$y=b$,且 $a,b > 0$ 于 {\tt more} 处成立,或 \\
+{\sl 在某时刻} $x=a$,$y=b$,且 $a,b > 0$ 于 {\tt reducex} 处成立,或\\
+{\sl 在某时刻} $x=a$,$y=b$,且 $a,b > 0$ 于 {\tt reducey} 处成立,\\
+则{\sl 在某时刻} $y=gcd(a,b)$ 于 {\tt finish} 处成立
+
+为了说明引理蕴含定理,我们假设
+
+{\sl 在某时刻} $x=a$,$y-b$,且 $a,b > 0$ 于 {\tt start} 处成立。
+
+然后控制传递到 {\tt more},于是
+
+{\sl 在某时刻} $x=a$,$y-b$,且 $a,b > 0$ 于 {\tt more} 处成立。
+
+但接下来引理便蕴含
+
+{\sl 在某时刻} $y=gcd(a,b)$ 于 {\tt finish} 处成立,
+
+这正是定理所要的结论。
+
+剩下要证的就是引理。我们假设
+
+{\sl 在某时刻} $x=a$,$y=b$,且 $a,b > 0$ 于 {\tt more} 处成立,或 \\
+{\sl 在某时刻} $x=a$,$y=b$,且 $a,b > 0$ 于 {\tt reducex} 处成立,或\\
+{\sl 在某时刻} $x=a$,$y=b$,且 $a,b > 0$ 于 {\tt reducey} 处成立,
+
+证明按 $a+b$ 归纳进行;我们归纳假设:每当 $x=a^\prime$、$y=b^\prime$,
+其中 $a^\prime + b^\prime < a + b$ 时引理成立,并证明
+
+{\sl 在某时刻} $y=gcd(a,b)$ 于 {\tt finish} 处成立。
+
+我们需要区分三种情形。
+
+{\bf 情形 $a = b$}。无论控制此刻处于 {\tt more}、{\tt reducex} 还是
+{\tt reducey},控制都会带着 $y=b$ 传递到 {\tt finish},于是
+
+{\sl 在某时刻} $y=b$ 于 {\tt finish} 处成立
+
+但在这种情形下,由 $gcd$ 函数的一个已知性质可知 $b=gcd(a,b)$,于是
+我们有
+
+{\sl 在某时刻} $y=gcd(a,b)$ 于 {\tt finish} 处成立。
+
+这正是引理所要的结论。
+
+{\bf 情形 $a > b$}。无论控制此刻处于 {\tt more}、{\tt reducex} 还是
+{\tt reducey},控制都会到达 {\tt reducex},并绕上方的内层循环走一圈,
+把 $x$ 重设为 $a-b$,于是
+
+{\sl 在某时刻} $x = a - b$ 且 $y = b$ 于 {\tt reducex} 处成立
+
+为简便起见,把 $a-b$ 和 $b$ 分别记作 $a^\prime$ 和 $b^\prime$。注意
+
+$a^\prime, b^\prime > 0$\\
+$a+b > a^\prime + b^\prime$,且\\
+$gcd(a^\prime,b^\prime) = gcd(a-b,b) = gcd(a,b)$
+
+最后这个条件由 $gcd$ 的一个已知性质得出。
+
+因为 $a^\prime, b^\prime > 0$ 且 $a+b > a^\prime+b^\prime$,归纳假设
+便蕴含
+
+{\sl 在某时刻} $y=gcd(a^\prime,b^\prime)$ 于 {\tt finish} 处成立。
+
+亦即,由上面第三个条件,
+
+{\sl 在某时刻} $y=gcd(a,b)$ 于 {\tt finish} 处成立。
+
+{\bf 情形 $b > a$}。这种情形可用与上一种情形对称的方式处理。
+
+至此引理证毕。由此,该程序的完全正确性也就确立了。
+
+用传统的不变式断言法(invariant-assertion method)来证明上述程序的
+部分正确性(partial correctness)并不困难。例如,要证明该程序相对于
+如下输入规范
+
+$x_0 > 0$ 且 $y_0 > 0$
+
+以及输出规范
+
+$y=gcd(x_0,y_0)$
+
+(其中 $x_0$ 和 $y_0$ 分别是 $x$ 和 $y$ 的初值)是部分正确的,我们
+可以使用同一个不变式断言
+
+$x,y > 0$ 且 $gcd(x,y) = gcd(x_0,y_0)$
+
+在 {\tt more}、{\tt reducex} 和 {\tt reducey} 这几个标号处均成立。
+
+与此相对,用传统的良基序方法(well-founded ordering method)来证明
+这个程序的终止性却很别扭,因为控制可能从 {\tt more} 传递到
+{\tt reducex}、从 {\tt reducex} 传递到 {\tt reducey},或者从
+{\tt reducey} 传递回 {\tt more},而不改变任何程序变量。用这种方法
+证明 $gcd$ 程序终止性的最简单证明之一,是取良基集(well-founded set)
+为按通常字典序排序的非负整数对。当取与各循环标号相对应的表达式为
+
+$(x+y,2)$,位于 {\tt more}\\
+若 $x\ne y$ 则取 $(x+y,1)$,否则取 $(x+y,4)$,位于 {\tt reducex},
+以及\\
+若 $x<y$ 则取 $(x+y,0)$,否则取 $(x+y,3)$,位于 {\tt reducey}
+
+可以证明,当控制从一个循环标号传递到下一个时,这些相继取值是递减的。
+
+尽管这种方法是有效的,但用它来确立 $gcd$ 程序的终止性并不是最自然
+的方式。
+
+\subsection{Mao \cite{Maox20}}
+
+设 $a=bq+r$,其中 $a$、$b$、$q$、$r$ 均为整数。那么 $gcd(a,b)=gcd(b,r)$。
+
+{\bf 证明}
+
+假设 $d\vert a$ 且 $d\vert b$,那么有
+\[\begin{array}{rcl}
+a & = & dk_1\\
+b & = & dk_2\
+\end{array}\]
+其中 $k_1,k_2 \in \mathbb{N}$
+\[\begin{array}{rcl}
+r & = & a-bq\\
+  & = & dk_1 - dk_2q\\
+  & = & d(k_1-k_2q)
+\end{array}\]
+
+这说明:$a$ 和 $b$ 的任何公因子(common divisor)也必是 $r$ 的因子,
+进而 $a$ 和 $b$ 的任何公因子也必是 $b$ 和 $r$ 的公因子。于是 $a$ 和
+$b$ 的众公因子之一,即 $gcd(a,b)$,也是 $b$ 和 $r$ 的一个公因子。既然
+$b$ 和 $r$ 的最大公因子是 $gcd(b,r)$,便有 $gcd(a,b)\le gcd(b,r)$。
+
+同理可证:$b$ 和 $r$ 的任何公因子也必是 $a$ 的因子,进而 $b$ 和 $r$
+的任何公因子也必是 $a$ 和 $b$ 的公因子。于是 $b$ 和 $r$ 的众公因子之
+一,即 $gcd(b,r)$,也是 $a$ 和 $b$ 的一个公因子。既然 $a$ 和 $b$ 的最
+大公因子是 $gcd(a,b)$,便有 $gcd(b,r)\le gcd(a,b)$。
+
+因为 $gcd(a,b)\le gcd(b,r)$ 且
+$gcd(b,r)\le gcd(a,b)$,我们必有
+$gcd(a,b)=gcd(b,r)$。
+
+{\bf 证毕}
+
+\subsection{McAllester, D. and Arkondas, K., \cite{Mcal96}}
+
+“原始递归(primitive recursion)是对递归定义的一种广为人知的句法
+限制,能够保证终止性。遗憾的是,许多自然的定义——比如欧几里得 GCD
+算法最常见的那个定义——并不是原始递归的。Walther 最近给出了一套
+证明系统,用来验证更广一类定义的终止性。尽管 Walther 的系统高度可
+自动化,但可接受定义的类别依然只是半可判定的。这里我们简化了
+Walther 的演算,给出一条推广了原始递归、并能处理 Walther 给出的大
+多数例子的句法判据。我们把相应的一类可接受定义称为‘Walther 递归
+的’。",
+
+\subsection{McCarthy \cite{Mcca63}}
+
+
+设 $I$ 为非负整数集合 $\{0,1,2,\ldots\}$,把整数 $n$ 的后继记作
+$n^\prime$,把整数 $n_1$ 与 $n_2$ 的相等关系记作 $n_1=n_2$。若我们按
+下式定义函数 $succ$ 和 $eq$
+\[succ(n)=n^\prime\]
+
+\[eq(n_1,n_2)=
+\left\{
+\begin{array}{c}
+{\tt T} {\tt\ if\ } n_1=n_2\\
+{\tt F} {\tt\ if\ } n_1\ne n_2\\
+\end{array}
+\right.\]
+
+那么我们记 $\mathcal{F}=\{succ,eq\}$。我们感兴趣的是
+$\mathcal{C\{F\}}$。显然,$\mathcal{C\{F\}}$ 中的所有函数,其值
+要么是整数,要么是真值。
+
+首先我们按下式定义前驱函数 $pred$($n=0$ 时无定义):
+\[pred(n)=pred2(n,0)\]
+
+\[pred2(n,m)=(m^\prime=n\rightarrow m,
+{\tt T}\rightarrow pred2(n,m^\prime))\]
+
+我们把 $pred(n)$ 记作 $n^-$
+
+现在我们定义和
+\[m+n=(n=0\rightarrow m,~{\tt T}\rightarrow m^\prime+n^\prime)\]
+积
+\[mn=(n=0\rightarrow 0,~{\tt T}\rightarrow m+mn^-)\]
+差
+\[m-n=(n=0\rightarrow m,~{\tt T}\rightarrow m^- -n^-)\]
+该定义仅对 $m\ge n$ 成立。不等式谓词 $m\le n$ 定义为
+\[m\le n=(m=0)\lor(\sim{}(n=0\land(m^-\le n^-))\]
+严格不等式 $m<n$ 定义为
+\[m<n=(m\le n)\land\sim{}(m=n)\]
+整数值的商 $m/n$ 定义为
+\[m/n=(m<n\rightarrow 0,~{\tt T}\rightarrow((m-n)/n)^\prime)\]
+$m$ 除以 $n$ 的余数定义为
+\[rem(m/n)=(m<n\rightarrow m,~{\tt T}\rightarrow rem((m-n)/n))\]
+以及数 $n$ 被数 $m$ 整除的关系,
+\[m|n=(n=0)\lor((n\ge m)\land(m|(n-m)))\]
+一个数的素性(primeness)定义为
+\[prime(n)=(n\ne 0)\land(n\ne 1)\land prime2(n,2)\]
+其中
+\[prime2(m,n)=(m=n)\lor(\sim{}(m|n)\land prime2(n,m^\prime))\]
+
+欧几里得算法定义了最大公约数,我们记作
+\[gcd(m,n)=(m>n\rightarrow gcd(n,m),
+rem(n/m)=0\rightarrow m,
+{\tt T}\rightarrow gcd(rem(n/m,m))\]
+并且我们可以按下式定义 Euler 的 $\varphi$ 函数:
+\[\varphi(n)=\varphi_2(n,n)\]
+其中
+\[\varphi_2(n,m)=(m=1\rightarrow 1,
+gcd(n,m)=1\rightarrow \varphi_2(n,m^-)^\prime,
+{\tt T}\rightarrow\varphi_2(n,m^-))\]
+$\varphi(n)$ 是小于 $n$ 且与 $n$ 互素的数的个数。
+
+\subsection{Meshveliani \cite{Mesh16a}}
+
+{\bf 偏见一}:“构造性数学中不能使用反证法”
+
+而事实上:{\sl 它是可能的}——当这个关系拥有一个{\bf 判定算法
+(decision algorithm)}的时候。
+
+{\bf 例}:在计算机代数的大多数 domain 中,相等关系都拥有一个判定
+算法 \verb|_=?_|。相应地,如下形式的一段程序,
+\[{\rm case\ x\ } =? {\rm\ y\ of\ } \backslash{} 
+\{ (yes x\approx y)\rightarrow\ldots;
+({\rm\ no\ }x\ne y)\rightarrow\ldots\}\]
+实际上就是把{\sl 排中律(excluded third law)}用到了这个关系上。
+
+{\bf 偏见二}:“经过验证的编程工具(如 Coq、Agda)中的程序本身
+并不提供证明,取而代之的是,它们为每一个具体数据提供一个构造证明
+见证(proof witness)的算法”。
+
+我主张:{\sl 它们同样也提供了通常意义下的证明}(在 Agda 中确实
+如此,我预期 Coq 也是一样)。
+
+\subsection{Myreen \cite{Mimr20}}
+
+当然,如果我们想证明程序更丰富的性质(或者反过来,用程序去证明更
+有趣的公式),就需要一种比命题逻辑表达力更强的逻辑。在本课程中,
+我们将介绍能够做到这一点的{\sl 依赖类型(dependent types)},同时
+保留“证明即程序”的对应关系。例如,计算两个整数的商与余数的欧几
+里得除法,通常被赋予如下类型:
+\begin{verbatim}
+   int -> int -> int * int
+\end{verbatim}
+这个类型是说,它接受两个整数作为参数,返回一个整数对。这种类型
+标注非常弱,因为有很多不同的函数都具有同一个类型。有了依赖类型,
+我们就能够给它如下的类型:
+\[(m:{\tt int}) \rightarrow (n:{\tt int}) \rightarrow
+\sum{(q:({\tt int})}.\sum{(r:({\tt int})}.((m=nq+r)\times (r<n))\]
+这可以读作如下公式:
+\[\forall m\in {\tt int}.
+\forall n\in {\tt int}.
+\exists q\in {\tt int}.
+\exists r\in {\tt int}.
+((m=nq+r)\land(r<n))\]
+
+\subsection{Myreen \cite{Myre10}}
+
+GCD 被用作已验证 JIT 编译器(verified JIT Compiler)的一个基准示例,
+见第 111 页。
+
+\subsection{Neuper \cite{Neup13}} 
+
+该案例研究的动机来自 RISC Linz 的一篇硕士论文,该论文用 SML 实现
+了一个计算多元多项式最大公约数的计算机代数(CA)算法 \cite{Mein13}。
+
+\subsection{Nordstr\"om, Petersson, and Smith \cite{Nord90}}
+
+近年来,人们提出了好几种用于程序构造的形式系统。其中一种就是
+Per Martin-L\"̈of 提出的类型论。它非常适合作为程序构造的理论,
+因为它能够在同一个形式系统内同时表达规范(specification)与程序。
+此外,证明规则既可以用来从一份规范推导出一个正确的程序,也可以
+用来验证一个给定的程序确实具有某种性质。本书包含了对类型论作为
+程序构造理论的一个引介。
+
+作为一种编程语言,类型论与 Hope [18]、ML [44] 这类带类型的函数式
+语言相似,但一个主要区别在于:{\bf 一个良类型(well-typed)程序的
+求值总会终止}。在类型论中,同样可以写出编程任务的规范,也可以开发
+出可证明正确的程序。因此,类型论不仅仅是一种编程语言,不应该拿它
+去和编程语言比较,而应该拿它和 LCF、PL/CV 这类形式化编程逻辑相
+比较。
+
+一个命题被解释为一个集合,其元素代表该命题的各个证明。因此,一个
+假命题被解释为空集,一个真命题被解释为非空集。第 2 章详细解释了
+逻辑常项如何对应到集合,从而说明了一个命题为何可以被解释为一个
+集合。一个集合不仅可以被看作一个命题,也可以被看作一个问题描述。
+这一点对编程很重要,因为如果一个集合可以被看作对一个问题的描述,
+它就尤其可以被用作一个编程问题的规范。当一个集合被看作一个问题时,
+该集合的元素就是这个问题的可能解;类似地,如果我们把这个集合看作
+一份规范,它的元素就是满足该规范的程序。因此,在类型论中,集合的
+成员关系与程序的正确性是同一个问题,而且由于所有程序都会终止,
+“正确性”意味着完全正确性(total correctness)
+
+\subsection{O'Donnell \cite{Odon81}}
+
+对于谓词演算(Predicate Calculus)而言彼此等价的几种“推理系统
+正确性”定义,对 Hoare 语言而言并不等价。
+
+一致性(consistency)指的是一个系统无法推导出显式矛盾的性质,而
+更强的可靠性(soundness)概念则是说,一个系统中推导出的一切在某
+种意义上都为真。
+
+一致性定义如下:
+\begin{itemize}
+\item 假设在某种语言的公式有限集 $\phi$ 上,已经定义了一个关系
+{\bf contradictory($\phi$)},用来刻画“$\phi$ 中的公式显式矛盾”
+这一直观概念。
+\item 一个逻辑推理系统是{\bf 强一致的(strongly consistent)},
+如果不可能证明满足 {\bf contradictory($\phi$)} 的集合 $\phi$ 中的
+所有公式。
+\item 一个逻辑推理系统是{\bf 弱一致的(weakly consistent)},如果
+不可能证明满足 {\bf contradictory($\phi$)} 的单个公式 $F$。
+\end{itemize}
+强一致性显然蕴含弱一致性。
+
+在 Hoare 逻辑中,两个公式 $A\{P\}B$ 与 $C\{Q\}D$ 不能用类似 \&
+这样的符号组合起来。所以对于 Hoare 语言中的推理系统,弱一致性与
+强一致性可能并不等价。
+
+对于某个合理的 contradictory 定义而言,强一致性直觉上是一个逻辑
+系统正确性的必要条件,但一般来说并非充分条件,因为一个系统可能
+证明出某个为假的公式,而它并不与任何其他可证公式相矛盾。
+
+\begin{itemize}
+\item 如果在 $\phi$ 中所有公式均为真的每一个世界(world)中 $F$
+都为真,就说公式集 $\phi$ {\bf 蕴含(implies)} 公式 $F$。
+\item 一个逻辑系统是{\bf 定理可靠的(theorem sound)},如果每一个
+可证公式都为真
+\item 一个逻辑系统是{\bf 推理可靠的(inferentially sound)},如果
+对每一个公式集 $\phi$ 和每一个公式 $F$,只要 $F$ 能够从 $\phi$ 中
+的假设证明出来,$\phi$ 就蕴含 $F$。
+\end{itemize}
+在任何“相矛盾的公式不可能同时全为真”的系统中,定理可靠性蕴含
+强一致性。取 $\phi$ 为空集,即可看出推理可靠性蕴含定理可靠性。
+
+虽然乍看之下定理可靠性似乎已经足以支撑“正确性”这一直观论断,
+但这种较弱形式的可靠性只能为一个系统的定理背书,而不能为其推理
+方法背书。
+
+定义:一个 Hoare 三元组 $A\{P\}B$ 是一个{\bf 真的部分正确性公式
+(true partial correctness formula)},如果每当程序段 P 在使 $A$ 为
+真的状态下从其第一条命令开始执行,并且 P 通过执行其最后一条命令
+而正常终止,那么所得终止状态下 $B$ 为真。
+
+当函数体可能失败时,函数定义规则的可靠性就是一个棘手的问题,因为
+谓词演算的通常解释并不允许偏函数(partial function)的存在。
+
+对于只用条件语句和循环作为控制结构的程序,Hoare 语言中的部分正确
+性推理非常自然;但对于带有自定义函数和(或)GoTo 语句的程序则不
+然。自定义函数把部分正确性与终止性纠缠在一起,纠缠到不再方便把
+二者分开的程度。既然无论如何都必须证明终止性,我们在对函数定义
+做推理时就应该使用完全正确性(total correctness)逻辑。
+
+\subsection{Paulson \cite{Paul96}}
+
+考虑欧几里得算法(Euclid's Algorithm),它以递归方式定义,用来计算
+两个自然数的最大公约数(Greatest Common Divisor,GCD):
+\begin{verbatim}
+   gcd(0,n) = n
+   gcd(m,n) = gcd(n mod m,m)       for m > 0
+\end{verbatim}
+
+下面是用 Standard ML 写成的函数式程序:
+\begin{verbatim}
+   fun gcd(m,n) = if m=0 then n else gcd(n mod m,m);
+\end{verbatim}
+
+\subsection{Sanuki, Inaba, and Sasaki \cite{Sanu15}}
+
+用扩展 Hensel 构造法计算稀疏多元多项式的 GCD
+
+    “设 $F(x,u_1,\ldots,u_i)$ 是主变量为 $x$、子变量为
+    $u_1\ldots u_i$ 的一个无平方因子(squarefree)多元多项式。我们
+    说 $F$ 的首项系数(leading coefficient,LC)是奇异的(singular),
+    如果它在子变量的原点处取值为零。求非稀疏多元多项式 GCD 的一个
+    代表性算法是 EZ-GCD 算法,它基于广义 Hensel 构造法(generalized
+    Hensel construction,GHC)。为了能顺利套用 GHC,我们需要:1)
+    $F$ 的 LC 非奇异;2)$F(x,0,\ldots,0)$ 无平方因子;以及 3)GCD 的
+    初始 Hensel 因子是“幸运的(lucky)”。这些条件通常可以通过
+    “非零代换(nonzero substitution)”来满足,也就是平移子变量
+    的原点。然而,如果 $F$ 是稀疏的,非零代换可能会导致 $F$ 的项数
+    急剧增加。1993 年,Sasaki 和 Kako 提出了扩展 Hensel 构造法
+    (extended Hensel construction,EHC),即便 LC 是奇异的,它也不
+    需要做非零代换。利用 EHC,Inaba 实现了一个多元多项式因式分解
+    算法,并验证了它对稀疏多项式非常有用。本文中,我们把 EHC 用于
+    稀疏多元多项式 GCD 的计算。为了找到一个幸运的初始因子,我们
+    利用了子变量的加权等手段。我们在 Maple 中做的朴素实现表明,我们
+    的算法在性能上可与基于稀疏插值的 Maple 内置 GCD 例程相媲美。",
+
+\subsection{Scott and Strachey \cite{Scot71}}
+
+完备格(complete lattice)上的单调函数总是有不动点。它们甚至有
+最小不动点。这使得它们对我们的目的而言用起来极为方便。实际上,
+我们所使用的——也是适用于计算理论的——那些函数还有一个更强的
+性质:它们是连续的。我们将假定这一更强的性质成立,但在本文中不
+打算深入其技术细节。读者只需相信,正常的函数会自动是连续的。
+
+所有这套理论跟语义学这个主题又有什么关系呢?其关联可以逐步说明
+如下:命令(程序)自然地被看作定义了状态变换。递归命令则需要偏
+函数。求解这些偏函数,恰恰就是在求某些函数方程的(最小)不动点。
+一般来说,不动点的存在性是靠格理论的论证来保证的。因此,只要我们
+能看清格与偏函数之间的联系,这套理论的相关性也就确立了。
+
+\subsection{Smolka \cite{Smol89a}} 
+
+详细阐述了带多态有序分类(polymorphically order-sorted)数据类型
+的关系型逻辑编程的基础理论。
+
+\subsection{Stepanov and McJones \cite{Step09}}
+
+第 5 章
+
+\subsection{Strub, Pierre Yves}
+\begin{verbatim}
+Formal Proofs and Decision Procedures  (Strub, Pierre Yves)
+htps://www.youtube.com/watch?v=YgOoDNIT8A8
+year = "2016"
+
+Prop is a type containing other types
+The inhabitants of Prop are proof types or propositions
+If A:Prop and B:Prop are proof types then A->B is a proof type (implication)
+A proof type is valid if there exists a program of that type
+(fun (x:A) => x) is a proof of (A -> A)
+
+Elimination of the \forall connector
+   \forall x,P 
+   --------
+   P{x \mapsto t}
+ We want to express a proof of (\forall x,P) by a function taking a t
+ and returning a proof of P(t)
+ The result type depends on the input
+    Dependent typ: type that depends on a value
+
+Arithmetic (P. Cregut)
+Real Arithmetic (L Pottier)
+First Order Logic (P Corbineau)
+Polynomial Systems (B Barras, B Gregoire, A Mahboubi)
+External Oracles (N Ayache JC Filliatre)
+
+two terms are computationally equal are considered identical
+
+Fact fact1 A B C : (A -> B -> C) -> (A -> B) -> A -> C
+fact1 = fun (A B C : Type) (HABC : A -> B -> C) (HAB : A -> B) (HA : A) =>
+HABC HA (HAB HA) : forall A B C : Type, (A -> B -> C) -> (A -> B) -> A -> C
+
+Fact fact2 A B C : (A -> B -> C) -> (A -> B) -> A -> C
+fact2 = fun (A B C : Type) (X : A -> B -> C) (X0 : A -> B) (X1 : A) =>
+let X2 := X X1 in let X3 := X0 X1 in unkeyed (X2 X3)
+  : forall A B C : (A -> B -> C) -> (A -> B) -> A -> C
+
+Fact fact3 (m n:Z) : (1 + 2 * m <> 2 * n)%Z
+fact3 - fun (m n : Z) (H : (1 + 2 * M)%Z = (2 * n)%Z) =>
+let H0 :=
+  fact_Zmult comm 2 m (fun x : Z => (1 + x + - (2 * n))%Z = 0%Z -> False)
+   (fast_Zplus_comm 1 (m * 2)
+     (fun x : Z => (x + - (2 * n))%Z = 0%Z -> False)
+     (fast _Zmult_comm 2 n (fun x :Z => (M * 2 + 1 - x)%Z = 0%Z -> False)
+       (fast_Zopp_mult disr r n 2
+         (fun x : Z => (m * 2 + 1 + x)%Z = 0%Z -> False)
+	 (fast_Zplus_comm (m * 2 + 1) (n * -2)
+	   (fun x : Z => x = 0%Z -> False)
+	   (fun Omega0 : (n * -2 + (m * 2 + 1))%Z = 0%Z =>
+	     let H0 := erefl Gt in
+	     (let H1 := erefl Gt in
+	      fun auxiliary_1 : (1 > 0)%Z =>
+	      OMEGA4 1 2 (n * -1 + (m * 1 + 0)) auxiliary_1 H1
+	        (fast_OMEGA11 n (-1) (m * 1 + 0) 1 2
+		  (eq^- 0%Z)
+		    (fast_OMEGA11 m 1 0 1 2
+		      (fun x : Z => (n * (-1 * 2) + x)%Z = 0%Z)
+
+Fact fact4: 2 + 2 = 4
+fact4 =
+ eq_ind_r (eq^ - 4)
+  (eq_ind_r (fun _pattern_value : nat => _pattern_value_.+1 = 4)
+      (eq_ind_r (fun _pattern_value : nat => _pattern_value_.+2 = 4) (erefl 4) (addn0 2))
+      (addnS 2 0))
+  (addnS 2 1) : 2 + 2 = 4
+
+ \forall x,x+0 = x   \forall x y, x+S(y)=S(x+y)
+
+2+2 = 4 is proved by
+
+ |- \forall x,x+S(y)=S(x+y)         |- \forall x,x+S(y)=S(x+y)
+ ---------------------        ---------------------
+   |- 2+2 = S(2+1)                      |- S(2+1) = S(S(2+0))           |- \forall x,x+0 = x
+   -----------------------------------------         ----------------
+                              |- 2+2 = S(2+0)                                       |- S(2+0) = 4
+			      -------------------------------------------
+			              |- 2+2 = 4
+
+Calculus of Construction (Coquand, Huet, 1985)
+  \beta convertibility
+Calculus of Inductive Construction (Coquand, Paulin, 1990)
+  \beta convertibility + recursors for inductive types
+Extensional Calculus of Construction (Oury 05)
+  \beta + convertible
+  "any terms which can be proven equal are convertible"
+   (BUT proof checking isn't decidable because convertibility is not decidable)
+Coq Modulo Theory (TCS'08, CSL'10, LICS'11) (Strub, Pierre Yves)
+  add decision procedure to conversion rule
+Calculus of Presburger Constructions
+  \beta conversions (function evaluation)
+  recursor for natural numbers (def. by induction of functions and types)
+  a decision procedure for Presburger arithmetic in its conversion
+  an extraction from the proof environment of arithmtic equations
+  whose proof checking is decidable
+
+    \Gamma |- t:T   \Gamma |- T':s'   T ~r T'
+    --------------------------------
+           \Gamma |- t:T'
+
+   where ~r will include
+     \beta-convertibility (function evaluation)
+     recursor for natural numbers (fixpoint+match evaluation)
+     validity entailment of the Presburger arithmetic
+         At least, the conversion must consider equal
+	 any pair of Presburger-equal algebraic terms
+	   Algebraic terms are all terms built from 0, S,+ and variables with the right arity
+	   This solves our motivation examples
+	       list n + m ~ list m + n
+	   because n + m and m + n are algebraic and P-equal
+	   BUT this does not define a sound logic
+	   
+
+
+\end{verbatim}
+
+\subsection{Sutor \cite{Suto87}} 
+
+Scratchpad II 中的类型推断与强制转换。
+
+\subsection{Tsuji \cite{Tsuj09}}
+
+面向多元多项式的改进 EZ-GCD 算法
+
+    “EZ-GCD 算法常常存在坏零点问题(bad-zero problem),它对带有
+    高次项的多项式有着显著的影响。本文通过运用特殊理想(ideal),
+    改进了针对稀疏多项式的 EZ-GCD 算法。由于多项式的稀疏性,这个
+    改进算法大大降低了计算复杂度。作者预期,使用这些理想将有助于
+    求解带高次项的稀疏多元多项式的 GCD。",
+
+
+\subsection{Wang \cite{Wang80}}
+
+EEZ-GCD 算法
+
+   “本文描述了一个基于 EX-GCD 算法的增强型 gcd 算法,着重讨论了
+    实现方面的问题。它通常速度更快,尤其适合用来计算稀疏多元多项式
+    的 gcd。EEZ-GCD 算法具有以下特点:
+    \begin{enumerate}
+    \item 避免不幸求值(unlucky evaluation),
+    \item 预先确定所求 gcd 的正确首项系数,
+    \item 利用给定多项式的稀疏性来确定 gcd 中的各项,以及
+    \item 直接处理“公共因子问题(common divisor problem)”的
+    方法。
+    \end{enumerate}
+    当 gcd 与各个余因子(cofactor)分别有不同的公共因子时,就会
+    出现公共因子问题。EZ-GCD 算法在这种情形下会做一次无平方因子
+    分解。这一步是可以避免的,从而提高速度。一种方法是对两个以上
+    的因子采用并行 p-adic 构造。文中还给出了带计时数据的机器实例。",
+
+\subsection{Watt \cite{Watt85a}}
+
+Watt 写了一篇 GCD 算法综述(Survey of GCD Algorithms)。
+
+\subsection{Wijngaarden \cite[Section 6, p95]{Wijn68}}
+
+ALGOL 68 为强制转换(coercion)精心定义了一套规则,通过解引用
+(dereferencing)、解过程化(deproceduring)、拓宽(widening)、
+行化(rowing)、联合化(uniting)以及置空(voiding),把值转换为
+进一步计算所需的类型。
+
+\appendix
+
+\chapter{Common Lisp 中的无类型 Lambda}
+见 Garret \cite{Garr14}
+
+这是一个针对无类型 lambda 演算(untyped lambda calculus)的编译器。
+\begin{chunk}{lambda}
+(defmacro ulambda (args body)
+  (if (and args (atom args)) (setf args (list args)))
+  (if (and (consp body) (consp (car body))) (push 'funcall body))
+  (if (null args)
+    body
+    `(lambda (&rest args1)
+  (let ((,(first args) (first args1)))
+    (declare (ignorable ,(first args)))
+    (flet ((,(first args) (&rest args2) (apply ,(first args) args2)))
+      (if (rest args1)
+        (apply (ulambda ,(rest args) ,body) (rest args1))
+        (ulambda ,(rest args) ,body)))))))
+
+\end{chunk}
+
+阶乘函数。
+\begin{chunk}{factorial}
+(ulambda (n f) 
+  (n (ulambda (c i)
+       (i (c (ulambda (f x)
+               (i f (f x))))))
+     (ulambda x f)
+     (ulambda x x)))
+
+\end{chunk}
+
+10 的阶乘。先取 3 的阶乘,加上 4,再对结果求阶乘。
+\begin{chunk}(factorial10}
+(ulambda ()
+  ((ulambda (f s) (f (s (s (s (s (f (s (s (s (ulambda (f x) x)))))))))))
+   (ulambda (n f) (n (ulambda (c i) (i (c (ulambda (f x) (i f (f x))))))
+                   (ulambda x f) (ulambda x x)))
+   (ulambda (n f x) ((n f) (f x)))
+   '1+ 0))
+
+\end{chunk}
+
+\subsection{Weber \cite{Webe95a}}
+
+由于两个整数的最大公约数(greatest common divisor,GCD)是一种基本
+的算术运算,广泛用于许多数学软件系统中,因此计算它的新算法始终
+广受关注。这里讨论的加速整数 GCD 算法,基于 Sorenson 提出的一种
+归约步骤(k 元归约,k-ary reduction),并配合类似 Norton 的 smod
+的 dmod 运算。Sorenson 归约法的一些实际限制已被消除。对 $n$ 位
+输入而言,最坏情形复杂度仍是 $O(n^2)$,但在输入约 4000 位长时,
+实际实现在一种带乘法指令的计算机体系结构上,速度比二进制 GCD 快
+5.5 倍以上。Jebelean 的独立研究也得出了相同的结论。
+
+\subsection{LeanProver}
+
+在 LeanProver 聊天记录(chat)中 \cite{Lean19},agro1986 写道:
+
+\begin{flalign*}
+{\tt variables}~\{a~b~c~d:~\mathbb{Z}\}&&
+\end{flalign*}
+
+\noindent
+${\tt def}~{\tt divides}~(a~b:~\mathbb{Z}):~{\tt Prop}~:=
+~\exists(d:~\mathbb{Z}),~b~=~a~*~d$\\
+
+\noindent
+${\tt def}~{\tt gcd}~(a~b~d:~\mathbb{Z}):~{\tt Prop}~:=$\\
+\hspace*{0.2cm} $\lnot(a~=~0~\land~b~=~0)~\land$\\
+\hspace*{0.2cm} ${\tt divides}~d~a~\land$\\
+\hspace*{0.2cm} ${\tt divides}~d~b~\land$\\
+\hspace*{0.2cm} $\forall~(c:~\mathbb{Z}),~{\tt divides}~c~a~\land
+~~{\tt divides}~c~b\rightarrow c~\le~d$
+
+\noindent
+${\tt theorem}~{\tt gcd\_sym}~(h:~{\tt gcd}~a~b~d):~{\tt gcd}~b~a~d~:=$\\
+\hspace*{0.2cm}${\tt begin}$\\
+\hspace*{0.4cm}${\tt let\ hnonzero\ }:={\tt \ h.left},
+\quad\qquad\qquad -- \lnot(a~=~0~\land~b~=~0)$\\
+\hspace*{0.4cm}${\tt let\ hda\ }:={\tt \ h.right.left},
+\quad\qquad\qquad -- {\tt divides\ }d~a~\land$\\
+\hspace*{0.4cm}${\tt let\ hdb\ }:={\tt \ h.right.right.left},
+\qquad -- {\tt divides\ }d~b~\land$\\
+\hspace*{0.4cm}${\tt let\ }{\tt hgreatest\ }:={\tt \ h.right.right.right},$\\
+\hspace*{0.4cm}${\tt apply\ and.intro},$\\
+\hspace*{0.6cm}${\tt exact\ }({\tt assume\ hzero}:~b~=~0~\land~a~=~0,$\\
+\hspace*{0.8cm}${\tt hnonzero\ (hzero.right,\ hzero.left))},$\\
+\hspace*{0.4cm}${\tt apply\ and.intro},$\\
+\hspace*{0.6cm}${\tt assumption},$\\
+\hspace*{0.4cm}${\tt apply\ and.intro},$\\
+\hspace*{0.6cm}${\tt assumption},$\\
+\hspace*{0.4cm}${\tt assume\ c},$\\
+\hspace*{0.6cm}${\tt let\ hc\_lt\_d\ (hc\_divides.right,
+\ hc\_divides.left)}$\\
+${\tt end}$
+
+Kevin Buzzard 给出了一个 {\bf 策略模式(tactics mode)} 的证明作为
+回复:
+
+\noindent
+${\tt theorem}~{\tt gcd\_sym}~(h:~{\tt gcd}~a~b~d):~{\tt gcd}~b~a~d~:=$\\
+\hspace*{0.2cm}${\tt begin}$\\
+\hspace*{0.4cm}${\tt rcases\ h\ with\ (hne0,\ hda,\ hdb,\ hdmin),}$\\
+\hspace*{0.4cm}${\tt split,\ exact\ mt\ and.comm.mp\ hne0,}$\\
+\hspace*{0.4cm}${\tt split,\ assumption,}$\\
+\hspace*{0.4cm}${\tt split,\ assumption,}$\\
+\hspace*{0.4cm}${\tt rintros\ }c{\tt \ (ha,\ hb)},$\\
+\hspace*{0.4cm}${\tt exact\ hdmin\ }c{\tt \ (hb,\ ha)}$\\
+${\tt end}$
+
+这里还有一个 {\bf 项证明(term proof)}
+
+\noindent
+${\tt theorem}~{\tt gcd\_sym}~(h:~{\tt gcd}~a~b~d):~{\tt gcd}~b~a~d~:=$\\
+${\tt (mt\ and.comm.mp\ h.1,\ h.2.2.1,\ h.2.1,\ }\lambda~c~{\tt hc},
+{\tt \ h.2.2.2\ \_\ (hc.2\ hc.1))}$\\
+
+Reid Barton 说,一个更好的定义应当得出如下结论
+
+\noindent
+$\forall~(c:~\mathbb{Z}),{\tt \ divides\ }c~a~\land~
+{\tt \ divides\ }c~b~\rightarrow
+{\tt \ divides\ }c~d$
+
+接着假设 $d\ge 0$。这样就不需要 $\lnot(a~=~0~\land~b~=~0)$ 这部分
+了。
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{axiom}
+\bibliography{axiom}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+%\addcontentsline{toc}{chapter}{Index}
+\printindex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
