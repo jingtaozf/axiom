@@ -1,0 +1,5716 @@
+\documentclass{book}
+\newcommand{\VolumeName}{Volume 8.1: Axiom Gallery}
+\input{bookheader.tex}
+\pagenumbering{arabic}
+\mainmatter
+\setcounter{chapter}{0} % Chapter 1
+\chapter{一般示例}
+这些示例来自 Axiom 自带的各种输入文件中的代码。
+
+\section{二维函数}
+
+\newpage
+\subsection{一个简单的正弦函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation123.eps}}}
+\begin{chunk}{equation123}
+draw(sin(11*x),x = 0..2*%pi)
+\end{chunk}
+
+\newpage
+\subsection{一个简单的正弦函数,非自适应绘图}
+{\center{\includegraphics[scale=0.50]{ps/v81equation124.eps}}}
+\begin{chunk}{equation124}
+draw(sin(11*x),x = 0..2*%pi,adaptive == false,title == "Non-adaptive plot")
+\end{chunk}
+
+\newpage
+\subsection{一个简单的正弦函数,按比例绘制}
+{\center{\includegraphics[scale=0.50]{ps/v81equation125.eps}}}
+\begin{chunk}{equation125}
+draw(sin(11*x),x = 0..2*%pi,toScale == true,title == "Drawn to scale")
+\end{chunk}
+
+\newpage
+\subsection{一个简单的正弦函数,极坐标绘图}
+{\center{\includegraphics[scale=0.50]{ps/v81equation126.eps}}}
+\begin{chunk}{equation126}
+draw(sin(11*x),x = 0..2*%pi,coordinates == polar,title == "Polar plot")
+\end{chunk}
+
+\newpage
+\subsection{一个简单的正切函数,裁剪开启}
+{\center{\includegraphics[scale=0.50]{ps/v81equation127.eps}}}
+\begin{chunk}{equation127}
+draw(tan x,x = -6..6,title == "Clipping on")
+\end{chunk}
+
+\newpage
+\subsection{一个简单的正切函数,裁剪开启}
+{\center{\includegraphics[scale=0.50]{ps/v81equation128.eps}}}
+\begin{chunk}{equation128}
+draw(tan x,x = -6..6,clip == false,title == "Clipping off")
+\end{chunk}
+
+\newpage
+\subsection{正切与正弦}
+{\center{\includegraphics[scale=0.50]{ps/v81equation101.eps}}}
+\begin{chunk}{equation101}
+f(x:DFLOAT):DFLOAT == sin(tan(x))-tan(sin(x))
+draw(f,0..6)
+\end{chunk}
+
+\newpage
+\subsection{双极坐标下的二维正弦函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation107.eps}}}
+\begin{chunk}{equation107}
+draw(sin(x),x=0.5..%pi,coordinates == bipolar(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{椭圆坐标下的二维正弦函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation110.eps}}}
+\begin{chunk}{equation110}
+draw(sin(4*t/7),t=0..14*%pi,coordinates == elliptic(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{极坐标下的二维正弦波}
+{\center{\includegraphics[scale=0.50]{ps/v81equation118.eps}}}
+\begin{chunk}{equation118}
+draw(sin(4*t/7),t=0..14*%pi,coordinates == polar)
+\end{chunk}
+
+\section{二维曲线}
+
+\newpage
+\subsection{抛物坐标下的一条直线}
+{\center{\includegraphics[scale=0.50]{ps/v81equation114.eps}}}
+\begin{chunk}{equation114}
+h1(t:DFLOAT):DFLOAT == t
+h2(t:DFLOAT):DFLOAT == 2
+draw(curve(h1,h2),-3..3,coordinates == parabolic)
+\end{chunk}
+
+\newpage
+\subsection{Lissajous 曲线}
+{\center{\includegraphics[scale=0.50]{ps/v81equation102.eps}}}
+\begin{chunk}{equation102}
+i1(t:DFLOAT):DFLOAT == 9*sin(3*t/4)
+i2(t:DFLOAT):DFLOAT == 8*sin(t)
+draw(curve(i1,i2),-4*%pi..4*%pi,toScale == true, title == "Lissajous Curve")
+\end{chunk}
+
+\newpage
+\subsection{一条参数曲线}
+{\center{\includegraphics[scale=0.50]{ps/v81equation129.eps}}}
+\begin{chunk}{equation129}
+draw(curve(sin(5*t),t),t = 0..2*%pi,title == "Parametric curve")
+\end{chunk}
+
+\newpage
+\subsection{极坐标下的一条参数曲线}
+{\center{\includegraphics[scale=0.50]{ps/v81equation130.eps}}}
+\begin{chunk}{equation130}
+draw(curve(sin(5*t),t),t = 0..2*%pi,_
+           coordinates == polar,title == "Parametric polar curve")
+\end{chunk}
+
+\section{三维函数}
+
+\newpage
+\subsection{椭圆坐标下的三维常数函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation111.eps}}}
+\begin{chunk}{equation111}
+m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
+draw(m,0..2*%pi,0..%pi,coordinates == elliptic(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{扁球面坐标下的三维常数函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation113.eps}}}
+\begin{chunk}{equation113}
+m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
+draw(m,-%pi/2..%pi/2,0..2*%pi,coordinates == oblateSpheroidal(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{极坐标下的三维常数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation119.eps}}}
+\begin{chunk}{equation119}
+m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
+draw(m,0..2*%pi, 0..%pi,coordinates == polar)
+\end{chunk}
+
+\newpage
+\subsection{长球面坐标下的三维常数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation120.eps}}}
+\begin{chunk}{equation120}
+m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
+draw(m,-%pi/2..%pi/2,0..2*%pi,coordinates == prolateSpheroidal(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{球坐标下的三维常数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation121.eps}}}
+\begin{chunk}{equation121}
+m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
+draw(m,0..2*%pi,0..%pi,coordinates == spherical)
+\end{chunk}
+
+\newpage
+\subsection{一个双方程空间函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation104.eps}}}
+\begin{chunk}{equation104}
+f(x:DFLOAT,y:DFLOAT):DFLOAT == cos(x*y)
+colorFxn(x:DFLOAT,y:DFLOAT):DFLOAT == 1/(x**2 + y**2 + 1)
+draw(f,-3..3,-3..3, colorFunction == colorFxn,title=="2-Equation Space Curve")
+\end{chunk}
+
+\section{三维曲线}
+
+\newpage
+\subsection{一条参数空间曲线}
+{\center{\includegraphics[scale=0.50]{ps/v81equation131.eps}}}
+\begin{chunk}{equation131}
+draw(curve(sin(t)*cos(3*t/5),cos(t)*cos(3*t/5),cos(t)*sin(3*t/5)),_
+           t = 0..15*%pi,title == "Parametric curve")
+\end{chunk}
+
+\newpage
+\subsection{参数空间曲线周围的一根管}
+{\center{\includegraphics[scale=0.50]{ps/v81equation132.eps}}}
+\begin{chunk}{equation132}
+draw(curve(sin(t)*cos(3*t/5),cos(t)*cos(3*t/5),cos(t)*sin(3*t/5)),_
+           t = 0..15*%pi,tubeRadius == .15,title == "Tube around curve")
+\end{chunk}
+
+\newpage
+\subsection{一条双方程柱坐标曲线}
+{\center{\includegraphics[scale=0.50]{ps/v81equation109.eps}}}
+\begin{chunk}{equation109}
+j1(t:DFLOAT):DFLOAT == 4
+j2(t:DFLOAT):DFLOAT == t
+draw(curve(j1,j2,j2),-9..9,coordinates == cylindrical)
+\end{chunk}
+
+\section{三维曲面}
+
+\newpage
+\subsection{一个二十面体}
+{\center{\includegraphics[scale=0.50]{ps/v81icosahedron.eps}}}
+\begin{chunk}{Icosahedron}
+)se exp add con InnerTrigonometricManipulations
+exp(%i*2*%pi/5)
+FG2F %
+% -1
+complexForm %
+norm %
+simplify %
+s:=sqrt %
+ph:=exp(%i*2*%pi/5)
+A1:=complex(1,0)
+A2:=A1*ph
+A3:=A2*ph
+A4:=A3*ph
+A5:=A4*ph
+ca1:=map(numeric , complexForm FG2F simplify A1)
+ca2:=map(numeric , complexForm FG2F simplify A2)
+ca3:=map(numeric ,complexForm FG2F simplify A3)
+ca4:=map(numeric ,complexForm FG2F simplify A4)
+ca5:=map(numeric ,complexForm FG2F simplify A5)
+B1:=A1*exp(2*%i*%pi/10)
+B2:=B1*ph
+B3:=B2*ph
+B4:=B3*ph
+B5:=B4*ph
+cb1:=map (numeric ,complexForm FG2F simplify B1)
+cb2:=map (numeric ,complexForm FG2F simplify B2)
+cb3:=map (numeric ,complexForm FG2F simplify B3)
+cb4:=map (numeric ,complexForm FG2F simplify B4)
+cb5:=map (numeric ,complexForm FG2F simplify B5)
+u:=numeric sqrt(s*s-1)
+p0:=point([0,0,u+1/2])@Point(SF)
+p1:=point([real ca1,imag ca1,0.5])@Point(SF)
+p2:=point([real ca2,imag ca2,0.5])@Point(SF)
+p3:=point([real ca3,imag ca3,0.5])@Point(SF)
+p4:=point([real ca4,imag ca4,0.5])@Point(SF)
+p5:=point([real ca5,imag ca5,0.5])@Point(SF)
+p6:=point([real cb1,imag cb1,-0.5])@Point(SF)
+p7:=point([real cb2,imag cb2,-0.5])@Point(SF)
+p8:=point([real cb3,imag cb3,-0.5])@Point(SF)
+p9:=point([real cb4,imag cb4,-0.5])@Point(SF)
+p10:=point([real cb5,imag cb5,-0.5])@Point(SF)
+p11:=point([0,0,-u-1/2])@Point(SF)
+space:=create3Space()$ThreeSpace DFLOAT
+polygon(space,[p0,p1,p2])
+polygon(space,[p0,p2,p3])
+polygon(space,[p0,p3,p4])
+polygon(space,[p0,p4,p5])
+polygon(space,[p0,p5,p1])
+polygon(space,[p1,p6,p2])
+polygon(space,[p2,p7,p3])
+polygon(space,[p3,p8,p4])
+polygon(space,[p4,p9,p5])
+polygon(space,[p5,p10,p1])
+polygon(space,[p2,p6,p7])
+polygon(space,[p3,p7,p8])
+polygon(space,[p4,p8,p9])
+polygon(space,[p5,p9,p10])
+polygon(space,[p1,p10,p6])
+polygon(space,[p6,p11,p7])
+polygon(space,[p7,p11,p8])
+polygon(space,[p8,p11,p9])
+polygon(space,[p9,p11,p10])
+polygon(space,[p10,p11,p6])
+makeViewport3D(space,title=="Icosahedron",style=="smooth")
+\end{chunk}
+
+\newpage
+\subsection{一个三维"8 字形"浸入(Klein bagel)}
+{\center{\includegraphics[scale=0.50]{ps/v81kleinbagel.eps}}}
+\begin{chunk}{kleinbagel}
+r := 1
+X(u,v) == (r+cos(u/2)*sin(v)-sin(u/2)*sin(2*v))*cos(u)
+Y(u,v) == (r+cos(u/2)*sin(v)-sin(u/2)*sin(2*v))*sin(u)
+Z(u,v) == sin(u/2)*sin(v)+cos(u/2)*sin(2*v)
+v3d:=draw(surface(X(u,v),Y(u,v),Z(u,v)),u=0..2*%pi,v=0..2*%pi,_
+          style=="solid",title=="Figure 8 Klein")
+colorDef(v3d,blue(),blue())
+axes(v3d,"off")
+\end{chunk}
+取自 \verb|en.wikipedia.org/wiki/Klein_bottle|。Klein 瓶的"8 字形"浸入
+(Klein bagel)有一种特别简单的参数化方式,它就是在一个"8 字形"圆环面上
+插入了一个 180 度的 M\"obius 扭转所得。在这一浸入中,自相交圆是 x-y
+平面内的一个几何圆,正常数 $r$ 就是该圆的半径。参数 $u$ 给出 x-y 平面
+内的角度,$v$ 则指定沿 8 字形截面周围的位置。按照上述参数化方式,
+该截面是一条 2:1 的 Lissajous 曲线。
+
+\subsection{一个双方程双极柱坐标曲面}
+{\center{\includegraphics[scale=0.50]{ps/v81equation108.eps}}}
+\begin{chunk}{equation108}
+draw(surface(u*cos(v),u*sin(v),u),u=1..4,v=1..2*%pi,_
+     coordinates == bipolarCylindrical(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{一个三方程参数空间曲面}
+{\center{\includegraphics[scale=0.50]{ps/v81equation105.eps}}}
+\begin{chunk}{equation105}
+n1(u:DFLOAT,v:DFLOAT):DFLOAT == u*cos(v)
+n2(u:DFLOAT,v:DFLOAT):DFLOAT == u*sin(v)
+n3(u:DFLOAT,v:DFLOAT):DFLOAT == v*cos(u)
+colorFxn(x:DFLOAT,y:DFLOAT):DFLOAT == 1/(x**2 + y**2 + 1)
+draw(surface(n1,n2,n3),-4..4,0..2*%pi, colorFunction == colorFxn)
+\end{chunk}
+
+\newpage
+\subsection{椭圆柱坐标下的三维点向量}
+{\center{\includegraphics[scale=0.50]{ps/v81equation112.eps}}}
+\begin{chunk}{equation112}
+U2:Vector Expression Integer := vector [0,0,1]
+x(u,v) == beta(u) + v*delta(u)
+beta u == vector [cos u, sin u, 0]
+delta u == (cos(u/2)) * beta(u) + sin(u/2) * U2
+vec := x(u,v)
+draw(surface(vec.1,vec.2,vec.3),v=-0.5..0.5,u=0..2*%pi,_
+     coordinates == ellipticCylindrical(1$DFLOAT),_
+     var1Steps == 50,var2Steps == 50)
+\end{chunk}
+
+
+\newpage
+\subsection{双极坐标下的三维常数函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation106.eps}}}
+\begin{chunk}{equation106}
+m(u:DFLOAT,v:DFLOAT):DFLOAT == 1
+draw(m,0..2*%pi, 0..%pi,coordinates == bipolar(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{抛物坐标下的一个扫掠}
+{\center{\includegraphics[scale=0.50]{ps/v81equation115.eps}}}
+\begin{chunk}{equation115}
+draw(surface(u*cos(v),u*sin(v),2*u),u=0..4,v=0..2*%pi,coordinates==parabolic)
+\end{chunk}
+
+\newpage
+\subsection{抛物柱坐标下的一个扫掠锥}
+{\center{\includegraphics[scale=0.50]{ps/v81equation116.eps}}}
+\begin{chunk}{equation116}
+draw(surface(u*cos(v),u*sin(v),v*cos(u)),u=0..4,v=0..2*%pi,_
+     coordinates == parabolicCylindrical)
+\end{chunk}
+
+\newpage
+\subsection{环坐标下的一个截断锥}
+{\center{\includegraphics[scale=0.50]{ps/v81equation122.eps}}}
+\begin{chunk}{equation122}
+draw(surface(u*cos(v),u*sin(v),u),u=1..4,v=1..4*%pi,_
+     coordinates == toroidal(1$DFLOAT))
+\end{chunk}
+
+\newpage
+\subsection{抛物面坐标下的一个扫掠曲面}
+{\center{\includegraphics[scale=0.50]{ps/v81equation117.eps}}}
+\begin{chunk}{equation117}
+draw(surface(u*cos(v),u*sin(v),u*v),u=0..4,v=0..2*%pi,_
+     coordinates==paraboloidal,var1Steps == 50, var2Steps == 50)
+\end{chunk}
+
+\chapter{Jenks 原书插图}
+\newpage
+\subsection{复 Gamma 函数}
+{\center{\includegraphics[scale=0.50]{ps/v81complexgamma.eps}}}
+\begin{chunk}{complexgamma}
+gam(x:DoubleFloat,y:DoubleFloat):Point(DoubleFloat) == _
+  ( g:Complex(DoubleFloat):= Gamma complex(x,y) ; _
+    point [x,y,max(min(real g, 4), -4), argument g] )
+v3d:=draw(gam, -%pi..%pi, -%pi..%pi, title == "Gamma(x + %i*y)", _
+          var1Steps == 100, var2Steps == 100, style=="smooth")
+\end{chunk}
+一个三维曲面,其高度是 Gamma 函数的实部,颜色则是 Gamma 函数的辐角。
+
+\newpage
+\subsection{复反正切函数}
+{\center{\includegraphics[scale=0.50]{ps/v81complexarctangent.eps}}}
+\begin{chunk}{complexarctangent}
+atf(x:DoubleFloat,y:DoubleFloat):Point(DoubleFloat) == _
+ ( a := atan complex(x,y) ; _
+   point [x,y,real a, argument a] )
+v3d:=draw(atf, -3.0..%pi, -3.0..%pi, style=="shade")
+rotate(v3d,210,-60)
+\end{chunk}
+复反正切函数。高度是实部,颜色是辐角。
+
+
+\chapter{Hyperdoc 示例}
+本节中的示例来自 Hyperdoc 文档工具,取自其中的 Basic Examples Draw 一节。
+
+\section{二维示例}
+
+\newpage
+\subsection{一元函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation001.eps}}}
+\begin{chunk}{equation001}
+draw(x*cos(x),x=0..30,title=="y = x*cos(x)")
+\end{chunk}
+这是 hypertex 中使用的演示方程之一。它演示了一个一元函数,绘制
+\[y = f(x) \]
+其中 $y$ 是因变量,$x$ 是自变量。
+
+\newpage
+\subsection{一个参数函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation002.eps}}}
+\begin{chunk}{equation002}
+draw(curve(-9*sin(4*t/5),8*sin(t)),t=-5*%pi..5*%pi,title=="Lissajous")
+\end{chunk}
+这是 hypertex 中使用的演示方程之一,绘制了一条参数化定义的曲线
+\[f1(t), f2(t)\]
+用两个函数 $f1$ 和 $f2$ 以及自变量 t 来表示。
+
+\newpage
+\subsection{二元多项式}
+{\center{\includegraphics[scale=0.50]{ps/v81equation003.eps}}}
+\begin{chunk}{equation003}
+draw(y**2+7*x*y-(x**3+16*x) = 0,x,y,range==[-15..10,-10..50])
+\end{chunk}
+这是 hypertex 中使用的演示方程之一,绘制
+\[p(x,y) = 0\]
+的解,其中 p 是关于 $x$ 和 $y$ 的二元多项式。
+
+\section{三维示例}
+
+\newpage
+\subsection{二元函数}
+{\center{\includegraphics[scale=0.50]{ps/v81equation004.eps}}}
+\begin{chunk}{equation004}
+cf(x,y) == 0.5
+draw(exp(cos(x-y)-sin(x*y))-2,x=-5..5,y=-5..5,_
+     colorFunction==cf,style=="smooth")
+\end{chunk}
+这是 hypertex 中使用的演示方程之一。一个二元函数
+\[z = f(x,y)\]
+其中 $z$ 是因变量,而 $x$ 和 $y$ 是因变量。
+
+\newpage
+\subsection{一条参数化定义的曲线}
+{\center{\includegraphics[scale=0.50]{ps/v81equation005.eps}}}
+\begin{chunk}{equation005}
+f1(t) == 1.3*cos(2*t)*cos(4*t)+sin(4*t)*cos(t)
+f2(t) == 1.3*sin(2*t)*cos(4*t)-sin(4*t)*sin(t)
+f3(t) == 2.5*cos(4*t)
+cf(x,y) == 0.5
+draw(curve(f1(t),f2(t),f3(t)),t=0..4*%pi,tubeRadius==.25,tubePoints==16,_
+     title=="knot",colorFunction==cf,style=="smooth")
+\end{chunk}
+这是 hypertex 中使用的演示方程之一。这是一条参数化定义的曲线
+\[ f1(t), f2(t), f3(t) \]
+用三个函数 $f1$、$f2$、$f3$ 以及自变量 $t$ 来表示。
+
+\newpage
+\subsection{一个参数化定义的曲面}
+{\center{\includegraphics[scale=0.50]{ps/v81equation006.eps}}}
+\begin{chunk}{equation006}
+f1(u,v) == u*sin(v)
+f2(u,v) == v*cos(u)
+f3(u,v) == u*cos(v)
+cf(x,y) == 0.5
+draw(surface(f1(u,v),f2(u,v),f3(u,v)),u=-%pi..%pi,v=-%pi/2..%pi/2,_
+     title=="surface",colorFunction==cf,style=="smooth")
+\end{chunk}
+这是 hypertex 中使用的演示方程之一。这是一条参数化定义的曲线
+\[ f1(t), f2(t), f3(t) \]
+用三个函数 $f1$、$f2$、$f3$ 以及自变量 $t$ 来表示。
+
+\chapter{CRC 标准曲线与曲面}
+\section{标准曲线与曲面}
+为了对 Axiom 的图形代码做一次有条理、全面的评估,我们参照 CRC Standard
+Curves and Surfaces \cite{Segg93}
+(下称 SCC)一书。
+这部著作是在 Axiom 图形代码写成多年之后才问世的,因此此前一直没有人
+尝试让两者相互对应,直到现在。不过,SCC 一书将为我们评估现有代码的
+功能、并提出未来的改进方向提供坚实的基础。
+
+按照 SCC 的分类法,我们可以把各种曲线组织成如下的分类体系:
+\begin{enumerate}
+\item[1] {\bf 随机}
+\begin{enumerate}
+\item[1.1] {\bf 分形}
+\item[1.2] {\bf 高斯型}
+\item[1.3] {\bf 非高斯型}
+\end{enumerate}
+\item[2] {\bf 确定性}
+\begin{enumerate}
+\item[2.1] {\bf 代数的} -- 多项式定义为由 $x$ 和 $y$ 的整数次幂组成的项
+之和。代数曲线是指其隐函数
+\[f(x,y)=0\] (在必要时经过有理化处理后)是 $x$ 和 $y$ 的多项式的曲线。
+由于曲线常常以显式形式
+\[y=f(x)\] 给出,因此有必要区分 $x$ 的有理函数和无理函数。
+\begin{enumerate}
+\item[2.1.1] {\bf 无理的} -- $x$ 的无理函数是两个多项式之商,其中一个
+或两个多项式含有幂次为 $p/q$ 的项(或多项这样的项),这里 $p$ 和 $q$
+都是整数。
+\item[2.1.2] {\bf 有理的} -- $x$ 的有理函数是两个关于 $x$ 的多项式之商,
+二者都只含整数次幂。
+\begin{enumerate}
+\item[2.1.2.1] {\bf 多项式}
+\item[2.1.2.2] {\bf 非多项式}
+\end{enumerate}
+\end{enumerate}
+\item[2.2] {\bf 积分类的} -- 有些连续函数无法表示成代数形式或超越形式,
+却是常见的数学工具。按定义,这些曲线等于代数曲线或超越曲线的积分;
+例如 Bessel 函数、Airy 积分、Fresnel 积分,以及误差函数。
+\item[2.3] {\bf 超越的} -- 超越曲线无法表示成 $x$ 和 $y$ 的多项式。这类
+曲线含有以下一种或多种形式:指数形式($e^x$)、对数形式($\log(x)$),
+或三角形式($\sin(x)$、$\cos(x)$)。
+\begin{enumerate}
+\item[2.3.1] {\bf 指数的}
+\item[2.3.2] {\bf 对数的}
+\item[2.3.3] {\bf 三角的}
+\end{enumerate}
+\item[2.4] {\bf 分段连续的} -- 其余的曲线除了在少数几个奇点之外都是
+光滑可微的。不可微曲线这一类,其基本特征是一阶导数存在间断,并且
+往往由直线段组成。简单的折线形、规则分形曲线以及海龟作图的轨迹都是
+这方面的例子。
+\begin{enumerate}
+\item[2.4.1] {\bf 周期的}
+\item[2.4.2] {\bf 非周期的}
+\item[2.4.3] {\bf 折线形的}
+\begin{enumerate}
+\item[2.4.3.1] {\bf 规则的}
+\item[2.4.3.2] {\bf 不规则的}
+\item[2.4.3.3] {\bf 分形}
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\section{CRC 图形}
+\subsection{形如 $x^{n/m}$ 的函数}
+\newpage
+\subsubsection{第 26 页 2.1.1}
+\[y=cx^n\]
+\[y-cx^n=0\]
+\begin{chunk}{p26-2.1.1.1-3}
+)clear all
+)set mes auto off
+f(c,x,n) == c*x^n
+lineColorDefault(green())
+viewport1:=draw(f(1,x,1), x=-2..2, adaptive==true, unit==[1.0,1.0],_
+                title=="p26-2.1.1.1-3")
+graph2111:=getGraph(viewport1,1)
+
+lineColorDefault(blue())
+viewport2:=draw(f(1,x,3), x=-2..2, adaptive==true, unit==[1.0,1.0])
+graph2112:=getGraph(viewport2,1)
+
+lineColorDefault(red())
+viewport3:=draw(f(1,x,5), x=-2..2, adaptive==true, unit==[1.0,1.0])
+graph2113:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2112,2)
+putGraph(viewport1,graph2113,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp26-2.1.1.1-3.eps}}}
+\label{CRCp26-2.1.1.1-3}
+\index{figures!CRCp26-2.1.1.1-3}
+
+\newpage
+\begin{chunk}{p26-2.1.1.4-6}
+)clear all
+)set mes auto off
+f(c,x,n) == c*x^n
+lineColorDefault(green())
+viewport1:=draw(f(1,x,2), x=-2..2, adaptive==true, unit==[1.0,1.0],_
+                title=="p26-2.1.1.4-6")
+graph2111:=getGraph(viewport1,1)
+
+lineColorDefault(blue())
+viewport2:=draw(f(1,x,4), x=-2..2, adaptive==true, unit==[1.0,1.0])
+graph2112:=getGraph(viewport2,1)
+
+lineColorDefault(red())
+viewport3:=draw(f(1,x,6), x=-2..2, adaptive==true, unit==[1.0,1.0])
+graph2113:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2112,2)
+putGraph(viewport1,graph2113,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+
+makeViewport2D(viewport1)
+
+\end{chunk}
+
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp26-2.1.1.4-6.eps}}}
+\label{CRCp26-2.1.1.4-6}
+\index{figures!CRCp26-2.1.1.4-6}
+
+\newpage
+\subsubsection{第 26 页 2.1.2}
+\[\displaystyle y=\frac{c}{x^n}\]
+\[yx^n-c=0\]
+\begin{chunk}{p26-2.1.2.1-3}
+)clear all
+f(c,x,n) == c/x^n
+lineColorDefault(green())
+viewport1:=draw(f(0.01,x,1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p26-2.1.2.1-3")
+graph2111:=getGraph(viewport1,1)
+lineColorDefault(blue())
+viewport2:=draw(f(0.01,x,3),x=-4..4,adaptive==true,unit==[1.0,1.0])
+graph2122:=getGraph(viewport2,1)
+lineColorDefault(red())
+viewport3:=draw(f(0.01,x,5),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2123:=getGraph(viewport3,1)
+putGraph(viewport1,graph2122,2)
+putGraph(viewport1,graph2123,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp26-2.1.2.1-3.eps}}}
+\label{CRCp26-2.1.2.1-3}
+\index{figures!CRCp26-2.1.2.1-3}
+
+\newpage
+注意,Axiom 对 viewport2 的绘图结果与 CRC 不一致
+\begin{chunk}{p26-2.1.2.4-6}
+)clear all
+f(c,x,n) == c/x^n
+lineColorDefault(green())
+viewport1:=draw(f(0.01,x,4),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p26-2.1.2.4-6")
+graph2124:=getGraph(viewport1,1)
+lineColorDefault(blue())
+viewport2:=draw(f(0.01,x,5),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2125:=getGraph(viewport2,1)
+lineColorDefault(red())
+viewport3:=draw(f(0.01,x,6),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2126:=getGraph(viewport3,1)
+putGraph(viewport1,graph2125,2)
+putGraph(viewport1,graph2126,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp26-2.1.2.4-6.eps}}}
+\label{CRCp26-2.1.2.4-6}
+\index{figures!CRCp26-2.1.2.4-6}
+
+\newpage
+\subsubsection{第 28 页 2.1.3}
+\[\displaystyle y=cx^{n/m}\]
+\[\displaystyle y-cx^{n/m}=0\]
+\begin{chunk}{p28-2.1.3.1-6}
+)clear all
+f(c,x,n,m) == c*x^(n/m)
+
+lineColorDefault(color(1))
+viewport1:=draw(f(1,x,1,4),x=0..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p28-2.1.3.1-6")
+graph2131:=getGraph(viewport1,1)
+
+lineColorDefault(color(2))
+viewport2:=draw(f(1,x,1,2),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2132:=getGraph(viewport2,1)
+
+lineColorDefault(color(3))
+viewport3:=draw(f(1,x,3,4),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2133:=getGraph(viewport3,1)
+
+lineColorDefault(color(4))
+viewport4:=draw(f(1,x,5,4),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2134:=getGraph(viewport4,1)
+
+lineColorDefault(color(5))
+viewport5:=draw(f(1,x,3,2),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2135:=getGraph(viewport5,1)
+
+lineColorDefault(color(6))
+viewport6:=draw(f(1,x,7,4),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2136:=getGraph(viewport6,1)
+
+putGraph(viewport1,graph2132,2)
+putGraph(viewport1,graph2133,3)
+putGraph(viewport1,graph2134,4)
+putGraph(viewport1,graph2135,5)
+putGraph(viewport1,graph2136,6)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp28-2.1.3.1-6.eps}}}
+\label{CRCp28-2.1.3.1-6}
+\index{figures!CRCp28-2.1.3.1-6}
+
+\newpage
+\begin{chunk}{p28-2.1.3.7-10}
+)clear all
+f(c,x,n,m) == c*x^(n/m)
+
+lineColorDefault(color(1))
+viewport1:=draw(f(1,x,1,3),x=0..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p28-2.1.3.7-10")
+graph2137:=getGraph(viewport1,1)
+
+lineColorDefault(color(2))
+viewport2:=draw(f(1,x,2,3),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2138:=getGraph(viewport2,1)
+
+lineColorDefault(color(3))
+viewport3:=draw(f(1,x,4,3),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2139:=getGraph(viewport3,1)
+
+lineColorDefault(color(4))
+viewport4:=draw(f(1,x,5,3),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph21310:=getGraph(viewport4,1)
+
+putGraph(viewport1,graph2138,2)
+putGraph(viewport1,graph2139,3)
+putGraph(viewport1,graph21310,4)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp28-2.1.3.7-10.eps}}}
+\label{CRCp28-2.1.3.7-10}
+\index{figures!CRCp28-2.1.3.7-10}
+
+\newpage
+\subsubsection{第 28 页 2.1.4}
+\[\displaystyle y=\frac{c}{x^{n/m}}\]
+\[\displaystyle yx^{n/m}-c=0\]
+\begin{chunk}{p28-2.1.4.1-6}
+)clear all
+f(c,x,n,m) == c/x^(n/m)
+
+lineColorDefault(color(1))
+viewport1:=draw(f(0.01,x,1,4),x=0..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p28-2.1.4.1-6")
+graph2141:=getGraph(viewport1,1)
+
+lineColorDefault(color(2))
+viewport2:=draw(f(0.01,x,1,2),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2142:=getGraph(viewport2,1)
+
+lineColorDefault(color(3))
+viewport3:=draw(f(0.01,x,3,4),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2143:=getGraph(viewport3,1)
+
+lineColorDefault(color(4))
+viewport4:=draw(f(0.01,x,5,4),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2144:=getGraph(viewport4,1)
+
+lineColorDefault(color(5))
+viewport5:=draw(f(0.01,x,3,2),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2145:=getGraph(viewport5,1)
+
+lineColorDefault(color(6))
+viewport6:=draw(f(0.01,x,7,4),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2146:=getGraph(viewport6,1)
+
+putGraph(viewport1,graph2142,2)
+putGraph(viewport1,graph2143,3)
+putGraph(viewport1,graph2144,4)
+putGraph(viewport1,graph2145,5)
+putGraph(viewport1,graph2146,6)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp28-2.1.4.1-6.eps}}}
+\label{CRCp28-2.1.4.1-6}
+\index{figures!CRCp28-2.1.4.1-6}
+
+\newpage
+\begin{chunk}{p28-2.1.4.7-10}
+)clear all
+f(c,x,n,m) == c/x^(n/m)
+
+lineColorDefault(color(1))
+viewport1:=draw(f(1,x,1,3),x=0..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p28-2.1.4.7-10")
+graph2147:=getGraph(viewport1,1)
+
+lineColorDefault(color(2))
+viewport2:=draw(f(1,x,2,3),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2148:=getGraph(viewport2,1)
+
+lineColorDefault(color(3))
+viewport3:=draw(f(1,x,4,3),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph2149:=getGraph(viewport3,1)
+
+lineColorDefault(color(4))
+viewport4:=draw(f(1,x,5,3),x=0..1,adaptive==true,unit==[1.0,1.0])
+graph21410:=getGraph(viewport4,1)
+
+putGraph(viewport1,graph2148,2)
+putGraph(viewport1,graph2149,3)
+putGraph(viewport1,graph21410,4)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp28-2.1.4.7-10.eps}}}
+\label{CRCp28-2.1.4.7-10}
+\index{figures!CRCp28-2.1.4.7-10}
+
+\newpage
+\subsection{含 $x^n$ 与 $(a+bx)^m$ 的函数}
+\subsubsection{第 30 页 2.2.1}
+\[y=c(a+bx)\]
+\[y-bcx-ac=0\]
+\begin{chunk}{p30-2.2.1.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p30-2.2.1.1-3")
+graph2211:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2212:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2213:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2212,2)
+putGraph(viewport1,graph2213,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp30-2.2.1.1-3.eps}}}
+\label{CRCp30-2.2.1.1-3}
+\index{figures!CRCp30-2.2.1.1-3}
+
+\newpage
+\subsubsection{第 30 页 2.2.2}
+\[y=c(a+bx)^2\]
+\[y - cb^2x^2 - 2abcx - a^2c = 0\]
+\begin{chunk}{p30-2.2.2.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p30-2.2.2.1-3")
+graph2221:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2222:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2223:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2222,2)
+putGraph(viewport1,graph2223,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp30-2.2.2.1-3.eps}}}
+\label{CRCp30-2.2.2.1-3}
+\index{figures!CRCp30-2.2.2.1-3}
+
+\newpage
+\subsubsection{第 30 页 2.2.3}
+\[y=c(a+bx)^3\]
+\[y - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0 \]
+\begin{chunk}{p30-2.2.3.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p30-2.2.3.1-3")
+graph2231:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2232:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2233:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2232,2)
+putGraph(viewport1,graph2233,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp30-2.2.3.1-3.eps}}}
+\label{CRCp30-2.2.3.1-3}
+\index{figures!CRCp30-2.2.3.1-3}
+
+\newpage
+\subsubsection{第 30 页 2.2.4}
+\[y=cx(a+bx)\]
+\[y - bcx^2 - acx = 0\]
+\begin{chunk}{p30-2.2.4.1-3}
+)clear all
+f(x,a,b,c) == c*x*(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p30-2.2.4.1-3")
+graph2241:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2242:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2243:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2242,2)
+putGraph(viewport1,graph2243,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp30-2.2.4.1-3.eps}}}
+\label{CRCp30-2.2.4.1-3}
+\index{figures!CRCp30-2.2.4.1-3}
+
+\newpage
+\subsubsection{第 30 页 2.2.5}
+\[y=cx(a+bx)^2\]
+\[y - b^2cx^3 - 2abcx^2 - a^2cx = 0\]
+\begin{chunk}{p30-2.2.5.1-3}
+)clear all
+f(x,a,b,c) == c*x*(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p30-2.2.5.1-3")
+graph2251:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2252:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2253:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2252,2)
+putGraph(viewport1,graph2253,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp30-2.2.5.1-3.eps}}}
+\label{CRCp30-2.2.5.1-3}
+\index{figures!CRCp30-2.2.5.1-3}
+
+\newpage
+\subsubsection{第 30 页 2.2.6}
+\[y=cx(a+bx)^3\]
+\[y - b^3cx^4 - 3ab^2cx^3 - 3a^2bcx^2 - a^3cx = 0\]
+\begin{chunk}{p30-2.2.6.1-3}
+)clear all
+f(x,a,b,c) == c*x*(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p30-2.2.6.1-3")
+graph2261:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2262:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2263:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2262,2)
+putGraph(viewport1,graph2263,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp30-2.2.6.1-3.eps}}}
+\label{CRCp30-2.2.6.1-3}
+\index{figures!CRCp30-2.2.6.1-3}
+
+\newpage
+\subsubsection{第 32 页 2.2.7}
+\[y=cx^2(a+bx)\]
+\[y - bcx^3 - acx^2 = 0\]
+\begin{chunk}{p32-2.2.7.1-3}
+)clear all
+f(x,a,b,c) == c*x^2*(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p30-2.2.7.1-3")
+graph2271:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2272:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2273:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2272,2)
+putGraph(viewport1,graph2273,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp32-2.2.7.1-3.eps}}}
+\label{CRCp32-2.2.7.1-3}
+\index{figures!CRCp32-2.2.7.1-3}
+
+\newpage
+\subsubsection{第 32 页 2.2.8}
+\[y = cx^2(a+bx)^2\]
+\[y - b^2cx^4 - 2abcx^3 - a^2cx^2 = 0\]
+\begin{chunk}{p32-2.2.8.1-3}
+)clear all
+f(x,a,b,c) == c*x^2*(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p32-2.2.8.1-3")
+graph2281:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2282:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2283:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2282,2)
+putGraph(viewport1,graph2283,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp32-2.2.8.1-3.eps}}}
+\label{CRCp32-2.2.8.1-3}
+\index{figures!CRCp32-2.2.8.1-3}
+
+\newpage
+\subsubsection{第 32 页 2.2.9}
+\[y = cx^2(a+bx)^3\]
+\[y - b^3cx^5 - 3ab^2cx^4 - 3a^2bcx^3 - a^3cx^2 = 0\]
+\begin{chunk}{p32-2.2.9.1-3}
+)clear all
+f(x,a,b,c) == c*x^2*(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p32-2.2.9.1-3")
+graph2291:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2292:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..1,adaptive==true,unit==[1.0,1.0])
+graph2293:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2292,2)
+putGraph(viewport1,graph2293,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp32-2.2.9.1-3.eps}}}
+\label{CRCp32-2.2.9.1-3}
+\index{figures!CRCp32-2.2.9.1-3}
+
+\newpage
+\subsubsection{第 32 页 2.2.10}
+\[y = cx^3(a+bx)\]
+\[y - bcx^4 - acx^3 = 0\]
+\begin{chunk}{p32-2.2.10.1-3}
+)clear all
+f(x,a,b,c) == c*x^3*(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p32-2.2.10.1-3")
+graph22101:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22102:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22103:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22102,2)
+putGraph(viewport1,graph22103,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp32-2.2.10.1-3.eps}}}
+\label{CRCp32-2.2.10.1-3}
+\index{figures!CRCp32-2.2.10.1-3}
+
+\newpage
+\subsubsection{第 32 页 2.2.11}
+\[y = cx^3(a+bx)^2\]
+\[y - b^2cx^5 - 2abcx^4 - a^2cx^3 = 0\]
+\begin{chunk}{p32-2.2.11.1-3}
+)clear all
+f(x,a,b,c) == c*x^3*(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p32-2.2.11.1-3")
+graph22111:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22112:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22113:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22112,2)
+putGraph(viewport1,graph22113,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp32-2.2.11.1-3.eps}}}
+\label{CRCp32-2.2.11.1-3}
+\index{figures!CRCp32-2.2.11.1-3}
+
+\newpage
+\subsubsection{第 32 页 2.2.12}
+\[y = cx^3(a+bx)^3\]
+\[y - b^3cx^6 - 3ab^2cx^5 - 3a^2bcx^4 - a^3cx^3 = 0\]
+\begin{chunk}{p32-2.2.12.1-3}
+)clear all
+f(x,a,b,c) == c*x^3*(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p32-2.2.12.1-3")
+graph22121:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22122:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,2.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22123:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22122,2)
+putGraph(viewport1,graph22123,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp32-2.2.12.1-3.eps}}}
+\label{CRCp32-2.2.12.1-3}
+\index{figures!CRCp32-2.2.12.1-3}
+
+\newpage
+\subsubsection{第 34 页 2.2.13}
+\[\displaystyle y = \frac{c}{(a+bx)}\]
+\[ay + bxy - c = 0\]
+\begin{chunk}{p34-2.2.13.1-3}
+)clear all
+f(x,a,b,c) == c/(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p34-2.2.13.1-3")
+graph22131:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22132:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22133:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22132,2)
+putGraph(viewport1,graph22133,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp34-2.2.13.1-3.eps}}}
+\label{CRCp34-2.2.13.1-3}
+\index{figures!CRCp34-2.2.13.1-3}
+
+\newpage
+\subsubsection{第 34 页 2.2.14}
+\[\displaystyle y = \frac{c}{(a+bx)^2}\]
+\[a^2y + 2abxy + b^2x^2y - c = 0\]
+\begin{chunk}{p34-2.2.14.1-3}
+)clear all
+f(x,a,b,c) == c/(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p34-2.2.14.1-3")
+graph22141:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22142:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22143:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22142,2)
+putGraph(viewport1,graph22143,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp34-2.2.14.1-3.eps}}}
+\label{CRCp34-2.2.14.1-3}
+\index{figures!CRCp34-2.2.14.1-3}
+
+\newpage
+\subsubsection{第 34 页 2.2.15}
+\[\displaystyle y = \frac{c}{(a+bx)^3}\]
+\[a^3y + 2a^2bxy + 2ab^2x^2y + b^3x^3y - c = 0\]
+\begin{chunk}{p34-2.2.15.1-3}
+)clear all
+f(x,a,b,c) == c/(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p34-2.2.15.1-3")
+graph22151:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22152:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22153:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22152,2)
+putGraph(viewport1,graph22153,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp34-2.2.15.1-3.eps}}}
+\label{CRCp34-2.2.15.1-3}
+\index{figures!CRCp34-2.2.15.1-3}
+
+\newpage
+\subsubsection{第 34 页 2.2.16}
+\[\displaystyle y = \frac{cx}{(a+bx)}\]
+\[ay + bxy - cx = 0\]
+\begin{chunk}{p34-2.2.16.1-3}
+)clear all
+f(x,a,b,c) == c*x/(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p34-2.2.16.1-3")
+graph22161:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22162:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22163:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22162,2)
+putGraph(viewport1,graph22163,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp34-2.2.16.1-3.eps}}}
+\label{CRCp34-2.2.16.1-3}
+\index{figures!CRCp34-2.2.16.1-3}
+
+\newpage
+\subsubsection{第 34 页 2.2.17}
+\[\displaystyle y = \frac{cx}{(a+bx)^2}\]
+\[a^2y + 2abxy + b^2x^2y - cx = 0\]
+\begin{chunk}{p34-2.2.17.1-3}
+)clear all
+f(x,a,b,c) == c*x/(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p34-2.2.17.1-3")
+graph22171:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22172:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22173:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22172,2)
+putGraph(viewport1,graph22173,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp34-2.2.17.1-3.eps}}}
+\label{CRCp34-2.2.17.1-3}
+\index{figures!CRCp34-2.2.17.1-3}
+
+\newpage
+\subsubsection{第 34 页 2.2.18}
+\[\displaystyle y = \frac{cx}{(a+bx)^3}\]
+\[a^3y + 3a^2bxy + 3ab^2x^2y + b^3x^3y - cx = 0\]
+\begin{chunk}{p34-2.2.18.1-3}
+)clear all
+f(x,a,b,c) == c*x/(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p34-2.2.18.1-3")
+graph22181:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22182:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22183:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22182,2)
+putGraph(viewport1,graph22183,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp34-2.2.18.1-3.eps}}}
+\label{CRCp34-2.2.18.1-3}
+\index{figures!CRCp34-2.2.18.1-3}
+
+\newpage
+\subsubsection{第 36 页 2.2.19}
+\[\displaystyle y = \frac{cx^2}{(a+bx)}\]
+\[ay + bxy - cx^2 = 0\]
+\begin{chunk}{p36-2.2.19.1-3}
+)clear all
+f(x,a,b,c) == c*x^2/(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p36-2.2.19.1-3")
+graph22191:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22192:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22193:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22192,2)
+putGraph(viewport1,graph22193,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp36-2.2.19.1-3.eps}}}
+\label{CRCp36-2.2.19.1-3}
+\index{figures!CRCp36-2.2.19.1-3}
+
+\newpage
+\subsubsection{第 36 页 2.2.20}
+\[\displaystyle y = \frac{cx^2}{(a+bx)^2}\]
+\[a^2y + 2abxy + b^2x^2y - cx^2 = 0\]
+\begin{chunk}{p36-2.2.20.1-3}
+)clear all
+f(x,a,b,c) == c*x^2/(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p36-2.2.20.1-3")
+graph22201:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22202:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22203:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22202,2)
+putGraph(viewport1,graph22203,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp36-2.2.20.1-3.eps}}}
+\label{CRCp36-2.2.20.1-3}
+\index{figures!CRCp36-2.2.20.1-3}
+
+\newpage
+\subsubsection{第 36 页 2.2.21}
+\[\displaystyle y = \frac{cx^2}{(a+bx)^3}\]
+\[a^3y + 3a^2bxy + 3ab^2x^2y + b^3x^3y - cx^2 = 0\]
+\begin{chunk}{p36-2.2.21.1-3}
+)clear all
+f(x,a,b,c) == c*x^2/(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p36-2.2.21.1-3")
+graph22211:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22212:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22213:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22212,2)
+putGraph(viewport1,graph22213,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp36-2.2.21.1-3.eps}}}
+\label{CRCp36-2.2.21.1-3}
+\index{figures!CRCp36-2.2.21.1-3}
+
+\newpage
+\subsubsection{第 36 页 2.2.22}
+\[\displaystyle y = \frac{cx^3}{(a+bx)}\]
+\[ay + bxy - cx^3 = 0\]
+\begin{chunk}{p36-2.2.22.1-3}
+)clear all
+f(x,a,b,c) == c*x^3/(a+b*x)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p36-2.2.22.1-3")
+graph22221:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22222:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22223:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22222,2)
+putGraph(viewport1,graph22223,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp36-2.2.22.1-3.eps}}}
+\label{CRCp36-2.2.22.1-3}
+\index{figures!CRCp36-2.2.22.1-3}
+
+\newpage
+\subsubsection{第 36 页 2.2.23}
+\[\displaystyle y = \frac{cx^3}{(a+bx)^2}\]
+\[a^2y + 2abxy + b^2x^2y - cx^3 = 0\]
+\begin{chunk}{p36-2.2.23.1-3}
+)clear all
+f(x,a,b,c) == c*x^3/(a+b*x)^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p36-2.2.23.1-3")
+graph22231:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22232:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22233:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22232,2)
+putGraph(viewport1,graph22233,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp36-2.2.23.1-3.eps}}}
+\label{CRCp36-2.2.23.1-3}
+\index{figures!CRCp36-2.2.23.1-3}
+
+\newpage
+\subsubsection{第 36 页 2.2.24}
+\[\displaystyle y = \frac{cx^3}{(a+bx)^3}\]
+\[a^3y + 3a^2bxy + 3ab^2x^2y + b^3x^3y - cx^3 = 0\]
+\begin{chunk}{p36-2.2.24.1-3}
+)clear all
+f(x,a,b,c) == c*x^3/(a+b*x)^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p36-2.2.24.1-3")
+graph22241:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,3.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22242:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,4.0,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22243:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22242,2)
+putGraph(viewport1,graph22243,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp36-2.2.24.1-3.eps}}}
+\label{CRCp36-2.2.24.1-3}
+\index{figures!CRCp36-2.2.24.1-3}
+
+\newpage
+\subsubsection{第 38 页 2.2.25}
+\[\displaystyle y = \frac{c(a+bx)}{x}\]
+\[xy - bcx - ca = 0\]
+\begin{chunk}{p38-2.2.25.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)/x
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.04),x=-0.5..0.5,adaptive==true,unit==[1.0,1.0],_
+                title=="p38-2.2.25.1-3")
+graph22251:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.04),x=-0.5..0.5,adaptive==true,unit==[1.0,1.0])
+graph22252:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.04),x=-0.5..0.5,adaptive==true,unit==[1.0,1.0])
+graph22253:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22252,2)
+putGraph(viewport1,graph22253,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp38-2.2.25.1-3.eps}}}
+\label{CRCp38-2.2.25.1-3}
+\index{figures!CRCp38-2.2.25.1-3}
+
+\newpage
+\subsubsection{第 38 页 2.2.26}
+\[\displaystyle y = \frac{c(a+bx)^2}{x}\]
+\[xy - b^2cx^2 - 2abcx - a^2c = 0\]
+\begin{chunk}{p38-2.2.26.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^2/x
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.04),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p38-2.2.26.1-3")
+graph22261:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.04),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22262:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.04),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22263:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22262,2)
+putGraph(viewport1,graph22263,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp38-2.2.26.1-3.eps}}}
+\label{CRCp38-2.2.26.1-3}
+\index{figures!CRCp38-2.2.26.1-3}
+
+\newpage
+\subsubsection{第 38 页 2.2.27}
+\[\displaystyle y = \frac{c(a+bx)^3}{x}\]
+\[xy - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0\]
+\begin{chunk}{p38-2.2.27.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^3/x
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p38-2.2.27.1-3")
+graph22271:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22272:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22273:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22272,2)
+putGraph(viewport1,graph22273,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp38-2.2.27.1-3.eps}}}
+\label{CRCp38-2.2.27.1-3}
+\index{figures!CRCp38-2.2.27.1-3}
+
+\newpage
+\subsubsection{第 38 页 2.2.28}
+\[\displaystyle y = \frac{c(a+bx)}{x^2}\]
+\[x^2y - bcx - ca = 0\]
+\begin{chunk}{p38-2.2.28.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)/x^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.04),x=-1..1,adaptive==true,unit==[1.0,1.0],_
+                title=="p38-2.2.28.1-3")
+graph22281:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.04),x=-1..1,adaptive==true,unit==[1.0,1.0])
+graph22282:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.04),x=-1..1,adaptive==true,unit==[1.0,1.0])
+graph22283:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22282,2)
+putGraph(viewport1,graph22283,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp38-2.2.28.1-3.eps}}}
+\label{CRCp38-2.2.28.1-3}
+\index{figures!CRCp38-2.2.28.1-3}
+
+\newpage
+\subsubsection{第 38 页 2.2.29}
+\[\displaystyle y = \frac{c(a+bx)^2}{x^2}\]
+\[x^2y - b^2cx^2 - 2abcx - a^2c = 0\]
+\begin{chunk}{p38-2.2.29.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^2/x^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p38-2.2.29.1-3")
+graph22291:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22292:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22293:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22292,2)
+putGraph(viewport1,graph22293,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp38-2.2.29.1-3.eps}}}
+\label{CRCp38-2.2.29.1-3}
+\index{figures!CRCp38-2.2.29.1-3}
+
+\newpage
+\subsubsection{第 38 页 2.2.30}
+\[\displaystyle y = \frac{c(a+bx)^3}{x^2}\]
+\[x^2y - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0\]
+\begin{chunk}{p38-2.2.30.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^3/x^2
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.003),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p38-2.2.30.1-3")
+graph22301:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.003),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22302:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.003),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22303:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22302,2)
+putGraph(viewport1,graph22303,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp38-2.2.30.1-3.eps}}}
+\label{CRCp38-2.2.30.1-3}
+\index{figures!CRCp38-2.2.30.1-3}
+
+\newpage
+\subsubsection{第 40 页 2.2.31}
+\[\displaystyle y = \frac{c(a+bx)}{x^3}\]
+\[x^3y - bcx - ca = 0\]
+\begin{chunk}{p40-2.2.31.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)/x^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.02),x=-4..4,adaptive==true,unit==[1.0,1.0],_
+                title=="p40-2.2.31.1-3")
+graph22311:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.02),x=-4..4,adaptive==true,unit==[1.0,1.0])
+graph22312:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.02),x=-4..4,adaptive==true,unit==[1.0,1.0])
+graph22313:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22312,2)
+putGraph(viewport1,graph22313,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp40-2.2.31.1-3.eps}}}
+\label{CRCp40-2.2.31.1-3}
+\index{figures!CRCp40-2.2.31.1-3}
+
+\newpage
+\subsubsection{第 40 页 2.2.32}
+\[\displaystyle y = \frac{c(a+bx)^2}{x^3}\]
+\[x^3y - b^2cx^2 - 2abcx - a^2c = 0\]
+\begin{chunk}{p40-2.2.32.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^2/x^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p40-2.2.32.1-3")
+graph22321:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22322:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22323:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22322,2)
+putGraph(viewport1,graph22323,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp40-2.2.32.1-3.eps}}}
+\label{CRCp40-2.2.32.1-3}
+\index{figures!CRCp40-2.2.32.1-3}
+
+\newpage
+\subsubsection{第 40 页 2.2.33}
+\[\displaystyle y = \frac{c(a+bx)^3}{x^3}\]
+\[x^3y - b^3cx^3 - 3ab^2cx^2 - 3a^2bcx - a^3c = 0\]
+\begin{chunk}{p40-2.2.33.1-3}
+)clear all
+f(x,a,b,c) == c*(a+b*x)^3/x^3
+
+lineColorDefault(red())
+viewport1:=draw(f(x,1.0,2.0,0.002),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p40-2.2.33.1-3")
+graph22331:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,4.0,0.002),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22332:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,6.0,0.002),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph22333:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph22332,2)
+putGraph(viewport1,graph22333,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp40-2.2.33.1-3.eps}}}
+\label{CRCp40-2.2.33.1-3}
+\index{figures!CRCp40-2.2.33.1-3}
+
+\newpage
+\subsection{带有 $a^2+x^2$ 与 $x^m$ 的函数}
+\subsubsection{第 42 页 2.3.1}
+\[\displaystyle y=\frac{c}{(a^2+b^2)}\]
+\[a^2y + x^2y - c = 0\]
+\begin{chunk}{p42-2.3.1.1-3}
+)clear all
+f(x,a,c) == c/(a^2+x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.04),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p42-2.3.1.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.04),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.04),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp42-2.3.1.1-3.eps}}}
+\label{CRCp42-2.3.1.1-3}
+\index{figures!CRCp42-2.3.1.1-3}
+
+\newpage
+\subsubsection{第 42 页 2.3.2}
+\[\displaystyle y=\frac{cx}{(a^2+b^2)}\]
+\[a^2y + x^2y - cx = 0\]
+\begin{chunk}{p42-2.3.2.1-3}
+)clear all
+f(x,a,c) == c*x/(a^2+x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.3),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p42-2.3.2.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.3),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.3),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp42-2.3.2.1-3.eps}}}
+\label{CRCp42-2.3.2.1-3}
+\index{figures!CRCp42-2.3.2.1-3}
+
+\newpage
+\subsubsection{第 42 页 2.3.3}
+\[\displaystyle y=\frac{cx^2}{(a^2+b^2)}\]
+\[a^2y + x^2y - cx^2 = 0\]
+\begin{chunk}{p42-2.3.3.1-3}
+)clear all
+f(x,a,c) == c*x^2/(a^2+x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p42-2.3.3.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp42-2.3.3.1-3.eps}}}
+\label{CRCp42-2.3.3.1-3}
+\index{figures!CRCp42-2.3.3.1-3}
+
+\newpage
+\subsubsection{第 42 页 2.3.4}
+\[\displaystyle y=\frac{cx^3}{(a^2+b^2)}\]
+\[a^2y + x^2y - cx^3 = 0\]
+\begin{chunk}{p42-2.3.4.1-3}
+)clear all
+f(x,a,c) == c*x^3/(a^2+x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p42-2.3.4.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp42-2.3.4.1-3.eps}}}
+\label{CRCp42-2.3.4.1-3}
+\index{figures!CRCp42-2.3.4.1-3}
+
+\newpage
+\subsubsection{第 44 页 2.3.5}
+\[\displaystyle y=\frac{c}{x(a^2+b^2)}\]
+\[a^2xy + x^3y - c = 0\]
+\begin{chunk}{p44-2.3.5.1-3}
+)clear all
+f(x,a,c) == c/(x*(a^2+x^2))
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p44-2.3.5.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp44-2.3.5.1-3.eps}}}
+\label{CRCp44-2.3.5.1-3}
+\index{figures!CRCp44-2.3.5.1-3}
+
+\newpage
+\subsubsection{第 44 页 2.3.6}
+\[\displaystyle y=\frac{c}{x^2(a^2+b^2)}\]
+\[a^2x^2y + x^4y - c = 0\]
+\begin{chunk}{p44-2.3.6.1-3}
+)clear all
+f(x,a,c) == c/(x^2*(a^2+x^2))
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p44-2.3.6.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp44-2.3.6.1-3.eps}}}
+\label{CRCp44-2.3.6.1-3}
+\index{figures!CRCp44-2.3.6.1-3}
+
+\newpage
+\subsubsection{第 44 页 2.3.7}
+\[\displaystyle y=cx(a^2+x^2)\]
+\[y - a^2cx - cx^3 = 0\]
+\begin{chunk}{p44-2.3.7.1-3}
+)clear all
+f(x,a,c) == c*x*(a^2+x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p44-2.3.7.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp44-2.3.7.1-3.eps}}}
+\label{CRCp44-2.3.7.1-3}
+\index{figures!CRCp44-2.3.7.1-3}
+
+\newpage
+\subsubsection{第 44 页 2.3.8}
+\[\displaystyle y=cx^2(a^2+x^2)\]
+\[y - a^2cx^2 - cx^4 = 0\]
+\begin{chunk}{p44-2.3.8.1-3}
+)clear all
+f(x,a,c) == c*x^2*(a^2+x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p44-2.3.8.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp44-2.3.8.1-3.eps}}}
+\label{CRCp44-2.3.8.1-3}
+\index{figures!CRCp44-2.3.8.1-3}
+
+\newpage
+\subsection{带有 $a^2-x^2$ 与 $x^m$ 的函数}
+\subsubsection{第 46 页 2.4.1}
+\[\displaystyle y=\frac{c}{(a^2-x^2)}\]
+\[a^2y - x^2y - c = 0\]
+\begin{chunk}{p46-2.4.1.1-3}
+)clear all
+f(x,a,c) == c/(a^2-x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.03),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p46-2.4.1.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.03),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.03),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp46-2.4.1.1-3.eps}}}
+\label{CRCp46-2.4.1.1-3}
+\index{figures!CRCp46-2.4.1.1-3}
+
+\newpage
+\subsubsection{第 46 页 2.4.2}
+\[\displaystyle y=\frac{cx}{(a^2-x^2)}\]
+\[a^2y - x^2y - cx = 0\]
+\begin{chunk}{p46-2.4.2.1-3}
+)clear all
+f(x,a,c) == c*x/(a^2-x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p46-2.4.2.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp46-2.4.2.1-3.eps}}}
+\label{CRCp46-2.4.2.1-3}
+\index{figures!CRCp46-2.4.2.1-3}
+
+\newpage
+\subsubsection{第 46 页 2.4.3}
+\[\displaystyle y=\frac{cx^2}{(a^2-x^2)}\]
+\[a^2y - x^2y - cx^2 = 0\]
+\begin{chunk}{p46-2.4.3.1-3}
+)clear all
+f(x,a,c) == c*x^2/(a^2-x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p46-2.4.3.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp46-2.4.3.1-3.eps}}}
+\label{CRCp46-2.4.3.1-3}
+\index{figures!CRCp46-2.4.3.1-3}
+
+\newpage
+\subsubsection{第 46 页 2.4.4}
+\[\displaystyle y=\frac{cx^3}{(a^2-x^2)}\]
+\[a^2y - x^2y - cx^3 = 0\]
+\begin{chunk}{p46-2.4.4.1-3}
+)clear all
+f(x,a,c) == c*x^3/(a^2-x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p46-2.4.4.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp46-2.4.4.1-3.eps}}}
+\label{CRCp46-2.4.4.1-3}
+\index{figures!CRCp46-2.4.4.1-3}
+
+\newpage
+\subsubsection{第 48 页 2.4.5}
+\[\displaystyle y=\frac{c}{x(a^2-x^2)}\]
+\[a^2xy - x^3y - c = 0\]
+\begin{chunk}{p48-2.4.5.1-3}
+)clear all
+f(x,a,c) == c/(x*(a^2-x^2))
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.001),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p48-2.4.5.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.001),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.001),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp48-2.4.5.1-3.eps}}}
+\label{CRCp48-2.4.5.1-3}
+\index{figures!CRCp48-2.4.5.1-3}
+
+\newpage
+\subsubsection{第 48 页 2.4.6}
+\[\displaystyle y=\frac{c}{x^2(a^2-x^2)}\]
+\[a^2x^2y - x^4y - c = 0\]
+\begin{chunk}{p48-2.4.6.1-3}
+)clear all
+f(x,a,c) == c/(x^2*(a^2-x^2))
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.0003),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p48-2.4.6.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.0003),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.0003),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp48-2.4.6.1-3.eps}}}
+\label{CRCp48-2.4.6.1-3}
+\index{figures!CRCp48-2.4.6.1-3}
+
+\newpage
+\subsubsection{第 48 页 2.4.7}
+\[\displaystyle y=cx(a^2-x^2)\]
+\[y - a^2cx + cx^3 = 0\]
+\begin{chunk}{p48-2.4.7.1-3}
+)clear all
+f(x,a,c) == c*x*(a^2-x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p48-2.4.7.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp48-2.4.7.1-3.eps}}}
+\label{CRCp48-2.4.7.1-3}
+\index{figures!CRCp48-2.4.7.1-3}
+
+\newpage
+\subsubsection{第 48 页 2.4.8}
+\[\displaystyle y=cx^2(a^2-x^2)\]
+\[y - a^2cx^2 + cx^4 = 0\]
+\begin{chunk}{p48-2.4.8.1-3}
+)clear all
+f(x,a,c) == c*x^2*(a^2-x^2)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,4.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p48-2.4.8.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,4.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,4.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp48-2.4.8.1-3.eps}}}
+\label{CRCp48-2.4.8.1-3}
+\index{figures!CRCp48-2.4.8.1-3}
+
+\newpage
+\subsection{含 $a^3+x^3$ 和 $x^m$ 的函数}
+\subsubsection{第 50 页 2.5.1}
+\[\displaystyle y=\frac{c}{(a^3+x^3)}\]
+\[a^3y + x^3y - c = 0\]
+\begin{chunk}{p50-2.5.1.1-3}
+)clear all
+f(x,a,c) == c/(a^3+x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p50-2.5.1.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.4,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp50-2.5.1.1-3.eps}}}
+\label{CRCp50-2.5.1.1-3}
+\index{figures!CRCp50-2.5.1.1-3}
+
+\newpage
+\subsubsection{第 50 页 2.5.2}
+\[\displaystyle y=\frac{cx}{(a^3+x^3)}\]
+\[a^3y + x^3y - cx = 0\]
+\begin{chunk}{p50-2.5.2.1-3}
+)clear all
+f(x,a,c) == c*x/(a^3+x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.1,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p50-2.5.2.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp50-2.5.2.1-3.eps}}}
+\label{CRCp50-2.5.2.1-3}
+\index{figures!CRCp50-2.5.2.1-3}
+
+\newpage
+\subsubsection{第 50 页 2.5.3}
+\[\displaystyle y=\frac{cx^2}{(a^3+x^3)}\]
+\[a^3y + x^3y - cx^2 = 0\]
+\begin{chunk}{p50-2.5.3.1-3}
+)clear all
+f(x,a,c) == c*x^2/(a^3+x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.1,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p50-2.5.3.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp50-2.5.3.1-3.eps}}}
+\label{CRCp50-2.5.3.1-3}
+\index{figures!CRCp50-2.5.3.1-3}
+
+\newpage
+\subsubsection{第 50 页 2.5.4}
+\[\displaystyle y=\frac{cx^3}{(a^3+x^3)}\]
+\[a^3y + x^3y - cx^3 = 0\]
+\begin{chunk}{p50-2.5.4.1-3}
+)clear all
+f(x,a,c) == c*x^3/(a^3+x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.1,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p50-2.5.4.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.02),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp50-2.5.4.1-3.eps}}}
+\label{CRCp50-2.5.4.1-3}
+\index{figures!CRCp50-2.5.4.1-3}
+
+\newpage
+\subsubsection{第 50 页 2.5.5}
+\[\displaystyle y=\frac{c}{x(a^3+x^3)}\]
+\[a^3xy + x^4y - c = 0\]
+\begin{chunk}{p50-2.5.5.1-3}
+)clear all
+f(x,a,c) == c/(x*(a^3+x^3))
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p50-2.5.5.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.7,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.9,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp50-2.5.5.1-3.eps}}}
+\label{CRCp50-2.5.5.1-3}
+\index{figures!CRCp50-2.5.5.1-3}
+
+\newpage
+\subsubsection{第 50 页 2.5.6}
+\[\displaystyle y=cx(a^3+x^3)\]
+\[y - a^3cx - cx^4 = 0\]
+\begin{chunk}{p50-2.5.6.1-3}
+)clear all
+f(x,a,c) == c*x*(a^3+x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p50-2.5.6.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.7,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.9,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp50-2.5.6.1-3.eps}}}
+\label{CRCp50-2.5.6.1-3}
+\index{figures!CRCp50-2.5.6.1-3}
+
+\newpage
+\subsection{含 $a^3-x^3$ 和 $x^m$ 的函数}
+\subsubsection{第 52 页 2.6.1}
+\[\displaystyle y=\frac{c}{(a^3-x^3)}\]
+\[a^3y - x^3y - c = 0\]
+\begin{chunk}{p52-2.6.1.1-3}
+)clear all
+f(x,a,c) == c/(a^3-x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p52-2.6.1.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.4,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp52-2.6.1.1-3.eps}}}
+\label{CRCp52-2.6.1.1-3}
+\index{figures!CRCp52-2.6.1.1-3}
+
+\newpage
+\subsubsection{第 52 页 2.6.2}
+\[\displaystyle y=\frac{cx}{(a^3-x^3)}\]
+\[a^3y - x^3y - cx = 0\]
+\begin{chunk}{p52-2.6.2.1-3}
+)clear all
+f(x,a,c) == c*x/(a^3-x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.1,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p52-2.6.2.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp52-2.6.2.1-3.eps}}}
+\label{CRCp52-2.6.2.1-3}
+\index{figures!CRCp52-2.6.2.1-3}
+
+\newpage
+\subsubsection{第 52 页 2.6.3}
+\[\displaystyle y=\frac{cx^2}{(a^3-x^3)}\]
+\[a^3y - x^3y - cx^2 = 0\]
+\begin{chunk}{p52-2.6.3.1-3}
+)clear all
+f(x,a,c) == c*x^2/(a^3-x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.1,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p52-2.6.3.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp52-2.6.3.1-3.eps}}}
+\label{CRCp52-2.6.3.1-3}
+\index{figures!CRCp52-2.6.3.1-3}
+
+\newpage
+\subsubsection{第 52 页 2.6.4}
+\[\displaystyle y=\frac{cx^3}{(a^3-x^3)}\]
+\[a^3y - x^3y - cx^3 = 0\]
+\begin{chunk}{p52-2.6.4.1-3}
+)clear all
+f(x,a,c) == c*x^3/(a^3-x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.1,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p52-2.6.4.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.2),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp52-2.6.4.1-3.eps}}}
+\label{CRCp52-2.6.4.1-3}
+\index{figures!CRCp52-2.6.4.1-3}
+
+\newpage
+\subsubsection{第 52 页 2.6.5}
+\[\displaystyle y=\frac{c}{x(a^3-x^3)}\]
+\[a^3xy - x^4y - c = 0\]
+\begin{chunk}{p52-2.6.5.1-3}
+)clear all
+f(x,a,c) == c/(x*(a^3-x^3))
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p52-2.6.5.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.7,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.9,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp52-2.6.5.1-3.eps}}}
+\label{CRCp52-2.6.5.1-3}
+\index{figures!CRCp52-2.6.5.1-3}
+
+\newpage
+\subsubsection{第 52 页 2.6.6}
+\[\displaystyle y=cx(a^3-x^3)\]
+\[y - a^3cx + cx^4 = 0\]
+\begin{chunk}{p52-2.6.6.1-3}
+)clear all
+f(x,a,c) == c*x*(a^3-x^3)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p52-2.6.6.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.7,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.9,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp52-2.6.6.1-3.eps}}}
+\label{CRCp52-2.6.6.1-3}
+\index{figures!CRCp52-2.6.6.1-3}
+
+\newpage
+\subsection{含 $a^4+x^4$ 和 $x^m$ 的函数}
+\subsubsection{第 54 页 2.7.1}
+\[\displaystyle y=\frac{c}{(a^4+x^4)}\]
+\[a^4y + x^4y - c = 0\]
+\begin{chunk}{p54-2.7.1.1-3}
+)clear all
+f(x,a,c) == c/(a^4+x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.3,0.007),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p54-2.7.1.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.4,0.007),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.007),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp54-2.7.1.1-3.eps}}}
+\label{CRCp54-2.7.1.1-3}
+\index{figures!CRCp54-2.7.1.1-3}
+
+\newpage
+\subsubsection{第 54 页 2.7.2}
+\[\displaystyle y=\frac{cx}{(a^4+x^4)}\]
+\[a^4y + x^4y - cx = 0\]
+\begin{chunk}{p54-2.7.2.1-3}
+)clear all
+f(x,a,c) == c*x/(a^4+x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p54-2.7.2.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.3,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.4,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp54-2.7.2.1-3.eps}}}
+\label{CRCp54-2.7.2.1-3}
+\index{figures!CRCp54-2.7.2.1-3}
+
+\newpage
+\subsubsection{第 54 页 2.7.3}
+\[\displaystyle y=\frac{cx^2}{(a^4+x^4)}\]
+\[a^4y + x^4y - cx^2 = 0\]
+\begin{chunk}{p54-2.7.3.1-3}
+)clear all
+f(x,a,c) == c*x^2/(a^4+x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.3,0.15),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p54-2.7.3.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.4,0.15),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.5,0.15),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp54-2.7.3.1-3.eps}}}
+\label{CRCp54-2.7.3.1-3}
+\index{figures!CRCp54-2.7.3.1-3}
+
+\newpage
+\subsubsection{第 54 页 2.7.4}
+\[\displaystyle y=\frac{cx^3}{(a^4+x^4)}\]
+\[a^4y + x^4y - cx^3 = 0\]
+\begin{chunk}{p54-2.7.4.1-3}
+)clear all
+f(x,a,c) == c*x^3/(a^4+x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.25),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p54-2.7.4.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.4,0.25),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.6,0.25),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp54-2.7.4.1-3.eps}}}
+\label{CRCp54-2.7.4.1-3}
+\index{figures!CRCp54-2.7.4.1-3}
+
+\newpage
+\subsubsection{第 54 页 2.7.5}
+\[\displaystyle y=\frac{cx^4}{(a^4+x^4)}\]
+\[a^4y + x^4y - cx^4 = 0\]
+\begin{chunk}{p54-2.7.5.1-3}
+)clear all
+f(x,a,c) == c*x^4/(a^4+x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p54-2.7.5.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp54-2.7.5.1-3.eps}}}
+\label{CRCp54-2.7.5.1-3}
+\index{figures!CRCp54-2.7.5.1-3}
+
+\newpage
+\subsubsection{第 54 页 2.7.6}
+\[\displaystyle y=cx(a^4+x^4)\]
+\[y - a^4cx - cx^5 = 0\]
+\begin{chunk}{p54-2.7.6.1-3}
+)clear all
+f(x,a,c) == c*x*(a^4+x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.5,0.5),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p54-2.7.6.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,1.0,0.5),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.2,0.5),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp54-2.7.6.1-3.eps}}}
+\label{CRCp54-2.7.6.1-3}
+\index{figures!CRCp54-2.7.6.1-3}
+
+\newpage
+\subsection{含 $a^4-x^4$ 与 $x^m$ 的函数}
+\subsubsection{第 56 页 2.8.1}
+\[\displaystyle y=\frac{c}{(a^4-x^4)}\]
+\[a^4y - x^4y - c = 0\]
+\begin{chunk}{p56-2.8.1.1-3}
+)clear all
+f(x,a,c) == c/(a^4-x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.4,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p56-2.8.1.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.6,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp56-2.8.1.1-3.eps}}}
+\label{CRCp56-2.8.1.1-3}
+\index{figures!CRCp56-2.8.1.1-3}
+
+\newpage
+\subsubsection{第 56 页 2.8.2}
+\[\displaystyle y=\frac{cx}{(a^4-x^4)}\]
+\[a^4y - x^4y - cx = 0\]
+\begin{chunk}{p56-2.8.2.1-3}
+)clear all
+f(x,a,c) == c*x/(a^4-x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p56-2.8.2.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.4,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.6,0.01),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp56-2.8.2.1-3.eps}}}
+\label{CRCp56-2.8.2.1-3}
+\index{figures!CRCp56-2.8.2.1-3}
+
+\newpage
+\subsubsection{第 56 页 2.8.3}
+\[\displaystyle y=\frac{cx^2}{(a^4-x^4)}\]
+\[a^4y - x^4y - cx^2 = 0\]
+\begin{chunk}{p56-2.8.3.1-3}
+)clear all
+f(x,a,c) == c*x^2/(a^4-x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p56-2.8.3.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.4,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.6,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp56-2.8.3.1-3.eps}}}
+\label{CRCp56-2.8.3.1-3}
+\index{figures!CRCp56-2.8.3.1-3}
+
+\newpage
+\subsubsection{第 56 页 2.8.4}
+\[\displaystyle y=\frac{cx^3}{(a^4-x^4)}\]
+\[a^4y - x^4y - cx^3 = 0\]
+\begin{chunk}{p56-2.8.4.1-3}
+)clear all
+f(x,a,c) == c*x^3/(a^4-x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p56-2.8.4.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.4,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.6,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp56-2.8.4.1-3.eps}}}
+\label{CRCp56-2.8.4.1-3}
+\index{figures!CRCp56-2.8.4.1-3}
+
+\newpage
+\subsubsection{第 56 页 2.8.5}
+\[\displaystyle y=\frac{cx^4}{(a^4-x^4)}\]
+\[a^4y - x^4y - cx^4 = 0\]
+\begin{chunk}{p56-2.8.5.1-3}
+)clear all
+f(x,a,c) == c*x^4/(a^4-x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.2,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p56-2.8.5.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.5,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,0.8,0.1),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp56-2.8.5.1-3.eps}}}
+\label{CRCp56-2.8.5.1-3}
+\index{figures!CRCp56-2.8.5.1-3}
+
+\newpage
+\subsubsection{第 56 页 2.8.6}
+\[\displaystyle y=cx(a^4-x^4)\]
+\[y - a^4cx + cx^5 = 0\]
+\begin{chunk}{p56-2.8.6.1-3}
+)clear all
+f(x,a,c) == c*x*(a^4-x^4)
+
+lineColorDefault(red())
+viewport1:=draw(f(x,0.4,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0],_
+                title=="p56-2.8.6.1-3")
+graph1:=getGraph(viewport1,1)
+
+lineColorDefault(green())
+viewport2:=draw(f(x,0.8,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+lineColorDefault(blue())
+viewport3:=draw(f(x,1.0,1.0),x=-2..2,adaptive==true,unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp56-2.8.6.1-3.eps}}}
+\label{CRCp56-2.8.6.1-3}
+\index{figures!CRCp56-2.8.6.1-3}
+
+\newpage
+\subsection{含 $(a+bx)^{1/2}$ 与 $x^m$ 的函数}
+\subsubsection{第 58 页 2.9.1}
+抛物线
+\[\displaystyle y=c(a+bx)^{1/2}\]
+\[y^2 - bc^2x - ac^2 = 0\]
+\begin{chunk}{p58-2.9.1.1-3}
+)clear all
+f1(x,y) == y^2 - x/8 - 1/2
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p58-2.9.1.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == y^2 - x - 1/2
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == y^2 - 2*x - 1/2
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp58-2.9.1.1-3.eps}}}
+\label{CRCp58-2.9.1.1-3}
+\index{figures!CRCp58-2.9.1.1-3}
+
+\newpage
+\subsubsection{第 58 页 2.9.2}
+Catalan 三分角线……运行失败,提示为 "singular pts in region of sketch"
+\[\displaystyle y=cx(a+bx)^{1/2}\]
+\[y^2 - bc^2x^3 - ac^2x^2 = 0\]
+\begin{chunk}{p58-2.9.2.1-3}
+)clear all
+f1(x,y) == y^2 - x^3/2 - x^2/2
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p58-2.9.2.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == y^2 - x^3 - x^2/2
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == y^2 - 2*x^3 - x^2/2
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+%{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp58-2.9.2.1-3.eps}}}
+\label{CRCp58-2.9.2.1-3}
+\index{figures!CRCp58-2.9.2.1-3}
+
+\newpage
+\subsubsection{第 58 页 2.9.3}
+运行失败,提示为 "singular pts in region of sketch"
+\[\displaystyle y=cx^2(a+bx)^{1/2}\]
+\[y^2 - bc^2x^5 - ac^2x^4 = 0\]
+\begin{chunk}{p58-2.9.3.1-3}
+)clear all
+f1(x,y) == y^2 - x^5/2 - x^4/2
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p58-2.9.3.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == y^2 - x^5 - x^4/2
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == y^2 - 2*x^5 - x^4/2
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+%{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp58-2.9.3.1-3.eps}}}
+\label{CRCp58-2.9.3.1-3}
+\index{figures!CRCp58-2.9.3.1-3}
+
+\newpage
+\subsubsection{第 58 页 2.9.4}
+\[\displaystyle y=c(a+bx)^{1/2}/x\]
+\[x^2y^2 - c^2bx - c^2a = 0\]
+\begin{chunk}{p58-2.9.4.1-3}
+)clear all
+f1(x,y) == x^2*y^2 - x/50 - 1/50
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-2.0..2.0,-2.0..2.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p58-2.9.4.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == x^2*y^2 - x/25 - 1/50
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-2.0..2.0,-2.0..2.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == x^2*y^2 - 2*x/25 -1/50
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-2.0..2.0,-2.0..2.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp58-2.9.4.1-3.eps}}}
+\label{CRCp58-2.9.4.1-3}
+\index{figures!CRCp58-2.9.4.1-3}
+
+\newpage
+\subsubsection{第 58 页 2.9.5}
+\[\displaystyle y=c(a+bx)^{1/2}/x^2\]
+\[x^4y^2 - c^2bx - c^2a = 0\]
+\begin{chunk}{p58-2.9.5.1-3}
+)clear all
+f1(x,y) == x^2*y^2 - x/200 - 1/200
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-2.0..2.0,-2.0..2.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p58-2.9.5.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == x^2*y^2 - x/100 - 1/200
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-2.0..2.0,-2.0..2.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == x^2*y^2 - x/50 - 1/200
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-2.0..2.0,-2.0..2.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp58-2.9.5.1-3.eps}}}
+\label{CRCp58-2.9.5.1-3}
+\index{figures!CRCp58-2.9.5.1-3}
+
+\newpage
+\subsubsection{第 58 页 2.9.6}
+\[\displaystyle y=c/(a+bx)^{1/2}\]
+\[ay^2 + bxy^2 - c^2 = 0\]
+\begin{chunk}{p58-2.9.6.1-3}
+)clear all
+f1(x,y) == (x + 1)*y^2 - 1/4
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p58-2.9.6.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == (2*x+1)*y^2 - 1/4
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == (4*x+1)*y^2 - 1/4
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp58-2.9.6.1-3.eps}}}
+\label{CRCp58-2.9.6.1-3}
+\index{figures!CRCp58-2.9.6.1-3}
+
+\newpage
+\subsubsection{第 60 页 2.9.7}
+作图区域内存在奇点
+\[\displaystyle y=\frac{cx}{(a+bx)^{1/2}}\]
+\[ay^2 + bxy^2 - c^2x^2 = 0\]
+\begin{chunk}{p60-2.9.7.1-3}
+)clear all
+f1(x,y) == (x + 1)*y^2 - x^2
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p60-2.9.7.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == (2*x+1)*y^2 - x^2
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == (4*x+1)*y^2 - x^2
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+%{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp60-2.9.7.1-3.eps}}}
+\label{CRCp60-2.9.7.1-3}
+\index{figures!CRCp60-2.9.7.1-3}
+
+\newpage
+\subsubsection{第 60 页 2.9.8}
+作图区域内存在奇点
+\[\displaystyle y=\frac{cx^2}{(a+bx)^{1/2}}\]
+\[ay^2 + bxy^2 - c^2x^4 = 0\]
+\begin{chunk}{p60-2.9.8.1-3}
+)clear all
+f1(x,y) == (x + 1)*y^2 - x^4
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p60-2.9.8.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == (2*x+1)*y^2 - x^4
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == (4*x+1)*y^2 - x^4
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+%{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp60-2.9.8.1-3.eps}}}
+\label{CRCp60-2.9.8.1-3}
+\index{figures!CRCp60-2.9.8.1-3}
+
+\newpage
+\subsubsection{第 60 页 2.9.9}
+\[\displaystyle y=\frac{c}{x(a+bx)^{1/2}}\]
+\[ax^2y^2 + bx^3y^2 - c^2 = 0\]
+\begin{chunk}{p60-2.9.9.1-3}
+)clear all
+f1(x,y) == (4/5*x^3 + x^2)*y*2 - 1/25
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p60-2.9.9.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == (x^3 + x^2)*y^2 - 1/25
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == (6/5*x^3 + x^2)*y^2 - 1/25
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp60-2.9.9.1-3.eps}}}
+\label{CRCp60-2.9.9.1-3}
+\index{figures!CRCp60-2.9.9.1-3}
+
+\newpage
+\subsubsection{第 60 页 2.9.10}
+\[\displaystyle y=\frac{c}{x^2(a+bx)^{1/2}}\]
+\[ax^4y^2 + bx^5y^2 - c^2 = 0\]
+\begin{chunk}{p60-2.9.10.1-3}
+)clear all
+f1(x,y) == (4/5*x^5 + x^4)*y*2 - 1/100
+
+lineColorDefault(red())
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p60-2.9.10.1-3")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == (x^5 + x^4)*y^2 - 1/100
+
+lineColorDefault(green())
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == (6/5*x^5 + x^4)*y^2 - 1/100
+
+lineColorDefault(blue())
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp60-2.9.10.1-3.eps}}}
+\label{CRCp60-2.9.10.1-3}
+\index{figures!CRCp60-2.9.10.1-3}
+
+\newpage
+\subsubsection{第 60 页 2.9.11}
+\[\displaystyle y=\frac{cx^{1/2}}{(a+bx)^{1/2}}\]
+\[y^2 - ac^2x - bc^2x^2 = 0\]
+\begin{chunk}{p60-2.9.11.1-6}
+)clear all
+f1(x,y) == y^2 + 2*x^2 - 2*x
+
+lineColorDefault(color(1))
+viewport1:=draw(f1(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0],title=="p60-2.9.11.1-6")
+graph1:=getGraph(viewport1,1)
+
+f2(x,y) == y^2 + 3*x^2 - 2*x
+
+lineColorDefault(color(2))
+viewport2:=draw(f2(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph2:=getGraph(viewport2,1)
+
+f3(x,y) == y^2 + 4*x^2 - 2*x
+
+lineColorDefault(color(3))
+viewport3:=draw(f3(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph3:=getGraph(viewport3,1)
+
+f4(x,y) == y^2 - x^2 - 3*x/10
+
+lineColorDefault(color(4))
+viewport4:=draw(f4(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph4:=getGraph(viewport4,1)
+
+f5(x,y) == y^2 - x^2 - x/2
+
+lineColorDefault(color(5))
+viewport5:=draw(f5(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph5:=getGraph(viewport5,1)
+
+f6(x,y) == y^2 - x^2 -7*x/10
+
+lineColorDefault(color(6))
+viewport6:=draw(f6(x,y)=0,x,y,range==[-4.0..4.0,-4.0..4.0],adaptive==true,_
+                unit==[1.0,1.0])
+graph6:=getGraph(viewport6,1)
+
+putGraph(viewport1,graph2,2)
+putGraph(viewport1,graph3,3)
+putGraph(viewport1,graph4,4)
+putGraph(viewport1,graph5,5)
+putGraph(viewport1,graph6,6)
+units(viewport1,1,"on")
+points(viewport1,1,"off")
+points(viewport1,2,"off")
+points(viewport1,3,"off")
+makeViewport2D(viewport1)
+
+\end{chunk}
+{\center{\includegraphics[height=8cm,width=8cm]{ps/v81crcp60-2.9.11.1-6.eps}}}
+\label{CRCp60-2.9.11.1-6}
+\index{figures!CRCp60-2.9.11.1-6}
+
+\chapter{意面设计}
+这是一本书\cite{Lege11},它把意面形状的分类法与在三维空间中实现这些
+形状的 Mathematica 方程结合在一起。我们把书中的示例在 Axiom 里重新
+实现,作为图形功能的测试集。
+
+\newpage
+\section{Acini Di Pepe}
+{\center{\includegraphics[scale=0.50]{ps/v81acinidipepe.eps}}}
+\begin{chunk}{Acini Di Pepe}
+X(i,j) == 15*cos(i/60*%pi)
+Y(i,j) == 15*sin(i/60*%pi)
+Z(i,y) == j
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..120,j=0..30,_
+          style=="smooth",title=="Acini Di Pepe",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+{\sl postine minute}(细小意面)家族中体型最小的成员,{\sl acini de
+pepe}(意为“胡椒粒”)最适合搭配清汤(consomm\'e),有时也会加入一些
+面包丁与切碎的青菜。acini di pepe 由杜兰小麦粉与鸡蛋制成,常用于意大利
+裔美国人的“婚礼汤”(wedding soup)——一种以蔬菜与肉类同煮而成的清汤。
+
+\newpage
+\section{Agnolotti}
+{\center{\includegraphics[scale=0.50]{ps/v81agnolotti.eps}}}
+\begin{chunk}{Agnolotti}
+X(i,j) == (10*sin((i/120)*%pi)^(0.5) + _
+           (1/400)*sin(((3*j)/10)*%pi)) * _
+          cos(((19*j)/2000)*%pi+0.03*%pi)
+Y(i,j) == (10*sin((i/120)*%pi) + _
+           (1/400)*cos(((30*j)/10)*%pi)) * _
+          sin(((19*j)/2000)*%pi+0.03*%pi)
+Z(i,j) == 5*cos((i/120)*%pi)^5 * sin((j/100)*%pi) - _
+          5*sin((j/100)*%pi) * cos((i/120)*%pi)^200
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..60,j=0..100,_
+          style=="smooth",title=="Agnolotti",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,0.6,0.6,0.6)
+\end{chunk}
+这种来自意大利北部皮埃蒙特(Piedmont)的贝壳状{\sl ravioli}
+(意式饺子),是用小麦粉与鸡蛋做成的压扁小面片制成的,常常包入炖小
+牛肉、猪肉、蔬菜或奶酪作馅。真正的 agnolotto 应带有褶皱的边缘,需用
+波纹滚轮刀切出。搭配融化黄油与鼠尾草风味最佳。
+
+\newpage
+\section{Anellini}
+{\center{\includegraphics[scale=0.50]{ps/v81anellini.eps}}}
+\begin{chunk}{Anellini}
+X(i,j) == cos(0.01*i*%pi)
+Y(i,j) == 1.1*sin(0.01*i*%pi)
+Z(i,j) == 0.05*j
+canvas := createThreeSpace()
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+makeObject(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..8,space==canvas,_
+           colorFunction==cf,style=="smooth")
+makeObject(surface(X(i,j)/1.4,Y(i,j)/1.4,Z(i,j)),i=0..200,j=0..8,_
+           space==canvas,colorFunction==cf,style=="smooth")
+vp:=makeViewport3D(canvas,style=="smooth",title=="Anellini")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+zoom(vp,1.1,1.1,1.1)
+\end{chunk}
+娇小的{\sl onellini}(小圆环)是庞大的{\sl postine minute}
+(细小意面)家族的一支。它们的粗细只在 1.15 到 1.20 毫米之间,因此
+通常出现在清淡的汤品中,搭配面包丁与切得很薄的蔬菜。这种意面也可见
+于{\sl timballo}(意式烤面食)之中。
+
+\newpage
+\section{Bucatini}
+{\center{\includegraphics[scale=0.50]{ps/v81bucatini.eps}}}
+\begin{chunk}{Bucatini}
+X(i,j) == 0.3*cos(i/30*%pi)
+Y(i,j) == 0.3*sin(i/30*%pi)
+Z(i,j) == j/45
+canvas := createThreeSpace()
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+makeObject(surface(X(i,j),Y(i,j),Z(i,j)),i=0..60,j=0..90,space==canvas,_
+           colorFunction==cf,style=="smooth")
+makeObject(surface(X(i,j)/2,Y(i,j)/2,Z(i,j)),i=0..60,j=0..90,space==canvas,_
+           colorFunction==cf,style=="smooth")
+vp:=makeViewport3D(canvas,style=="smooth",title=="Bucatini")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+zoom(vp,2.0,2.0,2.0)
+\end{chunk}
+{\sl Bucatini}(意为“穿孔的”)这种意面通常以{\sl pastasciutta}
+的方式食用(即意面煮熟沥干后拌上酱汁,而非泡在清汤里)。与之最相配
+的酱汁是{\sl amatriciana}:一种以风干猪肉、佩科里诺罗马诺奶酪
+(Pecorino Romano)与番茄酱调制而成的传统浓郁酱汁,得名于意大利
+中部的中世纪小镇阿马特里切(Amatrice)。
+
+\newpage
+\section{Buccoli}
+{\center{\includegraphics[scale=0.50]{ps/v81buccoli.eps}}}
+\begin{chunk}{Buccoli}
+X(i,j) == (0.7 + 0.2*sin(21*j/250 * %pi))*cos(i/20*%pi)
+Y(i,j) == (0.7 + 0.2*sin(21*j/250 * %pi))*sin(i/20*%pi)
+Z(i,j) == 39.0*i/1000. + 1.5*sin(j/50*%pi)
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..25,_
+          style=="smooth",title=="Buccoli",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+作为{\sl pasta corta}(短意面)家族里一种螺旋形的成员,{\sl
+buccoli} 的来历颇为不明,适合用于蘑菇香肠料理。它们与番茄茄子、
+香蒜酱(pesto)和乳清干酪(ricotta)沙拉搭配也十分出色。
+
+\newpage
+\section{Calamaretti}
+{\center{\includegraphics[scale=0.50]{ps/v81calamaretti.eps}}}
+\begin{chunk}{Calamaretti}
+X(i,j) == cos(i/75*%pi) + 0.1*cos(j/40*%pi) + 0.1*cos(i/75*%pi + j/40*%pi)
+Y(i,j) == 1.2*sin(i/75*%pi) + 0.2*sin(j/40*%pi)
+Z(i,j) == j/10
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..20,_
+          style=="smooth",title=="Calamaretti",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.1,1.1,1.1)
+\end{chunk}
+字面意思是“小鱿鱼”,{\sl calamaretti} 是一种小圆环状的意面,以
+{\sl pastasciutta} 方式烹制(煮熟沥干),再拌上以番茄、鸡蛋或奶酪
+为底的酱汁。它们的形状使{\sl calamaretti} 无论是浓稠还是稀薄的酱汁
+都能挂得很好。也正因如此,常与海鲜同食。
+
+\newpage
+\section{Cannelloni}
+{\center{\includegraphics[scale=0.50]{ps/v81cannelloni.eps}}}
+\begin{chunk}{Cannelloni}
+X(i,j) == (1+j/100)*cos(i*%pi/55) + 0.5*cos(j*%pi/100) + _
+          0.1*cos(i*%pi/55+j*%pi/125)
+Y(i,j) == 1.3*sin(i*%pi/55) + 0.3*sin(j*%pi/100)
+Z(i,j) == 7.*j/50.
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..110,j=0..50,_
+          style=="smooth",title=="Cannelloni",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl cannelloni}(大管子)由小麦粉、鸡蛋和橄榄油制成,最初是压平
+的意面条,卷成规整的圆筒状,可以填入肉类、蔬菜或乳清干酪作馅。填好
+馅料的{\sl cannelloni} 上会浇一层浓郁的{besciamella}(白汁奶油酱),
+撒上帕玛森干酪(Parmigiano-Reggiano),再入烤箱烘烤。
+
+\newpage
+\section{Cannolicchi Rigati}
+{\center{\includegraphics[scale=0.50]{ps/v81cannolicchirigati.eps}}}
+\begin{chunk}{Cannolicchi Rigati}
+X(i,j) == 8*cos(i*%pi/70) + 0.2*cos(2*i*%pi/7) + 5*cos(j*%pi/100)
+Y(i,j) == 8*sin(i*%pi/70) + 0.2*sin(2*i*%pi/7) + 4*sin(j*%pi/100)
+Z(i,j) == 6.0*j/5.0
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..140,j=0..50,_
+          style=="smooth",title=="Cannolicchi Rigati",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,2,7)
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+意为“小管子”,{\sl cannolicchi} 既有{\sl rigati}(带纹路的)也
+有{\sl lisci}(光滑的)形态。这种中空的{\sl pasta corta}(短意面)
+有多种直径,常与海鲜搭配食用。{\sl Cannolicchi} 来自意大利南部的
+坎帕尼亚(Campania)地区。
+
+\newpage
+\section{Capellini}
+{\center{\includegraphics[scale=0.50]{ps/v81capellini.eps}}}
+\begin{chunk}{Capellini}
+X(i,j) == 0.05*cos(2*i*%pi/15) + 0.6*cos(j*%pi/100)
+Y(i,j) == 0.05*sin(2*i*%pi/15) + 0.5*sin(j*%pi/100)
+Z(i,j) == 7.0*j/100.0
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..15,j=0..100,_
+          style=="smooth",title=="Capellini",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+{\sl capellini}(意为“细发”)是一种极细的杆状意面,既可用清淡
+的高汤烹制,也能与黄油、肉豆蔻或柠檬完美搭配。这个品种(或是它更
+纤细的近亲{\sl capelli d'angelo}(意为“天使的头发”))有时还被
+用作一道以柠檬和杏仁制成的特别甜点意面——{\sl torta ricciolina}
+——的基底。
+
+\newpage
+\section{Cappelletti}
+{\center{\includegraphics[scale=0.50]{ps/v81cappelletti.eps}}}
+\begin{chunk}{Cappelletti}
+X(i,j) == (0.1 + sin(((3*i)/160)*%pi)) * cos(((2.3*j)/120)*%pi)
+Y(i,j) == (0.1 + sin(((3*i)/160)*%pi)) * sin(((2.3*j)/120)*%pi)
+Z(i,j) == 0.1 + (1/400.)*j + (0.3 - 0.231*(i/40.)) * cos((i/20.)*%pi)
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..40,j=0..120,_
+          style=="smooth",title=="Cappelletti",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.1,1.1,1.1)
+\end{chunk}
+这种意面按传统会作为意大利北部圣诞大餐的头道菜,盛在鸡汤(brodo)
+里端上桌。通常是家里的孩子们在平安夜准备 cappelletti(小帽子):把
+小麦粉与新鲜鸡蛋做成的意面小包,填入什锦肉馅或乳清干酪之类的软质
+奶酪。
+
+\newpage
+\section{Casarecce}
+{\center{\includegraphics[scale=0.50]{ps/v81casarecce.eps}}}
+\begin{chunk}{Casarecce}
+X(i,j) == _ 
+  if (i <= 30)_
+   then 0.5*cos(j*%pi/30)+0.5*cos((2*i+j+16)/40*%pi) _
+   else cos(j*%pi/40)+0.5*cos(j*%pi/30)+0.5*sin((2*i-j)/40*%pi)
+Y(i,j) == _
+  if (i <= 30)_
+   then 0.5*sin(j*%pi/30)+0.5*sin((2*i+j+16)/40*%pi) _
+   else sin(j*%pi/40)+0.5*sin(j*%pi/30)+0.5*cos((2*i-j)/40*%pi)
+Z(i,j) == j/4.0
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..60,j=0..60,_
+          style=="smooth",title=="Casarecce",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+凭借独特的 s 形截面很容易辨认,{\sl casarecce}(意为“自制的”)
+最适合以{\sl postasciutta}方式烹制(煮熟沥干后拌酱汁)。{\sl
+casarecce} 常搭配经典的{\sl ragu}(肉酱),再撒上一点胡椒和帕玛森
+干酪调味。
+
+\newpage
+\section{Castellane}
+{\center{\includegraphics[scale=0.50]{ps/v81castellane.eps}}}
+\begin{chunk}{Castellane}
+X(i,j) == ((0.3*sin(j*%pi/120)*abs(cos((j+3)*%pi/6)) + _
+           i^2/720.*(sin(2*j*%pi/300)^2+0.1) + 0.3)) * cos(7*i*%pi/150)
+Y(i,j) == ((0.3*sin(j*%pi/120)*abs(cos((j+3)*%pi/6)) + _
+           i^2/720.*(sin(2*j*%pi/300)^2+0.1) + 0.3)) * sin(7*i*%pi/150)
+Z(i,j) == 12*cos(j*%pi/120)
+cf(x:DFLOAT,y:DFLOAT):DFLOAT == 1.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..60,j=0..120,_
+          style=="smooth",title=="Castellane",colorFunction==cf)
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+viewpoint(v3d,0.0,0.0,45.0)
+viewpoint(v3d,5,5,0)
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+生产商 Bailla 最近创制了这种优雅的意面形状。据其制造商所说,这款
+意面最初被称为{\sl paguri}(寄居蟹),后来改名为{\sl castellane}
+(城堡居民)。{\sl castellane} 扎实的形态与浓郁的坚果风味,足以撑
+起丰盛的正餐与味道浓烈的酱汁。
+
+\newpage
+\section{Cavatappi}
+{\center{\includegraphics[scale=0.50]{ps/v81cavatappi.eps}}}
+\begin{chunk}{Cavatappi}
+X(i,j) == (3+2*cos(i*%pi/35)+0.1*cos(2*i*%pi/7))*cos(j*%pi/30)
+Y(i,j) == (3+2*cos(i*%pi/35)+0.1*cos(2*i*%pi/7))*sin(j*%pi/30)
+Z(i,j) == 3+2*sin(i*%pi/35)+0.1*sin(2*i*%pi/7)+j/6.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..70,j=0..150,_
+          style=="smooth",title=="Cavatappi")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+{\sl cavatappi}(开瓶器)与用羊肉或猪肉做成的浓稠酱汁绝配,是一种
+长 36 毫米、中空的螺旋管状意面。除了搭配{\sl boscaiola}(樵夫风味)
+一类的奶油酱汁外,它们也常用于烤箱焗奶酪的菜式,或是拌香蒜酱(pesto)
+的沙拉中。
+
+\newpage
+\section{Cavatelli}
+{\center{\includegraphics[scale=0.50]{ps/v81cavatelli.eps}}}
+\begin{chunk}{Cavatelli}
+A(i) == 0.5*cos(i*%pi/100)
+B(i,j) == j/60.*sin(i*%pi/100)
+X(i,j) == 3*(1-sin(A(i)*2*%pi))*cos(A(i)*%pi+0.9*%pi)
+Y(i,j) == 3*sin(A(i)*2*%pi)*sin(A(i)*%pi+0.63*%pi)
+Z(i,j) == 4*B(i,j)*(5-sin(A(i)*%pi))
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..30,_
+          style=="smooth",title=="Cavatelli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,5,50)
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+{\sl cavatelli} 在意大利南部颇受欢迎,形状与更长的扭曲状{\sl
+casareccia} 相近,可以做成{\sl alla puttanesca}(意为“妓女式”,
+酱汁含辣椒、大蒜、刺山柑与鳀鱼)。它们也可以加入沙拉,搭配橄榄油、
+炒香的蒜末与撒一层软质奶酪。
+
+\newpage
+\section{Chifferi Rigati}
+{\center{\includegraphics[scale=0.50]{ps/v81chifferirigati.eps}}}
+\begin{chunk}{Chifferi Rigati}
+X(i,j) == (0.45+0.3*cos(i*%pi/100)+0.005*cos(2*i*%pi/5)) * cos(j*%pi/45) + _
+          0.15*(j/45.0)^10*cos(i*%pi/100)^3
+Y(i,j) == (0.35+j/300.0)*sin(i*%pi/100) + 0.005*sin(2*i*%pi/5)
+Z(i,j) == (0.4+0.3*cos(i*%pi/100))*sin(j*%pi/45)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..45,_
+          style=="smooth",title=="Chifferi Rigati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,90,180)
+\end{chunk}
+这种意面——有{\sl rigoti}(带纹路的)与{\sl lisci}(光滑的)
+两种形态——通常用高汤烹煮,或搭配{\sl rogu alla bolognese}
+(博洛尼亚肉酱)食用,不过{\sl chifferi rigati} 加入胡萝卜、红椒
+与西葫芦的沙拉里也非常出色。{\sl Chifferi rigoti} 与奥地利的
+'kipfel' 甜点形似,其名称正是该词的音译。
+
+\newpage
+\section{Colonne Pompeii}
+{\center{\includegraphics[scale=0.50]{ps/v81colonnepompeii.eps}}}
+\begin{chunk}{Colonne Pompeii}
+X0(i,j) == _
+  if (j <= 50) _
+   then 2*cos(i*%pi/20) _
+   else 2*cos(i*%pi/20)*cos(-j*%pi/25)
+Y0(i,j) == _
+  if (j <= 50) _
+   then 0.0 _
+   else 2*cos(i*%pi/20)*sin(-j*%pi/25) + 3*sin((j-50)*%pi/200)
+Z0(i,j) == _
+  if (j <= 50) _
+   then sin(i*%pi/20)+12 _
+   else sin(i*%pi/20)+6.0*j/25.0
+X1(i,j) == _
+  if (j <= 200) _
+   then 2*cos(i*%pi/20)*cos(-j*%pi/25+2*%pi/3) _
+   else 2*cos(i*%pi/20)*sin(-28*%pi/3)
+Y1(i,j) == _
+  if (j <= 200) _
+   then 2*cos(i*%pi/20)*sin(-j*%pi/20 + 2*%pi/3) + 3*sin(j*%pi/200) _
+   else 2*cos(i*%pi/20)*sin(-28*%pi/3)
+Z1(i,j) == _
+  if (j <= 200) _
+   then 12+sin(i*%pi/20)+6.0*j/25.0 _
+   else sin(i*%pi/20)+60
+X2(i,j) == _
+  if (j <= 200) _
+   then 2*cos(i*%pi/20)*cos(-j*%pi/25+4*%pi/3) _
+   else 2*cos(i*%pi/20)*sin(-28*%pi/3)
+Y2(i,j) == _
+  if (j <= 200) _
+   then 2*cos(i*%pi/200)*sin(-j*%pi/25+4*%pi/3)+3*sin(j*%pi/200) _
+   else 2*cos(i*%pi/20)*sin(-28*%pi/3)
+vsp:=createThreeSpace()
+makeObject(surface(X0(i,j),Y0(i,j),Z0(i,j)),i=0..10,j=0..250,space==vsp)
+makeObject(surface(X1(i,j),Y1(i,j),Z1(i,j)),i=0..10,j=0..250,space==vsp)
+makeObject(surface(X2(i,j),Y2(i,j),Z1(i,j)),i=0..10,j=0..250,space==vsp)
+vp:=makeViewport3D(vsp,title=="Colonne Pompeii",style=="smooth")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+zoom(vp,3.0,3.0,3.0)
+\end{chunk}
+这种华丽的意面(最初来自意大利南部的坎帕尼亚)形状与{\sl
+fusilloni}(大号的{\sl fusilli})相似,但明显更长。{\sl Colonne
+Pompeii}(庞贝的石柱)最适合用新鲜罗勒、松子、切得很细的蒜片与橄榄
+油调味,再撒上一层现磨帕玛森干酪。
+
+\newpage
+\section{Conchiglie Rigate}
+{\center{\includegraphics[scale=0.50]{ps/v81conchiglierigate.eps}}}
+\begin{chunk}{Conchiglie Rigate}
+A(i,j) == 0.25*sin(j*%pi/250)*cos((6*j+25)/25*%pi)
+B(i,j) == ((40.0-i)/40.0)*(0.3+sin(j*%pi/250))*%pi
+C(i,j) == 2.5*cos(j*%pi/125)+2*sin((40-i)*%pi/80)^10 * _
+          sin(j*%pi/250)^10*sin(j*%pi/125+1.5*%pi)
+X(i,j) == A(i,j)+cos(j*%pi/125)+(5+30*sin(j*%pi/250))*sin(B(i,j)) * _
+          sin(i/40*(0.1*(1.1+sin(j*%pi/250)^5))*%pi)
+Y(i,j) == A(i,j)+(5+30*sin(j*%pi/250))*cos(B(i,j)) * _
+          sin(i/40*(0.1*(1.1+sin(j*%pi/250)^5))*%pi) + C(i,j)
+Z(i,j) == 25.0*cos(j*%pi/250)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..40,j=0..250,_
+          style=="smooth",title=="Conchiglie Rigate")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,45,45)
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+形状正如其名,{\sl conchiglie}(贝壳)有{\sl rigate}(带纹路的)
+与{\sl lisce}(光滑的)两种形态。适合搭配清淡的番茄酱、乳清干酪或
+{\sl pesto genovese}(热那亚香蒜酱),{\sl conchiglie} 精巧的贝壳
+造型与纹路能把调味料牢牢锁住。较小的版本用于汤品,较大的贝壳则更常
+拌上酱汁食用。
+
+\newpage
+\section{Conchigliette Lisce}
+{\center{\includegraphics[scale=0.50]{ps/v81conchigliettelisce.eps}}}
+\begin{chunk}{Conchigliette Lisce}
+A(i,j) == (60.0-i)/60.0*(0.5+sin(j*%pi/60))*%pi
+B(i,j) == i/60.0*(0.1*(1.1+sin(j*%pi/60)^5))*%pi
+C(i,j) == 2.5*cos(j*%pi/30)+2*sin((60-i)*%pi/120)^10 * _
+          sin(j*%pi/60)^10*sin((j+45)*%pi/30)
+X(i,j) == (5+30*sin(j*%pi/60))*sin(A(i,j))*sin(B(i,j))+cos(j*%pi/30)
+Y(i,j) == (5+30*sin(j*%pi/60))*cos(A(i,j))*sin(B(i,j))+C(i,j)
+Z(i,j) == 25*cos(j*%pi/60)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..60,j=0..60,_
+          style=="smooth",title=="Conchigliette Lisce")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,45,45)
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+通常见于意大利中部和南部(尤其是坎帕尼亚地区),{\sl
+conchigliette lisce}(小号光滑贝壳)可以放入{\sl minestrone}
+(蔬菜浓汤)之类的汤品中食用。此外,这种贝壳形意面也可以搭配以肉类
+或蔬菜为底的酱汁。
+
+\newpage
+\section{Conchiglioni Rigate}
+{\center{\includegraphics[scale=0.50]{ps/v81conchiglionirigate.eps}}}
+\begin{chunk}{Conchiglioni Rigate}
+A(i,j) == 0.25*sin(j*%pi/200)*cos((j+4)*%pi/4)
+B(i,j) == i/40.0*(0.1+0.1*sin(j*%pi/200)^6)*%pi
+C(i,j) == 2.5*cos(j*%pi/100)+3*sin((40-i)*%pi/80)^10 * _
+          sin(j*%pi/200)^10*sin((j-150)*%pi/100)
+X(i,j) == A(i,j)+(10+30*sin(j*%pi/200)) * _
+          sin((40.0-i)/40*(0.3+sin(j*%pi/200)^3)*%pi) * _
+          sin(B(i,j))+cos(j*%pi/100)
+Y(i,j) == A(i,j)+(10+30*sin(j*%pi/200)) * _
+          cos((40.0-i)/40*(0.3+sin(j*%pi/200)^3)*%pi) * _
+          sin(B(i,j))+C(i,j)
+Z(i,j) == 30.0*cos(j*%pi/200)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..40,j=0..200,_
+          style=="smooth",title=="Conchiglioni Rigati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,45,45)
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+{\sl conchiglioni rigate}(大号带棱纹贝壳)的形状非常适合盛放
+酱汁与馅料(鱼肉或畜肉均可),这种意面可以入烤箱烘烤,也可以放在
+烤架下做成焗烤。{\sl Conchiglioni rigati} 常见于意大利裔美国菜
+{\sl pasta primavera}(春蔬意面)中,搭配爽脆的时令春菜。
+
+\newpage
+\section{Corallini Lisci}
+{\center{\includegraphics[scale=0.50]{ps/v81corallinilisci.eps}}}
+\begin{chunk}{Corallini Lisci}
+X(i,j) == 0.8*cos(i*%pi/50)
+Y(i,j) == 0.8*sin(i*%pi/50)
+Z(i,j) == 3.0*j/50.0
+vsp:=createThreeSpace()
+makeObject(surface(X(i,j),Y(i,j),Z(i,j)),i=0..140,j=0..70,space==vsp)
+makeObject(surface(X(i,j)/2,Y(i,j)/2,Z(i,j)),i=0..140,j=0..70,space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Corallini Lisci")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+zoom(vp,2.0,2.0,2.0)
+\end{chunk}
+作为{\sl postine minute}(细小意面)家族的一员,{\sl corallini
+lisci}(小号光滑珊瑚)之所以得名,是因为它们中空穿孔的外观酷似意大利
+人佩戴的珊瑚珠饰。它们体积很小(直径不超过 3.5 毫米),因此{\sl
+corallini} 最适合用于高汤烹煮,比如托斯卡纳白豆汤。
+
+\newpage
+\section{Creste Di Galli}
+{\center{\includegraphics[scale=0.50]{ps/v81crestedigalli.eps}}}
+\begin{chunk}{Creste Di Galli}
+A(i)   == ((1+sin((1.5+i)*%pi))/2)^5
+B(i,j) == 0.3*sin(A(i/140.)*%pi+0.5*%pi)^1000*cos(j*%pi/70.0)
+C(i,j) == 0.3*cos(A(i/140.)*%pi)^1000*sin(j*%pi/70.0)
+X(i,j) == (0.5+0.3*cos(A(i/140.)*2*%pi))*cos(j*%pi/70.0) + _
+          0.15*(j/70.0)^10*cos(A(i/140.0)*2*%pi)^3 + B(i,j)
+Y(i,j) == 0.35*sin(A(i/140.0)*2*%pi) + 0.15*j/70.0*sin(A(i/140.0)*2*%pi)
+Z(i,j) == (0.4+0.3*cos(A(i/140.0)*2*%pi))*sin(j*%pi/70.0) + C(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..140,j=0..70,_
+          style=="smooth",title=="Creste Di Galli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+作为{\sl pasta ripiena}(填馅意面)家族的一员,{\sl creste di
+galli}(鸡冠)与{\sl galletti} 几乎完全相同,唯一区别在于它们的冠部
+是光滑而非褶皱的。可以填馅、煮熟后拌上简单的{\sl marinara}
+(水手风味)酱汁食用,酱汁由番茄、大蒜和罗勒调制而成。
+
+\newpage
+\section{Couretti}
+{\center{\includegraphics[scale=0.50]{ps/v81couretti.eps}}}
+\begin{chunk}{Couretti}
+X(i,j) == 2*cos(i*%pi/150)-cos(i*%pi/75)-sin(i*%pi/300)^150 - _
+          (abs(cos(i*%pi/300)))^5
+Y(i,j) == 2*sin(i*%pi/150)-sin(i*%pi/75)
+Z(i,j) == j/10.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..300,j=0..10,_
+          style=="smooth",title=="Couretti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+作为{\sl postine minute}(细小意面)家族里造型浪漫的一支,{\sl
+cuoretti}(小心形)体积极其微小。事实上,连同{\sl acini di pepe}
+在内,它们是最小的几种意面之一。与所有{\sl postine} 一样,它们可以
+放入汤中食用,比如奶油鸡汤。
+
+\newpage
+\section{Ditali Rigati}
+{\center{\includegraphics[scale=0.50]{ps/v81ditalirigati.eps}}}
+\begin{chunk}{Ditali Rigati}
+X(i,j) ==       cos(i*%pi/100) + 0.03*cos((7*i)*%pi/40) + 0.25*cos(j*%pi/50)
+Y(i,j) == 1.1 * sin(i*%pi/100) + 0.03*sin((7*i)*%pi/40) + 0.25*sin(j*%pi/50)
+Z(i,j) == j/10.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..25,_
+          style=="smooth",title=="Ditali Rigati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+作为意大利南部坎帕尼亚地区的又一特产,{\sl ditali rigati}
+(带纹路的顶针)体型紧凑,通常长度不超过 10 毫米。和其他{\sl
+pastine}(小意面)一样,它们常见于{\sl pasta e patate}(意面炖
+土豆)之类的汤品中。它们敦实的造型使其成为冬日里管饱的小食,加入
+沙拉也同样出色。
+
+\newpage
+\section{Fagottini}
+{\center{\includegraphics[scale=0.50]{ps/v81fagottini.eps}}}
+\begin{chunk}{Fagottini}
+A(i,j) == (0.8 + sin(i/100*%pi)^8 - 0.8 * cos(i/25*%pi))^1.5 + _
+           0.2 + 0.2 * sin(1/100*%pi)
+B(i,j) == (0.9 + cos(i/100*%pi)^8 - 0.9 * cos(i/25*%pi + 0.03*%pi))^1.5 + _
+           0.3 * cos(i/100*%pi)
+C(i,j) == 4 - ((4*j)/500)*(1+cos(i/100*%pi)^8 - 0.8*cos(i/25*%pi))^1.5
+X(i,j) == cos(i/100*%pi) * _
+          (A(i,j) * sin(j/100*%pi)^8 + _
+           0.6 * (2 + sin(i/100*%pi)^2) * sin(j/50*%pi)^2)
+Y(i,j) == sin(i/100*%pi) * _
+          (B(i,j) * sin(j/100*%pi)^8 + _
+           0.6 * (2 + cos(i/100*%pi)^2) * sin(j/50*%pi)^2)
+Z(i,j) == (1 + sin(j/100*%pi - 0.5*%pi)) * _
+           (C(i,j) * ((4*j)/500) * _
+            (1 + sin(i/100*%pi)^8 - 0.8 * cos(i/25*%pi))^1.5)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..50,_
+          style=="smooth",title=="Fagottini")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+作为 pasta ripiena(填馅意面)家族里颇具代表性的一员,fagottini
+(小钱包)是用杜兰小麦面团切成的圆片做成的。在面片上放一勺乳清干酪、
+蒸蔬菜、甚至炖水果,再把边角捏合收拢成一个小包。这种包好的饺子和
+ravioli(意式饺子)相似,只是个头更大。
+
+\newpage
+\section{Farfalle}
+{\center{\includegraphics[scale=0.50]{ps/v81farfalle.eps}}}
+\begin{chunk}{Farfalle}
+A(i)   == sin((7*i+16)*%pi/40)
+B(i,j) == (7.0*j/16.0)+4*sin(i*%pi/80)*sin((j-10)*%pi/120)
+C(i,j) == 10*cos((i+80)*%pi/80)*sin((j+110)*%pi/100)^9
+D(i,j) == (7.0*j/16.0)-4*sin(i*%pi/80)-A(i)*sin((10-j)*%pi/20)
+-- E(i,j) was never defined. We guess at a likely function - close but wrong
+E(i,j) == _
+  if ((20 <= i) and (i <= 60)) _
+   then 7*sin((i+40)*%pi/40)^3*sin((2*j*%pi)/10+1.1*%pi)^9 _
+   else C(i,j)
+F(i) == _
+  if ((20 <= i) and (i <= 60)) _
+   then 7*sin((i+40)*%pi/40)^3*sin((j+110)*%pi/100)^9 _
+   else C(i,j)
+X(i,j) == (3.0*i)/8.0+F(i)
+Y(i,j) == _
+  if ((10 <= j) and (j <= 70)) _
+   then B(i,j)-4*sin(i*%pi/80)*sin((70-j)*%pi/120) _
+   else if (j <= 10) _
+         then D(i,j) _
+         else E(i,j)
+Z(i,j) == 3*sin((i+10)*%pi/20)*sin(j*%pi/80)^1.5
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..80,j=0..80,_
+          style=="smooth",title=="Farfalle")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,0.5,0.5,0.5)
+\end{chunk}
+{\sl farfalle}(蝴蝶)由杜兰小麦粉、鸡蛋和水调制而成,产自意大利
+北部的艾米利亚-罗马涅(Emilia-Romagna)与伦巴第(Lombardy)地区。
+最适合搭配浓郁的{\sl carbonara}(培根蛋酱,由奶油、鸡蛋与培根制成)
+酱汁。视季节而定,{\sl farfalle} 有时也会配上青豆与鸡肉或火腿。
+
+\newpage
+\section{Farfalline}
+{\center{\includegraphics[scale=0.50]{ps/v81farfalline.eps}}}
+\begin{chunk}{Farfalline}
+A(i) == 30*cos(i*%pi/125)+0.5*cos((6*i)*%pi/25)
+B(i) == 30*sin(i*%pi/125)+0.5*sin((6*i)*%pi/25)
+X(i,j) == cos(3*A(i)*%pi/100)
+Y(i,j) == 0.5*sin((3*A(i))*%pi/100)*(1+sin(j*%pi/100)^10)
+Z(i,j) == B(i)*j/500.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..250,j=0..50,_
+          style=="smooth",title=="Farfalline")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,45,45)
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+这种{\sl postine minute}(细小意面)家族中广为人知的成员体型
+娇小,因此{\sl farfalline}(小蝴蝶)很适合用于清淡的汤品,比如
+{\sl pomodori e robiolo}(番茄与软质奶酪的混合)。用褶边意面滚刀
+切出形状,再从中间一捏,便造就了这标志性的外形。
+
+\newpage
+\section{Farfalloni}
+{\center{\includegraphics[scale=0.50]{ps/v81farfalloni.eps}}}
+\begin{chunk}{Farfalloni}
+A(i,j) == 10*cos((i+70)*%pi/70)*sin((2*j)*%pi/175+1.1*%pi)^9
+B(j)   == 0.3*sin((6-j)*%pi/7+0.4*%pi)
+C(i,j) == _
+  if ((17 <= i) and (i <= 52)) _
+   then 7*sin((i+35)*%pi/35)^3*sin((2*j*%pi)/175+1.1*%pi)^9 _
+   else A(i,j)
+D(i,j) == (j/2.0)+4*sin(i*%pi/70)*sin((j-10)*%pi/100) - _
+          4*sin(i*%pi/70)*sin((60-j)*%pi/100)
+E(i,j) == (j/2.0)+4*sin(i*%pi/70)+0.3*sin((2*i+2.8)*%pi/7)*sin((j-60)*%pi/20)
+F(i,j) == (j/2.0)-4*sin(i*%pi/70)-0.3*sin((2*i+2.8)*%pi/7)*sin((10-j)*%pi/20)
+X(i,j) == (3.0*i)/7.0+C(i,j)
+Y(i,j) == _
+  if ((10 <= j) and (j <= 60)) _
+   then D(i,j) _
+   else if (j <= 10) _
+         then F(i,j) _
+         else E(i,j)
+Z(i,j) == 3*sin((2*i+17.5)*%pi/35.)*sin(j*%pi/70)^1.5
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..70,j=0..70,_
+          style=="smooth",title=="Farfalloni")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+和{\sl farfalle} 一样,{\sl farfalloni}(大蝴蝶)很适合搭配以
+番茄或黄油为底、加青豆与火腿的酱汁。它们与葫芦科蔬菜也是绝配,比如
+烤西葫芦或南瓜泥,再撒上帕玛森干酪与一点{\sl noce moscata}
+(肉豆蔻)。
+
+\newpage
+\section{Festonati}
+{\center{\includegraphics[scale=0.50]{ps/v81festonati.eps}}}
+\begin{chunk}{Festonati}
+X(i,j) == 5*cos(i*%pi/50)+0.5*cos(i*%pi/50)*(1+sin(j*%pi/100)) + _
+          0.5*cos((i+25)*%pi/25)*(1+sin(j*%pi/5))
+Y(i,j) == 5*sin(i*%pi/50)+0.5*sin(i*%pi/50)*(1+sin(j*%pi/100)) + _
+          0.5*cos(i**%pi/25)*(1+sin(j*%pi/5))
+Z(i,j) == j/2.0+2*sin((3*i+25)*%pi/50)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..100,j=0..100,_
+          style=="smooth",title=="Festonati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+这种表面光滑的{\sl pasta corta}(短意面)家族成员,得名于
+“festoon”(花彩饰带,一种呈花环般波状轮廓的装饰性织物)。{\sl
+Festonati} 可以搭配烤茄子或自家种植的番茄,再撒上磨碎的斯卡莫扎
+奶酪(scamorza)、新鲜罗勒、橄榄油、大蒜与红辣椒碎。
+
+\newpage
+\section{Fettuccine}
+{\center{\includegraphics[scale=0.50]{ps/v81fettuccine.eps}}}
+\begin{chunk}{Fettuccine}
+X(i,j) == 1.8*sin((4*i)*%pi/375)
+Y(i,y) == 1.6*cos((6*i)*%pi/375)*sin((3*i)*%pi/750)
+Z(i,j) == i/75.0 + j/20.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..10,_
+          style=="smooth",title=="Fettuccine")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+这种著名的{\sl pasta lunga}(长意面)由杜兰小麦粉、水制成,若是{\sl fettuccine alluovo},还要加入鸡蛋,且以下蛋后数日内的最为理想。{\sl Fettuccine}(小丝带)发源于拉齐奥(Lazio)地区。它们在许多菜式中都很受欢迎,是搭配{\sl Alfredo}酱——奶油、帕尔马干酪、大蒜与欧芹调制而成的浓郁酱汁——的理想选择。
+
+\newpage
+\section{Fiocchi Rigati}
+{\center{\includegraphics[scale=0.50]{ps/v81fiocchirigati.eps}}}
+\begin{chunk}{Fiocchi Rigati}
+A(i,j) == 10*cos((i+80)*%pi/80)*sin((j+110)*%pi/100)^9
+B(i,j) == 35.0*j/80.0+4*sin(i*%pi/80)*sin((j-10)*%pi/120)
+X(i,j) == _
+  if ((20 <= i) and (i <= 60)) _
+   then 7*sin((i+40)*%pi/40)^3*sin((j+110)*%pi/100)^9 + 30.0*i/80.0 _
+   else A(i,j) + 30.0*i/80.0
+Y(i,j) == B(i,j)-4*sin(i*%pi/80)*sin((70-j)*%pi/120)
+Z(i,j) == 3*sin((1+10)*%pi/20)*sin(j*%pi/80)^1.5-0.7*((sin(3*j*%pi/8)+1)/2)^4
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..80,j=0..80,_
+           style=="smooth",title=="Fiocchi Rigati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl fiocchi rigati}(有槽薄片)是{\sl farfalle}家族的远亲,体型比{\sl farfalloni}或{\sl farfalline}都要小。它们表面的凹凸纹理比典型的{\sl farfalle}能挂住更多酱汁。若想尝尝更特别的做法,{\sl fiocchi rigati}也可以配番茄伏特加酱食用。
+
+\newpage
+\section{Fisarmoniche}
+{\center{\includegraphics[scale=0.50]{ps/v81fisarmoniche.eps}}}
+\begin{chunk}{Fisarmoniche}
+X(i,j) == (1.5+3*(i/70.0)^5+4*sin(j*%pi/200)^50)*cos(4*i*%pi/175)
+Y(i,j) == (1.5+3*(i/70.0)^5+4*sin(j*%pi/200)^50)*sin(4*i*%pi/175)
+Z(i,j) == j/50.0+cos(3*i*%pi/14)*sin(j*%pi/1000)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..70,j=0..1000,_
+           style=="smooth",title=="Fisarmoniche")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl fisarmoniche}得名于手风琴——它们簇拥起伏的外形让人联想到手风琴的风箱——十分适合裹住浓稠的酱汁,酱汁会牢牢挂在它们的褶皱里。据说这种结实的意大利面发明于十五世纪,诞生地是意大利中东部马尔凯(Marche)大区的洛雷托(Loreto)镇。
+
+\newpage
+\section{Funghini}
+{\center{\includegraphics[scale=0.50]{ps/v81funghini.eps}}}
+\begin{chunk}{Funghini}
+A(i,j) == 5*cos(i*%pi/150)+0.05*cos(i*%pi/3)*sin(j*%pi/60)^2000
+B(i,j) == j/30.0*(5*sin(i*%pi/150)+0.05*sin(i*%pi/3))
+C(i,j) == j/10.0*(2*sin(i*%pi/150)+0.05*sin(i*%pi/3))
+D(i,j) == _
+  if (i <= 150) _
+   then B(i,j) _
+   else if (j <= 10) _
+         then C(i,j) _
+         else 2*sin(i*%pi/150)+0.05*sin(i*%pi/6)
+X(i,j) == 0.05*cos(A(i,j)*%pi/5)+0.3*cos(A(i,j)*%pi/5)*sin(3*D(i,j)*%pi/50)^2
+Y(i,j) == 0.01*sin(A(i,j)*%pi/5)+0.3*sin(A(i,j)*%pi/5)*sin(3*D(i,j)*%pi/50)^2
+Z(i,j) == 0.25*sin((D(i,j)+3)*%pi/10)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..300,j=0..30,_
+           style=="smooth",title=="Funghini")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+作为{\sl pastine minute}(迷你意面)的一员,{\sl funghini}(小蘑菇)个头娇小,特别适合用来煮汤,比如用切碎并煸炒过的根芹菜做成的{\sl minestrone}(蔬菜浓汤)。
+
+\newpage
+\section{Fusilli}
+{\center{\includegraphics[scale=0.50]{ps/v81fusilli.eps}}}
+\begin{chunk}{Fusilli}
+X(i,j) == 6*cos((3*i+10)*%pi/100)*cos(j*%pi/25)
+Y(i,j) == 6*sin((3*i+10)*%pi/100)*cos(j*%pi/25)
+Z(i,j) == (3.0*i)/20.0+2.5*cos((j+12.5)*%pi/25)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..25,_
+           style=="smooth",title=="Fusilli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl fusilli}(小纺锤)是{\sl pasta corta}(短意面)家族里颇受欢迎的一类,最初的做法是把一根{\sl spaghetto}(意大利细面)迅速缠绕在一根粗针上制成。最适合做成{\sl pastasciutta}(煮熟沥干的意面),配上一份加了辣香肠片的奶香酱汁。
+
+\newpage
+\section{Fusilli al Ferretto} 
+{\center{\includegraphics[scale=0.50]{ps/v81fusillialferretto.eps}}}
+\begin{chunk}{Fusilli al Ferretto} 
+A(i,j) == 6.0*i/7.0+15*cos(j*%pi/20)
+X(i,j) == (3+1.5*sin(i*%pi/140)^0.5*sin(j*%pi/20))*sin(13*i*%pi/280) + _
+          5*sin(2*A(i,j)*%pi/135)
+Y(i,j) == (3+1.5*sin(i*%pi/140)^0.5*sin(j*%pi/20))*cos(13*i*%pi/280)
+Z(i,j) == A(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..140,j=0..40,_
+           style=="smooth",title=="Fusilli al Ferretto")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+要做出这种那不勒斯(Neapolitan)风味的{\sl fusilli},需先将少量杜兰小麦粉和成面团,贴着一根{\sl ferretto}(小铁棍)放好,再用双手来回搓动,搓出一条粗细不匀的面卷。成形后取下,放在一种叫{\sl spasa}的柳条托盘上晾干。{\sl fusilli al ferretto}最适合配羊肉{\sl ragu}(肉酱)享用。
+
+\newpage
+\section{Fusilli Capri}
+{\center{\includegraphics[scale=0.50]{ps/v81fusillicapri.eps}}}
+\begin{chunk}{Fusilli Capri}
+X(i,j) == 6*cos(j*%pi/50)*cos((i+2.5)*%pi/25)
+Y(i,j) == 6*cos(j*%pi/50)*sin((i+2.5)*%pi/25)
+Z(i,j) == 2.0*i/3.0 + 14*cos((j+25)*%pi/50)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..50,_
+           style=="smooth",title=="Fusilli Capri")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl fusilli Capri}是{\sl fusilli}在当地演变出的一种更长、更紧实的形态,适合搭配羊肉或猪肉香肠做成的浓郁{\sl ragu}(肉酱),也可以配芝麻菜和柠檬做成更清爽的一道菜。
+
+\newpage
+\section{Fusilli Lunghi Bucati}
+{\center{\includegraphics[scale=0.50]{ps/v81fusillilunghibucati.eps}}}
+\begin{chunk}{Fusilli Lunghi Bucati}
+A(i,j) == 10+cos(i*%pi/10)+2*cos((j+10)*%pi/10)+10*cos((j+140)*%pi/160)
+B(i,j) == 20+cos(i*%pi/10)+2*cos((j+10)*%pi/10)
+C(i,j) == (j+10.0)*%pi/10.0
+D(i,j) == i*%pi/10.0
+E(i,j) == 7+20*sin((j-20)*%pi/160)
+F(i,j) == 70*(0.1-(j-180.0)/200.0)
+X(i,j) == _
+  if ((20 <= j) and (j <= 180)) _
+   then A(i,j) _
+   else if (j <= 20) _
+         then cos(D(i,j))+2*cos(C(i,j)) _
+         else B(i,j)
+Y(i,j) == _
+  if ((20 <= j) and (j <= 180)) _
+   then sin(D(i,j))+2*sin(C(i,j)) _
+   else sin(D(i,j))+2*sin(C(i,j))
+Z(i,j) == _
+  if ((20 <= j) and (j <= 180)) _
+   then E(i,j) _
+   else if (j <= 20) _
+         then ((7.0*j)/20.0) _
+         else F(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..20,j=0..200,_
+           style=="smooth",title=="Fusilli Lunghi Bucati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl fusilli lunghi bucati}(长孔{\sl fusilli})是{\sl fusilli}大家族里颇具特色的一员,发源于意大利南部的坎帕尼亚(Campania),外形宛如弹簧。和所有{\sl fusilli}一样,传统上配肉类{\sl ragu}(肉酱)食用,但也可以拌浓稠的蔬菜酱后放入烤箱烘烤。
+
+\newpage
+\section{Galletti}
+{\center{\includegraphics[scale=0.50]{ps/v81galletti.eps}}}
+\begin{chunk}{Galletti}
+A(i)   == ((1+sin(i*%pi+1.5*%pi))/2)^5
+B(i,j) == 0.4*sin(A(i/140)*%pi+0.5*%pi)^1000*cos(j*%pi/70)
+C(i,j) == 0.15*sin(A(i/140)*%pi+0.5*%pi)^1000*cos(j*%pi/7)
+D(i,j) == 0.4*cos(A(i/140)*%pi)^1000*sin(j*%pi/70)
+X(i,j) == (0.5+0.3*cos(A(i/140)*2*%pi))*cos(j*%pi/70) + _
+          0.15*(j/70.0)^10*cos(A(i/140)*2*%pi)^3 + B(i,j)
+Y(i,j) == 0.35*sin(A(i/140)*2*%pi)+0.15*(j/70.0)*sin(A(i/140)*2*%pi)+C(i,j)
+Z(i,j) == (0.4+0.3*cos(A(i/140)*2*%pi))*sin(j*%pi/70) + D(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..140,j=0..70,_
+           style=="smooth",title=="Galletti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+据其生产商 Barilla 所说,{\sl galletti}(小公鸡)一名的来历已不可考,但它们的形状让人想起{\sl chifferi},只是多了一道波浪状的鸡冠。{\sl galletti}通常配番茄酱食用,但与蘑菇做的{\sl boscaiola}(伐木人)酱同样相配。
+
+\newpage
+\section{Garganelli}
+{\center{\includegraphics[scale=0.50]{ps/v81garganelli.eps}}}
+\begin{chunk}{Garganelli}
+A(i,j) == (i-25.0)/125.0*j
+B(i,j) == (i-25.0)/125.0*(150.0-j)
+C(i,j) == _
+  if ((j <= 75) or (i <= 25)) _
+   then A(i,j) _
+   else if ((J >= 75) or (i <= 25)) _
+         then B(i,j) _
+         else if ((j >= 75) or (i >= 25)) _
+               then B(i,j) _
+               else A(i,j)
+X(i,j) == 0.1*cos(j*%pi/3)+(3+sin(C(i,j)*%pi/60))*cos(7*C(i,j)*%pi/60)
+Y(i,j) == 0.1*sin(j*%pi/3)+(3+sin(C(i,j)*%pi/60))*sin(7*C(i,j)*%pi/60)
+Z(i,j) == 6.0*j/25.0+C(i,j)/4.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..50,j=0..150,_
+           style=="smooth",title=="Garganelli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+viewpoint(v3d,-5,0,0)
+\end{chunk}
+{\sl garganelli}是一种带凹槽的{\sl pasta corta}(短意面),外形与{\sl maccheroni}相近,但两端呈尖锐的斜切状,形似鸡的食道(在意大利北部的艾米利亚-罗马涅方言中被称作「{\sl garganel}」)。{\sl garganelli}传统上用清汤煮食,有时也会配野兔肉酱与碎培根一起上桌。
+
+\newpage
+\section{Gemelli}
+{\center{\includegraphics[scale=0.50]{ps/v81gemelli.eps}}}
+\begin{chunk}{Gemelli}
+X(i,j) == 6*cos(j*1.9*%pi/50+0.55*%pi)*cos(3.0*i/25.0)
+Y(i,j) == 6*cos(j*1.9*%pi/50+0.55*%pi)*sin(3.0*i/25.0)
+Z(i,j) == 8*sin(j*1.9*%pi/50+0.55*%pi)+3.0*i/4.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..100,j=0..50,_
+           style=="smooth",title=="Gemelli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+要做出一根{\sl gemello},只需把单独一根面条拧成螺旋状,乍看却像是两根绞在一起。在意大利南部,{\sl gemelli}(双胞胎)常配番茄、马苏里拉奶酪与罗勒食用;而在西北部,人们更喜欢配香蒜酱和四季豆,或用来做沙拉。
+
+\newpage
+\section{Gigli}
+{\center{\includegraphics[scale=0.50]{ps/v81gigli.eps}}}
+\begin{chunk}{Gigli}
+X(i,j) == (0.8-0.6*sin(j*%pi/80)^0.5)*cos(i*%pi/50)+0.08*sin(j*%pi/40)
+Y(i,j) == (0.8-0.6*sin(j*%pi/80)^0.5)*sin(i*%pi/50)+0.08*sin(j*%pi/40)
+Z(i,j) == 1.1*j/40.0+0.7*(1-sin((150-i)*%pi/300))^2
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..40,_
+           style=="smooth",title=="Gigli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl gigli}边缘呈波纹状,形似圆锥,看上去像小铃铛({\sl campanelle}),又像百合花({\sl gigli}),其名字正是由此而来。作为一种较晚近的设计,{\sl gigli}的形状很适合裹住浓稠的肉酱。
+
+\newpage
+\section{Giglio Ondulato}
+{\center{\includegraphics[scale=0.50]{ps/v81giglioondulato.eps}}}
+\begin{chunk}{Giglio Ondulato}
+A(i,j) == 0.6+0.03*((40.0-j)/40.0)^10*cos((4*i+75)*%pi/15) - _
+          0.5*sin(j*%pi/80)^0.6
+B(i,j) == sin(2*i*%pi/75)+(i/150.0)^10*(0.08*sin(j*%pi/40)+0.03*sin(j*%pi/5))
+X(i,j) == A(i,j)*cos(2*i*%pi/75)+(i/150.0)^10 * _
+          (0.08*sin(j*%pi/40)+0.03*cos(j*%pi/5))
+Y(i,j) == (0.6+0.03*((40.0-j)/40.0)^10*sin(4*i*%pi/15)-0.5*sin(j*%pi/80)^0.6)*_
+          B(i,j)
+Z(i,j) == 1.1*j/40.0+0.7*(1-sin((150.0-i)*%pi/300.0))
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..40,_
+           style=="smooth",title=="Giglio Ondulato")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl giglio ondulato}与{\sl gigli}几乎相同,只是边缘呈锯齿状的城垛形,同样以杜兰小麦粉和水制成。
+
+\newpage
+\section{Gnocchetti Sardi}
+{\center{\includegraphics[scale=0.50]{ps/v81gnocchettisardi.eps}}}
+\begin{chunk}{Gnocchetti Sardi}
+A(j)   == 0.8+3*sin(j*%pi/150)^0.8
+B(i,j) == cos((2*j+7.5)*%pi/15)
+X(i,j) == A(j)*cos(i*%pi/50)+0.2*cos(i*%pi/50)*sin(j*%pi/150)*B(i,j)
+Y(i,j) == A(j)*sin(i*%pi/50)+0.2*sin(i*%pi/50)*sin(j*%pi/150)*B(i,j)
+Z(i,j) == 13.0*cos(j*%pi/150)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..50,j=0..150,_
+           style=="smooth",title=="Gnocchetti Sardi")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+正如其名所示,{\sl gnocchetti}就是小号的{\sl gnocchi}(即「小疙瘩」)。它们很适合配意大利乳清干酪(ricotta)或佩科里诺罗马诺(Pecorino Romano)干酪食用,也可以配小牛肉{\sl ragu}之类的浓稠酱汁。{\sl gnocchetti}发源于撒丁岛(Sardinia)——一座位于意大利以西的地中海岛屿。
+
+\newpage
+\section{Gnocchi}
+{\center{\includegraphics[scale=0.50]{ps/v81gnocchi.eps}}}
+\begin{chunk}{Gnocchi}
+A(i,j) == i/40.0*sin(j*%pi/130)
+B(i,j) == abs(cos((j+13)*%pi/26))
+X(i,j) == 0.2*cos(i*1.3*%pi/40)*sin(j*%pi/130)*B(i,j) + _
+          A(i,j)*cos(i*1.3*%pi/40)
+Y(i,j) == 0.2*sin(i*1.3*%pi/40)*sin(j*%pi/130)*B(i,j) + _
+          A(i,j)*sin(i*1.3*%pi/40)
+Z(i,j) == 1.5*cos(j*%pi/130)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..40,j=0..130,_
+           style=="smooth",title=="Gnocchi")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+{\sl gnocchi}(疙瘩)是一个庞大家族的统称,外形常似半开的有槽贝壳。它们的做法与用料(包括土豆、杜兰小麦、荞麦和粗粒小麦粉)因种类而异。{\sl gnocchi}常常拌入丰提娜(fontina)干酪做的酱汁一起食用。
+
+\newpage
+\section{Gramigna}
+{\center{\includegraphics[scale=0.50]{ps/v81gramigna.eps}}}
+\begin{chunk}{Gramigna}
+X(i,j) == (0.5+5.6*(j/150.0)^2+0.3*cos(2*i*%pi/25))*cos(2.1*j*%pi/150)
+Y(i,j) == 0.3*sin(2*i*%pi/25)
+Z(i,j) == (0.5+3.2*(j/150.0)^2+0.3*cos(2*i*%pi/25))*sin(2.1*j*%pi/150)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..25,j=0..150,_
+           style=="smooth",title=="Gramigna")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl gramigna}(小杂草)是意大利北部艾米利亚-罗马涅(Emilia-Romagna)大区的特产,传统上配香肠块酱汁食用,或搭配举世闻名的{\sl ragu alla bolognese}(博洛尼亚肉酱)。此外,{\sl gramigna}有时也会做成{\sl alla pomodoro}(清淡番茄酱)风味。
+
+\newpage
+\section{Lancette}
+{\center{\includegraphics[scale=0.50]{ps/v81lancette.eps}}}
+\begin{chunk}{Lancette}
+A(i,j) == 0.4*sin(5*j*%pi/9)
+B(i,j) == sin((j+45)*%pi/90)
+C(i,j) == (3.0*i-75.0)/5.0*sin(j*%pi/90)-(1-sin(i*%pi/50))^25*A(i,j)*B(i,j)
+D(i,j) == _
+  if (i <= 25) _
+   then C(i,j) _
+   else 30.0*(i-25.0)/50.0*sin(j*%pi/90)+sin((i-25)*%pi/50)*A(i,j)*B(i,j)
+X(i,j) == 4*cos(3*D(i,j)*%pi/50)
+Y(i,j) == 4*sin(3*D(i,j)*%pi/50)*(0.3+(1-sin(j*%pi/90))^0.6)
+Z(i,j) == j/3.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..50,j=0..90,_
+           style=="smooth",title=="Lancette")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+{\sl lancette}即「(钟表的)指针」之意,长度不超过 15 毫米,属于{\sl pastine minute}(迷你意面)家族。它们配清汤享用十分美味,再撒上一些烤面包丁和碎香草便更添风味。{\sl lancette}加入蘑菇汤或鸡汤中同样出色。
+
+\newpage
+\section{Lasagna Larga Doppia Riccia}
+{\center{\includegraphics[scale=0.50]{ps/v81lasagnalargadoppiariccia.eps}}}
+\begin{chunk}{Lasagna Larga Doppia Riccia}
+X(i,j) == _
+  if ((8 <= i) and (i <= 42)) _
+   then 5.0/6.0+(5.0*i-40.0)/34.0 _
+   else if (i <= 8) _
+         then 5.0*i/48.0 _
+         else 5.0/6.0*(7+(i-42.0)/8)
+Y(i,j) == j/15.0
+Z(i,j) == _
+  if ((8 <= i) and (i <= 42)) _
+   then 0.0 _
+   else if (i <= 8) _
+         then (8.0-i)/32.0*cos((j+3)*%pi/6) _
+         else 0.25*(i-42)/8.0*cos((j+9)*%pi/6)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..50,j=0..150,_
+           style=="smooth",title=="Lasagna Larga Doppia Riccia")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+正如其名所示,{\sl lasagna larga doppia riccia}(宽幅双卷千层面)有两条长长的波浪状边缘。这些卷边让面片煮熟后口感富于变化,也更容易挂住酱汁。{\sl lasagne}配意大利乳清干酪与{\sl ragu napoletano}(那不勒斯肉酱)十分美味,也可以{\sl al forno}(入炉烘烤)配奶香{\sl besciamella}(白酱)食用。
+
+\newpage
+\section{Linguine}
+{\center{\includegraphics[scale=0.50]{ps/v81linguine.eps}}}
+\begin{chunk}{Linguine}
+X(i,j) == cos(i*%pi/75)
+Y(i,j) == 2*sin(i*%pi/75)
+Z(i,j) == j/5.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..50,_
+           style=="smooth",title=="Linguine")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl linguine}(小舌头)是{\sl bavette}(小水滴)家族里最细的一员,最适合配新鲜番茄、香草、少许橄榄油、大蒜、鳀鱼和辣椒享用。{\sl linguine}也可以配贝类酱汁,或用奶油与软质干酪调制、再以柠檬、藏红花或姜调味的白酱。
+
+\newpage
+\section{Lumaconi Rigati}
+{\center{\includegraphics[scale=0.50]{ps/v81lumaconirigati.eps}}}
+\begin{chunk}{Lumaconi Rigati}
+A(i,j) == 0.45+0.01*cos(i*%pi/3)+j/300.0*abs(cos(i*%pi/240))*cos(i*%pi/120)^20
+B(i,j) == j/300.0*abs(cos(i*%pi/240))*sin(i*%pi/120) + _
+          0.125*(j/60.0)^6*sin(i*%pi/120)
+X(i,j) == (0.4*cos(i*%pi/120)+A(i,j))*cos(j*%pi/60) + _
+          0.48*(j/60.0)^6*sin((i+60)*%pi/120)^3
+Y(i,j) == 0.5*sin(i*%pi/120)+0.01*sin(i*%pi/3)+B(i,j)
+Z(i,j) == (0.45+0.4*cos(i*%pi/120))*sin(j*%pi/60)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..240,j=0..60,_
+           style=="smooth",title=="Lumaconi Rigati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+rotate(v3d,90,180)
+\end{chunk}
+{\sl lumaconi rigati}(大号带槽蜗牛)最初来自坎帕尼亚(Campania)和利古里亚(Liguria),可以填入各式各样的馅料,包括菠菜和意大利乳清干酪。和意大利烤面卷(cannelloni)一样,填好馅后可以浇上{\sl besciamella}(白酱)放入烤箱烘烤。这个家族里还有个头更小的成员——{\sl lumache}。
+
+\newpage
+\section{Maccheroni}
+{\center{\includegraphics[scale=0.50]{ps/v81maccheroni.eps}}}
+\begin{chunk}{Maccheroni}
+X(i,j) == 8*cos(i*%pi/75)+0.2*cos(4*i*%pi/15)+5*cos(j*%pi/100)
+Y(i,j) == 8*sin(i*%pi/75)+0.2*sin(4*i*%pi/15)+4*sin(j*%pi/100)
+Z(i,j) == 6.0*j/5.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..50,_
+           style=="smooth",title=="Maccheroni")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl maccheroni}这个名字的来历已不可考。它是一个统称,泛指用杜兰小麦粉、或许再加鸡蛋制成的空心{\sl pasta corta}(短意面)。这种意面可以做成{\sl con le sarde}(配沙丁鱼)——再加一点茴香提味,风味更佳。
+
+\newpage
+\section{Maccheroni Alla Chitarra}
+{\center{\includegraphics[scale=0.50]{ps/v81maccheroniallachitarra.eps}}}
+\begin{chunk}{Maccheroni Alla Chitarra}
+X(i,j) == 0.05*cos(i*%pi/60)^3 + 0.05*cos(i*%pi/60)
+Y(i,j) == 0.05*sin(i*%pi/60)^3 + 0.05*sin(i*%pi/60)
+Z(i,j) == j/60.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..120,j=0..60,_
+           style=="smooth",title=="Maccheroni Alla Chitarra")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl maccheroni alla chitarra}(吉他{\sl maccheroni})来自意大利中部的阿布鲁佐(Abruzzo)大区,截面呈正方形——做法是把薄薄一张面皮压过一排排紧密排列的钢丝(即{\sl chitarra},意为「吉他」),其名字也由此而来。通常配羊肉{\sl ragu},或配{\sl pallottelle}(小牛肉丸)食用。
+
+\newpage
+\section{Mafaldine}
+{\center{\includegraphics[scale=0.50]{ps/v81mafaldine.eps}}}
+\begin{chunk}{Mafaldine}
+X(i,j) == 7.0*i/18.0
+Y(i,j) == j/3.0
+Z(i,j) == _
+  if ((6 <= i) and (i <= 24)) _
+   then 0.0 _
+   else if (i <= 6) _
+         then (6.0-i)/6.0*cos((j+5)*%pi/10) _
+         else (i-24.0)/6.0*cos((j+15)*%pi/10)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..30,j=0..150,_
+           style=="smooth",title=="Mafaldine")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl mafaldine}得名于二十世纪之交萨伏伊(Savoy)王室的 Mafalda 公主,是一种由杜兰小麦粉制成的薄面片,两条长边都做成波浪状。它们通常配{\sl ragu napoletano}(那不勒斯肉酱)之类的肉酱,或用于海鲜菜式。
+
+\newpage
+\section{Manicotti}
+{\center{\includegraphics[scale=0.50]{ps/v81manicotti.eps}}}
+\begin{chunk}{Manicotti}
+A(i,j) == -7*sin((i-100)*%pi/100)^2+0.3*sin((3*i-300)*%pi/10)
+B(i,j) == -8*cos((i-100)*%pi/100)+0.3*cos((3*i-300)*%pi/10)
+C(i,j) == -8*cos((i-100)*%pi/100)+22*sin((j-20)*%pi/40)
+X(i,j) == _
+  if (i < 100) _
+   then 7*sin(i*%pi/100)^2+0.3*sin(3*i*%pi/10) _
+   else A(i,j)
+Y(i,j) == _
+  if (i < 100) _
+   then 8*cos(i*%pi/100)+0.3*cos(3*i*%pi/10) _
+   else B(i,j)
+Z(i,j) == _
+  if (i < 100) _
+   then 8*cos(i*%pi/100)+22*sin((j-20)*%pi/40) _
+   else C(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..40,_
+           style=="smooth",title=="Manicotti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+{\sl manicotti}(袖子)是已知历史最悠久的杜兰小麦意面品种之一,最初的做法是把面团切成长方形,铺上馅料后卷起来,最后{\sl al forno}(入炉烘烤)。如今它们常常填入各式干酪,再浇上一层咸香酱汁,吃起来就像加了馅的正餐可丽饼。
+
+\newpage
+\section{Orecchiette}
+{\center{\includegraphics[scale=0.50]{ps/v81orecchiette.eps}}}
+\begin{chunk}{Orecchiette}
+X(i,j) == 2.0*j/3.0*cos(i*%pi/75)+0.3*cos(2*i*%pi/15)
+Y(i,j) == 10*sin(i*%pi/75)
+Z(i,j) == 0.1*cos(i*%pi/3)+5*(0.5+0.5*cos(2*i*%pi/75))^4*cos(j*%pi/30)^2 + _
+          1.5*(0.5+0.5*cos(2*i*%pi/75))^5*sin(j*%pi/30)^10
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..15,_
+           style=="smooth",title=="Orecchiette")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+这种意面在意大利东南沿海的普利亚(Puglia)大区颇受欢迎,当地惯常将它与西兰花薹(rapini,西兰花的近亲,当地盛产)同煮。{\sl orecchiette}(小耳朵)也很适合配豆类等其他蔬菜,以及鳀鱼、酸豆或橄榄之类的咸味调味料。
+
+\newpage
+\section{Paccheri}
+{\center{\includegraphics[scale=0.50]{ps/v81paccheri.eps}}}
+\begin{chunk}{Paccheri}
+X(i,j) == (j+60.0)/60.0*cos(i*%pi/75)+0.5*cos(j*%pi/60)+cos((i+j)*%pi/75)
+Y(i,j) == 2.6*sin(i*%pi/75)+0.3*sin(j*%pi/60)
+Z(i,j) == 7.0*j/30.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..30,_
+           style=="smooth",title=="Paccheri")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl paccheri}属于{\sl pasta corta}(短意面)家族,是一种带槽的圆柱形意面,由于个头较大,适合配茄子、海鲜,乃至任何口感厚实的酱汁。据认为其名字源自{\sl paccare}一词,在意大利南部坎帕尼亚(Campania)方言里意为「拍打」。
+
+\newpage
+\section{Pappardelle}
+{\center{\includegraphics[scale=0.50]{ps/v81pappardelle.eps}}}
+\begin{chunk}{Pappardelle}
+A(i,j) == cos(i*%pi/80)+(3.0*j)/50.0*sin(21*i*%pi/800)
+B(i,j) == sin(i*%pi/3200)^0.1*sin(i*%pi/80)
+C(i,j) == 3.0*j/50.0+0.5*sin(i*%pi/200)
+D(i,j) == cos(i*%pi/80)+3.0*j/50.0*sin(21*i*%pi/800)
+E(i,j) == sin(i*%pi/3200)^0.5*sin(i*%pi/80)
+F(i,j) == 3.0*j/50.0+0.5*sin(i*%pi/200)
+vsp:=createThreeSpace()
+makeObject(surface(A(i,j),B(i,j),C(i,j)),i=0..800,j=0..5,space==vsp)
+makeObject(surface(0.6*D(i,j),0.8*E(i,j),0.9*F(i,j)),i=0..800,j=0..5,_
+           space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Pappardelle")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+\end{chunk}
+这种{\sl pasta lunga}(长意面)常与鸭肉、鸽肉或其他野禽同煮。{\sl pappardelle}如此受欢迎,以至于意大利各地城镇都会为它举办节庆,例如意大利中部托雷阿尔菲纳(Torre Alfina)的{\sl Sagra delle Pappardelle al Cinghiale}(野猪{\sl pappardelle}节)。
+
+\newpage
+\section{Penne Rigate}
+{\center{\includegraphics[scale=0.50]{ps/v81pennerigate.eps}}}
+\begin{chunk}{Penne Rigate}
+X(i,j) == _
+  if (i < 85) _
+   then 4*sin(i*%pi/85)^2+0.1*sin(6*i*%pi/17) _
+   else -4*sin((i-85)*%pi/85)^2+0.1*sin(6*(i-85)*%pi/17)
+Y(i,j) == _
+  if (i < 85) _
+   then 4*cos(i*%pi/85)+0.1*cos(6*i*%pi/17) _
+   else -4*cos((i-85)*%pi/85)+0.1*cos(6*(i-85)*%pi/17)
+Z(i,j) == _
+  if (i < 85) _
+   then 7*cos(i*%pi/85)+15*sin((j-20)*%pi/40) _
+   else -7*cos((i-85)*%pi/85)+15*sin((j-20)*%pi/40)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..170,j=0..40,_
+           style=="smooth",title=="Penne Rigate")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl penne rigate}(有槽羽管面)是一种用途广泛的意面,来自意大利南部的坎帕尼亚(Campania),属于{\sl pasta corta}(短意面)家族。它们可以配辛辣的{\sl arrabbiata}(「发怒」)酱食用,这个名字正是源自其中所含的辣椒与红甜椒。
+
+\newpage
+\section{Pennoni Lisci}
+{\center{\includegraphics[scale=0.50]{ps/v81pennonilisci.eps}}}
+\begin{chunk}{Pennoni Lisci}
+X(i,j) == _ 
+  if (i < 100) _
+   then 7*sin(i*%pi/100)^2 _
+   else -7*sin((i-100)*%pi/100)^2
+Y(i,j) == _
+  if (i < 100) _
+   then 8*cos(i*%pi/100) _
+   else -8*cos((i-100)*%pi/100)
+Z(i,j) == _
+  if (i < 100) _
+   then 12*cos(i*%pi/100)+15*sin((j-20)*%pi/40) _
+   else -12*cos((i-100)*%pi/100)+15*sin((j-20)*%pi/40)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..40,_
+           style=="smooth",title=="Pennoni Lisci")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl pennoni}(大羽管面)外观与{\sl penne rigate}相似,但个头更大且没有凹槽,需要更油润的酱汁(或许加入切片的西班牙香肠)才能挂在它们光滑的表面上。
+
+\newpage
+\section{Pennoni Rigati}
+{\center{\includegraphics[scale=0.50]{ps/v81pennonirigati.eps}}}
+\begin{chunk}{Pennoni Rigati}
+A(i,j) == -7*sin((i-100)*%pi/100)^2+0.2*sin((3*i-300)*%pi/10)
+B(i,j) == -8*cos((i-100)*%pi/100)+0.2*cos((3*i-300)*%pi/10)
+C(i,j) == -12*cos((i-100)*%pi/100)+15*sin((j-20)*%pi/40)
+X(i,j) == _
+  if (i < 100) _
+   then 7*sin(i*%pi/100)^2+0.15*sin(3*i*%pi/10) _
+   else A(i,j)
+Y(i,j) == _
+  if (i < 100) _
+   then 8*cos(i*%pi/100)+0.15*cos(3*i*%pi/10) _
+   else B(i,j)
+Z(i,j) == _
+  if (i < 100) _
+   then 12*cos(i*%pi/100)+15*sin((j-20)*%pi/40) _
+   else C(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..200,j=0..40,_
+           style=="smooth",title=="Pennoni Rigati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl penne}意面家族那斜切的两端,让人一眼就能认出它的成员。{\sl pennoni rigati}(大号有槽羽管面)是{\sl pennoni}的带槽版本,可以填馅后烹煮。
+
+\newpage
+\section{Puntalette}
+{\center{\includegraphics[scale=0.50]{ps/v81puntalette.eps}}}
+\begin{chunk}{Puntalette}
+X(i,j) == 1.4*sin(j*%pi/80)^1.2*cos(i*%pi/40)
+Y(i,j) == 2.5*sin(j*%pi/80)^1.2*sin(i*%pi/40)
+Z(i,j) == 8*cos(j*%pi/80)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..80,j=0..80,_
+           style=="smooth",title=="Puntalette")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+{\sl puntalette}(小尖头)是{\sl pastine minute}(迷你意面)家族的又一成员,长约 9 毫米,厚度不超过 3 毫米。和大多数{\sl pastine}一样,它们最适合放进奶香浓汤,或者用来做沙拉。
+
+\newpage
+\section{Quadrefiore}
+{\center{\includegraphics[scale=0.50]{ps/v81quadrefiore.eps}}}
+\begin{chunk}{Quadrefiore}
+X(i,j) == 2*cos(i*%pi/250)*(abs(sin(3*i*%pi/250)))^20 + _
+          (0.6+0.9*sin(j*%pi/50))*cos(i*%pi/250)+0.2*cos(4*j*%pi/25)
+Y(i,j) == 2*sin(i*%pi/250)*(abs(sin(3*i*%pi/250)))^20 + _
+          (0.6+0.9*sin(j*%pi/50))*sin(i*%pi/250)+1.5*sin(j*%pi/50)
+Z(i,j) == 3.0*j/10.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..500,j=0..50,_
+           style=="smooth",title=="Quadrefiore")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl quadrefiori}(方形花朵)是{\sl pasta corta}(短意面)里较少见的一种,质地厚实,沿其长度方向带有波浪状的边缘。生产商与经销商 Francis Ford Coppola 采用古董青铜模具和木制晾架,以求做出原汁原味的形态与口感。
+
+\newpage
+\section{Quadretti}
+{\center{\includegraphics[scale=0.50]{ps/v81quadretti.eps}}}
+\begin{chunk}{Quadretti}
+X(i,j) == 3.0*i/14.0
+Y(i,j) == 3.0*j/14.0
+Z(i,j) == 0.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..70,j=0..70,_
+           style=="smooth",title=="Quadretti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,1.5,1.5,1.5)
+\end{chunk}
+这种扁平的形状用杜兰小麦粉、鸡蛋、甚至肉豆蔻制成。{\sl quadretti}(小方块)是一种经典的{\sl pastine},做法是利用较大面片裁剪后剩下的边角料,可以作为传统鱼汤的一部分,或加入蚕豆汤中。由于形状小,只需煮很短的时间即可。
+
+\newpage
+\section{Racchette}
+{\center{\includegraphics[scale=0.50]{ps/v81racchette.eps}}}
+\begin{chunk}{Racchette}
+A(i)    == sin(i*%pi/2000)^0.5
+X0(i,j) == 2*cos((i+1500)*%pi/1500)+0.65*cos((i+750)*%pi/1500) + _
+           2*(abs(cos(i*%pi/300)))^100*cos(i*%pi/1500)
+Y0(i,j) == 2.4*sin((i+1500)*%pi/1500)+0.1*sin(i*%pi/1500) + _
+           2.3*(abs(sin(i*%pi/300)))^100*sin(i*%pi/1500)
+X1(i,j) == _
+  if (i <= 2000) _
+   then 2.1*cos((2*A(i)+1)*%pi)+0.65*cos((2*A(i)+0.5)*%pi)+_
+        2.5*sin((A(i)+1.83)*%pi)^500 _
+   else -2.1
+Y1(i,j) == _
+  if (i <= 2000) _
+   then 2.5*sin((2*A(i)+1)*%pi)+0.1*sin(A(i)*2*%pi)+_
+        3*sin((A(i)+1.83)*%pi)^500 _
+   else 0.0
+Z(i,j) == j/4.0
+vsp:=createThreeSpace()
+makeObject(surface(X0(i,j),Y0(i,j),Z(i,j)),i=0..3000,j=0..4,space==vsp)
+makeObject(surface(X1(i,j),Y1(i,j),Z(i,j)),i=0..3000,j=0..4,space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Racchette")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+\end{chunk}
+{\sl racchette}(球拍)通常拌入沙拉食用,搭配香脆的松子、芦笋片和新鲜豌豆恰到好处。此外,加入西瓜丁或石榴籽,也能做成一道清爽可口的小食。
+
+\newpage
+\section{Radiatori}
+{\center{\includegraphics[scale=0.50]{ps/v81radiatori.eps}}}
+\begin{chunk}{Radiatori}
+X(i,j) == (1.5+3*(i/70.0)^5+4*sin(j*%pi/200)^50)*cos(4*i*%pi/175)
+Y(i,j) == (1.5+3*(i/70.0)^5+4*sin(j*%pi/200)^50)*sin(4*i*%pi/175)
+Z(i,j) == j/50.0+cos(3*i*%pi/14)*sin(j*%pi/1000)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..70,j=0..1000,_
+           style=="smooth",title=="Radiatori")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl radiatori}(暖气片)形状小巧敦实,因边缘褶皱形似暖气片散热片而得名。煮熟沥干、作为 {\sl pastasciutta}(煮沥意面)食用时,其中空的中心与较大的表面积能很好地挂住浓稠的酱汁,褶皱边缘还能兜住细小的食物碎屑。这种面食常搭配以羊肉、小牛肉、兔肉或猪肉为底的 {\sl ragu}(肉酱)。
+
+\newpage
+\section{Ravioli Quadrati}
+{\center{\includegraphics[scale=0.50]{ps/v81ravioliquadrati.eps}}}
+\begin{chunk}{Ravioli Quadrati}
+X(i,j) == i/2.0+0.4*sin((j+2.5)*%pi/5) * _
+          (sin(i*%pi/200)^0.2 - cos(i*%pi/200)^0.2)
+Y(i,j) == j/2.0+0.4*sin((11*i+25)*%pi/50) * _
+          (sin(j*%pi/200)^0.2 - cos(j*%pi/200)^0.2)
+Z(i,j) == _
+  if (((10 < j) and (j < 90)) or ((10 < i) and (i < 90))) _
+   then 10*sin((i-10)*%pi/80)^0.6*sin((j-10)*%pi/80)^0.6 _
+   else if ((10 > j) or (10 > i)) _
+         then 0.0 _
+         else 0.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..99,j=0..99,_
+           style=="smooth",title=="Ravioli Quadrati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+除了方形轮廓外,{\sl ravioli quadrati}(方形云吞)与 {\sl ravioli tondi}(圆形 {\sl ravioli})的做法完全相同。这一主题还有其他变体,如新月形、三角形和心形。关于 {\sl ravioli} 这个名字的来源,有人认为源自意思是"包裹"的动词,也有人将其与意大利语中意为"芜菁"的 {\sl rapa} 一词联系起来。
+
+\newpage
+\section{Ravioli Tondi}
+{\center{\includegraphics[scale=0.50]{ps/v81raviolitondi.eps}}}
+\begin{chunk}{Ravioli Tondi}
+X(i,j) == 5.0*i/8.0+0.5*sin((j+2)*%pi/4) * _
+          (sin(i*%pi/160)^0.2-cos(i*%pi/160)^0.2)
+Y(i,j) == 5.0*j/8.0+0.5*sin((i+2)*%pi/4) * _
+          (sin(j*%pi/160)^0.2-cos(j*%pi/160)^0.2)
+Z(i,j) == _
+  if (600 >= ((i-40)^2+(j-40)^2)) _
+   then 0.5*sqrt(600 - (i-40)^2-(j-40)^2) _
+   else 0.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..80,j=0..80,_
+           style=="smooth",title=="Ravioli Tondi")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl ravioli tondi}(圆形 {\sl ravioli})是迄今为止最著名的 {\sl pasta ripiena}(酿馅意面),做法是把馅料封在两层小麦粉和鸡蛋做的面皮之间。馅料的种类极为丰富,从奢华的肉类与奶酪搭配,到更为清淡的蘑菇、菠菜乃至荨麻馅心不等。
+
+\newpage
+\section{Riccioli}
+{\center{\includegraphics[scale=0.50]{ps/v81riccioli.eps}}}
+\begin{chunk}{Riccioli}
+X(i,j) == (2+8*sin(i*%pi/100)+9*sin((11*j+100)*%pi/400)^2)*cos(4*i*%pi/125)
+Y(i,j) == (2+8*sin(i*%pi/100)+9*sin((11*j+100)*%pi/400)^2)*sin(4*i*%pi/125)
+Z(i,j) == j/4.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..50,j=0..200,_
+           style=="smooth",title=="Riccioli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl riccioli}(卷儿)是知名的 {\sl pasta corta}(短意面),起源于意大利北部的艾米利亚-罗马涅大区。其外表带棱纹、内部中空的形状,使 {\sl riccioli} 能挂住大量酱汁。
+
+\newpage
+\section{Riccioli al Cinque Sapori}
+{\center{\includegraphics[scale=0.50]{ps/v81ricciolialcinquesapori.eps}}}
+\begin{chunk}{Riccioli al Cinque Sapori}
+X(i,j) == 1.5*cos(i*%pi/20)*(1+0.5*sin(j*%pi/25)*sin(i*%pi/40) + _
+          0.43*sin((j+18.75)*%pi/25)*cos(i*%pi/40))+2*cos(j*%pi/50)
+Y(i,j) == 1.5*sin(i*%pi/20)^3+cos(j*%pi/25)
+Z(i,j) == sin(j*%pi/100)+20*cos(j*%pi/200)^2
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..20,j=0..100,_
+           style=="smooth",title=="Riccioli al Cinque Sapori")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl riccioli} 与 {\sl riccioli al cinque sapori}(五味卷儿)都属于 {\sl pasta corta}(小型意面)家族,但二者在结构上并无相似之处。{\sl riccioli al cinque sapori} 用杜兰小麦粉制成,颜色则来自加入的菠菜、番茄、甜菜根和姜黄,通常配汤食用。
+
+\newpage
+\section{Rigatoni}
+{\center{\includegraphics[scale=0.50]{ps/v81rigatoni.eps}}}
+\begin{chunk}{Rigatoni}
+X(i,j) == 0.2*sin((7*i+15)*%pi/30)+2*cos((j+60)*%pi/120) + _
+          (7+(60-j)/60.0*sin(i*%pi/240))*cos(i*%pi/120)
+Y(i,j) == 0.2*sin(7*i*%pi/30)+(8+0.1*(60-j)/60+j/30*cos(i*%pi/240)) * _
+          sin(i*%pi/120)
+Z(i,j) == j/2.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..240,j=0..60,_
+           style=="smooth",title=="Rigatoni")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl rigatoni}(大棱纹管)是 {\sl pasta corta}(短意面)分支的一员,原产于意大利南部,用途十分广泛。其厚实的形状能很好地挂住奶油或番茄酱汁,但 {\sl rigatoni} 最适合搭配香肠、野味肉、蘑菇和黑胡椒同食。
+
+\newpage
+\section{Rombi}
+{\center{\includegraphics[scale=0.50]{ps/v81rombi.eps}}}
+\begin{chunk}{Rombi}
+X(i,j) == _
+  if ((13 <= i) and (i <= 37)) _
+    then i/20.0+j/25.0-1/20.0 _
+    else if (i <= 13) _
+          then 3.0*i/65.0+j/25.0 _
+          else 6/65.0+3.0*i/65.0+j/25.0
+Y(i,j) == j/25.0
+Z(i,j) == _
+  if ((13 <= i) and (i <= 37)) _
+   then 0.0 _
+   else if (i <= 13) _
+         then 0.2*((13.0-i)/13.0)*cos((2.0*j+12.5)*%pi/25) _
+         else (i-37.0)/65.0*cos((2.0*j+37.5)*%pi/25)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..50,j=0..50,_
+           style=="smooth",title=="Rombi")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+{\sl rombi}(菱形)是一种不太为人所知的 {\sl pasta corta},像 {\sl lasagna doppia riccia} 一样带有两条卷边,不过体形更小,且沿对角线切裁。通常根据大小的不同,或拌酱作 {\sl pastasciutta} 食用,或配 {\sl brodo}(清汤)上桌。
+
+\newpage
+\section{Rotelle}
+{\center{\includegraphics[scale=0.50]{ps/v81rotelle.eps}}}
+\begin{chunk}{Rotelle}
+X0(i,j) == 0.5*cos(i*%pi/1000)+1.5*(abs(sin(3*i*%pi/1000)))^50*cos(i*%pi/1000)
+Y0(i,j) == 0.5*sin(i*%pi/1000)+1.5*(abs(sin(3*i*%pi/1000)))^50*sin(i*%pi/1000)
+X1(i,j) == _
+  if (i <= 666) _
+   then 2*cos(3*i*%pi/1000)+0.03*cos(93*i*%pi/1000) _
+   else 2.03
+Y1(i,j) == _
+  if (i <= 666) _
+   then 2.05*sin(3*i*%pi/1000)+0.03*sin(93*i*%pi/1000) _
+   else 0.0
+Z(i,j) == j/5.0
+vsp:=createThreeSpace()
+makeObject(surface(X0(i,j),Y0(i,j),Z(i,j)),i=0..2000,j=0..5,space==vsp)
+makeObject(surface(X1(i,j),Y1(i,j),Z(i,j)),i=0..2000,j=0..5,space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Rotelle")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+\end{chunk}
+{\sl rotelle}(小轮子)是 {\sl pasta corta}(短意面)家族中较为新奇的一支现代设计,带辐条的构造有助于兜住各种风味,使其能与多种酱汁很好地搭配。较小的版本可拌入沙拉,或煮入汤中食用。
+
+\newpage
+\section{Saccottini}
+{\center{\includegraphics[scale=0.50]{ps/v81saccottini.eps}}}
+\begin{chunk}{Saccottini}
+X(i,j) == cos(i*%pi/75)*(sin(j*%pi/50)+1.3*sin(j*%pi/200) + _
+          3*j/1000.0*cos((i+25)*%pi/25))
+Y(i,j) == sin(i*%pi/75)*(sin(j*%pi/50)+1.3*sin(j*%pi/200) + _
+          0.7*(j/100.0)^2*sin(i*%pi/15))
+Z(i,j) == 2*(1-(abs(cos(j*%pi/200)))^5+(j/100.0)^4.5)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..100,_
+           style=="smooth",title=="Saccottini")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl saccottini} 是 {\sl pasta ripiena}(酿馅意面)大家族里又一个不折不扣的成员——与之关系密切的还有 {\sl fagottini}——做法是把一张圆形杜兰小麦面皮收拢成一个不规则的球状小包。{\sl saccottini} 通常填入意大利乳清干酪(ricotta)、肉或清蒸的青菜。
+
+\newpage
+\section{Sagnarelli}
+{\center{\includegraphics[scale=0.50]{ps/v81sagnarelli.eps}}}
+\begin{chunk}{Sagnarelli}
+A(i) == 0.5*sin((i+1.5)*%pi/3)
+B(i) == 0.05*sin((9*i+12.5)*%pi/25)
+X(i,j) == i/10.0+A(j)*(cos(i*%pi/120)^100-sin(i*%pi/200)^100)
+Y(i,j) == j/20.0+B(i)*(cos(j*%pi/120)^100-sin(j*%pi/200)^100)
+Z(i,j) == 0.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..100,j=0..60,_
+           style=="smooth",title=="Sagnarelli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+这种短小的长方形面带四边带有锯齿状凹口,属于 {\sl pasta lunga}(长意面)分支。{\sl sagnarelli} 有时会加鸡蛋制作,通常作 {\sl pastasciutta} 配肉 {\sl ragu}(肉酱)食用,或搭配野生芦笋一类的蔬菜。
+
+\newpage
+\section{Sagne Incannulate}
+{\center{\includegraphics[scale=0.50]{ps/v81sagneincannulate.eps}}}
+\begin{chunk}{Sagne Incannulate}
+X0(i,j) == (1-0.2*sin(3*j*%pi/20))*cos((i+10)*%pi/20) + _
+           2*sin((i-100)*%pi/200)+(3*i)/200.0*sin(i*%pi/400)^200
+Y0(i,j) == (1-0.2*sin(3*j*%pi/20))*sin((i+10)*%pi/20)+sin((i-50)/200*%pi)
+X1(i,j) == -3+(1-0.1*sin(3*j*%pi/20))*sin((3*i-10)*%pi/50) + _
+           cos(i*%pi/200)+3*i/200.0*sin(i*%pi/400)^5
+Y1(i,j) == -5+(1-01.*sin(3*j*%pi/20))*cos((3*i+10)*%pi/50)+2*sin(i*%pi/200)
+Z(i,j) == i/4.0+7/2.0*(1+cos(j*%pi/20))
+vsp:=createThreeSpace()
+makeObject(surface(X0(i,j),Y0(i,j),Z(i,j)),i=0..200,j=0..20,space==vsp)
+makeObject(surface(X1(i,j),Y1(i,j),Z(i,j)),i=0..200,j=0..20,space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Sagne Incannulate")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+zoom(vp,3.0,3.0,3.0)
+\end{chunk}
+制作这种名为 {\sl sagne incannulate} 的杜兰小麦扭纹面带需要一定手艺。做法是一只手把面条的一端按在木板上固定,另一只手掌搓动 {\sl pasta lunga}(长意面)的其余部分,搓出其独特的卷曲。{\sl sagne} 最适合搭配浓稠的酱汁或传统 {\sl ragu}(肉酱)食用。
+
+\newpage
+\section{Scialatielli}
+{\center{\includegraphics[scale=0.50]{ps/v81scialatielli.eps}}}
+猪肉或小牛肉 {\sl ragu}(肉酱)。
+\begin{chunk}{Scialatielli}
+X(i,j) == 0.1*cos(i*%pi/75)+0.1*cos((i+7.5)*%pi/75)^3+0.1*sin(j*%pi/50)
+Y(i,j) == 0.1*cos(i*%pi/75)+0.2*sin(i*%pi/75)^3+0.1*sin(j*%pi/50)
+Z(i,j) == 3.0*j/50.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..50,_
+           style=="smooth",title=="Scialatielli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl scialatielli} 来自那不勒斯省的阿马尔菲海岸,是一种朴实的 {\sl pasta lunga}(长意面),外观与 {\sl fettuccine} 及 {\sl tagliotelle} 相近。制作时可在杜兰小麦粉中加入牛奶和鸡蛋,赋予面条金黄的色泽,{\sl scialatielli} 最适合搭配海鲜,或
+
+\newpage
+\section{Spaccatelle}
+{\center{\includegraphics[scale=0.50]{ps/v81spaccatelle.eps}}}
+\begin{chunk}{Spaccatelle}
+X(i,j) == (0.5+5*(j/100.0)^3+0.5*cos((i+37.5)*%pi/25))*cos(2*j*%pi/125)
+Y(i,j) == 0.6*sin((i+37.5)*%pi/25)
+Z(i,j) == (0.5+5*(j/100.0)^3+0.5*cos((i+37.5)*%pi/25))*sin(2*j*%pi/125)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..25,j=0..100,_
+           style=="smooth",title=="Spaccatelle")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+这种西西里名产属于 {\sl pasta corta}(短意面)家族。{\sl spaccatelle} 通常呈中部凹陷的细长弧形,作 {\sl pastasciutta}(煮沥意面)食用时,配清淡的番茄酱或浓郁的肉 {\sl ragu}(肉酱)。
+
+\newpage
+\section{Spaghetti}
+{\center{\includegraphics[scale=0.50]{ps/v81spaghetti.eps}}}
+\begin{chunk}{Spaghetti}
+X(i,j) == 0.1*cos(i*%pi/20)
+Y(i,j) == 0.1*sin(i*%pi/20)
+Z(i,j) == j/10.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..40,j=0..100,_
+           style=="smooth",title=="Spaghetti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+毫无疑问,{\sl spaghetti}(细线)仍是全世界最知名、用途最广的 {\sl pasta lunga}(长意面)。它们最为人称道的,是搭配 {\sl ragu bolognese}(博洛尼亚肉酱)——一种由牛肉、番茄、奶油、洋葱和意式培根(pancetta)调制而成的混合酱料。近年来,{\sl spaghetti} 在奶香浓郁的 {\sl carbonara}(培根蛋酱面)中也大受欢迎。
+
+\newpage
+\section{Spiralli}
+{\center{\includegraphics[scale=0.50]{ps/v81spiralli.eps}}}
+\begin{chunk}{Spiralli}
+X(i,j) == (2.5+2*cos(i*%pi/50)+0.1*cos(i*%pi/5))*cos(j*%pi/30)
+Y(i,j) == (2.5+2*cos(i*%pi/50)+0.1*cos(i*%pi/5))*sin(j*%pi/30)
+Z(i,j) == (2.5+2*sin(i*%pi/50)+0.1*sin(i*%pi/5))+j/6.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..100,j=0..120,_
+           style=="smooth",title=="Spiralli")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+带棱纹的螺旋状 {\sl spirali}(螺旋)在形状上与 {\sl cavatappi} 相近,只是略大一些。{\sl spirali} 可拌浓稠酱汁作 {\sl pastasciutta} 食用,也可 {\sl al forno}(烤箱烘烤)、铺上厚厚一层奶酪烤制,或加入沙拉。
+
+\newpage
+\section{Stellette}
+{\center{\includegraphics[scale=0.50]{ps/v81stellette.eps}}}
+\begin{chunk}{Stellette}
+X(i,j) == (3.0+3.0*i/5.0)*cos(j*%pi/75)+i/10*cos((j+15)*%pi/15)
+Y(i,j) == (3.0+3.0*i/5.0)*sin(j*%pi/75)+i/10*sin(j*%pi/15)
+Z(i,j) == 0.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..25,j=0..150,_
+           style=="smooth",title=="Stellette")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+{\sl stellette}(小星星)是 {\sl pastine minute}(微型意面)家族的一员,体形只比 {\sl acini di pepe} 和 {\sl cuoretti} 稍大一点。和所有 {\sl pastine} 一样,它们最适合放入清淡的汤中食用,或许还可以用大褐菇(portobello)或豌豆调味。
+
+\newpage
+\section{Stortini}
+{\center{\includegraphics[scale=0.50]{ps/v81stortini.eps}}}
+\begin{chunk}{Stortini}
+A(i,j) == 0.5*(abs(sin(2*i*%pi/125)))^3
+B(i,j) == 1-abs(sin((2*i-500)*%pi/125))
+C(i,j) == 1-0.5*(abs(sin(2*(i-375)*%pi/125)))^3
+X(i,j) == _
+  if (i <= 250) _
+   then cos(2*i*%pi/125) _
+   else 1.7-cos((2*i-500)*%pi/125)
+Y(i,j) == _
+  if (i <= 250) _
+   then if (i <= 125) _
+         then abs(sin(2*i*%pi/125)) _
+         else A(i,j) _
+   else if (i <= 375) _
+         then B(i,j) _
+         else C(i,j)
+Z(i,j) == j/20.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..500,j=0..10,_
+           style=="smooth",title=="Stortini")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+{\sl stortini}(小弯条)是另一种 {\sl pastine minute}(微型意面),常配蘑菇和芹菜放入奶香浓汤食用。一般来说,较小的意面适合较稀的汤,而较大的 {\sl pastina minute} 则可搭配较浓稠的品种。
+
+\newpage
+\section{Strozzapreti}
+{\center{\includegraphics[scale=0.50]{ps/v81strozzapreti.eps}}}
+\begin{chunk}{Strozzapreti}
+A(i,j) == 0.5*cos(j*%pi/40)+0.5*cos((j+76)*%pi/40) + _
+          0.5*cos(j*%pi/30)+0.5*sin((2*i-j)*%pi/40)
+B(i,j) == 0.5*sin(j*%pi/40)+0.5*sin((j+76)*%pi/40) + _
+          0.5*sin(j*%pi/30)+0.5*cos((2*i-j)*%pi/40)
+X(i,j) == _
+  if (i <= 30) _
+   then 0.5*cos(j*%pi/30)+0.5*cos((2*i+j+16)*%pi/40) _
+   else A(i,j)
+Y(i,j) == _
+  if (i <= 30) _
+   then 0.5*sin(j*%pi/30)+0.5*sin((2*i+j+16)*%pi/40) _
+   else B(i,j)
+Z(i,j) == j/4.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..60,j=0..60,_
+           style=="smooth",title=="Strozzapreti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+用来制作 {\sl strozzapreti}(或称 {\sl strangolapreti};两者都意为"扼杀神父者")的面团,可以用各种面粉、鸡蛋乃至土豆调制而成。{\sl strozzapreti} 是理想的 {\sl pastasciutta},可配传统肉酱食用,再撒上帕尔玛干酪(Parmigiano-Reggiano)。
+
+\newpage
+\section{Tagliatelle}
+{\center{\includegraphics[scale=0.50]{ps/v81tagliatelle.eps}}}
+\begin{chunk}{Tagliatelle}
+X0(i,j) == 0.4*cos(3*i*%pi/250)+j/80.0*sin(31*i*%pi/1000)
+Y0(i,j) == 0.4*sin(3*i*%pi/250)*sin(i*%pi/4000)^0.1
+Z0(i,j) == j/80.0+0.12*sin(9*i*%pi/1000)
+X1(i,j) == 0.4*cos(3*i*%pi/250)+j/80.0*sin(31*i*%pi/1000)
+Y1(i,j) == 0.4*sin(i*%pi/4000)^0.5*sin(3*i*%pi/250)
+Z1(i,j) == j/80.0+0.12*sin(9*i*%pi/1000)
+vsp:=createThreeSpace()
+makeObject(surface(X0(i,j),Y0(i,j),Z0(i,j)),i=0..1000,j=0..4,space==vsp)
+makeObject(surface(0.8*X1(i,j),Y1(i,j),0.9*Z1(i,j)),i=0..1000,j=0..4,_
+           space==vsp)
+makeObject(surface(X1(i,j),0.9*Y1(i,j),0.6*Z1(i,j)),i=0..1000,j=0..4,_
+           space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Tagliatelle")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+\end{chunk}
+{\sl tagliatelle}(得名于意大利语动词 {\sl tagliare}——"切")由小麦粉与鸡蛋调制而成,属于 {\sl pasta lunga}(长意面)家族。它原产于意大利北部,常配 {\sl carbonara}(培根蛋酱)食用,也可搭配海鲜,或者作为 {\sl timballo}(意式烤面食)的基底。
+
+\newpage
+\section{Taglierini}
+{\center{\includegraphics[scale=0.50]{ps/v81taglierini.eps}}}
+\begin{chunk}{Taglierini}
+X0(i,j) == 0.5*cos(i*%pi/100)+0.05*cos(i*%pi/40)
+Y0(i,j) == 0.5*sin(i*%pi/4000)^0.1*sin(i*%pi/100)+0.075*sin(i*%pi/40)
+Z0(i,j) == 3.0*j/200.0+0.1*sin(i*%pi/125)
+X1(i,j) == 0.4*cos(i*%pi/100)
+Y1(i,j) == 0.4*sin(i*%pi/4000)^0.2*sin(i*%pi/100)
+Z1(i,j) == 3.0*j/200.0+0.1*sin(i*%pi/125)
+X2(i,j) == 0.3*cos(i*%pi/100)
+Y2(i,j) == 0.3*sin(3*i*%pi/1000)*sin(i*%pi/50)
+Z2(i,j) == -0.05+3.0*j/200.0+0.1*sin(i*%pi/125)
+vsp:=createThreeSpace()
+makeObject(surface(X0(i,j)*0.6,Y0(i,j)*0.5,Z0(i,j)),i=0..1000,j=0..2,_
+           space==vsp)
+makeObject(surface(X1(i,j),Y1(i,j),Z1(i,j)),i=0..1000,j=0..2,space==vsp)
+makeObject(surface(0.8*X1(i,j),0.9*Y1(i,j),1.3*Z1(i,j)),i=0..1000,j=0..2,_
+           space==vsp)
+makeObject(surface(X2(i,j),0.9*Y2(i,j),1.5*Z2(i,j)),i=0..1000,j=0..2,_
+           space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Taglierini")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+\end{chunk}
+{\sl taglierini} 是另一种卷曲的 {\sl pasta lunga}(长意面),与 {\sl tagliatelle} 同属一脉,但要窄得多——几乎细如发丝。
+
+\newpage
+\section{Tagliolini}
+{\center{\includegraphics[scale=0.50]{ps/v81tagliolini.eps}}}
+\begin{chunk}{Tagliolini}
+X0(i,j) == 0.5*cos(i*%pi/200)+0.05*cos(5*i*%pi/400)
+Y0(i,j) == 0.5*sin(i*%pi/8000)^0.1*sin(i*%pi/200)+0.075*sin(5*i*%pi/400)
+Z0(i,j) == 0.01*j+0.1*sin(i*%pi/250)
+X1(i,j) == 0.4*cos(i*%pi/200)
+Y1(i,j) == 0.4*sin(i*%pi/8000)^0.2*sin(i*%pi/200)
+Z1(i,j) == 0.01*j+0.1*sin(i*%pi/250)
+X2(i,j) == 0.3*cos(i*%pi/125)
+Y2(i,j) == 0.3*sin(3*i*%pi/2000)*sin(3*i*%pi/200)
+Z2(i,j) == -0.05+0.01*j+0.1*sin(i*%pi/250)
+vsp:=createThreeSpace()
+makeObject(surface(X0(i,j)*0.6,Y0(i,j)*0.5,Z0(i,j)),i=0..2000,j=0..1,_
+           space==vsp)
+makeObject(surface(X1(i,j),Y1(i,j),Z1(i,j)),i=0..2000,j=0..2,space==vsp)
+makeObject(surface(0.8*X1(i,j),0.9*Y1(i,j),1.3*Z1(i,j)),i=0..2000,j=0..2,_
+           space==vsp)
+makeObject(surface(X2(i,j),0.9*Y2(i,j),1.5*Z2(i,j)),i=0..2000,j=0..2,_
+           space==vsp)
+vp:=makeViewport3D(vsp,style=="smooth",title=="Tagliolini")
+colorDef(vp,yellow(),yellow())
+axes(vp,"off")
+\end{chunk}
+{\sl tagliolini} 比 {\sl taglierini} 还要细,传统上作为开胃菜食用,配黄油、软质奶酪,或 {\sl al pomodoro}(清淡番茄酱)。也可以配鸡汤食用。{\sl tagliolini} 用途广泛,还是多种 {\sl al forno}(烤箱烘烤)的 {\sl timballo} 菜肴的主要食材。
+
+\newpage
+\section{Torchietti}
+{\center{\includegraphics[scale=0.50]{ps/v81torchietti.eps}}}
+\begin{chunk}{Torchietti}
+A(i,j) == (3.0*i-60.0)*j/100.0
+B(i,j) == (3.0*i-60.0)*(100.0-j)/100.0
+C(i,j) == 3.0*(i-20.0)*(100.0-j)/100.0
+D(i,j) == 3.0*(i-20.0)*j/100.0
+E(i,j) == _
+  if ((j <= 50) or (i <= 20)) _
+   then A(i,j) _
+   else if ((j >= 50) or (i <= 20)) _
+         then B(i,j) _
+         else if ((j >= 50) or (i >= 20)) _
+               then C(i,j) _
+               else D(i,j)
+F(i,j) == (3+2.5*sin(E(i,j)*%pi/120)+3*sin(j*%pi/200)^10)
+X(i,j) == F(i,j)*cos(E(i,j)*%pi/10)+0.1*cos(j*%pi/2)
+Y(i,j) == F(i,j)*sin(E(i,j)*%pi/10)+0.1*sin(j*%pi/2)+3*sin(j*%pi/50)
+Z(i,j) == 18.0*j/25.0+2.0*E(i,j)/5.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..40,j=0..100,_
+           style=="smooth",title=="Torchietti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl torchietti}(小火把)的螺旋纹路能很好地兜住浓稠的酱汁。它们又称 {\sl maccheroni al torchio},最适合配番茄酱食用,再搭配胡萝卜、西兰花、菜花等切成大块的蔬菜。
+
+\newpage
+\section{Tortellini}
+{\center{\includegraphics[scale=0.50]{ps/v81tortellini.eps}}}
+\begin{chunk}{Tortellini}
+A(i,j) == 0.2*sin(i*%pi/200)+j/400.0
+B(i,j) == cos(j/60.0*(2.7+0.2*sin(i*%pi/120)^50)*%pi+1.4*%pi)
+C(i,j) == sin(j/60.0*(2.7+0.2*sin(i*%pi/120)^50)*%pi+1.4*%pi)
+X(i,j) == 0.5^(1+0.5*sin(i*%pi/120))*cos((11*i-60)*%pi/600) * _
+          (1.35+(3+sin(i*%pi/120))*A(i,j)*B(i,j))
+Y(i,j) == 0.5*sin((11*i-60)*%pi/600) * _
+          (1.35+(0.6+sin(i*%pi/120))*A(i,j)*B(i,j))
+Z(i,j) == 0.15+i/1200.0+0.5*(0.8*sin(i*%pi/120)+j/400.0)*sin(i*%pi/120)*C(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..120,j=0..60,_
+           style=="smooth",title=="Tortellini")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+\end{chunk}
+制作一枚 {\sl tortellino} 时,先用一小勺肉、奶酪或蔬菜作馅,包入一层小麦粉与鸡蛋做的面皮,再手法娴熟地卷起、折叠。这些造型精巧的 {\sl pasta ripiena}(酿馅意面)家族成员,传统上放入热气腾腾的汤中食用,但也可沥干后配当地酱汁作 {\sl pastasciutta} 食用。
+
+\newpage
+\section{Tortiglioni}
+{\center{\includegraphics[scale=0.50]{ps/v81tortiglioni.eps}}}
+\begin{chunk}{Tortiglioni}
+X(i,j) == 6*cos(i*%pi/75)-3.5*cos(j*%pi/100) + _
+          0.15*sin((13*i/75.0+j/15.0+1.5)*%pi)
+Y(i,j) == 6*sin(i*%pi/75)+0.15*sin((13*i/75.0+j/15.0)*%pi)
+Z(i,j) == 11.0*j/10.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..50,_
+           style=="smooth",title=="Tortiglioni")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl tortiglioni} 是另一种经典的 {\sl pasta corta}(短意面),原产于意大利南部的坎帕尼亚大区。{\sl tortiglioni}(得名于意大利语 {\sl torquere}——"切")常被烤入 {\sl timballo},或煮熟沥干后作 {\sl pastasciutta} 食用,搭配番茄、辣味香肠(chorizo)和黑胡椒调制的浓郁酱汁。
+
+\newpage
+\section{Trenne}
+{\center{\includegraphics[scale=0.50]{ps/v81trenne.eps}}}
+\begin{chunk}{Trenne}
+X(i,j) == _
+  (if (i <= 33) _
+    then (3.0*i/10.0) _
+     else ((300.0-3*i)/20.0))
+Y(i,j) == _
+ (if (i <= 33) _
+   then (0.0) _
+    else (if (i <= 66) _
+           then ((9*i-300)/20.0) _
+            else ((900-9*i)/20.0)))
+Z(i,j) == _
+ (if (i <= 33) _
+   then (if (i <= 16) _
+          then (-9.0*i/50.0+6.0*j/4.0) _
+           else (-6.0+9.0*i/50.0+3.0*j/2.0) ) _
+    else (if (i <= 66) _
+           then (-12.0+7.0*i/20.0+6.0*j/4.0) _
+            else (35.0-7.0*i/20.0+6.0*j/4.0)))
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..100,j=0..40,_
+           style=="smooth",title=="Trenne")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,4.0,4.0,4.0)
+\end{chunk}
+{\sl trenne}(横截面为三角形的 {\sl penne})是 {\sl pasta corta}(短意面)中一种中空的三角形品种,质地非常坚实。最适合搭配蘑菇、番茄和菠菜食用——或搭配其近亲 {\sl penne}、{\sl trennette} 和 {\sl ziti} 通常会用的任何酱汁。
+
+\newpage
+\section{Tripoline}
+{\center{\includegraphics[scale=0.50]{ps/v81tripoline.eps}}}
+\begin{chunk}{Tripoline}
+X(i,j) == i/20.0
+Y(i,j) == j/20.0
+Z(i,j) == _
+  if (i <= 30) _
+   then 0.0 _
+   else if (i <= 10) _
+         then (10.0-i)/50.0*cos((j+2)*%pi/4) _
+         else ((i-30.0)/50.0)*cos((j+15)*%pi/10)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..40,j=0..200,_
+           style=="smooth",title=="Tripoline")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+带状的 {\sl tripoline} 属于 {\sl pasta lunga}(长意面),仅一侧边缘带有卷曲。这道波浪使 {\sl tripoline} 煮熟后口感富于变化,也有助于挂住更多酱汁。它原产于意大利南部,常配番茄和罗勒,或 {\sl ragu alla napoletana}(那不勒斯式肉酱)食用,再撒上一层佩科里诺罗马诺干酪(Pecorino Romano)。
+
+\newpage
+\section{Trofie}
+{\center{\includegraphics[scale=0.50]{ps/v81trofie.eps}}}
+\begin{chunk}{Trofie}
+A(i,j) == (3.0*i)/5.0+10*cos(j*%pi/25)
+X(i,j) == (1+sin(i*%pi/150)+2*sin(i*%pi/150)*sin(j*%pi/25)) * _
+          sin(13*i*%pi/300)
+Y(i,j) == (1+sin(i*%pi/150)+2*sin(i*%pi/150)*sin(j*%pi/25)) * _
+          cos(13*i*%pi/300)+5*sin(2*A(i,j)*%pi/125)
+Z(i,j) == A(i,j)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..50,_
+           style=="smooth",title=="Trofie")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,3.0,3.0,3.0)
+\end{chunk}
+{\sl trofie} 是利古里亚版本的 {\sl gnocchi},由小麦粉、麸皮、水和土豆调制而成。传统做法是煮熟后配四季豆和更多土豆食用,也可以简单地拌入 {\sl pesto genovese}(热那亚青酱)、松子、盐和橄榄油。
+
+\newpage
+\section{Trottole}
+{\center{\includegraphics[scale=0.50]{ps/v81trottole.eps}}}
+\begin{chunk}{Trottole}
+A(i,j) == 0.17-0.15*sin(j*%pi/120)+0.25*((60.0-j)/60.0)^10*sin(j*%pi/30)
+B(i,j) == 0.17-0.15*sin(j*%pi/120)+0.25*((60.0-j)/60.0)^10*sin(j*%pi/30)
+C(i,j) == 0.25*((60.0-j)/60.0)^5*(1-sin((i-128)*%pi/160))*cos(j*%pi/30)
+D(i,j) == (7.0*i)/400.0-48/25+C(i,j)+j/120.0*(1-sin((i-128)*%pi/64))
+X(i,j) == _
+  if (i >= 128) _
+   then (A(i,j)*(1-sin((i-128)*%pi/320)))*cos(7*i*%pi/160) _
+   else B(i,j)*cos(7*i*%pi/160)
+Y(i,j) == _
+  if (i >= 128) _
+   then (A(i,j)*(1-sin((i-128)*%pi/160)))*sin(7*i*%pi/160) _
+   else B(i,j)*sin(7*i*%pi/160)
+Z(i,j) == _
+  if (i >= 128) _
+   then D(i,j) _
+   else i/400.0+j/100.0+0.25*((60.0-j)/60.0)^5*cos(j*%pi/30)
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..160,j=0..60,_
+           style=="smooth",title=="Trottole")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl trottole} 是一种造型别致的 {\sl pasta corta}(短意面),由环绕中央柄部卷起的圈圈构成,非常适合做沙拉。搭配南瓜或西葫芦、韭葱、松子,再削上几片帕尔玛干酪(Parmigiano-Reggiano),味道也十分可口。
+
+\newpage
+\section{Tubetti Rigati}
+{\center{\includegraphics[scale=0.50]{ps/v81tubettirigati.eps}}}
+\begin{chunk}{Tubetti Rigati}
+X(i,j) == 2*cos(i*%pi/75)+0.03*sin((4*i+7.5)*%pi/15)+0.5*cos(j*%pi/60)
+Y(i,j) == 2*sin(i*%pi/75)+0.03*sin(4*i*%pi/15)+0.5*sin(j*%pi/60)
+Z(i,j) == j/3.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..150,j=0..30,_
+           style=="smooth",title=="Tubetti Rigati")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.0,2.0,2.0)
+\end{chunk}
+{\sl tubetti rigati}(带槽小管)是 {\sl pasta corta}(短意面)家族中体形最小的成员,最早诞生于意大利南部的坎帕尼亚。做成 {\sl e fagioli}(配豆子)食用时能煮出十分饱腹的浓汤,也可以配清淡的 {\sl marinara}(水手式)番茄罗勒洋葱酱食用。
+
+\newpage
+\section{Ziti}
+{\center{\includegraphics[scale=0.50]{ps/v81ziti.eps}}}
+\begin{chunk}{Ziti}
+X(i,j) == 0.5*cos(i*%pi/35)+0.2*sin(j*%pi/70)
+Y(i,j) == 0.5*sin(i*%pi/35)+0.2*sin(j*%pi/70)
+Z(i,j) == j/14.0
+v3d:=draw(surface(X(i,j),Y(i,j),Z(i,j)),i=0..70,j=0..70,_
+           style=="smooth",title=="Ziti")
+colorDef(v3d,yellow(),yellow())
+axes(v3d,"off")
+zoom(v3d,2.5,2.5,2.5)
+\end{chunk}
+{\sl ziti}(在意大利方言中意为"新郎"或"新娘")是专用于宴会与特殊场合的意面,起源于西西里。按传统做法,下锅煮之前要先用手将其掰断。沥干后可配番茄酱与甜椒或西葫芦食用,再撒上普罗卧干酪(Provolone)之类的奶酪。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{axiom}
+\bibliography{axiom}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\cleardoublepage
+\phantomsection
+%\addcontentsline{toc}{chapter}{Index}
+\printindex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
