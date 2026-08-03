@@ -9766,7 +9766,7 @@ Mini-Haskell 的类型推断问题可以被有效地归约为正则签名上有�
         3
 
                                                 Type: Fraction Integer
-
+ 
 ->mersenne i== 2**i - 1
                                                             Type: Void
 ->mersenne
@@ -9775,15 +9775,15 @@ Mini-Haskell 的类型推断问题可以被有效地归约为正则签名上有�
    (2)  mersenne i == 2  - 1
                                          Type: FunctionCalled mersenne
 ->mersenne 3
-   Compiling function mersenne with type PositiveInteger -> Integer
+   Compiling function mersenne with type PositiveInteger -> Integer 
 
    (3)  7
                                                  Type: PositiveInteger
 ->addx  x == ((y :Integer): Integer +-> x + y)
                                                             Type: Void
 >g:=addx 10
-   Compiling function addx with type PositiveInteger -> (Integer ->
-   Integer)
+   Compiling function addx with type PositiveInteger -> (Integer -> 
+   Integer) 
 
    (10)  theMap(*1;anonymousFunction;0;G1048;internal,502)
                                             Type: (Integer -> Integer)
@@ -9875,8 +9875,8 @@ h :: Integer
 %\begin{progverb}
 \begin{footnotesize}
 \begin{verbatim}
-->a:Integer
-                                                            Type: Void
+->a:Integer 
+                                                            Type: Void 
 
 ->a+a a is declared as being in Integer but has not been given a value.
 \end{verbatim}
@@ -10023,7 +10023,7 @@ $$\mbox{(TYPE-AS)} \quad\quad {\displaystyle (A,
 一个以元素为参数的 category 的例子是
 %\begin{progverb}
 \begin{footnotesize}
-\begin{verbatim}
+\begin{verbatim} 
 PAdicIntegerCategory(p): Category == Definition where
   ++ This is the category of stream-based representations of
   ++ the p-adic integers.
@@ -19615,7 +19615,7 @@ $X^{21}+4X+1$ 作为“好”的多项式。表 2 展示了结果。
    PF      PrimeField
    FFP     FiniteFieldExtensionByPolynomial
    FFCGP   FiniteFieldCyclicGroupExtensionByPolynomial
-   FFNBP   FiniteFieldNormalBasisExtensionByPolynomial
+   FFNBP   FiniteFieldNormalBasisExtensionByPolynomial 
    FFX     FiniteFieldExtension
    FFCGX   FiniteFieldCyclicGroupExtension
    FFNBC   FiniteFieldNormalBasisExtension
@@ -22259,9 +22259,9 @@ axorb、bxorc、axorc。现在,我们知道
 我们还添加关系 \verb|a^2-a=0 => a=0| 或 \verb|a=1|,以便在需要时
 帮助求解器。
 \begin{verbatim}
-   I = ideal((axorb - xor2(a,b),
-              bxorc - xors(b,c),
-              axorc - xor2(a,c),
+   I = ideal((axorb - xor2(a,b), 
+              bxorc - xors(b,c), 
+              axorc - xor2(a,c), 
               a*a-a, b*b-b, c*c-c))
 \end{verbatim}
 
@@ -22287,12 +22287,12 @@ axorb、bxorc、axorc。现在,我们知道
 用来在所有输入上计算函数 $f$、以检验正确性的代码
 \begin{verbatim}
    def evalxor2(f)
-     for (i, j, k) in [(i, j, k)
-       for i in [0, 1]
-         for j in [0, 1]
+     for (i, j, k) in [(i, j, k) 
+       for i in [0, 1] 
+         for j in [0, 1] 
            for k in [0, 1]]:
              ref = i^^j^^k
-             eval = f.substitute(a=i, b=j,
+             eval = f.substitute(a=i, b=j, 
                                  axorb=i^^j, bxorc=j^^k, axorc=i^^k)
              print("%s^%s^%s: ref(%s) =?= f(%s): %s" %
                (i, j, k, ref, eval, ref == eval))
@@ -22368,7 +22368,7 @@ axorb、bxorc、axorc。现在,我们知道
     reduced:
       -a - b + c + 3*d - 3*axorb - axorc + axord - bxorc + bxord
       + 3*cxord - 3*axorbxorc - axorbxord + axorcxord + bxorcxord
-
+ 
 \end{verbatim}
 
 \begin{verbatim}
@@ -22418,7 +22418,7 @@ def xor3(x, y, z): return xor2(x, xor2(y, z))
 R = IntegerModRing(8)['a, b, c, d, axorb, axorc, axord,
                        bxorc, bxord, cxord, axorbxorc,
                        axorbxord, axorcxord, bxorcxord']
-(a, b, c, d, axorb, axorc, axord, bxorc, bxord, cxord,
+(a, b, c, d, axorb, axorc, axord, bxorc, bxord, cxord, 
   axorbxorc, axorbxord, axorcxord, bxorcxord) = R.gens()
 I = ideal((axorb - xor2(a, b),
            axorc - xor2(a, c),

@@ -15,9 +15,15 @@ CNSTY=axiom.sty catmac.sty dissdef.sty multind.sty selatex.sty slatex.sty
 
 all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf ${PDF}/bookvol0.pdf \
 	${PDF}/bookvol2.pdf ${PDF}/bookvol3.pdf ${PDF}/bookvol4.pdf \
-	${PDF}/bookvol5.pdf ${PDF}/bookvol9.pdf \
-	${PDF}/bookvol10.1.pdf ${PDF}/bookvol13.pdf ${PDF}/bookvol14.pdf \
-	${PDF}/bookvol15.pdf ${PDF}/bookvol8.1.pdf
+	${PDF}/bookvol5.pdf ${PDF}/bookvol6.pdf ${PDF}/bookvol7.pdf \
+	${PDF}/bookvol8.pdf ${PDF}/bookvol9.pdf ${PDF}/bookvol10.pdf \
+	${PDF}/bookvol10.1.pdf ${PDF}/bookvol11.pdf ${PDF}/bookvolbug.pdf \
+	${PDF}/bookvol12.pdf ${PDF}/bookvol13.pdf ${PDF}/bookvol14.pdf \
+	${PDF}/bookvol15.pdf ${PDF}/bookvol8.1.pdf \
+	${PDF}/rosetta.pdf ${PDF}/refcard.pdf ${PDF}/endpaper.pdf
+
+
+
 
 ${PDF}:
 	mkdir -p ${PDF}
