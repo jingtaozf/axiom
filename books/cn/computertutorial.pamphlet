@@ -1,0 +1,2420 @@
+\documentclass{article}
+% 中文译本适配:本篇不走 bookheader.tex,在 documentclass 与 begin{document} 之间就地注入 xeCJK 中文排版支持
+\usepackage{xeCJK}
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{Heiti SC}
+\setCJKmonofont{Songti SC}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\begin{document}
+\title{\$SPAD/src/doc CompilerTutorial(编译器教程)}
+\author{Timothy Daly}
+\newcommand{\<}{<}
+\maketitle
+\begin{abstract}
+我们从零构造几个 domain,以此演示如何用 Axiom 编译器来构建 Axiom domain。
+\end{abstract}
+\eject
+\tableofcontents
+\eject
+\section{概览}
+
+本教程分成好几节,写作目的是循序渐进地介绍 Axiom 编程的各种概念,采用一步步递进的开发方式,模拟一个 Axiom 新手程序员的开发过程。
+
+第 2 节用一个简单的 Axiom 程序来介绍理解如何使用编译器、如何使用简单类型、如何做简单输出所需要的概念。我们还会讨论 Axiom 与 C、C++ 编程语言之间的一些区别。
+
+第 3 节介绍如何构建一个 Axiom {\bf Type}。这一节介绍 {\bf Type}、签名以及导出/导入相关问题的概念,还会介绍导出与实现之间的划分。
+
+第 4 节构造一个新的 {\bf Type},我们称之为 {\tt Term}。这一节介绍类型内部表示的概念,以及``标准''导出列表({\tt new}、{\tt dispose!}、{\tt access}、{\tt print}),还会介绍注释风格与测试相关的问题。
+
+第 5 节构造另一个新类型,我们称之为 {\tt Polynomial}。这一节介绍在其他 {\bf Type} {\em 之上\/}构建 {\bf Type} 的概念。它讲解打印功能,并借助这个函数引出``该在哪里''实现某些操作这一问题。它还引入了局部函数的概念,以及 {\bf Category} 的概念。
+
+第 6 节介绍的是 {\bf Type} {\tt Polynomial} {\em 内部\/}的操作,而不是在其他类型{\em 之上\/}的操作。这里我们引入多项式的算术操作 {\tt +}、{\tt -} 和 {\tt *}。
+
+第 7 节介绍参数化的 {\bf Type}。我们会构建一个新的 {\tt Term} 类型,它比之前那版 {\bf Term} 更通用。
+
+我们的目的不是教编程。假定读者已经熟悉基本的编程概念,以及加法、乘法这类初等的多项式运算。如果读者不熟悉 C 和 C++,可以跳过与这两门语言的对比。
+
+由于这是一份教程,请读者留意:我们所做的设计选择是出于简洁性或清晰性的考虑,而不是出于效率或通用性的考虑。
+
+\section{一个简单的 Axiom 程序}
+
+我们将开发一个简单的多项式处理程序,并以此说明这门语言的各种特性。读完本教程后,你应该能够自己编写 Axiom 程序。
+
+\subsection{面向程序员的 Axiom 语言概说}
+
+这里最初的这些说明,是想通过类比的方式,让熟悉 C 和 C++ 的读者对 Axiom 语言有个大致印象。不是 C 程序员的读者可以跳过本节。
+
+Axiom 是一门块结构化、强类型的语言,语法风格与 C 类似。它有以下这些简单特点:
+
+\begin{itemize}
+\item 打印是用 {\bf output} 完成的。例如:\\
+\begin{verbatim}
+output "this is a number: "
+\end{verbatim}
+
+\item 要在同一行打印多个内容,可以用 {\bf outputList} 函数。这个函数接受一个对象列表,并把它们打印出来。例如:\\
+\begin{verbatim}
+outputList(["this is a number: ",3])
+\end{verbatim}
+
+\item 赋值用 {\tt :=}。例如:\\
+\begin{verbatim}
+a := 3
+\end{verbatim}
+
+\item 条件语句的形式是: \\
+{\tt if} {\it 条件} {\tt then} {\it 语句}
+{\tt else} {\it 语句} \\
+例如:
+\begin{verbatim}
+if a > 0 then output("positive") else output("negative")
+\end{verbatim}
+
+注意,判断相等要用 {\tt =},而不是 {\tt ==}。
+
+注意,{\tt if then else} 结构是一个能产生值的表达式,比如:
+\begin{verbatim}
+x := if a = 0 then 1 else 2
+\end{verbatim}
+
+这等价于下面这个 C/C++ 表达式:
+\begin{verbatim}
+x = (a == 0 ? 1 : 2)
+\end{verbatim}
+
+\item 迭代可以用 {\tt repeat} 语句来做。例如:
+\begin{verbatim}
+for i in 1..10 repeat output(i)
+\end{verbatim}
+
+在 Axiom 里,遍历结构体的方式可以比 C 更优雅、更抽象——在 C 里通常要写直接访问数据结构表示的循环,在 C++ 里则需要定义 {\em friend} 迭代器类。在 Axiom 里,每个 domain 都可以提供一个 {\em generator}(生成器),把遍历其元素这件事抽象出来。举个例子,你可以这样写:
+
+\begin{small}
+\begin{verbatim}
+ls := [1,2,3,4,5]
+for elem in ls repeat output(elem)
+\end{verbatim}
+\end{small}
+
+\item 语句序列可以用花括号括起来。例如:
+\begin{small}
+\begin{verbatim}
+{
+  a := 3; 
+  if a > 0 then
+          output "positive" 
+  else 
+          output "negative"
+}
+\end{verbatim}
+\end{small}
+
+\item 没有 {\tt main}(除非你自己想要一个)。程序是以文件为单位编译的。文件中出现的顶层形式(比如 {\bf print})会在(编译后的)文件运行时被执行。如果一个文件包含:
+\begin{small}
+\begin{verbatim}
+       #include "axllib"
+       print \<\< "hello, world" \<\< newline;
+\end{verbatim}
+\end{small}
+
+     运行时会打印 \\
+     {\bf hello, world} \\
+     这有点像若干新版本 Basic 那样的``编译式解释语言''。
+
+\item 整数、字符串和浮点数并不是语言内置的,而是需要显式导入。详情参见语言说明文档。
+
+\item domain 和 category 类似于 C++ 里 class 和 abstract class 的概念。不过,函数匹配时{\em 既\/}看实参的类型,{\em 也\/}看返回值的类型。C++ 在匹配函数签名时会忽略返回值类型。
+
+\item 与从不关心缩进的 C 和 C++ 不同,Axiom 编译器可以选择性地考虑缩进。在文件开头使用 {\tt \#pile} 指令,可以让 Axiom 在省略花括号时,把处于同一缩进层级的语句序列视为属于同一个语句块。
+
+\end{itemize}
+
+\subsection{Signum——第一个函数}
+
+在第一个例子里,我们要构造一个简单的程序,用来判断其参数的符号(这个函数叫 {\bf signum})。
+
+整个函数是这样的:
+
+\begin{small}
+\begin{verbatim}
+#include "axllib"
+
+signum(number: SingleInteger): String == {
+        number > 0 => "Positive"; 
+        number = 0 => "Zero";
+        "Negative"
+}
+
+import from SingleInteger;
+print \<\< signum 10 \<\< newline;
+print \<\< signum 0  \<\< newline;
+print \<\< signum(-10) \<\< newline;
+\end{verbatim}
+\end{small}
+
+Axiom 是一门强类型语言,但编译器一开始对具体的类型一无所知(除了极少数几个内置类型)。编译器自带一个叫 {\tt axllib} 的类型库。我们会在每个文件的开头写上 {\tt \#include "axllib"} 这一行,以便能访问这些类型。我们示例程序的第一行是:
+
+\begin{small}
+\begin{verbatim}
+  #include "axllib"
+\end{verbatim}
+\end{small}
+
+这行代码让我们能访问 {\bf SingleInteger} 和 {\bf String} 这两个类型,它们都是(大写 {\bf T} 的){\bf Type}。
+
+\subsection{什么是 Type?}
+
+(大写 {\bf T} 的){\bf Type} 是一种在这个世界里创造出特殊新事物的方式。假设我们想要一种特殊的数,比如罗马数字(你在学校学过的那种)。要定义这种新的数,我们需要两个部分:一种把它们存进程序里的方式(称为表示),以及一份我们能对它们做的事情的清单,比如加法、减法、打印等等(称为操作)。{\bf Type} 就是一种把三样东西打包在一起的盒子:操作、表示,以及实现这些操作的程序。
+
+Axiom 编程通常就是在构建新的 {\bf Type}。所以,当你看到一个新的 {\bf Type} 时,你需要知道的是:``我能用这个 {\bf Type} 做什么?''换句话说,也就是:``这个 {\bf Type} 有哪些可用的操作?''
+
+{\bf SingleInteger} 是一个反映底层机器整数实现的 {\bf Type}。也就是说,它有一个由机器字长决定的取值范围(这就是它的表示)。我们可以对它执行几十种操作——但对我们的目的而言,只需要知道它们的行为就像整数一样就够了。也就是说,我们可以对它们做加法、减法、乘法、比较等等。
+
+{\bf String} 是我们会用到的第二个 {\bf Type}。我们其实不需要知道它是怎么实现的。就我们的目的而言,{\bf String} 唯一值得关心的操作就是打印,这个操作叫``{\bf \<\<}''。
+
+要构建一个 {\bf Type},我们需要知道这个盒子由哪些部分组成(记住:{\bf Type} 是有三个重要组成部分的盒子——导出的函数、表示,以及这些导出函数的实现)。
+
+我们这个简单的 signum 函数是:
+
+\begin{small}
+\begin{verbatim}
+signum(number: SingleInteger): String == {
+        number > 0 => "Positive"; 
+        number = 0 => "Zero";
+        "Negative"
+}
+\end{verbatim}
+\end{small}
+
+我们来看看各个部分。
+
+这个形式的第一行是这样开头的:
+
+\begin{small}
+\begin{verbatim} 
+        signum(number: SingleInteger): String ==
+\end{verbatim}
+\end{small}
+
+这是函数头(定义的其余部分是函数体)。这行函数头是这样读的:
+
+\begin{quotation}
+  ``我们在定义一个叫`{\bf signum}'的函数,它接受一个名为`{\bf number}'的实参,类型是`{\bf SingleInteger}'。它返回一个类型为`{\bf String}'的结果。''
+\end{quotation}
+
+{\tt ==} 标志着函数体的开始。函数体由花括号({\tt \{ \}})括起来。函数体的每一个出口{\em 必须\/}是正确的返回 {\bf Type}。在这个例子里,{\bf signum} 函数的每个出口都必须是 {\bf String} 类型(因为我们说过 {\bf signum} 返回一个 {\bf String})。
+
+在函数体里我们用到了``{\bf =>}''操作符。它的左边是一个测试(结果为真或假),右边是要返回的值。如果测试为真,就求出右边的值,并把它作为所在语句序列的值返回。在这个例子里,所在的语句序列就是整个程序,所以一旦发现某个测试为真,就把对应的字符串作为结果返回。这里``{\bf =>}''的用法,和 C 里的 {\tt switch} 结构有点类似。
+
+定义函数并不会执行它。我们要调用这个函数,并打印它的结果值。打印是用``{\bf \<\<}''操作符完成的。(注意,这{\em 不是\/}C++ 的左移操作符。)``{\bf \<\<}''操作符的函数头是:
+
+\begin{small}
+\begin{verbatim}
+  (stream: TextWriter) \<\< (thing: String): TextWriter ==
+\end{verbatim}
+\end{small}
+
+这个操作符左边是一个 {\bf TextWriter},右边是要打印的对象。它的结果是一个 {\bf TextWriter} 对象。由于这是一个中缀操作符(语法里预定义了少数几个中缀操作符),我们可以把``{\bf \<\<}''操作符级联起来。(中缀的意思是,这个函数像 {\tt +} 函数一样写在实参之间,而不是像大多数函数那样写在实参前面。)因此打印是这样做的:
+
+\begin{small}
+\begin{verbatim}
+ print \<\< "first thing" \<\< "second thing" \<\< ... \<\< newline;
+\end{verbatim}
+\end{small}
+
+这一行是从左到右执行的,就好像加了括号一样:
+
+\begin{small}
+\begin{verbatim}
+ ((((print \<\< "first thing") \<\< "second thing") \<\< ...) \<\< newline);
+\end{verbatim}
+\end{small}
+
+有一件重要的事情要记住:编译器对所用到的具体 {\bf Type} 一无所知,但我们程序里每样东西的含义都是由某个 {\bf Type} 定义的。在我们的例子里,我们用到了数字 10、0 和 -10。编译器不知道这些是什么。我们希望它们是 {\tt SingleInteger}(因为这正是我们程序所需要的),所以我们必须加上这一行:
+
+\begin{small}%
+\begin{verbatim}
+ import from SingleInteger;
+\end{verbatim}
+\end{small}
+
+把这行加到我们的程序里,是为了告诉编译器可以使用 {\bf SingleInteger} 的操作。由于周围没有别的线索,10 就会被解释成 {\bf SingleInteger},这正是我们想要的。在 Axiom 程序里,我们经常需要告诉编译器去导入(import){\bf Type}。
+
+在我们的例子里,我们用它的实参(必须是 {\bf SingleInteger})来调用函数 {\bf signum},它返回一个 {\bf Type} 为 {\tt String} 的结果。我们在想要打印结果的时候调用这个函数。例子里有三行,测试了所有可能的情形,它们是这样的:
+
+\begin{small}
+\begin{verbatim}
+  print \<\< signum(10) \<\< newline;
+  print \<\< signum(0) \<\< newline;
+  print \<\< signum(-10) \<\< newline;
+\end{verbatim}
+\end{small}
+
+\section{构建一个 Axiom type}
+
+\subsection{Properties——第一个 domain}
+
+Axiom 程序和 C++ 程序一样,通常是以对象的方式来开发的。这类语言里对象的思路是:存在一些盒子(我们称之为 domain,C++ 称之为 class),它们把函数和数据表示包在一起,并隐藏所有细节。关于一个对象,我们所能知道的一切,都由它这个盒子的导出列表给出,换句话说,就是这个 domain 的导出列表。举例来说,我们知道可以把两个 {\tt SingleInteger} 相加,是因为 {\bf Type} {\tt SingleInteger} 导出了函数 {\tt +}。
+
+\begin{small}
+\begin{verbatim}
+
+#include "axllib"
+
+Properties: with {
+        signum: SingleInteger -> String;
+                ++ signum will return the sign of a number as a String
+ }
+== add {
+        signum(number: SingleInteger): String == {
+                number > 0 => "Positive";
+                number = 0 => "Zero";
+                "Negative"
+        }
+ }
+
+import from SingleInteger;
+import from Properties;
+print \<\< signum(10) \<\< newline;
+print \<\< signum(0) \<\< newline;
+print \<\< signum(-10) \<\< newline;
+
+\end{verbatim}
+\end{small}
+
+我们想定义一个新的 {\bf Type}——就叫它 {\tt Properties} 吧——里面有一份用来计算 {\tt SingleInteger} 各种性质的函数列表。实际上它只会有一个函数,也就是 {\bf signum} 函数。
+
+那么,我们该怎么定义一个 class(呃……domain)呢?每个 domain 都有下面这种(简化的)形式:
+
+\begin{small}%
+\begin{verbatim}
+DomainName: with {
+        exported list of function signatures
+}
+== add {
+        representation
+        implementations of exported functions
+}
+\end{verbatim}
+\end{small}
+
+记住我们说过一个 domain 有三个部分。第一部分是我们可以从这个 domain 调用的所有函数的列表,也就是``导出的函数签名列表''。在我们的例子里是这样的:
+
+\begin{small}%
+\begin{verbatim}
+Properties: with {
+        signum: SingleInteger -> String;
+                ++ signum will return the sign of a number as a String
+}
+\end{verbatim}
+\end{small}
+
+{\tt Properties} 是我们给这个 domain 起的名字。{\tt with} 表示我们正在导出一份函数签名列表,这份列表用花括号括起来。{\bf signum} 这一行和我们之前看到的略有不同,现在是这样的:
+
+\begin{small}%
+\begin{verbatim}
+        signum: SingleInteger -> String;
+\end{verbatim}
+\end{small}
+
+这一行是一个``函数签名''。这行签名是这样读的:
+\begin{quotation}
+  ``我们正在导出一个叫`{\bf signum}'的函数,它接受一个类型为
+   `{\bf SingleInteger}'的东西,返回一个类型为
+   `{\bf String}'的东西。''
+\end{quotation}
+要定义这个函数,我们用:
+
+\begin{small}%
+\begin{verbatim}
+        signum(number: SingleInteger): String == 
+\end{verbatim}
+\end{small}
+
+这一行是``函数头''。在 domain 的体内,我们用的是函数头。这行函数头是这样读的:
+\begin{quotation}
+  ``我们在定义一个叫`{\bf signum}'的函数,它接受一个名为
+   `{\bf number}'的具体 {\bf SingleInteger},
+   并返回一个具体的 {\bf String}。''
+\end{quotation}
+
+所以,导出列表就是一份函数签名的列表。还要注意跟在函数签名后面的 {\tt ++} 注释。在导出列表里,这种所谓的``plus-plus 注释''是和它前面的函数签名相关联的。这种注释和 {\tt --} 注释的区别在于,{\tt ++} 注释会出现在与该函数相关的文档里。含有 {\tt --} 的行,从 {\tt --} 开始到换行符为止都会被忽略。类似地,含有 {\tt ++} 的行,从 {\tt ++} 开始到换行符为止也会被忽略;不过,编译器{\em 确实}会检查 {\tt ++} 注释行的语法。
+
+在导出列表之后,我们会看到``{\bf add} 体'',它以 {\tt == add} 子句开始,用花括号括起来。{\bf add} 体包含表示与实现的信息。在我们的例子里,{\bf add} 体是这样的:
+
+\begin{small}
+\begin{verbatim}
+== add {
+        signum(number: SingleInteger): String == {
+                number > 0 => "Positive";
+                number = 0 => "Zero";
+                "Negative"
+        }
+}
+\end{verbatim}
+\end{small}
+
+这和我们之前的函数定义是一样的,只不过现在它被包在一个 domain 里了。每一个导出的函数签名都{\em 必须\/}有一个与之对应的实现。不过,现在这个实现被``隐藏''(如果你喜欢用大词的话,也可以说是``封装'')在 domain 内部,对外部世界不可见。要让这个函数变得可见,我们需要三个步骤:构造签名、把它放进这个 domain 的导出列表、导入这个 domain。
+
+当我们想使用 domain {\bf Properties} 导出的函数时,需要从 {\bf Properties}``导入(import)''。这样才能保证 {\bf Properties} 里的函数处在作用域内。import 让我们能控制自己想用哪些 domain——可能有很多 domain 都有相同的签名,而我们只想选用其中一个。
+
+\section{一个新类型:Term——第一版表示}
+
+{\bf 本节的完整代码清单见第 \pageref{FirstTermRepListing} 页。}
+
+{\bf signum} 这个 domain 并没有创造一种新的对象,所以我们没有指定 {\bf Properties} 的对象要怎么表示。它不引用自身。具有这种结构的 domain 有时被称为``package'',以便和那些在导出列表里引用自身的 domain 区分开来。
+
+我们暂时先放下 {\bf Properties} 这个 domain,现在来构建一个具有简单导出和内部表示的多项式 domain。
+
+多项式是相对简单的东西,由一些相加或相减、组合成一个多项式整体的项(term)构成。我们先来看看项。
+
+项是由系数和符号的乘积构成的(当然,这里做了简化处理,我们后面会再回来讨论)。所以一个项应该长这样:
+
+\begin{small}
+\begin{verbatim}
+  3*x
+\end{verbatim}
+\end{small}
+
+我们需要一种符号的表示。通常一个符号就是单个字母,对我们的目的而言,选用 ascii 字母集合作为符号的表示就足够了。注意,这样一来我们就{\em 不能\/}写出这样的项:
+
+\begin{small}
+\begin{verbatim}  
+  3*x*y
+\end{verbatim}
+\end{small}
+
+这里假设一个项可以含有多个符号(或者,一般来说,可以由多个项组成)。我们后面会重新考虑这个设计决定。
+
+我们需要一种系数的表示。系数所在的这个东西,通常被称为构建多项式所依托的{\em 系数环\/}。环上定义了某些操作。我们暂时先不管这个,选用 {\tt SingleInteger}(机器整数)作为我们的系数。
+注意,这样一来我们就{\em 不能\/}写出这样的多项式:
+\begin{small}
+\begin{verbatim}
+  (2/3)*x
+\end{verbatim}
+\end{small}
+
+因为 (2/3) 不是一个 {\bf SingleInteger}。所以如果我们需要对多项式做除法,就得重新考虑这个设计决定。
+
+\subsection{Rep,表示 domain}
+
+既然已经做了这些决定,我们就需要给项确定一种表示。一个 {\bf Term} 可以存储为一个由系数和符号构成的 record。用 Axiom 写出来是这样的:
+
+\begin{small}
+\begin{verbatim}
+ Rep == Record(coef:SingleInteger, var:Character);
+\end{verbatim}
+\end{small}
+
+这是一个新的结构,原因有好几个。``{\bf ==>}''记法定义的是一个宏。每次出现 {\tt Rep} 的地方,都会被替换成箭头右边的那个形式。
+
+{\bf Record} 构成的 {\bf Type} 和 C 里的``struct''类似。它们有一份字段列表(在这个例子里是 {\tt coef} 和 {\tt var}),每个字段都有自己的 {\bf Type}(在这个例子里是 {\tt SingleInteger} 和 {\tt Character})。{\bf Record} 是把许多不同 {\bf Type} 组合进同一个数据结构里的一种有用方式。
+
+按 Axiom 的惯例,{\tt Rep} 是用来定义一个 domain 的表示的。这样的表示既可以像上面这样用宏定义,也可以用常量定义(用 {\tt ==} 而不是 {\tt ==>})。给 domain 定义表示并不是必需的,但通常很有用,因为有两个宏是专门针对表示来工作的。
+
+把用户看到的你这个 {\bf Type} 的表示,和这个类型实际是怎么实现的做个对比:在这个例子里,我们把{\em 表示\/}(项实际上要怎么存储)定义成了一个 {\bf Record}——然而,用户看到的项将是 {\bf Term},也就是这个世界里一个全新的 {\bf Type}。有时候,我们需要在把数据看作 {\bf Term} 和把数据看作 {\bf Record} 这两种视角之间切换。宏 {\tt rep} 接受一个 {\tt Rep}(在这个例子里是一个 {\bf Record}),把它看作一个 domain 类型(在这个例子里是一个 {\bf Term})。宏 {\tt per} 则反过来:它接受一个 domain 类型(一个 {\bf Term}),把它看作一个 {\bf Rep}(一个 {\bf Record})。所以:
+
+\begin{small}%
+\begin{verbatim}
+  per: Record(coef: SingleInteger, var: Character) -> Term;
+  rep: Term -> Record(coef: SingleInteger, var: Character);
+\end{verbatim}
+\end{small}
+
+有时候我们手上有一个 {\bf Record},需要的是一个 {\bf Term}(比如从函数返回结果的时候),这时正确的写法是:
+
+\begin{small}%
+  {\bf per(}{\em recordobject\/}{\bf )}
+\end{small}
+
+而有时候我们手上有一个 {\bf Term}(比如用户调用了我们导出的某个函数时),需要深入这个 {\bf Term} 对象取出各个部分。这时正确的写法是:
+
+\begin{small}%
+  {\bf rep(}{\em termobject\/}{\bf )}
+\end{small}
+
+随着例子的推进,这一点应该会(希望)变得清楚起来。
+
+\subsection{导入 Rep}
+
+一旦选定了表示,我们就必须告诉编译器把与这个表示相关的函数引入这个世界(引入``作用域''),这样我们才能在我们的表示上使用 {\bf Record} 的函数。最常见的做法是,在 {\tt Rep} 宏定义之后加上这一行:
+
+\begin{small}
+\begin{verbatim}
+  import from Rep;
+\end{verbatim}
+\end{small}
+
+由于 {\tt Rep} 是一个会展开成
+\begin{small}
+\begin{verbatim}
+  Record(coef: SingleInteger, var: Character)
+\end{verbatim}
+\end{small}
+
+(在编译器完成宏展开之后)这一行{\em 实际上\/}读作:
+
+\begin{small}
+\begin{verbatim}
+  import from Record(coef: SingleInteger, var: Character);
+\end{verbatim}
+\end{small}
+
+这会从 {\tt Rep} 的值那里导入操作,从而允许访问对象的内部。
+
+\subsection{选择我们的导出列表}
+
+开发一个新 domain 的另一个早期步骤,是选择要导出哪些函数。这些函数定义了用户所看到的 {\bf Type}。{\em 怎么\/}表示这个 {\bf Type},至少从用户的角度看,远没有我们{\em 能用\/}这个 {\bf Type} 做什么来得重要。当你在构造一个新 {\bf Type} 时,表示的选择{\em 确实\/}是一个重要问题,会影响最终代码的效率。
+
+你完全可以自由决定要从你的 domain 里导出哪些函数。下面这份列表建议了每个 domain 都适合导出的一些函数。出于各种原因,你可能会决定不实现这些函数。我们推荐这些函数,是因为你这个 domain 的用户至少会期望能执行这些操作。
+
+新 domain 拥有下面这些函数,是合理的:
+
+\begin{description}
+\item[new]       用来构造这个 domain 的一个新实例,
+\item[dispose!]   用来销毁一个实例,
+\item[{\tt \<\<}]        用来打印一个实例,
+\item[{\em 访问器}] 用来访问一个实例的各个部分。
+\end{description}
+
+在 domain 的描述里有一个特殊符号 {\tt \%},指的是``正在被定义的这个类型''。
+
+我们就以这些作为基本函数,逐一开发它们。
+
+\subsection{New——构造函数}
+
+函数 {\tt new} 应该接受一个 domain 表示的各个部分,并用这些部分
+构造出该 domain 的一个新实例。举例来说,实例 {\tt 3} 就是类型
+{\bf SingleInteger} 的一个具体例子。
+
+由于我们在处理的是 domain {\bf Term},我们需要一个函数 {\tt new},
+它接受一个 {\bf SingleInteger} 和一个 {\bf Character}(这正是我们
+要放进 {\bf Record(coef: SingleInteger,
+var: Character))} 里的两样东西),并返回一个 {\bf Term} 类型的实例。{\tt new} 函数的签名是:
+
+\begin{small}
+\begin{verbatim}
+  new: (SingleInteger, Character) -> %;
+\end{verbatim}
+\end{small}
+
+也就是说,函数 {\tt new} 接受两个实参,一个
+{\bf SingleInteger} 和一个 {\bf Character},并返回这个 domain(此处是
+domain {\bf Term})的一个新实例。注意,我们用 {\tt \%} 来表示``this
+domain''(当前这个 domain)。举例来说:
+
+\begin{small}
+\begin{verbatim}
+  new(10, char "x") 
+\end{verbatim}
+\end{small}
+
+会返回一个新的 {\bf Term}。由于我们还没决定要怎么打印
+{\bf Term},现在还没法展示这个 term 长什么样;不过,这里定义的
+就是 term {\tt 3*x}。
+
+现在我们知道了签名,来看看实现。在
+{\bf add} 体里有下面这段代码:
+
+\begin{small}
+\begin{verbatim}
+new(number: SingleInteger, variable: Character): % ==
+        per([number, variable]);
+\end{verbatim}
+\end{small}
+
+这是说我们在实现函数 {\tt new}。它接受两个实参:number 是一个
+{\bf SingleInteger},variable 是一个 {\bf Character}。我们返回一个
+{\tt \%}(又是这个魔法符号)。也就是说,我们返回``this domain''
+(当前这个 domain,即 {\bf Term})的一个实例。所以我们要写一个函数,
+接受一个 number 和一个 variable,构造出一个
+{\bf Record(coef: SingleInteger,} {\bf var: Character)}。
+{\tt [number,variable]} 就能做到这一点。但是,返回的结果{\em
+不应该\/}是一个 {\bf Record}(那是我们的 {\tt Rep}),而应该是一个
+{\bf Term}(那是我们的 {\bf Type})。把 {\tt Rep} 变成 {\tt \%} 的
+这个魔法宏就是 {\tt per}。所以 {\tt per([number,variable])} 的最终
+结果就是一个 {\bf Term}。
+
+\subsection{Dispose! —— 销毁一个实例 }
+
+函数 {\tt dispose!} 会释放这个 domain 的实例所占用的存储。这里
+我们先不管存储的问题,让它什么都不返回,写作 {\tt ()}。所以签名是:
+
+\begin{small}
+\begin{verbatim}
+  dispose!: % -> ();
+\end{verbatim}
+\end{small}
+
+Axiom 默认带有一个``垃圾回收器'',会回收你不再使用的存储。对于
+简单的程序,这种策略应该足以应付存储需求。
+
+顺带一提,出于效率的考虑,让 {\tt dispose!} 把丢弃的项加入一个
+列表、再让 {\tt new} 从这个列表里挑选丢弃的项,而不是总是分配新的
+存储,可能是个好办法。Axiom 基础库里 primitive array 和 record
+类型的 {\tt new} 与 {\tt dispose!} 操作正是这么做的,所以如果你的
+操作是基于它们实现的,自然就会得到这个效果。用得得当的话,这是
+一个很好的效率机制,但如果这块存储正被别的东西指着,就可能很
+危险。不要把你用过的所有存储都攥在手里不放,否则程序很可能会
+变得太大。这项技术带来的好处超过了它的复杂性。这里我们暂时先
+不管这些问题。
+
+如果去看 {\bf add} 体,我们会找到实现 {\tt dispose!} 函数的
+代码,它长这样:
+
+\begin{small}
+\begin{verbatim}
+   dispose!(ignore: %): () == {}
+\end{verbatim}
+\end{small}
+
+也就是说,它接受一个 {\tt \%}(此处是一个 {\bf Term})作为实参,
+不返回任何结果。
+
+\subsection{{\tt \<\<} —— 打印这个 Type}
+
+前面我们构造了一个 term 的实例,它长这样:
+
+\begin{small}
+\begin{verbatim}
+  new(10, char "x") 
+\end{verbatim}
+\end{small}
+
+现在我们来走一遍打印这个 term 的步骤。要打印这个 term,我们会
+这样调用:
+
+\begin{small}
+\begin{verbatim}
+  print \<\< new(10, char "x")
+\end{verbatim}
+\end{small}
+
+打印是用``{\bf \<\<}''来完成的,和 C++ 的惯例类似。这个函数的
+签名对 {\tt Record}、{\tt SingleInteger} 和 {\bf Character}(也就是
+我们表示里用到的类型)都已经定义好了。但是,对我们这个类型
+{\bf Term} 的实例,它还{\em 没有\/}定义。``{\bf \<\<}''函数把一个
+{\bf TextWriter} 作为它的左实参(``{\bf \<\<}''是中缀的),把一个
+{\bf Term} 的实例作为右实参,返回一个 {\bf TextWriter} 的实例作为
+结果。上面调用里的符号 {\tt print} 就是一个 {\bf TextWriter}。
+
+所以我们的签名是:
+
+\begin{small}
+\begin{verbatim}
+ \<\<: (TextWriter, %) -> TextWriter;
+\end{verbatim}
+\end{small}
+
+(注意这个 {\tt \%}。它是``the current domain''(当前这个
+domain)的简写。这里我们说的是 domain {\bf Term},所以 {\tt \%}
+就表示 {\bf Term},和 C++ 里 {\tt this} 的用法类似。不过,你会在
+Axiom 代码里反复看到这个符号,它的含义取决于你正在定义的是哪个
+domain。搞清楚你说的到底是{\em 哪个\/} {\tt \%} 很{\em 重要}。
+一定要小心这个符号的含义。)
+
+如果去 {\bf add} 体里找实现,我们会看到:
+
+\begin{small}
+\begin{verbatim}
+  (port: TextWriter) \<\< (term1: %): TextWriter == {
+           port \<\< rep(term1).coef;
+           port \<\< "*";
+           port \<\< rep(term1).var
+   }
+\end{verbatim}
+\end{small}
+
+这是说我们有一个函数``{\bf \<\<}'',接受一个 {\bf TextWriter}
+和一个 {\tt \%}(此处是一个 {\bf Term}),返回一个 {\bf TextWriter}。
+
+\subsubsection{第二行}
+
+一开始,我们手上有一个想要打印的 {\bf Term}(存在名为
+{\bf term1} 的变量里)。首先我们用这个形式:
+
+\begin{small}
+\begin{verbatim}
+  rep(term1)
+\end{verbatim}
+\end{small}
+
+把变量 {\bf term1} 视作我们的 {\tt Rep}(此处是一个
+{\bf Record})。然后我们伸进这个 record,用下面这个方式取得
+{\bf coef} 信息:
+
+\begin{small}
+\begin{verbatim}
+  rep(term1).coef
+\end{verbatim}
+\end{small}
+
+这是一个 {\bf SingleInteger}(因为我们说过要往 {\bf Record} 里
+放的就是这个)。现在我们调用一个函数来打印这个 {\bf SingleInteger}:
+
+\begin{small}
+\begin{verbatim}
+  port \<\< rep(term1).coef;
+\end{verbatim}
+\end{small}
+
+这里用的是来自 {\bf SingleInteger} 的``{\bf \<\<}''函数,它的
+签名是:
+
+\begin{small}
+\begin{verbatim}
+  \<\<: (TextWriter, SingleInteger) -> TextWriter
+\end{verbatim}
+\end{small}
+
+经过这一切,程序的第一行会打印出:
+
+\begin{small}
+\begin{verbatim}
+  10
+\end{verbatim}
+\end{small}
+
+\subsubsection{第三行}
+
+程序的第三行调用了
+
+\begin{small}
+\begin{verbatim}
+ \<\<: (TextWriter, String) -> TextWriter
+\end{verbatim}
+\end{small}
+
+并打印出一个 {\tt *} 字符串。这时打印出来的这一行看起来是这样:
+
+\begin{small}
+\begin{verbatim}
+ 10*
+\end{verbatim}
+\end{small}
+
+\subsubsection{第四行}
+
+我们再次需要用到
+
+\begin{small}
+\begin{verbatim}
+  rep(term1)
+\end{verbatim}
+\end{small}
+
+把 term1 变量视作我们的 {\tt Rep}(此处是一个 {\bf Record})。
+然后我们伸进这个 record,用下面这个方式取得 var 信息:
+
+\begin{small}
+\begin{verbatim}
+  rep(term1).var
+\end{verbatim}
+\end{small}
+
+这是一个 {\bf Character}(因为我们说过要往 {\bf Record} 里放的
+就是这个)。现在我们调用一个函数来打印这个 {\bf Character}:
+
+\begin{small}
+\begin{verbatim}
+  port \<\< rep(term1).var;
+\end{verbatim}
+\end{small}
+
+这里用的是来自 {\bf Character} 的``{\bf \<\<}''函数,它的签名是:
+
+\begin{small}
+\begin{verbatim}
+  \<\<: (TextWriter, Character) -> TextWriter
+\end{verbatim}
+\end{small}
+
+经过这一切,这一行现在看起来是这样:
+
+\begin{small}
+\begin{verbatim}
+  10*x
+\end{verbatim}
+\end{small}
+
+注意,我们在打印例程里{\em 没有\/}放换行符。polynomial 这个
+domain 会打印许多个 term,它们需要串在同一行上,所以我们把行的
+格式问题留给别人操心,自己只专注于一个 term 在一行里应该长什么样。
+
+在本教程后面,我们还会有更多关于``{\bf \<\<}''与打印的内容要
+讲。眼下,只需要知道:只要把上面这个签名加进导出列表、再往我们的
+``{\bf add} 体''里加一个``{\bf \<\<}''函数,我们就能控制 {\bf Term}
+的打印方式。
+
+\subsection{名字重载}
+
+呼!这个解释起来比写代码要费劲。不过,我们用了好几个不同的
+``{\bf \<\<}''函数,它们都用同一个名字。这就叫{\em 名字重载}。
+在一门不支持名字重载的语言里,我们就得给这些函数起不同的名字,
+比如:
+
+\begin{small}
+\begin{verbatim}
+  printTerm
+  printSingleInteger
+  printCharacter
+  printString
+\end{verbatim}
+\end{small}
+
+我们在这里{\em 也可以\/}这样做,但用一个单一的函数名来对应
+我们想做的事情,而不是对应我们想打印的类型,要自然得多。
+
+大多数计算机编程语言只允许你对{\em 极}少数几个名字这样做,或者
+已经预定义了一些重载操作,但不允许你添加新的重载操作。举例来说,
+通常你可以这样写:
+
+\begin{tabular}{llll}
+ \    & y=3*4     & 用的是 & {\bf *:(Integer,Integer) -> Integer;} \\
+ 而  & y=3.0*4.0 & 用的是 & {\bf *:(Float, Float)     -> Float;}   \\
+ 而  & y=3*4.0   & 用的是 & {\bf *:(Integer, Float)   -> Float;}
+\end{tabular}
+
+但在其他语言里,你没法重载大多数其他的函数名。
+
+\subsection{访问这个表示}
+
+既然我们有一个含有 {\tt coef} 和 {\tt var} 两个字段的 record,
+我们希望外界能够在不破坏封装的前提下,看到并访问这两个字段。用户
+不需要知道 {\bf Term} 是用 {\bf Record} 实现的,只需要知道它有
+两个部分。访问器需要伸进某个具体的 {\bf Term} 内部,所以每个访问器
+都以一个 {\bf Term} 作为实参,返回相应的部分作为结果。
+
+\begin{small}
+\begin{verbatim}
+  coef: Term -> SingleInteger;
+  var:  Term -> Character;
+\end{verbatim}
+\end{small}
+
+在``{\bf add} 体''里,我们能找到这些实现:
+
+\begin{small}
+\begin{verbatim}
+  coef(term1: %): SingleInteger == rep(term1).coef;
+\end{verbatim}
+\end{small}
+
+也就是说,{\tt coef} 接受一个 {\bf Term}(verb"term1"),把它
+当作一个 {\bf Record},伸进这个 record 取得 {\bf coef} 字段
+(是一个 {\bf SingleInteger})并返回它;
+
+\begin{small}
+\begin{verbatim}
+  var(term1: %): Character == rep(term1).var;
+\end{verbatim}
+\end{small}
+
+{\tt var} 接受一个 {\bf Term}({\bf term1}),把它当作一个
+{\bf Record},伸进这个 record 取得 {\bf var} 字段(是一个
+{\bf Character})并返回它。
+
+\subsection{关于测试的几句话}
+
+每一个导出的函数都应该被测试。你会注意到,在接下来的例子里,
+我们会尽量为每个导出函数找出边界情形。把测试用例留在原始源文件
+里以备后用,是个合理的做法。对源文件的改动,可以通过取消注释
+测试用例来轻松测试。这些被注释掉的测试用例,对需要知道各个函数
+该怎么用的终端用户来说,也是有用的文档。添加测试用例、并把它们
+注释掉的最简单办法,就是用编译器指令把它们包起来:
+
+\begin{small}
+\begin{verbatim}
+#if TEST
+        testcase1
+        testcase2
+        ...
+#endif
+\end{verbatim}
+\end{small}
+
+如果你在编译文件时加上编译器开关 {\bf -DTEST},就会把所有测试
+用例都编译进去。运行这个文件就会运行这些测试用例。编译器指令
+({\tt \#if} .. {\tt \#endif})之间的所有内容都会被编译。
+
+如果编译文件时不加这个开关,就会在不含测试用例的情况下编译
+这个文件。运行这个文件就不会运行这些测试。编译器指令之间的所有
+内容都会被当作注释。
+
+\subsection{完整代码}
+
+\label{FirstTermRepListing}
+
+\begin{small}
+\begin{verbatim}
+#include "axllib"
+
+Term: with {
+        new: (SingleInteger, Character) -> %;
+        dispose!: % -> ();
+        \<\<: (TextWriter, %) -> TextWriter;
+        coef: % -> SingleInteger;
+        var:  % -> Character;
+ }
+== add {
+        Rep == Record(coef: SingleInteger, var: Character);
+        import from Rep;
+
+        new(number: SingleInteger, variable: Character): % == 
+                 per([number, variable]);
+
+        dispose!(ignore: %):() == {}
+
+        (port: TextWriter) \<\< (term1: %): TextWriter == {
+                port \<\< rep(term1).coef;
+                port \<\< "*";
+                port \<\< rep(term1).var
+        }
+
+        coef(term: %): SingleInteger == rep(term).coef;
+
+        var(term: %): Character == rep(term).var;
+ }
+
+import from SingleInteger;
+import from Character;
+import from Term;
+term1 := new(3, char "x");
+print \<\< term1 \<\< newline;
+print \<\< coef term1 \<\< newline;
+print \<\< var term1 \<\< newline;
+dispose! term1;
+
+\end{verbatim}
+\end{small}
+
+\section{一个新的 Type:Polynomial}
+
+{\bf 本节的完整代码列在第
+\pageref{PolynomialListing} 页。}
+
+\subsection{决定一种表示}
+
+我们打算构造我们的第一个 polynomial。它将由若干个 {\bf Term}
+相加组成(这里我们暂时不考虑各 term 的符号)。由于 polynomial
+包含的 term 数目是可变的,我们需要给每个 term 标出各自的幂次。
+我们可以用两种方式来做这件事……
+
+每个 term 都可以显式带上一个幂次。这叫做稀疏表示,因为一个
+polynomial 里的所有 term 不一定都要出现。在稀疏表示里,我们不需要
+保留系数为零的 term。
+
+另一种做法是用每个 term 在数据结构里的位置来表示它,位置就是
+这个 term 的幂次。这叫做稠密表示。稠密表示需要在表示的每一个位置
+上都放一个 term,即便这个 term 是零。
+
+一般来说,稀疏表示存储代价更低,但操作起来更麻烦。由于这是一份
+教程,我们会用稠密表示。这样存储 $x^{1000}$ 的代价肯定会很高——
+但应该能简化代码。
+
+这个表示会是一个足够长、能容纳所有 term 的 {\bf Array}。数组
+元素 1 存放常数项,数组元素 2 存放 $x^1$ 次幂的项,依此类推。这个
+数组会比 polynomial 里的最高次幂多一位。
+
+所以我们需要下面这几行:
+
+\begin{small}
+\begin{verbatim}
+  Rep == Array Term;
+  import from Rep;
+\end{verbatim}
+\end{small}
+
+\subsection{类型塔 —— \\ 再仔细看看 Term}
+
+另一个重要的事实是,我们选择了 {\bf Array(Term)} 作为我们的
+表示。这就假定了 {\bf Type} 构造子 {\tt Array} 会接受 {\bf Term}
+作为它可以用作数组元素的一种类型。但是,当我们去看 {\bf Array}
+的定义时(在你的 Axiom {\bf samples/libaxllib} 目录下的
+{\bf array.as} 里——参见 \ref{asugManifest}),我们会看到下面这个
+domain 定义:
+
+\begin{small}
+\begin{verbatim}
+  Array(S: BasicType): ExtensibleArrayCategory S
+\end{verbatim}
+\end{small}
+
+这个定义告诉我们,{\bf Array} 的实参必须是 {\bf BasicType} 类型
+的。用这个 {\bf Array} 的定义,我们没法构造出那些不满足
+{\bf BasicType} 定义的东西的数组。如果我们硬要这么做,编译器会看到
+这个定义:
+
+\begin{small}
+\begin{verbatim}
+  Array Term
+\end{verbatim}
+\end{small}
+
+然后抱怨说 {\bf Term} 不是``{\bf BasicType}''这个 {\bf Type}。
+
+所以我们必须修改 {\bf Term} 的 domain 头部,声明 {\bf Term} 是
+一个 {\bf BasicType}。我们原来的 domain 头部是这样写的:
+
+\begin{small}
+\begin{verbatim}
+  Term: with {
+\end{verbatim}
+\end{small}
+
+我们把它改成:
+
+\begin{small}
+\begin{verbatim}
+  Term: BasicType with {
+\end{verbatim}
+\end{small}
+
+这是说 {\bf Term} 是一个带有若干附加函数的 {\bf BasicType}。
+现在我们再试着编译,编译器会说:
+
+\begin{small}%
+\begin{verbatim}
+  Term is missing the following exports:
+        =: (%, %) -> Boolean;   ++ Equality test.
+        sample: %;              ++ Example element.
+\end{verbatim}
+\end{small}
+
+哦,麻烦了。编译器没法接受 {\bf Term} 是一个 {\bf BasicType},
+因为 {\bf Term} 并{\em 没有\/}提供所有必需的函数。
+
+要构建像 {\bf Array(Term)} 这样的数据结构(在 Axiom 里我们把
+这叫做{\em 类型塔}),塔里的每一个 {\bf Type} 都必须提供塔里下一层
+所期望的全部函数。为什么呢?因为 {\bf Array} 需要能够判断两个
+元素是否相等。任何 {\bf BasicType} 都{\em 必须\/}有一个 {\tt =}
+函数,这样 Array 就知道有办法在完全不了解某个数组元素内情的情况下,
+判断两个数组元素是否相等。它只需要取出这两个数组元素,调用它们
+{\bf Type} 里的 {\bf equal} 就行。
+
+而我们目前定义的 {\bf Term},还{\em 没有\/}实现 {\tt =} 函数。
+
+\subsection{BasicType}
+
+我们花点时间看看 {\bf BasicType}(在你的 Axiom \linebreak
+{\bf samples/libaxllib} 目录下的
+{\bf axlcat.as} 里——参见
+\ref{asugManifest})。{\bf BasicType} 的定义如下:
+
+\begin{small}
+\begin{verbatim}
+define BasicType: Category == with {
+        =:      (%, %) -> Boolean;              ++ Equality test.
+        ~=:     (%, %) -> Boolean;              ++ Inequality test.
+        \<\<:     (TextWriter, %) -> TextWriter;  ++ Basic output.
+        \<\<:     % -> TextWriter -> TextWriter;  ++ Basic output.
+        sample: %;                              ++ Example element.
+        hash:   % -> SingleInteger;             ++ Hashing function.
+
+        default (x: %) ~= (y: %): Boolean == not (x = y);
+        default hash(x: %): SingleInteger == (0$Machine)::SingleInteger;
+        default (\<\<)(x: %)(p: TextWriter): TextWriter == p \<\< x;
+}
+\end{verbatim}
+\end{small}
+
+{\bf BasicType} 是一种叫做 {\bf Category}(或者说元类)的类型。
+要成为一个 {\bf BasicType},就{\em 必须\/}实现导出列表里的那些
+函数。{\bf Term} 没有实现下面这些函数:{\tt =}、{\tt \~{}=}、
+``{\bf \<\<}''、{\tt sample} 和 {\tt hash}。没有这些,我们就不能
+把 {\bf Term} 当作一个 {\bf BasicType}。
+
+仔细看看这个定义。最下面有三个函数被标记为 {\tt default}。这是
+说,如果这个 domain(此处是 {\bf Term}){\em 没有\/}实现这些函数,
+就会用 {\bf Category} 给出的缺省定义。所以,我们不需要实现函数
+{\tt \~{}=}、{\tt hash} 和``{\bf \<\<}。''(嗯,差不多是这样……)
+
+还要注意,``{\bf \<\<}''有{\em 两个\/}定义,它们的签名不同。
+这就是说存在两个同名但不同的函数。这不是问题——事实上,这正是
+一个特性。只有当名字、每个实参的类型{\em 以及\/}结果的类型都
+相同时,Axiom 才会认为某次函数调用与某个函数定义相匹配。所以,
+即便我们有两个同名的函数,也很清楚它们签名的其余部分是不同的,
+因此它们是不同的函数。
+
+\subsection{在 Term 里实现相等性(=)}
+
+归根结底,我们需要做好几件事:需要为 domain {\bf Term} 实现
+{\tt =} 函数;需要定义 {\tt sample};需要从 {\bf Term} 导出这两个
+函数;还需要声明 {\bf Term} 现在满足了 {\bf BasicType} 的契约。
+
+我们一件一件来做。我们需要为函数 {\tt =} 导出的签名是这样的:
+
+\begin{small}
+\begin{verbatim}
+  =: (%, %) -> Boolean;
+\end{verbatim}
+\end{small}
+
+我们需要能够比较两个 {\bf Term} 对象,判断它们是否相等。这里,
+一个可行的定义可以是:两个 {\bf Term} 对象相等,当且仅当它们的
+系数相等且变量相等。注意,我们用的是构建 {\bf Term} 时所用类型
+自带的相等性定义。这是组合与构造 domain 的一条重要规则。
+
+这个函数的实现需要放进 {\bf Term} 的 {\bf add} 体里:
+
+\begin{small}
+\begin{verbatim}
+  (term1: %) = (term2: %): Boolean == {
+          coef term1 ~= coef term2 => false;
+          var  term1 ~= var term2  => false;
+          true
+  }
+\end{verbatim}
+\end{small}
+
+这是说我们有一个中缀函数 {\tt =},接受两个实参:{\bf Type} 为
+{\tt \%}(此处是 {\bf Term})的 {\tt term1},以及 {\bf Type} 为
+{\tt \%}(此处是 {\bf Term})的 {\tt term2},返回一个
+{\bf Boolean}。% We implement it as follows:
+
+第二行调用了签名如下的函数:
+
+\begin{small}
+\begin{verbatim}
+  ~=: (SingleInteger, SingleInteger) -> Boolean
+\end{verbatim}
+\end{small}
+
+因为 {\tt coef(term1)} 和 {\tt coef(term2)} 都返回
+{\tt SingleInteger},而``{\bf =>}''左边需要一个 {\bf Boolean}
+结果。如果它们{\em 不\/}相等,那么这两个 term 就不可能相等,
+于是我们返回 {\bf false}。
+
+第三行是调用签名如下的函数:
+
+\begin{small}
+\begin{verbatim}
+  ~=: (Character, Character) -> Boolean
+\end{verbatim}
+\end{small}
+
+因为 {\tt var(term1)} 和 {\tt var(term2)} 都返回 {\bf Character},
+而``{\bf =>}''左边需要一个 {\bf Boolean} 结果。如果它们{\em
+不\/}相等,那么这两个 term 就不可能相等,于是我们返回 {\bf false}。
+
+第四行(如果我们能走到这一步)是说我们已经通过了所有测试,
+所以这两个 term 必定相等,于是我们返回 {\bf true}。
+
+\subsection{在 Term 里实现 sample}
+
+我们需要实现的第二个签名是:
+
+\begin{small}
+\begin{verbatim}
+  sample: %;
+\end{verbatim}
+\end{small}
+
+也就是说,我们需要返回这个 domain 的一个样本元素。一个相当
+无害的样本元素,可以是系数为 0 的那个,因为它永远不会出现在打印出
+的表示里。或者,我们也可以返回系数为 1、变量为 {\tt x} 的元素。
+一般来说,样本元素应该是(在某种意义上)最容易计算出来的那个,
+因为这个 domain 的用户不能依赖样本具有诸如``为一''或``为空''这样
+的特殊性质。眼下,我们就返回 0 元素好了。既然变量是什么无所谓,
+我们就用 {\tt x}。
+
+\subsection{满足这个契约}
+
+下一步本该是把这两个签名都加进 {\bf Term} 的导出列表——但事实
+证明我们不需要这么做。仔细看看 {\bf BasicType} 里 {\tt =} 和
+{\tt sample} 的定义,这两个签名是这样写的:
+
+\begin{small}
+\begin{verbatim}
+  =: (%, %) -> Boolean;
+  sample: %;
+\end{verbatim}
+\end{small}
+
+注意它们用的是 {\tt \%},而不是 {\bf BasicType}。记住,
+{\tt \%} 表示``the current domain''(当前这个 domain)。所以,
+{\bf BasicType} 导出的签名,一旦用在 {\bf Term} 里,就自动对
+{\bf Term} 有效。我们只需要实现这些函数。最后,既然我们已经满足了
+作为 {\bf BasicType} 的契约,我们就声明自己是一个 {\bf BasicType}。
+这样一来,{\bf Array(Term)} 就可以被构造出来了。
+
+{\bf Term} 这个 domain 新的定义行和导出列表长这样:
+
+\begin{small}
+\begin{verbatim}
+  Term: BasicType with {
+          new: (SingleInteger, Character) -> %;
+          dispose!: % -> ();
+          \<\<: (TextWriter, %) -> TextWriter;
+          coef: % -> SingleInteger;
+          var:  % -> Character;
+   }
+\end{verbatim}
+\end{small}
+
+但除此之外,我们还得到了 {\bf BasicType} 导出的所有签名,所以
+{\em 真正\/}的导出列表,是 {\bf BasicType} {\em 加上\/} {\bf Term}
+两边导出的总和(也就是说,我们可以对 {\bf Term} 调用下面这些
+函数,即便看起来它们不是从 {\bf Term} 导出的):
+
+\begin{small}
+\begin{verbatim}
+        =:      (%, %) -> Boolean;              ++ Equality test.
+        ~=:     (%, %) -> Boolean;              ++ Inequality test.
+        \<\<:     (TextWriter, %) -> TextWriter;  ++ Basic output.
+        \<\<:     % -> TextWriter -> TextWriter;  ++ Basic output.
+        sample: %;                              ++ Example element.
+        hash:   % -> SingleInteger;             ++ Hashing function.
+        new:    (SingleInteger, Character) -> %;
+        dispose!: % -> ();
+        \<\<:     (TextWriter, %) -> TextWriter;
+        coef:   % -> SingleInteger;
+        var:    % -> Character;
+\end{verbatim}
+\end{small}
+
+注意,我们还从 {\bf BasicType} 那里白得了 {\tt \~{}=}、
+{\tt hash} 和``{\bf \<\<}''的实现。我们可以选择提供自己的定义,
+这会覆盖掉缺省定义,但眼下我们不需要这么做。也就是说,我们可以
+这样写:
+
+\begin{small}
+\begin{verbatim}
+  new(10, char "x") ~= new(10, char "x")
+\end{verbatim}
+\end{small}
+
+(按我们的定义,这个结果是 false)但我们{\em 不\/}需要在
+{\bf Term} 的 {\bf add} 体里实现这个函数。它是从 {\bf BasicType}
+的缺省定义那里{\em 继承\/}来的。这就是为什么我们写
+
+\begin{small}
+\begin{verbatim}
+  Term: BasicType with {
+\end{verbatim}
+\end{small}
+
+我们这是在说,我们想要 {\bf BasicType} 的全部签名,{\em
+并且\/}我们会提供成为一个 {\bf BasicType} 所需要的任何实现。
+
+这种对导出列表的类型检查,是 Axiom 语言的一项基本特性。既然
+{\bf Term} 是一个 {\bf BasicType},我们就知道它会具备某些特性,
+并且可以依赖这个事实。具体来说,我们知道可以比较任意两个
+{\bf Term} 是否相等(因为 {\bf Term} 是一个 {\bf BasicType},而
+所有 {\bf BasicType} 都有相等性的定义)。
+
+\subsection{Polynomial —— 定义}
+
+和往常一样,我们需要一个 domain 的最基本函数:
+
+\begin{description}
+\item[new]       用来构造这个 domain 的一个新实例,
+\item[dispose!]   用来销毁一个实例,
+\item[{\tt \<\<}]        用来打印一个实例,
+\item[{\em accessors}] 用来访问一个实例的各个部分。
+\end{description}
+
+{\tt new} 函数接受一个类型为 {\bf Term} 的列表,返回一个
+{\bf Polynomial} 的实例。签名是:
+
+\begin{small}
+\begin{verbatim}
+  new: List(Term) -> %;
+\end{verbatim}
+\end{small}
+
+\vbox{
+注意,这个签名里的 {\tt \%} 指的是当前这个 domain,也就是
+\linebreak {\bf Polynomial},而不是我们前面用的 domain
+{\bf Term}。在一个 domain 定义内部,它指的永远是当前这个 domain。
+
+眼下,{\tt dispose!} 函数不做任何有意思的事情,什么都不返回。
+
+\begin{small}
+\begin{verbatim}
+  dispose!: % -> ();
+\end{verbatim}
+\end{small}
+
+``{\bf \<\<}''函数的签名和 {\bf Term} 这个 domain 里的
+``{\bf \<\<}''函数一样,只是这里的 {\tt \%} 指的是
+{\bf Polynomial}:
+
+\begin{small}
+\begin{verbatim}
+  \<\<: (TextWriter, %) -> TextWriter;
+\end{verbatim}
+\end{small}
+
+\subsection{打印 —— 一段插曲}
+
+打印多项式是一个略有意思的问题。我们来一步一步地开发``{\bf \<\<}''这个函数。
+
+我们需要更好地理解``{\bf \<\<}''函数的要求。标准的函数头是:
+
+\begin{small}
+\begin{verbatim}
+   (stream: TextWriter) \<\< (poly: %): TextWriter 
+\end{verbatim}
+\end{small}
+
+这表示我们期望左边的实参是一个 {\tt stream}(``{\bf \<\<}''算子是中缀的),右边的对象是一个 {\tt poly}。在函数体内部,打印是通过引用
+{\bf stream} 来完成的:
+
+\begin{small}
+\begin{verbatim}
+   stream \<\< poly \<\< newline;
+\end{verbatim}
+\end{small}
+
+这会把 {\bf poly} 打印到 {\bf stream} 上,后面跟一个换行。通常的做法是把 {\bf stream} 作为``{\bf \<\<}''函数体的最后一件事返回。
+
+第一版的做法是只把多项式的每一项(除了最后一项)打印出来,后面
+跟一个 {\tt +} 号,像这样:
+
+\begin{small}
+\begin{verbatim}
+  (stream: TextWriter) \<\< (poly: %): TextWriter == {
+          size: SingleInteger := #(rep(poly));
+          for i in 1..(size-1) repeat 
+                  stream \<\< poly.i \<\< "^" \<\< (size - i) \<\< " + ";
+          stream \<\< poly.size
+  }
+\end{verbatim}
+\end{small}
+
+这样做出来,我们的多项式看起来会是这样:
+
+\begin{small}
+\begin{verbatim}
+  3*x^2 + 2*x^1 + 1*x^0
+\end{verbatim}
+\end{small}
+
+这样是对的,但有点丑。
+}
+
+首先我们简化零次项的打印。因为任何数的零次方都是 1,所以那一项
+应该打印成 {\bf 1}。我们需要做的改动是只打印最后一项的 {\bf coef}。
+因为 {\tt poly.size} 的类型是 {\bf Term},我们可以直接用 {\bf Term}
+的函数 {\tt coef}:
+
+\begin{small}
+\begin{verbatim}
+  (stream: TextWriter) \<\< (poly: %): TextWriter == {
+          size: SingleInteger := #(rep(poly));
+          for i in 1..(size-1) repeat
+                  stream \<\< poly.i \<\< "^" \<\< (size - i) \<\< " + ";
+          stream \<\< coef(poly.size)
+  }
+\end{verbatim}
+\end{small}
+
+接下来我们注意到 {\bf $x^1$} 这种记法是不必要的,所以我们改变
+下标,把这一项打印成 {\tt x}:
+
+\begin{small}
+\begin{verbatim}
+  (stream: TextWriter) \<\< (poly: %): TextWriter == {
+          size: SingleInteger := #(rep(poly));
+          for i in 1..(size-2) repeat 
+                  stream \<\< poly.i \<\< "^" \<\< (size-i) \<\< " + ";
+          stream \<\< poly.(size-1) \<\< " + "
+          stream \<\< coef(poly.size)
+  }
+\end{verbatim}
+\end{small}
+
+第三个改动是,我们不希望打印形如 {\bf $0*x^n$} 的项。也就是说,
+如果一项的 {\bf coef} 是零,我们希望跳过它的打印。我们可以通过
+询问 {\bf coef} 来深入这一项内部,但还有另一种做法。``某一项是不是
+零''对任何 {\bf Term} 类型的对象而言都是一个有意思的问题,所以我们
+会改动 {\bf Term},让它导出一个 zero? 函数。这是一个很小的改动,
+但却是更好的编程选择。于是,下面这条签名被加入了 {\bf Term}:
+
+\begin{small}
+\begin{verbatim}
+  zero? % -> Boolean;
+\end{verbatim}
+\end{small}
+
+现在我们就可以在 {\bf Polynomial} 对``{\bf \<\<}''的实现里这样用它了:
+
+\begin{small}
+\begin{verbatim}
+  (stream: TextWriter) \<\< (poly: %): TextWriter == {
+          size: SingleInteger := #(rep(poly));
+
+          for i in 1..(size-2) repeat 
+                if not zero?(poly.i) then 
+                        stream \<\< poly.i \<\< "^" \<\< (size - i) \<\< " + ";
+
+          if not zero?(poly.(size-1)) then 
+                stream \<\< poly.(size-1) \<\< " + ";
+          if zero?(poly.size) then
+                stream \<\< 0
+          else
+                stream \<\< coef(poly.size)
+  }
+\end{verbatim}
+\end{small}
+
+这样一来就会跳过打印系数为零的项。不过,它对 {\bf $x^0$} 项的
+处理是个不太好的技巧。问题在于,我们在除最后一项之外的每一项后面
+都打印了一个 {\tt +} 号。如果我们决定{\em 不\/}打印最后一项(因为它
+是零)会怎样?如果我们什么都不打印,就会留下一个悬空的 {\tt +} 号。
+所以,我们耍了个小聪明,打印一个 0。
+
+我们可以做得更好。问题出在程序设计上。它在还不知道后面是否还有
+项的情况下就打印了一个 {\tt +}。它需要检查{\em 所有}后续的项是否
+非零,才能决定是否打印 {\tt +}。这是可以做到的,但效率不高。更好
+的技巧是:每打印一项(当然第一项除外)就打印一个前缀 {\tt +}。
+于是又有了下面这个新版本:
+
+\begin{small}
+\begin{verbatim}
+  (stream: TextWriter) \<\< (poly: %): TextWriter == {
+          size: SingleInteger := #(rep(poly));
+          prefix: String := "";
+          for i in 1..(size-2) repeat
+                if not zero?(poly.i) then {
+                        stream \<\< prefix \<\< poly.i \<\< "^" \<\< (size - i);
+                        prefix := " + "
+                }
+          if not zero?(poly.(size-1)) then {
+                  stream \<\< prefix \<\< poly.(size-1);
+                  prefix := " + "
+          }
+          if not zero?(poly.size) then 
+                  stream \<\< prefix \<\< coef(poly.size);
+         stream
+  }
+\end{verbatim}
+\end{small}
+
+现在又出现了一个新问题……(这些问题都逃不出那条普遍规律:
+``天下没有简单的活儿'')……如果整个多项式的系数全都是零,会怎样?
+上面给出的代码什么都不会打印,但其实应该打印一个 {\tt 0}。如果
+我们用一个多项式减去它自己,就会出现这种情况。结果的每一项都会
+是零,整份项列表也就全是零。
+
+我们可以用好几种方式来打这个补丁。简单的修法是:检查打印结束时
+前缀字符串是否仍然是空的。如果是这样,并且最后一项也是零,那就
+说明我们什么都没打印,于是可以打印一个 {\tt 0}。简单,但难看。
+之所以难看,是因为这个函数``知道''零多项式长什么样。没错,这确实
+是多项式实现的一部分,但没有理由把这种表示如此深地硬编码进程序
+的逻辑里。而且,想知道``这是不是零多项式''的也不止我们一个,所以
+我们应该采用和 {\bf Term} 一样的做法,导出一个 {\tt zero?} 函数。
+签名是这样的:
+
+\begin{small}
+\begin{verbatim}
+  zero?: % -> Boolean;
+\end{verbatim}
+\end{small}
+
+(再次注意,我们这里的签名和 {\bf Term} 里的 {\tt zero?} 一样,只是
+{\tt \%} 现在指的是 {\bf Polynomial}。清楚知道 {\tt \%} 在任何给定
+时刻指代什么,是至关重要的。事实上,编译器也把大量时间花在了判定
+同样这个哲学问题上。)
+
+哦,顺便一提,我们还有另一个设计决定要做(还记得那条普遍规律吧)。
+我们的多项式表示允许零多项式有{\em 很多}种表示。任何系数全为零的
+项列表都是一个零多项式。我们可以写一个函数来检查这种情况,但更好
+的办法是为零确定一种单一的表示。这在文献里被称为规范表示
+(canonical representation)。如果我们强制规定``没有多项式的最高
+次项系数为零''这条规则,就能得到这样一种表示。如果生成出来的多项式
+最高次项系数为零,我们就缩短这个多项式的表示,直到这一情况不再
+成立为止。按照这条规则,零多项式就被表示成一个长度为 0 的列表。
+
+规范表示对于判定相等性、是否等价于零这类问题都很重要。围绕这个
+问题、以及稀疏表示与稠密表示之类问题所做的决定,是从根本上区分
+不同计算机代数系统的地方。这里有很多取舍,但没有唯一正确的解法。
+
+所以,我们在打印一开始就加上 {\tt zero? poly} 这个测试:
+
+\begin{small}
+\begin{verbatim}
+  (stream: TextWriter) \<\< (poly: %): TextWriter == {
+          zero? poly => stream \<\< 0;
+
+          size: SingleInteger := #(rep(poly));
+          prefix: String := "";
+
+          for i in 1..(size-2) repeat
+                  if not zero?(poly.i) then {
+                         stream \<\< prefix \<\< poly.i \<\< "^" \<\< (size-i);
+                         prefix := " + "
+                  }
+          if not zero?(poly.(size-1)) then {
+                  stream \<\< prefix \<\< poly.(size-1);
+                  prefix := " + "
+          }
+          if not zero?(poly.size) then 
+                  stream \<\< prefix \<\< coef(poly.size);
+          stream
+  }
+\end{verbatim}
+\end{small}
+
+还有一个问题。我们打印出的是 {\tt 1*x}。正常的数学记法会省去这个
+{\tt 1},只打印 {\tt x}。修正这个问题最好的地方是在 {\bf Term} 里。
+打印一个 {\bf coef} 为 {\bf 1} 的项时,应该只打印变量。
+
+顺便再说一个问题。如果一项的系数是负的,会怎样?我们打印出来的
+会是这样:
+
+\begin{small}
+\begin{verbatim}
+  -3*x^2 + -2*x + -1
+\end{verbatim}
+\end{small}
+
+这样打印当然是对的,但真的很丑。我们再改一版来修正它。我们需要
+能够对一项取负,这样才能翻转负项的符号。所以我们加上这条签名:
+
+\begin{small}
+\begin{verbatim}
+  -: % -> %;
+\end{verbatim}
+\end{small}
+
+加到 {\bf Term} 里。这是一元取负。我们还需要能判断一项是正是负的
+谓词:
+
+\begin{small}
+\begin{verbatim}
+  positive? % -> Boolean;
+  negative? % -> Boolean;
+\end{verbatim}
+\end{small}
+
+既然都做到这一步了,不妨把项的加法和减法也一并加上,因为后面在
+多项式的加减法里会用到它们。以下签名需要加进 {\bf Term} 的导出
+列表:
+
+\begin{small}
+\begin{verbatim}
+  -:(%,%) -> %;
+  +:(%,%) -> %;
+\end{verbatim}
+\end{small}
+
+现在回到打印带负项的多项式这件事上来。我们来写两个局部函数:
+{\bf prefix},接受一项、返回正确的前缀字符串;以及 {\bf abs},接受
+一项、返回一个符号为正的项。局部函数位于代码的实现部分,但它们的
+签名{\em 不\/}出现在导出列表里。因为 {\bf prefix} 和 {\bf abs} 不在
+{\bf Polynomial} 的导出列表中,外界没有任何办法知道这两个函数的
+存在。它们被藏在 {\bf Polynomial} 这个盒子里。它们算不上特别通用
+或有趣,但能让代码(稍微)清楚一点。
+
+\begin{small}
+\begin{verbatim}
+  prefix(term: Term): String ==
+          if negative? term then " - " else " + ";
+
+  abs(term: Term): Term ==
+          if negative? term then -term else term;
+
+  (stream: TextWriter) \<\< (poly: %): TextWriter == {
+          zero? poly => stream \<\< 0;
+
+          size: SingleInteger := #(rep(poly));
+          prefix: String := if negative?(poly.1) then " - " else "";
+
+          for i in 1..(size-2) repeat
+                  if not zero?(poly.i) then {
+                          stream \<\< prefix \<\< abs(poly.i);
+                          stream \<\< "^" \<\< (size - i);
+                          prefix := prefix(poly.(i+1))
+                  }
+          if not zero?(poly.(size-1)) then {
+                  stream \<\< prefix \<\< abs(poly.(size-1));
+                  prefix := prefix(poly.size)
+          }
+          if not zero?(poly.size) then 
+                  stream \<\< prefix \<\< abs(coef(poly.size));
+          stream
+  }
+\end{verbatim}
+\end{small}
+
+牢记:天下没有简单的活儿。
+
+\subsection{Polynomial——打印之后}
+
+{\bf Polynomial} 的访问函数可以分成几种情况。我们希望能够访问
+多项式的首项,以及多项式的每一项。单独一项被称为一个
+{\em 单项式(monomial)}。
+
+\begin{small}
+\begin{verbatim}
+  leadingMonomial: % -> Term;
+  apply: (%, SingleInteger) -> Term;
+\end{verbatim}
+\end{small}
+
+注意,我们的多项式表示并不直接提供指数,所以使用者必须自己知道
+给定一项的指数应该是多少。一般来说,多项式的第 $i$ 项将是
+{\bf $x^i$}。不过,使用者需要知道这个多项式的最高指数(称为
+{\tt degree}):
+
+\begin{small}
+\begin{verbatim}
+  degree: % -> SingleInteger;
+\end{verbatim}
+\end{small}
+
+作为对 {\bf Polynomial} 类型的第一次尝试,这已经足够好了。下一个
+例子是这个类型的一份实现。
+
+\subsection{代码清单}
+\label{PolynomialListing}
+
+\begin{small}
+\begin{verbatim}
+
+#include "axllib"
+
+Term: BasicType with {
+        new: (SingleInteger, Character) -> %;
+        dispose!: % -> ();
+        \<\<: (TextWriter, %) -> TextWriter;
+        coef: % -> SingleInteger;
+        var:  % -> Character;
+        zero?: % -> Boolean;
+        positive?: % -> Boolean;
+        negative?: % -> Boolean;
+        -: % -> %;
+        -:(%,%) -> %;
+        +:(%,%) -> %;
+}
+== add {
+        Rep == Record(coef: SingleInteger, var: Character);
+        import from Rep;
+
+        new(number: SingleInteger, variable: Character): % == 
+                per [number, variable];
+
+        dispose!(ignore: %):() == {}
+
+        (stream: TextWriter) \<\< (term: %): TextWriter ==
+                if rep(term).coef = 1 then
+                         stream \<\< rep(term).var
+                else {
+                         stream \<\< rep(term).coef;
+                         stream \<\< "*" \<\< rep(term).var
+                }
+
+        coef(term: %): SingleInteger == rep(term).coef;
+
+        var(term: %): Character == rep(term).var;
+
+        (term1: %) = (term2: %): Boolean == {
+                coef term1 ~= coef term2 => false;
+                var  term1 ~= var term2  => false;
+                true
+        }
+
+        sample: % == per [0, char "x"];
+
+        zero?(term: %): Boolean     == coef(term) = 0;
+
+        positive?(term: %): Boolean == coef(term) > 0;
+
+        negative?(term: %): Boolean == coef(term) < 0;
+
+        -(term: %): % == per [-coef(term), var term];
+
+        (term1: %) - (term2: %): % == {
+                var term1 ~= var term2 => 
+                       error "Subtracting terms with incompatible vars";
+                per [coef(term1) - coef(term2), var term1]
+        }
+
+        (term1: %) + (term2: %): % == {
+                var term1 ~= var term2 => 
+                       error "Adding terms with incompatible vars";
+                per [coef(term1) + coef(term2), var term1]
+        }
+}
+
+Polynomial: with {
+        new: List(Term) -> %;
+        dispose!: % -> ();
+        \<\<: (TextWriter, %) -> TextWriter;
+        leadingMonomial: % -> Term;
+        apply: (%, SingleInteger) -> Term;
+        degree: % -> SingleInteger;
+        zero?: % -> Boolean;
+}
+== add {
+        import from List Term;
+        import from SingleInteger;
+        Rep == Array Term;
+        import from Rep;
+
+        new(terms: List Term): % == {
+
+                size: SingleInteger := #terms;
+                result: Rep := new(size, sample@Term);
+
+                for i in 1..size repeat
+                        result.i:=terms.i;
+
+                per result
+        }
+
+        dispose!(ignore: %):() == {}
+
+        prefix(term: Term): String == 
+                if negative? term then " - " else " + ";
+
+        abs(term: Term): Term == 
+                if negative? term then -term else term;
+
+        (stream: TextWriter) \<\< (poly: %): TextWriter == {
+                zero? poly => stream \<\< 0;
+
+                size: SingleInteger := #(rep(poly));
+                sign: String := if negative?(poly.1) then " - " else "";
+
+                for i in 1..(size-2) repeat
+                        if not zero?(poly.i) then {
+                                stream \<\< sign \<\< abs(poly.i);
+                                stream \<\< "^" \<\< (size - i);
+                                sign := prefix(poly.(i + 1))
+                        }
+
+               if not zero?(poly.(size - 1)) then {
+                       stream \<\< sign \<\< abs(poly.(size-1));
+                       sign := prefix(poly.size)
+               }
+               if not zero?(poly.size) then 
+                       stream \<\< sign \<\< abs(coef(poly.size));
+               stream
+        }              
+
+        leadingMonomial(poly: %): Term == 
+                rep(poly).(#(rep(poly)));
+
+        apply(poly: %, exponent: SingleInteger): Term == 
+                rep(poly).exponent;
+
+        degree(poly: %): SingleInteger == #(rep(poly));
+
+        zero?(poly: %): Boolean == #(rep(poly)) = 0;
+ }
+
+#if TEST
+
+import from Character;
+import from SingleInteger;
+import from List Term;
+import from Polynomial;
+var: Character := char "x";
+term1 := new(3, var);
+term2 := new(2, var);
+term3 := new(1, var);
+term4 := new(0, var);
+term5 := new(-3, var);
+--  term6 := -term5;
+print \<\< new(list(term5,term5,term5)) \<\< newline; -- negative signs
+print \<\< new(list(term3,term2,term1)) \<\< newline; -- 1 elision
+print \<\< new(list(term1,term2,term3)) \<\< newline;
+print \<\< new(list(term4,term2,term3)) \<\< newline;
+print \<\< new(list(term1,term4,term3)) \<\< newline;
+print \<\< new(list(term4,term4,term3)) \<\< newline;
+print \<\< new(list(term1,term2,term4)) \<\< newline; -- bad leading term
+print \<\< new(list(term4,term2,term4)) \<\< newline; -- bad leading term
+print \<\< new(list(term1,term4,term4)) \<\< newline; -- bad leading term
+print \<\< new(list(term4,term4,term4)) \<\< newline; -- bad leading term
+print \<\< new(list())@Polynomial \<\< newline; -- true zero polynomial
+
+#endif -- TEST
+
+\end{verbatim}
+\end{small}
+
+\section{``Polynomial''类型上的操作}
+
+{\bf 本节的完整代码清单见第 \pageref{OpsInPolynomialListing} 页。}
+
+{\bf Polynomial} 是很有意思的对象,人们可以在这个 {\bf Type} 的
+对象上定义好几十种有意思的操作。我们只介绍其中两种,来让你了解
+具体该怎么做。这两个操作是加法({\tt +})和减法({\tt -})。它们
+都是中缀操作。它们的签名是这样的:
+
+\begin{small}
+\begin{verbatim}
+
+        +: (%,%) -> %;
+        -: (%,%) -> %;
+
+\end{verbatim}
+\end{small}
+
+也就是说,它们接受两个对象,都属于当前的 {\bf Type}(在这
+个 % "Both" added to avoid bad linebreak.  例子里是 {\bf Polynomial}),
+并返回同一个 {\bf Type} 的一个对象。
+
+实现相当直截了当。记住,每个多项式其实就是一个由项组成的数组,
+数组里的位置定义了这一项的指数。既然如此,原则上我们只需要创建
+一个长度合适的目标数组,然后遍历每一对元素,做加法或减法。稍微
+复杂一点的地方是,两个数组的长度可能不一样:我们的解决办法是,
+最终数组取较大的那个长度,只对两个多项式里都存在的项求和或求差。
+
+\begin{small}
+\begin{verbatim}
+
+        (poly1: %) + (poly2: %): % == {
+                zero? poly1 => poly2;
+                zero? poly2 => poly1;
+
+                if (l1: SingleInteger := #(rep(poly1)))
+		    < (l2: SingleInteger := #(rep(poly2))) then {
+
+                        result: Rep := new(l2, sample@Term);
+			d: SingleInteger := l2 - l1;
+
+                        for i in 1..d repeat 
+                                result.i := poly2.i;
+                        for i in (d + 1)..l2 repeat 
+                                result.i := poly1.(i - d) + poly2.i
+                }
+		else {
+
+                        result: Rep := new(l1, sample@Term);
+			d: SingleInteger := l1 - l2;
+                        for i in 1..d repeat 
+                                result.i := poly1.i;
+                        for i in (d + 1)..l1 repeat 
+                                result.i:=poly2.(i - d) + poly1.i
+                }
+
+                per result
+        }
+
+        (poly1: %) - (poly2: %): % == {
+                zero? poly1 => poly2;
+                zero? poly2 => poly1;
+
+                if (l1: SingleInteger := #(rep(poly1)))
+		    < (l2: SingleInteger := #(rep(poly2))) then {
+
+                        result: Rep := new(l2, sample@Term);
+			d: SingleInteger := l2 - l1;
+
+                        for i in 1..d repeat 
+                                result.i := - poly2.i;
+                        for i in (d + 1)..l2 repeat 
+                                result.i:=poly1.(i - d) - poly2.i
+                }
+		else {
+
+                        result: Rep := new(l1, sample@Term);
+			d: SingleInteger := l1 - l2;
+                        for i in 1..d repeat 
+                                result.i :=  poly1.i;
+                        for i in (d + 1)..l1 repeat 
+                                result.i:=poly2.(i - d) - poly1.i
+                }
+
+                per result
+        }
+\end{verbatim}
+\end{small}
+
+不过,这样做严格来说并不正确,因为减法可能会在多项式的最高次幂
+处产生系数为零的项。我们应该缩短多项式的长度,把这些项省去。
+
+现在我们开始针对创建和打印多项式的各种情形做一系列测试。首先
+我们需要把要用到的那些 domain 引入作用域。
+
+\begin{small}
+\begin{verbatim}
+
+import from Character;
+import from SingleInteger;
+import from List Term;
+import from Polynomial;
+\end{verbatim}
+\end{small}
+
+由于多项式是项的列表,我们创建几个变量为 {\tt x} 的项,用来构造
+多项式。
+
+\begin{small}
+\begin{verbatim}
+var: Character := char "x";
+term1 := new(3, var);
+term2 := new(2, var);
+term3 := new(1, var);
+term4 := new(0, var);
+term5 := new(-3, var);
+--   term6 := -term5;
+\end{verbatim}
+\end{small}
+
+我们需要检查一下首项负号的处理:
+
+\begin{small}
+\begin{verbatim}
+print \<\< new(list(term5,term5,term5)) \<\< newline; -- negative signs
+\end{verbatim}
+\end{small}
+
+我们需要检查一下,{\tt 1*x} 是不是被打印成了 {\tt x}。
+
+\begin{small}
+\begin{verbatim}
+print \<\< new(list(term3,term2,term1)) \<\< newline; -- 1 elision
+\end{verbatim}
+\end{small}
+
+我们需要检查一下,{\tt 0*x} 是不是被正确地跳过了:
+
+\begin{small}
+\begin{verbatim}
+print \<\< new(list(term1,term2,term3)) \<\< newline;
+print \<\< new(list(term4,term2,term3)) \<\< newline;
+print \<\< new(list(term1,term4,term3)) \<\< newline;
+print \<\< new(list(term4,term4,term3)) \<\< newline;
+print \<\< new(list(term1,term2,term4)) \<\< newline; -- bad leading term
+print \<\< new(list(term4,term2,term4)) \<\< newline; -- bad leading term
+print \<\< new(list(term1,term4,term4)) \<\< newline; -- bad leading term
+print \<\< new(list(term4,term4,term4)) \<\< newline; -- bad leading term
+\end{verbatim}
+\end{small}
+
+我们需要检查一下,零多项式是不是被正确地打印了出来:
+
+\begin{small}
+\begin{verbatim}
+print \<\< new(list())@Polynomial \<\< newline; -- true zero polynomial
+print \<\< 0@Polynomial \<\< newline; -- true zero polynomial
+\end{verbatim}
+\end{small}
+
+我们需要检查一下,项的算术运算是不是被正确地实现了:
+
+\begin{small}
+\begin{verbatim}
+print \<\< term1 + term2 \<\< newline;
+print \<\< term1 - term2 \<\< newline;
+print \<\< term2 - term1 \<\< newline;
+print \<\< term1 - term1 \<\< newline;
+\end{verbatim}
+\end{small}
+%#endif --example5
+
+\subsection{代码清单}
+
+\label{OpsInPolynomialListing}
+
+\begin{small}
+\begin{verbatim}
+
+#include "axllib"
+
+Term: BasicType with {
+        new: (SingleInteger, Character) -> %;
+        dispose!: % -> ();
+        \<\<: (TextWriter, %) -> TextWriter;
+        coef: % -> SingleInteger;
+        var:  % -> Character;
+        zero?: % -> Boolean;
+        positive?: % -> Boolean;
+        negative?: % -> Boolean;
+        -: % -> %;
+        -:(%,%) -> %;
+        +:(%,%) -> %;
+}
+== add {
+        Rep == Record(coef: SingleInteger, var: Character);
+        import from Rep;
+
+        new(number: SingleInteger, variable: Character): % == 
+                per [number, variable];
+
+        dispose!(ignore: %):() == {}
+
+        (stream: TextWriter) \<\< (term: %): TextWriter == 
+                if rep(term).coef = 1 then
+                         stream \<\< rep(term).var
+                else {
+                         stream \<\< rep(term).coef;
+                         stream \<\< "*" \<\< rep(term).var
+                }
+
+        coef(term: %): SingleInteger == rep(term).coef;
+
+        var(term: %): Character == rep(term).var;
+
+        (term1: %) = (term2: %): Boolean == {
+                coef term1 ~= coef term2  => false;
+                var term1  ~= var term2   => false;
+                true
+        }
+
+        sample: % == per [0, char "x"];
+
+        zero?(term: %): Boolean      == coef(term) = 0;
+
+        positive?(term: %): Boolean == coef(term) > 0;
+
+        negative?(term: %): Boolean == coef(term) < 0;
+
+        -(term: %): % == per [-coef(term), var term];
+
+        (term1: %) - (term2: %): % == {
+                var term1 ~= var term2 => 
+                        error "Term: Variables do not match";
+                per [coef term1 - coef term2, var term1]
+        }
+
+        (term1): % + (term2: %): % == {
+                var term1 ~= var term2 => 
+                        error "Term: Variables do not match";
+                per [coef term1 + coef term2, var term1]
+        }
+}
+
+Polynomial: with {
+        new: List(Term) -> %;
+        dispose!: % -> ();
+        \<\<: (TextWriter, %) -> TextWriter;
+        leadingMonomial: % -> Term;
+        apply: (%, SingleInteger) -> Term;
+        degree: % -> SingleInteger;
+        0: %;
+        zero?: % -> Boolean;
+        +: (%,%) -> %;
+        -: (%,%) -> %;
+ }
+== add {
+        import from List Term;
+        import from SingleInteger;
+        Rep == Array Term;
+        import from Rep;
+
+        new(terms: List Term): % == {
+                size: SingleInteger := #terms;
+                result: Rep := new(size, sample@Term);
+
+                for i in 1..size repeat
+                        result.i := terms.i;
+
+                per(result)
+                }
+
+        dispose!(ignore: %):() == {}  -- undefined
+
+        prefix(term: Term): String == 
+                if negative? term then " - " else " + ";
+
+        abs(term: Term): Term == 
+                if negative? term then -term else term;
+
+        (stream: TextWriter) \<\< (poly: %): TextWriter == {
+                zero? poly => stream \<\< 0@%;
+
+                size: SingleInteger := #(rep(poly));
+
+                sign: String:=
+                        if negative? (poly.1) then " - " else "";
+
+                for i in 1..(size - 2) repeat
+                        if not zero?(poly.i) then {
+                                stream \<\< sign \<\< abs(poly.i);
+                                stream \<\< "^" \<\< (size - i);
+                                sign := prefix(poly.(i+1))
+                        }
+                if not zero?(poly.(size-1)) then {
+                        stream \<\< sign \<\< abs(poly.(size-1));
+                        sign := prefix(poly.size)
+                }
+                if not zero?(poly.size) then 
+                        stream \<\< sign \<\< abs(coef(poly.size));
+                stream
+                }
+
+        leadingMonomial(poly: %): Term == 
+                rep(poly).(#(rep(poly)));
+
+        apply(poly: %, exponent: SingleInteger): Term == 
+                rep(poly).exponent;
+
+        degree(poly: %): SingleInteger == 
+                #(rep(poly));
+
+        0: % == new(list())@Polynomial;
+
+        zero?(poly: %): Boolean == 
+              #(rep(poly)) = 0;
+
+        (poly1: %) + (poly2: %): % == {
+                zero? poly1 => poly2;
+                zero? poly2 => poly1;
+
+                if (l1: SingleInteger := #(rep(poly1)))
+		    < (l2: SingleInteger := #(rep(poly2))) then {
+
+                        result: Rep := new(l2, sample@Term);
+			d: SingleInteger := l2 - l1;
+
+                        for i in 1..d repeat 
+                                result.i := poly2.i;
+                        for i in (d + 1)..l2 repeat 
+                                result.i := poly1.(i - d) + poly2.i
+                }
+		else {
+
+                        result: Rep := new(l1, sample@Term);
+			d: SingleInteger := l1 - l2;
+                        for i in 1..d repeat 
+                                result.i := poly1.i;
+                        for i in (d + 1)..l1 repeat 
+                                result.i:=poly2.(i - d) + poly1.i
+                }
+
+                per result
+        }
+
+        (poly1: %) - (poly2: %): % == {
+                zero? poly1 => poly2;
+                zero? poly2 => poly1;
+
+                if (l1: SingleInteger := #(rep(poly1)))
+		    < (l2: SingleInteger := #(rep(poly2))) then {
+
+                        result: Rep := new(l2, sample@Term);
+			d: SingleInteger := l2 - l1;
+
+                        for i in 1..d repeat 
+                                result.i := - poly2.i;
+                        for i in (d + 1)..l2 repeat 
+                                result.i:=poly1.(i - d) - poly2.i
+                }
+		else {
+
+                        result: Rep := new(l1, sample@Term);
+			d: SingleInteger := l1 - l2;
+                        for i in 1..d repeat 
+                                result.i :=  poly1.i;
+                        for i in (d + 1)..l1 repeat 
+                                result.i:=poly2.(i - d) - poly1.i
+                }
+
+                per result
+        }
+ }
+
+\end{verbatim}
+\end{small}
+
+\section{参数化类型}
+
+{\bf 本节的完整代码清单见第 \pageref{ParamTypesListing} 页。}
+
+类型可以比我们目前见过的更通用。其中一种通用化的做法,是允许
+类型带参数。也就是说,我们可以构造一个类型,它的行为会依赖于
+另一个类型而变化。
+
+如果我们看看一般的多项式,会发现系数有好几种不同的类型。我们
+可能会有这样形式的多项式:
+
+\begin{small}
+\begin{verbatim}
+  3*x^2 + 2*x + 1
+
+or 
+
+  3.0*x^2 + 2.0*x + 1.0
+
+or
+
+  (3/5)*x^2 + (2/5)*x + (1/5)
+
+\end{verbatim}
+\end{small}
+
+第一个多项式的系数是整数。第二个的系数是实数,第三个的系数是
+有理数(整数之比)。多项式系数里允许的数的类型,是由系数所在的
+环决定的。环是定义了加法、减法这类操作的简单数学对象。由于多项式
+要依赖项来定义``相加''或``相减''意味着什么,我们发现多项式的行为
+会随着所选系数环的不同而变化。
+
+我们本可以把``整数''多项式、``实数''多项式和``有理数''多项式分别
+定义成不同的类型来实现这一点。然而,我们想要的大多数操作在这些
+多项式类型之间都是通用的。我们真正想做到的是,定义能够接受不同
+种类 {\bf Term} 的 {\bf Polynomial}。
+
+同样的论证也适用于 {\bf Term}。与其有许多种不同的 {\bf Term},
+不如让 {\bf Term} 带一个参数,用来定义要使用哪种系数。我们就从
+修改 {\bf Term}、让它带一个告诉我们系数 {\bf Type} 的参数开始
+这整个过程。
+
+此前 {\bf Term} 的 {\bf Type} 定义行是:
+
+\begin{small}
+\begin{verbatim}
+  Term: BasicType with {
+\end{verbatim}
+\end{small}
+
+现在改成了:
+
+\begin{small}
+\begin{verbatim}
+  Term(CoefType: OrderedRing): BasicType with {          
+\end{verbatim}
+\end{small}
+
+关于这个改动有很多可说的。第一个、也是最显著的区别是,{\bf Term}
+不再是一个常量 {\bf Type} 了。它现在是一个接受一个实参的函数。
+我们给这个实参取了个名字,并且,和我们所有的函数定义一样,给出了
+这个实参的 {\bf Type}。
+
+随之而来的一个问题是,我们为什么、以及是怎么选中 {\bf OrderedRing}
+这个类型的。当我们构建 {\bf Type} 塔时,我们依赖塔中位于我们下方
+的那些东西来提供某些操作。如果我们构建在某个不能提供所需操作的
+东西之上,我们的程序就没有意义了(比如说,把两个 {\bf Type} 为
+{\tt Display} 的东西相加,又能是什么意思呢)。
+
+一个合理的初步猜测,声明行或许可以是:
+
+\begin{small}
+\begin{verbatim}
+  Term(CoefType: BasicType): BasicType with {          
+\end{verbatim}
+\end{small}
+
+但这样是不行的,因为后面的代码假设我们可以把系数拿来和常量
+{\bf 1} 做比较。然而,属于 {\bf BasicType} 的东西只有这些操作:
+({\tt =}、{\tt \~{}=}、
+%{\tt $\<\<$}, {\tt sample}, {\tt hash}) and are not required to have
+``{\bf \<\<}、{\tt sample}、{\tt hash}),并不要求具备常量
+{\bf 1}。{\bf Type} 具有常量 {\bf 1} 这一保证,最早出现在(非常
+基础的)类型 {\bf Monoid} 里(见 \ref{axlcatFigure} 与
+pageref{axlcatFigure})。所以我们可以用下面这条定义行来满足这个
+要求:
+
+\begin{small}
+\begin{verbatim}
+  Term(CoefType: Monoid): BasicType with {          
+\end{verbatim}
+\end{small}
+
+我们又遇到了一个问题:我们在 {\bf Term} 里实现的一些操作(比如
+{\tt positive?})需要用到 {\tt >} 操作来比较两个系数。能够比较
+两个东西、判断谁更大,这意味着存在一个序。比如说,颜料(pigments)
+就是没有序的。所以我们需要在 {\bf Type} 层级里再往下走,找到一个
+既是 {\bf Monoid} 又具有 {\bf Order} 的东西。所需要的 {\bf Type}
+就是 {\bf OrderedRing}。
+所以,为了(这个``order''是故意用的双关)能{\em 保证}我们可以
+比较系数是否等于 {\bf 1}、也可以比较两个系数判断谁更大,我们必须
+给 {\bf Term} 一个至少是 {\bf OrderedRing} 的东西。这就得到了我们
+所需要的函数定义行:
+
+\begin{small}
+\begin{verbatim}
+  Term(CoefType: OrderedRing): BasicType with {          
+\end{verbatim}
+\end{small}
+
+我们最初写 {\tt Rep} 的时候,假设了 {\bf Record}(这是我们在内部
+存储 {\bf Term} 的方式)的 {\tt coef} 字段的 {\bf Type} 会是
+{\tt SingleInteger}。我们必须改掉这一点。旧的 {\tt Rep} 是这样
+写的:
+
+\begin{small}
+\begin{verbatim}
+  Rep == Record(coef: SingleInteger, var: Character);       
+\end{verbatim}
+\end{small}
+
+现在它是这样的:
+
+\begin{small}
+\begin{verbatim}
+  Rep == Record(coef: CoefType, var: Character);       
+\end{verbatim}
+\end{small}
+
+这告诉我们,任何满足 {\tt CoefType} 要求的东西,都可以存储在内部
+表示里。
+
+我们接下来要做的改动是在某些函数的签名行里。函数 {\tt new} 原来
+的签名是:
+
+\begin{small}
+\begin{verbatim}
+  new: (SingleInteger, Character) -> %;
+\end{verbatim}
+\end{small}
+
+现在改成了:
+
+\begin{small}
+\begin{verbatim}
+  new: (CoefType, Character) -> %;                    
+\end{verbatim}
+\end{small}
+
+这样一来,我们原本要求系数是一个 {\bf SingleInteger},现在则可以
+是任何类型为 {\bf CoefType} 的系数。这可以是任何东西,只要它
+{\em 至少}是一个 {\bf OrderedRing} 就行。
+
+既然我们改了函数签名,就必须在函数头那一行做相应的改动。它原来
+是这样的:
+
+\begin{small}
+\begin{verbatim}
+  new(number: SingleInteger, variable: Character): % ==
+\end{verbatim}
+\end{small}
+
+现在是这样的:
+
+\begin{small}
+\begin{verbatim}
+  new(number: CoefType, variable: Character): % ==
+\end{verbatim}
+\end{small}
+
+类似地,我们原本假设 {\tt coef} 会返回一个 {\bf SingleInteger}:
+
+\begin{small}
+\begin{verbatim}
+  coef: % -> SingleInteger;
+
+  coef: % -> CoefType;                                     
+\end{verbatim}
+\end{small}
+
+而现在它返回的是存储在 {\bf Term} 里的任何东西。
+
+既然我们改了函数签名,就必须在函数头那一行做相应的改动。它原来
+是这样的:
+
+\begin{small}
+\begin{verbatim}
+  coef(term: %): SingleInteger ==                         
+\end{verbatim}
+\end{small}
+
+现在是这样的:
+
+\begin{small}
+\begin{verbatim}
+  coef(term: %): CoefType ==                         
+\end{verbatim}
+\end{small}
+
+\subsection{代码清单}
+
+\label{ParamTypesListing}
+
+\begin{small}
+\begin{verbatim}
+#include "axllib"
+
+Term(CoefType: OrderedRing): BasicType with {          
+        new: (CoefType, Character) -> %;                    
+        dispose!: % -> ();
+        \<\<: (TextWriter, %) -> TextWriter;
+        coef: % -> CoefType;                                     
+        var:  % -> Character;
+        zero?: % -> Boolean;
+        positive?: % -> Boolean;
+        negative?: % -> Boolean;
+        -: % -> %;
+        -:(%,%) -> %;
+        +:(%,%) -> %;
+ }
+== add { 
+        Rep == Record(coef: CoefType, var: Character);       
+        import from Rep;
+
+        new(number: CoefType, variable: Character): % == 
+                per [number,variable];
+
+        dispose!(ignore: %):() == {}  -- undefined
+
+        (stream: TextWriter) \<\< (term: %): TextWriter == 
+                if rep(term).coef = 1 then
+                        stream \<\< rep(term).var
+                else {
+                        stream \<\< rep(term).coef;
+                        stream \<\< "*" \<\< rep(term).var
+                }
+
+        coef(term: %): CoefType == rep(term).coef;
+
+        var(term: %): Character == rep(term).var;
+
+        (term1: %) = (term2: %): Boolean == {
+                coef(term1) ~= coef(term2) => false;
+                var(term1)  ~= var(term2)  => false;
+                true
+        }
+
+        sample: % == per [0, char "x"];
+
+        zero?(term: %):     Boolean == coef(term) = 0;
+
+        positive?(term: %): Boolean == coef(term) > 0;
+
+        negative?(term: %): Boolean == coef(term) < 0;
+
+        -(term: %): % == per [-coef(term), var term];
+
+        (term1: %) - (term2: %): % == {
+                var term1 ~= var term2 => 
+                        error "Term: Variables do not match";
+                per [coef(term1)-coef(term2), var term1]
+        }
+
+        (term1: %) + (term2: %): % == {
+                var term1 ~= var term2 => 
+                        error "Term:  Variables do not match";
+                per [coef(term1)+coef(term2), var term1]
+        }
+ }
+
+#if TEST
+
+import from Character;
+import from Term SingleInteger;
+print \<\< new(0$SingleInteger,char "x") \<\< newline;
+import from Term Float;
+print \<\< new(0$Float,char "x") \<\< newline;
+
+#endif -- TEST
+
+\end{verbatim}
+\end{small}
+
+非常感谢以下这些审阅者:
+Peter Broadbery,
+Robert Corless,
+George Corliss,
+Tim Daly, Jr.,
+Pietro Iglio,
+Phillip Santas,
+Jon Steinbach 与
+Stephen Watt。
+
+到这里,你已经掌握了足够的知识,可以写出相当能用的 Axiom 程序了。
+我们介绍了 domain 这个概念,把它作为组织 Axiom 程序的一种手段。
+我们展示了 domain 的例子,并探讨了它的各个部分,也就是导出列表、
+表示和实现。我们也展示了如何把 domain 和既有的类型层级连接起来。
+
+
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}

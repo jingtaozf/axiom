@@ -1,0 +1,383 @@
+\documentclass{article}
+% (cn) 本卷使用独立的 article 前导,不走 bookheader.tex,故在此就地注入 xeCJK 中文排版支持
+\usepackage{xeCJK}
+\setCJKmainfont{Songti SC}
+\setCJKsansfont{Heiti SC}
+\setCJKmonofont{Songti SC}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+\usepackage{axiom}
+\begin{document}
+\title{\$SPAD/src/algebra primesp.spad}
+\author{Manindra Agrawal, Neeraj Kayal and Nitin Saxena}
+\maketitle
+\begin{abstract}
+我们给出一个确定性的多项式时间算法,判定输入的数 $n$ 是素数还是合数。
+\end{abstract}
+\begin{quote}
+{\sl
+"把素数与合数区分开来、并把后者分解为素因子的问题,众所周知是算术中
+最重要、最有用的问题之一。它耗费了古今几何学家如此之多的勤勉与智慧,
+以致再详加讨论都显得多余……而且,这门科学本身的尊严似乎也要求人们
+探索一切可能的手段,去解决这样一个如此优雅、如此著名的问题。"}
+\begin{flushright}
+Karl Friedrich Gauss,{\sl Disquisitiones Arithmeticae},1801(转译自
+[Knu98] 的英译)
+\end{flushright}
+\end{quote}
+\eject
+\tableofcontents
+\eject
+\section{引言}
+自古以来,数学家就为素数相关的问题所着迷。素数的基本问题之一,
+是判定给定的数是否为素数。到了现代,素性测试(primality testing)
+因其在密码学中的应用,从实用角度看也变得重要起来。
+
+从古代中国与希腊开始,许多人都研究过寻找高效素性测试算法的问题。
+Eratosthenes 筛法(约公元前 240 年)是对所有素数都能正确工作的最
+古老的算法,然而它的时间复杂度($=\Omega{}(n)$,其中 $n$ 为输入的数)
+对输入规模而言是指数级的。17 世纪,Fermat 证明了后来被称为
+{\sl Fermat 小定理}的结果:对任意素数 $p$ 与任意不被 $p$ 整除的数
+$a$,有 $a^{p-1} = 1 (mod p)$。尽管该定理的逆命题不成立
+(事实上对 {\sl Carmichael 数}会以惊人的方式失效),这一结果仍是
+多个高效素性测试算法的出发点。1976 年,Miller [Mil76] 利用这一性质,
+在假定{\sl 扩展 Riemann 假设 (ERH)} 成立的前提下,得到了一个确定性的
+多项式时间素性测试算法。Rabin [Rab80] 改造了他的测试,得到一个无条件
+但随机化的多项式时间算法。Solovay 与 Strassen [SS77] 利用二次剩余
+得到了另一个随机化多项式时间算法。(在 ERH 下他们的算法同样可以
+去随机化。)此后,人们又提出了许多随机化多项式时间的素性测试算法。
+
+1983 年,Adleman、Pomerance 与 Rumely 取得重大突破,给出了一个运行
+时间为 $(log n)^{O(log long log n)}$ 的确定性素性算法(此前的确定性
+算法都需要指数时间)。1986 年,Goldwasser 与 Killian [GK86] 提出了
+一个基于椭圆曲线的随机化算法,在几乎所有输入上(在一个被广泛相信的
+假设下则是{\sl 所有}输入)以期望多项式时间运行,并能给出素性证书
+(在此之前,所有随机化算法只对合数给出证书)。Atkin [Atk86] 发展了
+类似的算法。Adelman 与 Huang [AH92] 修改了 Goldwasser-Killian 算法,
+得到一个总能给出素性证书的随机化多项式时间算法。
+
+这条研究路线的终极目标,当然是得到一个无条件的、确定性的多项式时间
+素性测试算法。尽管素性测试已取得了令人瞩目的进展,这一目标始终
+未能实现。本文实现了它。我们给出一个确定性的、$\Omega((log n)^{12})$
+时间的素数判定算法。启发式地看,我们的算法表现要好得多:在一个关于
+Sophie Germain 素数(使 $2p+1$ 也是素数的素数 $p$)密度的、被广泛
+相信的猜想之下,算法只需 $\Omega((log n)^{6})$ 步。我们算法的正确性
+证明只用到简单的代数工具(除了引用一个筛法理论的结果,关于 $p-1$
+含有大素因子的素数 $p$ 的密度)。相比之下,[APR83, GK86, Atk86] 的
+确定性算法的正确性证明要复杂得多。
+
+第 2 节概述我们算法背后的基本思想。第 3 节陈述若干预备定理并固定
+本文使用的记号。然后我们完整给出算法,并给出正确性证明。
+
+\section{基本思想与途径}
+我们的测试基于下面这个素数恒等式。同一恒等式也是 [AB99] 中一个
+随机化多项式时间算法的基础:
+\vskip .1cm
+\noindent
+{\bf 恒等式}
+{\sl 设 a 与 p 互素。那么 p 是素数当且仅当}
+$$(x-a)^p == (x^p - a)(mod\ p)\eqno{1}$$
+
+\noindent
+{\sl 证明}. 对 $0 < i < p$,$((x-a)^p - (x^p - a))$ 中 $x^i$ 的系数是
+$(-1)^i \left(p \over i\right) a^{p-i}$。
+若 $p$ 为素数,则 $\left(p \over i\right) == 0(mod\ p)$,
+因此所有系数皆为零。
+
+\noindent
+若 $p$ 为合数:取 $p$ 的一个素因子 $q$,并设 $q^k \vert\vert p$。
+那么 $q^k$ 不整除 $\left(p \over q\right)$,且与 $a^{p-q}$ 互素,
+于是 $x^q$ 的系数不为零 $(mod\ p)$。因此
+$((x-a)^p - (x^p - a))$ 在 $F_p$ 上不恒为零。
+
+于是,给定输入 $p$,可以取多项式 $P(x) = x - a$,并计算同余式 (1)
+是否成立。然而这需要 $\Omega(p)$ 的时间,因为最坏情况下我们要对
+左端求出 $p$ 个系数。因此,为了可行,我们将对形如 $x^r - 1$ 的
+多项式取模,再计算 (1) 的两端。我们算法的一次迭代,就是判定下式
+是否成立:
+$$(x - a)^p == (x^p - a)(mod\ x^r - 1,p)\eqno{2}$$
+\noindent
+由恒等式立即可知,所有素数 $p$ 对一切 $a$ 与 $r$ 的取值都满足上述
+同余式;但某些合数 $p$ 也可能对少数几组 $(a,r)$ 满足 (2)。上述
+同余式的验证需要 $O(r^2\ log^3\ p)$ 时间(左端用反复平方求值),
+若使用快速 Fourier 乘法 [Knu98] 则更快,只需 $O(r\ log^2\ p)$。
+我们的算法先选取一个"合适的"$r$。(对我们而言,$r$ "合适"是指
+它是一个 $=O(log^6\ p)$ 的素数,且 $r-1$ 含有一个大小至少为
+$r^{({1 \over{2}} +\delta)}$ 的素因子,其中 $\delta > 0$ 为某常数。
+[Fou85, BH96] 保证这样的"合适的"$r$ 存在。)
+此后,算法对"少量"($O(\sqrt{r}\ log\ p)$ 个)的 $a$ 验证同余式
+(2)。我们将证明这一思路可行:即算法能正确判定 $p$ 是否为素数。
+\section{记号与预备}
+本节陈述一些代数与数论结果,供后面的证明使用。
+
+本文其余部分中,$F_{p^d}$ 表示有限域,其中 $p$ 为素数。回忆:若
+$p$ 为素数,$h(x)$ 是次数为 $d$ 且在 $F_p$ 中不可约的多项式,则
+$F_p[x]/(h(x))$ 是阶为 $P^d$ 的有限域。除非另行说明,本文其余部分
+h(x) 都是 ${{x^r-1}\over{x-1}}$ 的一个因子。
+
+我们用 $O(t(n))$ 表示 $O(t(n)poly(log\ t(n)))$,其中 $t(n)$ 是 $n$
+的某个函数。除非另行说明,本文中 log 均以 2 为底。
+
+我们现在汇集一些代数中的简单事实,它们可以在任何标准教材中找到,
+例如 [LN86, Fra90]。为完整起见,其中一些我们也给出证明。
+
+\noindent
+{\bf 引理 3.1}
+{\sl 设 p 与 r 为素数,$p \ne r$。}
+\vskip .1cm
+\begin{enumerate}
+\item {\sl 任意域 $F_{p^t}$($t > 0$)的乘法群,记作
+$F_{p^t}^*$,是循环群。}
+\item {\sl 设 $f(x)$ 是整系数多项式。则
+$$f(x)^p == f(x^p)(mod\ p)$$}
+\item {\sl 设 h(x) 是 $x^r - 1$ 的任一因子。设 $m == m_r(mod\ r)$。则
+$$x^m == x^{m_r}\ (mod\ h(x))$$}
+\item {\sl 设 $o_r(p)$ 为 $p\ module\ r$ 的阶。则在
+$F_p$ 中,${{x^r - 1}\over{x-1}}$ 分解为一些不可约多项式之积,
+每个的次数都是 $o_r(p)$。}
+\end{enumerate}
+\vskip .2cm
+\noindent
+{\sl 证明}
+\begin{enumerate}
+\item 参见,例如,[LN86]
+\item 设 $f(x) = a_0+a_1x+\ldots+a_dx^d$。$f(x)^p$ 中 $x^i$ 的系数是
+$$\Sigma_{{i_0+\ldots+i_d=p}\over{i_1+2i_2+\ldots+di_d=i}}
+a_0^{i_0} \dots a_d^{i_d} {{p!}\over{i_0! \dots i_d!}}$$
+注意除非某个 $i_j$ 等于 $p$,否则这个和可被 $p$ 整除。而在后一情形,
+$i=pj$,且 $x^i$ 的系数为 $a_j^p = a_j$。这就给出所需的同余式。
+\item 设 $m=kr+m_r$。于是
+\vskip .1cm
+\begin{tabular}{llllll}
+\ \ \ \ \ \ \ \ &     & $x^r$        & $==$ & $1$       & $(mod\ x^r - 1)$\\
+\ \ \ \ \ \ \ \ &$=>$ & $x^{kr}$     & $==$ & $1$       & $(mod\ x^r - 1)$\\
+\ \ \ \ \ \ \ \ &$=>$ & $x^{kr+m_r}$ & $==$ & $x^{m_r}$ & $(mod\ x^r - 1)$\\
+\ \ \ \ \ \ \ \ &$=>$ & $x^m$        & $==$ & $x^{m_r}$ & $(mod\ h(x))$
+\end{tabular}
+\item 设 $d = o_r(p)$,$Q_r(x) = {{x^r-1}\over{x-1}}$。
+假设 $Q_r(x)$ 在 $F_p$ 中有一个次数为 $k$ 的不可约因子 $h(x)$。
+那么 $F_p[x]/h(x)$ 构成一个大小为 $p^k$ 的域,且 $F_p[x]/h(x)$ 的
+乘法子群是循环群,设其生成元为 $g(x)$。此外,在这个 galois 域中,
+由上述事实 (2),我们有
+\vskip .1cm
+\begin{tabular}{llllll}
+\ \ \ \ \ \ \ \ &     & $g(x)^p$         & $==$ & $g(x^p)$\\
+\ \ \ \ \ \ \ \ &$=>$ & $g(x)^{p^d}$     & $==$ & $g(x^{p^d})$\\
+\ \ \ \ \ \ \ \ &$=>$ & $g(x)^{p^d}$     & $==$ & $g(x)$ [由上述事实 (3)]\\
+\ \ \ \ \ \ \ \ &$=>$ & $g(x)^{{p^d}-1}$ & $==$ & $1$
+\end{tabular}
+\vskip .1cm
+由于 $(p^k - 1)$ 是 $g(x)$ 的阶,我们得到 $(p^k - 1) \vert (p^d - 1)$,
+这蕴含 $k \vert d$。我们还知道在 $F_p$ 中 $h(x) \vert (x^r - 1)$,
+因此在域 $F_p[x]/h(x)$ 中有
+$$x^r == 1$$
+于是 $x$ 在该域中的阶必为 $r$(因为 $r$ 是素数且 $x !== 1$)。
+因此 $r \vert (p^k - 1)$,即 $p^k == 1 (mod\ r)$。从而
+$d \vert k$。所以 $k = d$,引理得证。
+\end{enumerate}
+
+除上述代数事实外,我们还需要下面两个数论事实。
+
+\noindent
+{\bf 引理 3.2} {\sl [Fou85, BH96] 设 $P(n)$ 表示 $n$ 的最大素因子。
+存在常数 $c > 0$ 与 $n_0$,使得对一切 $x \ge n_0$}
+$$\vert \{p \vert p\ is\ prime, p \le x\ and\ P(p-1) > x^{{2}\over{3}} \}
+\vert \ge c{{x}\over{log\ x}}$$
+事实上,已知上述引理对不超过 $0.6683$ 的指数都成立
+(这类结果的综述见 [BH96])。
+\noindent
+{\bf 引理 3.3}
+{\sl [Apo97] 设 $\pi(n)$ 为 $\le n$ 的素数个数。则对 $n \ge 1$:}
+$${{n}\over{6\ log\ n}} \le \pi(n) \le {{8n}\over{log\ n}}$$
+\eject
+\section{算法}
+\hrule
+\vskip .1cm
+输入:整数 $n > 1$
+\begin{enumerate}
+\item if($n$ 形如 $a^b$,$b>1$)output COMPOSITE;
+\item $r = 2$;
+\item while $(r < n)$ \{
+\item \ \ \ \ if($gcd(n,r) \ne 1$)output COMPOSITE;
+\item \ \ \ \ if($r$ 是素数)
+\item \ \ \ \ \ \ \ \ 设 $q$ 为 $r - 1$ 的最大素因子;
+\item \ \ \ \ \ \ \ \ if($q \ge 4\sqrt{r}\ log\ n$)and($n^{{r-1}\over{q}} !== 1 (mod\ r)$)
+\item \ \ \ \ \ \ \ \ \ \ \ \ break;
+\item \ \ \ \ $r \leftarrow r + 1$;
+\item \}
+\item for $a = 1$ to $2\sqrt{r}\ log\ n$
+\item \ \ \ \ if($(x-a)^n !== (x^n - a)(mod\ x^r-1,n)$)output COMPOSITE;
+\item output PRIME;
+\end{enumerate}
+
+\hrule
+\vskip .3cm
+
+\noindent
+{\bf 定理 4.1}
+{\sl 上述算法返回 PRIME 当且仅当 $n$ 为素数}
+
+本节其余部分通过一列引理来确立该定理。首先注意算法有两个循环。
+第一个循环试图找到一个素数 $r$,使得 $r-1$ 有一个大素因子
+$q \ge 4\sqrt{r}\ log\ n$,并且 $q \vert o_r(n)$,其中 $o_r(n)$
+是 $n\ modulo\ r$ 的阶。我们先给出 {\bf while} 循环找到这样的 $r$
+所需迭代次数的上界。
+
+\vskip .2cm
+\noindent
+{\bf 引理 4.2}
+{\sl 存在正常数 $c_1$ 与 $c_2$,使得区间
+$[c_1 (log\ n)^6, c_2 (log\ n)^6]$ 内存在素数 $r$,满足 $r - 1$ 有
+素因子 $q \ge 4 \sqrt{r}\ log\ n$ 且 $q \vert o_r(n)$。}
+
+\vskip .2cm
+\noindent
+{\sl 证明}
+设 $c$ 与 $P(n)$ 如引理 3.2 所给。于是,介于 $c_1(log\ n)^6$ 与
+$c_2(log\ n)^6$ 之间、满足
+$P(r-1) > (c_2(log\ n)^6)^{{2}\over{3}} > r^{{2}\over{3}}$
+的素数 $r$(我们称之为{\sl 特殊}素数)的个数(对足够大的 $n$)为
+\vskip .1cm
+\begin{tabular}{lll}
+\ \ \ \ \ \ \ \ & $\ge$ & $[1\dots c_2(log\ n)^6]$ 内特殊素数的个数 $-$\\
+                &       & $[1\dots c_1(log\ n)^6]$ 内素数的个数\\
+\ \ \ \ \ \ \ \ & $\ge$ & ${{cc_2(log\ n)^6}\over{7\ log\ log\ n}} -
+{{8c_1(log\ n)^6}\over{6\ log\ log\ n}}$(用引理 3.3)\\
+\ \ \ \ \ \ \ \ & $=$   & ${{(log\ n)^6}\over{log\ log\ n}}
+\left({{cc_2}\over{7}} - {{8c_1}\over{6}}\right)$
+\end{tabular}
+\vskip .3cm
+
+\noindent
+取常数 $c_1 \ge 4^6$ 与 $c_2$,使括号中的量为正常数,记为 $c_3$。
+
+设 $x=c_2(log\ n)^6$。考虑乘积
+$$\Pi = (n-1)(n^2-1)\dots(n^{x^{{1}\over{3}}} - 1)$$
+
+\noindent
+该乘积至多有 $x^{{2}\over{3}}\ log\ n$ 个素因子。注意:
+$$x^{{2}\over{3}}\ log\ n < {{c_3(log\ n)^6}\over{log\ log\ n}}$$
+
+\noindent
+因此,至少存在一个特殊素数,记为 $r$,不整除乘积 $\Pi$
+
+这就是所求的素数:$r-1$ 有大素因子
+$q \ge r^{{2}\over{3}} \ge 4\sqrt{r}\ log\ n$
+(因为 $c_1 \ge 4^6$),并且 $q \vert o_r(n)$。
+
+既然知道了 {\bf while} 循环会停机,我们就可以证明:
+
+\vskip .3cm
+\noindent
+{\bf 引理 4.3} {\sl 若 $n$ 为素数,算法返回 PRIME}
+\vskip .3cm
+\noindent
+{\sl 证明}. {\bf while} 循环不会返回 COMPOSITE,因为对一切
+$r \le c_2(log\ n)^6$ 都有 $gcd(n,r) = 1$,其中 $c_2$ 如引理 4.2
+所给。由引理 3.1(事实 2),{\bf for} 循环同样不会返回 COMPOSITE。
+因此,算法将判定 $n$ 为 PRIME。
+
+现在我们把注意力转向输入为合数 $n$ 的情形。设合数 $n$ 的素因子为
+$p_i$,$1 \le i \le k$,此时 {\bf while} 循环找到的 $r$ 的意义在于:
+$o_r(n) \vert lcm_i\{o_r(p_i)\}$,因此 $n$ 存在素因子 $p$ 使得
+$q \vert o_r(p)$,其中 $q$ 是 $r-1$ 的最大素因子。在余下的论证中,
+设 $p$ 就是 $n$ 的这样一个素因子。
+
+算法的第二个循环利用得到的 $r$ 值,对 $l = 2\sqrt{r}\ log\ n$ 个
+二项式 $(x-a)$($1 \le n \le l$)做多项式计算。由引理 3.1(事实 4),
+存在次数为 $d = o_r(p)$、在 $F_p$ 中不可约的多项式 $h(x)$
+($x^r - 1$ 的因子)。注意
+$$(x-a)^n == (x^n - a)(mod\ x^r - 1,n)$$
+蕴含
+$$(x-a)^n == (x^n - a)(mod\ h(x),p)$$
+\vskip .2cm
+\noindent
+于是每个二项式上的恒等式都在域 $F_p[x]/(h(x))$ 中成立。
+这 {\sl l} 个二项式在该域中生成一个大的循环群:
+
+\noindent
+{\bf 引理 4.4}
+{\sl 在域 $F_p[x]/(h(x))$ 中,由 l 个二项式
+$(x-a)$,$1 \le a \le l$ 生成的群,即
+$$G = \left\{\Pi_{1 \le a \le l} (x-a)^{\alpha_a} \vert \alpha_a \ge 0,
+\forall 1 \le a \le l\right\}$$
+是循环群,且大小 $> \left({d}\over{l}\right)^l$
+
+\noindent
+{\sl 证明}
+显然 $G$ 是群,且由于它是循环群 $(F_p[x]/(h(x)))^*$ 的子群,
+它也是循环群。
+
+现在考虑集合
+$$S=\left{\Pi_{1 \le a \le l} (x-a)^{\alpha_a} \vert 
+\Sigma_{1 \le a \le l} \alpha_a \le d - 1, \alpha_a \ge 0, 
+\forall{l} \le a \le l\right}$$
+
+\noindent
+下面的论证表明 $S$ 的所有元素在
+$F_p[x]/(h(x)). 中互不相同。{\tt while} 循环保证其停机时最终的
+$r$ 满足 $r > q > 4\sqrt(r)\ log\ n > l$。算法第 4 步还检查了 $r$ 与
+$n$ 的 {\tt gcd}。若有某些 $a$ 模 $p$ 同余,则 $p < l < r$,于是
+算法第 4 步就会判定 $n$ 为合数。因此,任意两个 $a$ 都不模 $p$
+同余。所以 $S$ 中任意两个元素都模 $p$ 互异。这蕴含 $S$ 的所有元素
+在域 $F_p[x]/(h(x)) 中互不相同,因为 $S$ 中任意元素的次数都小于
+$d$——即 h(x) 的次数。
+
+集合 $S$ 的基数为:
+\begin{tabular}{lll}
+$$\left({l + d - 1}\over{l}\right)$$ & $=$ &
+$${l + d - 1)(l + d - 2)\dots(d)}\over{l!}$$\\
+& $$\left({d}\over{l}\right)^l$$
+\end{tabular}
+
+\noindent
+由于 $S$ 只是 $G$ 的子集,结论得证。
+
+由于 $d \ge 2l$,$G$ 的大小 $> 2^l = n^{2\sqrt{r}}$。设 $g(x)$ 为
+$G$ 的生成元。显然,$g(x)$ 在 $F_p[x]/(h(x))$ 中的阶
+$> n^{2\sqrt{r}}$。我们现在定义一个与 $g(x)$ 相关的集合,它将在
+余下的论证中扮演重要角色。令
+$$I_{g(x)} = \{m \vert g(x)^m \ident g(x^m)(mod\ x^r - 1,p)\}$$
+
+$I_{g(x)}$ 有一个漂亮的性质:
+
+\section{package PRIMESP PrimesIsInP}
+<<package PRIMESP PrimesIsInP>>=
+)abbrev package PRIMESP PrimesIsInP
+++ Author: Tim Daly
+++ Date Created: Nov 29, 2003
+++ Date Last Updated:
+++ Basic Functions:
+++ Related Constructors:
+++ Also See:
+++ AMS Classifications:
+++ Keywords:
+++ References:
+++ Description:
+++ A deterministic polynomial-time algorith that determines whether an
+++ input number is prime or composite
+++
+AbelianGroup(): Category == CancellationAbelianMonoid with
+    --operations
+      "-": % -> %                      ++ -x is the additive inverse of x.
+      "-": (%,%) -> %                  ++ x-y is the difference of x and y
+                                       ++ i.e. \spad{x + (-y)}.
+                       -- subsumes the partial subtraction from previous
+      "*": (Integer,%) -> %            ++ n*x is the product of x by the integer n.
+    add
+      (x:% - y:%):% == x+(-y)
+      subtractIfCan(x:%, y:%):Union(%, "failed") == (x-y) :: Union(%,"failed")
+      n:NonNegativeInteger * x:% == (n::Integer) * x
+      import RepeatedDoubling(%)
+      if not (% has Ring) then
+        n:Integer * x:% ==
+          zero? n => 0
+          n>0 => double(n pretend PositiveInteger,x)
+          double((-n) pretend PositiveInteger,-x)
+
+@
+\eject
+\begin{thebibliography}{99}
+\bibitem{1} nothing
+\end{thebibliography}
+\end{document}

@@ -22,7 +22,8 @@ all: ${PDF}/bookvol1.pdf ${PDF}/glossary.pdf ${PDF}/bookvol0.pdf \
 	${PDF}/bookvol15.pdf ${PDF}/bookvol8.1.pdf \
 	${PDF}/rosetta.pdf ${PDF}/refcard.pdf ${PDF}/endpaper.pdf \
 	${PDF}/bookvol10.2.pdf ${PDF}/bookvol10.3.pdf \
-	${PDF}/bookvol10.4.pdf ${PDF}/bookvol10.5.pdf ${PDF}/bookvol7.1.pdf
+	${PDF}/bookvol10.4.pdf ${PDF}/bookvol10.5.pdf ${PDF}/bookvol7.1.pdf \
+	${PDF}/computertutorial.pdf ${PDF}/primesp.spad.pdf
 
 
 
